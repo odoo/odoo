@@ -21,6 +21,8 @@ export class DisableSnippetsPlugin extends Plugin {
             20,
             this.disableUndroppableSnippets.bind(this)
         ),
+        on_visibility_impacted_droppable_snippets_handlers:
+            this.disableUndroppableSnippets.bind(this),
     };
 
     setup() {

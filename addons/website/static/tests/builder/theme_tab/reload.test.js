@@ -1,6 +1,11 @@
 import { expect, queryOne, test, waitFor } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    TestInvisibleElementPlugin,
+} from "../website_helpers";
 
 defineWebsiteModels();
 
@@ -35,6 +40,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
         return true;
     });
     onRpc("/website/theme_customize_data", () => {});
+    addPlugin(TestInvisibleElementPlugin);
     await setupWebsiteBuilder(
         `<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element"></div>`
     );
@@ -44,7 +50,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     await contains(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye"
     ).click();
-    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+    expect(":iframe .o_snippet_invisible").toHaveStyle({ display: "none" });
 
     await contains(".o-snippets-tabs button[data-name=theme]").click();
     await waitFor(".o_theme_tab");
@@ -56,7 +62,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     // completed. This relies on the "save" mocked for this test that does
     // nothing to save anything and the reload (mocked in `setupWebsiteBuilder`)
     // resets to initial content
-    expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible", "1");
+    expect(":iframe .o_snippet_invisible").not.toHaveStyle({ display: "none" });
 
     expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
 

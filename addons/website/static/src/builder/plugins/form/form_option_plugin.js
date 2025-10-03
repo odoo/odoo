@@ -45,7 +45,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { getParsedDataFor } from "@website/js/utils";
-import { isTargetVisible } from "@html_builder/core/visibility_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 
 /**
@@ -1389,7 +1388,7 @@ export class SetLabelTextAction extends BuilderAction {
 }
 export class SelectLabelsPositionAction extends BuilderAction {
     static id = "selectLabelsPosition";
-    static dependencies = ["websiteFormOption"];
+    static dependencies = ["websiteFormOption", "visibility"];
     setup() {
         this.fieldSelector = ".s_website_form_field:not(.s_website_form_dnone)";
     }
@@ -1398,7 +1397,9 @@ export class SelectLabelsPositionAction extends BuilderAction {
     }
     apply({ editingElement: formEl, value, loadResult: fields }) {
         for (const fieldEl of formEl.querySelectorAll(this.fieldSelector)) {
-            const fieldClassName = !isTargetVisible(fieldEl) ? fieldEl.className : "";
+            const fieldClassName = this.dependencies.visibility.isElementHidden(fieldEl)
+                ? fieldEl.className
+                : "";
             const field = getActiveField(fieldEl, { fields });
             field.formatInfo.labelPosition = value;
             field.formatInfo.labelInvisible = value === "none";

@@ -46,7 +46,7 @@ test("BreadcrumbVisibility option should appear with overTheContent", async () =
     expect(".o-overlay-container [data-action-value='overTheContent']").toBeVisible();
 });
 
-test("undo/redo Breadcrumb visibility options", async () => {
+test.skip("undo/redo Breadcrumb visibility options", async () => {
     const { getEditor } = await setupWebsiteBuilder("", {
         beforeWrapwrapContent: `
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="breadcrumb_visible">

@@ -14,7 +14,8 @@ import { CustomInnerSnippet } from "./custom_inner_snippet";
 
 /**
  * @typedef {import("@html_builder/core/drag_and_drop_plugin").DragState} DragState
- * @typedef {((arg: { snippetEl: HTMLElement }) => void)[]} on_snippet_dropped_handlers
+ * @typedef {((arg: { snippetEl: HTMLElement }) => Promise)[]} on_snippet_dropped_handlers
+ * If the resolved promise is a truthy value, cancel the drop
  * @typedef {((arg: { snippetEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_dragged_handlers
  * @typedef {((arg: { droppedEl: HTMLElement, dropzoneEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_dropped_near_handlers
  * @typedef {((arg: { droppedEl: HTMLElement, dragState: DragState }) => void)[]} on_snippet_dropped_over_handlers

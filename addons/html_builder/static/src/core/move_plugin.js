@@ -32,6 +32,7 @@ import { localization } from "@web/core/l10n/localization";
  */
 export class MovePlugin extends Plugin {
     static id = "move";
+    static dependencies = ["visibility"];
     static shared = ["getNeighbors"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -306,7 +307,7 @@ export class MovePlugin extends Plugin {
             (el) =>
                 el === target ||
                 (!el.classList.contains("o_we_no_overlay") &&
-                    window.getComputedStyle(el).display !== "none" &&
+                    !this.dependencies.visibility.isElementHidden(el) &&
                     (this.checkPredicates("is_move_neighbor_predicates", el) ?? true) &&
                     !el.closest(systemNodeSelectors))
         );
