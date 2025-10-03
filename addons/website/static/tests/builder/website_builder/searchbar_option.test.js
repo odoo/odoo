@@ -1,9 +1,12 @@
-import { after, beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -39,10 +42,7 @@ class SearchbarTestPlugin extends Plugin {
 }
 
 beforeEach(() => {
-    registry.category("website-plugins").add(SearchbarTestPlugin.id, SearchbarTestPlugin);
-    after(() => {
-        registry.category("website-plugins").remove(SearchbarTestPlugin);
-    });
+    addPlugin(SearchbarTestPlugin);
 });
 
 test("Available 'order by' options are updated after switching search type", async () => {
