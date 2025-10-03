@@ -19,6 +19,7 @@ export class BuilderButton extends Component {
         iconImgAlt: { type: String, optional: true },
         icon: { type: String, optional: true },
         className: { type: String, optional: true },
+        disabled: { type: Boolean, optional: true },
         classActive: { type: String, optional: true },
         style: { type: String, optional: true },
         type: { type: String, optional: true },
@@ -28,6 +29,7 @@ export class BuilderButton extends Component {
 
     static defaultProps = {
         type: "secondary",
+        disabled: false,
     };
 
     setup() {
