@@ -11,6 +11,7 @@
                     <group invisible="state != 'init'">
                         <field name="module_file" string="Module file (.zip)" options="{'accepted_file_extensions': '.zip'}" invisible="context.get('data_module')"/>
                         <field name="force" groups="base.group_no_one"/>
+                        <field name="major_upgrade" groups="base.group_no_one"/>
                         <field name="with_demo" string="Load demo data"/>
                     </group>
                     <group invisible="state != 'done'">

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import base64
 from io import BytesIO
-from odoo import api, fields, models
+
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 
 class BaseImportModule(models.TransientModel):
@@ -14,6 +16,7 @@ class BaseImportModule(models.TransientModel):
     import_message = fields.Text()
     force = fields.Boolean(string='Force init', help="Force init mode even if installed. (will update `noupdate='1'` records)")
     with_demo = fields.Boolean(string='Import demo data of module')
+    major_upgrade = fields.Boolean(string='Force upgrade', help="Force upgrade will upgrade module even if major version has changed. (may break your database)")
     modules_dependencies = fields.Text()
 
     def import_module(self):
@@ -22,7 +25,9 @@ class BaseImportModule(models.TransientModel):
         zip_data = base64.decodebytes(self.module_file)
         fp = BytesIO()
         fp.write(zip_data)
-        res = IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
+        if not self.major_upgrade and IrModule.is_major_version_different(fp):
+            raise UserError(_("Upgrade script is not available yet to update to new major version.\nTo enforce module upgrade at your own risk, set the force upgrade setting."))
+        IrModule._import_zipfile(fp, force=self.force, with_demo=self.with_demo)
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
