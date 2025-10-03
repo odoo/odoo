@@ -5,18 +5,24 @@ import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
 
-export class PhoneField extends Component {
-    static template = "web.PhoneField";
+export class Phone extends Component {
+    static template = "web.Phone";
     static props = {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
     };
 
-    setup() {
-        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
-    }
     get phoneHref() {
         return "tel:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
+    }
+}
+
+export class PhoneField extends Phone {
+    static template = "web.PhoneField";
+
+    setup() {
+        super.setup();
+        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
     }
 }
 
