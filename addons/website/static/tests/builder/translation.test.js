@@ -572,6 +572,188 @@ test("'Translate to' works with partial request failure", async () => {
     ]);
 });
 
+test("text with bold or italic tags should preserve spacing after translate with AI", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello <b>world</b>" }),
+    });
+    // Note that space in this response is intentional just to replicate how the
+    // AI will response.
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "Bonjour ",
+            },
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "le monde",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe .o_savable").toHaveInnerHTML("Hello <b>world</b>");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe .o_savable").toHaveInnerHTML("Bonjour <b>le monde</b>");
+});
+
+test("image's title and alt attribute with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <main>
+                <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" alt="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;545&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>alt text</span>"/>
+            </main>
+        `,
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "ta_" + parseInt(uniqueId() - 2),
+                text: "texte alt",
+            },
+            {
+                id: "ta_" + parseInt(uniqueId() - 2),
+                text: "titre",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe img").toHaveAttribute("title", "title");
+    expect(":iframe img").toHaveAttribute("alt", "alt text");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe img").toHaveAttribute("title", "titre");
+    expect(":iframe img").toHaveAttribute("alt", "texte alt");
+});
+
+test("input's placeholder attribute with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <main>
+                <input type="text" placeholder='<span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">Enter your name</span>' />
+            </main>
+        `,
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "ta_" + parseInt(uniqueId() - 1),
+                text: "Entrez votre nom",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe input").toHaveAttribute("placeholder", "Enter your name");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe input").toHaveAttribute("placeholder", "Entrez votre nom");
+});
+
+test("textArea's placeholder attribute and textContent with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <main>
+                <textarea name="textarea" class="form-control s_website_form_input" placeholder='<span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">Enter your message</span>'><span data-oe-model="ir.ui.view" data-oe-id="545" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">Your message here</span></textarea>
+            </main>
+        `,
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "ta_" + (parseInt(uniqueId()) - 2),
+                text: "Votre message ici",
+            },
+            {
+                id: "ta_" + (parseInt(uniqueId()) - 2),
+                text: "Entrez votre message",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe textarea").toHaveValue("Your message here");
+    expect(":iframe textarea").toHaveAttribute("placeholder", "Enter your message");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe textarea").toHaveValue("Votre message ici");
+    expect(":iframe textarea").toHaveAttribute("placeholder", "Entrez votre message");
+});
+
+test("avoid translating elements with same hash with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha: "1a1b1c" })}
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha: "1a1b1c" })}
+            ${getTranslateEditable({ inWrap: "Goodbye", sourceSha: "2b2c2d" })}
+        `,
+    });
+    onRpc("/html_editor/generate_text", async (data) => {
+        const { params } = await data.json();
+        const prompt = JSON.parse(params.prompt);
+        expect(prompt).toHaveLength(2);
+        return JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "Bonjour",
+            },
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "Au revoir",
+            },
+        ]);
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText("Bonjour");
+    expect(":iframe main:nth-child(2) .o_savable").toHaveText("Bonjour");
+    expect(":iframe main:nth-child(3) .o_savable").toHaveText("Au revoir");
+});
+
+test("elements marked as o_dirty should not be translated with 'Translate to' button", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha: "1a1b1c" })}
+            ${getTranslateEditable({ inWrap: "Goodbye", sourceSha: "2b2c2d" })}
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    const firstTextNode = queryOne(":iframe main:nth-child(1) .o_savable").firstChild;
+    setSelection({
+        anchorNode: firstTextNode,
+        anchorOffset: 0,
+        focusNode: firstTextNode,
+        focusOffset: firstTextNode.textContent.length,
+    });
+    await insertText(editor, "Bonjour");
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText("Bonjour");
+    onRpc("/html_editor/generate_text", async (data) => {
+        const { params } = await data.json();
+        const prompt = JSON.parse(params.prompt);
+        expect(prompt).toHaveLength(1);
+        return JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 1),
+                text: "Au revoir",
+            },
+        ]);
+    });
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText("Bonjour");
+    expect(":iframe main:nth-child(2) .o_savable").toHaveText("Au revoir");
+});
+
 test("trying to translate an element inside a .o_not_editable should add a notification", async () => {
     mockService("notification", {
         add(message, options = {}) {
