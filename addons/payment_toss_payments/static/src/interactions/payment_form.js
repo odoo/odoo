@@ -7,12 +7,13 @@ import { patch } from '@web/core/utils/patch';
 import { PaymentForm } from '@payment/interactions/payment_form';
 
 patch(PaymentForm.prototype, {
-    // #=== DOM MANIPULATION ===#
+
+    // === DOM MANIPULATION ===
 
     /**
-     * Prepare the Toss Payments SDK.
+     * Prepare the inline form of Toss Payments for direct payment.
      *
-     * @override method from @payment/js/payment_form
+     * @override method from payment.payment_form
      * @private
      * @param {number} providerId - The id of the selected payment option's provider.
      * @param {string} providerCode - The code of the selected payment option's provider.

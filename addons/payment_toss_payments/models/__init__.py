@@ -1,1 +1,3 @@
-from . import payment_provider, payment_transaction, res_partner
+from . import payment_provider
+from . import payment_transaction
+from . import res_partner

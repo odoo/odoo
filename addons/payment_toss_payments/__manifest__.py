@@ -2,15 +2,14 @@
 
 {
     'name': "Payment Provider: Toss Payments",
-    'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
-    'summary': "A Korean payment provider",
+    'summary': "A payment provider covering the South Korea market",
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_provider_views.xml',
-        'views/payment_toss_payments_template.xml',
+        'views/payment_toss_payments_templates.xml',
 
         'data/payment_provider_data.xml',
     ],

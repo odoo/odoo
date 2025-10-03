@@ -74,7 +74,7 @@ class PaymentProvider(models.Model):
         }
 
     def _parse_response_error(self, response):
-        """ Override of `payment` to parse error returned by the payment provider """
+        """"Override of `payment` to parse the error message."""
         if self.provider_code != 'tosspayments':
             return super()._parse_response_error(response)
 

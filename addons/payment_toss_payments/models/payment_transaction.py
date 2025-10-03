@@ -65,7 +65,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
-        """ Override of `payment` to extract reference from `payment_data` returned by the SDK.
+        """ Override of `payment` to extract reference from `payment_data` returned by the API.
 
         Note: `payment_data['orderId']` is base64 encoded `reference` value of the payment tx.
         """
