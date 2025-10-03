@@ -609,6 +609,19 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(params.get('message'), f"Users {employees[1].name} creation successful")
         self.assertTrue(employees[1].user_id)
 
+    def test_employee_phone_number_unchanged(self):
+        partner_A = self.env['res.partner'].create({'name': 'company_A', 'phone': '+32333333333'})
+        employee_A = self.env['hr.employee'].create({
+            'name': 'employee_A',
+            'work_phone': '+32222222222',
+            'address_id': partner_A.id,
+        })
+        self.assertEqual(employee_A.work_phone, '+32222222222')
+        partner_A.phone = '+32444444444'
+        self.assertEqual(employee_A.work_phone, '+32222222222')
+        employee_A._cron_update_current_version_id()
+        self.assertEqual(employee_A.work_phone, '+32222222222')
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
