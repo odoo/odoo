@@ -26,6 +26,25 @@ import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 
+/**
+ * Checks if the classes that changed during the mutation are all to be ignored.
+ * (The mutation can be discarded if it is the case, when filtering the mutation
+ * records).
+ *
+ * @param {Object} record the current mutation
+ * @param {Array} excludedClasses the classes to ignore
+ * @returns {Boolean}
+ */
+function checkForExcludedClasses(record, excludedClasses) {
+    const classBefore = (record.oldValue && record.oldValue.split(" ")) || [];
+    const classAfter = [...record.target.classList];
+    const changedClasses = [
+        ...classBefore.filter((c) => c && !classAfter.includes(c)),
+        ...classAfter.filter((c) => c && !classBefore.includes(c)),
+    ];
+    return changedClasses.every((c) => excludedClasses.includes(c));
+}
+
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
@@ -166,6 +185,100 @@ export class Builder extends Component {
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
                     can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
+
+                    savable_mutation_record_predicates: (record) => {
+                        // Dropdown attributes to ignore.
+                        const dropdownClasses = ["show"];
+                        const dropdownToggleAttributes = ["aria-expanded"];
+                        const dropdownMenuAttributes = [
+                            "data-popper-placement",
+                            "style",
+                            "data-bs-popper",
+                        ];
+                        // Offcanvas attributes to ignore.
+                        const offcanvasClasses = ["show"];
+                        const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+                        // Carousel attributes to ignore.
+                        const carouselSlidingClasses = [
+                            "carousel-item-start",
+                            "carousel-item-end",
+                            "carousel-item-next",
+                            "carousel-item-prev",
+                            "active",
+                            "o_carousel_sliding",
+                        ];
+                        const carouselIndicatorAttributes = ["aria-current"];
+
+                        if (record.type === "attributes") {
+                            if (record.target.closest("header#top")) {
+                                // Do not record when showing/hiding a dropdown.
+                                if (
+                                    record.target.matches(".dropdown-toggle, .dropdown-menu") &&
+                                    record.attributeName === "class"
+                                ) {
+                                    if (checkForExcludedClasses(record, dropdownClasses)) {
+                                        return false;
+                                    }
+                                } else if (
+                                    record.target.matches(".dropdown-menu") &&
+                                    dropdownMenuAttributes.includes(record.attributeName)
+                                ) {
+                                    return false;
+                                } else if (
+                                    record.target.matches(".dropdown-toggle") &&
+                                    dropdownToggleAttributes.includes(record.attributeName)
+                                ) {
+                                    return false;
+                                }
+
+                                // Do not record when showing/hiding an offcanvas.
+                                if (
+                                    record.target.matches(".offcanvas, .offcanvas-backdrop") &&
+                                    record.attributeName === "class"
+                                ) {
+                                    if (checkForExcludedClasses(record, offcanvasClasses)) {
+                                        return false;
+                                    }
+                                } else if (
+                                    record.target.matches(".offcanvas") &&
+                                    offcanvasAttributes.includes(record.attributeName)
+                                ) {
+                                    return false;
+                                }
+                            }
+
+                            // Do not record some carousel attributes changes.
+                            if (record.target.closest(":not(section) > .carousel")) {
+                                if (
+                                    record.target.matches(
+                                        ".carousel, .carousel-item, .carousel-indicators > *"
+                                    ) &&
+                                    record.attributeName === "class"
+                                ) {
+                                    if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                        return false;
+                                    }
+                                } else if (
+                                    record.target.matches(".carousel-indicators > *") &&
+                                    carouselIndicatorAttributes.includes(record.attributeName)
+                                ) {
+                                    return false;
+                                }
+                            }
+                        } else if (record.type === "childList") {
+                            const addedOrRemovedNode =
+                                record.addedNodes[0] || record.removedNodes[0];
+                            // Do not record the addition/removal of the offcanvas
+                            // backdrop or the image snippet placeholder.
+                            if (
+                                addedOrRemovedNode.nodeType === Node.ELEMENT_NODE &&
+                                addedOrRemovedNode.matches(".offcanvas-backdrop") // Check s_image legacy code
+                            ) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    },
 
                     // disable the toolbar for images and icons
                 },
