@@ -49,6 +49,7 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
+    static shared = ["getElToTranslationInfoMap"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -313,6 +314,10 @@ export class TranslationPlugin extends Plugin {
             });
         }
         this.dispatchTo("mark_translatable_nodes", this.editableEls);
+    }
+
+    getElToTranslationInfoMap() {
+        return this.elToTranslationInfoMap;
     }
 
     updateTranslationMap(translateEl, translation, attrName) {
