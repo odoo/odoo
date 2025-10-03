@@ -969,7 +969,7 @@ class PosOrder(models.Model):
         if self.company_id.anglo_saxon_accounting and self.picking_ids.ids:
             stock_moves = self.env['stock.move'].sudo().search([
                 ('picking_id', 'in', self.picking_ids.ids),
-                ('product_id.valuation', '=', 'real_time')
+                ('product_id.valuation', '=', 'real_time'),
             ])
             for stock_move in stock_moves:
                 product_accounts = stock_move.product_id._get_product_accounts()
