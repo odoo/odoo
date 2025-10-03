@@ -285,7 +285,7 @@ class ResPartner(models.Model):
             *self._get_store_avatar_fields(),
             *self._get_store_im_status_fields(),
             "is_company",
-            Store.One("main_user_id", ["share"]),
+            Store.One("main_user_id", ["share"], sudo=True),  # sudo: to access portal user of another company in chatter
             "name",
         ]
         if target.is_internal(self.env):
