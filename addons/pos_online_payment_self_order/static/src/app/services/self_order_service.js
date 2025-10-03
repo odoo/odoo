@@ -51,15 +51,4 @@ patch(SelfOrder.prototype, {
         const exit = encodeURIComponent(exitRouteUrl);
         return `${baseUrl}/pos/pay/${order_id}?access_token=${order_access_token}&exit_route=${exit}`;
     },
-    filterPaymentMethods(pms) {
-        const pm = super.filterPaymentMethods(...arguments);
-        const pmIds = this.config.payment_method_ids.map((o) => o.id);
-        const online_pms = pms.filter(
-            (rec) =>
-                rec.is_online_payment &&
-                (this.config.self_order_online_payment_method_id?.id === rec.id ||
-                    (this.config.self_ordering_mode === "kiosk" && pmIds.includes(rec.id)))
-        );
-        return [...new Set([...pm, ...online_pms])];
-    },
 });

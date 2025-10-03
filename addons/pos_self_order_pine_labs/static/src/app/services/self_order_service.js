@@ -21,14 +21,6 @@ patch(SelfOrder.prototype, {
         }
     },
 
-    filterPaymentMethods(pms) {
-        const filteredPaymentMethods = super.filterPaymentMethods(...arguments);
-        const pineLabsPaymentMethods = pms.filter(
-            (rec) => rec.use_payment_terminal === "pine_labs"
-        );
-        return [...new Set([...filteredPaymentMethods, ...pineLabsPaymentMethods])];
-    },
-
     handlePineLabsError(error, type) {
         this.paymentError = true;
         this.handleErrorNotification(error, type);

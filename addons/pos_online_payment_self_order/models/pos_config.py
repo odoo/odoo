@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from typing import Dict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
@@ -16,14 +15,8 @@ class PosConfig(models.Model):
             if config.self_ordering_mode == 'mobile' and config.self_ordering_service_mode == 'each' and config.self_order_online_payment_method_id and not config.self_order_online_payment_method_id._get_online_payment_providers(config.id, error_if_invalid=True):
                 raise ValidationError(_("The online payment method used for self-order in a POS config must have at least one published payment provider supporting the currency of that POS config."))
 
-    def _get_self_ordering_data(self):
-        res = super()._get_self_ordering_data()
-        payment_methods = self._get_self_ordering_payment_methods_data(self.self_order_online_payment_method_id)
-        res['pos_payment_methods'] += payment_methods
-        return res
-
     def has_valid_self_payment_method(self):
         res = super().has_valid_self_payment_method()
         if self.self_ordering_mode == 'mobile':
             return res or bool(self.self_order_online_payment_method_id)
-        return res or any(pm.is_online_payment for pm in self.payment_method_ids)
+        return res
