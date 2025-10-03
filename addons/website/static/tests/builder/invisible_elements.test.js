@@ -1,7 +1,7 @@
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { getSnippetStructure, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { unformat } from "@html_editor/../tests/_helpers/format";
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -165,4 +165,72 @@ test("invisible elements efficiency", async () => {
     expect.verifySteps(["update invisible panel"]);
     await contains("button[data-action='mobile']").click();
     expect.verifySteps(["update invisible panel"]);
+});
+
+describe("drop invisible elements", () => {
+    addDropZoneSelector({ selector: "*", dropNear: "section" });
+    const snippetDesktopInvisible = `
+         <div class="s_desktop_test o_snippet_desktop_invisible d-lg-none" data-snippet="s_desktop_test" data-name="Test desktop">
+             <span>Hello Mobile</span>
+         </div>`;
+    const snippetInnerDesktopInvisible = `
+         <div class="s_desktop_test" data-snippet="s_desktop_test" data-name="Test desktop">
+             <p>Hello <span class="o_snippet_desktop_invisible d-lg-none">Mobile</span></p>
+         </div>`;
+    const snippetConditionalInvisible = `
+         <div class="s_conditional_test o_conditional_hidden" data-visibility="conditional" data-snippet="s_conditional_test" data-name="Test conditional">
+             <p>Hello <span class="o_conditional_hidden" data-visibility="conditional">Sometimes</span></p>
+         </div>`;
+    function snippetsInfoWithSnippet(snippet) {
+        return {
+            snippet_groups: [
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: [
+                getSnippetStructure({
+                    name: "Test",
+                    groupName: "a",
+                    content: unformat(snippet),
+                }),
+            ],
+        };
+    }
+    describe("preview of snippet with invisible elements", () => {
+        test("elements with o_conditional_hidden are visible in snippet preview", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: snippetsInfoWithSnippet(snippetConditionalInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            expect(
+                ".o_add_snippet_dialog :iframe .s_conditional_test span:contains(Sometimes)"
+            ).toBeVisible();
+        });
+        test("snippet which are desktop invisible are visible in snippet preview", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: snippetsInfoWithSnippet(snippetDesktopInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            expect(
+                ".o_add_snippet_dialog :iframe .s_desktop_test span:contains(Hello Mobile)"
+            ).toBeVisible();
+        });
+        test("elements which are desktop invisible inside a snippet are invisible in snippet preview", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: snippetsInfoWithSnippet(snippetInnerDesktopInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            expect(
+                ".o_add_snippet_dialog :iframe .s_desktop_test span:contains(Mobile)"
+            ).not.toBeVisible();
+        });
+    });
 });
