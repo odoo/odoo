@@ -15,7 +15,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog = cls.env['blog.blog'].create({
             "name": 'aaa Blog Test',
             "subtitle": 'Blog Test Subtitle',
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
         })
 
         blog_tag = cls.env.ref('website_blog.blog_tag_2', raise_if_not_found=False)
@@ -28,7 +28,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             "author_id": cls.env.user.id,
             "tag_ids": [(4, blog_tag.id)],
             "is_published": True,
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
         })
 
     def test_admin(self):

@@ -17,11 +17,11 @@ class TestBlogPerformance(UtilPerf):
         blogs = self.env['blog.blog'].create([{
             "name": 'aaa Blog Test',
             "subtitle": 'Blog Test Subtitle',
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
         }, {
             "name": 'bbb Blog Test',
             "subtitle": 'Blog Test Subtitle',
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
         }])
 
         blog_tags = self.env['blog.tag'].create([{
@@ -36,7 +36,7 @@ class TestBlogPerformance(UtilPerf):
             "author_id": self.env.user.id,
             "tag_ids": [(4, tag.id) for tag in blog_tags],
             "is_published": True,
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
         } for blog in blogs])
 
     def test_10_perf_sql_blog_standard_data(self):
