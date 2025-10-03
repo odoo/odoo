@@ -775,9 +775,6 @@ class EventEvent(models.Model):
                 # (= the last selected time range or fallback on 12PM-1PM).
                 'default_start_hour': next_hour.hour,
                 'default_end_hour': (next_hour + timedelta(hours=1)).hour,
-                # To disable calendar days outside of event date range.
-                'event_calendar_range_start_date': self.date_begin.astimezone(ZoneInfo(self.date_tz)).date(),
-                'event_calendar_range_end_date': self.date_end.astimezone(ZoneInfo(self.date_tz)).date(),
                 # Calendar view initial date.
                 'initial_date': min(max(datetime.now(), self.date_begin), self.date_end),
             },
