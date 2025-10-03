@@ -90,6 +90,13 @@ export class RestaurantTable extends Base {
     get children() {
         return this["<-restaurant.table.parent_id"];
     }
+    get recursiveChildren() {
+        let children = [...this.children];
+        this.children.forEach((child) => {
+            children = children.concat(child.recursiveChildren);
+        });
+        return children;
+    }
     get rootTable() {
         let table = this;
         while (table.parent_id) {

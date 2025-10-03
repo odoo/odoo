@@ -43,9 +43,9 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(1, "Self-Order"),
-            TicketScreen.nthRowContains(1, "T 101"),
+            TicketScreen.nthRowContains(1, "T101"),
             TicketScreen.nthRowNotContains(2, "Self-Order"),
-            TicketScreen.nthRowContains(2, "T 103"),
+            TicketScreen.nthRowContains(2, "T103"),
         ].flat(),
 });
 

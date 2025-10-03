@@ -96,18 +96,14 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
 
                 orderline.setHasChange(true);
             } else {
-                if (quantityDiff) {
-                    orderline.setHasChange(false);
+                // If only note updated
+                if (noteChange) {
+                    lineDetails.quantity = orderline.qty;
+                    noteUpdate[lineKey] = lineDetails;
+                    orderline.setHasChange(true);
+                    changesCount += 1;
                 } else {
-                    // If only note updated
-                    if (noteChange) {
-                        lineDetails.quantity = orderline.qty;
-                        noteUpdate[lineKey] = lineDetails;
-                        orderline.setHasChange(true);
-                        changesCount += 1;
-                    } else {
-                        orderline.setHasChange(false);
-                    }
+                    orderline.setHasChange(false);
                 }
             }
         } else {

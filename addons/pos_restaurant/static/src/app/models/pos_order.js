@@ -40,18 +40,13 @@ patch(PosOrder.prototype, {
             if (this.isDirectSale) {
                 return _t("Direct Sale");
             }
-            if (this.getTable()) {
-                const table = this.getTable();
-                const child_tables = this.models["restaurant.table"].filter((t) => {
-                    if (t.floor_id && t.floor_id.id === table.floor_id.id) {
-                        return table.isParent(t);
-                    }
-                });
-                let name = "T " + table.table_number.toString();
-                for (const child_table of child_tables) {
-                    name += ` & ${child_table.table_number}`;
-                }
-                return name;
+            const table = this.getTable();
+            if (table) {
+                const children = table.recursiveChildren;
+                const tables = [table, ...children];
+
+                const tableNumbers = tables.map((t) => t.table_number).sort((a, b) => a - b);
+                return "T" + tableNumbers.join(" & ");
             }
         }
         return super.getName(...arguments);

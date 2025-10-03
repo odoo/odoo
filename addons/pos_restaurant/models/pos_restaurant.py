@@ -138,3 +138,20 @@ class RestaurantTable(models.Model):
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
             if confs:
                 raise UserError(error_msg)
+
+    def get_recursive_parent(self):
+        self.ensure_one()
+        if not self.parent_id:
+            return self
+        return self.parent_id.get_recursive_parent()
+
+    def get_children(self):
+        self.ensure_one()
+        return self.env['restaurant.table'].search([('parent_id', '=', self.id)])
+
+    def get_recursive_children(self):
+        self.ensure_one()
+        all_children = self.get_children()
+        for child in all_children:
+            all_children |= child.get_recursive_children()
+        return all_children
