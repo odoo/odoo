@@ -659,53 +659,6 @@ class TestPerformance(BaseCase):
         self.assertLess(entry_count, 5)  # ~3
 
 
-@tagged('-standard', 'profiling')
-class TestSyncRecorder(BaseCase):
-    # this test was made non standard because it can break for strange reason because of additionnal _remove or signal_handler frame
-    def test_sync_recorder(self):
-        if sys.gettrace() is not None:
-            self.skipTest(f'Cannot start SyncCollector, settrace already set: {sys.gettrace()}')
-
-        def a():
-            b()
-            c()
-
-        def b():
-            pass
-
-        def c():
-            d()
-            d()
-
-        def d():
-            pass
-
-        with Profiler(description='test', collectors=['traces_sync'], db=None) as p:
-            a()
-
-        stacks = [r['stack'] for r in p.collectors[0].entries]
-
-        # map stack frames to their function name, and check
-        stacks_methods = [[frame[2] for frame in stack] for stack in stacks]
-        self.assertEqual(stacks_methods[:-2], [
-            ['a'],
-            ['a', 'b'],
-            ['a'],
-            ['a', 'c'],
-            ['a', 'c', 'd'],
-            ['a', 'c'],
-            ['a', 'c', 'd'],
-            ['a', 'c'],
-            ['a'],
-            [],
-        ])
-
-        # map stack frames to their line number, and check
-        stacks_lines = [[frame[1] for frame in stack] for stack in stacks]
-        self.assertEqual(stacks_lines[1][0] + 1, stacks_lines[3][0],
-                         "Call of b() in a() should be one line before call of c()")
-
-
 @tagged('-standard', 'profiling_memory')
 class TestMemoryProfiler(HttpCase):
     def test_memory_profiler(self):

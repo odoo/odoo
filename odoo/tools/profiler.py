@@ -292,59 +292,7 @@ class MemoryCollector(_BasePeriodicCollector):
                 self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
 
 
-class SyncCollector(Collector):
-    """
-    Record complete execution synchronously.
-    Note that --limit-memory-hard may need to be increased when launching Odoo.
-    """
-    name = 'traces_sync'
-
-    def start(self):
-        if sys.gettrace() is not None:
-            _logger.error("Cannot start SyncCollector, settrace already set: %s", sys.gettrace())
-        assert not self._processed, "You cannot start SyncCollector after accessing entries."
-        sys.settrace(self.hook)  # todo test setprofile, but maybe not multithread safe
-
-    def stop(self):
-        sys.settrace(None)
-
-    def hook(self, _frame, event, _arg=None):
-        if event == 'line':
-            return
-        entry = {'event': event, 'frame': _format_frame(_frame)}
-        if event == 'call' and _frame.f_back:
-            # we need the parent frame to determine the line number of the call
-            entry['parent_frame'] = _format_frame(_frame.f_back)
-        self.progress(entry, frame=_frame)
-        return self.hook
-
-    def _get_stack_trace(self, frame=None):
-        # Getting the full stack trace is slow, and not useful in this case.
-        # SyncCollector only saves the top frame and event at each call and
-        # recomputes the complete stack at the end.
-        return None
-
-    def post_process(self):
-        # Transform the evented traces to full stack traces. This processing
-        # could be avoided since speedscope will transform that back to
-        # evented anyway, but it is actually simpler to integrate into the
-        # current speedscope logic, especially when mixed with SQLCollector.
-        # We could improve it by saving as evented and manage it later.
-        stack = []
-        for entry in self._entries:
-            frame = entry.pop('frame')
-            event = entry.pop('event')
-            if event == 'call':
-                if stack:
-                    stack[-1] = entry.pop('parent_frame')
-                stack.append(frame)
-            elif event == 'return':
-                stack.pop()
-            entry['stack'] = stack[:]
-        super().post_process()
-
-
-class QwebTracker():
+class QwebTracker:
 
     def __init__(self, view_id, arch, cr):
         current_thread = threading.current_thread()  # don't store current_thread on self
