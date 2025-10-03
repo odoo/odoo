@@ -3,7 +3,7 @@ import { registry } from '@web/core/registry';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class AddToCart extends Interaction {
-    static selector = '#add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit';
+    static selector = '#add_to_cart, #buy_now, .o_wsale_products_page button[name="add_to_cart"]';
     dynamicContent = {
         _root: { "t-on-click.prevent": this.locked(this.addToCart, true) },
     };
@@ -16,44 +16,37 @@ export class AddToCart extends Interaction {
     async addToCart(ev) {
         const el = ev.currentTarget;
         const form = wSaleUtils.getClosestProductForm(el);
-        this._updateRootProduct(form);
-        const isBuyNow = el.classList.contains('o_we_buy_now');
-        const isConfigured = el.parentElement.id === 'add_to_cart_wrap';
-        const showQuantity = Boolean(el.dataset.showQuantity);
-        return this.services['cart'].add(this.rootProduct, {
-            isBuyNow: isBuyNow,
-            isConfigured: isConfigured,
-            showQuantity: showQuantity,
-        });
-    }
 
-    /**
-     * Update the root product based on the info in the provided form.
-     *
-     * @param {HTMLFormElement} form - The product form.
-     */
-    _updateRootProduct(form) {
-        const productId = parseInt(
-            form.querySelector('input[type="hidden"][name="product_id"]')?.value
-        );
-        const productEl = form.closest('.js_product') ?? form;
-        const quantity = parseFloat(productEl.querySelector('input[name="add_qty"]')?.value);
-        const uomId = this._getUoMId(form);
-        const isCombo = form.querySelector(
-            'input[type="hidden"][name="product_type"]'
-        )?.value === 'combo';
-        this.rootProduct = {
-            ...(productId ? { productId: productId } : {}),
-            productTemplateId: parseInt(form.querySelector(
-                'input[type="hidden"][name="product_template_id"]',
-            ).value),
-            ...(quantity ? { quantity: quantity } : {}),
-            ...(uomId ? { uomId: uomId } : {}),
+        const quantity = await this.waitFor(this.services['cart'].add({
+            productTemplateId: parseInt(el.dataset.productTemplateId),
+            productId: parseInt(el.dataset.productId),
+            isCombo: el.dataset.productType === 'combo',
+            quantity: parseFloat(form.querySelector('input[name="add_qty"]')?.value) || 1,
+            uomId: parseInt(form.querySelector('input[name="uom_id"]:checked')?.value),
             ptavs: this._getSelectedPtavs(form),
             productCustomAttributeValues: this._getCustomPtavValues(form),
             noVariantAttributeValues: this._getSelectedNoVariantPtavs(form),
-            ...(isCombo ? { isCombo: isCombo } : {}),
-        };
+            ...this._getOptionalParams(form),
+        }, {
+            isBuyNow: el.id === 'buy_now',
+            isConfigured: el.parentElement.id === 'add_to_cart_wrap',
+            showQuantity: el.dataset.showQuantity === 'True',
+        }));
+
+        if (quantity > 0) {
+            el.dispatchEvent(new CustomEvent('product_added_to_cart', { bubbles: true }));
+        }
+
+        return quantity;
+    }
+
+    /**
+     * Hook to add optional params when adding a product to the cart.
+     *
+     * @param {HTMLFormElement} form - The product form.
+     */
+    _getOptionalParams(form) {
+        return {};
     }
 
     /**
@@ -103,10 +96,6 @@ export class AddToCart extends Interaction {
             'input.no_variant.js_variant_change:checked, select.no_variant.js_variant_change'
         );
         return Array.from(selectedNoVariantPtavElements).map(el => parseInt(el.value));
-    }
-
-    _getUoMId(element) {
-        return parseInt(element.querySelector('input[name="uom_id"]:checked')?.value)
     }
 }
 

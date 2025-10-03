@@ -4,7 +4,6 @@ import { registry } from '@web/core/registry';
 export class Tracking extends Interaction {
     static selector = '.oe_website_sale';
     dynamicContent = {
-        'form a.a-submit': { 't-on-click': this.onAddProductToCart },
         'a[href^="/shop/checkout"]': { 't-on-click': this.onCheckoutStart },
         'a[href^="/web/login?redirect"][href*="/shop/checkout"]': {
             't-on-click': this.onCustomerSignin,
@@ -62,13 +61,6 @@ export class Tracking extends Interaction {
             'items': productsTrackingInfo,
         };
         this._trackGa('event', 'add_to_cart', trackingInfo);
-    }
-
-    onAddProductToCart() {
-        const productId = this.el.querySelector('input[name="product_id"]')?.getAttribute('value');
-        if (productId) {
-            this._vpv('/stats/ecom/product_add_to_cart/' + productId);
-        }
     }
 
     onCheckoutStart() {

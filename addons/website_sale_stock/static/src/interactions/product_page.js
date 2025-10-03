@@ -18,6 +18,9 @@ patch(ProductPage.prototype, {
             '#product_stock_notification_form_submit_button': {
                 't-on-click': this.onClickSubmitProductStockNotificationForm.bind(this),
             },
+            'button[name="add_to_cart"]': {
+                't-on-product_added_to_cart': this._getCombinationInfo.bind(this),
+            }
         });
     },
 
@@ -30,8 +33,7 @@ patch(ProductPage.prototype, {
     },
 
     onClickSubmitProductStockNotificationForm(ev) {
-        const formEl = ev.currentTarget.closest('#stock_notification_form');
-        const productId = parseInt(formEl.querySelector('input[name="product_id"]').value);
+        const productId = parseInt(ev.currentTarget.dataset.productId);
         this._handleClickSubmitStockNotificationForm(ev, productId);
     },
 
