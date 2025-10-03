@@ -685,6 +685,9 @@ export class Rtc extends Record {
         if (Boolean(session.raisingHand) === active) {
             return;
         }
+        if (this.isHost && active) {
+            this.soundEffectsService.play("raise-hand");
+        }
         Object.assign(session, {
             raisingHand: active ? new Date() : undefined,
         });
@@ -1758,6 +1761,9 @@ export class Rtc extends Record {
      * @param {Boolean} raise
      */
     async raiseHand(raise) {
+        if (raise) {
+            this.soundEffectsService.play("raise-hand");
+        }
         if (this.isRemote) {
             this._remoteAction({ raisingHand: raise });
             return;
