@@ -30,10 +30,14 @@
                             <input class="form-control"
                                    id="stock_notification_input" name="email"
                                    type="text" placeholder="youremail@gmail.com" t-att-value="stock_notification_email? stock_notification_email: ''"/>
-                            <input name="product_id" type="hidden" t-att-value="product_id"/>
-                            <div id="product_stock_notification_form_submit_button" class="btn btn-primary">
+                            <button
+                                id="product_stock_notification_form_submit_button"
+                                type="button"
+                                class="btn btn-primary"
+                                t-att-data-product-id="product_id"
+                            >
                                 <i class="fa fa-paper-plane"/>
-                            </div>
+                            </button>
                         </div>
                         <div id="stock_notification_input_incorrect" class="d-none form-text text-danger">
                             Invalid email

@@ -312,8 +312,9 @@ export class ProductPage extends Interaction {
      */
     _toggleDisable(parent, isCombinationPossible) {
         parent.classList.toggle('css_not_available', !isCombinationPossible);
-        parent.querySelector('#add_to_cart')?.classList?.toggle('disabled', !isCombinationPossible);
-        parent.querySelector('.o_we_buy_now')?.classList?.toggle('disabled', !isCombinationPossible);
+        parent.querySelectorAll('#add_to_cart, #buy_now').forEach(
+            el => el.disabled = !isCombinationPossible
+        );
     }
 
     /**
@@ -326,22 +327,19 @@ export class ProductPage extends Interaction {
         const parent = ev.target.closest('.js_product');
         if (!parent) return Promise.resolve();
         const combination = wSaleUtils.getSelectedAttributeValues(parent);
+        const addToCart = parent.querySelector('#add_to_cart');
 
         const combinationInfo = await this.waitFor(rpc('/website_sale/get_combination_info', {
-            'product_template_id': parseInt(parent.querySelector('.product_template_id')?.value),
-            'product_id': parseInt(parent.querySelector('.product_id')?.value),
+            'product_template_id': parseInt(addToCart?.dataset?.productTemplateId),
+            'product_id': parseInt(addToCart?.dataset?.productId),
             'combination': combination,
-            'add_qty': parseInt(parent.querySelector('input[name="add_qty"]')?.value),
-            'uom_id': this._getUoMId(parent),
+            'add_qty': parseFloat(parent.querySelector('input[name="add_qty"]')?.value),
+            'uom_id': parseInt(parent.querySelector('input[name="uom_id"]:checked')?.value),
             'context': this.context,
             ...this._getOptionalCombinationInfoParams(parent),
         }));
         this._onChangeCombination(ev, parent, combinationInfo);
         this._checkExclusions(parent, combination);
-    }
-
-    _getUoMId(element) {
-        return parseInt(element.querySelector('input[name="uom_id"]:checked')?.value)
     }
 
     /**
@@ -626,9 +624,11 @@ export class ProductPage extends Interaction {
             productTags?.remove();
         }
 
-        const productIdInput = parent.querySelector('.product_id');
-        productIdInput.value = combination.product_id || 0;
-        productIdInput.dispatchEvent(new Event('change', { bubbles: true }));
+        const productIdElements = parent.querySelectorAll('[data-product-id]');
+        productIdElements.forEach(el => el.dataset.productId = combination.product_id || 0);
+        parent.dispatchEvent(new CustomEvent(
+            'product_changed', { detail: { productId: combination.product_id || 0 } }
+        ));
 
         this.handleCustomValues(ev.target);
     }

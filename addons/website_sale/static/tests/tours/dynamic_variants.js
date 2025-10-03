@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('website_sale.dynamic_variants', {
             trigger: '.oe_price .oe_currency_value:contains("0.00")',
         },
         {
-            trigger: 'body:has(input[type="hidden"][name="product_id"][value="0"])',
+            trigger: 'body:has(.js_product:not(:has([data-product-id])))',
         },
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart(),
