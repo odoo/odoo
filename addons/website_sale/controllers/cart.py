@@ -84,7 +84,7 @@ class Cart(PaymentPortal):
         self,
         product_template_id,
         product_id,
-        quantity=1.0,
+        quantity,
         uom_id=None,
         product_custom_attribute_values=None,
         no_variant_attribute_value_ids=None,
@@ -111,7 +111,8 @@ class Cart(PaymentPortal):
         :rtype: dict
         """
         order_sudo = request.cart or request.website._create_cart()
-        quantity = int(quantity)  # Do not allow float values in ecommerce by default
+        # Do not allow float values in ecommerce by default
+        quantity = (quantity and int(quantity)) or 1
 
         product = request.env['product.product'].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():

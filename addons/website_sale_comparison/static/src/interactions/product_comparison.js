@@ -15,7 +15,7 @@ export class ProductComparison extends Interaction {
 
     dynamicContent = {
         '.o_add_compare, .o_add_compare_dyn': { 't-on-click': this.addProduct },
-        'input.product_id': { 't-on-change': this.onChangeVariant },
+        '.js_product': { 't-on-product_changed': this.onProductChanged },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
     };
 
@@ -60,13 +60,13 @@ export class ProductComparison extends Interaction {
     /**
      * Enable/disable the "add to comparison" button based on the selected variant.
      *
-     * @param {Event} ev
+     * @param {CustomEvent} event
      */
-    onChangeVariant(ev) {
-        const input = ev.target;
-        const productId = input.value;
+    onProductChanged(event) {
+        const input = event.target;
         const button = input.closest('.js_product')?.querySelector('[data-action="o_comparelist"]');
         if (button) {
+        const { productId } = event.detail;
             const isDisabled = comparisonUtils.getComparisonProductIds().includes(
                 parseInt(productId)
             );

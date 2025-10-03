@@ -30,7 +30,8 @@ export class DynamicSnippetProductsOption extends BaseOptionComponent {
 }
 
 export function getContextualFilterDomain(editable) {
-    const productTemplateId = editable.querySelector("input.product_template_id");
-    const hasProductTemplateId = productTemplateId?.value;
-    return hasProductTemplateId ? [] : [["product_cross_selling", "=", false]];
+    const productTemplateId = parseInt(editable.querySelector(
+        ".js_product [data-product-template-id]"
+    )?.dataset?.productTemplateId);
+    return productTemplateId ? [] : [["product_cross_selling", "=", false]];
 }
