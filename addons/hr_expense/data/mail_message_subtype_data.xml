@@ -9,6 +9,13 @@
             <field name="description">Expense approved</field>
         </record>
 
+        <record id="mt_expense_posted" model="mail.message.subtype">
+            <field name="name">Posted</field>
+            <field name="res_model">hr.expense</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense posted</field>
+        </record>
+
         <record id="mt_expense_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
             <field name="res_model">hr.expense</field>
