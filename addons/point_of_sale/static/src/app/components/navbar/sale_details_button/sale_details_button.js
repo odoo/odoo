@@ -1,6 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
@@ -18,12 +17,18 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
             formatCurrency: pos.env.utils.formatCurrency,
         })
     );
-    const { successful, message } = await hardwareProxy.printer.printReceipt(report);
-    if (!successful) {
-        dialog.add(AlertDialog, {
-            title: message.title,
-            body: message.body,
-        });
+    try {
+        if (hardwareProxy.printer) {
+            const { successful, message } = await hardwareProxy.printer.printReceipt(report);
+            if (!successful) {
+                console.error("Error while printing sale details", message);
+                await pos.downloadSessionReport(report);
+            }
+        } else {
+            await pos.downloadSessionReport(report);
+        }
+    } catch (error) {
+        console.error("Error while printing sale details", error);
     }
 }
 export class SaleDetailsButton extends Component {
