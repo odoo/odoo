@@ -1641,7 +1641,7 @@ header {
 
 @if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
-        #wrapwrap {
+        #wrapwrap:has(> header) {
             // Two different website options might add padding:
             // - The sidebar header template
             // - The website layout template when different than 'full'
