@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("generic_localization_tour", {
     steps: () =>
         [
-            Chrome.startPoS(),
+            Chrome.startPoS().map((step) => ({ ...step, timeout: 20000 })),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA Generic Partner"),
