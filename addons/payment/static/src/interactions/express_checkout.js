@@ -22,6 +22,20 @@ export class ExpressCheckout extends Interaction {
         this.env.bus.addEventListener('cart_amount_changed', (ev) =>
             this._updateAmount(...ev.detail)
         );
+        // Monitor when the page is restored from the bfcache.
+        this.addListener(window, 'pageshow', this._onNavigationBack);
+    }
+
+    /**
+     * Reload the page when the page is restored from the bfcache.
+     *
+     * @param {PageTransitionEvent} event - The pageshow event.
+     * @private
+     */
+    _onNavigationBack(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
     }
 
     /**
