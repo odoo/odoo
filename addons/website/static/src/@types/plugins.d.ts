@@ -32,7 +32,7 @@ declare module "plugins" {
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
-    import { on_nodes_marked_translatable_handlers } from "@website/builder/plugins/translation/translation_plugin";
+    import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
@@ -61,6 +61,7 @@ declare module "plugins" {
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
         translateWebpageOption: TranslateWebpageOptionShared;
+        translation: TranslationShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;

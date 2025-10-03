@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TranslateAttributeOption">
+    <t t-foreach="this.state.availableAttributes" t-as="attribute" t-key="attribute_index">
+        <BuilderRow label="attribute.name"
+                    tooltip="attribute.tooltip">
+            <BuilderTextInput
+                action="'translateAttribute'"
+                actionParam="attribute.attribute"
+                placeholder="attribute.placeholder"/>
+        </BuilderRow>
+    </t>
+</t>
+
+<t t-inherit="website.TranslationBuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='translation_options']" position="after">
+        <translate_attribute_option
+            t-att-selector="translateAttributeOptionSelector"
+            editableOnly="false"/>
+        <translate_attribute_option
+            selector=".s_website_form_field"
+            t-att-applyTo="translateAttributeOptionSelector"
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>
