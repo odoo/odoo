@@ -79,10 +79,10 @@ class NotifyTests(TransactionCase):
                 while not stop_event.is_set():
                     if sel.select(timeout=5):
                         conn.poll()
-                        channels = json.loads(conn.notifies.pop().payload)
-                        _logger.info("[TEST_NOTIFY] 3. channels received: %s", channels)
-                        if notify_channels := [c for c in channels if c[0] == self.env.cr.dbname]:
-                            channels = notify_channels
+                        channels_received = json.loads(conn.notifies.pop().payload)
+                        _logger.info("[TEST_NOTIFY] 3. channels received: %s", channels_received)
+                        channels = [c for c in channels_received if c[0] == self.env.cr.dbname]
+                        if channels:
                             break
                 _logger.info("[TEST_NOTIFY] 4. exiting listen loop")
 
