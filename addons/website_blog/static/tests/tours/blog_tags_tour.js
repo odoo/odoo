@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add("blog_tags", {
             run: "click",
         },
         {
-            trigger: ":iframe .h1:contains(our latest posts)",
+            trigger: ":iframe html[data-view-xmlid='website_blog.blog_post_short']",
         },
         {
             content: "Click on the adventure tag",
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add("blog_tags", {
         },
         {
             content: "Verify we are still on the backend",
-            trigger: ":iframe span:contains(adventure) i[data-icon='label']",
+            trigger: ":iframe span:contains(adventure) i[data-icon='sell']",
         },
     ],
 });

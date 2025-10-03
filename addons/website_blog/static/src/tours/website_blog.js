@@ -50,6 +50,12 @@ registerWebsitePreviewTour("blog", {}, () => [
         trigger: `:iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
     },
     {
+        trigger: ":iframe .o_record_cover_container",
+        content: _t("Click on the cover to edit it."),
+        tooltipPosition: "top",
+        run: "click",
+    },
+    {
         trigger: "button[data-action-id='setCoverBackground'][title='Image']",
         content: markup(_t("Set a blog post <b>cover</b>.")),
         tooltipPosition: "top",
