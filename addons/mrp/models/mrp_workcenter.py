@@ -154,9 +154,26 @@ class MrpWorkcenter(models.Model):
 
     @api.depends('blocked_time', 'productive_time')
     def _compute_oee(self):
+        time_data = self.env['mrp.workcenter.productivity']._read_group(
+            [
+                ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
+                ('workcenter_id', 'in', self.ids),
+                ('date_end', '!=', False),
+            ],
+            ['loss_type', 'duration', 'workcenter_id'],
+            ['workcenter_id', 'loss_type'],
+            lazy=False,
+        )
         for order in self:
-            if order.productive_time:
-                order.oee = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
+            order_time_data = {
+                td['loss_type']: td['duration']
+                for td in time_data
+                if td['workcenter_id'][0] == order.id
+            }
+            if order_time_data.get('productive', 0) != 0:
+                productive_time = order_time_data['productive']
+                blocked_time = sum(duration for loss_type, duration in order_time_data.items() if loss_type != 'productive')
+                order.oee = round(productive_time * 100.0 / (productive_time + blocked_time), 2)
             else:
                 order.oee = 0.0
 
