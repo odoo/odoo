@@ -79,6 +79,16 @@
                         }
                     }
                 }
+
+                // Force visibility on root snippets if desktop/mobile invisible
+                // and on conditionally visible elements
+                &.o_snippet_desktop_invisible, &.o_snippet_mobile_invisible, &.o_conditional_hidden, & .o_conditional_hidden {
+                    display: block !important;
+
+                    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_three_quarter_height, &.o_full_screen_height {
+                        display: flex !important;
+                    }
+                }
             }
             &[data-label]:not([data-label=""])::before {
                 content: attr(data-label);
@@ -163,6 +173,8 @@
 
     &.o_add_snippets_preview--dark {
         .o_custom_snippet_edit {
+            --body-color: #{$white};
+
             color: $white;
         }
     }

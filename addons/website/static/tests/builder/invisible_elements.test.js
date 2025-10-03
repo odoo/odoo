@@ -5,8 +5,8 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { unformat } from "@html_editor/../tests/_helpers/format";
-import { expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
@@ -169,4 +169,159 @@ test("invisible elements efficiency", async () => {
     expect.verifySteps(["update invisible panel"]);
     await toggleMobilePreview();
     expect.verifySteps(["update invisible panel"]);
+});
+
+describe("drop invisible elements", () => {
+    addDropZoneSelector({ selector: "*", dropNear: "section" });
+    const snippetMobileInvisible = `
+        <section class="s_mobile_test o_snippet_mobile_invisible d-none d-lg-block" data-snippet="s_mobile_test" data-name="Test mobile">
+            <p>Hello Desktop</p>
+        </section>`;
+    const snippetDesktopInvisible = `
+        <section class="s_desktop_test o_snippet_desktop_invisible d-lg-none" data-snippet="s_desktop_test" data-name="Test desktop">
+            <p>Hello Mobile</p>
+        </section>`;
+    const snippetInnerDesktopInvisible = `
+        <section class="s_desktop_test" data-snippet="s_desktop_test" data-name="Test desktop">
+            <p>Hello All</p>
+            <section class="o_snippet_desktop_invisible d-lg-none">
+                <p>Hello Mobile</p>
+            </section>
+        </section>`;
+    const snippetConditionalInvisible = `
+        <section class="s_conditional_test o_conditional_hidden" data-visibility="conditional" data-snippet="s_conditional_test" data-name="Test conditional">
+            <p>Hello All</p>
+            <section class="o_conditional_hidden" data-visibility="conditional" data-snippet="s_inner_conditional_test">
+                <p>Hello Sometimes</p>
+            </section>
+        </section>`;
+    const snippetDesktopAndConditionalInvisible = `
+        <section class="s_desktop_and_conditional_test o_snippet_desktop_invisible d-lg-none o_conditional_hidden" data-visibility="conditional" data-snippet="s_desktop_and_conditional_test" data-name="Test desktop and conditional">
+            <p>Hello Mobile Sometimes</p>
+        </section>`;
+
+    function getSnippetInfos(snippet) {
+        return {
+            snippet_groups: [
+                '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+                '<div name="Custom" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: [
+                getSnippetStructure({
+                    name: "Test",
+                    groupName: "a",
+                    content: unformat(snippet),
+                }),
+            ],
+            snippet_custom: [
+                getSnippetStructure({
+                    name: "Custom Test",
+                    groupName: "custom",
+                    content: unformat(snippet),
+                }),
+            ],
+        };
+    }
+
+    describe("snippets shown with invisible elements in snippet dialog", () => {
+        test("elements with o_conditional_hidden are visible", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetConditionalInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=a] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            expect(
+                ".o_add_snippet_dialog :iframe .s_conditional_test p:contains(Sometimes)"
+            ).toBeVisible();
+        });
+
+        test("snippets which are desktop invisible are visible", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetDesktopInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=a] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            expect(
+                ".o_add_snippet_dialog :iframe .s_desktop_test p:contains(Hello Mobile)"
+            ).toBeVisible();
+        });
+
+        test("elements which are desktop invisible inside a snippet are invisible", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetInnerDesktopInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=a] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            expect(
+                ".o_add_snippet_dialog :iframe .s_desktop_test p:contains(Mobile)"
+            ).not.toBeVisible();
+        });
+    });
+
+    describe("invisible snippets have an indicator in snippet dialog telling they are invisible", () => {
+        test("mobile invisible snippet", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetMobileInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=custom] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            await waitFor(".o_add_snippet_dialog :iframe .o_custom_snippet_edit");
+            expect(
+                ".o_add_snippet_dialog :iframe .o_custom_snippet_edit .o_prefix_mobile_invisible"
+            ).toHaveCount(1);
+        });
+
+        test("desktop invisible snippet", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetDesktopInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=custom] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            await waitFor(".o_add_snippet_dialog :iframe .o_custom_snippet_edit");
+            expect(
+                ".o_add_snippet_dialog :iframe .o_custom_snippet_edit .o_prefix_desktop_invisible"
+            ).toHaveCount(1);
+        });
+
+        test("conditionally visible snippet", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetConditionalInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=custom] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            await waitFor(".o_add_snippet_dialog :iframe .o_custom_snippet_edit");
+            expect(
+                ".o_add_snippet_dialog :iframe .o_custom_snippet_edit .o_prefix_conditional"
+            ).toHaveCount(1);
+        });
+
+        test("both desktop invisible and conditionally visible snippet", async () => {
+            await setupWebsiteBuilder(`<section>test</section>`, {
+                snippets: getSnippetInfos(snippetDesktopAndConditionalInvisible),
+            });
+            await contains(
+                ".o-snippets-menu #snippet_groups div[data-snippet-group=custom] .o_snippet_thumbnail .o_snippet_thumbnail_area"
+            ).click();
+            await waitForSnippetDialog();
+            await waitFor(".o_add_snippet_dialog :iframe .o_custom_snippet_edit");
+            expect(
+                ".o_add_snippet_dialog :iframe .o_custom_snippet_edit .o_prefix_conditional"
+            ).toHaveCount(1);
+            expect(
+                ".o_add_snippet_dialog :iframe .o_custom_snippet_edit .o_prefix_desktop_invisible"
+            ).toHaveCount(1);
+        });
+    });
 });

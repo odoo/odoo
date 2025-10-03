@@ -25,7 +25,12 @@
                     <button t-if="snippet.moduleId" class="o_snippet_preview_install_btn btn text-white rounded-1 mx-auto p-2 bottom-50"
                             t-out="this.getButtonInstallName(snippet)"/>
                 </div>
-                <div t-if="snippet.isCustom" class="d-grid mt-2 mx-5 gap-2 d-md-flex justify-content-md-end o_custom_snippet_edit">
+                <div t-if="snippet.isCustom" class="d-grid mt-2 mx-5 gap-2 d-md-flex justify-content-md-end align-items-md-center o_custom_snippet_edit">
+                    <span t-foreach="this.getPrefixIcons(snippet.content)" t-as="icon" t-key="icon.keyClass" t-attf-class="me-2 #{icon.keyClass}" t-att-title="icon.title">
+                        <span class="visually-hidden" t-out="icon.title"/>
+                        <t t-if="icon.Component" t-component="icon.Component" t-props="icon.props"/>
+                        <t t-else="" t-out="icon.content"/>
+                    </span>
                     <span class="w-100" t-out="snippet.title"></span>
                     <button class="o_btn_reset me-md-2" t-on-click="() => this.onClickRename(snippet)" title="Rename">
                         <span class="visually-hidden" t-out="this.getRenameBtnLabel(snippet.title)"/>
