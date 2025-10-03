@@ -1,7 +1,16 @@
-.o_snippet_override_invisible {
+.o_snippet_mobile_invisible.o_snippet_override_invisible,
+.o_snippet_desktop_invisible.o_snippet_override_invisible {
     display: block !important;
     opacity: 70%;
     position: relative;
+
+    &::before {
+        position: absolute;
+        width: -webkit-fill-available;
+        width: -moz-available;
+        z-index: 100;
+        pointer-events: none;
+    }
 
     &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_three_quarter_height, &.o_full_screen_height {
         // e.g. Useful if "Height" option is enabled.
@@ -9,30 +18,20 @@
     }
 
     &::before {
-        position: absolute;
-        // Content is 0px wide => use available width.
-        width: -webkit-fill-available;
-        width: -moz-available;
         right: 20px;
-        z-index: 100;
         font-family: "Material Symbols Outlined";
         text-align: right;
         color: $o-we-color-accent;
-        pointer-events: none;
         content: "."; // Content is mandatory.
-    }
-
-    &.d-md-none::before, &.d-lg-none::before {
-        font-size: 50px;
-        content: "desktop_access_disabled";
-    }
-
-    &:not(.d-md-none):not(.d-lg-none)::before {
-        font-size: 30px;
-        content: "mobile_off";
     }
 }
 
-.o_conditional_hidden {
-    display: none !important;
+.o_snippet_mobile_invisible.o_snippet_override_invisible::before {
+    font-size: 30px;
+    content: "mobile_off";
+}
+
+.o_snippet_desktop_invisible.o_snippet_override_invisible::before {
+    font-size: 50px;
+    content: "desktop_access_disabled";
 }
