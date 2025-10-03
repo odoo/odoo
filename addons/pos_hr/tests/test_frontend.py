@@ -27,7 +27,6 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             "pin": False,
             'department_id': cls.env.ref('hr.dep_administration').id,
             'address_id': cls.env.ref('base.main_partner').id,
-            'structure_type_id': cls.env.ref('hr.structure_type_employee').id,
         })
 
         # Managers

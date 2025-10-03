@@ -13,7 +13,6 @@
                 <field name="currency_id" column_invisible="1"/>
                 <field name="wage" widget="monetary" optional="hide"/>
                 <field name="contract_type_id" optional="show"/>
-                <field name="structure_type_id" optional="hide"/>
                 <field name="job_id" optional="show"/>
                 <field name="department_id" optional="show"/>
                 <field name="hr_responsible_id" optional="hide"/>
@@ -39,7 +38,6 @@
                 <field name="currency_id" column_invisible="1"/>
                 <field name="wage" widget="monetary" optional="hide"/>
                 <field name="contract_type_id" optional="hide"/>
-                <field name="structure_type_id" optional="hide"/>
                 <field name="job_id" optional="show"/>
                 <field name="department_id" optional="show"/>
                 <field name="hr_responsible_id" optional="hide"/>
@@ -126,7 +124,6 @@
                 <filter string="Department" name="group_by_department" domain="[]" context="{'group_by': 'department_id'}"/>
                 <separator />
                 <filter string="Working Schedule" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
-                <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
             </search>
         </field>
     </record>

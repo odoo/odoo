@@ -376,8 +376,6 @@
                                                invisible="not has_country_contract_type" domain="[('country_id', '=', company_country_id)]"/>
                                         <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
                                                invisible="has_country_contract_type" domain="[('country_id', '=', False)]"/>
-                                        <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
-                                                domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
                                         <separator name="schedule" string="Schedule"/>
                                         <field name="resource_calendar_id" help="The default working hours are set in configuration." placeholder="Flexible"/>
@@ -633,7 +631,6 @@
                     <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type" optional="hide"/>
                     <field name="contract_type_id" optional="hide"/>
-                    <field name="structure_type_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="activity_date_deadline" widget="remaining_days" optional="show"/>
