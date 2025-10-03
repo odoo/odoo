@@ -24,7 +24,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
                  */
                 column["optional"] = ["in_invoice", "in_refund", "in_receipt"].includes(
                     this.props.list.evalContext.parent.move_type
-                )
+                ) && !this.props.list.evalContext.parent.is_self_billing
                     ? "hide"
                     : "show";
             }
