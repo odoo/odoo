@@ -50,6 +50,7 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
+    static shared = ["getElToTranslationInfoMap"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -321,6 +322,10 @@ export class TranslationPlugin extends Plugin {
         return new DOMParser()
             .parseFromString(translationHtml, "text/html")
             .querySelector("[data-oe-translation-source-sha]");
+    }
+
+    getElToTranslationInfoMap() {
+        return this.elToTranslationInfoMap;
     }
 
     updateTranslationMap(translateEl, translation, attrName) {
