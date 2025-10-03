@@ -68,6 +68,12 @@ class Delivery(WebsiteSale):
         """
         Monetary = request.env['ir.qweb.field.monetary']
         currency = order.currency_id
+        rendered_tax_lines = request.env['ir.ui.view']._render_template(
+            'website_sale.order_tax_lines',
+            {
+                'website_sale_order': order,
+            }
+        )
         return {
             'success': True,
             'is_free_delivery': not bool(order.amount_delivery),
@@ -78,9 +84,7 @@ class Delivery(WebsiteSale):
             'amount_untaxed': Monetary.value_to_html(
                 order.amount_untaxed, {'display_currency': currency}
             ),
-            'amount_tax': Monetary.value_to_html(
-                order.amount_tax, {'display_currency': currency}
-            ),
+            'amount_tax_lines': rendered_tax_lines,
             'amount_total': Monetary.value_to_html(
                 order.amount_total, {'display_currency': currency}
             ),

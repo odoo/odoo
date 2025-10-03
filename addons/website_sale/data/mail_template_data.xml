@@ -189,8 +189,16 @@
                                 <td style="padding-top: 4px; text-align: right; color: #495057;" width="100px" align="right"><t t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">-</t></td>
                             </tr>
                             <tr>
-                                <td style="padding: 4px 0 8px 0; color: #495057;">Taxes</td>
-                                <td style="padding: 4px 0 8px 0; text-align: right; color: #495057;" width="100px" align="right"><t t-out="format_amount(object.amount_tax, object.currency_id) or ''">-</t></td>
+                                <t t-if="object.tax_totals and object.tax_totals['subtotals']">
+                                        <t t-foreach="object.tax_totals['subtotals']" t-as="line">
+                                            <t t-foreach="line['tax_groups']" t-as="tax_line">
+                                                <tr>
+                                                    <td style="padding: 4px 0 8px 0; color: #495057;"><span t-out="tax_line['group_name']"/></td>
+                                                    <td style="padding: 4px 0 8px 0; text-align: right; color: #495057;" width="100px" align="right" t-out="format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''">$ 0.00</td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
                             </tr>
                             <tr>
                                 <td style="padding-top: 8px; border-top: 1px solid #343a40;"><strong>Total</strong></td>
