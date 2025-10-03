@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { AttributeTranslateDialog } from "../translation_components/attributeTranslateDialog";
 import { SelectTranslateDialog } from "../translation_components/selectTranslateDialog";
 import {
     localStorageNoDialogKey,
@@ -48,7 +47,7 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
-    static shared = ["updateTranslationMap"];
+    static shared = ["getTranslationInfo", "updateTranslationMap"];
 
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -285,16 +284,6 @@ export class TranslationPlugin extends Plugin {
                     );
                 }
             }
-            this.addDomListener(translateEl, "click", (ev) => {
-                const translateEl = ev.target;
-                const elToTranslationInfoMap = this.elToTranslationInfoMap;
-                this.dialogService.add(AttributeTranslateDialog, {
-                    node: translateEl,
-                    elToTranslationInfoMap: elToTranslationInfoMap,
-                    addStep: this.dependencies.history.addStep,
-                    applyCustomMutation: this.dependencies.history.applyCustomMutation,
-                });
-            });
         }
         for (const translateSelectEl of this.translateSelectEls) {
             this.addDomListener(translateSelectEl, "click", (ev) => {
@@ -320,6 +309,10 @@ export class TranslationPlugin extends Plugin {
                 }
             });
         }
+    }
+
+    getTranslationInfo(translateEl) {
+        return this.elToTranslationInfoMap.get(translateEl);
     }
 
     setupTranslationMap(translateEl, translation, attrName) {
