@@ -83,6 +83,13 @@ export class CallPreview extends Component {
                     this.disableBlur();
                 }
             });
+            onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
+                if (this.state.blurManager) {
+                    this.state.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
+                    this.state.blurManager.backgroundBlur =
+                        this.store.settings.backgroundBlurAmount;
+                }
+            });
             onWillDestroy(() => {
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
@@ -269,7 +276,7 @@ export class CallPreview extends Component {
         }
         try {
             this.state.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
-            this.videoRef.el.srcObject = this.state.blurManager.stream;
+            this.videoRef.el.srcObject = await this.state.blurManager.stream;
         } catch (_e) {
             this.notification.add(_e.message, { type: "warning" });
             this.disableBlur();
