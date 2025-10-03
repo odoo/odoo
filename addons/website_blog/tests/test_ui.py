@@ -17,7 +17,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog = cls.env['blog.blog'].create({
             "name": 'aaa Blog Test',
             "subtitle": 'Blog Test Subtitle',
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.jpeg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
         })
 
         blog_tag = cls.env.ref('website_blog.blog_tag_2', raise_if_not_found=False)
@@ -30,7 +30,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             "author_id": cls.env.user.partner_id.id,
             "tag_ids": [(4, blog_tag.id)],
             "is_published": True,
-            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
+            "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
         })
 
     def test_admin(self):
@@ -66,13 +66,13 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     def test_blog_social_image(self):
         with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             meta = self.blog_post.get_website_meta()
-            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.jpg')
-            self.blog_post.cover_properties = """{"background-image": "url(\\"/2.jpg\\")"}"""
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/website_blog/static/src/img/cover_1.webp')
+            self.blog_post.cover_properties = """{"background-image": "url(\\"/2.webp\\")"}"""
             meta = self.blog_post.get_website_meta()
-            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.jpg')
-            self.blog_post.cover_properties = """{"background-image": "url(/3.jpg)"}"""
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/2.webp')
+            self.blog_post.cover_properties = """{"background-image": "url(/3.webp)"}"""
             meta = self.blog_post.get_website_meta()
-            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.jpg')
+            self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/3.webp')
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
