@@ -207,8 +207,9 @@ test("translate attribute", async () => {
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
     await contains(":iframe img").click();
-    await contains(".modal .modal-body input").edit("titre");
-    await contains(".modal .btn:contains(Ok)").click();
+    await contains(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).edit("titre");
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(1);
     expect(resultSave[0]).toBe("titre");
@@ -229,8 +230,9 @@ test("translate attribute history", async () => {
     const wrapEl = getEditor().editable.querySelector("#wrap");
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
     await contains(":iframe img").click();
-    await contains(".modal .modal-body input").edit("titre");
-    await contains(".modal .btn:contains(Ok)").click();
+    await contains(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).edit("titre");
     const getImg = ({ titleName, translated }) =>
         `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_savable_attribute o_translatable_attribute${
             translated ? " oe_translated" : ""
@@ -239,7 +241,9 @@ test("translate attribute history", async () => {
     await contains(".o-snippets-menu button.fa-undo").click();
     expect(wrapEl).toHaveInnerHTML(getImg({ titleName: "title", translated: false }));
     await contains(":iframe img").click();
-    expect(".modal .modal-body input").toHaveValue("title");
+    expect(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).toHaveValue("title");
 });
 
 test("undo shortcut in translate", async () => {
@@ -492,7 +496,9 @@ test("it should be possible to translate the attribute of an image that has the 
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
     await contains(":iframe img").click();
-    expect(".modal .modal-body input").toHaveCount(1);
+    expect(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).toHaveCount(1);
 });
 
 test("Ensure the contenteditable attributes have been set before the TranslationPlugin checks for the node to be translated", async () => {
