@@ -2,6 +2,7 @@ import { markup, toRaw } from "@odoo/owl";
 import {
     IS_DELETED_SYM,
     OR_SYM,
+    fieldsToDelete,
     isCommand,
     isMany,
     isOne,
@@ -367,15 +368,6 @@ export class Record {
     }
 
     _cleanupData(data) {
-        const fieldsToDelete = [
-            "_",
-            "_fieldsValue",
-            "_proxy",
-            "_proxyInternal",
-            "_raw",
-            "env",
-            "Model",
-        ];
         fieldsToDelete.forEach((field) => delete data[field]);
     }
 

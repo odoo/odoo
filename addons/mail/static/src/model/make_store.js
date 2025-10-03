@@ -1,6 +1,14 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { Store } from "./store";
-import { STORE_SYM, isFieldDefinition, isMany, isRelation, modelRegistry } from "./misc";
+import {
+    STORE_SYM,
+    fields,
+    fieldsToDelete,
+    isFieldDefinition,
+    isMany,
+    isRelation,
+    modelRegistry,
+} from "./misc";
 import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
@@ -151,8 +159,13 @@ export function makeStore(env, { localRegistry } = {}) {
         const obj = new OgClass();
         obj.setup();
         for (const [name, val] of Object.entries(obj)) {
-            if (isFieldDefinition(val)) {
-                Model._.prepareField(name, val);
+            let val2 = val;
+            if (!isFieldDefinition(val) && !fieldsToDelete.includes(name)) {
+                val2 = fields.Attr(val);
+                obj[name] = val2;
+            }
+            if (isFieldDefinition(val2)) {
+                Model._.prepareField(name, val2);
             }
         }
     }

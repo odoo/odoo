@@ -3,6 +3,16 @@ import { registry } from "@web/core/registry";
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
+export const fieldsToDelete = [
+    "_",
+    "_fieldsValue",
+    "_proxy",
+    "_proxyInternal",
+    "_raw",
+    "env",
+    "Model",
+];
+
 export const modelRegistry = registry.category("discuss.model");
 
 export const FIELD_DEFINITION_SYM = Symbol("field_definition");
