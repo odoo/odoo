@@ -34,7 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
             if indian_company.state_id:
                 for inv_ref in invoices:
                     move = self.with_company(indian_company).ref(inv_ref, raise_if_not_found=False)
-                    if move and not move.l10n_in_ewaybill_ids:
+                    if move:
                         ewaybill_vals.append({
                             **default_ewaybill_vals,
                             'account_move_id': move.id,
