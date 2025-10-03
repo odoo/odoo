@@ -15,7 +15,7 @@ registry.category("website-options").add(PopupOption.id, PopupOption);
 
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "domObserver", "popupVisibilityPlugin"];
+    static dependencies = ["anchor"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -39,7 +39,6 @@ export class PopupOptionPlugin extends Plugin {
         on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
         on_snippet_out_dropzone_handlers: this.onSnippetOutDropzone.bind(this),
         on_snippet_inserted_handlers: this.onSnippetInserted.bind(this),
-        on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
         anchor_excluded_selectors: ".s_popup",
     };
@@ -60,14 +59,6 @@ export class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.domObserver.stageCustomMutation({
-                apply: () => {
-                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
-                },
-                revert: () => {
-                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, false);
-                },
-            });
         }
     }
 
@@ -118,18 +109,6 @@ export class PopupOptionPlugin extends Plugin {
             modalContentEl.removeAttribute("data-editor-message");
         }
         modalContentEl.classList.toggle("oe_structure_empty_message", showEmptyMessage);
-    }
-
-    onWillRemove(el) {
-        this.dependencies.visibility.toggleTargetVisibility(el, false);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => {
-                this.dependencies.visibility.toggleTargetVisibility(el, false);
-            },
-            revert: () => {
-                this.dependencies.visibility.toggleTargetVisibility(el, true);
-            },
-        });
     }
 
     onRemoved({ nextTargetEl }) {
