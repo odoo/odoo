@@ -9,7 +9,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
     read_events: {
         'click .send_validation_email': 'async _onSendValidationEmailClick',
-        'click .validated_email_close': '_onCloseValidatedEmailClick',
+        'close.bs.alert div:has(button.validated_email_close)': '_onCloseValidatedEmailClick',
     },
 
     //--------------------------------------------------------------------------

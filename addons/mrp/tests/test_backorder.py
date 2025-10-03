@@ -1002,8 +1002,8 @@ class TestMrpWorkorderBackorder(TransactionCase):
         op_6.button_finish()
         bo_2.button_mark_done()
         self.assertRecordValues(bo_2.workorder_ids, [
-            {'state': 'cancel', 'qty_remaining': 0.0},
-            {'state': 'done', 'qty_remaining': 0.0}
+            {'state': 'cancel', 'qty_remaining': 0.0, 'duration': 0.0},
+            {'state': 'done', 'qty_remaining': 0.0, 'duration': 240.0}
         ])
 
     def test_kit_bom_order_splitting(self):
