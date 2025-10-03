@@ -118,13 +118,17 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 'schemeID': commercial_partner.peppol_eas
             }
 
-        if commercial_partner.country_code == 'NL':
-            party_node['cac:PartyIdentification'] = [
-                party_node['cac:PartyIdentification'],
-                {
-                    'cbc:ID': {'_text': commercial_partner.peppol_endpoint}
-                }
-            ]
+        if commercial_partner.country_code == 'NL' and commercial_partner.peppol_endpoint:
+            # [UBL-SR-16] Buyer identifier shall occur maximum once
+            if role == 'customer':
+                party_node['cac:PartyIdentification'] = [{'cbc:ID': {'_text': commercial_partner.peppol_endpoint}}]
+            else:
+                party_node['cac:PartyIdentification'] = [
+                    party_node['cac:PartyIdentification'],
+                    {
+                        'cbc:ID': {'_text': commercial_partner.peppol_endpoint}
+                    }
+                ]
 
         party_node['cac:PartyTaxScheme'] = party_tax_scheme = [
             {
