@@ -49,7 +49,7 @@
                     onChange.bind="onExpDateChange" />
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="addBalance" t-att-disabled="state.loading">
+                <button class="btn btn-primary" t-on-click="addBalance" t-att-disabled="state.loading">
                     <t t-if="state.lockGiftCardFields">
                         Add existing Gift Card
                     </t>
