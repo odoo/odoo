@@ -127,8 +127,15 @@ class IrHttp(models.AbstractModel):
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
+        middleware_endpoint = None
+        rules = super()._generate_routing_rules(modules, converters)
+        all_rules = list(rules)
+        for url, endpoint in all_rules:
+            if url == '/rewrite/conditional_redirect':
+                middleware_endpoint = endpoint
+                break
 
-        for url, endpoint in super()._generate_routing_rules(modules, converters):
+        for url, endpoint in all_rules:
             if url in rewrites:
                 rewrite = rewrites[url]
                 url_to = rewrite.url_to
@@ -145,8 +152,13 @@ class IrHttp(models.AbstractModel):
                         redirect_endpoint.routing = dict(endpoint.routing, redirect_to=_slug_matching)
                         yield url, redirect_endpoint  # yield original redirected to new url
                 elif rewrite.redirect_type == '404':
-                    logger.debug('Return 404 for %s for website %s' % (url, website_id))
-                    continue
+                    if middleware_endpoint:
+                        handler_with_fallback = functools.partial(middleware_endpoint, original_endpoint=endpoint)
+                        functools.update_wrapper(handler_with_fallback, middleware_endpoint)
+                        yield url, handler_with_fallback
+                    else:
+                        logger.warning('Middleware endpoint not found, dropping 404 rule for %s', url)
+                        continue
             else:
                 yield url, endpoint
 
@@ -351,7 +363,22 @@ class IrHttp(models.AbstractModel):
             & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
             & request.website.website_domain()
         )
-        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        redirect_rule = request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        if not redirect_rule:
+            return False
+        user_groups = request.env.user.group_ids
+        apply_to = redirect_rule.apply_to_group
+        rule_groups = redirect_rule.user_group_ids
+
+        # Determine if the rewrite rule should be applied to the current user
+        should_apply_rule = (
+            apply_to == 'all_users' or
+            (apply_to == 'has_group' and user_groups & rule_groups) or
+            (apply_to == 'not_in_group' and not (user_groups & rule_groups))
+        )
+        if should_apply_rule:
+            return redirect_rule
+        return False
 
     @classmethod
     def _serve_fallback(cls):
