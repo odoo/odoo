@@ -8,9 +8,11 @@ import { useService } from "@web/core/utils/hooks";
 const { DateTime } = luxon;
 
 export class EventSlotCalendarController extends CalendarController {
+    static template = "event.EventSlotCalendarController";
 
     setup() {
         super.setup();
+        this.actionService = useService("action");
         this.dialogService = useService("dialog");
     }
 
@@ -107,6 +109,27 @@ export class EventSlotCalendarController extends CalendarController {
             },
             title: _t("New Slot"),
         };
+    }
+
+    /**
+     * On mobile and desktop:
+     * - Add a "New" button for single record creation.
+     * - Raise validation error if slot is outside of the event time range.
+     */
+    onClickAddButton() {
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: _t("New Slot"),
+                res_model: "event.slot",
+                views: [[false, "form"]],
+                target: "new",
+            },
+            {
+                additionalContext: this.props.context,
+                onClose: () => this.model.load(),
+            }
+        );
     }
 
     /**
