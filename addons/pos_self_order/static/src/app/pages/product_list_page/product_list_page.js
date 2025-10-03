@@ -32,7 +32,10 @@ export class ProductListPage extends Component {
         }
         const availableCategories = this.selfOrder.availableCategories;
         const topCategories = availableCategories.filter((category) => !category.parent_id);
-        const selectedCategory = initCategories ? topCategories[0] : this.selfOrder.currentCategory;
+        const selectedCategory =
+            initCategories && topCategories.length > 0
+                ? topCategories[0]
+                : this.selfOrder.currentCategory;
 
         this.state = useState({
             selectedCategory: selectedCategory,

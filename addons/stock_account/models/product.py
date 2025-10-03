@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
             ('periodic', 'Periodic (at closing)'),
             ('real_time', 'Perpetual (at invoicing)'),
         ],
-        compute='_compute_valuation',
+        compute='_compute_valuation', search='_search_valuation',
     )
     lot_valuated = fields.Boolean(
         string="Valuation by Lot/Serial",
@@ -39,6 +39,13 @@ class ProductTemplate(models.Model):
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
+
+    def _search_valuation(self, operator, value):
+        if operator != '=' or value not in ['periodic', 'real_time']:
+            raise UserError(_("Invalid search on valuation"))
+        domain_categ = Domain([('categ_id.property_valuation', operator, value)])
+        domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), ('company_id.inventory_valuation', operator, value)])
+        return domain_company | domain_categ
 
     @api.depends('tracking')
     def _compute_lot_valuated(self):
@@ -65,11 +72,20 @@ class ProductTemplate(models.Model):
                 product_template.company_id).property_valuation or self.env.company.inventory_valuation
 
     def write(self, vals):
+        product_to_update = set()
+        if 'categ_id' in vals:
+            category = self.env['product.category'].browse(vals['categ_id'])
+            valuation = category.property_valuation if category else self.env.company.inventory_valuation
+            for product in self:
+                if product.valuation != valuation:
+                    product_to_update.update(product.product_variant_ids.ids)
         res = super().write(vals)
         if 'lot_valuated' in vals:
             self.env['stock.lot'].search([
                 ('product_id', 'in', self.product_variant_ids.ids),
             ])._update_standard_price()
+        if 'product_to_update':
+            self.env['product.product'].browse(product_to_update)._update_standard_price()
         return res
 
     # -------------------------------------------------------------------------
@@ -119,6 +135,7 @@ class ProductProduct(models.Model):
              "to the totaled value of the product's valuation layers")
 
     @api.depends_context('to_date', 'company')
+    @api.depends('cost_method', 'stock_move_ids.value')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
@@ -287,7 +304,43 @@ class ProductProduct(models.Model):
 
         return avco_value, avco_total_value
 
+    def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
+        """ Returns the value for the next outgoing product base on the qty give as argument."""
+        self.ensure_one()
+        external_location = location and location.is_valued_external
+
+        fifo_cost = 0
+        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
+        last_move = False
+        # Going up to get the quantity in the argument
+        while quantity > 0 and fifo_stack:
+            move = fifo_stack.pop(0)
+            last_move = move
+            if qty_on_first_move:
+                valued_qty = move._get_valued_qty()
+                in_qty = qty_on_first_move
+                in_value = move.value * in_qty / valued_qty
+                qty_on_first_move = 0
+            else:
+                in_qty = move._get_valued_qty()
+                in_value = move.value
+            if at_date and not external_location:
+                in_value = move._get_value(at_date=at_date)
+            if in_qty > quantity:
+                in_value = in_value * quantity / in_qty
+                in_qty = quantity
+            fifo_cost += in_value
+            quantity -= in_qty
+        # When we required more quantity than available we extrapolate with the last known price
+        if quantity > 0:
+            if last_move:
+                fifo_cost += quantity * last_move.value
+            else:
+                fifo_cost += quantity * self.standard_price
+        return fifo_cost
+
     def _run_fifo_get_stack(self, lot=None, at_date=None, location=None):
+        # TODO: return a list of tuple (move, valued_qty) instead
         external_location = location and location.is_valued_external
         fifo_stack = []
         fifo_stack_size = 0
@@ -315,10 +368,15 @@ class ProductProduct(models.Model):
         else:
             moves_domain &= Domain([('is_in', '=', True)])
 
-        moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', limit=fifo_stack_size * 10)
-        # TODO: fetch more if 10 times quantity is not enough
+        # Base limit to 100 to avoid issue with other UoM than Unit
+        initial_limit = fifo_stack_size * 10
+        unit_uom = self.env.ref('uom.product_uom_unit', raise_if_not_found=False)
+        if unit_uom and self.uom_id != unit_uom:
+            initial_limit = max(initial_limit, 100)
+        moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', limit=initial_limit)
 
         remaining_qty_on_first_stack_move = 0
+        current_offset = 0
         # Go to the bottom of the stack
         while fifo_stack_size > 0 and moves_in:
             move = moves_in[0]
@@ -327,35 +385,12 @@ class ProductProduct(models.Model):
             fifo_stack.append(move)
             remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
+            if fifo_stack_size > 0 and not moves_in:
+                # We need to fetch more moves
+                current_offset += 1
+                moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', offset=current_offset * initial_limit, limit=initial_limit)
         fifo_stack.reverse()
         return fifo_stack, remaining_qty_on_first_stack_move
-
-    def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
-        """ Returns the value for the next outgoing product base on the qty give as argument."""
-        self.ensure_one()
-        external_location = location and location.is_valued_external
-
-        fifo_cost = 0
-        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
-        # Going up to get the quantity in the argument
-        while quantity > 0 and fifo_stack:
-            move = fifo_stack.pop(0)
-            if qty_on_first_move:
-                valued_qty = move._get_valued_qty()
-                in_qty = qty_on_first_move
-                in_value = move.value * in_qty / valued_qty
-                qty_on_first_move = 0
-            else:
-                in_qty = move._get_valued_qty()
-                in_value = move.value
-            if at_date and not external_location:
-                in_value = move._get_value(at_date=at_date)
-            if in_qty > quantity:
-                in_value = in_value * quantity / in_qty
-                in_qty = quantity
-            fifo_cost += in_value
-            quantity -= in_qty
-        return fifo_cost
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
@@ -364,9 +399,14 @@ class ProductProduct(models.Model):
                 continue
             elif product.cost_method == 'fifo':
                 fifo_price = product.total_value / product.qty_available if product.qty_available else 0
-                product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
+                if fifo_price != 0:
+                    product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
+                elif last_in := self.env['stock.move'].search([('is_in', '=', True), ('product_id', '=', product.id)], order='date desc, id desc', limit=1):
+                    product.with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
                 continue
-            product.with_context(disable_auto_revaluation=True).standard_price = product._run_avco()[0]
+            new_standard_price = product._run_avco()[0]
+            if new_standard_price:
+                product.with_context(disable_auto_revaluation=True).standard_price = new_standard_price
 
 
 class ProductCategory(models.Model):
@@ -415,3 +455,14 @@ class ProductCategory(models.Model):
     @api.depends_context('company')
     def _compute_anglo_saxon_accounting(self):
         self.anglo_saxon_accounting = self.env.company.anglo_saxon_accounting
+
+    def write(self, vals):
+        products_to_update = self.env['product.product']
+        if 'property_cost_method' in vals:
+            updated_categories = self.filtered(lambda c: c.property_cost_method != vals['property_cost_method'])
+            if updated_categories:
+                products_to_update = self.env['product.product'].search([('categ_id', 'in', updated_categories.ids)])
+        res = super().write(vals)
+        if products_to_update:
+            products_to_update._update_standard_price()
+        return res

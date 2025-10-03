@@ -3648,7 +3648,7 @@ class BaseModel(metaclass=MetaModel):
             for lang, _translations in translations.items():
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
-                new_values[lang] = field.translate(_new_translations.get, old_source_lang_value)
+                new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
             field._update_cache(self.with_context(prefetch_langs=True), new_values, dirty=True)
 
         # the following write is incharge of

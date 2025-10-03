@@ -18,6 +18,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'company_id': False,
         })
         cls.env['res.currency.rate'].search([]).unlink()
+        cls.customer = cls.env['res.partner'].create({
+            'name': 'Customer',
+        })
 
     #########
     # UTILS #
@@ -26,8 +29,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def _create_sale_order(self):
         return self.env['sale.order'].create({
             'name': 'Sale order',
-            'partner_id': self.env.ref('base.partner_admin').id,
-            'partner_invoice_id': self.env.ref('base.partner_admin').id,
+            'partner_id': self.customer.id,
+            'partner_invoice_id': self.customer.id,
             'pricelist_id': self.pricelist.id,
         })
 
@@ -257,6 +260,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.pricelist.currency_id = new_company_currency.id
 
         product = self._create_product()
+        product.categ_id.property_cost_method = 'fifo'
+        product.standard_price = 100
 
         incoming_picking_type = self.env['stock.picking.type'].search([('company_id', '=', new_company.id), ('code', '=', 'incoming')], limit=1)
         production_location = self.env['stock.location'].search([('company_id', '=', new_company.id), ('usage', '=', 'production')])
@@ -272,13 +277,11 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'location_dest_id': incoming_picking_type.default_location_dest_id.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': 100,
             'picking_type_id': incoming_picking_type.id,
             'picking_id': picking.id,
         })
         picking.action_confirm()
         picking.button_validate()
-
         self.pricelist.currency_id = new_company_currency.id
         partner = self.env['res.partner'].create({'name': 'Super Partner'})
         so = self.env['sale.order'].create({

@@ -98,6 +98,10 @@ class StockMove(models.Model):
             else:
                 move.remaining_value = move.remaining_qty * move.with_company(move.company_id).standard_price
 
+    def _inverse_picked(self):
+        super()._inverse_picked()
+        self.sudo()._create_analytic_move()
+
     def _inverse_value_manual(self):
         for move in self:
             if move.value_manual == move.value:
@@ -133,6 +137,7 @@ class StockMove(models.Model):
         moves._create_account_move()
         # Update standard price on outgoing fifo products
         moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo')._update_standard_price()
+        (moves_in | moves_out).sudo()._create_analytic_move()
         return moves
 
     def _create_account_move(self):
@@ -152,6 +157,12 @@ class StockMove(models.Model):
         self.env['stock.move'].browse(move_to_link).account_move_id = account_move.id
         account_move._post()
         return account_move
+
+    def _create_analytic_move(self):
+        for move in self:
+            analytic_line_vals = move._prepare_analytic_lines()
+            if analytic_line_vals:
+                move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
 
     def _get_account_move_line_vals(self):
         if self.location_id.valuation_account_id:
@@ -174,21 +185,16 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
         }]
 
-    def _get_average_price_unit(self):
-        if len(self.product_id) > 1:
-            return 0
-        # TODO handle returns ect
-        total_value = sum(self.mapped('value'))
-        total_qty = sum(m._get_valued_qty() for m in self)
-        return total_value / total_qty if total_qty else self.product_id.standard_price
+    def _get_analytic_distribution(self):
+        return {}
 
     def _get_price_unit(self):
         """ Returns the unit price to value this stock move """
-        self.ensure_one()
-        # TODO: Don't use self.quantity but real valued quantity
-        if not self._get_valued_qty():
-            return 0.0
-        return self._get_value() / self._get_valued_qty()
+        if len(self.product_id) > 1:
+            return 0
+        total_value = sum(self.mapped('value'))
+        total_qty = sum(m._get_valued_qty() for m in self)
+        return total_value / total_qty if total_qty else self.product_id.standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -471,6 +477,52 @@ class StockMove(models.Model):
         self.ensure_one()
         return (self.location_id.usage == 'customer' or (self.location_id.usage == 'transit' and not self.location_id.company_id)) \
            and (self.location_dest_id.usage == 'supplier' or (self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id))
+
+    def _prepare_analytic_lines(self):
+        self.ensure_one()
+        if not self._get_analytic_distribution() and not self.analytic_account_line_ids:
+            return False
+
+        if self.state in ['cancel', 'draft']:
+            return False
+        amount, unit_amount = 0, 0
+
+        if self.state != 'done':
+            if self.picked:
+                unit_amount = self.product_uom._compute_quantity(
+                    self.quantity, self.product_id.uom_id)
+                # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
+                # we would have to recompute all the analytic estimation at each out.
+                amount = unit_amount * self.product_id.standard_price
+            else:
+                return False
+        else:
+            amount = self.value
+            unit_amount = self._get_valued_qty()
+
+        if self._is_out():
+            amount = -amount
+
+        if self.analytic_account_line_ids and amount == 0 and unit_amount == 0:
+            self.analytic_account_line_ids.unlink()
+            return False
+
+        return self.env['account.analytic.account']._perform_analytic_distribution(
+            self._get_analytic_distribution(), amount, unit_amount, self.analytic_account_line_ids, self)
+
+    def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
+        self.ensure_one()
+        return {
+            'name': self.reference,
+            'amount': amount,
+            **account_field_values,
+            'unit_amount': unit_amount,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_id.uom_id.id,
+            'company_id': self.company_id.id,
+            'ref': self._description,
+            'category': 'other',
+        }
 
     def _should_create_account_move(self):
         """Determines if an account move should be created for this move.

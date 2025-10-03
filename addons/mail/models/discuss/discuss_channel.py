@@ -117,11 +117,6 @@ class DiscussChannel(models.Model):
         compute="_compute_channel_name_member_ids",
         help="Members from which the channel name is computed when the name field is empty.",
     )
-
-    _channel_type_not_null = models.Constraint(
-        'CHECK(channel_type IS NOT NULL)',
-        'The channel type cannot be empty',
-    )
     _from_message_id_unique = models.Constraint(
         'UNIQUE(from_message_id)',
         'Messages can only be linked to one sub-channel',
@@ -1007,7 +1002,7 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel - write to discuss.channel is not accessible for most users
         self.sudo().last_interest_dt = fields.Datetime.now()
         if "everyone" in kwargs.pop("special_mentions", []):
-            partner_ids = list(OrderedSet(partner_ids + self.channel_member_ids.partner_id.ids))
+            partner_ids = list(OrderedSet((partner_ids or []) + self.channel_member_ids.partner_id.ids))
         if partner_ids:
             kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
         # mail_post_autofollow=False is necessary to prevent adding followers

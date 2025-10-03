@@ -275,7 +275,7 @@ class PosOrder(models.Model):
             .mapped('picking_ids.move_ids')\
             .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time')\
             .sorted(lambda x: x.date)
-        return moves._get_average_price_unit()
+        return moves._get_price_unit()
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
@@ -965,6 +965,33 @@ class PosOrder(models.Model):
                         'balance': balance,
                         'display_type': 'rounding',
                     })
+        # Stock.
+        if self.company_id.anglo_saxon_accounting and self.picking_ids.ids:
+            stock_moves = self.env['stock.move'].sudo().search([
+                ('picking_id', 'in', self.picking_ids.ids),
+                ('product_id.valuation', '=', 'real_time'),
+            ])
+            for stock_move in stock_moves:
+                product_accounts = stock_move.product_id._get_product_accounts()
+                expense_account = product_accounts['expense']
+                stock_account = product_accounts['stock_valuation']
+                balance = -sum(stock_move.mapped('value'))
+                aml_vals_list_per_nature['stock'].append({
+                    'name': _("Stock variation for %s", stock_move.product_id.name),
+                    'account_id': expense_account.id,
+                    'partner_id': commercial_partner.id,
+                    'currency_id': self.company_id.currency_id.id,
+                    'amount_currency': balance,
+                    'balance': balance,
+                })
+                aml_vals_list_per_nature['stock'].append({
+                    'name': _("Stock variation for %s", stock_move.product_id.name),
+                    'account_id': stock_account.id,
+                    'partner_id': commercial_partner.id,
+                    'currency_id': self.company_id.currency_id.id,
+                    'amount_currency': -balance,
+                    'balance': -balance,
+                })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
@@ -1723,7 +1750,7 @@ class PosOrderLine(models.Model):
             product = line.product_id
             if line._is_product_storable_fifo_avco() and stock_moves:
                 moves = line._get_stock_moves_to_consider(stock_moves, product)
-                product_cost = moves._get_average_price_unit()
+                product_cost = moves._get_price_unit()
                 if (product.cost_currency_id.is_zero(product_cost) and line.order_id.shipping_date and line.refunded_orderline_id):
                     product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
             else:

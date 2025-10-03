@@ -28,7 +28,8 @@
         <t t-component="Dropdown" menuClass="(action.dropdownMenuClass ?? '') + ' ' + store.discussDropdownMenuClass(this)" position="action.dropdownPosition" state="action.dropdownState">
             <t t-call="mail.Action.main"/>
             <t t-set-slot="content">
-                <t t-if="action.dropdownTemplate" t-call="{{ action.dropdownTemplate }}">
+                <t t-if="action.dropdownComponent" t-component="action.dropdownComponent" t-props="action.dropdownComponentProps"/>
+                <t t-elif="action.dropdownTemplate" t-call="{{ action.dropdownTemplate }}">
                     <t t-set="templateParams" t-value="action.dropdownTemplateParams"/>
                 </t>
                 <t t-elif="action.definition?.isMoreAction">

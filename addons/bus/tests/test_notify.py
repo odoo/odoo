@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 import selectors
 import threading
 
@@ -8,6 +9,9 @@ import odoo
 from odoo.tests import TransactionCase
 
 from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH, ODOO_NOTIFY_FUNCTION
+
+
+_logger = logging.getLogger(__name__)
 
 
 class NotifyTests(TransactionCase):
@@ -55,7 +59,7 @@ class NotifyTests(TransactionCase):
 
     def test_postcommit(self):
         """Asserts all ``postcommit`` channels are fetched with a single listen."""
-        if ODOO_NOTIFY_FUNCTION != 'pg_notify':
+        if ODOO_NOTIFY_FUNCTION != "pg_notify":
             return
         channels = []
         stop_event = threading.Event()
@@ -63,9 +67,10 @@ class NotifyTests(TransactionCase):
 
         def single_listen():
             nonlocal channels
-            with odoo.sql_db.db_connect(
-                "postgres"
-            ).cursor() as cr, selectors.DefaultSelector() as sel:
+            with (
+                odoo.sql_db.db_connect("postgres").cursor() as cr,
+                selectors.DefaultSelector() as sel,
+            ):
                 cr.execute("listen imbus")
                 cr.commit()
                 conn = cr._cnx
@@ -74,18 +79,17 @@ class NotifyTests(TransactionCase):
                 while not stop_event.is_set():
                     if sel.select(timeout=5):
                         conn.poll()
-                        if notify_channels := [
-                            c
-                            for c in json.loads(conn.notifies.pop().payload)
-                            if c[0] == self.env.cr.dbname
-                        ]:
-                            channels = notify_channels
+                        channels_received = json.loads(conn.notifies.pop().payload)
+                        _logger.info("[TEST_NOTIFY] 3. channels received: %s", channels_received)
+                        channels = [c for c in channels_received if c[0] == self.env.cr.dbname]
+                        if channels:
                             break
+                _logger.info("[TEST_NOTIFY] 4. exiting listen loop")
 
         thread = threading.Thread(target=single_listen)
         thread.start()
-        selector_ready_event.wait(timeout=5)
-
+        is_selector_ready = selector_ready_event.wait(timeout=5)
+        _logger.info("[TEST_NOTIFY] 1. selector ready: %s", is_selector_ready)
         self.env["bus.bus"].search([]).unlink()
         self.env["bus.bus"]._sendone("channel 1", "test 1", {})
         self.env["bus.bus"]._sendone("channel 2", "test 2", {})
@@ -95,8 +99,10 @@ class NotifyTests(TransactionCase):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(channels, [])
+        _logger.info("[TEST_NOTIFY] 2. running postcommit. Data: %s.", self.env.cr.postcommit.data)
         self.env.cr.postcommit.run()  # notify
         thread.join(timeout=5)
+        _logger.info("[TEST_NOTIFY] 5. thread joined. Alive: %s", thread.is_alive())
         stop_event.set()
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(

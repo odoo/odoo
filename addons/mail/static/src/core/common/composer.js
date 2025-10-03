@@ -109,6 +109,7 @@ export class Composer extends Component {
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
         this.composerActions = useComposerActions({ composer: () => this.props.composer });
+        this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
             send_keybind: htmlJoin(
                 this.sendKeybinds.map((key) => markup`<samp>${key}</samp>`),
@@ -318,38 +319,25 @@ export class Composer extends Component {
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
-        if (this.ui.isSmall) {
-            return _t(
-                "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s",
-                {
-                    open_button: markup`<button class='btn px-1 py-0' data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
-                    close_button: markup`</button>`,
-                    icon: markup`<i class='fa fa-times-circle pe-1' data-type="${EDIT_CLICK_TYPE.CANCEL}"></i>`,
-                    open_em: markup`<em data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
-                    close_em: markup`</em>`,
-                }
-            );
-        } else {
-            const tags = {
-                open_samp: markup`<samp>`,
-                close_samp: markup`</samp>`,
-                open_em: markup`<em>`,
-                close_em: markup`</em>`,
-                open_cancel: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
-                close_cancel: markup`</button>`,
-                open_save: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.SAVE}">`,
-                close_save: markup`</button>`,
-            };
-            return this.env.inChatter
-                ? _t(
-                      "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
-                      tags
-                  )
-                : _t(
-                      "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
-                      tags
-                  );
-        }
+        const tags = {
+            open_samp: markup`<samp>`,
+            close_samp: markup`</samp>`,
+            open_em: markup`<em>`,
+            close_em: markup`</em>`,
+            open_cancel: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.CANCEL}">`,
+            close_cancel: markup`</button>`,
+            open_save: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.SAVE}">`,
+            close_save: markup`</button>`,
+        };
+        return this.env.inChatter
+            ? _t(
+                  "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                  tags
+              )
+            : _t(
+                  "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                  tags
+              );
     }
 
     get SEND_TEXT() {
@@ -446,9 +434,7 @@ export class Composer extends Component {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionThread",
                     options: suggestions.map((suggestion) => ({
-                        label: suggestion.parent_channel_id
-                            ? `${suggestion.parent_channel_id.displayName} > ${suggestion.displayName}`
-                            : suggestion.displayName,
+                        label: suggestion.fullNameWithParent,
                         thread: suggestion,
                         classList: "o-mail-Composer-suggestion",
                     })),
