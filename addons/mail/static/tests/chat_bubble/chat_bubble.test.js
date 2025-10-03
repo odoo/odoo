@@ -188,6 +188,42 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     await contains(".o-mail-ChatBubble-preview", { text: "DemoYou: Hi" });
 });
 
+test("Hover on chat bubble shows message preview along with message seen indicator", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Marc" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello there!!!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
+        fetched_message_id: messageId,
+        seen_message_id: false,
+    });
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", partnerId_1],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: messageId,
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await hover(".o-mail-ChatBubble[name='Marc']");
+    await contains(".o-mail-ChatBubble-preview", { text: "MarcYou: Hello there!!!" });
+    await contains(".o-mail-MessageSeenIndicator[title='Seen by Marc']");
+});
+
 test("Chat bubble preview works on author as email address", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["discuss.channel"].create({ name: "test channel" });

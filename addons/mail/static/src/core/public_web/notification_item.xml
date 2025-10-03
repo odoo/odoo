@@ -33,6 +33,7 @@
                 <div class="d-flex o-mail-NotificationItem-line">
                     <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate, 'small': !ui.isSmall }" t-att-style="props.textMaxLine !== undefined ? webkitLineClamp(props.textMaxLine) : ''">
                         <t t-slot="body-icon"/>
+                        <MessageSeenIndicator t-if="message?.showSeenIndicator(props.thread)" message="message" thread="props.thread" />
                         <t t-if="props.slots?.body" name="notificationBody" t-slot="body"/>
                     </div>
                     <div class="flex-grow-1"/>
