@@ -17,6 +17,7 @@
                 <field name="name">Tax on domestic sales by tax rates</field>
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
                 <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance</field>
+                <field name="code">domestic_sales</field>
                 <field name="children_ids">
                     <record id="tax_report_sales_25_5_and_24" model="account.report.line">
                         <field name="name">25.5% tax + 24% tax</field>
@@ -129,6 +130,7 @@
             </record>
             <record id="vat_report_relief" model="account.report.line">
                 <field name="name">The amount of lower limit relief</field>
+                <field name="code">vat_relief</field>
                 <field name="expression_ids">
                     <record id="vat_report_relief_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -139,11 +141,13 @@
             </record>
             <record id="tax_report_tax_payable" model="account.report.line">
                 <field name="name">Payable tax / Refundable tax (-)</field>
+                <field name="code">payable_refundable_tax</field>
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
                 <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
             </record>
             <record id="tax_report_base_turnover_0_vat" model="account.report.line">
                 <field name="name">0-Turnover subject to zero tax rate</field>
+                <field name="code">sales_O_vat_rate</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_turnover_0_vat_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -154,6 +158,7 @@
             </record>
             <record id="tax_report_base_sales_goods_eu" model="account.report.line">
                 <field name="name">Sales of goods to other EU countries</field>
+                <field name="code">base_goods_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_sales_goods_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -164,6 +169,7 @@
             </record>
             <record id="tax_report_base_sales_service_eu" model="account.report.line">
                 <field name="name">Sales of services to other EU countries</field>
+                <field name="code">base_services_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_sales_service_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -174,6 +180,7 @@
             </record>
             <record id="tax_report_base_purchase_goods_eu" model="account.report.line">
                 <field name="name">Purchases of goods from other EU countries</field>
+                <field name="code">purchases_base_goods_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_purchase_goods_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -184,6 +191,7 @@
             </record>
             <record id="tax_report_base_purchase_service_eu" model="account.report.line">
                 <field name="name">Service purchases from other EU countries</field>
+                <field name="code">purchases_base_services_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_purchase_service_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -194,6 +202,7 @@
             </record>
             <record id="tax_report_base_import_goods_no_eu" model="account.report.line">
                 <field name="name">Imports of goods from outside the EU</field>
+                <field name="code">base_goods_no_eu</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_import_goods_no_eu_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -204,6 +213,7 @@
             </record>
             <record id="tax_report_base_sales_construct_service" model="account.report.line">
                 <field name="name">Sales of construction services and scrap metal (inverted tax liability)</field>
+                <field name="code">base_construct</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_sales_construct_service_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -214,6 +224,7 @@
             </record>
             <record id="tax_report_base_purchase_construct_service" model="account.report.line">
                 <field name="name">Purchases of construction services and scrap metal (inverted tax liability)</field>
+                <field name="code">base_purchase_construct</field>
                 <field name="expression_ids">
                     <record id="tax_report_base_purchase_construct_service_tag" model="account.report.expression">
                         <field name="label">balance</field>
