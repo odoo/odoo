@@ -417,7 +417,7 @@
                 </p>
                 <t
                     t-set="onboarding_provider"
-                    t-value="request.env['res.config.settings'].sudo().new({}).onboarding_payment_module"
+                    t-value="request.env.company.onboarding_payment_module"
                 />
                 <a
                     t-if="onboarding_provider and not providers_sudo"
