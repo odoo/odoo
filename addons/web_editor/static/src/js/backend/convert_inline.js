@@ -932,10 +932,10 @@ function formatTables($editable) {
     const editable = $editable.get(0);
     const writes = [];
     for (const table of editable.querySelectorAll('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
-        const tablePaddingTop = parseFloat(_getStylePropertyValue(table, 'padding-top').match(RE_PADDING)[1]);
-        const tablePaddingRight = parseFloat(_getStylePropertyValue(table, 'padding-right').match(RE_PADDING)[1]);
-        const tablePaddingBottom = parseFloat(_getStylePropertyValue(table, 'padding-bottom').match(RE_PADDING)[1]);
-        const tablePaddingLeft = parseFloat(_getStylePropertyValue(table, 'padding-left').match(RE_PADDING)[1]);
+        const tablePaddingTop = parseFloat((_getStylePropertyValue(table, 'padding-top').match(RE_PADDING) || [0, 0])[1]);
+        const tablePaddingRight = parseFloat((_getStylePropertyValue(table, 'padding-right').match(RE_PADDING) || [0, 0])[1]);
+        const tablePaddingBottom = parseFloat((_getStylePropertyValue(table, 'padding-bottom').match(RE_PADDING) || [0, 0])[1]);
+        const tablePaddingLeft = parseFloat((_getStylePropertyValue(table, 'padding-left').match(RE_PADDING) || [0, 0])[1]);
         const rows = [...table.querySelectorAll('tr')].filter(tr => tr.closest('table') === table);
         const columns = [...table.querySelectorAll('td')].filter(td => td.closest('table') === table);
         for (const column of columns) {
