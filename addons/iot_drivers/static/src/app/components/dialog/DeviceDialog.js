@@ -75,9 +75,6 @@ export class DeviceDialog extends Component {
                                         <span t-att-class="'me-2 fa fa-fw ' + connectionIcons[device.connection]"/>
                                         <t t-out="device.identifier"/>
                                     </span>
-                                    <div t-if="device.value" class="text-secondary one-line">
-                                        <i>Last sent value was <t t-out="device.value"/></i>
-                                    </div>
                                 </div>
                             </div>
                         </div>
