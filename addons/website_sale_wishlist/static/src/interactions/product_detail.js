@@ -5,19 +5,19 @@ import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils
 export class ProductDetail extends Interaction {
     static selector = '#product_detail';
     dynamicContent = {
-        'input.product_id': { 't-on-change': this.onChangeVariant },
+        '.js_product': { 't-on-product_changed': this.onProductChanged },
     };
 
     /**
      * Enable/disable the "add to wishlist" button based on the selected variant.
      *
-     * @param {Event} ev
+     * @param {CustomEvent} event
      */
-    onChangeVariant(ev) {
-        const input = ev.target;
-        const productId = input.value;
+    onProductChanged(event) {
+        const input = event.target;
         const button = input.closest('.js_product')?.querySelector('[data-action="o_wishlist"]');
         if (button) {
+            const { productId } = event.detail;
             const isDisabled = wishlistUtils.getWishlistProductIds().includes(parseInt(productId));
             wishlistUtils.updateDisabled(button, isDisabled);
             button.dataset.productProductId = productId;

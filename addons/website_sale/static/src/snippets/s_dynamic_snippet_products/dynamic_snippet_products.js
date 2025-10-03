@@ -12,11 +12,9 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
         let productCategoryId = this.el.dataset.productCategoryId;
         if (productCategoryId && productCategoryId !== "all") {
             if (productCategoryId === "current") {
-                productCategoryId = undefined;
-                const productCategoryFieldEl = this.el.closest("body").querySelector("#product_details .product_category_id");
-                if (productCategoryFieldEl) {
-                    productCategoryId = parseInt(productCategoryFieldEl.value);
-                }
+                productCategoryId = parseInt(document.querySelector(
+                    ".js_product [data-product-category-id]"
+                )?.dataset?.productCategoryId);
                 if (!productCategoryId) {
                     const mainObject = this.services.website_page.mainObject;
                     if (mainObject.model === "product.public.category") {
@@ -25,9 +23,11 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
                 }
                 if (!productCategoryId) {
                     // Try with categories from product, unfortunately the category hierarchy is not matched with this approach
-                    const productTemplateIdEl = this.el.closest("body").querySelector("#product_details .product_category_id");
-                    if (productTemplateIdEl) {
-                        searchDomain.push(["public_categ_ids.product_tmpl_ids", "=", parseInt(productTemplateIdEl.value)]);
+                    const productTemplateId = parseInt(document.querySelector(
+                        ".js_product [data-product-template-id]"
+                    )?.dataset?.productTemplateId);
+                    if (productTemplateId) {
+                        searchDomain.push(["public_categ_ids.product_tmpl_ids", "=", productTemplateId]);
                     }
                 }
             }
@@ -85,9 +85,11 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
      * @override
      */
     getRpcParameters() {
-        const productTemplateIdEl = document.body.querySelector("#product_details .product_template_id");
+        const productTemplateId = parseInt(document.querySelector(
+            ".js_product [data-product-template-id]"
+        )?.dataset?.productTemplateId);
         return Object.assign(super.getRpcParameters(...arguments), {
-            productTemplateId: productTemplateIdEl ? productTemplateIdEl.value : undefined,
+            productTemplateId: productTemplateId || undefined,
         });
     }
 }
