@@ -10,10 +10,10 @@
                     t-model.trim="state.description"
                     t-on-keydown="onInputKeydown"
                     />
-                <CheckBox value="state.isDefault" onChange.bind="onDefaultCheckboxChange">
+                <CheckBox t-model="state.isDefault" t-on-change="onDefaultCheckboxChange">
                     <span data-tooltip="Use this filter by default when opening this view">Default filter</span>
                 </CheckBox>
-                <CheckBox value="state.isShared" onChange.bind="onShareCheckboxChange">
+                <CheckBox t-model="state.isShared" t-on-change="onShareCheckboxChange">
                     <span data-tooltip="Make this filter available to other users">Shared</span>
                 </CheckBox>
             </div>
