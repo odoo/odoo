@@ -532,11 +532,6 @@ class ResPartner(models.Model):
     def _compute_company_registry_placeholder(self):
         self.company_registry_placeholder = False
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if self._has_cycle():
-            raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
-
     @api.constrains('company_id')
     def _check_partner_company(self):
         """
@@ -890,6 +885,10 @@ class ResPartner(models.Model):
             result = super(ResPartner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super().write(vals)
+        if vals.get('parent_id'):
+            # Not a @constraint because the invariant should be respect before _fields_sync called in write
+            if self._has_cycle():
+                raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
         for partner, pre_values in zip(self, pre_values_list, strict=True):
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access('write')

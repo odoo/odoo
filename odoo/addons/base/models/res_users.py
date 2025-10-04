@@ -1346,7 +1346,7 @@ class ResUsers(models.Model):
 ResUsersPatchedInTest = ResUsers
 
 
-class UsersMultiCompany(models.Model):
+class UsersView(models.Model):
     _inherit = 'res.users'
 
     @api.model_create_multi

@@ -735,13 +735,10 @@ Versions:
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
-        if self.env.context.get('leave_skip_date_check', False):
-            return
         for holiday in self:
             if holiday.dashboard_warning_message:
                 raise ValidationError(holiday.dashboard_warning_message)
 
-    @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
         if self.env.context.get('leave_skip_state_check'):
             return
@@ -877,6 +874,7 @@ Versions:
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
+        holidays._check_date_state()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:
@@ -931,6 +929,8 @@ Versions:
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             self._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+        if {'date_from', 'employee_id', 'date_to'}.intersection(values.keys()):
+            self._check_date_state()
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:
@@ -958,7 +958,7 @@ Versions:
     def unlink(self):
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
-        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        return super().unlink()
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

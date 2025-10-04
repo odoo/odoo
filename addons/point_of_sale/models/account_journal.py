@@ -10,12 +10,6 @@ class AccountJournal(models.Model):
 
     pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')
 
-    @api.constrains('type')
-    def _check_type(self):
-        methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])
-        if methods:
-            raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
-
     def _check_no_active_payments(self):
         hanging_journal_entries = self.env['pos.payment'].sudo().search(
         [
@@ -42,6 +36,13 @@ class AccountJournal(models.Model):
             super()._get_journal_inbound_outstanding_payment_accounts()
             | self.sudo().pos_payment_method_ids.outstanding_account_id.with_env(self.env)
         )
+
+    def write(self, vals):
+        if 'type' in vals:
+            method_exist = self.env['pos.payment.method'].sudo().search_count([("journal_id", "in", self.ids)], limit=1)
+            if method_exist:
+                raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
+        return super().write(vals)
 
     @api.model
     def _ensure_company_account_journal(self):

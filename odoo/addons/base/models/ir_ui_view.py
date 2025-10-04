@@ -538,9 +538,7 @@ actual arch.
                 raise ValidationError(_("Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
 
     @api.constrains('inherit_id')
-    def _check_000_inheritance(self):
-        # NOTE: constraints methods are check alphabetically. Always ensure this method will be
-        #       called before other constraint methods to avoid infinite loop in `_get_combined_arch`.
+    def _check_recursive_inherit_id(self):
         if self._has_cycle('inherit_id'):
             raise ValidationError(_('You cannot create recursive inherited views.'))
 
@@ -633,6 +631,7 @@ actual arch.
 
         self.env.registry.clear_cache('templates')
         result = super().create(vals_list)
+        self.env.check_constrains()  # Ensure that _check_recursive_inherit_id is called before `_check_xml`
         result.with_context(ir_ui_view_partial_validation=True)._check_xml()
         return result
 
@@ -658,6 +657,8 @@ actual arch.
 
         # Check the xml of the view if it gets re-activated or changed.
         if 'active' in vals or 'arch_db' in vals or 'inherit_id' in vals:
+            if 'inherit_id' in vals:  # Ensure that _check_recursive_inherit_id is called before `_check_xml`
+                self.env.check_constrains()
             self._check_xml()
 
         return res
