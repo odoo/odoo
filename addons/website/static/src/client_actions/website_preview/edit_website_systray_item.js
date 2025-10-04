@@ -13,7 +13,7 @@ export class EditWebsiteSystrayItem extends Component {
     static props = {
         onNewPage: { type: Function },
         onEditPage: { type: Function },
-        iframeEl: { type: HTMLElement },
+        iframeEl: { type: HTMLElement, optional: true },
     };
     static components = {
         Dropdown,
@@ -53,14 +53,16 @@ export class EditWebsiteSystrayItem extends Component {
             const recordsOnPage = {
                 [pageModelAndId.model]: pageModelAndId.id,
             };
-            const otherRecordEls = this.props.iframeEl.querySelectorAll(
-                "[data-res-model][data-res-id]:not([data-res-model='ir.ui.view']), [data-oe-model][data-oe-id]:not([data-oe-model='ir.ui.view'])"
-            );
-            for (const el of otherRecordEls) {
-                const model = el.dataset.resModel || el.dataset.oeModel;
-                if (!recordsOnPage[model]) {
-                    // Keep one record of each type.
-                    recordsOnPage[model] = parseInt(el.dataset.resId || el.dataset.oeId);
+            if (this.props.iframeEl) {
+                const otherRecordEls = this.props.iframeEl.querySelectorAll(
+                    "[data-res-model][data-res-id]:not([data-res-model='ir.ui.view']), [data-oe-model][data-oe-id]:not([data-oe-model='ir.ui.view'])"
+                );
+                for (const el of otherRecordEls) {
+                    const model = el.dataset.resModel || el.dataset.oeModel;
+                    if (!recordsOnPage[model]) {
+                        // Keep one record of each type.
+                        recordsOnPage[model] = parseInt(el.dataset.resId || el.dataset.oeId);
+                    }
                 }
             }
             await rpc("/website/check_can_modify_any", {

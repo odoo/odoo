@@ -9,6 +9,7 @@ import {
     onWillStart,
     useRef,
     onMounted,
+    status,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -207,13 +208,24 @@ export class EditMenuDialog extends Component {
         this.state = useState({ rootMenu: {} });
 
         onWillStart(async () => {
+            // Load pages and menu tree. Guard against component destruction
+            // while the async operations are in flight.
             this.allPages = await getAllPages();
-            const menu = await this.orm.call(
+            if (status(this) === "destroyed") {
+                return new Promise(() => {});
+            }
+            const orm = this.env.services.orm; // unproxied to avoid throw on destroyed
+            const websiteId = this.website.currentWebsite.id;
+            const lang = this.website.currentWebsite.metadata.lang;
+            const menu = await orm.call(
                 'website.menu',
                 'get_tree',
-                [this.website.currentWebsite.id, this.props.rootID],
-                { context: { lang: this.website.currentWebsite.metadata.lang } }
+                [websiteId, this.props.rootID],
+                { context: { lang } }
             );
+            if (status(this) === "destroyed") {
+                return new Promise(() => {});
+            }
             this.markPageNotFound(menu);
             this.state.rootMenu = menu;
             this.map = new Map();

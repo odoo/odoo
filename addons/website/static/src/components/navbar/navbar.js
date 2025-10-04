@@ -26,6 +26,8 @@ patch(NavBar.prototype, {
         // is updated, we need to adapt the navbar so that the "more" menu
         // can be computed.
         let adaptCounter = 0;
+        const getSiteDropdownButton = () =>
+            document.querySelector('nav .o_menu_sections button[data-menu-xmlid="website.menu_site"]');
         const renderAndAdapt = () => {
             this.render(true);
             adaptCounter++;
@@ -36,6 +38,11 @@ patch(NavBar.prototype, {
                 // as the super class already does it.
                 if (adaptCounter > 0) {
                     this.adapt();
+                    const siteBtnEl = getSiteDropdownButton();
+                    if (siteBtnEl?.classList.contains("show")) {
+                        siteBtnEl.click();
+                        siteBtnEl.click();
+                    }
                 }
             },
             () => [adaptCounter]
