@@ -292,6 +292,8 @@ class AccountBankStatementLine(models.Model):
         for st_line in self:
             _liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
 
+            last_line = st_line.line_ids[-1]
+            open_amount_currency = st_line.amount - sum(line.reconciled_lines_ids.amount_currency for line in st_line.line_ids)
             # Compute residual amount
             if not st_line.checked:
                 st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
@@ -303,6 +305,9 @@ class AccountBankStatementLine(models.Model):
             # Compute is_reconciled
             if not st_line.id:
                 # New record: The journal items are not yet there.
+                st_line.is_reconciled = False
+            # In case the move line set is at least 3% bigger we don't mark it as reconciled
+            elif not suspense_lines and last_line.currency_id.compare_amounts(abs(open_amount_currency), 0.03 * abs(last_line.reconciled_lines_ids.amount_currency)) < 0:
                 st_line.is_reconciled = False
             elif suspense_lines:
                 # In case of the statement line comes from an older version, it could have a residual amount of zero.
