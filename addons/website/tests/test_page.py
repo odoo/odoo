@@ -4,6 +4,7 @@ from lxml import html
 from unittest.mock import patch
 
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.models.website import Website as WebsiteClass
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.fields import Command
 from odoo.http import root
@@ -612,3 +613,51 @@ class TestNewPage(common.TransactionCase):
         pages = self.env['website.page'].search([('url', '=', '/snippets')])
         self.assertEqual(len(pages), 1, "Exactly one page should be at /snippets.")
         self.assertNotEqual(pages.key, "website.snippets", "Page's key cannot be website.snippets.")
+
+
+@tagged("-at_install", "post_install")
+class TestPrivacyPolicyEurope(common.TransactionCase):
+    def test_privacy_policy_auto_create_for_europe(self):
+        # Create German and US companies and associated websites
+        germany_company = self.env["res.company"].create({
+            "name": "Company (Germany)",
+            "country_id": self.env.ref("base.de").id
+        })
+        germany_website = self.env["website"].create({
+            "name": "My Website (Germany)",
+            "company_id": germany_company.id,
+        })
+        usa_company = self.env["res.company"].create({
+            "name": "Company (USA)",
+            "country_id": self.env.ref("base.us").id
+        })
+        usa_website = self.env["website"].create({
+            "name": "My Website (USA)",
+            "company_id": usa_company.id,
+        })
+
+        # Mock the external API call to return no industries
+        with patch.object(WebsiteClass, "_website_api_rpc", return_value={"industries": []}):
+            # Initialize configurator for both websites
+            de_config = germany_website.with_context(website_id=germany_website.id).configurator_init()
+            us_config = usa_website.with_context(website_id=usa_website.id).configurator_init()
+
+        # Check for "Privacy Policy" in configurator features
+        has_privacy_in_de = any(f["name"] == "Privacy Policy" for f in de_config["features"])
+        has_privacy_in_us = any(f["name"] == "Privacy Policy" for f in us_config["features"])
+
+        self.assertFalse(has_privacy_in_de, "Privacy Policy should not be shown for EU countries (Germany)")
+        self.assertTrue(has_privacy_in_us, "Privacy Policy should be shown for non-EU countries (USA)")
+
+        # Check if the Privacy Policy page was auto-created
+        privacy_page_de = self.env["website.page"].search([
+            ("website_id", "=", germany_website.id),
+            ("url", "=", "/privacy")
+        ])
+        privacy_page_us = self.env["website.page"].search([
+            ("website_id", "=", usa_website.id),
+            ("url", "=", "/privacy")
+        ])
+
+        self.assertTrue(privacy_page_de, "Privacy Policy page should be automatically created for EU countries")
+        self.assertFalse(privacy_page_us, "Privacy Policy page should NOT be auto-created for non-EU countries")
