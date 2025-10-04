@@ -243,6 +243,25 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     # Order EDI Import
     # -------------------------------------------------------------------------
 
+    def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
+        """Override of `account.edi.xml.ubl_bis3` to set/update `edi_customer_product_ref` on order
+        on order_line and search for the product if `edi_customer_product_ref` is already set."""
+        line_vals = super()._retrieve_line_vals(
+            record, tree, document_type=document_type, qty_factor=qty_factor
+        )
+        if not line_vals.get('product_id'):
+            # Set customer product reference on order line
+            line_vals['edi_customer_product_ref'] = self._find_value(
+                './cac:Item/cac:BuyersItemIdentification/cbc:ID', tree
+            )
+            # Find product related to customer product reference
+            line_vals['product_id'] = self.env['customer.product.reference'].search([
+                ('partner_id', '=', record.partner_id.id),
+                ('customer_product_reference', '=', line_vals['edi_customer_product_ref']),
+            ], limit=1).product_id.id
+
+        return line_vals
+
     def _retrieve_order_vals(self, order, tree):
         """ Fill order details by extracting details from xml tree.
         param order: Order to fill details from xml tree.
@@ -256,7 +275,8 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             **self._import_retrieve_partner_vals(tree, 'BuyerCustomer'),
         )
         if partner:
-            order_vals['partner_id'] = partner.id
+            # Need to set partner before in order to find products from previous order
+            order.partner_id = partner.id
         order_vals['client_order_ref'] = tree.findtext('./{*}ID')
         order_vals['origin'] = tree.findtext('./{*}QuotationDocumentReference/{*}ID')
 
