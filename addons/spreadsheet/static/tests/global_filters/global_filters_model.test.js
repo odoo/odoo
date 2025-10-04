@@ -57,7 +57,6 @@ import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { GlobalFiltersCoreViewPlugin } from "@spreadsheet/global_filters/plugins/global_filters_core_view_plugin";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/index";
-import { RELATIVE_PERIODS } from "@spreadsheet/global_filters/helpers";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -3241,7 +3240,15 @@ test("Default value of date filter", () => {
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 
     for (const value of [
-        ...Object.keys(RELATIVE_PERIODS),
+        "today",
+        "yesterday",
+        "last_7_days",
+        "last_30_days",
+        "last_90_days",
+        "month_to_date",
+        "last_month",
+        "year_to_date",
+        "last_12_months",
         "this_year",
         "this_month",
         "this_quarter",

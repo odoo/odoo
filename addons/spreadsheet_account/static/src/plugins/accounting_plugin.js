@@ -20,9 +20,13 @@ export class AccountingPlugin extends OdooUIPlugin {
         "getAccountResidual",
         "getAccountPartnerData",
         "getAccountTagData",
+        "getCurrentFiscalYearStart",
+        "getCurrentFiscalYearEnd",
     ]);
     constructor(config) {
         super(config);
+        this.currentFiscalYearStart = config.custom.currentFiscalYearStart;
+        this.currentFiscalYearEnd = config.custom.currentFiscalYearEnd;
         /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
         this._serverData = config.custom.odooDataProvider?.serverData;
     }
@@ -84,6 +88,14 @@ export class AccountingPlugin extends OdooUIPlugin {
      */
     getFiscalEndDate(date, companyId) {
         return this._fetchCompanyData(date, companyId).end;
+    }
+
+    getCurrentFiscalYearStart() {
+        return this.currentFiscalYearStart;
+    }
+
+    getCurrentFiscalYearEnd() {
+        return this.currentFiscalYearEnd;
     }
 
     /**
@@ -165,7 +177,9 @@ export class AccountingPlugin extends OdooUIPlugin {
             camelToSnakeObject({ codes, dateRange, companyId, includeUnposted })
         );
         if (result === false) {
-            throw new EvaluationError(_t("The residual amount for given accounts could not be computed."));
+            throw new EvaluationError(
+                _t("The residual amount for given accounts could not be computed.")
+            );
         }
         return result.amount_residual;
     }
@@ -228,7 +242,9 @@ export class AccountingPlugin extends OdooUIPlugin {
             camelToSnakeObject({ accountTagIds, dateRange, companyId, includeUnposted })
         );
         if (result === false) {
-            throw new EvaluationError(_t("The balance for given account tag could not be computed."));
+            throw new EvaluationError(
+                _t("The balance for given account tag could not be computed.")
+            );
         }
         return result.balance;
     }

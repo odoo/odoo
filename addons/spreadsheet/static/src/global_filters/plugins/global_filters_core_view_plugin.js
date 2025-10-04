@@ -20,12 +20,12 @@ import {
     checkFilterValueIsValid,
     getDateDomain,
     getDateRange,
+    getDateGlobalFilterValueFromDefault,
 } from "@spreadsheet/global_filters/helpers";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
 import { serializeDate } from "@web/core/l10n/dates";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
-
 const { DateTime } = luxon;
 
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
@@ -298,7 +298,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     _getDateFilterDisplayValue(filter) {
-        const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id));
+        const value = this.getGlobalFilterValue(filter.id);
+        const { from, to } = getDateRange(value, 0, DateTime.local(), this.getters);
         const locale = this.getters.getLocale();
         const _from = {
             value: from ? toNumber(serializeDate(from), locale) : "",
@@ -320,33 +321,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {DateValue|undefined}
      */
     _getDateValueFromDefaultValue(defaultValue) {
-        const year = DateTime.local().year;
-        switch (defaultValue) {
-            case "this_year":
-                return { type: "year", year };
-            case "this_month": {
-                const month = DateTime.local().month;
-                return { type: "month", year, month };
-            }
-            case "this_quarter": {
-                const quarter = Math.floor(new Date().getMonth() / 3) + 1;
-                return { type: "quarter", year, quarter };
-            }
-            case "today":
-            case "yesterday":
-            case "last_7_days":
-            case "last_30_days":
-            case "last_90_days":
-            case "month_to_date":
-            case "last_month":
-            case "last_12_months":
-            case "year_to_date":
-                return {
-                    type: "relative",
-                    period: defaultValue,
-                };
-        }
-        return undefined;
+        return getDateGlobalFilterValueFromDefault(defaultValue);
     }
 
     /**
@@ -366,7 +341,12 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const field = fieldMatching.chain;
         const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
         const offset = fieldMatching.offset || 0;
-        const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id), offset);
+        const { from, to } = getDateRange(
+            this.getGlobalFilterValue(filter.id),
+            offset,
+            DateTime.local(),
+            this.getters
+        );
         return getDateDomain(from, to, field, type);
     }
 
