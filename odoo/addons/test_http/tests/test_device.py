@@ -10,12 +10,19 @@ from odoo.addons.test_http.utils import (
     TEST_IP,
     USER_AGENT_android_chrome,
     USER_AGENT_linux_chrome,
-    USER_AGENT_linux_firefox
+    USER_AGENT_linux_firefox,
+    TEST_IPv4_locations,
+    TEST_IPv6_locations,
 )
+from odoo.addons.base.models.res_device import _logger as res_device_logger
+from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.website.tools import MockRequest
+from odoo.tests import tagged
 from .test_common import TestHttpBase
 
 
-class TestDevice(TestHttpBase):
+@tagged('post_install', '-at_install')
+class TestDevice(TestHttpBase, MailCase):
 
     def setUp(self):
         super().setUp()
@@ -431,3 +438,117 @@ class TestDevice(TestHttpBase):
         # This means that the device logic will not create a session file
         # (because we are not passing in the `_update_device` logic).
         self.assertFalse(session['_trace'])
+
+    # --------------------
+    # UNTRUSTED LOCATIONS
+    # --------------------
+
+    def test_untrusted_location_device_ipv4(self):
+        self.geoip_resolver.add_locations(TEST_IPv4_locations)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+
+        def count_untrusted_ip_address(log_list):
+            return len(list(filter(lambda l: 'untrusted ip address' in l, log_list)))
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.1.1')  # Belgium, Bruges
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.4.2')  # France, Paris
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.6.1')  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 2)
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-15 08:00:00', '/test_http/greeting-public', ip='192.0.1.1')  # Belgium, Bruges
+            self.hit('2024-01-15 08:00:00', '/test_http/greeting-public', ip='192.0.6.1')  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 0)
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-02-01 08:00:00', '/test_http/greeting-public', ip='192.0.6.1')  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 0)
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-03-02 08:00:00', '/test_http/greeting-public', ip='192.0.7.1')  # Italy, Rome
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 1)
+
+        # A new trace with a known IP after more than 30 days is considered unknown
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-03-05 08:00:00', '/test_http/greeting-public', ip='192.0.6.1',
+                headers={'User-Agent': USER_AGENT_android_chrome}
+            )  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 1)
+
+    def test_untrusted_location_device_ipv6(self):
+        self.geoip_resolver.add_locations(TEST_IPv6_locations)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+
+        def count_untrusted_ip_address(log_list):
+            return len(list(filter(lambda l: 'untrusted ip address' in l, log_list)))
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0001:abcd:1234:5678:9abc')  # Belgium, Bruges
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0003:bcde:2345:6789:abcd')  # France, Paris
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0005:abcd:1234:5678:9abc')  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 2)
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-15 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0001:abcd:1234:5678:9abc')  # Belgium, Bruges
+            self.hit('2024-01-15 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0005:abcd:1234:5678:9abc')  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 0)
+
+        # Trust ipv6 on the same network
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-02-01 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0001:def1:4567:89ab:cdef')  # Netherlands, Rotterdam
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 0)
+
+        # A new trace with a known IP after more than 30 days is considered unknown
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-03-05 08:00:00', '/test_http/greeting-public', ip='fe80:0000:0000:0005:abcd:1234:5678:9abc',
+                headers={'User-Agent': USER_AGENT_android_chrome}
+            )  # United Kingdom, London
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 1)
+
+    def test_untrusted_location_number_trusted_days(self):
+        self.geoip_resolver.add_locations(TEST_IPv4_locations)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+
+        def count_untrusted_ip_address(log_list):
+            return len(list(filter(lambda l: 'untrusted ip address' in l, log_list)))
+
+        self.env['ir.config_parameter'].set_param('base.number_trusted_days_ip', 7)
+
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.1.1')
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-5 08:00:00', '/test_http/greeting-public', ip='192.0.1.1', headers={'User-Agent': USER_AGENT_linux_firefox})
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 0)  # IP address verified within 7 days
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-15 08:00:00', '/test_http/greeting-public', ip='192.0.1.1', headers={'User-Agent': USER_AGENT_android_chrome})
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 1)  # IP address not verified within 7 days
+
+        with self.assertLogs(res_device_logger) as log_catcher:
+            self.hit('2024-01-30 08:00:00', '/test_http/greeting-public', ip='192.0.1.1', headers={'User-Agent': USER_AGENT_linux_firefox})
+            self.assertEqual(count_untrusted_ip_address(log_catcher.output), 0)  # Because no new trace created
+
+    def test_untrusted_location_empty_session(self):
+        with MockRequest(self.env) as mock_request:
+            mock_request.session = self.authenticate(self.user_admin.login, self.user_admin.login)
+            mock_request.session['_trace'].clear()
+            self.DeviceLog._check_location(mock_request)
+
+    def test_untrusted_location_mail_alert(self):
+        self.geoip_resolver.add_locations(TEST_IPv4_locations)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+
+        with self.mock_mail_gateway():
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.1.1')  # Belgium, Bruges
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.4.2')  # France, Paris
+            self.assertEqual(len(self._new_mails), 1)
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.4.2')  # France, Paris
+            self.assertEqual(len(self._new_mails), 1)
+            self.hit('2024-01-01 08:00:00', '/test_http/greeting-public', ip='192.0.6.1')  # United Kingdom, London
+            self.assertEqual(len(self._new_mails), 2)
+
+            self.env['ir.config_parameter'].set_param("auth_signup.alert_untrusted_location", 'false')
+
+            self.hit('2024-03-02 08:00:00', '/test_http/greeting-public', ip='192.0.7.1')  # Italy, Rome
+            self.assertEqual(len(self._new_mails), 2)

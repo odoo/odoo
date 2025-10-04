@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import nullcontext
-from datetime import datetime
+from datetime import datetime, timedelta
+import ipaddress
 import logging
+import math
 
 from odoo import api, fields, models, tools
 from odoo.http import GeoIP, request, root, STORED_SESSION_BYTES
@@ -11,6 +13,24 @@ from odoo.tools.translate import _
 from .res_users import check_identity
 
 _logger = logging.getLogger(__name__)
+
+
+def haversine_formula(latitude_A, longitude_A, latitude_B, longitude_B):
+    """
+        The haversine formula is used to calculate the distance between two points
+        on a sphere, taking into account their latitudes and longitudes.
+        :return (int): the distance between the two points in kilometers.
+    """
+    latitude_A = math.radians(latitude_A)
+    longitude_A = math.radians(longitude_A)
+    latitude_B = math.radians(latitude_B)
+    longitude_B = math.radians(longitude_B)
+    delta_latitude = latitude_B - latitude_A
+    delta_longitude = longitude_B - longitude_A
+    var_1 = math.sin(delta_latitude / 2) ** 2 \
+        + math.cos(latitude_A) * math.cos(latitude_B) * math.sin(delta_longitude / 2) ** 2
+    var_2 = 2 * math.atan2(math.sqrt(var_1), math.sqrt(1 - var_1))
+    return math.floor(var_2 * 6371)  # 6371 = radius of Earth [km]
 
 
 class ResDeviceLog(models.Model):
@@ -74,6 +94,78 @@ class ResDeviceLog(models.Model):
         return platform.lower() in mobile_platform
 
     @api.model
+    def _check_location(self, request):
+        """
+            Check if the location of the last trace is plausible according to
+            the history of location within the session.
+
+            This method should be called when a new trace has been added because
+            it assumes that the ip address of the last trace (in the order of insertion)
+            is the one to be checked.
+
+            An IPv4 is trusted if it is located within a radius close enough to another
+            IP address that has been checked beforehand.
+            An IPv6 address is trusted if it contains the same 64-bit network as another
+            IPv6 address that has already been verified.
+            Otherwise it is tested according to location.
+
+            If a location is not checked, we fallback to the `_alert_untrusted_location` method.
+        """
+        if len(request.session['_trace']) <= 1:
+            return
+        last_trace = request.session['_trace'][-1]
+
+        last_ip = last_trace['ip_address']
+        geoip = GeoIP(last_ip)
+        last_latitude, last_longitude, last_accuracy_radius = (
+            geoip.location.latitude,
+            geoip.location.longitude,
+            geoip.location.accuracy_radius
+        )
+        last_ip = ipaddress.ip_address(last_ip)
+
+        if not (last_latitude and last_longitude and last_accuracy_radius):
+            return
+
+        number_trusted_days = int(self.env['ir.config_parameter'].sudo().get_param("base.number_trusted_days_ip", 30))
+        last_activity = last_trace['last_activity']
+        time_ = last_activity - int(timedelta(days=number_trusted_days).total_seconds())
+
+        for trace in (t for t in request.session['_trace'][-2::-1] if t['last_activity'] >= time_):
+            ip = trace['ip_address']
+            geoip = GeoIP(ip)
+            latitude, longitude, accuracy_radius = (
+                geoip.location.latitude,
+                geoip.location.longitude,
+                geoip.location.accuracy_radius
+            )
+            ip = ipaddress.ip_address(ip)
+
+            # Assume all IPv6 networks are /64, consider IPs coming from
+            # a same network safe.
+            if (
+                isinstance(last_ip, ipaddress.IPv6Address) and
+                isinstance(ip, ipaddress.IPv6Address) and
+                (int(last_ip) >> 64) == (int(ip) >> 64)
+            ):
+                break
+
+            if not (latitude and longitude and accuracy_radius):
+                continue
+
+            distance = haversine_formula(last_latitude, last_longitude, latitude, longitude)
+            max_distance = max(accuracy_radius, last_accuracy_radius) * 1.5
+            # We add a tolerance, because according to the definition of
+            # the ``accuracy_radius`` attribute, the radius has a confidence of 67%.
+            if distance <= max_distance:
+                break  # Trusted location
+        else:
+            user_id = request.session.uid
+            session_identifier = request.session.sid[:42]
+            _logger.info("User %d used untrusted ip address %s for session identifier %s", user_id, last_ip, session_identifier)
+            self.env.user._alert_untrusted_location()
+
+    @api.model
     def _update_device(self, request):
         """
             Must be called when we want to update the device for the current request.
@@ -88,6 +180,9 @@ class ResDeviceLog(models.Model):
         geoip = GeoIP(trace['ip_address'])
         user_id = request.session.uid
         session_identifier = request.session.sid[:STORED_SESSION_BYTES]
+
+        first_activity = datetime.fromtimestamp(trace['first_activity'])
+        last_activity = datetime.fromtimestamp(trace['last_activity'])
 
         if self.env.cr.readonly:
             self.env.cr.rollback()
@@ -107,11 +202,15 @@ class ResDeviceLog(models.Model):
                 city=geoip.get('city'),
                 device_type='mobile' if self._is_mobile(trace['platform']) else 'computer',
                 user_id=user_id,
-                first_activity=datetime.fromtimestamp(trace['first_activity']),
-                last_activity=datetime.fromtimestamp(trace['last_activity']),
+                first_activity=first_activity,
+                last_activity=last_activity,
                 revoked=False,
             ))
-        _logger.info("User %d inserts device log (%s)", user_id, session_identifier)
+            _logger.info("User %d inserts device log (%s)", user_id, session_identifier)
+            if first_activity == last_activity:
+                # New trace is categorised by a last activity which is equal
+                # to the first activity (>< updated trace).
+                self.with_env(self.env(cr=cr))._check_location(request)
 
     @api.autovacuum
     def _gc_device_log(self):

@@ -19,7 +19,7 @@ class TestHttpBase(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        geoip_resolver = MemoryGeoipResolver()
+        cls.geoip_resolver = MemoryGeoipResolver()
         session_store = MemorySessionStore(session_class=Session)
 
         reset_cached_properties(odoo.http.root)
@@ -28,8 +28,8 @@ class TestHttpBase(HttpCaseWithUserDemo):
             'server_wide_modules': ['base', 'web', 'rpc', 'test_http']
         }))
         cls.classPatch(odoo.http.Application, 'session_store', session_store)
-        cls.classPatch(odoo.http.Application, 'geoip_city_db', geoip_resolver)
-        cls.classPatch(odoo.http.Application, 'geoip_country_db', geoip_resolver)
+        cls.classPatch(odoo.http.Application, 'geoip_city_db', cls.geoip_resolver)
+        cls.classPatch(odoo.http.Application, 'geoip_country_db', cls.geoip_resolver)
 
     def setUp(self):
         super().setUp()
