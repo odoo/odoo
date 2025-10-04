@@ -216,6 +216,14 @@ class StockLocation(models.Model):
         ]
         return [('id', 'not in', location_ids)]
 
+    @api.depends_context('show_empty_location', 'formatted_display_name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if not (self.env.context.get('show_empty_location', False) and self.env.context.get('formatted_display_name', False)):
+            return
+        for location in self.filtered(lambda location: location.is_empty):
+            location.display_name += self.env._("\t--Empty--")
+
     def write(self, vals):
         values = vals
         if 'company_id' in values:
