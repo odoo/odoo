@@ -1,0 +1,175 @@
+<!-- Look-up table : Raw XML to parse -->
+<lookup_table>
+    <partition>
+        <!-- The Partition Table encoding method is used for a segment that appears in the URI as a pair of
+        variable-length numeric fields separated by a dot (".") character, and in the binary encoding as
+        a 3-bit (1 digit) "partition" field followed by two variable length binary integers.
+        -->
+        <sgtin>
+            <key value="0" left_bit="40" left_digit="12" right_bit="4" right_digit="1"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="7" right_digit="2"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="10" right_digit="3"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="14" right_digit="4"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="17" right_digit="5"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="20" right_digit="6"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="24" right_digit="7"/>
+        </sgtin>
+        <sscc>
+            <key value="0" left_bit="40" left_digit="12" right_bit="18" right_digit="5"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="21" right_digit="6"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="24" right_digit="7"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="28" right_digit="8"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="31" right_digit="9"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="34" right_digit="10"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="38" right_digit="11"/>
+        </sscc>
+        <sgln>
+            <key value="0" left_bit="40" left_digit="12" right_bit="1" right_digit="0"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="4" right_digit="1"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="7" right_digit="2"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="11" right_digit="3"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="14" right_digit="4"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="17" right_digit="5"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="21" right_digit="6"/>
+        </sgln>
+        <grai>
+            <key value="0" left_bit="40" left_digit="12" right_bit="4" right_digit="0"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="7" right_digit="1"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="10" right_digit="2"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="14" right_digit="3"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="17" right_digit="4"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="20" right_digit="5"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="24" right_digit="6"/>
+        </grai>
+        <giai96>
+            <key value="0" left_bit="40" left_digit="12" right_bit="42" right_digit="13"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="45" right_digit="14"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="48" right_digit="15"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="52" right_digit="16"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="55" right_digit="17"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="58" right_digit="18"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="62" right_digit="19"/>
+        </giai96>
+        <giai202>
+            <key value="0" left_bit="40" left_digit="12" right_bit="148" right_digit="18"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="151" right_digit="19"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="154" right_digit="20"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="158" right_digit="21"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="161" right_digit="22"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="164" right_digit="23"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="168" right_digit="24"/>
+        </giai202>
+        <gsrn>
+            <key value="0" left_bit="40" left_digit="12" right_bit="18" right_digit="5"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="21" right_digit="6"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="24" right_digit="7"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="28" right_digit="8"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="31" right_digit="9"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="34" right_digit="10"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="38" right_digit="11"/>
+        </gsrn>
+        <gsrnp>
+            <key value="0" left_bit="40" left_digit="12" right_bit="18" right_digit="5"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="21" right_digit="6"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="24" right_digit="7"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="28" right_digit="8"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="31" right_digit="9"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="34" right_digit="10"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="38" right_digit="11"/>
+        </gsrnp>
+        <gdti>
+            <key value="0" left_bit="40" left_digit="12" right_bit="1" right_digit="0"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="4" right_digit="1"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="7" right_digit="2"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="11" right_digit="3"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="14" right_digit="4"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="17" right_digit="5"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="21" right_digit="6"/>
+        </gdti>
+        <cpi_96>
+            <key value="0" left_bit="40" left_digit="12" right_bit="11" right_digit="3"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="14" right_digit="4"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="17" right_digit="5"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="21" right_digit="6"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="24" right_digit="7"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="27" right_digit="8"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="31" right_digit="9"/>
+        </cpi_96>
+        <cpi_var>
+            <key value="0" left_bit="40" left_digit="12" right_bit="114" right_digit="18"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="120" right_digit="19"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="126" right_digit="20"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="132" right_digit="21"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="138" right_digit="22"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="144" right_digit="23"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="150" right_digit="24"/>
+        </cpi_var>
+        <sgcn>
+            <key value="0" left_bit="40" left_digit="12" right_bit="1" right_digit="0"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="4" right_digit="1"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="7" right_digit="2"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="11" right_digit="3"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="14" right_digit="4"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="17" right_digit="5"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="21" right_digit="6"/>
+        </sgcn>
+        <itip>
+            <key value="0" left_bit="40" left_digit="12" right_bit="4" right_digit="1"/>
+            <key value="1" left_bit="37" left_digit="11" right_bit="7" right_digit="2"/>
+            <key value="2" left_bit="34" left_digit="10" right_bit="10" right_digit="3"/>
+            <key value="3" left_bit="30" left_digit="9" right_bit="14" right_digit="4"/>
+            <key value="4" left_bit="27" left_digit="8" right_bit="17" right_digit="5"/>
+            <key value="5" left_bit="24" left_digit="7" right_bit="20" right_digit="6"/>
+            <key value="6" left_bit="20" left_digit="6" right_bit="24" right_digit="7"/>
+        </itip>
+    </partition>
+    <aidc>
+        <header>
+            <key value="0" digits="2" next_bits="0" />
+            <key value="1" digits="2" next_bits="0" />
+            <key value="2" digits="2" next_bits="0" />
+            <key value="10" digits="2" next_bits="0" />
+            <key value="11" digits="2" next_bits="0" />
+            <key value="12" digits="2" next_bits="0" />
+            <key value="13" digits="2" next_bits="0" />
+            <key value="15" digits="2" next_bits="0" />
+            <key value="16" digits="2" next_bits="0" />
+            <key value="17" digits="2" next_bits="0" />
+            <key value="20" digits="2" next_bits="0" />
+            <key value="21" digits="2" next_bits="0" />
+            <key value="22" digits="2" next_bits="0" />
+            <key value="23" digits="3" next_bits="4" />
+            <key value="24" digits="3" next_bits="4" />
+            <key value="25" digits="3" next_bits="4" />
+            <key value="30" digits="2" next_bits="0" />
+            <key value="31" digits="4" next_bits="8" />
+            <key value="32" digits="4" next_bits="8" />
+            <key value="33" digits="4" next_bits="8" />
+            <key value="34" digits="4" next_bits="8" />
+            <key value="35" digits="4" next_bits="8" />
+            <key value="36" digits="4" next_bits="8" />
+            <key value="37" digits="2" next_bits="0" />
+            <key value="39" digits="4" next_bits="8" />
+            <key value="40" digits="3" next_bits="4" />
+            <key value="41" digits="3" next_bits="4" />
+            <key value="42" digits="3" next_bits="4" />
+            <key value="43" digits="4" next_bits="8" />
+            <key value="70" digits="4" next_bits="8" />
+            <key value="71" digits="3" next_bits="4" />
+            <key value="72" digits="4" next_bits="8" />
+            <key value="80" digits="4" next_bits="8" />
+            <key value="81" digits="4" next_bits="8" />
+            <key value="82" digits="4" next_bits="8" />
+            <key value="90" digits="2" next_bits="0" />
+            <key value="91" digits="2" next_bits="0" />
+            <key value="92" digits="2" next_bits="0" />
+            <key value="93" digits="2" next_bits="0" />
+            <key value="94" digits="2" next_bits="0" />
+            <key value="95" digits="2" next_bits="0" />
+            <key value="96" digits="2" next_bits="0" />
+            <key value="97" digits="2" next_bits="0" />
+            <key value="98" digits="2" next_bits="0" />
+            <key value="99" digits="2" next_bits="0" />
+        </header>
+    </aidc>
+</lookup_table>
