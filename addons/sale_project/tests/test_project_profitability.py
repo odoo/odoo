@@ -1158,3 +1158,49 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             },
         )
+
+    def test_prefetch_sale_items_data(self):
+        SaleOrderLine = self.env["sale.order.line"].with_context(
+            tracking_disable=True,
+            default_order_id=self.sale_order.id,
+            default_project_id=self.sale_order.project_id.id,
+        )
+        self.sale_order.project_id.allow_billable = True
+        vals = SaleOrderLine.create([
+            {
+                "product_id": self.service_product.id,
+                "product_uom_qty": 10,
+            }
+            for i in range(5)
+        ])
+
+        result = self.sale_order.project_id.prefetch_sale_items_data(
+            {"billable_fixed": vals.ids[:2]}
+        )
+        expected_result = {
+            "billable_fixed": {
+                "sol_items": [
+                    {
+                        "id": vals[0].id,
+                        "display_name": vals[0].display_name,
+                        "product_uom_qty": 10.0,
+                        "qty_delivered": 0.0,
+                        "qty_invoiced": 0.0,
+                        "product_uom_id": (1, "Units"),
+                        "product_id": (self.service_product.id, "Test Service Product"),
+                    },
+                    {
+                        "id": vals[1].id,
+                        "display_name": vals[1].display_name,
+                        "product_uom_qty": 10.0,
+                        "qty_delivered": 0.0,
+                        "qty_invoiced": 0.0,
+                        "product_uom_id": (1, "Units"),
+                        "product_id": (self.service_product.id, "Test Service Product"),
+                    },
+                ],
+                # Dislay load more is true as we have 3 more sol items of billable fixed
+                "displayLoadMore": True,
+            },
+        }
+        self.assertDictEqual(result, expected_result)

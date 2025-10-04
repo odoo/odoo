@@ -7,6 +7,7 @@ patch(ProjectProfitability, {
         ...ProjectProfitability.props,
         projectId: Number,
         context: Object,
+        sectionState: { type: Object, optional: true },
     },
 
     components: {
