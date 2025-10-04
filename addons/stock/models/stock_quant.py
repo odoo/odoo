@@ -2,6 +2,7 @@
 import heapq
 import logging
 from collections import namedtuple
+import operator as py_operator
 
 from ast import literal_eval
 from collections import defaultdict
@@ -14,6 +15,15 @@ from odoo.fields import Domain
 from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
+
+PY_OPERATORS = {
+    '>': py_operator.gt,
+    '<': py_operator.lt,
+    '>=': py_operator.ge,
+    '<=': py_operator.le,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+}
 
 
 class StockQuant(models.Model):
@@ -109,7 +119,7 @@ class StockQuant(models.Model):
     inventory_date = fields.Date(
         'Scheduled', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
-    last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
+    last_count_date = fields.Date(compute='_compute_last_count_date', search='_search_last_count_date', help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
@@ -175,6 +185,40 @@ class StockQuant(models.Model):
             _update_dict(date_by_quant, (location_dest_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
+
+    def _search_last_count_date(self, operator, value):
+        compare = PY_OPERATORS.get(operator)
+        if not compare:
+            return NotImplemented
+        domain = [('state', '=', 'done'), ('is_inventory', '=', True)]
+        if value is not False:
+            if operator == '=':
+                domain += [('date', '>=', value), ('date', '<=', value)]
+            else:
+                domain.append(('date', operator, value))
+        groups = self.env['stock.move.line']._read_group(
+            domain=domain,
+            aggregates=['id:recordset'],
+        )
+        move_lines = sum((group[0] for group in groups), self.env['stock.move.line'])
+        quant_domain = [
+            ('product_id', 'in', move_lines.mapped('product_id').ids),
+            '|',
+            ('lot_id', 'in', move_lines.mapped('lot_id').ids),
+            ('lot_id', '=', False),
+            '|',
+            ('owner_id', 'in', move_lines.mapped('owner_id').ids),
+            ('owner_id', '=', False),
+            ('location_id', 'in', move_lines.mapped('location_id').ids + move_lines.mapped('location_dest_id').ids),
+            '|',
+            '|',
+            ('package_id', 'in', move_lines.mapped('package_id').ids),
+            ('package_id', 'in', move_lines.mapped('result_package_id').ids),
+            ('package_id', '=', False),
+        ]
+        if operator == '=' and not value:
+            return ['!'] + quant_domain
+        return quant_domain
 
     def _search(self, domain, *args, **kwargs):
         domain = Domain(domain).map_conditions(
