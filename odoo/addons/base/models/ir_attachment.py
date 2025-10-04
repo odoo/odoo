@@ -9,6 +9,7 @@ import mimetypes
 import os
 import psycopg2
 import re
+import time
 import uuid
 import warnings
 import werkzeug
@@ -218,6 +219,15 @@ class IrAttachment(models.Model):
         # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
         # for each chunk.
         removed = 0
+
+        now = time.time()
+        min_age = 24
+        try:
+            min_age = float(self.env['ir.config_parameter'].get_param("base._gc_file_store_delay_h", 24))
+        except Exception:
+            _logger.error('Cannot convert ICP `base._gc_file_store_delay_h` in Float')
+            pass
+
         for names in split_every(self.env.cr.IN_MAX, checklist):
             # determine which files to keep among the checklist
             self.env.cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
@@ -227,12 +237,17 @@ class IrAttachment(models.Model):
             for fname in names:
                 filepath = checklist[fname]
                 if fname not in whitelist:
+                    fullpath_fname = self._full_path(fname)
                     try:
-                        os.unlink(self._full_path(fname))
-                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
-                        removed += 1
+                        stat_info = os.stat(fullpath_fname)
+                        if now - stat_info.st_mtime > min_age * 60 * 60:
+                            os.unlink(fullpath_fname)
+                            _logger.debug("_file_gc unlinked %s", fullpath_fname)
+                            removed += 1
+                        else:
+                            _logger.debug("_file_gc ignored %s [recently updated]", fullpath_fname)
                     except OSError:
-                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+                        _logger.info("_file_gc could not unlink %s", fullpath_fname, exc_info=True)
                 with contextlib.suppress(OSError):
                     os.unlink(filepath)
 
