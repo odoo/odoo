@@ -1550,9 +1550,16 @@ class Website(models.Model):
         if query_string:
             domain += [('url', 'like', query_string)]
 
+        # ==== User Defined Redirections ====
+        redirects = self.env["website.rewrite"].sudo().search([])
+
         pages = self._get_website_pages(domain)
 
+        redirect_map = {r.url_from: r.url_to for r in redirects}
         for page in pages:
+            if page.url in redirect_map:
+                yield {"loc": redirect_map[page.url]}
+                continue
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
@@ -1583,6 +1590,17 @@ class Website(models.Model):
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
                 continue
+            if (
+                'sitemap' in rule.endpoint.routing
+                and rule.endpoint.routing['sitemap'] is True
+                and "request.redirect" in inspect.getsource(rule.endpoint.func)
+            ):
+                logger.warning(
+                    "Sitemap for controller %s (%s) is set to True but the endpoint performs a redirect, "
+                    "please set it to False or a function returning the URLs to include in the sitemap.",
+                    rule.endpoint,
+                    rule.endpoint.func,
+                )
 
             if callable(sitemap_func):
                 func_key = _unwrap_callable(sitemap_func)

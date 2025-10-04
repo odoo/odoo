@@ -200,7 +200,18 @@ class WebsiteEventController(http.Controller):
 
         return request.render(page, values)
 
-    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True, readonly=True)
+    def sitemap_events(env, rule, qs):
+        """ Sitemap for event page. """
+        slug = env["ir.http"]._slug
+        events = env["event.event"].sudo().search([("website_published", "=", True)], order="id")
+        for event in events:
+            if event.menu_id and event.menu_id.child_id:
+                final_url = event.menu_id.child_id[0].url
+            else:
+                final_url = "/event/%s/register" % slug(event)
+            yield {"loc": final_url}
+
+    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=sitemap_events, readonly=True)
     def event(self, event, **post):
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url

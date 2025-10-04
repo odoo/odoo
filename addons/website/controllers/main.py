@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
-SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
+SITEMAP_CACHE_TIME = datetime.timedelta(seconds=5)
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 
@@ -86,7 +86,28 @@ class QueryURL:
 
 class Website(Home):
 
-    @http.route('/', auth="public", website=True, sitemap=True)
+    def sitemap_index(env, rule, qs):
+        Website = env["website"].get_current_website()
+        homepage_url = Website._get_cached("homepage_url")
+
+        if homepage_url and homepage_url != "/":
+            yield {"loc": homepage_url}
+            return
+
+        website_page = env["website.page"].sudo().search([("url", "=", "/"), ("is_published", "=", True)], limit=1)
+        if website_page:
+            yield {"loc": "/"}
+            return
+
+        def is_reachable(menu):
+            return menu.is_visible and menu.url not in ("/", "", "#") and not menu.url.startswith(("/?", "/#", " "))
+
+        top_menu = Website.menu_id
+        reachable_menus = top_menu.child_id.filtered(is_reachable)
+        if reachable_menus:
+            yield {"loc": reachable_menus[0].url}
+
+    @http.route('/', auth="public", website=True, sitemap=sitemap_index)
     def index(self, **kw):
         """ The goal of this controller is to make sure we don't serve a 404 as
         the website homepage. As this is the website entry point, serving a 404
