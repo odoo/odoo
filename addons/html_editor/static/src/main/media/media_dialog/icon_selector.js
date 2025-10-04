@@ -68,6 +68,10 @@ export class IconSelector extends Component {
         return selectedMedia.map((icon) => {
             const iconEl = document.createElement("span");
             iconEl.classList.add(icon.fontBase, icon.names[0]);
+            const match = icon.css.match(/content:\s*["'](.*?)["']/);
+            if (match) {
+                iconEl.dataset.unicode = match[1];
+            }
             return iconEl;
         });
     }
