@@ -5,6 +5,7 @@ import calendar
 
 from collections import defaultdict, OrderedDict
 from datetime import timedelta
+from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -494,6 +495,22 @@ class Location(models.Model):
             result[self.browse(line['location_dest_id'][0])]['forecast_weight'] += line['quantity_product_uom'] * weight_per_product[line['product_id'][0]]
 
         return result
+
+    @api.model
+    def get_views(self, views, options=None):
+        # Stock users can write on stock.locations to be able to do inventories, but they shouldn't be able to change stuff in the location itself.
+        res = super().get_views(views, options)
+        if self.env.user.has_group("stock.group_stock_manager"):
+            return res
+        for view_type, view in res["views"].items():
+            if view_type not in {"form", "list"}:
+                continue
+            root = etree.fromstring(view["arch"])
+            root_element = root.xpath(f"//{view_type}")
+            if root_element:
+                root_element[0].set("edit", "0")
+                view["arch"] = etree.tostring(root, encoding="unicode")
+        return res
 
 
 class StockRoute(models.Model):
