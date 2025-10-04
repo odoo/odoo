@@ -491,6 +491,10 @@ export class Message extends Component {
     async onClickToggleTranslation() {
         toRaw(this.props.message).onClickToggleTranslation();
     }
+
+    get shouldHideFromMessageListOnDelete() {
+        return false;
+    }
 }
 
 discussComponentRegistry.add("Message", Message);

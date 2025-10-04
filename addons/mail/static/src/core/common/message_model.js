@@ -529,9 +529,12 @@ export class Message extends Record {
         );
     }
 
-    async remove() {
+    async remove({ removeFromThread = false } = {}) {
         const data = await rpc("/mail/message/update_content", this.removeParams);
         this.store.insert(data, { html: true });
+        if (this.thread && removeFromThread) {
+            this.thread.messages = this.thread.messages.filter((message) => message.notEq(this));
+        }
         return data;
     }
 
