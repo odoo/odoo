@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_xendit
+# 
+# Translators:
+# Wil Odoo, 2024
+# Abe Manyo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
+"PO-Revision-Date: 2024-01-23 08:23+0000\n"
+"Last-Translator: Abe Manyo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occurred during the processing of your payment (status %s). Please "
+"try again."
+msgstr ""
+"Terjadi error pada pemrosesan pembayaran Anda (status %s). Silakan coba "
+"lagi."
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
+msgid "Code"
+msgstr "Kode"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Tidak dapat membuat hubungan ke API."
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Tidak ada transaksi dengan referensi %s yang cocok."
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_provider
+msgid "Payment Provider"
+msgstr "Penyedia Pembayaran"
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaksi Tagihan"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference."
+msgstr "Menerima data dengan referensi yang kurang lengkap."
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Secret Key"
+msgstr "Secret Key"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. Xendit gave us the following "
+"information: '%s'"
+msgstr ""
+"Komunikasi dengan API gagal. Xendit memberikan kami informasi berikut: '%s'"
+
+#. module: payment_xendit
+#: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Kode teknis penyedia pembayaran ini."
+
+#. module: payment_xendit
+#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
+msgid "Webhook Token"
+msgstr "Token Webhook"
+
+#. module: payment_xendit
+#: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
+msgid "Xendit"
+msgstr "Xendit"
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
+msgid "Xendit Secret Key"
+msgstr "Xendit Secret Key"
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
+msgid "Xendit Webhook Token"
+msgstr "Xendit Webhook Token"

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SearchBarMenu">
+        <Dropdown togglerClass="'o_searchview_dropdown_toggler d-print-none btn btn-outline-secondary o-no-caret rounded-start-0 h-100'"
+                  menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap w-100 w-md-auto mx-md-auto mt-2 py-3'"
+                  position="'bottom-end'"
+                  holdOnHover="true"
+                  t-if="this.env.searchModel.searchMenuTypes.size">
+            <t t-set-slot="toggler" t-slot-scope="scope">
+                <i class="fa fa-caret-down" aria-hidden="true" data-hotkey="shift+q" title="Toggle Search Panel"/>
+            </t>
+            <!-- Filter -->
+            <t t-if="this.env.searchModel.searchMenuTypes.has('filter')">
+                <div class="o_dropdown_container o_filter_menu w-100 h-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
+                    <div class="px-3 fs-5 mb-2">
+                        <i class="me-2 text-primary" t-att-class="facet_icons.filter"/>
+                        <h5 class="o_dropdown_title d-inline">Filters</h5>
+                    </div>
+                    <t t-set="currentGroup" t-value="null"/>
+                    <t t-foreach="filterItems" t-as="item" t-key="item.id">
+                        <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                            <div class="dropdown-divider" role="separator"/>
+                        </t>
+                        <t t-if="item.options">
+                            <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive">
+                                <t t-set="subGroup" t-value="null"/>
+                                <t t-foreach="item.options" t-as="option" t-key="option.id">
+                                    <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                        <div class="dropdown-divider" role="separator"/>
+                                    </t>
+                                    <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
+                                                        t-esc="option.description"
+                                                        checked="option.isActive"
+                                                        parentClosingMode="'none'"
+                                                        onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
+                                    />
+                                    <t t-set="subGroup" t-value="option.groupNumber"/>
+                                </t>
+                            </AccordionItem>
+                        </t>
+                        <t t-else="">
+                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                                                checked="item.isActive"
+                                                parentClosingMode="'none'"
+                                                t-esc="item.description"
+                                                 title="item.description.length > 15 ? item.description : ''"
+                                                onSelected="() => this.onFilterSelected({ itemId: item.id })"
+                            />
+                        </t>
+                        <t t-set="currentGroup" t-value="item.groupNumber"/>
+                    </t>
+                    <t t-if="filterItems.length">
+                        <div role="separator" class="dropdown-divider"/>
+                    </t>
+                    <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected.bind="onAddCustomFilterClick">Add Custom Filter</DropdownItem>
+                </div>
+            </t>
+            <!-- GroupBy -->
+            <t t-if="this.env.searchModel.searchMenuTypes.has('groupBy')">
+                <div class="o_dropdown_container o_group_by_menu w-100 h-100 w-lg-auto px-3 mb-4 mb-lg-0 border-end">
+                    <div class="px-3 fs-5 mb-2">
+                        <i class="me-2 text-action" t-att-class="facet_icons.groupBy"/>
+                        <h5 class="o_dropdown_title d-inline">Group By</h5>
+                    </div>
+                    <t t-set="currentGroup" t-value="null"/>
+                    <t t-foreach="groupByItems" t-as="item" t-key="item.id">
+                        <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                            <div class="dropdown-divider" role="separator"/>
+                        </t>
+                        <t t-if="item.fieldType === 'properties'">
+                            <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+                        </t>
+                        <t t-elif="item.options">
+                            <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive">
+                                <t t-set="subGroup" t-value="null"/>
+                                <t t-foreach="item.options" t-as="option" t-key="option.id">
+                                    <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                        <div class="dropdown-divider" role="separator"/>
+                                    </t>
+                                    <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
+                                                        checked="option.isActive ? true : false"
+                                                        parentClosingMode="'none'"
+                                                        t-esc="option.description"
+                                                        title="option.description.length > 15 ? option.description : ''"
+                                                        onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
+                                    />
+                                    <t t-set="subGroup" t-value="option.groupNumber"/>
+                                </t>
+                            </AccordionItem>
+                        </t>
+                        <t t-else="">
+                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                                                checked="item.isActive"
+                                                parentClosingMode="'none'"
+                                                t-esc="item.description"
+                                                title="item.description.length > 15 ? item.description : ''"
+                                                onSelected="() => this.onGroupBySelected({ itemId: item.id })"
+                            />
+                        </t>
+                        <t t-set="currentGroup" t-value="item.groupNumber"/>
+                    </t>
+                    <t t-if="!hideCustomGroupBy and fields.length">
+                        <div t-if="groupByItems.length" role="separator" class="dropdown-divider"/>
+                        <CustomGroupByItem fields="fields" onAddCustomGroup.bind="onAddCustomGroup"/>
+                    </t>
+                </div>
+            </t>
+            <!-- Comparison -->
+            <t t-if="showComparisonMenu">
+                <div class="o_dropdown_container o_comparison_menu w-100 h-100 w-lg-auto px-3 border-end">
+                    <div class="px-3 fs-5 mb-2">
+                        <i class="me-2 text-danger" t-att-class="facet_icons.comparison"/>
+                        <h5 class="o_dropdown_title d-inline">Comparison</h5>
+                    </div>
+                    <t t-foreach="comparisonItems" t-as="item" t-key="item.id">
+                        <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                                            checked="item.isActive"
+                                            parentClosingMode="'none'"
+                                            t-esc="item.description"
+                                            title="item.description.length > 15 ? item.description : ''"
+                                            onSelected="() => this.onComparisonSelected(item.id)"
+                        />
+                    </t>
+                </div>
+            </t>
+            <!-- Favorite -->
+            <t t-if="this.env.searchModel.searchMenuTypes.has('favorite')">
+                <div class="o_dropdown_container o_favorite_menu w-100 h-100 w-lg-auto px-3">
+                    <div class="px-3 fs-5 mb-2">
+                        <i class="me-2 text-favourite" t-att-class="facet_icons.favorite"/>
+                        <h5 class="o_dropdown_title d-inline">Favorites</h5>
+                    </div>
+                    <t t-set="currentGroup" t-value="null"/>
+                    <t t-foreach="favoriteItems" t-as="item" t-key="item.id or item.key">
+                        <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                            <div role="separator" class="dropdown-divider"/>
+                        </t>
+                        <t t-if="item.type ==='favorite'">
+                            <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                                                checked="item.isActive"
+                                                parentClosingMode="'none'"
+                                                onSelected="() => this.onFavoriteSelected(item.id)"
+                            >
+                                <span class="d-flex p-0 align-items-center justify-content-between">
+                                    <span t-out="item.description" t-att-title="item.description.length > 15 ? item.description : ''" class="text-truncate"/>
+                                    <i class="ms-1 o_icon_right fa fa-trash-o"
+                                       title="Delete item"
+                                       t-on-click.stop="() => this.openConfirmationDialog(item.id)"
+                                    />
+                                </span>
+                            </CheckboxItem>
+                        </t>
+                        <t t-else="">
+                            <t t-component="item.Component"/>
+                        </t>
+                        <t t-set="currentGroup" t-value="item.groupNumber"/>
+                    </t>
+                </div>
+            </t>
+            <t t-slot="default"/>
+        </Dropdown>
+    </t>
+
+</templates>

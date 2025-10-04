@@ -1,0 +1,200 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_org_chart
+# 
+# Translators:
+# Wil Odoo, 2024
+# Tony Ng, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr "<span class=\"o_stat_text\">組織架構圖</span>"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "添加一個新員工"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "一般員工"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr "部門顏色"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr "直屬下屬人數"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Direct and indirect subordinates"
+msgstr "直接和間接下屬"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Direct subordinates"
+msgstr "直接下屬"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee
+msgid "Employee"
+msgstr "員工"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "員工"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "In order to get an organigram, set a manager and save the record."
+msgstr "要獲得組織圖，請設定經理並儲存記錄。"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Indirect Subordinates Count"
+msgstr "間接下屬數量"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Indirect subordinates"
+msgstr "間接的下屬"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
+msgid "Is Subordinate"
+msgstr "是下屬"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "More managers"
+msgstr "更多經理人"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "No hierarchy position."
+msgstr "沒有層級職位。"
+
+#. module: hr_org_chart
+#. odoo-python
+#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "不支援該操作"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
+msgstr "組織架構圖"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "Organization Chart"
+msgstr "人員管理組織結構圖"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_public
+msgid "Public Employee"
+msgstr "公開員工"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Redirect"
+msgstr "重新導向"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "See All"
+msgstr "查看所有"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Subordinates"
+msgstr "下屬"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
+#, python-format
+msgid "Team"
+msgstr "團隊"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "This employee has no manager or subordinate."
+msgstr "該員工沒有經理或下級。"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Total"
+msgstr "總計"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+"隨著Odoo員工的螢幕上只是一個快速瀏覽，您\n"
+"可以很容易地找到您所需要的每個人\n"
+"的資訊、聯絡人資料、工作職位、可用性等。"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+#, python-format
+msgid "people"
+msgstr "人"

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.SettingsBinaryField" t-inherit="web.BinaryField" t-inherit-mode="primary">
+        <xpath expr="//t[@name='download']" position="attributes">
+            <attribute name="t-if"/>
+        </xpath>
+    </t>
+
+</templates>

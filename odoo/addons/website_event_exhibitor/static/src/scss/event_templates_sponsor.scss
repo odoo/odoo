@@ -1,0 +1,69 @@
+/*
+ * SPONSORS
+ */
+
+.o_wevent_event .o_wevent_sponsor {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.o_wevent_event .o_ribbon {
+    font: 12px Sans-Serif;
+    color: #404040;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.o_wevent_event .ribbon_Gold {
+    background-color: #FDE21B;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#E9CE0C), to(#FDE21B));
+    background-image: -webkit-linear-gradient(top, #E9CE0C, #FDE21B);
+    background-image: -moz-linear-gradient(top, #E9CE0C, #FDE21B);
+    background-image: -ms-linear-gradient(top, #E9CE0C, #FDE21B);
+    background-image: -o-linear-gradient(top, #E9CE0C, #FDE21B);
+}
+
+.o_wevent_event .ribbon_Silver {
+    background-color: #CCCCCC;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#BBBBBB), to(#CCCCCC));
+    background-image: -webkit-linear-gradient(top, #BBBBBB, #CCCCCC);
+    background-image: -moz-linear-gradient(top, #BBBBBB, #CCCCCC);
+    background-image: -ms-linear-gradient(top, #BBBBBB, #CCCCCC);
+    background-image: -o-linear-gradient(top, #BBBBBB, #CCCCCC);
+}
+
+.o_wevent_event .ribbon_Bronze {
+    background-color: #DB9141;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#C2792A), to(#DB9141));
+    background-image: -webkit-linear-gradient(top, #C2792A, #DB9141);
+    background-image: -moz-linear-gradient(top, #C2792A, #DB9141);
+    background-image: -ms-linear-gradient(top, #C2792A, #DB9141);
+    background-image: -o-linear-gradient(top, #C2792A, #DB9141);
+}
+
+/*
+ * EVENT TOOL: SPONSOR WIDGET
+ */
+.o_wevent_event .o_wevent_sponsor_card {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid $gray-200;
+    background-color: $white;
+    margin: 0 -1px -1px 0;
+    cursor: pointer;
+
+    &:before {
+        content: "";
+        display: block;
+        @include o-position-absolute(0,0,0,0);
+        background-color: $black;
+        opacity: 0;
+        transition: opacity .3s;
+    }
+
+    &:hover:before {
+        opacity:.1;
+    }
+}

@@ -1,0 +1,69 @@
+.o-mail-Composer {
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    &.o-hasSelfAvatar {
+        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        padding-top: 0.1875rem; // avatar centered with composer text input: 36px (avatar) + 2*3px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        width: 48px;
+    }
+
+    .o-mail-Composer-coreHeader {
+        grid-area: core-header;
+    }
+
+    .o-mail-Composer-coreMain {
+        grid-area: core-main;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        grid-area: sidebar-main;
+    }
+
+    .o-mail-Composer-footer {
+        grid-area: core-footer;
+    }
+}
+
+.o-mail-Composer-actions button {
+    opacity: 75%;
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        opacity: 100%;
+    }
+}
+
+.o-mail-Composer-input {
+    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+    padding-bottom: 10px;
+    max-height: 100px;
+    resize: none;
+    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
+
+    .o-extended & {
+        max-height: Min(400px, 30vh);
+    }
+
+    &::placeholder {
+        @include text-truncate();
+    }
+}
+
+.o-mail-Composer-avatar {
+    --Avatar-size: #{$o-mail-Avatar-size};
+}
+
+.o-mail-Composer-fake {
+    height: 0;
+    top: -10000px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
+}

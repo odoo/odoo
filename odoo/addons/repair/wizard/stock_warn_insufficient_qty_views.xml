@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_warn_insufficient_qty_repair_form_view" model="ir.ui.view">
+        <field name="name">stock.warn.insufficient.qty.repair</field>
+        <field name="model">stock.warn.insufficient.qty.repair</field>
+        <field name="inherit_id" ref="stock.stock_warn_insufficient_qty_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='description']" position="after">
+                Do you confirm you want to repair <strong><field name="quantity" readonly="True"/></strong><field name="product_uom_name" readonly="True" class="mx-1"/>from location <strong><field name="location_id" readonly="True"/></strong>? This may lead to inconsistencies in your inventory.
+            </xpath>
+        </field>
+    </record>
+</odoo>

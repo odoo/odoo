@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="slide.course.prerequisite">
+        <ul class="m-0 ps-3">
+            <li t-foreach="channels" t-as="channel" t-key="channel.course_id">
+                <a t-attf-href="/slides/#{channel.course_id}" t-out="channel.course_name"/>
+            </li>
+        </ul>
+    </t>
+</templates>

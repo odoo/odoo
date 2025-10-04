@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_type_form" model="ir.ui.view">
+        <field name="name">l10n_latam.document.type.form</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
+        <field name="arch" type="xml">
+            <field name='doc_code_prefix' position="after">
+                <field name='l10n_ar_letter'/>
+                <field name='purchase_aliquots'/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_document_type_tree" model="ir.ui.view">
+        <field name="name">l10n_latam.document.type.tree</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_tree"/>
+        <field name="arch" type="xml">
+            <field name='doc_code_prefix' position="after">
+                <field name='l10n_ar_letter'/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_document_type_filter" model="ir.ui.view">
+        <field name="name">l10n_latam.document.type.filter</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_filter"/>
+        <field name="arch" type="xml">
+            <field name='code' position="after">
+                <field name='l10n_ar_letter'/>
+                <filter string="Argentinean Documents" name="localization" domain="[('country_id', '=', %(base.ar)d)]"/>
+            </field>
+            <group>
+                <filter string="Document Letter" name="l10n_ar_letter" context="{'group_by':'l10n_ar_letter'}"/>
+            </group>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_document_type_argentina">
+        <field name="name">Document Types</field>
+        <field name="res_model">l10n_latam.document.type</field>
+        <field name="context">{'search_default_localization': 1}</field>
+    </record>
+
+    <menuitem action="action_document_type_argentina" id="menu_document_type_argentina" sequence="5" parent="menu_afip_config"/>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='preferences']" position="after">
+                    <page string="Oauth" name="oauth">
+                        <group>
+                            <field name="oauth_provider_id"/>
+                            <field name="oauth_uid"/>
+                            <field name="oauth_access_token"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+</odoo>

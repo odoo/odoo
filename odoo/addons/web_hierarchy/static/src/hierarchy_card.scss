@@ -1,0 +1,71 @@
+@mixin o-hierarchy-node-color {
+    @for $size from 2 through length($o-colors) {
+        // Note: the first color is not defined as it is the 'no color' for org chart node
+        .o_hierarchy_node_color_#{$size - 1} {
+            background-color: nth($o-colors, $size);
+        }
+    }
+}
+
+.o_hierarchy_node_container {
+    width: 250px;
+    min-height: 130px;
+
+    &.o_hierarchy_dragged {
+        margin: 0px;
+        .o_hierarchy_node {
+            background-color: $hierarchy_element_dragged-background;
+        }
+    }
+
+    &.o_hierarchy_hover {
+        .o_hierarchy_node {
+            background-color: $hierarchy_element_hover-background;
+            border: 3px solid green !important;
+        }
+    }
+
+    .o_hierarchy_node {
+        &:hover {
+            cursor: pointer;
+        }
+
+        .o_hierarchy_node_header {
+            height: 30px;
+
+            div.o_field_background_image {
+                width: 48px;
+                height: 48px;
+                margin-bottom: -24px;
+                transform: translateY(-24px);
+                z-index: 1;
+
+                > img {
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        .o_hierarchy_node_body {
+            .o_employee_availability {
+                position: absolute;
+                top: 4px;
+                right: 2px;
+            }
+        }
+
+        .o_hierarchy_node_color_0 {
+            background-color: $gray-200;
+        }
+
+        @include o-hierarchy-node-color;
+    }
+
+    .o_hierarchy_node_button {
+        grid-template-columns: 50px 1fr 50px;
+
+        .o_hierarchy_icon {
+            vertical-align: text-top;
+        }
+    }
+}

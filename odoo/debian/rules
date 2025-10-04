@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+export PYBUILD_NAME=odoo-bin
+export PYBUILD_DISABLE=test
+
+%:
+	dh ${@} --with=python3 --buildsystem=pybuild
+
+override_dh_auto_build:
+	cp -r addons/* odoo/addons/
+	dh_auto_build
+
+override_dh_auto_install:
+	dh_auto_install
+	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/point_of_sale/static/src/fonts/Inconsolata.otf
+	for LINKTARGET in `awk '{ print $2 }' odoo.links`; do rm debian/odoo/${LINKTARGET} ; done
+	find debian/odoo -name LICENSE.txt -exec rm {} \;
+
+override_dh_auto_clean:
+	dh_auto_clean
+	for d in addons/* ; do rm -fr odoo/$$d ; done

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- EVENT A4 FOLDABLE BADGE (A4_french_fold) -->
+
+<template id="event_report_template_foldable_badge">
+    <div class="o_event_foldable_badge_container o_event_badge_report_page_break">
+        <div class="row">
+            <!-- Front -->
+            <div class="page col-6 o_event_badge_height pt-2">
+                <div class="oe_structure"/>
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+            <!-- Back -->
+            <div class="page col-6 position-relative p-1">
+                <div class="oe_structure"/>
+                <div class="o_event_foldable_badge_back text-center">
+                    <t t-if="event.use_barcode">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                    <div class="o_event_foldable_badge_barcode_container_top">
+                        <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=174&amp;height=174&amp;quiet=0" alt="QR Code"/>
+                    </div>
+                    <div class="fs-4 mt-2">
+                        <span t-out="attendee.barcode if attendee else '12345678901234567890'"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row o_event_foldable_badge_bottom_row">
+            <!-- Reversed Back -->
+            <div class="o_event_foldable_badge_bottom_quarter page col-6 p-1">
+                <div class="oe_structure"/>
+                <div class="o_event_foldable_badge_back text-center">
+                    <t t-if="event.use_barcode">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                    <div class="o_event_foldable_badge_barcode_container_bottom">
+                        <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=174&amp;height=174&amp;quiet=0" alt="QR Code"/>
+                    </div>
+
+                    <div class="fs-4 mt-2">
+                        <span t-out="attendee.barcode if attendee else '12345678901234567890'"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Reversed Front -->
+            <div class="o_event_foldable_badge_bottom_quarter page col-6 pt-2">
+                <div class="oe_structure"/>
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- EVENT A6 BADGE -->
+
+<template id="event_report_template_a6_badge">
+    <div class="o_event_badge_report_page_break">
+        <div class="row">
+            <div class="o_event_badge_height page col-6 pt-2">
+                <div class="oe_structure"/>
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- EVENT A4 4 PER SHEET -->
+
+<template id="event_report_template_four_per_sheet_badge">
+    <t t-if="example_badge" t-foreach="[(0, 1), (2, 3)]" t-as="indices_pair">
+        <div t-att-class="'row' + (' o_event_badge_report_page_break' if indices_pair_index else '')">
+            <div t-foreach="indices_pair" t-as="attendee_number" class="col-6 o_event_badge_height pt-2">
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </t>
+    <t t-if="not example_badge" t-foreach="[attendees[n:n+2] for n in range(0, len(attendees), 2)] if attendees else []" t-as="attendee_pair">
+        <t t-set="do_page_break" t-value="attendee_pair_index > 0 and attendee_pair_index % 2 or (attendee_pair_index + 1) * 2 >= len(attendees)"/>
+        <div t-att-class="'row' + (' o_event_badge_report_page_break' if do_page_break else '')">
+            <div t-foreach="attendee_pair" t-as="attendee" class="col-6 o_event_badge_height pt-2">
+                <t t-call="event.event_report_template_badge_card"/>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- EVENT REGISTRATION BADGE - REDIRECTING TO EVENT FORMAT BADGE ABOVE -->
+
+<template id="event_registration_report_template_badge">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs.grouped('event_id').items()" t-as="attendees_per_event">
+            <t t-set="event" t-value="attendees_per_event[0]"/>
+            <t t-set="attendees" t-value="attendees_per_event[1]"/>
+            <t t-if="event.badge_format != 'four_per_sheet'" t-foreach="attendees" t-as="attendee">
+                <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge"/>
+                <t t-else="" t-call="event.event_report_template_a6_badge"/>
+            </t>
+            <t t-if="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge"/>
+        </t>
+    </t>
+</template>
+
+<!-- EVENT EVENT BADGE - EXAMPLE BADGE - ATTENDEE NOT SET -->
+
+<template id="event_event_report_template_badge">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="event">
+            <t t-set="example_badge" t-value="True"/>
+            <t t-if="event.badge_format == 'A4_french_fold'" t-call="event.event_report_template_foldable_badge"/>
+            <t t-elif="event.badge_format == 'four_per_sheet'" t-call="event.event_report_template_four_per_sheet_badge"/>
+            <t t-else="" t-call="event.event_report_template_a6_badge"/>
+        </t>
+    </t>
+</template>
+
+<!-- EVENT FULL PAGE TICKET -->
+
+<template id="event_report_template_full_page_ticket">
+    <div class="row page">
+        <div t-attf-class="o_event_full_page_ticket_container page w-100 #{'o_event_full_page_ticket_responsive_html' if responsive_html else 'o_event_full_page_ticket'}">
+            <div class="o_event_full_page_ticket_wrapper">
+                <div class="o_event_full_page_ticket_details d-flex">
+                    <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
+                        <span itemprop="startDate" t-field="event.date_begin"
+                            t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                            class="fw-bold"/>
+                        <span itemprop="startDateTime" t-field="event.date_begin"
+                            class="fw-bold"
+                            t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                        <h2 class="o_event_full_page_ticket_event_name fw-bold pt-3 pb-2" t-field="event.name"/>
+                        <div t-if="event.address_id">
+                            <t t-set="use_map_marker" t-value="False"/>
+                            <t t-call="event.event_report_template_formatted_event_address"/>
+                        </div>
+                        <div t-if="not responsive_html" t-field="event.ticket_instructions" class="o_event_full_page_extra_instructions pt-3"></div>
+                        <div class="row pt-3 g-0">
+                            <h5 class="col-6" t-if="attendee" t-field="attendee.name"></h5>
+                            <h5 class="col-6" t-elif="not attendee"><span>John Doe</span></h5>
+                            <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                            <div class="col-6 text-end">
+                                <div t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type pe-4" t-field="attendee.event_ticket_id"/>
+                                <div t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
+                            </div>
+                        </div>
+                        <div t-if="not responsive_html" class="o_event_full_page_ticket_sponsors_container"></div>
+                    </div>
+                    <div class="o_event_full_page_ticket_barcode">
+                    
+                        <div class="o_event_full_page_ticket_barcode_container px-2">
+                            <t t-if="not attendee or (attendee and attendee.barcode)"> 
+                                <div class="pb-3">
+                                    <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
+                                </div>
+
+                                <t t-if="event.use_barcode">
+                                    <img class="o_event_barcode" t-attf-src="/report/barcode/?barcode_type=Code128&amp;value={{attendee.barcode if attendee and attendee.barcode else '12345678901234567890'}}&amp;width=168&amp;height=84&amp;humanreadable=1&amp;quiet=0" alt="Barcode"/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page oe_structure"/>
+        </div>
+    </div>
+</template>
+
+<template id="event_report_full_page_ticket_layout">
+    <!-- Inspired from "external_layout_standard" to get a repeated footer element. -->
+    <div class="article"
+        t-att-data-oe-model="main_object and main_object._name"
+        t-att-data-oe-id="main_object and main_object.id"
+        t-att-data-oe-lang="main_object and main_object.env.context.get('lang')">
+        <main>
+            <t t-out="0"/>
+        </main>
+    </div>
+
+    <div class="oe_structure"></div>
+    <div class="row footer o_event_full_page_ticket_footer d-block">
+        <div class="o_event_full_page_ticket_powered_by bg-odoo text-white text-center p-2 w-100">
+            <span t-if="event.organizer_id">
+                <span class="fw-bold" t-field="event.organizer_id.name">Marc Demo</span>
+                <span t-if="event.organizer_id.phone" class="ps-3 fa fa-phone"/>
+                <span t-if="event.organizer_id.phone" t-field="event.organizer_id.phone">+123456789</span>
+                <span t-if="event.organizer_id.email_normalized" class="ps-3 fa fa-envelope"/>
+                <span t-if="event.organizer_id.email_normalized" t-field="event.organizer_id.email_normalized">organizer@email.com</span>
+                <span t-if="event.organizer_id.website" class="ps-3 fa fa-globe"/>
+                <span t-if="event.organizer_id.website" t-field="event.organizer_id.website">https://www.example.com</span>
+            </span>
+            <t t-else="">
+                <span t-out="event.name">Odoo Community Days</span> <!-- Force some content to avoid messing the layout -->
+            </t>
+        </div>
+    </div>
+    <div class="oe_structure"></div>
+</template>
+
+<template id="event_registration_report_template_full_page_ticket">
+    <t t-foreach="docs" t-as="attendee">
+        <t t-call="web.html_container">
+            <t t-set="event" t-value="attendee.event_id._set_tz_context()"/>
+            <t t-set="main_object" t-value="attendee"/>
+            <t t-set="responsive_html" t-value="False"/>
+            <t t-call="event.event_report_full_page_ticket_layout">
+                <t t-call="event.event_report_template_full_page_ticket"/>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="event_event_report_template_full_page_ticket">
+    <t t-foreach="docs" t-as="event">
+        <t t-call="web.html_container">
+            <t t-set="event" t-value="event._set_tz_context()"/>
+            <t t-set="main_object" t-value="event"/>
+            <t t-set="responsive_html" t-value="False"/>
+            <t t-call="event.event_report_full_page_ticket_layout">
+                <t t-call="event.event_report_template_full_page_ticket"/>
+            </t>
+        </t>
+    </t>
+</template>
+
+<!-- EVENT RESPONSIVE HTML TICKET : Responsive web page -->
+
+<template id="event_registration_report_template_responsive_html_ticket">
+    <t t-foreach="docs" t-as="attendee">
+        <t t-call="web.html_container">
+            <t t-set="event" t-value="attendee.event_id._set_tz_context()"/>
+            <t t-set="main_object" t-value="attendee"/>
+            <t t-set="responsive_html" t-value="True"/>
+            <t t-call="event.event_report_full_page_ticket_layout">
+                <t t-call="event.event_report_template_full_page_ticket"/>
+            </t>
+        </t>
+    </t>
+</template>
+
+<!-- EVENT BADGE CARD (tool template used in all badge templates)-->
+
+<template id="event_report_template_badge_card">
+    <t t-set="badge_image_url" t-value="image_data_uri(event.badge_image) if event.badge_image else ''"/>
+    <div class="o_event_badge_ticket_wrapper" t-att-style="'background-image: url(%s);' % badge_image_url if badge_image_url else ''">
+        <div class="position-relative h-100">
+            <h3 class="fw-bold text-center" t-field="event.name"/>
+            <div class="text-center mt-5 py-2">
+                <h2 class="mb-0" t-if="attendee" t-field="attendee.name"/>
+                <h2 class="mb-0" t-elif="not attendee"><span>John Doe</span> <span t-if="attendee_number" t-out="attendee_number + 1"/></h2>
+                <h4 t-if="attendee and attendee.company_name" class="o_event_badge_font_faded" t-field="attendee.company_name"/>
+                <h4 t-elif="not attendee"><span class="o_event_badge_font_faded">My Placeholder Company</span></h4>
+            </div>
+            <div class="position-absolute bottom-0 w-100 text-center">
+                <img t-if="event.organizer_id.image_256" class="o_event_badge_logo text-center mb-2" t-att-src="image_data_uri(event.organizer_id.image_256)"/>
+                <span t-if="event.badge_format != 'A4_french_fold'" class="o_event_badge_barcode_container mb-2">
+                    <img t-att-class="'mb-2' + (' ms-5' if event.organizer_id.image_256 else '')" t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=116&amp;height=116&amp;quiet=0" alt="QR Code"/>
+                    <t t-if="event.use_barcode">
+                        <t t-if="attendee">
+                            <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                        <t t-elif="not attendee">
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                        </t>
+                    </t>
+                </span>
+
+                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                <t t-set="ticket" t-value="attendee.event_ticket_id if attendee else first_ticket"/>
+                <div t-if="ticket" class="text-center w-100" t-attf-style="background-color: {{ticket.color or '#875A7B'}};">
+                    <div class="p-3 fs-3" t-out="ticket.name"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- MISC -->
+
+<template id="event_report_template_formatted_event_address">
+    <!-- Small utility template to display "Venue" as:
+    fa-map-marker PartnerName
+    RestOfAddress -->
+    <span t-if="use_map_marker" class="fa fa-map-marker"/>
+    <t t-if="event.address_id.contact_address.strip()">
+        <t t-set="address_bits" t-value="event.address_id.contact_address.split('\n')"/>
+        <span t-if="address_bits" t-out="address_bits[0]">Rue de la Paix 123</span>
+        <t t-if="len(address_bits) > 1">
+            <br/>
+        </t>
+        <t t-set="remaining_bits" t-value="address_bits[1:]"/>
+        <t t-foreach="remaining_bits" t-as="address_bit">
+            <t t-if="address_bit and address_bit.strip()">
+                <span class="text-muted" t-out="address_bit">Rue de la Paix 123</span>
+            </t>
+        </t>
+    </t>
+    <span t-else="" t-out="event.address_id.name">1000 Brussels</span>
+</template>
+
+</odoo>

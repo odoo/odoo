@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_event']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='event_upcoming_snippet_hook']" position="replace">
+        <t t-snippet="website_event.s_events" string="Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
+    </xpath>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Event snippet options">
+    <xpath expr="." position="inside">
+        <!-- Events page  -->
+        <div data-selector="main:has(.o_wevent_events_list)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Events Page">
+            <we-select string="Layout" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="website_event.opt_events_list_columns">Grid</we-button>
+                <we-button data-customize-website-views="">List</we-button>
+            </we-select>
+            <we-checkbox string="Card design"
+                         data-customize-website-views="website_event.opt_events_list_cards"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Template badge"
+                         data-customize-website-views="website_event.opt_events_list_categories"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-row string="Top Bar Filter" class="o_we_full_row">
+                <we-button string="Date"
+                           data-customize-website-views="website_event.event_time"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Countries"
+                           data-customize-website-views="website_event.event_location"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+            <we-checkbox string="Sidebar"
+                         data-name="events_sidebar_opt"
+                         data-customize-website-views="website_event.opt_index_sidebar"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="About Us"
+                         class="o_we_sublevel_1"
+                         data-dependencies="events_sidebar_opt"
+                         data-customize-website-views="website_event.index_sidebar_about_us"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Follow Us"
+                         class="o_we_sublevel_1"
+                         data-dependencies="events_sidebar_opt"
+                         data-customize-website-views="website_event.index_sidebar_follow_us"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Photos"
+                         class="o_we_sublevel_1"
+                         data-dependencies="events_sidebar_opt"
+                         data-customize-website-views="website_event.index_sidebar_photos"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Quotes"
+                         class="o_we_sublevel_1"
+                         data-dependencies="events_sidebar_opt"
+                         data-customize-website-views="website_event.index_sidebar_quotes"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+        <!-- Event page  -->
+        <div data-js="WebsiteEvent" data-selector="main:has(.o_wevent_event)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Event Page">
+            <we-checkbox string="Sub-menu (Specific)"
+                         data-display-submenu="true"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website_event.s_searchbar_000_js" model="ir.asset">
+    <field name="name">Searchbar 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_event/static/src/snippets/s_searchbar/000.js</field>
+</record>
+
+<record id="website_event.s_searchbar_000_xml" model="ir.asset">
+    <field name="name">Searchbar 000 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_event/static/src/snippets/s_searchbar/000.xml</field>
+</record>
+
+</odoo>

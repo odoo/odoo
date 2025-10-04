@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mail</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="emails" position='replace'>
+                    <block title="Discuss" id="emails">
+                        <setting id="activities_setting" string="Activities" help="Configure your activity types">
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="oi-arrow-right"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="email_servers_setting" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com)." documentation="/applications/general/email_communication/email_servers.html" help="Configure your own email servers">
+                            <field name="external_email_server_default"/>
+                            <div class="content-group mb-3" invisible="not external_email_server_default">
+                                <div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(action_email_server_tree)d"
+                                        string="Incoming Email Servers" icon="oi-arrow-right" class="btn-link"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(base.action_ir_mail_server_list)d"
+                                        string="Outgoing Email Servers" icon="oi-arrow-right" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="email-alias-setting" string="Alias Domain"
+                                 help="Use different domains for your mail aliases"
+                                 company_dependent="1"
+                                 documentation="/applications/general/email_communication/email_domain.html#be-spf-compliant">
+                            <span class="me-1">@</span>
+                            <field name="alias_domain_id" placeholder="e.g. domain.com"
+                                   options="{'no_create_edit': True}"/>
+                        </setting>
+                        <setting string="Use a Gmail Server"
+                                 help="Send and receive emails through your Gmail account."
+                                 documentation="https://console.developers.google.com/"
+                                 invisible="not external_email_server_default">
+                            <field name="module_google_gmail"/>
+                            <div class="content-group" invisible="not module_google_gmail" id="msg_module_google_gmail">
+                                <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                            </div>
+                        </setting>
+                        <setting id="email-outlook-setting" string="Use an Outlook Server"
+                                 help="Send and receive emails through your Outlook account."
+                                 documentation="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app"
+                                 invisible="not external_email_server_default">
+                            <field name="module_microsoft_outlook"/>
+                            <div class="content-group" id="msg_module_microsoft_outlook"
+                                invisible="not module_microsoft_outlook">
+                                <div class="mt16 text-warning">
+                                    <strong>Save</strong> this page and come back here to set up the feature.
+                                </div>
+                            </div>
+                        </setting>
+                        <setting help="Add your twilio credentials for ICE servers">
+                            <field name="use_twilio_rtc_servers"/>
+                            <div class="content-group"  invisible="not use_twilio_rtc_servers">
+                                <div class="row mt16" id="mail_twilio_sid">
+                                    <label for="twilio_account_sid" class="col-lg-3"/>
+                                    <field name="twilio_account_sid" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
+                                </div>
+                                <div class="row mt16" id="mail_twilio_auth_token">
+                                    <label for="twilio_account_token" class="col-lg-3"/>
+                                    <field name="twilio_account_token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="SFU server">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="sfu_server_url" string="URL" class="col-lg-3"/>
+                                    <field name="sfu_server_url"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="sfu_server_key" string="Key" class="col-lg-3"/>
+                                    <field name="sfu_server_key"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Custom ICE server list" help="Configure your ICE server list for webRTC">
+                            <div class="content-group">
+                                <div class="row col-lg-4">
+                                    <button type="action" name="%(mail.action_ice_servers)d" string="ICE Servers" icon="oi-arrow-right" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="restrict_template_rendering_setting" help="Restrict mail templates edition and QWEB placeholders usage.">
+                            <field name="restrict_template_rendering"/>
+                        </setting>
+                        <setting id="tenor_api_key" string="Tenor GIF API key" help="Add a Tenor GIF API key to enable GIFs support." documentation="https://developers.google.com/tenor/guides/quickstart#setup">
+                            <field name="tenor_api_key" placeholder="Paste your API key"/>
+                        </setting>
+                        <setting id="tenor_content_filter" string="Tenor GIF content filter" help="Select the content filter used for filtering GIFs" documentation="https://developers.google.com/tenor/guides/content-filtering">
+                            <field name="tenor_content_filter"/>
+                        </setting>
+                        <setting id="tenor_gif_limit" string="Tenor GIF limits" help="Fetch up to the specified number of GIF.">
+                            <field name="tenor_gif_limit"/>
+                        </setting>
+                        <setting string="Message Translation" help="Google Translate Integration" id="message_translation_setting" documentation="https://cloud.google.com/translate/docs/setup">
+                            <field name="google_translate_api_key" placeholder="Paste your API key"/>
+                        </setting>
+                    </block>
+                </div>
+                <setting id="document_layout_setting" position="after">
+                    <setting string="Email Templates" help="Customize the look and feel of automated emails" id="mail_templates_setting" groups="mail.group_mail_template_editor,base.group_system">
+                        <div class="w-50 row">
+                            <span class="d-block w-75 py-2">Header Color</span>
+                            <field name="email_primary_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">Button Color</span>
+                            <field name="email_secondary_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <button name="open_email_layout" icon="oi-arrow-right"
+                            type="object" string="Update Mail Layout"
+                            groups="base.group_no_one" class="btn-link"/>
+                        <br groups="base.group_no_one"/>
+                        <button name="open_mail_templates" icon="oi-arrow-right" type="object" string="Review All Templates" class="btn-link"/>
+                    </setting>
+                </setting>
+            </field>
+        </record>
+    </data>
+</odoo>

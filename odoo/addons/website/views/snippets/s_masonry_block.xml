@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Template to fill with the chosen view -->
+<template id="s_masonry_block" name="Masonry">
+    <section class="s_masonry_block" data-vcss="001" data-vxml="001">
+        <div class="container-fluid">
+            <t t-call="website.s_masonry_block_default_template"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_masonry_block_default_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 1 / 11 / 7; z-index: 1;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 7 / 6 / 10; z-index: 2;" >
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc3" data-name="Block"
+            style="grid-area: 1 / 10 / 6 / 13; z-index: 3;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 6 / 7 / 11 / 10; z-index: 4;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 6 / 10 / 11 / 13; z-index: 5;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_reversed_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc3" data-name="Block"
+            style="grid-area: 1 / 1 / 6 / 4; z-index: 1;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 4 / 6 / 7; z-index: 2;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 6 / 1 / 11 / 4; z-index: 3;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 6 / 4 / 11 / 7; z-index: 4;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 13; z-index: 5;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_images_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 1 / 11 / 7; z-index: 1;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 13; z-index: 2;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_image_texts_image_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 4 / 6 / 7; z-index: 2;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 6 / 4 / 11 / 7; z-index: 3;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 13; z-index: 4;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_mosaic_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="13">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc3" data-name="Block"
+            style="grid-area: 1 / 1 / 4 / 4; z-index: 1;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 4 / 4 / 7; z-index: 2;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 4 / 1 / 14 / 7; z-index: 3;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 13; z-index: 4;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 11 / 7 / 14 / 10; z-index: 5;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 11 / 10 / 14 / 13; z-index: 6;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_texts_image_texts_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc3" data-name="Block"
+            style="grid-area: 1 / 1 / 6 / 4; z-index: 1;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 6 / 1 / 11 / 4; z-index: 2;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 4 / 11 / 10; z-index: 3;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 10 / 6 / 13; z-index: 4;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-5 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 6 / 10 / 11 / 13; z-index: 5;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_text_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="3">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 1 / 4 / 4; z-index: 1;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 1 / 4 / 4 / 7; z-index: 2;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 7 / 4 / 10; z-index: 3;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-2 text-center o_cc o_cc3" data-name="Block"
+            style="grid-area: 1 / 10 / 4 / 13; z-index: 4;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_text_image_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 4 / 11 / 7; z-index: 2;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 10; z-index: 3;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 10 / 11 / 13; z-index: 4;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_image_text_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 text-center o_cc o_cc4" data-name="Block"
+            style="grid-area: 1 / 4 / 11 / 7; z-index: 2;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 10; z-index: 3;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 text-center o_cc o_cc3" data-name="Block"
+            style="grid-area: 1 / 10 / 11 / 13; z-index: 4;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_text_image_text_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+        <div class="o_grid_item col-lg-6 g-col-lg-6 g-height-10 o_grid_item_image text-center" data-name="Block"
+            style="grid-area: 1 / 4 / 11 / 10; z-index: 2;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item col-lg-3 g-col-lg-3 g-height-10 text-center o_cc o_cc2" data-name="Block"
+            style="grid-area: 1 / 10 / 11 / 13; z-index: 3;">
+            <h3>A great title</h3>
+            <p>And a great subtitle</p>
+        </div>
+    </div>
+</template>
+
+<!-- Options -->
+<template id="s_masonry_block_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='layout_column']" position="after">
+        <div data-js="MasonryLayout" data-selector=".s_masonry_block">
+            <we-select string="Template"
+                data-name="masonry_template_opt"
+                data-attribute-name="masonryTemplate"
+                data-attribute-default-value="default">
+                <we-button title="Default"
+                    data-select-template="website.s_masonry_block_default_template"
+                    data-select-data-attribute="default"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_default.svg"/>
+                <we-button title="Default Reversed"
+                    data-select-template="website.s_masonry_block_reversed_template"
+                    data-select-data-attribute="default_reversed"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_reversed.svg"/>
+                <we-button title="Images"
+                    data-select-template="website.s_masonry_block_images_template"
+                    data-select-data-attribute="images"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_images.svg"/>
+                <we-button title="Image Text Image"
+                    data-select-template="website.s_masonry_block_image_texts_image_template"
+                    data-select-data-attribute="image_text_image"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_image_texts_image.svg"/>
+                <we-button title="Mosaic"
+                    data-select-template="website.s_masonry_block_mosaic_template"
+                    data-select-data-attribute="mosaic"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_mosaic.svg"/>
+                <we-button title="Text Image Text"
+                    data-select-template="website.s_masonry_block_texts_image_texts_template"
+                    data-select-data-attribute="text_image_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_texts_image_texts.svg"/>
+                <we-button title="Alternate Text"
+                    data-select-template="website.s_masonry_block_alternation_text_template"
+                    data-select-data-attribute="alternate_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_texts.svg"/>
+                <we-button title="Alternate Text Image"
+                    data-select-template="website.s_masonry_block_alternation_text_image_template"
+                    data-select-data-attribute="alternate_text_image"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_text_image.svg"/>
+                <we-button title="Alternate Image Text"
+                    data-select-template="website.s_masonry_block_alternation_image_text_template"
+                    data-select-data-attribute="alternate_image_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_image_text.svg"/>
+                <we-button title="Alternate Text Image Text"
+                    data-select-template="website.s_masonry_block_alternation_text_image_text_template"
+                    data-select-data-attribute="alternate_text_image_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_text_image_text.svg"/>
+            </we-select>
+        </div>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<record id="website.s_masonry_block_000_scss" model="ir.asset">
+    <field name="name">Masonry block 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_masonry_block/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_masonry_block_001_scss" model="ir.asset">
+    <field name="name">Masonry block 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_masonry_block/001.scss</field>
+</record>
+
+<record id="website.s_masonry_block_000_variables_scss" model="ir.asset">
+    <field name="name">Masonry block 000 variables SCSS</field>
+    <field name="bundle">web._assets_primary_variables</field>
+    <field name="path">website/static/src/snippets/s_masonry_block/000_variables.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+</odoo>

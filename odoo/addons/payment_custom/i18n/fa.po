@@ -1,0 +1,116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_custom
+# 
+# Translators:
+# Hanna Kheradroosta, 2023
+# odooers ir, 2023
+# Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid ""
+"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
+"app</small>"
+msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">من را در برنامه بانکی خود اسکن "
+"کنید</small>"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
+msgstr "<strong class=\"mt-auto\">ارتباط:</strong>"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "کد"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "سفارشی"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "حالت سفارشی"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr "کدهای QR را فعال کنید"
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr "هنگام پرداخت از طریق حواله سیمی، استفاده از کدهای QR را فعال کنید."
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "Finalize your payment"
+msgstr "پرداخت خود را نهایی کنید"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "هیچ تراکنشی مرجع منطبق پیدا نشد%s"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "OR"
+msgstr "یا"
+
+#. module: payment_custom
+#: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
+msgid "Only custom providers should have a custom mode."
+msgstr "فقط ارائه دهندگان سفارشی باید حالت سفارشی داشته باشند."
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_provider
+msgid "Payment Provider"
+msgstr "سرویس دهنده پرداخت"
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "تراکنش پرداخت"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Reload Pending Message"
+msgstr "بارگیری مجدد پیام در انتظار"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
+#, python-format
+msgid "The customer has selected %(provider_name)s to make the payment."
+msgstr "مشتری انتخاب کرده است%(provider_name)s که پرداخت را انجام دهد."
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "کد فنی این ارائه دهنده پرداخت."
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+msgid "Wire Transfer"
+msgstr "انتقال سیم"

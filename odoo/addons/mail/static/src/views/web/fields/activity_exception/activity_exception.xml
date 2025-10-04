@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityException">
+        <div
+            t-if="props.record.data[props.name]"
+            class="o-mail-ActivityException float-end mt-1"
+            t-att-class="textClass"
+            title="This record has an exception activity."
+        />
+    </t>
+</templates>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="crm_lead_merge_summary_inherit_partner_assign" inherit_id="crm.crm_lead_merge_summary">
+    <xpath expr="//div[@name='company']" position="after">
+        <br t-if="lead.date_partner_assign or lead.partner_assigned_id" />
+        <div t-if="lead.partner_assigned_id">
+            Assigned Partner: <span t-field="lead.partner_assigned_id"/>
+        </div>
+        <div name="date_partner_assign" t-if="lead.date_partner_assign">
+            Partner Assignment Date: <span t-field="lead.date_partner_assign"/>
+        </div>
+    </xpath>
+    <xpath expr="//div[@name='address']" position="attributes">
+        <attribute name="t-if">
+            lead.street or lead.street2 or lead.zip or lead.city or lead.state_id or lead.country_id
+            or lead.partner_latitude or lead.partner_longitude
+        </attribute>
+    </xpath>
+    <xpath expr="//div[@name='address']/*[last()]" position="after">
+        <div name="partner_geolocation" t-if="lead.partner_latitude or lead.partner_longitude">
+            Geolocation: <t t-esc="lead.partner_latitude"/> latitude, <t t-esc="lead.partner_longitude"/> longitude
+        </div>
+    </xpath>
+</template>
+
+</odoo>

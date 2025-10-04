@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_price_rule_form" model="ir.ui.view">
+        <field name="name">delivery.price.rule.form</field>
+        <field name="model">delivery.price.rule</field>
+        <field name="arch" type="xml">
+            <form string="Price Rules">
+                <group>
+                    <field name="name" invisible="1"/>
+                </group>
+                <group>
+                    <label for="variable" string="Condition"/>
+                    <div class="o_row">
+                        <field name="variable"/>
+                        <field name="operator"/>
+                        <field name="max_value"/>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <label for="list_base_price" string="Delivery Cost"/>
+                    <div>
+                        <field name="list_base_price" widget="monetary" class="oe_inline"/>
+                        +
+                        <field name="list_price" widget="monetary" class="oe_inline"/>
+                        *
+                        <field name="variable_factor" class="oe_inline"/>
+                    </div>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_delivery_price_rule_tree" model="ir.ui.view">
+        <field name="name">delivery.price.rule.tree</field>
+        <field name="model">delivery.price.rule</field>
+        <field name="arch" type="xml">
+            <tree string="Price Rules">
+                <field name="sequence" widget="handle" />
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

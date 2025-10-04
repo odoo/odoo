@@ -1,0 +1,40 @@
+.o-livechat-LivechatButton {
+    min-width: 100px;
+    font-size: 14px;
+    z-index: 5;
+    transition: filter 0.3s;
+
+    &:hover {
+        filter: brightness(90%);
+    }
+}
+
+.o-livechat-LivechatButton-notification {
+    transform-origin: 100% 100%;
+    bottom: 2.5em;
+    right: 4.5em;
+}
+
+.o-livechat-LivechatButton-animate {
+    animation: o-livechat-LivechatButton-notification-animation 0.6s ease-in-out forwards;
+}
+
+@keyframes o-livechat-LivechatButton-notification-animation {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    20% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

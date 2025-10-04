@@ -1,0 +1,131 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_discount
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: pos_discount
+#. odoo-python
+#: code:addons/pos_discount/models/pos_config.py:0
+#, python-format
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+"Щоб скористатися функцією глобальної знижки, потрібен товар зі знижкою. "
+"Перейдіть до точки продажу > Конфігурація > Параметри, щоб налаштувати це."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
+msgid "Allow the cashier to give discounts on the whole order."
+msgstr "Дозволити касиру робити знижку на все замовлення."
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#, python-format
+msgid "Discount"
+msgstr "Знижка"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount %"
+msgstr "Знижка %"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
+#, python-format
+msgid "Discount Percentage"
+msgstr "Відсоток знижки"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount Product"
+msgstr "Товар знижки"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "No discount product found"
+msgstr "Не знайдено товару зі знижкою"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "No tax"
+msgstr "Немає податків"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
+msgid "Order Discounts"
+msgstr "Знижки на замовлення"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Налаштування точки продажу"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Сесія точки продажу"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
+msgstr "Товар знижки точки продажу"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "Податок: %s"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
+msgstr "Типовий відсоток знижки при натисканні на кнопку Знижка"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Дисконтний товар здається неправильним. Переконайтеся, що його позначено як "
+"\"Можна продати\" та \"Доступно в точці продажу\"."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to apply the discount on the ticket."
+msgstr "Товар, який використовується для застосування знижки на квиток."

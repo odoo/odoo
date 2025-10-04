@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web_editor.LinkDialog" t-inherit-mode="extension">
+        <xpath expr="//*[@id='o_link_dialog_url_input']" position="after">
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+        </xpath>
+    </t>
+
+    <t t-inherit="web_editor.LinkTools" t-inherit-mode="extension">
+        <xpath expr="//we-row[@id='url_row']" position="after">
+            <div style="text-align: center" t-attf-class="#{state.isButton ? ' d-none' : ''}">
+                <small>
+                    Type '<span class="highlighted-text">/</span>' to search a page.
+                    '<span class="highlighted-text">#</span>' to link to an anchor.
+                </small>
+            </div>
+            <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{state.isButton ? ' d-none' : ''}">
+                <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                    <we-title>Page Anchor</we-title>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle"
+                                data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                                <we-toggler>
+                                    Loading...
+                                </we-toggler>
+                            </button>
+                            <we-selection-items name="link_anchor" class="dropdown-menu link-style">
+                                <we-button class="dropdown-item o_anchors_loading">Loading...</we-button>
+                            </we-selection-items>
+                            <span class="o_we_dropdown_caret"></span>
+                        </div>
+                    </div>
+                </we-select>
+            </we-row>
+        </xpath>
+    </t>
+
+    <t t-inherit="web_editor.toolbar" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='this.isMobile()']//div[@id='list']" position="inside">
+            <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text" data-text-selector=".o_animated_text"/>
+        </xpath>
+        <xpath expr="//t[@t-else]//div[last()]" position="after">
+            <div t-if="props.showAnimateText" id="animate" class="btn-group">
+                <div title="Animate text" class="btn o_we_animate_text" data-text-selector=".o_animated_text">
+                    <span class="fa fa-play fa-fw"></span>
+                    <span>Animate</span>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='open-chatgpt']" position="inside">
+            <span>AI</span>
+        </xpath>
+
+        <xpath expr="//div[@id='strikethrough']" position="attributes">
+            <attribute name="t-if">!props.showTextHighlights</attribute>
+        </xpath>
+        <xpath expr="//div[1]" position="inside">
+            <div t-if="props.showTextHighlights" id="highlight" class="btn-group">
+                <div title="Add Text Highlight Effects"
+                    class="btn o_we_text_highlight"
+                    data-text-selector=".o_text_highlight">
+                    <span class="oi oi-text-effect oi-fw"></span>
+                    <span>Highlight</span>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

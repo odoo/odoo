@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_report_view_search_website" model="ir.ui.view">
+        <field name="name">sale.report.search</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <search string="Sales">
+                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="product_id"/>
+                <field name="categ_id"/>
+                <field name="partner_id"/>
+                <field name="country_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Confirmed Orders" name="confirmed" domain="[('state', '=', 'sale')]"/>
+                <separator/>
+                <filter name="filter_date" date="date" default_period="this_month"/>
+                <group expand="0" string="Group By">
+                    <filter string="Website" name="groupby_website" context="{'group_by':'website_id'}" groups="website.group_multi_website"/>
+                    <filter string="Product" name="groupby_product" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Category" name="groupby_product_category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Customer" name="groupby_customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Customer Country" name="groupby_country" context="{'group_by':'country_id'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Order Date" name="groupby_order_date" context="{'group_by':'date'}"/>
+                    <!-- Dashboard filter - used by context -->
+                    <filter string="Last Week" invisible="1" name="week" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last Month" invisible="1" name="month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Last Year" invisible="1"  name="year" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=365)).strftime('%Y-%m-%d'))]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_report_view_pivot_website" model="ir.ui.view">
+        <field name="name">sale.report.view.pivot.website</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Analysis" sample="1">
+                <field name="date" type="row"/>
+                <field name="state" type="col"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_report_view_graph_website" model="ir.ui.view">
+        <field name="name">sale.report.view.graph.website</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sale Analysis" sample="1">
+                <field name="date"/>
+                <field name="price_subtotal" type='measure'/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_report_view_tree" model="ir.ui.view">
+        <field name="name">sale.report.view.tree.inherit.website.sale</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.sale_report_view_tree"/>
+        <field name="arch" type="xml">
+             <field name="order_reference" position="after">
+                <field name="website_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_report_action_dashboard" model="ir.actions.act_window">
+        <field name="name">Online Sales Analysis</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="search_view_id" ref="sale_report_view_search_website"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order from the website
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_report_action_view_pivot_website" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_view_pivot_website"/>
+        <field name="act_window_id" ref="sale_report_action_dashboard"/>
+    </record>
+
+    <record id="sale_report_action_view_graph_website" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_view_graph_website"/>
+        <field name="act_window_id" ref="sale_report_action_dashboard"/>
+    </record>
+
+    <record id="sale_report_action_carts" model="ir.actions.act_window">
+        <field name="name">Sales</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="search_view_id" ref="sale_report_view_search_website"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order from the website
+            </p>
+        </field>
+    </record>
+
+    <record id="sale_report_action_view_pivot_carts" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_view_pivot_website"/>
+        <field name="act_window_id" ref="sale_report_action_carts"/>
+    </record>
+
+    <record id="sale_report_action_view_graph_carts" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_view_graph_website"/>
+        <field name="act_window_id" ref="sale_report_action_carts"/>
+    </record>
+</odoo>

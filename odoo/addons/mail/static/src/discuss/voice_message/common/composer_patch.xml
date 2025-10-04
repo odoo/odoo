@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//FileUploader" position="after">
+            <VoiceRecorder t-if="thread and thread.type !== 'chatter' and allowUpload"
+                composer="props.composer"
+                attachmentUploader="attachmentUploader"
+                onchangeRecording.bind="() => this.state.recording = !this.state.recording"/>
+        </xpath>
+    </t>
+</templates>

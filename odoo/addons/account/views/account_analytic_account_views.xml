@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_analytic_account_view_form_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field eval="9" name="priority"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_invoice"
+                        icon="fa-pencil-square-o" invisible="invoice_count == 0">
+                        <field string="Customer Invoices" name="invoice_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button" type="object" name="action_view_vendor_bill"
+                        icon="fa-file-text-o" invisible="vendor_bill_count == 0">
+                        <field string="Vendor Bills" name="vendor_bill_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="account_analytic_account_view_list_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.account.list.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                <field name="debit" position="attributes">
+                    <attribute name="column_invisible">False</attribute>
+                </field>
+                <field name="credit" position="attributes">
+                    <attribute name="column_invisible">False</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

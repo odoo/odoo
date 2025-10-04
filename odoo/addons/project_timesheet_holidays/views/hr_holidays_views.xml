@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_holiday_status_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.type.form</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='visual']" position="before">
+                <group name="timesheet" groups="base.group_no_one" string="Timesheets">
+                    <div class="text-muted mb-4" colspan="2">
+                        Generate timesheets when validating time off requests of this type
+                    </div>
+                    <group>
+                        <field name="timesheet_project_id" context="{'active_test': False}" invisible="not company_id"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="timesheet_task_id" context="{'active_test': False, 'default_project_id': timesheet_project_id}" invisible="not timesheet_project_id" required="timesheet_project_id"/>
+                        <field name="timesheet_generate" invisible="company_id"/>
+                    </group>
+                </group>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

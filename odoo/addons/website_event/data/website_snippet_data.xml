@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="ir_filters_event_list_snippet" model="ir.filters">
+        <field name="name">Upcoming Events</field>
+        <field name="model_id">event.event</field>
+        <field name="user_id" eval="False" />
+        <field name="domain">[('date_begin', '&gt;=', context_today())]</field>
+        <field name="sort">["date_begin asc"]</field>
+    </record>
+
+    <record id="website_snippet_filter_event_list" model="website.snippet.filter">
+        <field name="filter_id" ref="website_event.ir_filters_event_list_snippet"/>
+        <field name="field_names">name,subtitle</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Upcoming Events</field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_journal_dashboard_kanban_view_inherit_hr_expense" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@id='account.JournalBodySalePurchase']//div[hasclass('o_kanban_primary_right')]" position="inside">
+                <div class="row" t-if="dashboard.number_expenses_to_pay">
+                    <div class="col overflow-hidden text-start">
+                        <a type="object" t-if="journal_type == 'purchase'" name="open_expenses_action">
+                            <t t-out="dashboard.number_expenses_to_pay"/> Expenses to Process
+                        </a>
+                    </div>
+                    <div class="col-auto text-end">
+                        <span t-if="journal_type == 'purchase'"><t t-out="dashboard.sum_expenses_to_pay"/></span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

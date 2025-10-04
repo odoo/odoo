@@ -1,0 +1,263 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_test
+#
+# Translators:
+# Martin Trigaux, 2018
+# Visti Kristensen <visti@vkdata.dk>, 2018
+# Morten Schou <ms@msteknik.dk>, 2018
+# Jesper Carstensen <jc@danodoo.dk>, 2018
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Ejner Sønniksen <ejner@vkdata.dk>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2018\n"
+"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+msgid ""
+"<br/>\n"
+"                        <strong>Description:</strong>"
+msgstr ""
+"<br/>\n"
+"<strong>Beskrivelse:</strong>"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+msgid "<strong>Name:</strong>"
+msgstr "<strong>Navn:</strong>"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+msgid "Account Test Report"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "Accounting Assert Test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.actions.report,name:account_test.account_assert_test_report
+#: model:ir.ui.menu,name:account_test.menu_action_license
+msgid "Accounting Tests"
+msgstr "Regnskabstests"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
+msgid "Accounting tests on"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr "Tjek om flyttede linjer er i balance og har samme dato og periode"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
+msgstr "Check på bank kontoudtoget om slutsaldo = startsaldo + summen af linjer"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr "Tjek at de betalte/udlignede fakturaer ikke er i\" Åben\" status"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
+msgstr "Check at udlignede bevægelser, på kreditor og debitor konti, tilhører udlignede fakturaer"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
+msgstr "Tjek om udlignede købs-/salgsfakturaer har udlignede posteringer på debitor og kreditor samlekonti."
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr "Tjek balancen: Debet sum = Kredit sum"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Code Help"
+msgstr "Kode hjælp"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid ""
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
+"try to translate and print what is inside `result`.\n"
+"\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"what order you want to print `result`'s content.\n"
+"\n"
+"Should you need them, you can also use the following variables into your code:\n"
+"    * cr: cursor to the database\n"
+"    * uid: ID of the current user\n"
+"\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid "Create a new accounting test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Description"
+msgstr "Beskrivelse"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Expression"
+msgstr "Udtryk"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Name"
+msgstr ""
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+msgid "Python Code"
+msgstr "Python kode"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
+msgid "Python code"
+msgstr "Python code"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Search Account Test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_01
+msgid "Test 1: General balance"
+msgstr "Test 1: Generel balance"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_03
+msgid "Test 3: Movement lines"
+msgstr "Test 3: Bevægelseslinjer"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05
+msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr "Test 5.1 : Kreditor og Debitor posteringer fra udlignede fakturaer"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05_2
+msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
+msgstr "Test 5.2 : Udlignede fakturaer og kreditor/debitor konti"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06
+msgid "Test 6 : Invoices status"
+msgstr "Test 6 : Fakturaers status"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_07
+msgid "Test 7 : Closing balance on bank statements"
+msgstr "Test 7: Slutbalance på bankkontoudtog"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
+msgid "Test Description"
+msgstr "Test beskrivelse"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
+msgid "Test Name"
+msgstr "Test navn"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
+msgid "Tests"
+msgstr "Test"
+
+#. module: account_test
+#: code:addons/account_test/report/report_account_test.py:0
+#, python-format
+msgid "The test was passed successfully"
+msgstr "Testen blev gennemført med succes"

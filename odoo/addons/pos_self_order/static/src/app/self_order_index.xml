@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.selfOrderIndex">
+        <div t-if="!selfOrder.pos_session" class="o-self-closed w-100 m-0 text-center bg-black text-white">
+            <p>We're currently closed.</p>
+        </div>
+        <div t-if="selfOrder.rpcLoading">
+            <LoadingOverlay />
+        </div>
+        <Router t-if="selfIsReady" pos_config_id="selfOrder.pos_config_id">
+            <t t-set-slot="default" route="`/pos-self/${selfOrder.pos_config_id}`">
+                <LandingPage />
+            </t>
+            <t t-set-slot="product_list" route="`/pos-self/${selfOrder.pos_config_id}/products`">
+                <ProductListPage />
+            </t>
+            <t t-set-slot="product" route="`/pos-self/${selfOrder.pos_config_id}/product/{int:id}`" t-slot-scope="url">
+                <ProductPage product="selfOrder.productByIds[url.id]" />
+            </t>
+            <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.pos_config_id}/combo-selection/{int:id}`" t-slot-scope="url">
+                <ComboPage product="selfOrder.productByIds[url.id]" />
+            </t>
+            <t t-set-slot="cart" route="`/pos-self/${selfOrder.pos_config_id}/cart`">
+                <CartPage />
+            </t>
+            <t t-set-slot="payment" route="`/pos-self/${selfOrder.pos_config_id}/payment`">
+                <PaymentPage />
+            </t>
+            <t t-set-slot="confirmation" route="`/pos-self/${selfOrder.pos_config_id}/confirmation/{string:orderAccessToken}/{string:screenMode}`" t-slot-scope="url">
+                <ConfirmationPage orderAccessToken="url.orderAccessToken" screenMode="url.screenMode" />
+            </t>
+            <t t-set-slot="location" route="`/pos-self/${selfOrder.pos_config_id}/location`">
+                <EatingLocationPage />
+            </t>
+            <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.pos_config_id}/stand_number`">
+                <StandNumberPage />
+            </t>
+            <t t-set-slot="orderHistory" route="`/pos-self/${selfOrder.pos_config_id}/orders`">
+                <OrdersHistoryPage />
+            </t>
+        </Router>
+        <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center text-center">
+            Hey, looks like you forgot to create products or add them to pos_config. Please add them before using the Self Order
+        </div>
+        <MainComponentsContainer />
+    </t>
+</templates>

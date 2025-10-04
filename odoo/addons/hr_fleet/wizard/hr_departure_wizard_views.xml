@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_departure_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.departure.wizard.view.form.extend2</field>
+        <field name="model">hr.departure.wizard</field>
+        <field name="inherit_id" ref="hr.hr_departure_wizard_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='activities_label']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='activities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='activities']" position="inside">
+                <div><field name="release_campany_car"/><label for="release_campany_car" string="Company Car"/></div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

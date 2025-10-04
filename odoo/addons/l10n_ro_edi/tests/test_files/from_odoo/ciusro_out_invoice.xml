@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>INV/2017/00001</cbc:ID>
+  <cbc:IssueDate>2017-01-01</cbc:IssueDate>
+  <cbc:DueDate>2017-02-28</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:Note>test narration</cbc:Note>
+  <cbc:DocumentCurrencyCode>RON</cbc:DocumentCurrencyCode>
+  <cbc:TaxCurrencyCode>RON</cbc:TaxCurrencyCode>
+  <cbc:BuyerReference>ref_partner_a</cbc:BuyerReference>
+  <cac:OrderReference>
+    <cbc:ID>ref_move</cbc:ID>
+  </cac:OrderReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>INV_2017_00001.pdf</cbc:ID>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="INV_2017_00001.pdf">___ignore___</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="9947">RO1234567897</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Hudson Construction</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Strada Kunst, 3</cbc:StreetName>
+        <cbc:CityName>SECTOR1</cbc:CityName>
+        <cbc:PostalZone>010101</cbc:PostalZone>
+        <cbc:CountrySubentity>RO-B</cbc:CountrySubentity>
+        <cac:Country>
+          <cbc:IdentificationCode>RO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>RO1234567897</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Hudson Construction</cbc:RegistrationName>
+        <cbc:CompanyID>RO1234567897</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>Hudson Construction</cbc:Name>
+        <cbc:Telephone>+40 123 456 789</cbc:Telephone>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="9947">RO1234567897</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>Roasted Romanian Roller</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Rolling Roast, 88</cbc:StreetName>
+        <cbc:CityName>SECTOR3</cbc:CityName>
+        <cbc:PostalZone>010101</cbc:PostalZone>
+        <cbc:CountrySubentity>RO-B</cbc:CountrySubentity>
+        <cac:Country>
+          <cbc:IdentificationCode>RO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>RO1234567897</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>Roasted Romanian Roller</cbc:RegistrationName>
+        <cbc:CompanyID>RO1234567897</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>Roasted Romanian Roller</cbc:Name>
+        <cbc:Telephone>+40 123 456 780</cbc:Telephone>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>Rolling Roast, 88</cbc:StreetName>
+        <cbc:CityName>SECTOR3</cbc:CityName>
+        <cbc:PostalZone>010101</cbc:PostalZone>
+        <cbc:CountrySubentity>RO-B</cbc:CountrySubentity>
+        <cac:Country>
+          <cbc:IdentificationCode>RO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+    <cbc:PaymentID>INV/2017/00001</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID>RO98RNCB1234567890123456</cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:Note>Payment terms: 30% Advance End of Following Month</cbc:Note>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="RON">285.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="RON">1500.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="RON">285.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="RON">1500.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="RON">1500.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="RON">1785.00</cbc:TaxInclusiveAmount>
+    <cbc:PrepaidAmount currencyID="RON">0.00</cbc:PrepaidAmount>
+    <cbc:PayableAmount currencyID="RON">1785.00</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>___ignore___</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="RON">500.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>product_a</cbc:Description>
+      <cbc:Name>product_a</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="RON">500.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>___ignore___</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="DZN">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="RON">1000.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>product_b</cbc:Description>
+      <cbc:Name>product_b</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="RON">1000.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>
