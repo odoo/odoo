@@ -5,7 +5,7 @@ import re
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_compare, groupby
+from odoo.tools import OrderedSet, float_compare, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
 
@@ -610,6 +610,16 @@ class ProductProduct(models.Model):
             [('name', operator, value)],
             [('default_code', operator, value)],
         ]
+
+        if isinstance(value, (OrderedSet)):
+            value = next(iter(value))
+        match = re.match(r'\[(.*?)\]\s*(.*)', value)
+        if match:
+            code, name = match.groups()
+            domains.append(Domain.OR([
+                Domain(f, operator, v) for f, v in [('default_code', code), ('name', name)] if v
+            ]))
+
         if operator == 'in':
             domains.append([('barcode', 'in', value)])
             for v in value:
