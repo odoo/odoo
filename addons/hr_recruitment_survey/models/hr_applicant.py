@@ -11,6 +11,12 @@ class HrApplicant(models.Model):
     survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_ids = fields.One2many('survey.user_input', 'applicant_id', string="Responses")
 
+    def action_archive(self):
+        res = super().action_archive()
+        if survey_input := self.env['survey.user_input'].search([('partner_id', '=', self.partner_id.id)]):
+            survey_input.write({'deadline': fields.Datetime.now()})
+        return res
+
     def action_print_survey(self):
         """ If response is available then print this response otherwise print survey form (print template of the survey) """
         self.ensure_one()
@@ -65,3 +71,10 @@ class HrApplicant(models.Model):
             'target': 'new',
             'context': local_context,
         }
+
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('stage_id') and self.env['hr.recruitment.stage'].browse(vals.get('stage_id')).hired_stage:
+            if survey_input := self.env['survey.user_input'].search([('partner_id', '=', self.partner_id.id)]):
+                survey_input.write({'deadline': fields.Datetime.now()})
+        return res
