@@ -12,6 +12,7 @@ import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
+import { user } from "@web/core/user";
 
 export class DomainField extends Component {
     static template = "web.DomainField";
@@ -259,7 +260,7 @@ export class DomainField extends Component {
         if (domain.isInvalid) {
             return false;
         }
-        return rpc("/web/domain/validate", { model: resModel, domain });
+        return rpc("/web/domain/validate", { model: resModel, domain, context: user.context });
     }
 
     update(domain, isDebugEdited = false) {
