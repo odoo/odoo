@@ -1,121 +1,165 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="html_editor.HistoryDialog">
-        <Dialog size="size" title="title" contentClass="'h-100 html-history-dialog-container'"
+        <Dialog size="state.size" title="title" bodyClass="'p-0'" contentClass="'html-history-dialog-container h-100'"
+                onExpand="toggleFullscreen"
                 t-on-close="props.close" t-on-cancel="props.close" t-on-confirm="_onRestoreRevisionClick"
                 t-on-after-render="_onAfterRender">
-            <div t-attf-class="dialog-container html-history-dialog #{state.revisionLoading ? 'html-history-loading' : 'html-history-loaded'}">
-                <div class="revision-list d-flex flex-column align-content-stretch" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
-                    <t t-if="!state.revisionsData.length">
-                        <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
-                    </t>
-
-                    <t t-foreach="state.revisionsData" t-as="rev"
-                       t-key="rev.revision_id">
-                        <a type="object" href="#" role="button"
-                           t-attf-title="Show the document submited by #{rev.create_user_name}, on #{this.getRevisionDate(rev)}"
-                           t-att-class="this.getRevisionClasses(rev)"
-                           t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
-                            <small><t t-esc="this.getRevisionDate(rev)" /></small>
-                            <div class="o_avatar">
-                                <img class="rounded" t-att-src="this.getRevisionAuthorAvatar(rev)"
-                                     t-att-alt="rev.create_user_name" t-att-title="rev.create_user_name"/>
-                            </div>
+            <div class="d-flex flex-column h-100 overflow-hidden">
+                <ul class="nav nav-tabs d-md-none flex-shrink-0" role="tablist">
+                    <li class="nav-item flex-grow-1">
+                        <a
+                            href="#"
+                            id="tab-revisions"
+                            class="nav-link position-relative text-center fw-bold"
+                            t-att-class="{'active': state.mobileActiveTab === 'revisions'}"
+                            t-on-click.prevent="() => this.setMobileTab('revisions')"
+                            role="tab"
+                            aria-controls="revisions-panel"
+                            t-att-aria-selected="state.mobileActiveTab === 'revisions' ? 'true' : 'false'">
+                            <i class="fa fa-list me-1" role="img" aria-hidden="true"/>Revisions
                         </a>
-                    </t>
-                </div>
-                <div class="history-container" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
-                    <div t-attf-class="history-content-view #{state.currentView === 'content' ? '' : 'd-none'}">
-                        <div class="history-view-top-bar">
-                            <div>
-                                <div class="text-info smaller">
-                                    <i class="fa fa-info-circle me-1" title="Version date"/>
-                                    Showing the document as it was on <t t-esc="this.getRevisionDate(this.currentRevision)" />, submited by <t t-esc="this.currentRevision.create_user_name" />
-                                </div>
-                            </div>
-                            <div>
-                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'comparison'">
-                                    <i class="fa fa-exchange" title="View comparison" />
-                                    View comparison
-                                </a>
-                            </div>
-                        </div>
-                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-20}}px;">
-                            <t t-if="state.revisionLoading">
-                                <div class="d-flex flex-column justify-content-center align-items-center">
-                                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
-                                         style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
-                                    <p class="m-0 text-muted loading-text">
-                                        <em>Loading...</em>
-                                    </p>
-                                </div>
-                            </t>
-                            <t t-elif="state.revisionContent?.length">
-                                <div class="pe-none">
-                                    <HtmlViewer config="getConfig('revisionContent')"/>
-                                </div>
-                            </t>
-                            <t t-else="" t-out="props.noContentHelper" />
-                        </div>
-                    </div>
-                    <div t-attf-class="history-comparison-view #{state.currentView === 'comparison' ? '' : 'd-none'}">
-                        <div class="history-view-top-bar">
-                            <t t-if="env.debug">
-                                <div class="toggle-view-btns">
-                                    <div class="btn-group" role="group">
-                                        <input type="radio" class="btn-check" name="vbtn-radio" id="unified-view-btn"
-                                               t-on-click="() => state.isComparisonSplit = false"
-                                               t-att-checked="state.isComparisonSplit ? '' : 'checked'" />
-                                        <label class="btn btn-secondary" for="unified-view-btn">Unified view</label>
-                                        <input type="radio" class="btn-check" name="vbtn-radio" id="split-view-btn"
-                                               t-on-click="() => state.isComparisonSplit = true"
-                                               t-att-checked="state.isComparisonSplit ? 'checked' : ''" />
-                                        <label class="btn btn-secondary" for="split-view-btn">Split view</label>
+                    </li>
+                    <li class="nav-item flex-grow-1">
+                        <a
+                            href="#"
+                            id="tab-preview"
+                            class="nav-link position-relative text-center fw-bold"
+                            t-att-class="{'active': state.mobileActiveTab === 'content'}"
+                            t-on-click.prevent="() => this.setMobileTab('content')"
+                            role="tab"
+                            aria-controls="content-panel"
+                            t-att-aria-selected="state.mobileActiveTab === 'content' ? 'true' : 'false'">
+                            <i class="fa fa-eye me-1" role="img" aria-hidden="true"/>Preview
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="html-history-dialog position-relative d-flex flex-column flex-md-row h-100" t-attf-class="{{state.isLoading ? 'html-history-loading' : 'html-history-loaded'}}">
+                    <div id="revisions-panel" class="o_revision_panel h-100 p-3 border-end overflow-auto d-md-flex flex-md-shrink-0" t-att-class="{'d-none': !isMobileActiveTab('revisions')}" role="region" aria-labelledby="tab-revisions">
+                        <t t-if="!state.revisionsData.length">
+                            <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
+                        </t>
+
+                        <ul t-else="" class="list-group w-100" role="listbox" t-ref="listbox" >
+                            <t t-foreach="state.revisionsData" t-as="rev" t-key="rev.revision_id">
+                                <li t-att-data-revision-id="rev.revision_id"
+                                    t-attf-title="Submitted by #{rev.create_user_name} on #{this.getRevisionFullDate(rev)}"
+                                    class="o_revision_panel_item list-group-item rounded-2 mb-2 px-2 py-1 border-1 cursor-pointer user-select-none"
+                                    t-att-class="this.getRevisionClasses(rev)"
+                                    t-on-click="() => this.updateCurrentRevision(rev.revision_id)"
+                                    t-on-keydown="(ev) => this.onRevisionKeydown(rev.revision_id, ev)"
+                                    t-att-aria-selected="this.isRevisionSelected(rev) ? 'true' : 'false'"
+                                    role="option"
+                                    tabindex="0"
+                                    >
+                                    <div class="revision-item-content d-flex justify-content-between align-items-center gap-3">
+                                        <div class="revision-info lh-sm">
+                                            <time class="revision-date fw-bold d-block" t-att-datetime="rev.create_date">
+                                                <t t-esc="this.getRevisionDate(rev)" />
+                                            </time>
+                                            <div class="revision-author text-muted text-truncate">
+                                                <small>by <t t-esc="rev.create_user_name" /></small>
+                                            </div>
+                                        </div>
+                                        <div class="o_avatar">
+                                            <img
+                                                class="rounded"
+                                                t-att-src="this.getRevisionAuthorAvatar(rev)"
+                                                t-att-alt="rev.create_user_name + ' avatar'"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+                                </li>
                             </t>
-                            <div>
-                                <div class="text-info smaller">
-                                    <i class="fa fa-info-circle me-1" title="Version date"/>
-                                    Showing all differences between the current version and the selected one updated by <t t-esc="this.currentRevision.create_user_name" /> on <t t-esc="this.getRevisionDate(this.currentRevision)" />
-                                </div>
+                        </ul>
+                    </div>
+                    <div id="content-panel"
+                         class="history-container d-md-flex flex-column flex-grow-1 min-w-0 overflow-hidden"
+                         t-att-class="{'d-none': !isMobileActiveTab('content')}"
+                         role="region"
+                         aria-labelledby="tab-preview">
+                        <div class="history-view-top-bar d-flex gap-3 justify-content-between align-items-center px-3 border-bottom bg-view">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="compare-switch"
+                                    t-att-checked="state.currentView === 'comparison'"
+                                    t-on-change="toggleComparison"
+                                    aria-label="Toggle comparison view" />
+                                <label class="form-check-label fw-medium" for="compare-switch">
+                                    Show comparison
+                                </label>
                             </div>
-                            <div>
-                                <a type="object" href="#" role="button" class="btn btn-secondary" t-on-click="() => state.currentView = 'content'">
-                                    <i class="fa fa-eye" title="View Content"/>
-                                    View content
-                                </a>
+                            <div t-if="env.debug and state.currentView === 'comparison'" class="btn-group" role="group" aria-label="Diff view mode">
+                                <input type="radio" class="btn-check" name="diff-mode" id="unified-view-btn"
+                                    t-on-click="setComparisonUnified"
+                                    t-att-checked="!state.isComparisonSplit" />
+                                <label class="btn btn-secondary" for="unified-view-btn">Unified</label>
+                                <input type="radio" class="btn-check" name="diff-mode" id="split-view-btn"
+                                    t-on-click="setComparisonSplit"
+                                    t-att-checked="state.isComparisonSplit" />
+                                <label class="btn btn-secondary" for="split-view-btn">Split</label>
                             </div>
                         </div>
-                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-60}}px;">
-                            <t t-if="state.revisionLoading">
-                                <div class="d-flex flex-column justify-content-center align-items-center">
-                                    <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
-                                         style="filter: invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
-                                    <p class="m-0 text-muted loading-text">
-                                        <em>Loading...</em>
-                                    </p>
-                                </div>
-                            </t>
-                            <t t-elif="state.revisionComparison?.length">
-                                <div t-attf-class="history-comparison-split #{state.isComparisonSplit ? '' : 'd-none'}">
-                                    <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
-                                </div>
-                                <div t-attf-class="pe-none history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
-                                    <HtmlViewer config="getConfig('revisionComparison')"/>
-                                </div>
-                            </t>
-                            <t t-else="">
-                                <span class="text-muted fst-italic">This is the current version, nothing to compare.</span>
-                            </t>
+                        <div class="history-info-bar flex-shrink-0">
+                            <div class="alert alert-secondary py-2 mb-0 rounded-0 border-0" role="status" aria-live="polite">
+                                <small>
+                                    <i class="fa fa-info-circle me-1" role="img" aria-hidden="true"/>
+                                    <t t-if="state.currentView === 'content'">
+                                        Showing <strong t-esc="this.currentRevision.create_user_name" />'s description from <strong t-esc="this.getRevisionFullDate(this.currentRevision)" />
+                                    </t>
+                                    <t t-else="">
+                                        Comparing current description with <strong t-esc="this.currentRevision.create_user_name" />'s version from <strong t-esc="this.getRevisionFullDate(this.currentRevision)" />
+                                    </t>
+                                </small>
+                            </div>
+                        </div>
+                        <div t-attf-class="history-content-view d-flex flex-column flex-grow-1 pt-0 #{state.currentView !== 'content' ? 'd-none' : ''}">
+                            <div class="history-view-inner flex-grow-1 p-3 overflow-auto" t-att-aria-busy="state.isLoading ? 'true' : 'false'">
+                                <t t-if="state.isLoading">
+                                    <t t-call="html_editor.HistoryDialog.LoadingSpinner"/>
+                                </t>
+                                <t t-elif="state.revisionContent?.length">
+                                    <div class="pe-none">
+                                        <HtmlViewer config="getConfig('revisionContent')"/>
+                                    </div>
+                                </t>
+                                <t t-else="" t-out="props.noContentHelper" />
+                            </div>
+                        </div>
+                        <div t-attf-class="history-comparison-view d-flex flex-column flex-grow-1 pt-0 #{state.currentView !== 'comparison' ? 'd-none' : ''}">
+                            <div class="history-view-inner flex-grow-1 p-3 overflow-auto" t-att-aria-busy="state.isLoading ? 'true' : 'false'">
+                                <t t-if="state.isLoading">
+                                    <t t-call="html_editor.HistoryDialog.LoadingSpinner"/>
+                                </t>
+                                <t t-elif="state.revisionComparison?.length">
+                                    <div t-attf-class="history-comparison-split position-relative h-100 #{!state.isComparisonSplit ? 'd-none' : ''}">
+                                        <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
+                                    </div>
+                                    <div t-attf-class="pe-none history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
+                                        <HtmlViewer config="getConfig('revisionComparison')"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted fst-italic">This is the current version, nothing to compare.</span>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick" t-att-disabled="state.revisionLoading || state.revisionId === -1">Restore history</button>
+                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick" t-att-disabled="state.isLoading || state.revisionId === -1">Restore history</button>
                 <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
             </t>
         </Dialog>
+    </t>
+
+    <t t-name="html_editor.HistoryDialog.LoadingSpinner">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <img src="/web/static/img/spin.svg" alt="Loading..." class="loading-spinner me-2 opacity-50"/>
+            <p class="m-0 text-muted loading-text">
+                <em>Loading...</em>
+            </p>
+        </div>
     </t>
 </templates>

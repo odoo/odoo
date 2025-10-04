@@ -70,9 +70,9 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         trigger: ".modal .html-history-dialog.html-history-loaded",
     }, {
         content: "Verify that 5 revisions are displayed (default empty description after the creation of the todo + 3 edits)",
-        trigger: ".modal .html-history-dialog .revision-list .btn",
+        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item",
         run: function () {
-            const items = document.querySelectorAll(".revision-list .btn");
+            const items = document.querySelectorAll(".o_revision_panel .list-group-item");
             if (items.length !== 5) {
                 throw new Error('Expect 5 Revisions in the history dialog, got ' + items.length);
             }
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 3)`,
     }, {
         content: "Go to the third revision related to the second edit",
-        trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(3)",
+        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item:nth-child(3)",
         run: "click",
     }, {
         trigger: ".modal .html-history-dialog.html-history-loaded",
@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 1)`,
     }, {
         // click on the split comparison tab
-        trigger: '.history-container .history-view-top-bar a:contains(Comparison)',
+        trigger: '.history-container .history-view-top-bar label:contains(Show comparison)',
         run: "click",
     }, {
         content: "Verify comparaison text",
