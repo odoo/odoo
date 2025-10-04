@@ -293,15 +293,9 @@ class DiscussChannel(models.Model):
         # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
         # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if current_guest:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_guest.sudo().channel_ids
-        elif current_partner:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_partner.sudo().channel_ids
-        else:
-            channels = self.env["discuss.channel"]
-        return [('id', 'in', channels.ids)]
+        # sudo: discuss.channel - sudo for performance, just checking existence
+        channel_ids = (current_partner.sudo().channel_ids + current_guest.sudo().channel_ids).ids
+        return [('id', 'in', channel_ids)]
 
     @api.depends_context("uid", "guest")
     @api.depends("channel_member_ids")
@@ -1135,9 +1129,16 @@ class DiscussChannel(models.Model):
     def _find_or_create_member_for_self(self):
         self.ensure_one()
         domain = [("channel_id", "=", self.id), ("is_self", "=", True)]
-        member = self.env["discuss.channel.member"].search(domain)
-        if member:
-            return member
+        members = self.env["discuss.channel.member"].search(domain)
+        if members:
+            user_member = members.filtered("partner_id")
+            if user_member:
+                return user_member
+            guest_member = members.filtered("guest_id")
+            if guest_member:
+                if not self.env.user._is_public():
+                    return self._add_members(users=self.env.user)
+                return guest_member
         if not self.env.user._is_public():
             return self._add_members(users=self.env.user)
         guest = self.env["mail.guest"]._get_guest_from_context()

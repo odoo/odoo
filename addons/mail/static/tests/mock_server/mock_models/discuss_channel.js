@@ -1061,7 +1061,7 @@ export class DiscussChannel extends models.ServerModel {
         }
         return DiscussChannelMember._filter([
             ["channel_id", "=", id],
-            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
+            partner ? ["partner_id", "=", partner.id] : ["guest_id", "=", guest.id],
         ])[0];
     }
 
