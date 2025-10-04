@@ -92,6 +92,42 @@ DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 REGEX_SUBTYPE_UNFORMATED = re.compile(r'^\w+/[\w-]+$')
 REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
 
+try:
+    from bidi.algorithm import get_display as get_bidi_display
+except ImportError:
+    _logger.error("`python-bidi` Python module not found, Falling back to simple logic for bidirectional PDF content."
+                  " Consider installing this module if you have RTL content!")
+
+
+    def get_bidi_display(
+            str_or_bytes: str,
+            encoding: str = "utf-8",
+            upper_is_rtl: bool = False,
+            base_dir: str = None,
+            debug: bool = False,
+    ):
+        """
+        Hot fix, in case of missing python-bidi
+
+        Keep function signature same as python-bidi and accept byte inputs too.
+
+        This function is called when the text is containing one or more RTL character, and after `arabic_reshaper.reshape`.
+        In this case, correct presentation is to filip order of RTL characters and KEEP order of LTR characters.
+        As the logic is complicated and has many cases to consider, we keep it simple here:
+        - If there is no LTR character, we flip the order to get correct presentation.
+        - If it's mixed LTR and RTL, we do nothing!
+          we prefer a readable english text with reversed LTR overs correct LTR with reversed english letters.
+        """
+        if isinstance(str_or_bytes, bytes):
+            text = str_or_bytes.decode(encoding)
+        else:
+            text = str_or_bytes
+
+        # No LTR letter
+        if not any(unicodedata.bidirectional(letter) == 'L' for letter in text[1:]):
+            return text[::-1]
+
+        return text
 
 # Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
 PdfImagePlugin.__name__
@@ -307,7 +343,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
 
 def reshape_text(text):
     """
-    Display the text based on his first character unicode name to choose Right-to-left or Left-to-right
+    Display the text based on Unicode name to choose Right-to-left or Left-to-right
     This is just a hotfix to make things work
     In the future the clean way be to use arabic-reshaper and python3-bidi libraries
 
@@ -320,21 +356,18 @@ def reshape_text(text):
     - 'L' for Left-to-Right character
     - 'R' or 'AL' for Right-to-Left character
 
-    So we have to check if the first character of the text is of type 'R' or 'AL', and check that there is no
-    character in the rest of the text that is of type 'L'. Based on that we can confirm we have a fully Right-to-Left language,
-    then we can flip the text before returning it.
+    So we have to check if any character of the text is of type 'R' or 'AL'.
+    Based on that we can reshape and flip the Right-to-Left text before returning it.
     """
     if not text:
         return ''
-    maybe_rtl_letter = text.lstrip()[:1] or ' '
-    maybe_ltr_text = text[1:]
-    first_letter_is_rtl = unicodedata.bidirectional(maybe_rtl_letter) in ('AL', 'R')
-    no_letter_is_ltr = not any(unicodedata.bidirectional(letter) == 'L' for letter in maybe_ltr_text)
-    if first_letter_is_rtl and no_letter_is_ltr:
-        text = reshape(text)
-        text = text[::-1]
+    has_rtl_letter = any(unicodedata.bidirectional(letter) in ('AL', 'R') for letter in text)
+    if not has_rtl_letter:
+        return text
 
-    return text
+    text = reshape(text)
+    # Will fall back to hotfix if python-bidi is not installed
+    return get_bidi_display(text)
 
 
 class OdooPdfFileReader(PdfFileReader):
