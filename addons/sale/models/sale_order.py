@@ -93,6 +93,11 @@ class SaleOrder(models.Model):
         required=True, copy=False,
         help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
         default=fields.Datetime.now)
+    order_type = fields.Selection(
+        string="Sale Type",
+        selection=[('building', 'Building'), ('sale', 'Sale'), ('house', 'House')],
+        required=True,
+    )
     origin = fields.Char(
         string="Source Document",
         help="Reference of the document that generated this sales order request")
