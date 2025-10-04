@@ -299,7 +299,9 @@ export class TranslationPlugin extends Plugin {
         }
         for (const translateSelectEl of this.translateSelectEls) {
             this.addDomListener(translateSelectEl, "click", (ev) => {
-                const translateSelectEl = ev.target;
+                const translateSelectEl = ev.currentTarget
+                    .closest(".o_translation_select")
+                    ?.querySelectorAll(".o_translation_select_option");
                 this.dialogService.add(SelectTranslateDialog, {
                     node: translateSelectEl,
                     addStep: this.dependencies.history.addStep,
