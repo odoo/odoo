@@ -401,9 +401,7 @@ class SnailmailLetter(models.Model):
                 error = doc['error'] if response['request_code'] == 200 else response['reason']
 
                 if error == 'CREDIT_ERROR':
-                    self.env['iap.account']._send_no_credit_notification(
-                        service_name='snailmail',
-                        title=_("Not enough credits for Snail Mail"))
+                    self.env['iap.account']._send_no_credit_notification(service_name='snailmail')
                 note = _('An error occurred when sending the document by post.<br>Error: %s', self._get_error_message(error))
                 letter_data = {
                     'info_msg': note,
