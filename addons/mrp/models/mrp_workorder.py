@@ -563,6 +563,7 @@ class MrpWorkorder(models.Model):
         return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
     def _plan_workorder(self, replan=False):
+        # (see _simulate_planning in bom & operation)
         self.ensure_one()
         # Plan workorder after its predecessors
         date_start = max(self.production_id.date_start, datetime.now())
