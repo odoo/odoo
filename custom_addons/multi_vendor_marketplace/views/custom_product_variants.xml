@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template for displaying product variants with simple buttons UI -->
+    <template id="custom_product_variants" name="Custom Product Variants">
+        <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+            <!-- Show the attribute name (e.g., "Мощность", "Длина") -->
+            <div class="attribute-group mb-3">
+                <div class="attribute-name mb-2"><t t-esc="ptal.attribute_id.name"/></div>
+                
+                <!-- Display the attribute value options as buttons -->
+                <div class="attribute-values d-flex flex-wrap">
+                    <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
+                        <label class="css_attribute_color variant-button me-2 mb-2" 
+                               t-att-for="'ptal-%s-value-%s' % (ptal.id, ptav.id)">
+                            <div class="variant-button-content">
+                                <input type="radio"
+                                       t-att-name="'ptal-%s' % (ptal.id)"
+                                       t-att-id="'ptal-%s-value-%s' % (ptal.id, ptav.id)"
+                                       t-att-value="ptav.id"
+                                       t-att-checked="ptav_index == 0"
+                                       t-att-data-attribute_name="ptal.attribute_id.name"
+                                       t-att-data-value_name="ptav.name"
+                                       class="js_variant_change d-none"
+                                       t-att-data-value_id="ptav.id"
+                                       t-att-data-attribute_id="ptal.attribute_id.id"/>
+                                <span t-esc="ptav.name"/>
+                            </div>
+                        </label>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
