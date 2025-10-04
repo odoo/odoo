@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-att-class">
+                {'w-auto': this.props.list.resModel == 'mrp.workorder' or (this.props.nestedKeyOptionalFieldsData and this.props.nestedKeyOptionalFieldsData.field == 'workorder_ids')}
+            </attribute>
+        </xpath>
+    </t>
+</templates>
