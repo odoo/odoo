@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_in.TdsCertificateBinaryField" t-inherit="web.BinaryField" t-inherit-mode="primary">
+        <xpath expr="//label[hasclass('o_select_file_button')]" position="attributes">
+            <attribute name="class" remove="btn-primary" add="text-sm btn-secondary fa fa-upload" separator=" " />
+        </xpath>
+        <xpath expr="//label[hasclass('o_select_file_button')]//t[@t-set-slot='toggler']" position="replace">
+            Upload
+        </xpath>
+    </t>
+
+</templates>
