@@ -209,4 +209,16 @@ export default class ListDataSource extends OdooViewsDataSource {
             });
         });
     }
+
+    get source() {
+        this._assertMetadataIsLoaded();
+        const data = this._metaData;
+        return {
+            resModel: data.resModel,
+            type: "list",
+            fields: data.columns,
+            groupby: undefined,
+            domain: this._searchParams.domain,
+        };
+    }
 }

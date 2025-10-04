@@ -236,4 +236,19 @@ export default class PivotDataSource extends OdooViewsDataSource {
         this._assertDataIsLoaded();
         await this._model.prepareForTemplateGeneration();
     }
+
+    get source() {
+        this._assertMetadataIsLoaded();
+        const data = this._metaData;
+        const groupby = [];
+        groupby.push(...data.colGroupBys);
+        groupby.push(...data.rowGroupBys);
+        return {
+            resModel: data.resModel,
+            type: "pivot",
+            fields: data.activeMeasures,
+            groupby,
+            domain: this._searchParams.domain,
+        };
+    }
 }
