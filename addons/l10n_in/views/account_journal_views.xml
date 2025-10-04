@@ -5,6 +5,9 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="l10n_in_sale_journal_type" invisible="country_code != 'IN' or type != 'sale'"/>
+            </xpath>
             <field name="profit_account_id" position="attributes">
                 <attribute name="invisible">country_code != 'IN' and type != 'cash' or country_code == 'IN' and type not in ['bank', 'cash', 'sale', 'purchase']</attribute>
             </field>
