@@ -104,7 +104,7 @@
                                 <field name="check_in" options="{'rounding': 0}" readonly="not is_manager"/>
                                 <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not is_manager"/>
                             </group>
-                            <group col="2">
+                            <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
                                 <field name="overtime_hours" widget="float_time" string="Worked Extra Hours" invisible="overtime_hours == validated_overtime_hours"/>
                                 <label for="validated_overtime_hours"/>
