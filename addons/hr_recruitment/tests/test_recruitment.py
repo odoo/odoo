@@ -21,6 +21,26 @@ class TestRecruitment(TransactionCase):
         })
         self.assertEqual(applicant.partner_id.lang, 'pl_PL', 'Context langague not used for partner creation')
 
+    def test_update_candidate_name_propagates_to_activities(self):
+        """
+            Test that updating the name of an candidate propagates to planned activities.
+        """
+
+        candidate = self.env['hr.candidate'].create({
+            'partner_name': 'Test Candidate',
+            'email_from': "test_aplicant@example.com"
+        })
+        activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            'res_id': candidate.id,
+            'res_model_id': self.env['ir.model']._get_id('hr.candidate'),
+            'summary': 'Test',
+        })
+        self.assertEqual(activity.res_name, 'Test Candidate')
+
+        candidate.write({'partner_name': 'A New Candidate Name'})
+        self.assertEqual(activity.res_name, 'A New Candidate Name')
+
     def test_duplicate_email(self):
         # Tests that duplicate email match ignores case
         # And that no match is found when there is none
