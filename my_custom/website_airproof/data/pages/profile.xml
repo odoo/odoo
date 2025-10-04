@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <data noupdate="1">
+    <record id="page_profile" model="website.page">
+      <field name="name">Profile</field>
+      <field name="key">website_airproof.page_profile</field>
+      <field name="url">/profile</field>
+      <field name="type">qweb</field>
+      <field name="is_published" eval="True" />
+      <field name="website_id" eval="1" />
+      <field name="arch" type="xml">
+        <t t-name="website_airproof.profile">
+          <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+              <h1>Thang dep chai</h1>
+              <!-- <img src="/web/image/website_airproof.img_hhe" alt="Ảnh Hà Giang siêu đẹp" /> -->
+              <span class="fa fa-2x fa-picture-o rounded-circle" />
+            </div>
+          </t>
+        </t>
+      </field>
+    </record>
+  </data>
+
+
+</odoo>
