@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_order_tree_view_inherit_pos_salesperson_assignment" model="ir.ui.view">
+        <field name="name">view.pos.order.tree.view.inherit.pos.salesperson.assignment</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="sales_person_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form_view_inherit_pos_salesperson_assignment" model="ir.ui.view">
+        <field name="name">view.pos.pos.form.view.inherit.pos.salesperson.assignment</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <field name="fiscal_position_id" position="after">
+                <field name="sales_person_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>
