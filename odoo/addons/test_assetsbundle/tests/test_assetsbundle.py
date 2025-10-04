@@ -1947,6 +1947,8 @@ class TestAssetsManifest(AddonManifestPatched):
 
 @tagged('-at_install', 'post_install')
 class AssetsNodeOrmCacheUsage(TransactionCase):
+    # Asset backend includes font-awesome and odoo_ui_icons binary font assets
+    fonts_bundle_count = 2
 
     def cache_keys(self):
         keys = list(self.env.registry._Registry__caches['assets'])
@@ -1965,24 +1967,24 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
 
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='tests')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='1')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         # in debug=assets, the ormcache is not used for _generate_asset_links_cache
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='assets')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
     def test_assets_node_orm_cache_usage_file_type(self):
         self.env.registry.clear_cache('assets')
@@ -1998,15 +2000,15 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=False, css=True)
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 2)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 2 + self.fonts_bundle_count)
 
         # NOTE: this result is not really desired but this is the current behaviour. In practice, we usually only generate one of them.
         # This could be enforced or avoided
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=True, css=True)
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 3)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 3 + self.fonts_bundle_count)
 
 
     def test_assets_node_orm_cache_usage_lang(self):
@@ -2021,18 +2023,18 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 
         self.env['ir.qweb'].with_context(lang='fr_FR')._get_asset_nodes('web.assets_backend')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         self.env['ir.qweb'].with_context(lang='en_US')._get_asset_nodes('web.assets_backend')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         self.env['ir.qweb'].with_context(lang='ar_SY')._get_asset_nodes('web.assets_backend')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 2)  # a second cache entry is created for rtl
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 2 + 2 * self.fonts_bundle_count)  # a second cache entry is created for rtl
 
     def test_assets_node_orm_cache_usage_website(self):
         if self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'uninstalled')]):
@@ -2045,13 +2047,13 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 
         self.env['ir.qweb'].with_context(website_id=None)._get_asset_nodes('web.assets_backend')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         self.env['ir.qweb'].with_context(website_id=1)._get_asset_nodes('web.assets_backend')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 2)  # the content may be different for different websites, even if it is not always the case
-        self.assertEqual(len(qweb_keys), 2)
+        self.assertEqual(len(asset_keys), 2 + 2 * self.fonts_bundle_count)  # the content may be different for different websites, even if it is not always the case
+        self.assertEqual(len(qweb_keys), 2 + 2 * self.fonts_bundle_count)
 
     def test_assets_node_orm_cache_usage_node_flags(self):
         self.env.registry.clear_cache('assets')
@@ -2062,23 +2064,23 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count)
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count)
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', media='print')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1, "media shouldn't create another entry")
-        self.assertEqual(len(qweb_keys), 1, "media shouldn't create another entry")
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count, "media shouldn't create another entry")
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count, "media shouldn't create another entry")
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', defer_load=True)
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1, "defer_load shouldn't create another entry")
-        self.assertEqual(len(qweb_keys), 1, "defer_load shouldn't create another entry")
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count, "defer_load shouldn't create another entry")
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count, "defer_load shouldn't create another entry")
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend', lazy_load=True)
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1, "lazy_load shouldn't create another entry")
-        self.assertEqual(len(qweb_keys), 1, "lazy_load shouldn't create another entry")
+        self.assertEqual(len(asset_keys), 1 + self.fonts_bundle_count, "lazy_load shouldn't create another entry")
+        self.assertEqual(len(qweb_keys), 1 + self.fonts_bundle_count, "lazy_load shouldn't create another entry")
 
 @tagged('-at_install', 'post_install')
 @unittest.skipIf(os.getenv("ODOO_FAKETIME_TEST_MODE"), "This test cannot work with faketime")

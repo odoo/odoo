@@ -57,11 +57,9 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web._assets_core'),
 
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/odoo_ui_icons/*',
+            ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
-            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/translation_dialog.scss',
@@ -179,12 +177,10 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web._assets_bootstrap_frontend'),
 
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/odoo_ui_icons/*',
+            ('include', 'web.icons_fonts'),
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/base_frontend.scss',
-            'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/translation_dialog.scss',
@@ -303,9 +299,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/toast.js',
 
             'base/static/src/css/description.css',
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/src/scss/fontawesome_overridden.scss',
-            'web/static/lib/odoo_ui_icons/*',
+            ('include', 'web.icons_fonts'),
             'web/static/fonts/fonts.scss',
 
             'web/static/src/webclient/actions/reports/bootstrap_review_report.scss',
@@ -534,6 +528,21 @@ This module provides the core of the Odoo Web Client.
             '/web/static/lib/fullcalendar/luxon3/index.global.js',
             '/web/static/lib/fullcalendar/timegrid/index.global.js',
             '/web/static/lib/fullcalendar/list/index.global.js',
+        ],
+        'web.fontawesome': [
+            '/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2',
+            '/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff',
+            '/web/static/src/libs/fontawesome/css/font-awesome.css',
+        ],
+        'web.odoo_ui_icons': [
+            '/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2',
+            '/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff',
+            '/web/static/lib/odoo_ui_icons/style.css',
+        ],
+        'web.icons_fonts': [
+            ('include', 'web.fontawesome'),
+            ('include', 'web.odoo_ui_icons'),
+            'web/static/src/scss/fontawesome_overridden.scss',  # some are fa classes... but using odoo_ui_icons font
         ],
     },
     'bootstrap': True,  # load translations for login screen,
