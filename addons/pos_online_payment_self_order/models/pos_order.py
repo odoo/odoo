@@ -86,3 +86,8 @@ class PosOrder(models.Model):
                 'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id), load=False),
             }
         })
+
+    def read_pos_data(self, data, config):
+        result = super().read_pos_data(data, config)
+        result['account.payment'] = self.payment_ids.online_account_payment_id.sudo().read(self.payment_ids.online_account_payment_id._load_pos_data_fields(config), load=False) if config else []
+        return result
