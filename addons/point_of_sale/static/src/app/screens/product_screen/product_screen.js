@@ -25,6 +25,7 @@ import {
 import { pick } from "@web/core/utils/objects";
 import { unaccent } from "@web/core/utils/strings";
 import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
+import { useTrackedFinalizedOrder } from "@point_of_sale/app/hooks/use_tracked_finalized_order";
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -70,6 +71,7 @@ export class ProductScreen extends Component {
             }
         });
 
+        useTrackedFinalizedOrder(this.currentOrder.uuid, () => true);
         this.barcodeReader = useService("barcode_reader");
         this.sound = useService("mail.sound_effects");
 

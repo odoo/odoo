@@ -170,6 +170,7 @@ patch(PosStore.prototype, {
             this.addPendingOrder([order.id]);
             if (!this.get_order().uiState.booked) {
                 this.get_order().setBooked(true);
+                await this.syncAllOrders({ orders: [order] });
             }
         }
         return super.addLineToCurrentOrder(vals, opts, configure);

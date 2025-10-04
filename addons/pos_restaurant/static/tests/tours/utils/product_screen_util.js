@@ -1,5 +1,6 @@
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 export function clickOrderButton() {
     return [
@@ -61,5 +62,6 @@ export function bookOrReleaseTable() {
             trigger: ".table-booking button",
             run: "click",
         },
+        ...Chrome.waitRequest(),
     ];
 }

@@ -9,7 +9,10 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
-        if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
+        if (
+            paymentMethod.is_online_payment &&
+            (typeof this.currentOrder.id === "string" || this.pos.config.module_pos_restaurant)
+        ) {
             this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
             this.pos.addPendingOrder([this.currentOrder.id]);
             await this.pos.syncAllOrders();
