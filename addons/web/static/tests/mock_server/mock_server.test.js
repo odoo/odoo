@@ -135,7 +135,6 @@ class Foo extends models.Model {
     });
     many2one_reference = fields.Many2oneReference({
         model_field: "res_model",
-        relation: "bar",
         inverse_fname_by_model_name: { bar: "one2many_field" },
         model_name_ref_fname: "res_model",
     });
@@ -1059,6 +1058,61 @@ test("performRPC: formatted_read_group, group by m2o", async () => {
     ]);
 });
 
+test("performRPC: formatted_read_group, group by many2one_reference", async () => {
+    Bar._records = [{ id: 1 }];
+    Foo._records = [{ id: 2, many2one_reference: 1, res_model: "bar" }];
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            model: "foo",
+            method: "formatted_read_group",
+            kwargs: {
+                domain: [],
+                groupby: ["many2one_reference"],
+                aggregates: ["__count"],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            many2one_reference: 1,
+            __extra_domain: [["many2one_reference", "=", 1]],
+            __count: 1,
+        },
+    ]);
+});
+
+test("performRPC: formatted_read_group, group by reference", async () => {
+    Bar._records = [
+        { id: 1, partner_ref: "res.partner,1" },
+        { id: 2, partner_ref: "res.partner,2" },
+    ];
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "formatted_read_group",
+            kwargs: {
+                domain: [],
+                groupby: ["partner_ref"],
+                aggregates: ["__count"],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            partner_ref: "res.partner,1",
+            __extra_domain: [["partner_ref", "=", "res.partner,1"]],
+            __count: 1,
+        },
+        {
+            partner_ref: "res.partner,2",
+            __extra_domain: [["partner_ref", "=", "res.partner,2"]],
+            __count: 1,
+        },
+    ]);
+});
+
 test("performRPC: formatted_read_group, group by id", async () => {
     Bar._records = [
         { id: 1, name: "A" },
@@ -1143,9 +1197,9 @@ test("performRPC: formatted_read_group, group by selection", async () => {
             },
         })
     ).resolves.toEqual([
-        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
         { select: "dev", __extra_domain: [["select", "=", "dev"]], __count: 1 },
         { select: "done", __extra_domain: [["select", "=", "done"]], __count: 2 },
+        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
     ]);
 });
 
@@ -1796,7 +1850,7 @@ test("many2many update should update inverse field", async () => {
     expect(env["bar"][0].many2many_field).toEqual([2]);
 });
 
-test.todo("many2one update should update inverse field", async () => {
+test("many2one update should update inverse field", async () => {
     Bar._records = [{ id: 1 }];
     Foo._records = [{ id: 2, many2one_field: 1 }];
 
@@ -1850,6 +1904,38 @@ test("webRead sub-fields of a many2one field", async () => {
                 id: 1,
                 test_name: "Jean-Michel",
                 test_number: 5,
+            },
+        },
+    ]);
+});
+
+test("webRead display_name of a many2one_reference field", async () => {
+    Bar._records = [{ id: 1, name: "Raoul" }];
+    Foo._records = [{ id: 2, many2one_reference: 1, res_model: "bar" }];
+
+    await makeMockServer();
+
+    await expect(
+        ormRequest({
+            method: "web_read",
+            model: "foo",
+            args: [[2]],
+            kwargs: {
+                specification: {
+                    many2one_reference: {
+                        fields: {
+                            display_name: {},
+                        },
+                    },
+                },
+            },
+        })
+    ).resolves.toEqual([
+        {
+            id: 2,
+            many2one_reference: {
+                id: 1,
+                display_name: "Raoul",
             },
         },
     ]);

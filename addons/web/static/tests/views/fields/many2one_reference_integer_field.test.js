@@ -10,7 +10,6 @@ class Partner extends models.Model {
     res_id = fields.Many2oneReference({
         string: "Resource Id",
         model_field: "model",
-        relation: "partner.type",
     });
 
     _records = [
