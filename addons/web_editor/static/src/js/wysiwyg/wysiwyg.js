@@ -3590,7 +3590,6 @@ export class Wysiwyg extends Component {
                 data: imageData,
                 is_image: true,
                 res_model: resModel,
-                res_id: resId,
             },
         );
         if (attachment.mimetype === 'image/webp') {
