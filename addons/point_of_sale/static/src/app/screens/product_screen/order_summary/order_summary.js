@@ -250,14 +250,14 @@ export class OrderSummary extends Component {
             }
         }
         const newLine = this.getNewLine();
-        const decreasedQuantity = current_saved_quantity - newQuantity;
-        if (decreasedQuantity != 0) {
-            newLine.set_quantity(-decreasedQuantity + newLine.get_quantity(), true);
+        const decreasedSavedQuantity = current_saved_quantity - newQuantity;
+        if (decreasedSavedQuantity != 0) {
+            newLine.set_quantity(newQuantity, true);
         }
         if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
             selectedLine.set_quantity(selectedLine.saved_quantity);
         }
-        return decreasedQuantity;
+        return decreasedSavedQuantity;
     }
     getNewLine() {
         const selectedLine = this.currentOrder.get_selected_orderline();
