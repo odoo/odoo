@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+	#!/usr/bin/env python
 
 """
 Checks versions from the requirements files against distribution-provided
@@ -17,7 +17,7 @@ TODO:
 - add legends
 - better management of cache
 - add meta info on cells (mainly to genearte a better html report)
-    - warn/ko reason
+    - warn/ko reason			
     - wheel + link
     - original debian package name + link
     ...
