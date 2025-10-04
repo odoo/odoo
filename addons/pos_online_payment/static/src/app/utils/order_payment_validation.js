@@ -152,7 +152,7 @@ patch(OrderPaymentValidation.prototype, {
 
             await this.afterPaidOrderSavedOnServer(lastOrderServerOPData.paid_order);
             return false; // Cancel normal flow because the current order is already saved on the server.
-        } else if (typeof this.order.id === "number") {
+        } else if (this.order.isSynced) {
             const orderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
                 this.order,
                 0

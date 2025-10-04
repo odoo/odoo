@@ -34,15 +34,8 @@ export class InvoiceButton extends Component {
     }
     async _downloadInvoice(orderId) {
         try {
-            const result = await this.pos.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["id", "=", orderId]]],
-                {},
-                false,
-                true
-            );
-            const order = result["pos.order"][0];
+            const orders = await this.pos.data.loadServerOrders([["id", "=", orderId]]);
+            const order = orders[0];
             const accountMoveId = order.raw.account_move;
             if (accountMoveId) {
                 await this.invoiceService.downloadPdf(accountMoveId);

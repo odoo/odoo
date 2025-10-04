@@ -7,8 +7,7 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "restaurant.order.course": {
                 key: "uuid",
-                condition: (record) =>
-                    record.order_id?.finalized && typeof record.order_id.id === "number",
+                condition: (record) => record.order_id?.finalized && record.order_id.isSynced,
             },
         };
     },
