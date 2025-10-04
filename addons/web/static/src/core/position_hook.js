@@ -188,8 +188,8 @@ function getBestPosition(reference, popper, { container, margin, position }) {
             // viewport). It can be done like that because the style top and
             // left were reset to 0px in `reposition`
             // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
-            top: positioning.top - popBox.top,
-            left: positioning.left - popBox.left,
+            top: Math.max(positioning.top - popBox.top, 0),
+            left: Math.max(positioning.left - popBox.left, 0),
             direction: DIRECTIONS[d],
             variant: VARIANTS[v],
         };
