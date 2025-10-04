@@ -5635,6 +5635,7 @@ class AccountMove(models.Model):
         self.invoice_line_ids._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()
+        self.line_ids._compute_price_unit()
 
     def open_created_caba_entries(self):
         self.ensure_one()
