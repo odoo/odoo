@@ -100,3 +100,57 @@ class TestExpression(TransactionCase):
             self.assertTrue(res.id, 'The resource was successfully created')
             self.assertEqual(res.date_from, Datetime.to_string(date_from))
             self.assertEqual(res.date_to, Datetime.to_string(date_to))
+
+    def test_duration_based_hours_per_week(self):
+        """
+        Test that the hours per week in duration based calendar is correctly computed.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration Based Calendar',
+            'two_weeks_calendar': False,
+            'tz': 'Europe/Brussels',
+            'company_id': False,
+            'duration_based': True,
+            'attendance_ids': [(5, 0, 0),
+                ## Hours Per Week: 31, Avg hours_per_day = 6.2
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'duration_hours': 4, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'duration_hours': 4, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'duration_hours': 5, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'duration_hours': 4, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'duration_hours': 5, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'duration_hours': 3, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Full Day', 'dayofweek': '4', 'duration_hours': 6, 'day_period': 'full_day'}),
+            ],
+        })
+
+        with Form(calendar) as res:
+            self.assertEqual(res.hours_per_week, 31)
+            self.assertAlmostEqual(res.hours_per_day, 31 / 5, 2)
+            self.assertEqual(res.attendance_ids._records[0].get('hour_from'), 8)
+            self.assertEqual(res.attendance_ids._records[0].get('hour_to'), 12)
+            self.assertEqual(res.attendance_ids._records[4].get('hour_from'), 12)
+            self.assertEqual(res.attendance_ids._records[4].get('hour_to'), 17)
+            self.assertEqual(res.attendance_ids._records[6].get('hour_from'), 9)
+            self.assertEqual(res.attendance_ids._records[6].get('hour_to'), 15)
+
+        calendar.attendance_ids[0].unlink()
+        with Form(calendar) as res:
+            self.assertEqual(res.hours_per_week, 27)
+            self.assertAlmostEqual(res.hours_per_day, 27 / 5, 2)
+
+        calendar.write({'attendance_ids': [(0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'duration_hours': 5, 'day_period': 'morning'})]})
+        with Form(calendar) as res:
+            self.assertEqual(res.hours_per_week, 32)
+            self.assertAlmostEqual(res.hours_per_day, 32 / 5, 2)
+
+        calendar.attendance_ids[0]['duration_hours'] = 6.0
+        with Form(calendar) as res:
+            self.assertEqual(res.hours_per_week, 34)
+            self.assertAlmostEqual(res.hours_per_day, 34 / 5, 2)
+
+        calendar.attendance_ids[2].unlink()
+        calendar.attendance_ids[2]['day_period'] = 'full_day'
+        calendar.attendance_ids[2]['duration_hours'] = 8.0
+        with Form(calendar) as res:
+            self.assertEqual(res.hours_per_week, 33)
+            self.assertAlmostEqual(res.hours_per_day, 33 / 5, 2)
