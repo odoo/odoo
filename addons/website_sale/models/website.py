@@ -340,6 +340,10 @@ class Website(models.Model):
         ):
             sale_order_sudo = None
 
+        # Also ignore the cart if it is not in draft state.
+        if sale_order_sudo and sale_order_sudo.state != 'draft':
+            sale_order_sudo = None
+
         if not (sale_order_sudo or force_create):
             # Do not create a SO record unless needed
             if request.session.get('sale_order_id'):
