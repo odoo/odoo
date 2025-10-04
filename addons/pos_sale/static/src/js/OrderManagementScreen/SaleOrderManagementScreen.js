@@ -193,7 +193,14 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
                         description: line.product_id[1],
                         price: line.price_unit,
-                        tax_ids: orderFiscalPos ? undefined : line.tax_id,
+                            tax_ids:
+                                orderFiscalPos &&
+                                line.reward_id &&
+                                this.env.pos.reward_by_id[line.reward_id[0]] &&
+                                this.env.pos.reward_by_id[line.reward_id[0]].reward_type !==
+                                    "discount"
+                                    ? undefined
+                                    : line.tax_id,
                         price_automatically_set: true,
                         price_manually_set: false,
                         sale_order_origin_id: clickedOrder,
