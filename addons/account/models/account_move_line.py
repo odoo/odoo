@@ -1699,9 +1699,17 @@ class AccountMoveLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted(self):
-        # Prevent deleting lines on posted entries
-        if not self._context.get('force_delete') and any(m.state == 'posted' for m in self.move_id):
-            raise UserError(_("You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."))
+        """Allow deletion of zero-amount journal items even if they are protected by a lock date."""
+        for move_line in self:
+            if move_line.move_id.state == 'posted':
+                # Check if all move lines have zero debit, zero credit, and zero currency amount (if any)
+                all_zero =  move_line.debit == 0 and move_line.credit == 0 and move_line.amount_currency == 0
+                if not all_zero:
+                    if not self._context.get('force_delete'):
+                        raise UserError( _("You can't delete a posted journal item. Don’t play games with your accounting records; reset the journal entry to draft before deleting it."))
+                else:
+                    # Allow deletion for zero-amount journal items
+                    continue  # Skip further checks and allow deletion
 
     @api.ondelete(at_uninstall=False)
     def _prevent_automatic_line_deletion(self):

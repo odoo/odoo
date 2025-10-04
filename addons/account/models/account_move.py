@@ -2418,7 +2418,14 @@ class AccountMove(models.Model):
                 tax=False,
                 hard=True,
             )
-            if violated_lock_dates:
+            # allow removing the lines if they are credit 0 and debit 0
+            all_zero = all(
+                line.debit == 0 and
+                line.credit == 0 and
+                line.amount_currency == 0
+                for line in move.line_ids
+            )
+            if violated_lock_dates and not all_zero:
                 message = _("You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s.",
                             lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates))
                 raise UserError(message)
