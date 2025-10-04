@@ -80,6 +80,26 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         })
         return self.env['hr.leave'].with_user(user_id).create(values)
 
+    # ******************************************************
+    # Action approve
+    # ******************************************************
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_holidays_user_self_approve_request(self):
+        """ a holiday user cannot approve his own leaves """
+        self.leave_type.write({'leave_validation_type': 'both'})
+        leave_start = date_utils.start_of(date.today() + relativedelta(days=15), 'week')
+        officer_leave = self.env['hr.leave'].with_user(self.user_hruser_id).create({
+            'name': 'double hruser',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_hruser_id,
+            'request_date_from': leave_start,
+            'request_date_to': leave_start + relativedelta(days=1),
+        })
+        self.assertEqual(officer_leave.state, 'confirm')
+        with self.assertRaises(UserError):
+            officer_leave.with_user(self.user_hruser_id).action_approve()
+
 @tests.tagged('access_rights', 'access_rights_create')
 class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -345,6 +365,24 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
         with self.assertRaises(UserError):
             hr_leave.with_user(self.user_employee_id).action_approve()
         hr_leave.with_user(self.user_hruser_id).action_approve()
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_holidays_user_self_validate_request(self):
+        """ a holiday user cannot validate his own leaves """
+        self.leave_type.write({'leave_validation_type': 'both'})
+        leave_start = date_utils.start_of(date.today() + relativedelta(days=15), 'week')
+        officer_leave = self.env['hr.leave'].with_user(self.user_hruser_id).create({
+            'name': 'double hruser',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_hruser_id,
+            'request_date_from': leave_start,
+            'request_date_to': leave_start + relativedelta(days=1),
+        })
+        self.assertEqual(officer_leave.state, 'confirm')
+        officer_leave.with_user(self.user_hrmanager_id).action_approve()
+        self.assertEqual(officer_leave.state, 'validate1')
+        with self.assertRaises(AccessError):
+            officer_leave.with_user(self.user_hruser_id).action_validate()
 
     # hr_holidays.group_hr_holidays_manager
 
