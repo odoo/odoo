@@ -270,7 +270,17 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'constr_mandatory': False,
                 }), Command.create({
                     'title': 'Q3',
-                    'sequence': 3,
+                    'sequence': 5,
+                    'question_type': 'numerical_box',
+                    'constr_mandatory': False,
+                }), Command.create({
+                    'title': 'Section 3',
+                    'is_page': True,
+                    'sequence': 6,
+                    'question_type': False,
+                }), Command.create({
+                    'title': 'Q4',
+                    'sequence': 7,
                     'question_type': 'numerical_box',
                     'constr_mandatory': False,
                 }),
@@ -284,8 +294,10 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         q2_a1 = q2.suggested_answer_ids.filtered(lambda a: a.value == 'Answer 1')
 
         q3 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q3')
-
         q3.triggering_answer_ids = q1_a1 | q2_a1
+
+        q4 = survey_with_trigger_on_different_page.question_ids.filtered(lambda q: q.title == 'Q4')
+        q4.triggering_answer_ids = q2_a1
 
         access_token = survey_with_trigger_on_different_page.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey_conditional_question_on_different_page')
