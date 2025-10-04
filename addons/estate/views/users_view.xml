@@ -1,0 +1,17 @@
+<odoo>
+    <!-- Extension de la vue formulaire des utilisateurs -->
+    <record id="view_users_form_inherit" model="ir.ui.view">
+        <field name="name">users.form.inherit.property</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <!-- Ajout d'un nouvel onglet "Properties" -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Properties">
+                    <field name="property_ids" widget="many2many_tags" options="{'no_create': True}"
+                        domain="[('state', '=', 'new')]" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
