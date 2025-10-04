@@ -119,7 +119,6 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     async _setMode(modeName) {
         modeName = modeName || 'slideshow'; // FIXME should not be needed
-        this.$target.css('height', '');
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + modeName);
@@ -163,18 +162,22 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
     _slideshow() {
         const imageEls = this._getItemsGallery();
         const imgHolderEls = this._getImgHolderEls();
-        const images = Array.from(imageEls).map((img) => ({
-            // Use getAttribute to get the attribute value otherwise .src
-            // returns the absolute url.
-            src: img.getAttribute('src'),
-            // TODO: remove me in master. This is not needed anymore as the
-            // images of the rendered `website.gallery.slideshow` are replaced
-            // by the elements of `imgHolderEls`.
-            alt: img.getAttribute('alt'),
-        }));
+        const elements = imageEls.map((img) => {
+            const isVideo = img.classList.contains("media_iframe_video");
+            return {
+                // Use getAttribute to get the attribute value otherwise .src
+                // returns the absolute url.
+                src: isVideo ? img.getAttribute("data-oe-expression") : img.getAttribute("src"),
+                // TODO: remove me in master. This is not needed anymore as the
+                // images of the rendered `website.gallery.slideshow` are replaced
+                // by the elements of `imgHolderEls`.
+                alt: img.getAttribute("alt"),
+                isVideo: isVideo,
+            };
+        });
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
         var params = {
-            images: images,
+            images: elements,
             index: 0,
             title: "",
             interval: currentInterval || 0,
@@ -183,11 +186,31 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             // This is not needed anymore as the images of the rendered
             // `website.gallery.slideshow` are replaced by the elements of
             // `imgHolderEls`.
-            attrClass: imageEls.length > 0 ? imageEls[0].className : '',
             attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
         },
         $slideshow = $(renderToElement('website.gallery.slideshow', params));
-        const imgSlideshowEls = $slideshow[0].querySelectorAll("img[data-o-main-image]");
+        const videoEls = elements.filter((el) => el.isVideo);
+        for (const element of videoEls) {
+            const videoEl = $slideshow[0].querySelector(`img[src='${element.src}']`);
+            // Todo: To remove this code and adapt in xml code in master
+            // Template: Replace image tag with media_iframe_video
+            const videoContainerHTML = `
+                <div class="d-block media_iframe_video" data-o-main-image="true" data-oe-expression="${element.src}">
+                    <div class="css_editable_mode_display"></div>
+                    <div class="media_iframe_video_size"></div>
+                    <iframe src="${element.src}" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+                </div>`;
+            videoEl.insertAdjacentHTML("afterend", videoContainerHTML);
+            videoEl.remove();
+
+            // Todo: To remove this code and adapt in xml code in master
+            // Indicators: Replace backgroundImage styling with thumbnail URL
+            const thumbnailUrl = this._extractThumbnailUrl(videoEl.src);
+            $slideshow[0].querySelector(
+                `.carousel-indicators li[style="background-image: url(${element.src})"]`
+            ).style.backgroundImage = `url(${thumbnailUrl})`;
+        }
+        const imgSlideshowEls = $slideshow[0].querySelectorAll("[data-o-main-image]");
         imgSlideshowEls.forEach((imgSlideshowEl, index) => {
             // Replace the template image by the original one. This is needed in
             // order to keep the characteristics of the image such as the
@@ -197,10 +220,13 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             imgSlideshowEl.remove();
         });
         this._replaceContent($slideshow);
-        this.$("img").toArray().forEach((img, index) => {
-            $(img).attr({contenteditable: true, 'data-index': index});
+        const mediaEls = this.$target[0].querySelectorAll("img, .media_iframe_video");
+        mediaEls.forEach((el, index) => {
+            if (!el.classList.contains("media_iframe_video")) {
+                el.setAttribute("contenteditable", true);
+            }
+            el.setAttribute("data-index", index);
         });
-        this.$target.css('height', Math.round(window.innerHeight * 0.7));
 
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
@@ -211,9 +237,8 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @override
      */
     _getItemsGallery() {
-        const imgs = this.$('img').get();
-        imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
-        return imgs;
+        const mediaEls = Array.from(this.$target[0].querySelectorAll("img, .media_iframe_video"));
+        return mediaEls.sort((a, b) => this._getIndex(a) - this._getIndex(b));
     },
     /**
      * Returns the images, or the images holder if this holder is an anchor,
@@ -435,13 +460,9 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      * @override
      */
     start() {
-        // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed.gallery', 'img', ev => {
-            const $img = $(ev.currentTarget);
-            const index = this.$target.find('.carousel-item.active').index();
-            this.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
-                .css('background-image', 'url(' + $img.attr('src') + ')');
-        });
+        // Make sure image and video previews are updated if they are replaced.
+        this.__handleImageChangedElement = this._handleImageChangedElement.bind(this);
+        this.$target[0].addEventListener("image_changed", this.__handleImageChangedElement);
 
         // When the snippet is empty, an edition button is the default content
         // TODO find a nicer way to do that to have editor style
@@ -486,6 +507,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     destroy() {
         this._super(...arguments);
         this.$target.off('.gallery');
+        this.$target[0].removeEventListener("image_changed", this.__handleImageChangedElement);
     },
     /**
      * @override
@@ -608,6 +630,55 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Handles the update of the thumbnail when an image or a video is changed.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _handleImageChangedElement(ev) {
+        const index = Array.from(this.$target[0].querySelectorAll(".carousel-item")).findIndex(
+            (item) => item.classList.contains("active")
+        );
+        const targetEl = ev.target;
+        if (targetEl.classList.contains("img")) {
+            const carouselItemEl = ev.currentTarget.querySelector(
+                ".carousel:first-of-type li[data-bs-target]:nth-child(" + (index + 1) + ")"
+            );
+            return (carouselItemEl.style.backgroundImage =
+                "url(" + targetEl.getAttribute("data-original-src") + ")");
+        }
+
+        const iframeEl = targetEl.querySelector("iframe");
+        if (iframeEl) {
+            const thumbnailUrl = this._extractThumbnailUrl(iframeEl.src);
+            const carouselIndicatorEls = this.$target[0].querySelectorAll(
+                ".carousel li[data-bs-target]"
+            );
+
+            if (carouselIndicatorEls[index]) {
+                carouselIndicatorEls[index].style.backgroundImage = `url(${thumbnailUrl})`;
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {String} src
+     *
+     * Extract thumbnail from video src.
+     */
+    _extractThumbnailUrl(src) {
+        if (src.includes("youtube.com") || src.includes("youtu.be")) {
+            const videoId = src.split("/embed/")[1].split("?")[0];
+            return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        } else if (src.includes("vimeo.com")) {
+            const videoId = src.split("/video/")[1].split("?")[0];
+            return `https://vumbnail.com/${videoId}.jpg`;
+        } else if (src.includes("dailymotion.com")) {
+            const videoId = src.split("/video/")[1].split("?")[0];
+            return `https://www.dailymotion.com/thumbnail/video/${videoId}`;
+        }
+    },
     /**
      * @private
      */

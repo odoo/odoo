@@ -241,6 +241,12 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (snippetSaveOptionEl) {
             snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
         }
+        // TODO handle from xml in master
+        const snippetOptionEl = $html.toArray().find((el) => el.id === "snippet_options");
+        const imageReorderEl = snippetOptionEl.querySelector("[data-js='GalleryElement']");
+        if (imageReorderEl) {
+            imageReorderEl.dataset.selector += ", .s_image_gallery .media_iframe_video";
+        }
         // TODO remove in 18.0
         const navTabsStyleEl = $html.find(`[data-js="NavTabsStyle"]`)[0];
         if (navTabsStyleEl) {

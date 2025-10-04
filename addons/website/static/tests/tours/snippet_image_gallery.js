@@ -116,6 +116,49 @@ wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     content: "Check that the option is restored",
     trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
     isCheck: true,
+}, {
+    content: "Click on replace button in a image option",
+    trigger: ".snippet-option-ReplaceMedia we-button",
+}, {
+    content: "Click on the videos button",
+    trigger: "a:contains('Videos')",
+}, {
+    content: "Enter video link",
+    trigger: "#o_video_text",
+    run: "text https://youtu.be/nbso3NVz3p8",
+}, {
+    content: "Check video is preview",
+    trigger: ".o_video_dialog_iframe",
+    run: () => {}, // This is a check.
+}, {
+    content: "Click on 'add' button",
+    trigger: ".modal-footer button:contains('Add')",
+}, {
+    content: "Check if the video thumbnail is added to the indicator.",
+    trigger: "iframe .s_image_gallery ul.carousel-indicators .active",
+    run: function () {
+        const indicatorEl = this.$anchor[0];
+        if (!indicatorEl.style.backgroundImage.includes("nbso3NVz3p8")) {
+            console.error("There is a problem with the video thumbnail.");
+        }
+    },
+}, {
+    content: "Slide back to the previous image.",
+    trigger: "iframe .s_image_gallery .carousel-control-prev",
+}, {
+    content: "Click on the image",
+    trigger: "iframe .s_image_gallery img",
+}, {
+    content: "Click on the reorder next button to move the position to the next.",
+    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+}, {
+    content: "Ensure the video element remains in the gallery.",
+    trigger: "iframe .s_image_gallery ul.carousel-indicators",
+    run: function () {
+        if (this.$anchor[0].childElementCount !== 3) {
+            console.error("Video iframe should be retain to it original place.");
+        }
+    },
 }]);
 
 wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
