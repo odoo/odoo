@@ -706,3 +706,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_popup_visibility_option(self):
         self.start_tour("/", "website_popup_visibility_option", login="admin")
+
+    def test_custom_button_adapt(self):
+        self.start_tour("/", "custom_button_adapt", login="admin")
