@@ -73,7 +73,7 @@ class NotifyTests(TransactionCase):
             ):
                 cr.execute("listen imbus")
                 cr.commit()
-                conn = cr._cnx
+                conn = cr._cnx__
                 sel.register(conn, selectors.EVENT_READ)
                 selector_ready_event.set()
                 while not stop_event.is_set():
