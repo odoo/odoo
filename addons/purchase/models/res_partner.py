@@ -52,3 +52,11 @@ class ResPartner(models.Model):
             stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases'), 'tagClass': 'o_tag_color_5'}
             data_list[partner.id].append(stat_info)
         return data_list
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'property_purchase_currency_id' in vals:
+            supplierinfo = self.env['product.supplierinfo'].search([('partner_id', 'in', self.ids)])
+            if supplierinfo:
+                supplierinfo.write({'currency_id': vals.get('property_purchase_currency_id')})
+        return res
