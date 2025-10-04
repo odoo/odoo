@@ -15,6 +15,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
+    _mail_post_access = 'read'
 
     # override to add and order tracking
     name = fields.Char(tracking=1)
