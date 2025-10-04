@@ -10,6 +10,7 @@ class EstateModel(models.Model):
     _description = "Estate Property"
 
     today = fields.Datetime.now()
+
     name = fields.Char("Title",required=True)
     description = fields.Text()
     postcode = fields.Char()
@@ -26,3 +27,15 @@ class EstateModel(models.Model):
       string='Type',
       selection=[('north', 'North'), ('south','South'), ('east', 'East'), ('west','West')]
     )
+    active = fields.Boolean('Active', default=False)
+    status = fields.Selection(
+        string='Status',
+        selection=[
+          ('new', 'New'), 
+          ('offer received', 'Offer Received'), 
+          ('offer accepted', 'Offered Accepted'),
+          ('sold', 'Sold'),
+          ('cancelled', 'Cancelled')
+        ],
+        default='new'
+      )
