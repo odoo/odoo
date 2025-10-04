@@ -483,6 +483,9 @@ export class FormController extends Component {
     }
 
     beforeVisibilityChange() {
+        if (this?.rootRef?.el?.querySelector(".o_field_priority_switch")?.style?.background) {
+            this.rootRef.el.querySelector(".o_field_priority_switch").style.background = "red";
+        }
         if (document.visibilityState === "hidden" && this.formInDialog === 0) {
             return this.model.root.save();
         }
