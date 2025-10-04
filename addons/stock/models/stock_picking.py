@@ -1447,7 +1447,17 @@ class StockPicking(models.Model):
         moves = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity != 0)
         backorder_moves = moves._create_backorder()
         backorder_moves += self.move_ids.filtered(lambda m: m.quantity == 0)
-        self._create_backorder(backorder_moves=backorder_moves)
+        backorder = self._create_backorder(backorder_moves=backorder_moves)
+        backorder.message_post(
+            body=self.env._('Splitted From %s.', self._get_html_link())
+        )
+        return {
+            "name": self.env._("Splitted Backorder"),
+            "type": "ir.actions.act_window",
+            "res_model": "stock.picking",
+            "view_mode": "form",
+            "res_id": backorder.id,
+        }
 
     def _pre_action_done_hook(self):
         for picking in self:
