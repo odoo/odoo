@@ -46,6 +46,7 @@ viewWidgetRegistry.addValidation({
     },
     supportedAttributes: supportedInfoValidation,
     supportedOptions: supportedInfoValidation,
+    label: { type: [String, { value: "" }], optional: true },
 });
 
 /**
