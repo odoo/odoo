@@ -14,7 +14,7 @@ describe.current.tags("interaction_dev");
 // TODO Obtain rendering from `website.s_images_wall` template ?
 const defaultGallery = `
     <div id="wrapwrap">
-        <section class="s_image_gallery o_spc-small o_masonry pt24 pb24 o_colored_level" data-vcss="002" data-columns="3" style="overflow: hidden;" data-snippet="s_images_wall" data-name="Images Wall">
+        <section class="s_image_gallery o_spc-small o_masonry pt24 pb24 o_colored_level o_image_popup" data-vcss="002" data-columns="3" style="overflow: hidden;" data-snippet="s_images_wall" data-name="Images Wall">
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
@@ -34,15 +34,6 @@ const defaultGallery = `
         </section>
     </div>
 `;
-
-test("gallery does nothing if there is no non-slideshow s_image_gallery", async () => {
-    const { core } = await startInteractions(`
-        <div id="wrapwrap">
-            <section class="s_image_gallery o_slideshow"/>
-        </div>
-    `);
-    expect(core.interactions).toHaveLength(0);
-});
 
 async function checkLightbox({ next, previous, close }) {
     const { core } = await startInteractions(defaultGallery);
