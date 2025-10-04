@@ -10,6 +10,8 @@ class StockRule(models.Model):
         res = super()._prepare_purchase_order(company_id, origins, values)
         if values[0].get('project_id'):
             res['project_id'] = values[0].get('project_id')
+        elif project := self.env.context.get('project_id'):
+            res['project_id'] = project
         return res
 
     def _make_po_get_domain(self, company_id, values, partner):
