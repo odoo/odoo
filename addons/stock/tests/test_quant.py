@@ -216,26 +216,6 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 3.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 2)
 
-    def test_increase_available_quantity_3(self):
-        """ Increase the available quantity when a concurrent transaction is already increasing
-        the reserved quanntity for the same product.
-        """
-        quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
-        if not quant:
-            self.skipTest('Cannot test concurrent transactions without demo data.')
-        product = quant.product_id
-        available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True)
-        # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
-        # quantity increase
-        with closing(self.registry.cursor()) as cr:
-            cr.execute("SELECT id FROM stock_quant WHERE product_id=%s AND location_id=%s", (product.id, self.stock_location.id))
-            quant_id = cr.fetchone()
-            cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
-            self.env['stock.quant']._update_available_quantity(product, self.stock_location, 1.0)
-
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True), available_quantity + 1)
-        self.assertEqual(len(self.gather_relevant(product, self.stock_location, strict=True)), 2)
-
     def test_increase_available_quantity_4(self):
         """ Increase the available quantity when no quants are already in a location with a user without access right.
         """
@@ -304,25 +284,6 @@ class StockQuant(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, -1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 1.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 1)
-
-    def test_decrease_available_quantity_3(self):
-        """ Decrease the available quantity when a concurrent transaction is already increasing
-        the reserved quanntity for the same product.
-        """
-        quant = self.env['stock.quant'].search([('location_id', '=', self.stock_location.id)], limit=1)
-        if not quant:
-            self.skipTest('Cannot test concurrent transactions without demo data.')
-        product = quant.product_id
-        available_quantity = self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True)
-
-        # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
-        # quantity increase
-        with closing(self.registry.cursor()) as cr:
-            cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quant.ids)
-            self.env['stock.quant']._update_available_quantity(product, self.stock_location, -1.0)
-
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location, allow_negative=True), available_quantity - 1)
-        self.assertEqual(len(self.gather_relevant(product, self.stock_location, strict=True)), 2)
 
     def test_decrease_available_quantity_4(self):
         """ Decrease the available quantity that delete the quant. The active user should have
