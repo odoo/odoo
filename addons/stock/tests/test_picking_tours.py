@@ -217,3 +217,27 @@ class TestStockPickingTour(HttpCase):
         url = self._get_picking_url(picking.id)
         self.start_tour(url, 'test_onchange_twice_lot_ids', login='admin', step_delay=100)
         self.assertRecordValues(picking.move_ids, [{"quantity": 1, "lot_ids": lots[2].ids}])
+
+    def test_receipt_move_state_after_generate(self):
+        product_serial = self.env['product.product'].create({
+            'name': 'Use Serials',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        self.receipt.write({
+            'move_ids': [Command.create({
+                'name': 'move',
+                'location_id': self.receipt.location_id.id,
+                'location_dest_id': self.receipt.location_dest_id.id,
+                'product_id': product_serial.id,
+                'product_uom_qty': 2,
+            })],
+        })
+
+        self.receipt.action_confirm()
+        self.assertEqual(self.receipt.move_ids.state, 'assigned')
+
+        url = self._get_picking_url(self.receipt.id)
+        self.start_tour(url, 'test_receipt_move_state_after_generate', login='admin', step_delay=100)
+
+        self.assertEqual(self.receipt.move_ids.state, 'assigned')
