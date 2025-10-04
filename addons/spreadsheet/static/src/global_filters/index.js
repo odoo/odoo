@@ -26,6 +26,7 @@ readonlyAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("UPDATE_OBJECT_DOMAINS");
 
 readonlyAllowedCommands.add("UPDATE_CHART_GRANULARITY");
+readonlyAllowedCommands.add("UPDATE_CHART_REGION");
 
 inverseCommandRegistry
     .add("EDIT_GLOBAL_FILTER", identity)

@@ -1817,3 +1817,76 @@ test("filtering on 'day' doesn't change to hour if not datetime", async () => {
     });
     expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:day"]);
 });
+
+test("can change chart region", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_geo",
+        definition: {
+            region: "world",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    model.dispatch("UPDATE_CHART_REGION", {
+        chartId,
+        region: "europe",
+    });
+    expect(model.getters.getChartDefinition(chartId).region).toEqual("europe");
+});
+
+test("Region change is available for a world chart", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_geo",
+        definition: {
+            region: "world",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    expect(model.getters.getAvailableChartRegions(chartId)).toMatchObject([
+        { id: "world", label: "World" },
+        { id: "africa", label: "Africa" },
+        { id: "asia", label: "Asia" },
+        { id: "europe", label: "Europe" },
+        { id: "north_america", label: "North America" },
+        { id: "south_america", label: "South America" },
+    ]);
+});
+
+test("Region change is not available for another type", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        definition: {
+            region: "europe",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    for (const region of ["europe", "asia", "africa", "north_america", "south_america"]) {
+        const definition = model.getters.getChartDefinition(chartId);
+        model.dispatch("UPDATE_CHART", {
+            chartId,
+            figureId: model.getters.getFigureIdFromChartId(chartId),
+            definition: { ...definition, region },
+        });
+        expect(model.getters.getAvailableChartRegions(chartId)).toEqual([]);
+    }
+});
+
+test("Can change region after another one", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_geo",
+        definition: {
+            region: "world",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    expect(model.getters.getAvailableChartRegions(chartId)).toHaveLength(6);
+    model.dispatch("UPDATE_CHART_REGION", {
+        chartId,
+        region: "europe",
+    });
+    expect(model.getters.getChartDefinition(chartId).region).toEqual("europe");
+    expect(model.getters.getAvailableChartRegions(chartId)).toHaveLength(6);
+});

@@ -3,9 +3,19 @@ import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { getBestGranularity, getValidGranularities } from "../../global_filters/helpers";
 
 export class OdooChartFeaturePlugin extends OdooUIPlugin {
-    static getters = /** @type {const} */ (["getAvailableChartGranularities"]);
+    static getters = /** @type {const} */ ([
+        "getAvailableChartGranularities",
+        "getAvailableChartRegions",
+    ]);
 
     overwrittenGranularities = {};
+    worldCharts = new Set();
+
+    constructor(config) {
+        super(config);
+
+        this.custom = config.custom;
+    }
 
     handle(cmd) {
         switch (cmd.type) {
@@ -41,6 +51,10 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
             case "UPDATE_CHART_GRANULARITY": {
                 this._updateChartGranularity(cmd.chartId, cmd.granularity);
                 this.overwrittenGranularities[cmd.chartId] = cmd.granularity;
+                break;
+            }
+            case "UPDATE_CHART_REGION": {
+                this._updateChartRegion(cmd.chartId, cmd.region);
                 break;
             }
         }
@@ -99,6 +113,35 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
                         ...definition.metaData.groupBy.slice(1),
                     ],
                 },
+            },
+        });
+    }
+
+    getAvailableChartRegions(chartId) {
+        const definition = this.getters.getChartDefinition(chartId);
+        if (definition.type !== "odoo_geo" && definition.type !== "geo") {
+            return [];
+        }
+        if (!definition.region || definition.region === "world") {
+            this.worldCharts.add(chartId);
+        }
+        if (!this.worldCharts.has(chartId)) {
+            return [];
+        }
+        const geoJsonService = this.custom.env.services.geo_json_service;
+        return (geoJsonService?.getAvailableRegions() || []).filter(
+            (region) => region.id !== "usa"
+        );
+    }
+
+    _updateChartRegion(chartId, region) {
+        const definition = this.getters.getChartDefinition(chartId);
+        this.dispatch("UPDATE_CHART", {
+            chartId,
+            figureId: this.getters.getFigureIdFromChartId(chartId),
+            definition: {
+                ...definition,
+                region,
             },
         });
     }
