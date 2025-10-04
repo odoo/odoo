@@ -150,6 +150,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.orderCounter = new Counter(0);
 
+        // InstantQR
+        this.stickerPaymentsInProgress = new Set();
+
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
@@ -2455,33 +2458,34 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
-    async showQR(payment) {
-        let qr;
-        try {
-            qr = await this.data.call("pos.payment.method", "get_qr_code", [
-                [payment.payment_method_id.id],
-                payment.amount,
-                payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
-                "",
-                this.currency.id,
-                payment.pos_order_id.partner_id?.id,
-            ]);
-        } catch (error) {
-            qr = payment.payment_method_id.default_qr;
-            if (!qr) {
-                let message;
-                if (error instanceof ConnectionLostError) {
-                    message = _t(
-                        "Connection to the server has been lost. Please check your internet connection."
-                    );
-                } else {
-                    message = error.data.message;
+    async showQR(payment, qr) {
+        if (!qr) {
+            try {
+                qr = await this.data.call("pos.payment.method", "get_qr_code", [
+                    [payment.payment_method_id.id],
+                    payment.amount,
+                    payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
+                    "",
+                    this.currency.id,
+                    payment.pos_order_id.partner_id?.id,
+                ]);
+            } catch (error) {
+                qr = payment.payment_method_id.default_qr;
+                if (!qr) {
+                    let message;
+                    if (error instanceof ConnectionLostError) {
+                        message = _t(
+                            "Connection to the server has been lost. Please check your internet connection."
+                        );
+                    } else {
+                        message = error.data.message;
+                    }
+                    this.env.services.dialog.add(AlertDialog, {
+                        title: _t("Failure to generate Payment QR Code"),
+                        body: message,
+                    });
+                    return false;
                 }
-                this.env.services.dialog.add(AlertDialog, {
-                    title: _t("Failure to generate Payment QR Code"),
-                    body: message,
-                });
-                return false;
             }
         }
         payment.qrPaymentData = {

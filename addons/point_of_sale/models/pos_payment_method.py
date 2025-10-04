@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -8,13 +8,27 @@ class PosPaymentMethod(models.Model):
     _order = "sequence, id"
     _inherit = ['pos.load.mixin']
 
+    def _get_use_payment_terminal_selection(self):
+        return self._get_payment_terminal_selection() + self._get_payment_external_qr_selection()
+
     def _get_payment_terminal_selection(self):
+        if tools.config['test_enable']:
+            return [('__test_terminal_1__', 'Test Terminal 1'), ('__test_terminal_2__', 'Test Terminal 2')]
+        return []
+
+    def _get_payment_external_qr_selection(self):
+        if tools.config['test_enable']:
+            return [('__test_external_qr_1__', 'Test External QR 1'), ('__test_external_qr_2__', 'Test External QR 2')]
         return []
 
     def _get_payment_method_type(self):
-        selection = [('none', 'None required'), ('terminal', 'Terminal')]
+        selection = [
+            ('none', _('None required')),
+            ('terminal', _('Terminal')),
+            ("external_qr", _('Quick Pay (QR Code)')),
+        ]
         if self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-            selection.append(('qr_code', 'Bank App (QR Code)'))
+            selection.append(('qr_code', _('Bank App (QR Code)')))
         return selection
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
@@ -48,7 +62,7 @@ class PosPaymentMethod(models.Model):
     config_ids = fields.Many2many('pos.config', string='Point of Sale')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     default_pos_receivable_account_name = fields.Char(related="company_id.account_default_pos_receivable_account_id.display_name", string="Default Receivable Account Name")
-    use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
+    use_payment_terminal = fields.Selection(selection=lambda self: self._get_use_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
     # used to hide use_payment_terminal when no payment interfaces are installed
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
@@ -62,6 +76,36 @@ class PosPaymentMethod(models.Model):
         help='Type of QR-code to be generated for this payment method.',
     )
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
+    external_qr_usage = fields.Selection(
+        selection=[
+            ("display", "On-Screen Display"),
+            ("sticker", "Static Sticker"),
+        ],
+        string="QR Code Usage",
+        default="display",
+        required=True,
+        help=(
+            "Defines how the QR Code is presented to the customer:\n"
+            "- On-Screen Display: A new QR code is dynamically shown on the screen for each order.\n"
+            "- Static Sticker: A fixed QR sticker placed near the checkout counter is used for scanning with every order."
+        ),
+    )
+    external_qr_sticker_size = fields.Selection(
+        selection=[
+            ("S", "Small (180x180)"),
+            ("M", "Medium (250x250)"),
+            ("L", "Large (400x400)"),
+            ("XL", "Extra Large (800x800)"),
+        ],
+        string="Sticker Size",
+        required=True,
+        default="S",
+    )
+    external_qr_sticker_url = fields.Char(
+        string="Sticker URL",
+        compute="_compute_external_qr_sticker_url",
+        store=True,
+    )
 
     @api.model
     def get_provider_status(self, modules_list):
@@ -75,13 +119,13 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
+        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr', 'external_qr_usage']
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):
         no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
         for payment_method in self:
-            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type in ('cash', 'pay_later') or payment_method.payment_method_type != 'terminal'
+            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type in ('cash', 'pay_later') or payment_method.payment_method_type not in ['terminal', 'external_qr']
 
     @api.depends('payment_method_type')
     def _compute_hide_qr_code_method(self):
@@ -91,7 +135,19 @@ class PosPaymentMethod(models.Model):
     @api.onchange('payment_method_type')
     def _onchange_payment_method_type(self):
         # We don't display the field if there is only one option and cannot set a default on it
-        if self.payment_method_type == 'none':
+        if (
+            self.payment_method_type == "none"
+            or (
+                self.payment_method_type == "terminal"
+                and self.use_payment_terminal
+                not in [e[0] for e in self._get_payment_terminal_selection()]
+            )
+            or (
+                self.payment_method_type == "external_qr"
+                and self.use_payment_terminal
+                not in [e[0] for e in self._get_payment_external_qr_selection()]
+            )
+        ):
             self.use_payment_terminal = False
 
         selection_options = self.env['res.partner.bank'].get_available_qr_methods_in_sequence()
@@ -101,7 +157,10 @@ class PosPaymentMethod(models.Model):
     @api.onchange('use_payment_terminal')
     def _onchange_use_payment_terminal(self):
         """Used by inheriting model to unset the value of the field related to the unselected payment terminal."""
-        pass
+        if self.payment_method_type != 'terminal' and self.use_payment_terminal in [e[0] for e in self._get_payment_terminal_selection()]:
+            self.payment_method_type = 'terminal'
+        elif self.payment_method_type != 'external_qr' and self.use_payment_terminal in [e[0] for e in self._get_payment_external_qr_selection()]:
+            self.payment_method_type = 'external_qr'
 
     @api.depends('config_ids')
     def _compute_open_session_ids(self):
@@ -132,6 +191,32 @@ class PosPaymentMethod(models.Model):
         for pm in self:
             pm.is_cash_count = pm.type == 'cash'
 
+    @api.depends("external_qr_sticker_size", "use_payment_terminal", "external_qr_usage", "config_ids")
+    def _compute_external_qr_sticker_url(self):
+        for record in self:
+            if record.payment_method_type != "external_qr" or record.external_qr_usage != "sticker":
+                record.external_qr_sticker_url = ""
+                continue
+
+            record._compute_external_qr_sticker_url_payload()
+
+    def _compute_external_qr_sticker_url_payload(self):
+        """To be overridden by inheriting models to compute the payload for the instant QR sticker URL."""
+        for record in self:
+            record.external_qr_sticker_url = ""
+
+    @api.constrains('external_qr_usage', 'payment_method_type', 'config_ids')
+    def _check_external_qr_sticker(self):
+        for record in self:
+            if (
+                record.payment_method_type == "external_qr"
+                and record.external_qr_usage == "sticker"
+                and len(record.config_ids) > 1
+            ):
+                raise ValidationError(_(
+                    "To save the Instant QR sticker URL, you must have exactly one Point of Sale configuration associated with this payment method.",
+                ))
+
     def _is_write_forbidden(self, fields):
         whitelisted_fields = {'sequence'}
         return bool(fields - whitelisted_fields and self.open_session_ids)
@@ -154,7 +239,8 @@ class PosPaymentMethod(models.Model):
 
         pmt_terminal = self.filtered(lambda pm: pm.payment_method_type == 'terminal')
         pmt_qr = self.filtered(lambda pm: pm.payment_method_type == 'qr_code')
-        not_pmt = self - pmt_terminal - pmt_qr
+        pmt_external_qr = self.filtered(lambda pm: pm.payment_method_type == 'external_qr')
+        not_pmt = self - pmt_terminal - pmt_qr - pmt_external_qr
 
         res = True
         forced_vals = vals.copy()
@@ -164,6 +250,9 @@ class PosPaymentMethod(models.Model):
         if pmt_qr:
             self._force_payment_method_type_values(forced_vals, 'qr_code', True)
             res = super(PosPaymentMethod, pmt_qr).write(forced_vals) and res
+        if pmt_external_qr:
+            self._force_payment_method_type_values(forced_vals, 'external_qr', True)
+            res = super(PosPaymentMethod, pmt_external_qr).write(forced_vals) and res
         if not_pmt:
             res = super(PosPaymentMethod, not_pmt).write(vals) and res
 
@@ -171,7 +260,7 @@ class PosPaymentMethod(models.Model):
 
     @staticmethod
     def _force_payment_method_type_values(vals, payment_method_type, if_present=False):
-        if payment_method_type == 'terminal':
+        if payment_method_type in ['terminal', 'external_qr']:
             disabled_fields_name = ['qr_code_method']
         elif payment_method_type == 'qr_code':
             disabled_fields_name = ['use_payment_terminal']
@@ -231,3 +320,18 @@ class PosPaymentMethod(models.Model):
 
         return payment_bank.with_context(is_online_qr=True).build_qr_code_base64(
             float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False)
+
+    def download_sticker(self):
+        """Download the QR sticker image for the payment method."""
+        self.ensure_one()
+        if self.payment_method_type != "external_qr" or self.external_qr_usage != "sticker":
+            raise UserError(_("This payment method is not configured to generate a QR sticker."))
+
+        if not self.external_qr_sticker_url:
+            raise UserError(_("The QR sticker URL is not set. Please compute it first."))
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.external_qr_sticker_url,
+            'target': 'download',
+        }

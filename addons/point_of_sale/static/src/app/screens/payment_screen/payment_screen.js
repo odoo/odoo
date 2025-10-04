@@ -51,10 +51,10 @@ export class PaymentScreen extends Component {
         onMounted(this.onMounted);
     }
 
-    async validateOrder(isForceValidate = false) {
+    async validateOrder(isForceValidate = false, orderUuid = null) {
         const validation = new OrderPaymentValidation({
             pos: this.pos,
-            orderUuid: this.currentOrder.uuid,
+            orderUuid: orderUuid || this.currentOrder.uuid,
         });
         await validation.validateOrder(isForceValidate);
     }
@@ -164,7 +164,7 @@ export class PaymentScreen extends Component {
             if (
                 paymentMethod.use_payment_terminal &&
                 !this.isRefundOrder &&
-                paymentMethod.payment_terminal.fastPayments
+                paymentMethod.payment_terminal?.fastPayments
             ) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
@@ -286,6 +286,19 @@ export class PaymentScreen extends Component {
             this.numberBuffer.reset();
             return;
         }
+
+        if (
+            line.payment_method_id.isExternalQR &&
+            ["waitingScanExternalQR", "waitingPaymentExternalQR"].includes(line.payment_status)
+        ) {
+            this.sendPaymentCancel(line).then(() => {
+                this.pos.paymentTerminalInProgress = false;
+                this.currentOrder.removePaymentline(line);
+                this.numberBuffer.reset();
+            });
+            return;
+        }
+
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
@@ -321,6 +334,20 @@ export class PaymentScreen extends Component {
     }
 
     async sendPaymentRequest(line) {
+        if (
+            line.payment_method_id.isExternalStickerQR &&
+            this.pos.stickerPaymentsInProgress.has(line.payment_method_id.id)
+        ) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Error"),
+                body: _t(
+                    `There is already a payment in progress for this sticker (%s).`,
+                    line.payment_method_id.name
+                ),
+            });
+            return;
+        }
+
         // Other payment lines can not be reversed anymore
         this.pos.paymentTerminalInProgress = true;
         this.numberBuffer.capture();
@@ -329,30 +356,66 @@ export class PaymentScreen extends Component {
         });
 
         let isPaymentSuccessful = false;
+        // QR Code
         if (line.payment_method_id.payment_method_type === "qr_code") {
             const resp = await this.pos.showQR(line);
             isPaymentSuccessful = line.handlePaymentResponse(resp);
-        } else {
+        }
+
+        // External QR Code
+        else if (line.payment_method_id.isExternalQR) {
+            isPaymentSuccessful = await this.processExternalQRPayment(line);
+        }
+
+        // Other
+        else {
             isPaymentSuccessful = await line.pay();
         }
 
         // Automatically validate the order when after an electronic payment,
         // the current order is fully paid and due is zero.
+        if (isPaymentSuccessful) {
+            this.autoValidateOrder({
+                currentOrder: line.pos_order_id,
+                paymentMethod: line.payment_method_id,
+                line: line,
+            });
+        }
+    }
+    autoValidateOrder({
+        paymentMethod,
+        currentOrder: _currentOrder,
+        isForceValidate = false,
+        line = null,
+    } = {}) {
         this.pos.paymentTerminalInProgress = false;
+        if (paymentMethod && paymentMethod.isExternalQR) {
+            this.closeQRCustomerDisplay(line);
+            this.pos.stickerPaymentsInProgress.delete(paymentMethod.id);
+        }
         const config = this.pos.config;
         const currency = this.pos.currency;
-        const currentOrder = line.pos_order_id;
+        const currentOrder = _currentOrder || this.currentOrder;
         if (
-            isPaymentSuccessful &&
             currentOrder.isPaid() &&
             currency.isZero(currentOrder.getDue()) &&
             config.auto_validate_terminal_payment &&
             !currentOrder.isRefundInProcess()
         ) {
-            this.validateOrder(false);
+            this.validateOrder(isForceValidate, currentOrder.uuid);
         }
     }
     async sendPaymentCancel(line) {
+        // External QR
+        if (line.payment_method_id.isExternalQR) {
+            const cancelSuccess = await this.cancelExternalQR(line);
+            if (cancelSuccess) {
+                this.finalizeExternalQRCancellation(line);
+            }
+            return;
+        }
+
+        // Terminal
         const payment_terminal = line.payment_method_id.payment_terminal;
         line.setPaymentStatus("waitingCancel");
         const isCancelSuccessful = await payment_terminal.sendPaymentCancel(
@@ -366,18 +429,38 @@ export class PaymentScreen extends Component {
             line.setPaymentStatus("waitingCard");
         }
     }
+
+    finalizeExternalQRCancellation(line) {
+        line.setPaymentStatus("retry");
+        this.pos.paymentTerminalInProgress = false;
+        this.closeQRCustomerDisplay(line);
+        this.pos.stickerPaymentsInProgress.delete(line.payment_method_id.id);
+    }
+
     async sendPaymentReverse(line) {
         const payment_terminal = line.payment_method_id.payment_terminal;
         line.setPaymentStatus("reversing");
 
-        const isReversalSuccessful = await payment_terminal.sendPaymentReversal(line.uuid);
-        if (isReversalSuccessful) {
-            line.setAmount(0);
-            line.setPaymentStatus("reversed");
-        } else {
-            line.can_be_reversed = false;
-            line.setPaymentStatus("done");
+        const finalizeReversal = (success) => {
+            if (success) {
+                line.setAmount(0);
+                line.setPaymentStatus("reversed");
+            } else {
+                line.can_be_reversed = false;
+                line.setPaymentStatus("done");
+            }
+        };
+
+        // External QR
+        if (line.payment_method_id.isExternalQR) {
+            const success = await this.reverseExternalQR(line);
+            finalizeReversal(success);
+            return;
         }
+
+        // Terminal
+        const success = await payment_terminal.sendPaymentReversal(line.uuid);
+        finalizeReversal(success);
     }
     async sendForceDone(line) {
         line.setPaymentStatus("done");
@@ -392,6 +475,52 @@ export class PaymentScreen extends Component {
         ) {
             this.validateOrder(false);
         }
+    }
+
+    sendPaymentConfirm(line) {
+        if (line.payment_method_id.isExternalQR) {
+            line.setPaymentStatus("done");
+            this.autoValidateOrder({
+                currentOrder: line.pos_order_id,
+                paymentMethod: line.payment_method_id,
+                line: line,
+            });
+        }
+    }
+
+    async processExternalQRPayment(line) {
+        return false;
+    }
+
+    async cancelExternalQR(line) {
+        return false;
+    }
+
+    async reverseExternalQR(line) {
+        return false;
+    }
+
+    sendQRToCustomerDisplay(line) {
+        if (!line) {
+            return;
+        }
+
+        line.qrPaymentData?.close();
+        line.qrPaymentData = {
+            qrCode: line.qr_code,
+            name: line.payment_method_id.name,
+            amount: this.env.utils.formatCurrency(line.getAmount()),
+            close: () => {},
+        };
+    }
+
+    closeQRCustomerDisplay(line) {
+        if (!line) {
+            return;
+        }
+
+        line.qrPaymentData?.close();
+        line.qrPaymentData = null;
     }
 }
 

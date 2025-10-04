@@ -13,14 +13,14 @@
                                     <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
                                 </div>
                             </div>
-                            <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
+                            <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture', 'waitingScanExternalQR', 'waitingPaymentExternalQR'].includes(line.payment_status)">
                                 <button class="delete-button btn btn-link mx-2 px-3"
                                     t-on-click="() => this.props.deleteLine(line.uuid)"
                                     aria-label="Delete" title="Delete">
                                     <i class="oi oi-close text-danger" />
                                 </button>
                             </t>
-                           <t t-elif="line.payment_status and ['waitingCard', 'waitingCapture'].includes(line.payment_status)">
+                           <t t-elif="line.payment_status and ['waitingCard', 'waitingCapture', 'waitingScanExternalQR', 'waitingPaymentExternalQR'].includes(line.payment_status)">
                                 <div class="mx-2 px-3">
                                     <i class="fa fa-circle-o-notch fa-spin" role="img" />
                                 </div>
@@ -71,6 +71,23 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                    </div>
+                                </t>
+                                <t t-elif="['waitingScanExternalQR', 'waitingPaymentExternalQR'].includes(line.payment_status)">
+                                    <div class="electronic_status">
+                                        Waiting for the customer to scan the QR Code
+                                    </div>
+                                    <div class="d-flex p-0">
+                                        <button class="btn btn-success external_qr_confirm flex-grow-1 rounded-0 px-3 py-2"
+                                            title="Confirm External QR Code Payment"
+                                            t-on-click="() => this.props.sendPaymentConfirm(line)">
+                                            Confirm
+                                        </button>
+                                        <button class="btn btn-danger external_qr_cancel flex-grow-1 rounded-0 px-3 py-2"
+                                            title="Cancel External QR Code"
+                                            t-on-click="() => this.props.sendPaymentCancel(line)">
+                                            Cancel
+                                        </button>
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversing'">

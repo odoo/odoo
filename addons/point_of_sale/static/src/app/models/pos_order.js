@@ -532,7 +532,7 @@ export class PosOrder extends Base {
 
             if (
                 (payment_method.payment_terminal && !this.isRefund) ||
-                payment_method.payment_method_type === "qr_code"
+                ["qr_code", "external_qr"].includes(payment_method.payment_method_type)
             ) {
                 newPaymentLine.setPaymentStatus("pending");
             }
