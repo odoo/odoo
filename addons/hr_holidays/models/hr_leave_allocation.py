@@ -332,13 +332,15 @@ class HolidaysAllocation(models.Model):
         accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
             allocation_unit = allocation._get_request_unit()
-            if allocation_unit != 'hour':
-                allocation.number_of_days = allocation.number_of_days_display
-            else:
-                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
-                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
-                    or HOURS_PER_DAY
+            if allocation.type_request_unit == 'hour':
+                # Determine hours per day from employee calendar, company calendar, or default value
+                hours_per_day = (
+                    allocation.employee_id.sudo().resource_calendar_id.hours_per_day or
+                    allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day or
+                    HOURS_PER_DAY
+                )
                 allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+
             if allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
                 allocation.accrual_plan_id = False
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
