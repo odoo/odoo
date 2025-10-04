@@ -16,7 +16,7 @@ class MailComposeMessage(models.TransientModel):
 
         if campaign := self.mass_mailing_id.card_campaign_id:
             card_from_res_id = self.env['card.card'].search_fetch(
-                [('campaign_id', '=', campaign.id), ('res_id', 'in', res_ids)],
+                [('campaign_id', '=', campaign.id), ('res_id', 'in', res_ids), ('lang', '=', self.mass_mailing_id.card_lang)],
                 ['res_id'],
             ).grouped('res_id')
 
