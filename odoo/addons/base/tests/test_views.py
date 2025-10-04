@@ -4134,6 +4134,199 @@ class TestViewCombined(ViewCase):
             model=main_view.model,
         )
 
+def test_merge_expression(self):
+    main_view = self.View.create(
+        {
+            "model": "res.partner",
+            "arch": """
+                <form>
+                    <sheet>
+                        <field name="name" invisible="name == 'foo'" readonly="context.get('a')"/>
+                        <field name="bank_ids" context="{'default_name':'boo'}" options="{'no_open':1}" domain="[('active','=','1')]"/>
+                        <field name="company_id" domain="[('name','=','foo')]"/>
+                        <field name="category_id" domain="[]"/>
+                        <field name="state_id"/>
+                        <field name="color"/>
+                    </sheet>
+                </form>""",
+        }
+    )
+
+    def test_merge(
+        attribute: (
+            Literal["domain", "context", "options", "invisible", "readonly"] | str
+        ),
+        arch: str,
+        result: str,
+        field_index: int = 0,
+    ):
+        view = self.View.create(
+            {
+                "model": "res.partner",
+                "inherit_id": main_view.id,
+                "mode": "primary",
+                "arch": arch,
+            }
+        )
+        # print(view.get_combined_arch())
+        python_expr = etree.fromstring(view.get_combined_arch())[0][field_index].get(
+            attribute
+        )
+        self.assertEqual(python_expr, result)
+
+    test_merge(
+        "invisible",
+        """
+                   <data>
+                        <xpath expr="//field[@name='name']" position="attributes">
+                            <attribute name="invisible" merge="or name == 'boo'"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "name == 'foo' or name == 'boo'",
+    )
+
+    test_merge(
+        "readonly",
+        """
+                   <data>
+                        <xpath expr="//field[@name='name']" position="attributes">
+                            <attribute name="readonly" merge="and context.get('b') and id == 1"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "context.get('a') and context.get('b') and id == 1",
+    )
+
+    test_merge(
+        "options",
+        """
+                   <data>
+                        <xpath expr="//field[@name='bank_ids']" position="attributes">
+                            <attribute name="options" merge="{'no_create':1}"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "{'no_open':1,'no_create':1}",
+        field_index=1,
+    )
+
+    test_merge(
+        "context",
+        """
+                   <data>
+                        <xpath expr="//field[@name='bank_ids']" position="attributes">
+                            <attribute name="context" merge="{'default_phone':'555','default_company_id':id}"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "{'default_name':'boo','default_phone':'555','default_company_id':id}",
+        field_index=1,
+    )
+
+    test_merge(
+        "domain",
+        """
+                   <data>
+                        <xpath expr="//field[@name='bank_ids']" position="attributes">
+                            <attribute name="domain" merge="[('bank_name','ilike','foo')]"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "[('active','=','1'),('bank_name','ilike','foo')]",
+        field_index=1,
+    )
+
+    test_merge(
+        "domain",
+        """
+                   <data>
+                        <xpath expr="//field[@name='company_id']" position="attributes">
+                            <attribute name="domain" merge="['|',('name','ilike','foo')]"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "['|',('name','=','foo'),('name','ilike','foo')]",
+        field_index=2,
+    )
+
+    test_merge(
+        "domain",
+        """
+                   <data>
+                        <xpath expr="//field[@name='category_id']" position="attributes">
+                            <attribute name="domain" merge="[('name','ilike','foo')]"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "[('name','ilike','foo')]",
+        field_index=3,
+    )
+
+    test_merge(
+        "domain",
+        """
+                   <data>
+                        <xpath expr="//field[@name='state_id']" position="attributes">
+                            <attribute name="domain" merge="[('name','=','foo')]"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "[('name','=','foo')]",
+        field_index=4,
+    )
+
+    test_merge(
+        "invisible",
+        """
+                   <data>
+                        <xpath expr="//field[@name='color']" position="attributes">
+                            <attribute name="invisible" merge="name == 'foo'"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "name == 'foo'",
+        field_index=5,
+    )
+
+    test_merge(
+        "readonly",
+        """
+                   <data>
+                        <xpath expr="//field[@name='color']" position="attributes">
+                            <attribute name="readonly" merge="name == 'foo'"></attribute>
+                            <attribute name="readonly" merge="or name == 'boo'"></attribute>
+                            <attribute name="readonly" merge="or id == 1"></attribute>
+                        </xpath>
+                    </data>
+                   """,
+        "name == 'foo' or name == 'boo' or id == 1",
+        field_index=5,
+    )
+
+    self.assertInvalid(
+        """ <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible" position="merge">True</attribute>
+                </xpath>
+            </data> """,
+        "Invalid attributes 'position' in element <attribute>",
+        inherit_id=main_view.id,
+        model=main_view.model,
+    )
+
+    self.assertInvalid(
+        """ <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible" merge="True">text</attribute>
+                </xpath>
+            </data> """,
+        "Element <attribute> with 'merge' cannot contain text 'text'",
+        inherit_id=main_view.id,
+        model=main_view.model,
+    )
+
+
 
 class TestOptionalViews(ViewCase):
     """
