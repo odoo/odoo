@@ -427,6 +427,7 @@
         </div>
     </template>
 
+<<<<<<< c71cd7745a68105691f46793193e6a58516f40cf
     <template id="portal_my_contact">
         <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 #{_spacingClass}">
             <div class="d-flex gap-2">
@@ -435,6 +436,41 @@
                     <span t-attf-class="d-block lh-1 mb-1 {{ 'pt-1' if not _contactLink else '' }}" t-out="_contactName"/>
                     <a t-if="_contactLink" href="#discussion" class="d-flex align-items-center gap-2 small lh-1">Send message</a>
                 </div>
+||||||| c84285dbd2a22527c980bcf4426868c302b8ddd1
+    <template id="portal_contact" name="Contact">
+        <div class="o_portal_contact_details mb-5">
+            <h4>Your contact</h4>
+            <hr class="mt-1 mb0"/>
+            <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
+            <div class="d-flex align-items-center mb-1">
+                <div class="fa fa-envelope fa-fw me-1"></div>
+                <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <div class="fa fa-phone fa-fw me-1"></div>
+                <span t-esc="sales_user.phone"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <div class="fa fa-map-marker fa-fw me-1"></div>
+                <span t-esc="sales_user.city"/>
+=======
+    <template id="portal_contact" name="Contact">
+        <div class="o_portal_contact_details mb-5">
+            <h4>Your contact</h4>
+            <hr class="mt-1 mb0"/>
+            <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
+            <div t-if="sales_user.email_normalized" class="d-flex align-items-center mb-1">
+                <div class="fa fa-envelope fa-fw me-1"></div>
+                <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <div class="fa fa-phone fa-fw me-1"></div>
+                <span t-esc="sales_user.phone"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <div class="fa fa-map-marker fa-fw me-1"></div>
+                <span t-esc="sales_user.city"/>
+>>>>>>> 99bbe9edddfccd7d9fdb9d4000ba36d4707c2f92
             </div>
             <t t-out="0"/>
         </div>
