@@ -20,13 +20,10 @@ class ResPartnerBank(models.Model):
         required=True
     )
 
-    @api.depends('country_code', 'acc_type')
+    @api.depends('country_code', 'bank_id', 'acc_type')
     def _compute_show_aba_routing(self):
         for bank in self:
-            if bank.country_code == 'US' and bank.acc_type != 'iban':
-                bank.show_aba_routing = True
-            else:
-                bank.show_aba_routing = False
+            bank.show_aba_routing = (bank.bank_id.country_code or bank.country_code) == 'US' and bank.acc_type != 'iban'
 
     @api.constrains('clearing_number')
     def _check_clearing_number_us(self):
