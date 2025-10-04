@@ -167,9 +167,6 @@ class L10nEsEdiTbaiDocument(models.Model):
         if error:
             return error
 
-        if not self.xml_attachment_id:
-            self._generate_xml(values)
-
         if (
             not self.chain_index
             and not self.is_cancel
