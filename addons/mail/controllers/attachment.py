@@ -5,7 +5,7 @@ import io
 import logging
 import zipfile
 
-from werkzeug.exceptions import NotFound, UnsupportedMediaType
+from werkzeug.exceptions import Forbidden, NotFound, UnsupportedMediaType
 
 from odoo import _, http
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -51,7 +51,7 @@ class AttachmentController(ThreadController):
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
-            raise NotFound()
+            raise Forbidden()
         vals = {
             "name": ufile.filename,
             "raw": ufile.read(),

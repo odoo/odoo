@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import Forbidden
 
 from odoo import _
 from odoo.http import route, request
@@ -15,7 +15,7 @@ class LivechatAttachmentController(AttachmentController):
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
-            raise NotFound()
+            raise Forbidden()
         if (
             thread_model == "discuss.channel"
             and thread.channel_type == "livechat"

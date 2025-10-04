@@ -3,6 +3,7 @@
 
 import json
 from odoo.tests.common import HttpCase, new_test_user
+from odoo.tools.misc import mute_logger
 
 
 class TestAttachmentController(HttpCase):
@@ -43,3 +44,59 @@ class TestAttachmentController(HttpCase):
         result = attachment.search(domain, limit=1)
         self.assertTrue(result, "No attachment fetched")
         self.assertEqual(result.id, attachment.id)
+
+    @mute_logger('odoo.http')
+    def test_03_portal_attachment(self):
+        post = self.env['forum.post'].create({
+            "name": "Forum Post Test",
+            "forum_id": self.env.ref("website_forum.forum_help").id,
+        })
+        post.forum_id.karma_editor = 0
+        self.assertTrue(post.can_use_full_editor)
+
+        self.authenticate('portal_user', 'portal_user')
+
+        # can't upload text file
+        response = self.url_open(
+            '/html_editor/attachment/add_data',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps({'params': {
+                'name': 'test.txt',
+                'data': 'SGVsbG8gd29ybGQ=',  # base64 Hello world
+                'is_image': False,
+                'res_model': 'forum.post',
+                'res_id': post.id,
+            }})
+        ).json()
+        self.assertIn('error', response)
+        self.assertIn("Non-internal users can only upload image.", str(response))
+
+        # can upload image file
+        response = self.url_open(
+            '/html_editor/attachment/add_data',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps({'params': {
+                'name': 'test.png',
+                'data': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',  # base64 image
+                'is_image': False,
+                'res_model': 'forum.post',
+                'res_id': post.id,
+            }})
+        ).json()
+        self.assertNotIn('error', response)
+
+        # try to upload a file larger than the limit
+        self.env["ir.config_parameter"].set_param("html_editor.max_portal_file_size", "10")
+        response = self.url_open(
+            '/html_editor/attachment/add_data',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps({'params': {
+                'name': 'test.png',
+                'data': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',  # base64 image
+                'is_image': False,
+                'res_model': 'forum.post',
+                'res_id': post.id,
+            }})
+        ).json()
+        self.assertIn('error', response)
+        self.assertIn("Non-internal users can't upload large files.", str(response))
