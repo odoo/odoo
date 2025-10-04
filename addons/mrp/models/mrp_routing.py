@@ -184,10 +184,10 @@ class MrpRoutingWorkcenter(models.Model):
             'res_model': 'mrp.routing.workcenter',
             'view_mode': 'list,form',
             'domain': ['|', ('bom_id', '=', False), ('bom_id.active', '=', True)],
-            'context' : {
+            'context': {
                 'bom_id': self.env.context["bom_id"],
                 'list_view_ref': 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
-            }
+            },
         }
 
     def _skip_operation_line(self, product, never_attribute_values=False):
