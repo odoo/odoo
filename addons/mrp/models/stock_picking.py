@@ -56,6 +56,9 @@ class StockPickingType(models.Model):
     generated_mrp_lot_label_to_print = fields.Selection(
         [('pdf', 'PDF'), ('zpl', 'ZPL')],
         "Generated Lot/SN Label to Print", default='pdf')
+    scheduling = fields.Selection([('forward', 'Forward'), ('backward', 'Backward')],
+        default='backward', string='Scheduling', required=True,
+        help="Select 'Backward' to schedule Manufacturing Orders to complete on the scheduled 'End' date.")
 
     @api.depends('code')
     def _compute_use_create_lots(self):
