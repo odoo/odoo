@@ -57,6 +57,17 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_editable_content(self):
         self.start_tour('/', 'website_form_editable_content', login="admin")
 
+    def test_website_form_m2m_field(self):
+        self.env['res.partner'].create({
+            'name': 'testuserA',
+            'email': 'testA@example.com',
+        })
+        self.env['res.partner'].create({
+            'name': 'testuserB',
+            'email': 'testB@example.com',
+        })
+        self.start_tour('/', 'website_form_m2m_field', login="admin")
+
     def test_website_form_special_characters(self):
         self.start_tour('/', 'website_form_special_characters', login='admin')
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)
