@@ -10,7 +10,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
-from odoo.tools import float_compare, SQL
+from odoo.tools import float_is_zero, SQL
 from odoo.tools.date_utils import get_month
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
@@ -541,6 +541,69 @@ class AccountMove(models.Model):
     def l10n_in_verify_partner_gstin_status(self):
         self.ensure_one()
         return self.with_company(self.company_id).partner_id.action_l10n_in_verify_gstin_status()
+
+    def _create_credit_note_for_early_payment_discount(self, invoice, open_balance, payment_vals):
+        payment_term = invoice.invoice_payment_term_id
+        if not payment_term.early_pay_credit_note:
+            return
+
+        # Exclude the discounted amount entry from the journal entry
+        payment_vals['write_off_line_vals'] = []
+
+        total_amount = (
+            invoice.amount_total
+            if payment_term.early_pay_discount_computation == "included"
+            else invoice.amount_untaxed
+        )
+
+        discount_factor = open_balance / total_amount
+        cash_discount_account = (
+            invoice.company_id.account_journal_early_pay_discount_loss_account_id
+            if invoice.is_inbound(include_receipts=True)
+            else invoice.company_id.account_journal_early_pay_discount_gain_account_id
+        )
+
+        credit_note_line_ids = [
+            Command.create({
+                'name': _("Early Discount: %s", line.name),
+                'account_id': cash_discount_account.id,
+                'quantity': 1,
+                'product_uom_id': line.product_uom_id.id,
+                'l10n_in_hsn_code': line.l10n_in_hsn_code,
+                'price_unit': line.price_subtotal * discount_factor,
+                'tax_ids': [(6, 0, line.tax_ids.ids)] if payment_term.early_pay_discount_computation == 'included' else [],
+            })
+            for line in invoice.invoice_line_ids
+            if not float_is_zero(line.price_subtotal * discount_factor, precision_rounding=line.currency_id.rounding)
+        ]
+
+        if not credit_note_line_ids:
+            return
+
+        credit_note_vals = {
+            'move_type': 'out_refund' if invoice.is_sale_document() else 'in_refund',
+            'partner_id': invoice.partner_id.id,
+            'journal_id': invoice.journal_id.id,
+            'invoice_origin': invoice.name,
+            'reversed_entry_id': invoice.id,
+            'invoice_line_ids': credit_note_line_ids,
+        }
+
+        credit_note = invoice.create(credit_note_vals)
+        credit_note.message_post(body=_('This entry has been reversed from %s', invoice._get_html_link()))
+        invoice.message_post(body=_('This entry has been %s', credit_note._get_html_link(title=_("reversed"))))
+
+        # Handle rounding adjustments
+        remaining_unpaid_amount = round(open_balance - credit_note.amount_total, 2)
+        if abs(remaining_unpaid_amount) == 0.01:
+            credit_note.write({
+                'invoice_line_ids': [Command.create({
+                    'name': _("Settlement Amount"),
+                    'account_id': cash_discount_account.id,
+                    'quantity': 1,
+                    'price_unit': remaining_unpaid_amount,
+                })]
+            })
 
     def _get_name_invoice_report(self):
         self.ensure_one()

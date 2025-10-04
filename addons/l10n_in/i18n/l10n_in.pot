@@ -299,6 +299,21 @@ msgid "Create TDS Entry"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_term__early_pay_credit_note
+msgid "Create Credit Note"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_payment_term__early_pay_credit_note
+msgid "Create Credit Note of early payment discount"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_payment_term_form
+msgid "Create credit note:"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__create_uid
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_uid
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__create_uid
@@ -310,6 +325,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_date
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_payment_register.py:0
+msgid ""
+"Creating credit note must be consistently enabled or disabled for payment "
+"terms of all selected invoices."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Credit Note"
 msgstr ""
 
 #. module: l10n_in
@@ -350,6 +378,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_payment__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_term__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_iap_account__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__display_name
@@ -634,6 +664,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move_line__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_payment__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_register__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment_term__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_in.field_iap_account__id
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__id
@@ -1019,6 +1051,16 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_section_alert_per_transaction_limit
 msgid "Per transaction limit must be positive"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_payment_term
+msgid "Payment Terms"
 msgstr ""
 
 #. module: l10n_in

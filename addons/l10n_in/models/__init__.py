@@ -16,3 +16,5 @@ from . import account_account
 from . import l10n_in_section_alert
 from . import l10n_in_pan_entity
 from . import l10n_in_report_handler
+from . import account_payment_term
+from . import account_payment_register
