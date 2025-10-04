@@ -120,6 +120,7 @@ class MailTestTrackAllPropertiesParent(models.Model):
     _description = 'Properties Parent'
     _name = "mail.test.track.all.properties.parent"
 
+    name = fields.Char()
     definition_properties = fields.PropertiesDefinition()
 
 
