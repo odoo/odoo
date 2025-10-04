@@ -372,17 +372,25 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 pb32" itemprop="description">
-                    <p class="lead">
-                        As an employee of our company, you will <b>collaborate with each department
-                        to create and deploy disruptive products.</b> Come work at a growing company
-                        that offers great benefits with opportunities to moving forward and learn
-                        alongside accomplished leaders. We're seeking an experienced and outstanding
-                        member of staff.
-                        <br/><br/>
-                        This position is both <b>creative and rigorous</b> by nature you need to think
-                        outside the box. We expect the candidate to be proactive and have a "get it done"
-                        spirit. To be successful, you will have solid solving problem skills.
-                    </p>
+                    <t t-if="job.description and job_description != ''">
+                        <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
+                        <div class="lead"
+                            t-field="job.description"
+                            t-att-data-editor-message="job_desc_edition_placeholder"/>
+                    </t>
+                    <t t-else="">
+                        <p class="lead">
+                            As an employee of our company, you will <b>collaborate with each department
+                            to create and deploy disruptive products.</b> Come work at a growing company
+                            that offers great benefits with opportunities to moving forward and learn
+                            alongside accomplished leaders. We're seeking an experienced and outstanding
+                            member of staff.
+                            <br/><br/>
+                            This position is both <b>creative and rigorous</b> by nature you need to think
+                            outside the box. We expect the candidate to be proactive and have a "get it done"
+                            spirit. To be successful, you will have solid solving problem skills.
+                        </p>
+                    </t>
                 </div>
                 <div class="col-lg-3 offset-lg-1 pb32">
                     <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
