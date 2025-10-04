@@ -19,10 +19,8 @@ def format_partner_name(partner_name):
 
 
 def include_partner_addresses(tx_sudo):
-    """ Include the billing and delivery addresses of the related sales order to the payload of the
-    API request.
-
-    If no related sales order exists, the addresses are not included.
+    """ Include the billing and delivery addresses of the related sales order or invoice to the
+    payload of the API request. If no related document exists, the addresses are not included.
 
     Note: `self.ensure_one()`
 
@@ -32,13 +30,18 @@ def include_partner_addresses(tx_sudo):
     """
     tx_sudo.ensure_one()
 
-    if 'sale_order_ids' in tx_sudo._fields:  # The module `sale` is installed.
-        order = tx_sudo.sale_order_ids[:1]
-        if order:
-            return {
-                'billingAddress': format_partner_address(order.partner_invoice_id),
-                'deliveryAddress': format_partner_address(order.partner_shipping_id),
-            }
+    if 'sale_order_ids' in tx_sudo._fields and tx_sudo.sale_order_ids:
+        document = tx_sudo.sale_order_ids[:1]
+        return {
+            'billingAddress': format_partner_address(document.partner_invoice_id),
+            'deliveryAddress': format_partner_address(document.partner_shipping_id),
+        }
+    elif 'invoice_ids' in tx_sudo._fields and tx_sudo.invoice_ids:
+        document = tx_sudo.invoice_ids[:1]
+        return {
+            'billingAddress': format_partner_address(document.partner_id),
+            'deliveryAddress': format_partner_address(document.partner_shipping_id),
+        }
     return {}
 
 
