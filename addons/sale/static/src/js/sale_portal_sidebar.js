@@ -20,6 +20,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
+        this.$el.find('#terms a').attr('target', '_blank');
         var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
         this._setElementId($spyWatcheElement);
         // Nav Menu ScrollSpy
