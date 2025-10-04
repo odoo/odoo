@@ -201,6 +201,7 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     orderlines_sequence_in_cart_by_category = fields.Boolean(string="Order cart by category's sequence", default=False,
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
+    qty_set_by_prices = fields.Boolean(help="when active, quantity will set by prices")
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         static_records = {}
