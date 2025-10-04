@@ -249,6 +249,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 create_values['currency_id'] = country.currency_id.id
         company = super()._create_company(**create_values)
         cls._use_chart_template(company, cls.chart_template)
+        company.partner_id.tz = "UTC"  # avoid problems in tests with timezones
         # if the currency_id was defined explicitly (or via the country), it should override the one from the coa
         if create_values.get('currency_id'):
             company.currency_id = create_values['currency_id']
