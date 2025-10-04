@@ -27,7 +27,7 @@
             <field name="name">purchase.report.view.list</field>
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
-                <list string="Purchase Analysis">
+                <list string="Purchase Analysis" action="action_open_purchase_order" type="object">
                     <field name="date_order"/>
                     <field name="order_id" optional="show"/>
                     <field name="partner_id" optional="show"/>
