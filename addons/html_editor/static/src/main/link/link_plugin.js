@@ -442,6 +442,17 @@ export class LinkPlugin extends Plugin {
                     if (fontSizeWrapper) {
                         this.dependencies.split.splitSelection();
                         const selectedNodes = this.dependencies.selection.getSelectedNodes();
+                        if (!selectedNodes.length) {
+                            const { anchorNode } =
+                                this.dependencies.selection.getEditableSelection();
+                            // The `feff` is used in case the selection is collapsed
+                            // (creating link with `/link` command) inside a font style
+                            // which will split around the `feff` to ensure always having
+                            // the same styling after link creation.
+                            // `feff` will be removed by `clean_handlers` in `splitElement`
+                            selectedNodes.push(this.document.createTextNode("\ufeff"));
+                            anchorNode.after(selectedNodes[0]);
+                        }
                         content = this.dependencies.split.splitAroundUntil(
                             selectedNodes,
                             fontSizeWrapper
