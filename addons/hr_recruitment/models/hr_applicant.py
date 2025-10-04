@@ -807,7 +807,7 @@ class HrApplicant(models.Model):
         return {
             'name': _('Employee'),
             'type': 'ir.actions.act_window',
-            'res_model': 'hr.employee',
+            'res_model': 'hr.employee' if self.env.user.has_group('hr.group_hr_user') else 'hr.employee.public',
             'view_mode': 'form',
             'res_id': self.employee_id.id,
         }

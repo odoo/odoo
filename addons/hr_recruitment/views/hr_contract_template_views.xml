@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend contract template form to add summary HTML -->
+    <record id="hr_contract_template_form_view_inherit_summary" model="ir.ui.view">
+        <field name="name">hr.contract.template.form.inherit.summary</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='top_info']" position="after">
+                <group name="summary" colspan="4">
+                    <field name="contract_template_payroll_summary" nolabel="1" readonly="1" invisible="not contract_template_payroll_summary" groups="hr_recruitment.group_hr_recruitment_user"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

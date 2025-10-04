@@ -102,4 +102,18 @@
         <field name="domain_force">[('plan_id.res_model', '=', 'hr.applicant')]</field>
         <field name="perm_read" eval="False"/>
     </record>
+
+    <record id="ir_rule_hr_contract_template_recruitment" model="ir.rule">
+        <field name="name">HR Recruitment: Contract Template Access</field>
+        <field name="model_id" ref="hr.model_hr_version"/>
+        <field name="domain_force">[
+            ('company_id', 'in', [False] + company_ids),
+            ('employee_id', '=', False),
+        ]</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 </odoo>
