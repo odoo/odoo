@@ -182,6 +182,7 @@ class IrRule(models.Model):
 
     def unlink(self):
         res = super(IrRule, self).unlink()
+        self.env.transaction.clear_access_cache()
         self.env.registry.clear_cache()
         return res
 
@@ -190,6 +191,7 @@ class IrRule(models.Model):
         res = super(IrRule, self).create(vals_list)
         # DLE P33: tests
         self.env.flush_all()
+        self.env.transaction.clear_access_cache()
         self.env.registry.clear_cache()
         return res
 
@@ -200,6 +202,7 @@ class IrRule(models.Model):
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
         self.env.flush_all()
+        self.env.transaction.clear_access_cache()
         self.env.registry.clear_cache()
         return res
 

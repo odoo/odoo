@@ -1415,7 +1415,10 @@ class BaseModel(metaclass=MetaModel):
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names)
 
-        return self._fetch_query(query, fields_to_fetch)
+        fetched = self._fetch_query(query, fields_to_fetch)
+        if not self.env.su and self._check_access is BaseModel._check_access:
+            self.env._add_to_access_cache(fetched)
+        return fetched
 
     #
     # display_name, name_create, name_search
@@ -3168,12 +3171,15 @@ class BaseModel(metaclass=MetaModel):
 
         # fetch the fields
         fetched = self._fetch_query(query, fields_to_fetch)
+        env = self.env
+        if not env.su and self._check_access is BaseModel._check_access:
+            env._add_to_access_cache(fetched)
 
         # possibly raise exception for the records that could not be read
-        if fetched != self:
+        if not env.su and fetched != self:
             forbidden = (self - fetched).exists()
             if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+                raise env['ir.rule']._make_access_error('read', forbidden)
 
     def _determine_fields_to_fetch(
             self,
@@ -3469,7 +3475,7 @@ class BaseModel(metaclass=MetaModel):
             records.browse().check_access(operation)
 
         """
-        if not self.env.su and (result := self._check_access(operation)):
+        if not self.env.su and (result := self.__check_access_cached(operation)):
             raise result[1]()
 
     def has_access(self, operation: str) -> bool:
@@ -3477,7 +3483,7 @@ class BaseModel(metaclass=MetaModel):
         on all the records in ``self``. The method is fully consistent with
         method :meth:`check_access` but returns a boolean instead.
         """
-        return self.env.su or not self._check_access(operation)
+        return self.env.su or not self.__check_access_cached(operation)
 
     def _filtered_access(self, operation: str):
         """ Return the subset of ``self`` for which the current user is allowed
@@ -3486,9 +3492,76 @@ class BaseModel(metaclass=MetaModel):
             self.filtered(lambda record: record.has_access(operation))
 
         """
-        if self and not self.env.su and (result := self._check_access(operation)):
+        if self and not self.env.su and (result := self.__check_access_cached(operation)):
             return self - result[0]
         return self
+
+    def __check_access_cached(self, operation: str) -> tuple[Self, Callable] | None:
+        """ Cached version of `_check_access`. """
+        # get the cache
+        env = self.env
+        if operation == 'read':
+            access = env._access_cache[self._name]
+        else:
+            return self._check_access(operation)
+
+        # if we have access data for some records, the model is accessible
+        if not access:
+            if result := self.browse()._check_access(operation):
+                return self, result[1]
+
+        # we only check access rules on real records, which should not be mixed
+        # with new records
+        # if we have access to all records, we can stop here
+        ids = self._ids
+        if not any(ids) or all(map(access.get, ids)):
+            return None
+
+        # check the rule and find all forbidden records
+        if len(ids) >= PREFETCH_MAX or self._prefetch_ids is ids:
+            records = self.browse(id_ for id_ in ids if id_ not in access)
+        else:
+            prefetch_ids = (id_ for id_ in unique(itertools.chain(ids, self._prefetch_ids)) if id_ not in access)
+            records = self.browse(itertools.islice(prefetch_ids, PREFETCH_MAX))
+        try:
+            result = records._check_access(operation)
+        except MissingError:
+            existing = records.exists()
+            record_ids, existing_ids = set(records._ids), set(existing._ids)
+            if any(id_ not in existing_ids and id_ in record_ids for id_ in ids):
+                # raise if initial ids intersect with missing ids
+                raise
+            records = existing
+            result = records._check_access(operation)
+        # update the cache
+        if result is None:
+            for id_ in records._ids:
+                access[id_] = True
+        else:
+            inaccessible_record_ids = set(result[0]._ids)
+            for id_ in records._ids:
+                access[id_] = id_ not in inaccessible_record_ids
+
+        # find all forbidden records
+        forbidden = self.browse(id_ for id_ in ids if not access[id_])
+        if not forbidden:
+            return None
+
+        # build the result
+        if result is not None and result[0] == forbidden:
+            return result
+        # call _check_access to generate the right error message
+        result = forbidden._check_access(operation)
+        # some records may become accessible
+        if result is None:
+            for id_ in forbidden._ids:
+                access[id_] = True
+        elif result[0] != forbidden:
+            for id_ in forbidden._ids:
+                if id_ in result[0]._ids:
+                    continue
+                access[id_] = True
+        return result
 
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
         """ Return ``None`` if the current user has permission to perform
@@ -3501,18 +3574,21 @@ class BaseModel(metaclass=MetaModel):
         and :meth:`_filtered_access`. The method may be overridden in order to
         restrict the access to ``self``.
         """
-        Access = self.env['ir.model.access']
-        if not Access.check(self._name, operation, raise_exception=False):
-            return self, functools.partial(Access._make_access_error, self._name, operation)
+        env = self.env
+        # get the cached access
+        ModelAccess = env['ir.model.access']
+        if not ModelAccess.check(self._name, operation, raise_exception=False):
+            return self, functools.partial(ModelAccess._make_access_error, self._name, operation)
 
         # we only check access rules on real records, which should not be mixed
         # with new records
         if any(self._ids):
-            Rule = self.env['ir.rule']
+            Rule = env['ir.rule']
             domain = Rule._compute_domain(self._name, operation)
-            if domain and (forbidden := self - self.sudo().filtered_domain(domain)):
+            if not domain:
+                return None
+            if forbidden := self - self.sudo().filtered_domain(domain):
                 return forbidden, functools.partial(Rule._make_access_error, operation, forbidden)
-
         return None
 
     def unlink(self) -> typing.Literal[True]:
@@ -6059,6 +6135,7 @@ class BaseModel(metaclass=MetaModel):
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
                 invf._invalidate_cache(env)
+        self.env.transaction.clear_access_cache(self._name)
 
     @api.private
     def modified(self, fnames: Collection[str], create: bool = False, before: bool = False) -> None:
