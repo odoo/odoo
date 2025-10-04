@@ -28,6 +28,8 @@ State Data/省份数据
 
     增加大企业会计科目表
 
+    增加增值税电子普通发票
+
 We added the option to print a voucher which will also
 print the amount in words (special Chinese characters for numbers)
 correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
@@ -35,12 +37,20 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     'depends': [
         'base',
         'account',
+        'hr',
     ],
     'data': [
         'views/account_move_view.xml',
+        'views/res_company_view.xml',
         'views/account_report.xml',
         'views/report_voucher.xml',
+        'views/report_invoice.xml',
     ],
+    "assets": {
+        "web.report_assets_common": [
+            "l10n_cn/static/src/scss/report_account_move.scss",
+        ],
+    },
     'demo': [
         'demo/demo_company.xml',
     ],

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.2+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-26 08:49+0000\n"
-"PO-Revision-Date: 2023-06-26 08:49+0000\n"
+"POT-Creation-Date: 2024-09-02 08:10+0000\n"
+"PO-Revision-Date: 2024-09-02 08:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,38 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_cn
+#: model:ir.actions.report,print_report_name:l10n_cn.account_tax_invoice_cn
+msgid "'Tax_Invoice_%s' % (object.name)"
+msgstr ""
+
+#. module: l10n_cn
 #: model:ir.actions.report,print_report_name:l10n_cn.account_voucher_cn
 msgid "'Voucher_%s' % (object.name)"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Buyer</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Narration</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Password</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Seller</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>(Small Capital)</span>"
 msgstr ""
 
 #. module: l10n_cn
@@ -31,8 +61,28 @@ msgid "<span>Accounting Voucher</span>"
 msgstr ""
 
 #. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Address, Phone No:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Approver:</span>"
+msgstr ""
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Balance</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Bank Name and account:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Company Chop:</span>"
 msgstr ""
 
 #. module: l10n_cn
@@ -41,13 +91,60 @@ msgid "<span>Credit</span>"
 msgstr ""
 
 #. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Customer:</span>"
+msgstr ""
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Debit</span>"
 msgstr ""
 
 #. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice Code:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice Creator:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice Date:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice No:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Name:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Taxpayer identification No:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Total (Big Capital)</span>"
+msgstr ""
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Total:</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid ""
+"<strong class=\"text-center cn-fs-25 cn-double-underline\">Electronic Tax "
+"Invoice</strong>"
 msgstr ""
 
 #. module: l10n_cn
@@ -86,6 +183,31 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_cn
+#: model:ir.model.fields,field_description:l10n_cn.field_account_bank_statement_line__approver_id
+#: model:ir.model.fields,field_description:l10n_cn.field_account_move__approver_id
+#: model:ir.model.fields,field_description:l10n_cn.field_account_payment__approver_id
+msgid "Approver"
+msgstr ""
+
+#. module: l10n_cn
+#. odoo-python
+#: code:addons/l10n_cn/models/template_cn_common.py:0
+#, python-format
+msgid "Common"
+msgstr ""
+
+#. module: l10n_cn
+#: model:ir.model,name:l10n_cn.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_cn
+#: model:ir.model.fields,field_description:l10n_cn.field_res_company__company_chop
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Company Chop"
+msgstr ""
+
+#. module: l10n_cn
 #: model:ir.model.fields,field_description:l10n_cn.field_account_bank_statement_line__fapiao
 #: model:ir.model.fields,field_description:l10n_cn.field_account_move__fapiao
 #: model:ir.model.fields,field_description:l10n_cn.field_account_payment__fapiao
@@ -105,8 +227,67 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_cn
+#. odoo-python
+#: code:addons/l10n_cn/models/template_cn_large_bis.py:0
+#, python-format
+msgid "Large Business"
+msgstr ""
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.external_layout_boxed
 msgid "Logo"
+msgstr ""
+
+#. module: l10n_cn
+#: model:ir.model.fields,field_description:l10n_cn.field_account_bank_statement_line__machine_number
+#: model:ir.model.fields,field_description:l10n_cn.field_account_move__machine_number
+#: model:ir.model.fields,field_description:l10n_cn.field_account_payment__machine_number
+msgid "Machine Number"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Price"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Product Code"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Product Name"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Quantity"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Subtotal"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Tax Amount"
+msgstr ""
+
+#. module: l10n_cn
+#: model:ir.actions.report,name:l10n_cn.account_tax_invoice_cn
+msgid "Tax Invoice"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Taxes"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: l10n_cn
