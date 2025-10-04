@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_report_calendar_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.view.form</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_report_calendar_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">state == 'refuse' or not is_manager or (after_linked_sandwich_leave_id or before_linked_sandwich_leave_id)</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="replace">
+                <button
+                    name="action_warning_refuse" string="Refuse" type="object"
+                    invisible="state == 'refuse' or not is_manager or (not after_linked_sandwich_leave_id and not before_linked_sandwich_leave_id)"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

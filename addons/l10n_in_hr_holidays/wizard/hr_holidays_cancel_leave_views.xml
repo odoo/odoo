@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_holidays_cancel_leave_form_inherite" model="ir.ui.view">
+        <field name="model">hr.holidays.cancel.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_holidays_cancel_leave_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <div name="l10n_in_contains_sandwich_leaves"
+                     invisible="not after_linked_sandwich_leave_id and not before_linked_sandwich_leave_id"
+                     class="ps-3 alert alert-warning d-flex justify-content-center"
+                     role="alert">
+                    Cancelling this leave will also cancel the linked sandwich leave.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
