@@ -25,6 +25,7 @@
         "im_livechat.assets_embed_core": [
             "website/static/src/**/common/**/*",
             "website_livechat/static/src/**/common/**/*",
+            "website_livechat/static/src/embed/shadow.scss",
         ],
         'im_livechat.embed_assets_unit_tests_setup': [
             ('remove', 'website_livechat/static/**'),
@@ -50,6 +51,7 @@
         'web.assets_backend': [
             "website_livechat/static/src/**/common/**/*",
             'website_livechat/static/src/**/*',
+            ("remove", "website_livechat/static/src/embed/shadow.scss"),
         ],
         'web.assets_unit_tests': [
             'website_livechat/static/tests/**/*',
