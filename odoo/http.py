@@ -183,8 +183,8 @@ import werkzeug.wsgi
 from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (
     default_exceptions as werkzeug_default_exceptions,
-    HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
-    InternalServerError
+    HTTPException, Unauthorized, NotFound, UnsupportedMediaType,
+    UnprocessableEntity, InternalServerError
 )
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
@@ -788,7 +788,7 @@ def route(route=None, **routing):
 
             result = endpoint(self, *args, **params_ok)
             if routing['type'] == 'http':  # _generate_routing_rules() ensures type is set
-                return Response.load(result)
+                return Response.load(result, endpoint)
             return result
 
         route_wrapper.original_routing = routing
@@ -1521,10 +1521,16 @@ class _Response(werkzeug.wrappers.Response):
             mentioned type.
         """
         if isinstance(result, Response):
+            if HTTPException_ := werkzeug_default_exceptions.get(result.status_code):
+                warnings.warn(
+                    f"{fname} returns Response(status={result.status_code}) "
+                    f"instead of raising {HTTPException_}")
+                raise HTTPException_(response=result)
             return result
 
         if isinstance(result, werkzeug.exceptions.HTTPException):
-            _logger.warning("%s returns an HTTPException instead of raising it.", fname)
+            warnings.warn(
+                f"{fname} returns an HTTPException instead of raising it.")
             raise result
 
         if isinstance(result, werkzeug.wrappers.Response):
@@ -2832,6 +2838,11 @@ class Application:
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
+                elif isinstance(exc, Unauthorized) and exc.www_authenticate is None:
+                    warnings.warn(
+                        "Missing WWW-Authenticate header with 401-Unauthorized "
+                        f"response for path {httprequest.path}. Use 403-Forbidden "
+                        "or set www_authenticate to another falsy value than None.")
                 elif isinstance(exc, HTTPException):
                     pass
                 elif isinstance(exc, SessionExpiredException):
