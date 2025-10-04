@@ -184,10 +184,10 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(hours, 32)
 
     def test_calendar_working_hours_count(self):
+        self.env.company.tz = 'UTC'
         calendar = self.env['resource.calendar'].create({
             'name': 'Standard 35 hours/week',
             'company_id': self.env.company.id,
-            'tz': 'UTC',
             'attendance_ids': [(5, 0, 0),
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
@@ -347,7 +347,6 @@ class TestCalendar(TestResourceCommon):
         # When genereting the attendance intervals in an edge timezone, the last interval shouldn't
         # be truncated if the timezone is correctly set
         self.env.user.tz = "America/Los_Angeles"
-        self.calendar_jean.tz = "America/Los_Angeles"
         attendances = self.calendar_jean._attendance_intervals_batch(
             datetime.combine(date(2023, 1, 1), datetime.min.time(), tzinfo=timezone("UTC")),
             datetime.combine(date(2023, 1, 31), datetime.max.time(), tzinfo=timezone("UTC")))
@@ -390,7 +389,6 @@ class TestCalendar(TestResourceCommon):
         # Define a mid time
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Calendar Mid-Time',
-            'tz': "Europe/Brussels",
             'two_weeks_calendar': False,
             'full_time_required_hours': 40,
             'attendance_ids': [
@@ -449,7 +447,6 @@ class TestCalendar(TestResourceCommon):
         # Define a mid time
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Calendar Mid-Time',
-            'tz': "Europe/Brussels",
             'two_weeks_calendar': True,
             'full_time_required_hours': 40,
             'attendance_ids': create_attendance_ids(attendance_list),

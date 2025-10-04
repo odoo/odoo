@@ -223,13 +223,11 @@ class HrAttendance(models.Model):
             between check_in and check_out, without taking into account the lunch_interval"""
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
-                calendar = attendance._get_employee_calendar()
-                resource = attendance.employee_id.resource_id
-                tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
+                tz = timezone(attendance.employee_id._get_tz())
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
                 lunch_intervals = []
-                if not resource._is_flexible():
+                if not attendance.employee_id.resource_id._is_flexible():
                     lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
                 attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
                 delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
@@ -293,8 +291,7 @@ class HrAttendance(models.Model):
         # Returns a tuple containing the datetime in naive UTC of the employee's start of the day
         # and the date it was for that employee
         if not dt.tzinfo:
-            calendar_tz = employee._get_calendar_tz_batch(dt)[employee.id]
-            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(calendar_tz))
+            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_tz()))
         else:
             date_employee_tz = dt
         start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)

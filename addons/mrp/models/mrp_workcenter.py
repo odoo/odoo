@@ -335,11 +335,11 @@ class MrpWorkcenter(models.Model):
         resource = self.resource_id
         revert = to_timezone(start_datetime.tzinfo)
         start_datetime = localized(start_datetime)
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources=resource, tz=timezone(resource.tz))
         workorder_intervals_leaves_domain = [('time_type', '=', 'other')]
         if leaves_to_ignore:
             workorder_intervals_leaves_domain.append(('id', 'not in', leaves_to_ignore.ids))
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources=resource, tz=timezone(resource.tz))
         extra_leaves_slots_intervals = Intervals([(localized(start), localized(stop), self.env['resource.calendar.attendance']) for start, stop in extra_leaves_slots])
 
         remaining = duration = max(duration, 1 / 60)

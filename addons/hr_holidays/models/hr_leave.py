@@ -655,10 +655,10 @@ Versions:
         for leave in self:
             leave.tz_mismatch = leave.tz != self.env.user.tz
 
-    @api.depends('resource_calendar_id.tz')
+    @api.depends('employee_id.tz')
     def _compute_tz(self):
         for leave in self:
-            leave.tz = leave.resource_calendar_id.tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
+            leave.tz = leave.employee_id.tz or self.env.company.tz or self.env.user.tz or 'UTC'
 
     @api.depends('number_of_hours', 'number_of_days', 'leave_type_request_unit')
     def _compute_duration_display(self):

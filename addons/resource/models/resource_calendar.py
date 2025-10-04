@@ -18,8 +18,6 @@ from odoo.tools.date_utils import float_to_time, localized, to_timezone
 from odoo.tools.float_utils import float_round
 from odoo.tools.intervals import Intervals
 
-from odoo.addons.base.models.res_partner import _tz_get
-
 
 class DummyAttendance(NamedTuple):
     hour_from: float
@@ -107,11 +105,6 @@ class ResourceCalendar(models.Model):
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
-    tz = fields.Selection(
-        _tz_get, string='Timezone', required=True,
-        default=lambda self: self.env.context.get('tz') or self.env.user.tz or self.env.ref('base.user_admin').tz or 'UTC',
-        help="This field is used in order to define in which timezone the resources will work.")
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
@@ -175,7 +168,6 @@ class ResourceCalendar(models.Model):
             company_calendar = calendar.company_id.resource_calendar_id
             calendar.update({
                 'two_weeks_calendar': company_calendar.two_weeks_calendar,
-                'tz': company_calendar.tz,
                 'attendance_ids': [(5, 0, 0)] + [
                     (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids],
             })
@@ -233,11 +225,6 @@ class ResourceCalendar(models.Model):
             last_day=last_day,
             number=week_type_str,
         )
-
-    @api.depends('tz')
-    def _compute_tz_offset(self):
-        for calendar in self:
-            calendar.tz_offset = datetime.now(timezone(calendar.tz or 'GMT')).strftime('%z')
 
     def _compute_work_resources_count(self):
         resources_per_calendar = dict(self.env['resource.resource']._read_group(
@@ -331,7 +318,8 @@ class ResourceCalendar(models.Model):
         # Group resources per tz they will all have the same result
         resources_per_tz = defaultdict(list)
         for resource in resources_list:
-            resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
+            tz = tz or timezone(resource.tz or resource.company_id.tz or self.env.company.tz)
+            resources_per_tz[tz].append(resource)
         # Resource specific attendances
         # Calendar attendances per day of the week
         # * 7 days per week * 2 for two week calendars
@@ -506,7 +494,7 @@ class ResourceCalendar(models.Model):
             for resource in resources_list:
                 if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
                     continue
-                tz = tz if tz else timezone((resource or self).tz)
+                tz = tz if tz else timezone(resource.tz or resource.company_id.tz or self.env.company.tz)
                 if (tz, start_dt) in tz_dates:
                     start = tz_dates[tz, start_dt]
                 else:
@@ -629,14 +617,13 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
-        tz = resource.tz if resource else self.tz
         if resource is None:
             resource = self.env['resource.resource']
 
         if not dt.tzinfo or (search_range and not (search_range[0].tzinfo and search_range[1].tzinfo)):
             raise ValueError(self.env._('Provided datetimes needs to be timezoned'))
 
-        dt = dt.astimezone(timezone(tz))
+        dt = dt.astimezone(timezone(resource.tz or resource.company_id.tz or self.env.company.tz))
 
         if not search_range:
             range_start = dt + relativedelta(hour=0, minute=0, second=0)

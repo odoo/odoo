@@ -20,10 +20,7 @@ class ResourceCalendarLeaves(models.Model):
         if 'date_from' in fields and 'date_to' in fields and not res.get('date_from') and not res.get('date_to'):
             # Then we give the current day and we search the begin and end hours for this day in resource.calendar of the current company
             today = Datetime.now()
-            calendar = self.env.company.resource_calendar_id
-            if 'calendar_id' in res:
-                calendar = self.env['resource.calendar'].browse(res['calendar_id'])
-            tz = timezone(calendar.tz or 'UTC')
+            tz = timezone(self.env.company.tz or 'UTC')
             date_from = tz.localize(datetime.combine(today, time.min))
             date_to = tz.localize(datetime.combine(today, time.max))
             res.update(
@@ -64,7 +61,7 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_date_to(self):
         user_tz = self.env.tz
         if not (self.env.user.tz or self.env.context.get('tz')):
-            user_tz = timezone(self.company_id.resource_calendar_id.tz or 'UTC')
+            user_tz = timezone(self.company_id.tz or 'UTC')
         for leave in self:
             if not leave.date_from or (leave.date_to and leave.date_to > leave.date_from):
                 continue

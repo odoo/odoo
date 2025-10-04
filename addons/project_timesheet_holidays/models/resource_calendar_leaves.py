@@ -96,14 +96,16 @@ class ResourceCalendarLeaves(models.Model):
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
         for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
             calendar = calendars_dict[calendar_id]
-            work_hours_intervals = calendar._attendance_intervals_batch(
-                cal_attendance_intervals_params_entry['date_from'],
-                cal_attendance_intervals_params_entry['date_to'],
-                cal_attendance_intervals_params_entry['resources'],
-                tz=timezone(calendar.tz)
-            )
+            work_hours_interval_per_tz = {}
+            for tz, employees in cal_attendance_intervals_params_entry['leaves'].employee_id.grouped('tz'):
+                work_hours_interval_per_tz[tz] = calendar._attendance_intervals_batch(
+                    cal_attendance_intervals_params_entry['date_from'],
+                    cal_attendance_intervals_params_entry['date_to'],
+                    employees.resource_id,
+                    tz=timezone(tz)
+                )
             for leave in cal_attendance_intervals_params_entry['leaves']:
-                work_hours_data = work_hours_intervals[leave.resource_id.id]
+                work_hours_data = work_hours_interval_per_tz[leave.employee_id.tz][leave.resource_id.id]
 
                 for date_from, date_to, _dummy in work_hours_data:
                     if date_to > utc.localize(leave.date_from) and date_from < utc.localize(leave.date_to):

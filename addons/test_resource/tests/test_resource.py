@@ -101,7 +101,6 @@ class TestResource(TestResourceCommon):
         resource = self._define_calendar_2_weeks(
             'Two weeks resource',
             [],
-            'Europe/Brussels',
         )
         self.env['resource.calendar.attendance'].create({
             'name': 'test',

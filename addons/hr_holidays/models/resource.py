@@ -130,13 +130,13 @@ class ResourceCalendarLeaves(models.Model):
                 not isinstance(vals.get('date_to'), (datetime, str)):
                 continue
             user_tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
-            calendar_tz = pytz.timezone(self.env['resource.calendar'].browse(vals['calendar_id']).tz)
-            if user_tz != calendar_tz:
+            company_tz = pytz.timezone(self.env['res.company'].browse(vals['company_id']).tz)
+            if user_tz != company_tz:
                 datetime_from = self._ensure_datetime(vals['date_from'], '%Y-%m-%d %H:%M:%S')
                 datetime_to = self._ensure_datetime(vals['date_to'], '%Y-%m-%d %H:%M:%S')
                 if datetime_from and datetime_to:
-                    vals['date_from'] = self._convert_timezone(datetime_from, user_tz, calendar_tz)
-                    vals['date_to'] = self._convert_timezone(datetime_to, user_tz, calendar_tz)
+                    vals['date_from'] = self._convert_timezone(datetime_from, user_tz, company_tz)
+                    vals['date_to'] = self._convert_timezone(datetime_to, user_tz, company_tz)
         return vals_list
 
     @api.model_create_multi

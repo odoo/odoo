@@ -32,11 +32,10 @@ class HrVersion(models.Model):
             leaves_per_employee[leave.employee_id] |= leave
         for contract in fr_contracts:
             employee = contract.employee_id
-            employee_calendar = contract.resource_calendar_id
             company = contract.company_id
             company_calendar = company.resource_calendar_id
             resource = employee.resource_id
-            tz = pytz.timezone(employee_calendar.tz)
+            tz = pytz.timezone(employee.tz or company.tz)
 
             for leave in leaves_per_employee[employee]:
                 leave_start_dt = max(start_dt, leave.date_from.astimezone(tz))

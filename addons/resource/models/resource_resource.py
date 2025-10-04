@@ -71,7 +71,7 @@ class ResourceResource(models.Model):
             if not values.get('tz'):
                 # retrieve timezone on user or calendar
                 tz = (self.env['res.users'].browse(values.get('user_id')).tz or
-                      self.env['resource.calendar'].browse(values.get('calendar_id')).tz)
+                      self.env['res.company'].browse(values.get('company_id')).tz)
                 if tz:
                     values['tz'] = tz
         return super().create(vals_list)
@@ -157,8 +157,9 @@ class ResourceResource(models.Model):
         for calendar, resources in calendar_mapping.items():
             if not calendar:
                 continue
-            resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources, tz=timezone(calendar.tz))
-            resource_mapping.update(resources_unavailable_intervals)
+            for tz, resources_tz in resources.grouped('tz').items():
+                resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources_tz, tz=timezone(tz))
+                resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
     def _get_calendars_validity_within_period(self, start, end, default_company=None):

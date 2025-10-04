@@ -1282,11 +1282,6 @@ class HrEmployee(models.Model):
         if not self.name:
             self.name = self.user_id.name
 
-    @api.onchange('resource_calendar_id')
-    def _onchange_timezone(self):
-        if self.resource_calendar_id and not self.tz:
-            self.tz = self.resource_calendar_id.tz
-
     def _remove_work_contact_id(self, user, employee_company):
         """ Remove work_contact_id for previous employee if the user is assigned to a new employee """
         employee_company = employee_company or self.company_id.id
@@ -1517,39 +1512,12 @@ class HrEmployee(models.Model):
 
     def _get_tz(self):
         self.ensure_one()
-        return self.resource_calendar_id.tz or\
-               self.tz or\
-               self.company_id.resource_calendar_id.tz or\
-               'UTC'
+        return self.tz or self.company_id.tz or 'UTC'
 
     def _get_tz_batch(self):
-        # Finds the first valid timezone in his tz, his work hours tz,
-        #  the company calendar tz or UTC
+        # Finds the first valid timezone in his tz, the company tz or UTC
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz() for emp in self}
-
-    def _get_calendar_tz_batch(self, dt=None):
-        """ Return a mapping { employee id : employee's effective schedule's (at dt) timezone }
-        """
-        employees_by_id = self.grouped('id')
-        if not dt:
-            calendars = self._get_calendars()
-            return {
-                emp_id: calendar.sudo().tz or employees_by_id[emp_id].tz \
-                    for emp_id, calendar in calendars.items()
-            }
-
-        employees_by_tz = self.grouped(lambda emp: emp._get_tz())
-
-        employee_timezones = {}
-        for tz, employee_ids in employees_by_tz.items():
-            date_at = timezone(tz).localize(dt).date()
-            calendars = self._get_calendars(date_at)
-            employee_timezones |= {
-                emp_id: cal.sudo().tz or employees_by_id[emp_id].tz \
-                    for emp_id, cal in calendars.items()
-            }
-        return employee_timezones
 
     def _get_calendars(self, date_from=None):
         res = super()._get_calendars(date_from=date_from)
@@ -1570,18 +1538,18 @@ class HrEmployee(models.Model):
         """
         calendar_periods_by_employee = defaultdict(list)
         for employee in self.sudo():
+            employee_tz = employee._get_tz()
             for version in employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date()):
                 # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
                 date_start = datetime.combine(
                     version.date_start,
                     time(0, 0, 0)
-                ).replace(tzinfo=calendar_tz).astimezone(utc)
+                ).replace(tzinfo=employee_tz).astimezone(utc)
                 if version.date_end:
                     date_end = datetime.combine(
                         version.date_end + relativedelta(days=1),
                         time(0, 0, 0)
-                    ).replace(tzinfo=calendar_tz).astimezone(utc)
+                    ).replace(tzinfo=employee_tz).astimezone(utc)
                 else:
                     date_end = stop
                 calendar_periods_by_employee[employee].append(

@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.base.models.res_partner import _tz_get
 
 
 class ResCompany(models.Model):
@@ -11,6 +11,9 @@ class ResCompany(models.Model):
         'resource.calendar', 'company_id', 'Working Hours')
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Default Working Hours', ondelete='restrict')
+    tz = fields.Selection(
+        _tz_get, string='Timezone', required=True,
+        default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     @api.model
     def _init_data_resource_calendar(self):

@@ -39,7 +39,7 @@ class ResPartner(models.Model):
         employees_by_partner = self._get_employees_from_attendees(everybody)
         if not employees_by_partner:
             return {}
-        interval_by_calendar = defaultdict()
+        interval_by_calendar_tz = defaultdict()
         calendar_periods_by_employee = defaultdict(list)
         resources_by_calendar = defaultdict(lambda: self.env['resource.resource'])
 
@@ -53,13 +53,14 @@ class ResPartner(models.Model):
 
         # Compute all work intervals per calendar
         for calendar, resources in resources_by_calendar.items():
-            work_intervals = calendar._work_intervals_batch(start_period, stop_period, resources=resources, tz=timezone(calendar.tz))
-            del work_intervals[False]
-            # Merge all employees intervals to avoid to compute it multiples times
-            if merge:
-                interval_by_calendar[calendar] = reduce(Intervals.__and__, work_intervals.values())
-            else:
-                interval_by_calendar[calendar] = work_intervals
+            for tz, resources_tz in resources.grouped('tz').items():
+                work_intervals = calendar._work_intervals_batch(start_period, stop_period, resources=resources_tz, tz=timezone(tz))
+                del work_intervals[False]
+                # Merge all employees intervals to avoid to compute it multiples times
+                if merge:
+                    interval_by_calendar_tz[calendar][tz] = reduce(Intervals.__and__, work_intervals.values())
+                else:
+                    interval_by_calendar_tz[calendar][tz] = work_intervals
 
         # Compute employee's schedule based own his calendar's periods
         schedule_by_employee = defaultdict(list)
@@ -69,9 +70,9 @@ class ResPartner(models.Model):
                 calendar = calendar or self.env.company.resource_calendar_id # No calendar if fully flexible
                 interval = Intervals([(start, stop, self.env['resource.calendar'])])
                 if merge:
-                    calendar_interval = interval_by_calendar[calendar]
+                    calendar_interval = interval_by_calendar_tz[calendar][employee.tz]
                 else:
-                    calendar_interval = interval_by_calendar[calendar][employee.resource_id.id]
+                    calendar_interval = interval_by_calendar_tz[calendar][employee.tz][employee.resource_id.id]
                 employee_interval = employee_interval | (calendar_interval & interval)
             schedule_by_employee[employee] = employee_interval
 
