@@ -259,7 +259,11 @@ class HolidaysAllocation(models.Model):
             if allocation_unit != 'hour':
                 allocation.number_of_days = allocation.number_of_days_display
             elif allocation_unit == 'hour' and allocation.employee_id:
-                allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_id._get_hours_per_day(allocation.date_from)
+                employee_hours_per_day = allocation.employee_id._get_hours_per_day(allocation.date_from)
+                if not employee_hours_per_day:
+                    employee_hours_per_day = allocation.employee_id.resource_calendar_id.hours_per_day or\
+                        allocation.employee_id.company_id.resource_calendar_id.hours_per_day or 8.0
+                allocation.number_of_days = allocation.number_of_hours_display / employee_hours_per_day
 
     @api.depends('holiday_status_id', 'allocation_type')
     def _compute_accrual_plan_id(self):
