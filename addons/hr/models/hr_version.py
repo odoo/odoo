@@ -112,6 +112,8 @@ class HrVersion(models.Model):
             ('trainee', 'Trainee'),
             ('contractor', 'Contractor'),
             ('freelance', 'Freelancer'),
+            ('statutory', 'Statutory'),
+            ('apprenticeship', 'Apprenticeship'),
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user", tracking=True)
     department_id = fields.Many2one('hr.department', check_company=True, tracking=True)
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',

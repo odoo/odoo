@@ -35,6 +35,7 @@ class HrWorkEntryType(models.Model):
     is_extra_hours = fields.Boolean(
         string="Added to Monthly Pay",
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
+    description = fields.Text(translate=True)
 
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):
