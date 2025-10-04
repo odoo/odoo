@@ -4273,7 +4273,13 @@ class _RelationalMulti(_Relational):
             Comodel._active_name
             and self.context.get('active_test', record.env.context.get('active_test', True))
         ):
-            corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
+            try:
+                corecords = corecords.filtered(Comodel._active_name)
+            except AccessError:
+                if not self.compute_sudo:
+                    raise
+                corecords = corecords.sudo().with_context(prefetch_fields=False).filtered(Comodel._active_name).with_env(record.env)
+            corecords = corecords.with_prefetch(prefetch_ids)
         return corecords
 
     def convert_to_record_multi(self, values, records):
@@ -4286,7 +4292,13 @@ class _RelationalMulti(_Relational):
             Comodel._active_name
             and self.context.get('active_test', records.env.context.get('active_test', True))
         ):
-            corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
+            try:
+                corecords = corecords.filtered(Comodel._active_name)
+            except AccessError:
+                if not self.compute_sudo:
+                    raise
+                corecords = corecords.sudo().with_context(prefetch_fields=False).filtered(Comodel._active_name).with_env(records.env)
+            corecords = corecords.with_prefetch(prefetch_ids)
         return corecords
 
     def convert_to_read(self, value, record, use_display_name=True):
