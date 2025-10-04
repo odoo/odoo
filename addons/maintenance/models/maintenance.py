@@ -393,7 +393,7 @@ class MaintenanceRequest(models.Model):
                 note = request._get_activity_note()
                 request.activity_schedule(
                     'maintenance.mail_act_maintenance_request',
-                    fields.Datetime.from_string(request.schedule_date).date(),
+                    date_dl,
                     note=note, user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
 
     def _add_followers(self):
