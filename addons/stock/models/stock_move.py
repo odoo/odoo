@@ -276,7 +276,7 @@ class StockMove(models.Model):
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
         for move in self:
-            if move.state == 'done' or any(ml.picked for ml in move.move_line_ids):
+            if move.state == 'done' or all(ml.picked for ml in move.move_line_ids):
                 move.picked = True
             elif move.move_line_ids:
                 move.picked = False
