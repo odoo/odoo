@@ -79,6 +79,7 @@ class HrEmployeePublic(models.Model):
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
+    birthday_month_public = fields.Selection(string="Birthday Month Public", related="employee_id.birthday_month_public")
 
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 

@@ -3,6 +3,7 @@
 import re
 
 from collections import defaultdict
+import calendar
 
 from pytz import timezone, UTC, utc
 from datetime import datetime, time, timedelta, date
@@ -248,6 +249,18 @@ class HrEmployee(models.Model):
     message_has_error = fields.Boolean(groups="hr.group_hr_user")
     message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
+    birthday_month = fields.Selection(
+        selection=[(str(i), calendar.month_name[i]) for i in range(1, 13)],
+        string="Birthday Month",
+        store=True,
+        compute='_compute_birthday_month',
+        groups="hr.group_hr_user"
+    )
+    birthday_month_public = fields.Selection(
+        selection=[(str(i), calendar.month_name[i]) for i in range(1, 13)],
+        string="Birthday Month Public",
+        store=True,
+        compute='_compute_birthday_month')
 
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
@@ -435,6 +448,12 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.hr_icon_display = 'presence_' + employee.hr_presence_state
             employee.show_hr_icon_display = bool(employee.user_id)
+
+    @api.depends('birthday', 'birthday_public_display_string')
+    def _compute_birthday_month(self):
+        for emp in self:
+            emp.birthday_month = str(emp.birthday.month) if emp.birthday else False
+            emp.birthday_month_public = emp.birthday_month if emp.birthday_public_display_string != "hidden" else False
 
     @api.model
     def _get_certificate_selection(self):
@@ -934,10 +953,11 @@ class HrEmployee(models.Model):
             employee[avatar_field] = avatar
         super(HrEmployee, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
 
+    @api.depends_context('uid')
     @api.depends('birthday_public_display')
     def _compute_birthday_public_display_string(self):
         for employee in self:
-            if employee.birthday and employee.birthday_public_display:
+            if employee.birthday and (employee.birthday_public_display or self.env.user.has_group('hr.group_hr_user')):
                 employee.birthday_public_display_string = datetime.strftime(employee.birthday, "%d %B")
             else:
                 employee.birthday_public_display_string = "hidden"
