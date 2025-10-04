@@ -36,10 +36,10 @@ class HrVersion(models.Model):
         groups="hr.group_hr_manager",
     )
 
-    @api.depends('work_entry_source', 'resource_calendar_id')
+    @api.depends('work_entry_source', 'resource_calendar_id', 'employee_id')
     def _compute_work_entry_source_calendar_invalid(self):
         for version in self:
-            version.work_entry_source_calendar_invalid = version.work_entry_source == 'calendar' and not version.resource_calendar_id
+            version.work_entry_source_calendar_invalid = version.work_entry_source == 'calendar' and not version.resource_calendar_id and version.employee_id
 
     @ormcache()
     def _get_default_work_entry_type_id(self):
