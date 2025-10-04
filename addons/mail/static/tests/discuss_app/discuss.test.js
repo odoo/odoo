@@ -103,8 +103,16 @@ test("should log notification when channel/thread is renamed", async () => {
     });
     onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
     await start();
+    await openFormView("discuss.channel", channelId, {
+        arch: `<form><field name="name"/></form>`,
+    });
+    await insertText("[name=name] input", "funny", { replace: true });
+    await click(".o_form_button_save");
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-threadName:value(general)");
+    await contains(".o-mail-NotificationMessage", {
+        text: `${serverState.partnerName} changed the channel name to funny`,
+    });
+    await click(".o-mail-DiscussContent-threadName:value(funny)");
     await insertText(".o-mail-DiscussContent-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
