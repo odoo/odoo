@@ -99,11 +99,14 @@ class MarketingCardController(Controller):
         """
         card = _get_card_from_url(card_id, card_slug)
 
-        campaign_sudo = card.sudo().campaign_id
+        card_sudo = card.sudo()
+        campaign_sudo = card_sudo.campaign_id
         # don't count clicks from preview
         redirect_url = campaign_sudo.target_url or campaign_sudo.get_base_url()
         if card.active:
             redirect_url = campaign_sudo.link_tracker_id.short_url or redirect_url
+            if card.campaign_id.target_url_dyn and card.campaign_id.show_target_url_dyn:
+                redirect_url = card_sudo.link_tracker_id.short_url or redirect_url
 
         if _is_crawler(request):
             return request.render('marketing_card.card_campaign_crawler', {
