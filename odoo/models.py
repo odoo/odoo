@@ -2963,6 +2963,10 @@ class BaseModel(metaclass=MetaModel):
         if '.' in fname:
             fname, property_name = fname.split('.', 1)
 
+        translation_name = None
+        if '@' in fname:
+            fname, translation_name = fname.split('@', 1)
+
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
@@ -2987,7 +2991,10 @@ class BaseModel(metaclass=MetaModel):
         sql_field = SQL.identifier(alias, fname, to_flush=field_to_flush)
 
         if field.translate:
-            langs = field.get_translation_fallback_langs(self.env)
+            env = self.env
+            if translation_name:
+                env = env.with_context(lang=translation_name) #TODO: error handling
+            langs = field.get_translation_fallback_langs(env)
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
             if len(sql_field_langs) == 1:
                 return sql_field_langs[0]

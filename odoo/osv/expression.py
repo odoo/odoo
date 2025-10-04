@@ -379,6 +379,7 @@ def _anyfy_leaves(domain, model):
             result.append(item)
             continue
 
+        left = left.split('@', 1)[0]
         path = left.split('.', 1)
         field = model._fields.get(path[0])
         if not field:
@@ -994,6 +995,7 @@ class expression(object):
 
             # Get working variables
             left, operator, right = leaf
+            left = left.split('@', 1)[0]
             path = left.split('.', 1)
 
             field = model._fields[path[0]]
