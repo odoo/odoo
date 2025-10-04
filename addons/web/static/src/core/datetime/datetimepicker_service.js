@@ -36,6 +36,7 @@ const arePropsEqual = (obj1, obj2) =>
     shallowEqual(obj1, obj2, (a, b) => areDatesEqual(a, b) || shallowEqual(a, b));
 
 const FOCUS_CLASSNAME = "text-primary";
+const REQUIRED_HEIGHT = 300;
 
 const formatters = {
     date: formatDate,
@@ -242,15 +243,19 @@ export const datetimePickerService = {
 
                     if (!popover.isOpen) {
                         const popoverTarget = getPopoverTarget();
+                        const spaceBelow =
+                            window.innerHeight - popoverTarget.getBoundingClientRect().bottom;
                         if (env.isSmall) {
                             const { marginBottom } = popoverTarget.style;
-                            // Adds enough space for the popover to be displayed below the target
-                            // even on small screens.
-                            popoverTarget.style.marginBottom = `100vh`;
-                            popoverTarget.scrollIntoView(true);
-                            restoreTargetMargin = async () => {
-                                popoverTarget.style.marginBottom = marginBottom;
-                            };
+                            popoverTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+                            if (!(spaceBelow < REQUIRED_HEIGHT)) {
+                                // Adds enough space for the popover to be displayed below the target
+                                // even on small screens.
+                                popoverTarget.style.marginBottom = `100%`;
+                                restoreTargetMargin = async () => {
+                                    popoverTarget.style.marginBottom = marginBottom;
+                                };
+                            }
                         }
                         popover.open(popoverTarget, { pickerProps });
                     }
