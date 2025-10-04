@@ -159,6 +159,11 @@
         </record>
 
         <!-- Contract or Work Permit Expiring -->
+        <record id="mail_act_employee_expiring_contract_work_permit" model="mail.activity.type">
+            <field name="name">Expiring Contract/Work Permit</field>
+            <field name="res_model">hr.employee</field>
+        </record>
+
         <record id="ir_cron_data_employee_notify_expiring_contract_work_permit" model="ir.cron">
             <field name="name">HR Employee: Notify Expiring Contract or Work Permit</field>
             <field name="model_id" ref="model_hr_employee"/>

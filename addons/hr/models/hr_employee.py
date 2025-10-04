@@ -1171,26 +1171,44 @@ class HrEmployee(models.Model):
                 ('company_id', '=', company.id),
                 ('contract_date_start', '!=', False),
                 ('contract_date_start', '<', fields.Date.today()),
-                ('contract_date_end', '=', fields.Date.today() + relativedelta(days=company.contract_expiration_notice_period)),
+                ('contract_date_end', '>=', fields.Date.today()),
+                ('contract_date_end', '<=', fields.Date.today() + relativedelta(days=company.contract_expiration_notice_period)),
             ])
 
             employees_work_permit_expiring += self.env['hr.employee'].search([
                 ('company_id', '=', company.id),
                 ('work_permit_expiration_date', '!=', False),
-                ('work_permit_expiration_date', '=', fields.Date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
+                ('work_permit_expiration_date', '>=', fields.Date.today()),
+                ('work_permit_expiration_date', '<=', fields.Date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
             ])
+        target_activity_type = self.env.ref('hr.mail_act_employee_expiring_contract_work_permit')
+        all_employees = employees_contract_expiring | employees_work_permit_expiring
+        existing_activities = all_employees.activity_ids.filtered(
+            lambda a: a.activity_type_id == target_activity_type
+        )
+        existing_activities_Index = {(a.res_id, a.date_deadline, a.user_id.id): a for a in existing_activities}
 
         for employee in employees_contract_expiring:
-            employee.with_context(mail_activity_quick_update=True).activity_schedule(
-                'mail.mail_activity_data_todo', employee.contract_date_end,
-                _("The contract of %s is about to expire.", employee.name),
-                user_id=employee.hr_responsible_id.id or self.env.uid)
+            activity_responsible = employee.hr_responsible_id.id or self.env.uid
+            key = (employee.id, employee.contract_date_end, activity_responsible)
+            if key not in existing_activities_Index:
+                employee.with_context(mail_activity_quick_update=True).activity_schedule(
+                    date_deadline=employee.contract_date_end,
+                    summary=self.env._("The contract of %s is about to expire.", employee.name),
+                    user_id=activity_responsible,
+                    activity_type_id=target_activity_type.id,
+                )
 
         for employee in employees_work_permit_expiring:
-            employee.with_context(mail_activity_quick_update=True).activity_schedule(
-                'mail.mail_activity_data_todo', employee.work_permit_expiration_date,
-                _("The work permit of %s is about to expire.", employee.name),
-                user_id=employee.hr_responsible_id.id or self.env.uid)
+            activity_responsible = employee.hr_responsible_id.id or self.env.uid
+            key = (employee.id, employee.work_permit_expiration_date, activity_responsible)
+            if key not in existing_activities_Index:
+                employee.with_context(mail_activity_quick_update=True).activity_schedule(
+                    date_deadline=employee.work_permit_expiration_date,
+                    summary=self.env._("The work permit of %s is about to expire.", employee.name),
+                    user_id=activity_responsible,
+                    activity_type_id=target_activity_type.id,
+                )
 
         return True
 
