@@ -1,7 +1,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tools import misc
+from odoo.tools import file_open, misc
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -117,6 +117,35 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_product_code_and_barcode')
+
+    def test_import_xml_with_missing_product(self):
+        """if we import an xml with a product that does not exist in the db, we should create it."""
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        journal = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'sale'),
+        ], limit=1)
+        file_path = "test_invoice.xml"
+        file_path = f'addons/{self.test_module}/tests/test_files/bis3/{file_path}'
+        with file_open(file_path, 'rb') as f:
+            xml_text = f.read().decode('utf-8')
+
+        new_product_name = 'Not existing product'
+        xml_text = xml_text.replace('>product_a<', f'>{new_product_name}<')
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test_invoice.xml',
+            'mimetype': 'application/xml',
+            'raw': xml_text.encode('utf-8'),
+        })
+        invoice = journal._create_document_from_attachment(attachment.ids)
+        lines = invoice.invoice_line_ids
+
+        self.assertTrue(lines, "No invoice lines created from XML")
+        self.assertTrue(all(lines.mapped('product_id')), "Some invoice lines have no product_id")
+
+        created_products = self.env['product.product'].browse(lines.mapped('product_id').ids)
+        self.assertIn(new_product_name, set(created_products.product_tmpl_id.mapped('name')))
 
     def test_financial_account(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
