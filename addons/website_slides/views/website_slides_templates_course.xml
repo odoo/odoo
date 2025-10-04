@@ -153,8 +153,8 @@
                                         <t t-set="force_submit_url" t-value="'/mail/message/update_content' if last_message_id else False"/>
                                         <t t-set="rate_with_void_content" t-value="True"/>
                                         <t t-set="disable_composer" t-value="not channel.can_review"/>
-                                        <t t-set="_link_btn_classes" t-value="'btn-sm btn-link mx-3 o_wslides_header_text'"/>
                                         <t t-set="_text_classes" t-value="'css_editable_mode_hidden'"/>
+                                        <t t-set="deported_btn" t-value="True"/>
                                     </t>
                                 </div>
                             </div>
@@ -226,6 +226,12 @@
                                     <t t-else="" t-call="website_slides.course_slides_cards"/>
                                 </div>
                                 <div t-if="channel.allow_comment" t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'review' else '')" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                    <t t-call="portal_rating.rating_stars_static_popup_composer_button">
+                                        <t t-set="display_composer" t-value="channel.can_review"/>
+                                        <t t-set="default_message_id" t-value="last_message_id"/>
+                                        <t t-set="_link_btn_classes" t-value="'btn-primary mx-3 o_website_slides_add_review_btn'"/>
+                                        <t t-set="_text_classes" t-value="'css_editable_mode_hidden'"/>
+                                    </t>
                                     <t t-call="portal.message_thread">
                                         <t t-set="object" t-value="channel"/>
                                         <t t-set="hash" t-value="message_post_hash"/>
