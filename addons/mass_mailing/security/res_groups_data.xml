@@ -4,7 +4,7 @@
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mail.group_mail_template_editor'))]"/>
     </record>
 
     <!-- Group to manage campaigns -->
