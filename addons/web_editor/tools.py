@@ -8,7 +8,7 @@ import re
 import requests
 
 from markupsafe import Markup
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, urlparse
 from werkzeug.urls import url_encode
 
 from odoo import _
@@ -142,7 +142,22 @@ def get_video_embed_code(video_url):
     """ Computes the valid iframe from given URL that can be embedded
         (or None in case of invalid URL).
     """
-    data = get_video_url_data(video_url)
+    parsed_url = urlparse(video_url)
+    query_params = parse_qs(parsed_url.query)
+    param_name_mapping = {
+        'autoplay': 'autoplay',
+        'loop': 'loop',
+        'hide_controls': 'controls',
+        'hide_fullscreen': 'fs',
+        'hide_dm_logo': 'ui-logo',
+        'hide_dm_share': 'sharing-enable',
+    }
+    params = {
+        func_param: int(query_params[url_param][0]) if func_param == 'autoplay' else 1
+        for func_param, url_param in param_name_mapping.items()
+        if url_param in query_params
+    }
+    data = get_video_url_data(video_url, **params)
     if 'error' in data:
         return None
     return Markup('<iframe class="embed-responsive-item" src="%s" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="true" frameborder="0"></iframe>') % data['embed_url']

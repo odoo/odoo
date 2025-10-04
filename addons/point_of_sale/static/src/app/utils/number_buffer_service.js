@@ -184,6 +184,10 @@ class NumberBuffer extends EventBus {
             if (["INPUT", "TEXTAREA"].includes(event.target.tagName) || !this.eventsBuffer) {
                 return;
             }
+            // Ignore any input if combined with Ctrl, Cmd, or Alt
+            if (event.ctrlKey || event.metaKey || event.altKey) {
+                return;
+            }
             clearTimeout(this._timeout);
             this.eventsBuffer.push(event);
             this._timeout = setTimeout(handler, this.maxTimeBetweenKeys);

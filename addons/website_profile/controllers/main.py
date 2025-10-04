@@ -309,4 +309,5 @@ class WebsiteProfile(http.Controller):
     @http.route('/profile/validate_email/close', type='json', auth='public', website=True)
     def validate_email_done(self, **kwargs):
         request.session['validation_email_done'] = False
+        request.session['validation_email_sent'] = False
         return True

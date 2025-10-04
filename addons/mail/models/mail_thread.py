@@ -902,15 +902,15 @@ class MailThread(models.AbstractModel):
         If the email is related to a partner, we consider that the number of message_bounce
         is not relevant anymore as the email is valid - as we received an email from this
         address. The model is here hardcoded because we cannot know with which model the
-        incomming mail match. We consider that if a mail arrives, we have to clear bounce for
+        incoming mail match. We consider that if a mail arrives, we have to clear bounce for
         each model having bounce count.
 
         :param email_from: email address that sent the incoming email."""
-        valid_email = message_dict['email_from']
-        if valid_email:
+        normalized_from = email_normalize(message_dict['email_from'])
+        if normalized_from:
             bl_models = self.env['ir.model'].sudo().search(['&', ('is_mail_blacklist', '=', True), ('model', '!=', 'mail.thread.blacklist')])
             for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
-                self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
+                self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', normalized_from)])._message_reset_bounce(normalized_from)
 
     @api.model
     def _detect_is_bounce(self, message, message_dict):

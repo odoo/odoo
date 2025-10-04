@@ -1959,6 +1959,23 @@ class TestStockValuation(TestStockValuationBase):
         self._make_in_move(product, 1, unit_cost=77)
         self.assertEqual(product.standard_price, 77)
 
+    def test_fifo_manual_revaluation_after_manual_standard_price(self):
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self._make_in_move(self.product1, 1, unit_cost=200)
+        self._make_in_move(self.product1, 1, unit_cost=300)
+        self.assertEqual(self.product1.standard_price, 250)
+
+        self.product1.standard_price = 300
+
+        Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_account_id': self.stock_valuation_account,
+            'default_added_value': 200.0,
+        })).save().action_validate_revaluation()
+
+        self.assertEqual(self.product1.standard_price, 350)
+
     def test_create_done_move(self):
         """Stock Move created directly in Done state must impact de valuation."""
         self.product1.categ_id.property_cost_method = 'average'

@@ -128,10 +128,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_identification_vals_list(partner)
 
-        if partner.country_code == 'NL':
-            vals.append({
-                'id': partner.peppol_endpoint,
-            })
+        if partner.country_code == 'NL' and partner.peppol_endpoint:
+            # [UBL-SR-16] Buyer identifier shall occur maximum once
+            if self._context.get('ubl_partner_role') == 'customer':
+                vals = [{'id': partner.peppol_endpoint}]
+            else:
+                vals.append({
+                    'id': partner.peppol_endpoint,
+                })
         return vals
 
     def _get_delivery_vals_list(self, invoice):
@@ -553,13 +557,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'schemeID': commercial_partner.peppol_eas
             }
 
-        if commercial_partner.country_code == 'NL':
-            party_node['cac:PartyIdentification'] = [
-                party_node['cac:PartyIdentification'],
-                {
-                    'cbc:ID': {'_text': commercial_partner.peppol_endpoint}
-                }
-            ]
+        if commercial_partner.country_code == 'NL' and commercial_partner.peppol_endpoint:
+            # [UBL-SR-16] Buyer identifier shall occur maximum once
+            if role == 'customer':
+                party_node['cac:PartyIdentification'] = [{'cbc:ID': {'_text': commercial_partner.peppol_endpoint}}]
+            else:
+                party_node['cac:PartyIdentification'] = [
+                    party_node['cac:PartyIdentification'],
+                    {
+                        'cbc:ID': {'_text': commercial_partner.peppol_endpoint}
+                    }
+                ]
 
         party_node['cac:PartyTaxScheme'] = party_tax_scheme = [
             {
