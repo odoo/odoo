@@ -4,7 +4,7 @@ import { AttributeSelectionHelper } from "./attribute_selection_helper";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
-    static props = ["productTemplate", "onSelection?"];
+    static props = ["productTemplate", "onSelection?", "isCombo?"];
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -25,9 +25,17 @@ export class AttributeSelection extends Component {
     }
 
     availableAttributeValue(attribute) {
-        return this.selfOrder.config.self_ordering_mode === "kiosk"
-            ? attribute.product_template_value_ids.filter((a) => !a.is_custom)
-            : attribute.product_template_value_ids;
+        const isKiosk = this.selfOrder.config.self_ordering_mode === "kiosk";
+        const isNoVariantCreation = attribute.attribute_id.create_variant === "no_variant";
+        return attribute.product_template_value_ids.filter((a) => {
+            if (isKiosk && a.is_custom) {
+                return false;
+            }
+            if (this.props.isCombo) {
+                return isNoVariantCreation;
+            }
+            return true;
+        });
     }
 
     getCustomSelectedValue(attribute) {
