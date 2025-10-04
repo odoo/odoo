@@ -230,6 +230,7 @@ export default class OrderPaymentValidation {
             this.order.state = "draft";
             handleRPCError(error, this.pos.dialog);
         } else {
+            this.order.state = "draft";
             throw error;
         }
         return error;
