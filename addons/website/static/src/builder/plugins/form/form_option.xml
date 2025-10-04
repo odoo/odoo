@@ -87,9 +87,6 @@
 </t>
 
 <t t-name="website.s_website_form_field_option">
-    <t t-if="domState.elClassList.includes('s_website_form_model_required')">
-        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" fetchModels="props.fetchModels"/>
-    </t>
     <BuilderRow label.translate="Type">
         <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
             id="'type_opt'" preview="false"
@@ -433,12 +430,6 @@
             <BuilderSelectItem classAction="''">Input Aligned</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-</t>
-
-<t t-name="website.s_website_form_model_required_field_alert">
-    <div class="alert alert-info">
-        <span t-out="state.message"/>
-    </div>
 </t>
 
 </templates>
