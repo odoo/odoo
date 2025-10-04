@@ -117,18 +117,47 @@ class ResDeviceLog(models.Model):
     def _gc_device_log(self):
         # Keep the last device log
         # (even if the session file no longer exists on the filesystem)
-        self.env.cr.execute("""
+
+        soft_gc = int(self.env['ir.config_parameter'].sudo().get_param(
+            'base.res_device_log_detail_retention_days', 0
+        ))
+        # If there is a value for this parameter other than `0`, the details for a session
+        # whose last activity has exceeded the number of days will be garbage collected.
+        # The last log for a session identifier will never be garbage collected
+        # when a value is set for this parameter.
+
+        hard_gc = int(self.env['ir.config_parameter'].sudo().get_param(
+            'base.res_device_log_retention_days', 0
+        ))
+        # If there is a value for this parameter other than `0` and the last activity date
+        # has exceeded the number of days, the log will be deleted (even if it is the last).
+
+        self.env.cr.execute(SQL("""
             DELETE FROM res_device_log log1
-            WHERE EXISTS (
-                SELECT 1 FROM res_device_log log2
-                WHERE
-                    log1.session_identifier = log2.session_identifier
-                    AND log1.platform = log2.platform
-                    AND log1.browser = log2.browser
-                    AND log1.ip_address = log2.ip_address
-                    AND log1.last_activity < log2.last_activity
+            WHERE (
+                EXISTS (
+                    SELECT 1 FROM res_device_log log2
+                    WHERE
+                        log1.session_identifier = log2.session_identifier AND
+                        log1.last_activity < log2.last_activity AND
+                        (
+                            (
+                                log1.platform IS NOT DISTINCT FROM log2.platform AND
+                                log1.browser IS NOT DISTINCT FROM log2.browser AND
+                                log1.ip_address = log2.ip_address
+                            ) OR
+                            (
+                                %s AND
+                                log1.last_activity + INTERVAL '%s DAYS' < CURRENT_TIMESTAMP
+                            )
+                        )
+                ) OR
+                (
+                    %s AND
+                    log1.last_activity + INTERVAL '%s DAYS' < CURRENT_TIMESTAMP
+                )
             )
-        """)
+        """, bool(soft_gc), soft_gc, bool(hard_gc), hard_gc))
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
     @api.autovacuum
