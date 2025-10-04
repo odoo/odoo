@@ -268,19 +268,27 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'flexible_hours': True,
         })
 
-        self.jules_emp.resource_calendar_id = flex_40h_calendar
-        self.jules_emp.contract_id.resource_calendar_id = flex_40h_calendar
-
+        test_employee = self.env['hr.employee'].create({
+            'name': 'Test Flexible Employee',
+        })
+        test_contract = self.env['hr.contract'].create({
+            'name': 'Test Contract',
+            'employee_id': test_employee.id,
+            'wage': 1000,
+            'date_start': date(2024, 1, 1),
+            'resource_calendar_id': flex_40h_calendar.id,
+        })
+        test_employee.contract_id = test_contract
         leave_paid = self.env['hr.leave'].create({
             'name': 'Paid leave',
-            'employee_id': self.jules_emp.id,
+            'employee_id': test_employee.id,
             'holiday_status_id': leave_type_paid.id,
             'request_date_from': datetime(2024, 9, 10),
             'request_date_to': datetime(2024, 9, 13),
         })
         leave_paid.with_user(SUPERUSER_ID).action_validate()
 
-        entries = self.jules_emp.contract_id.generate_work_entries(date(2024, 9, 9), date(2024, 9, 14))
+        entries = test_employee.contract_id.generate_work_entries(date(2024, 9, 9), date(2024, 9, 14))
         paid_leave_entry = entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
         self.assertEqual(len(paid_leave_entry), 4, "Four work entries should be created for a flexible employee")
         self.assertEqual(sum(paid_leave_entry.mapped('duration')), 32, "The combined duration of the work entries for flexible employee should "
