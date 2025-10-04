@@ -3,7 +3,7 @@ import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { testImg } from "./image_test_helpers";
+import { testGifImg, testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
 
@@ -40,6 +40,42 @@ test("Should set a shape on an image", async () => {
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-file-name",
         "s_text_image.svg"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
+});
+test("Should set a shape on a GIF image", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testGifImg}
+        </div>
+    `);
+    const editor = getEditor();
+
+    await contains(":iframe .test-options-target img").click();
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    // ensure the shape has been applied
+    await editor.shared.operation.next(() => {});
+
+    const img = queryFirst(":iframe .test-options-target img");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "456");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/svg+xml");
+    expect(img.src.startsWith("data:image/svg+xml;base64,")).toBe(true);
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-original-src",
+        "/website/static/src/img/snippets_options/header_effect_fade_out.gif"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-mimetype-before-conversion",
+        "image/gif"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-shape",
+        "html_builder/geometric/geo_shuriken"
+    );
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-file-name",
+        "header_effect_fade_out.svg"
     );
     expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
 });

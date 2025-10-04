@@ -22,12 +22,14 @@ export class ImagePostProcessPlugin extends Plugin {
      * Applies data-attributes modifications to an img tag and returns a dataURL
      * containing the result. This function does not modify the original image.
      *
-     * @param {HTMLImageElement} img the image to which modifications are applied
-     * @param {Object} newDataset an object containing the modifications to apply
-     * @param {Function} [onImageInfoLoaded] can be used to fill
-     * newDataset after having access to image info, return true to cancel call
-     * @returns {Function} callback that sets dataURL of the image with the
-     * applied modifications to `img` element
+     * @param {Object} params
+     * @param {HTMLImageElement} params.img - The image to process.
+     * @param {Object} [params.newDataset={}] - Dataset modifications to apply.
+     * @param {Function} [params.onImageInfoLoaded] - Callback invoked once
+     *   image info is loaded. If it returns `true`, processing is cancelled.
+     * @returns {Promise<{url: string, newDataset: Object} | void>} A promise
+     *   that resolves to the processed image dataURL and updated dataset, or
+     *   `undefined` if cancelled.
      */
     async _processImage({ img, newDataset = {}, onImageInfoLoaded }) {
         const processContext = {};
@@ -75,7 +77,7 @@ export class ImagePostProcessPlugin extends Plugin {
                 newDataset,
                 processContext
             );
-            return () => this.updateImageAttributes(img, postUrl, postDataset);
+            return { url: postUrl, newDataset: postDataset };
         }
         // Crop
         const container = document.createElement("div");
@@ -232,10 +234,7 @@ export class ImagePostProcessPlugin extends Plugin {
     }
     async getProcessedImageSize(img) {
         const processed = await this._processImage({ img });
-        if (processed.url) {
-            return getDataURLBinarySize(processed.url);
-        }
-        return undefined;
+        return getDataURLBinarySize(processed.url);
     }
     async postProcessImage(url, newDataset, processContext) {
         for (const cb of this.getResource("process_image_post_handlers")) {
