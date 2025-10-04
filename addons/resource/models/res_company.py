@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -28,8 +27,10 @@ class ResCompany(models.Model):
     def _prepare_resource_calendar_values(self):
         self.ensure_one()
         return {
-            'name': _('Standard 40 hours/week'),
+            'name': _('Fully Flexible 40 hours/week'),
+            'full_time_required_hours': 40,
             'company_id': self.id,
+            'schedule_type': 'fully_flexible'
         }
 
     @api.model_create_multi

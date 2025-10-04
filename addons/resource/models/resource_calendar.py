@@ -76,6 +76,7 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     schedule_type = fields.Selection(
         [
+            ('fully_flexible', 'Fully Flexible'),
             ('flexible', 'Flexible'),
             ('fully_fixed', 'Fully Fixed'),
         ],
@@ -83,8 +84,9 @@ class ResourceCalendar(models.Model):
         required=True,
         default='fully_fixed',
         help="Choose which level of definition you want to define on your Schedule\n"
+            "- Fully Flexible : no work time is defined in advance.\n"
             "- Flexible : Define an amount of hours to work on the week.\n"
-            "- Fully Fixed : define the days, periods and the start & end time for each period of the day",
+            "- Fully Fixed : define the days, periods and the start & end time for each period of the day.",
     )
     duration_based = fields.Boolean("Attendance based on duration", help="The hours will be centered around 12:00 to cover the duration for the day")
     flexible_hours = fields.Boolean(string="Flexible Hours",
@@ -163,9 +165,11 @@ class ResourceCalendar(models.Model):
     @api.depends("schedule_type")
     def _compute_flexible_hours(self):
         for calendar in self:
-            calendar.flexible_hours = calendar.schedule_type == 'flexible'
+            calendar.flexible_hours = calendar.schedule_type in ['fully_flexible', 'flexible']
 
     def _inverse_flexible_hours(self):
+        # TODO: Inverse is only used in test but never on the form view.
+        #  Maybe to remove? as fully_flexible will be lost when setting flexible_hours = True
         for calendar in self:
             calendar.schedule_type = 'flexible' if calendar.flexible_hours else 'fully_fixed'
 
