@@ -57,7 +57,7 @@ class ResCompany(models.Model):
         if column_name != 'attendance_kiosk_key':
             super(ResCompany, self)._init_column(column_name)
         else:
-            self.env.cr.execute("SELECT id FROM %s WHERE attendance_kiosk_key IS NULL" % self._table)
+            self.env.cr.execute("SELECT id FROM %s" % self._table)
             attendance_ids = self.env.cr.dictfetchall()
             values_args = [(attendance_id['id'], self._default_company_token()) for attendance_id in attendance_ids]
             query = """
