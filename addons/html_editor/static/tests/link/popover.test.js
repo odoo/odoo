@@ -86,6 +86,32 @@ describe("should open a popover", () => {
         expect(".o_we_edit_link").toHaveCount(1);
         expect(".o_we_remove_link").toHaveCount(0);
     });
+
+    test("unremovable button should not be removed when label and link are removed", async () => {
+        await setupEditor('<p><a href="http://test.com/" class=" oe_unremovable btn btn-fill-primary">link2[]</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        expect(".o_we_label_link").toHaveValue("link2");
+        expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        await contains(".o_we_label_link").edit("  ");
+        await contains(".o_we_href_input_link").edit("  ");
+        expect(".oe_unremovable").toHaveCount(1);
+    });
+
+    test("button should  be removed when label and link are removed for removable class", async () => {
+        await setupEditor('<p><a href="http://test.com/" class="btn btn-fill-primary">link2[]</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        expect(".o_we_label_link").toHaveValue("link2");
+        expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        expect("a").toHaveCount(1);
+        await contains(".o_we_label_link").edit("  ");
+        await contains(".o_we_href_input_link").edit("  ");
+        expect("a").toHaveCount(0);
+    });
+
     test("link popover should not repositioned when clicking in the input field", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
         await waitFor(".o_we_href_input_link");
