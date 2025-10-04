@@ -121,18 +121,11 @@ export class CallParticipantCard extends Component {
     }
 
     get showConnectionState() {
-        if (
-            !this.rtcSession ||
-            !this.isOfActiveCall ||
-            HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
-        ) {
-            return false;
-        }
-        if (this.rtc.state.connectionType === CONNECTION_TYPES.SERVER) {
-            return this.rtcSession.eq(this.rtc?.selfSession);
-        } else {
-            return this.rtcSession.notEq(this.rtc?.selfSession);
-        }
+        return (
+            this.rtcSession &&
+            this.isOfActiveCall &&
+            !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
+        );
     }
 
     /**
