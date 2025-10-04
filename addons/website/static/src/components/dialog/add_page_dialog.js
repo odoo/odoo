@@ -195,7 +195,7 @@ class AddPageTemplatePreview extends Component {
                 return;
             }
             // Wait for fonts.
-            await iframeEl.contentDocument.fonts.ready;
+            await iframeEl.contentDocument?.fonts.ready;
             holderEl.classList.remove("o_loading");
             const adjustHeight = () => {
                 if (!this.previewRef.el) {
