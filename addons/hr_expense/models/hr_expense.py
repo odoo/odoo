@@ -1200,6 +1200,11 @@ class HrExpense(models.Model):
         return _("Untitled Expense %s", *args)
 
     @api.model
+    def get_untitled_expense_name_at_current_date(self):
+        """ Done in a specific function to be called by hr_expense_extract to keep the same translation """
+        return _("Untitled Expense %s", format_date(self.env, fields.Date.context_today(self)))
+
+    @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
             Create the expenses from files.
@@ -1222,7 +1227,7 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             vals = {
-                'name': self._get_untitled_expense_name(format_date(self.env, fields.Date.context_today(self))),
+                'name': self.get_untitled_expense_name_at_current_date(),
                 'price_unit': 0,
                 'product_id': product.id,
             }
@@ -1275,15 +1280,6 @@ class HrExpense(models.Model):
         for state, total_amount_sum in fetched_expenses:
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
-
-    def action_get_attachment_view(self):
-        self.ensure_one()
-        res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
-        res.update({
-            'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
-            'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
-        })
-        return res
 
     def action_approve_duplicates(self):
         root = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
