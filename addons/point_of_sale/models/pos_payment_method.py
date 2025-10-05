@@ -8,6 +8,7 @@ class PosPaymentMethod(models.Model):
     _description = "Point of Sale Payment Method"
     _order = "sequence, id"
     _inherit = ['pos.load.mixin']
+    _check_company_auto = True
 
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
@@ -42,12 +43,14 @@ class PosPaymentMethod(models.Model):
     sequence = fields.Integer(copy=False, default=_default_sequence)
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',
+        check_company=True,
         ondelete='restrict',
         help='Account used as outstanding account when creating accounting payment records for bank payments.')
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
         ondelete='restrict',
         domain=[('account_type', '=', 'asset_receivable')],
+        check_company=True,
         help="Leave empty to use the default account from the company setting.\n"
              "Overrides the company's receivable account (for Point of Sale) used in the journal entries.")
     is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
@@ -67,8 +70,13 @@ class PosPaymentMethod(models.Model):
         default=False,
         help='Forces to set a customer when using this payment method and splits the journal entries for each customer. It could slow down the closing process.')
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
-    config_ids = fields.Many2many('pos.config', string='Point of Sale')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    config_ids = fields.Many2many('pos.config', string='Point of Sale', check_company=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+    )
     default_pos_receivable_account_name = fields.Char(related="company_id.account_default_pos_receivable_account_id.display_name", string="Default Receivable Account Name")
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
