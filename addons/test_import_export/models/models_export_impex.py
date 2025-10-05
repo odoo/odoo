@@ -26,6 +26,7 @@ MODELS = [
     ('date', fields.Date()),
     ('datetime', fields.Datetime()),
     ('text', fields.Text()),
+    ('json', fields.Json()),
     ('selection', fields.Selection([('1', "Foo"), ('2', "Bar"), ('3', "Qux"), ('4', '')])),
     ('selection.function', fields.Selection(selection_fn)),
     # just relate to an integer

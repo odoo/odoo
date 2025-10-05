@@ -7,6 +7,7 @@ import typing
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.tools import SQL
+from odoo.tools.misc import SENTINEL
 
 from .fields import Field
 from .identifiers import IdType
@@ -69,19 +70,31 @@ class Json(Field):
         return False if value is None else copy.deepcopy(value)
 
     def convert_to_cache(self, value, record, validate=True):
-        if not value:
+        if not value and type(value) not in (int, float, str):
             return None
         return json.loads(json.dumps(value))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        if not value:
+        if not value and type(value) not in (int, float, str):
             return None
         return PsycopgJson(value)
 
     def convert_to_export(self, value, record):
-        if not value:
+        if not value and type(value) not in (int, float, str):
             return ''
         return json.dumps(value)
+    
+    def _filter_not_equal(self, records, cache_value):
+        """ Return the subset of ``records`` for which the value of ``self`` is
+        either not in cache, or different from ``cache_value``.
+        """
+        field_cache = self._get_cache(records.env)
+        return records.browse(
+            record_id
+            for record_id in records._ids
+            if (old_value := field_cache.get(record_id, SENTINEL)) != cache_value
+            or type(old_value) != type(cache_value)
+        )
 
 
 class Id(Field[IdType | typing.Literal[False]]):
