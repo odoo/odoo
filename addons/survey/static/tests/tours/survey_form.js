@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     ...changeTab("options"),
     {
         content: "Remove invalid trigger",
-        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 2') a.o_delete:not(:visible)",
         run: "click",
     }, {
         content: "Check that the alert is gone",
@@ -170,7 +170,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     ...changeTab("options"),
     {
         content: "Remove temporarily used trigger",
-        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete",
+        trigger: ".modal .o_field_widget[name=triggering_answer_ids] span:contains('Question 1') a.o_delete:not(:visible)",
         run: "click",
     }, {
         content: "Check that the alert is gone in this case too",

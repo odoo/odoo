@@ -251,7 +251,7 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
     expect(".badge .o_tag_badge_text:eq(0)").toHaveText("gold");
     expect(".badge .o_tag_badge_text:eq(1)").toHaveText("silver");
     expect(".badge:eq(0)").toHaveClass("o_tag_color_2");
-    expect(".o_field_many2many_tags .o_delete").toHaveCount(2);
+    expect(".o_field_many2many_tags .o_delete:not(:visible)").toHaveCount(2);
 
     // add an other existing tag
     await contains("div[name='timmy'] .o-autocomplete.dropdown input").click();
@@ -266,7 +266,7 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
     expect(".badge:eq(2)").toHaveClass("o_tag_color_8");
 
     // remove tag silver
-    await contains(".o_field_many2many_tags .o_delete:eq(1)").click();
+    await contains(".o_field_many2many_tags .o_delete:eq(1)", { visible: false }).click();
     expect(".o_field_many2many_tags .badge").toHaveCount(2);
     const textContent = queryAllTexts(".o_field_many2many_tags  .dropdown-toggle .badge");
     expect(textContent).not.toInclude("silver");
@@ -1843,7 +1843,7 @@ test("Many2ManyTagsField selected records still pickable and not duplicable on d
     expect(".o_tag").toHaveCount(1);
 
     // Check that deleting a record which was selected twice doens't leave one occurence
-    await contains("a.o_delete").click();
+    await contains("a.o_delete", { visible: false }).click();
     expect(".o_tag").toHaveCount(0);
 });
 

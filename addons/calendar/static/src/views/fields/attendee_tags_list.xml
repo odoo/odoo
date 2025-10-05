@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="calendar.AttendeeTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_avatar_backdrop')]" position="attributes">
-            <attribute name="class" remove="opacity-100-hover" separator=" "/>
-        </xpath>
-
         <xpath expr="//img[hasclass('o_m2m_avatar')]" position="replace">
             <div class="o_attendee_tags_list">
                 <img t-if="tag.img"

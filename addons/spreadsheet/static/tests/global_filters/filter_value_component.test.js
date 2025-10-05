@@ -93,7 +93,7 @@ test("can clear a text filter value", async function () {
         operator: "ilike",
         strings: ["foo", "bar"],
     });
-    await contains(".o_tag .o_delete").click();
+    await contains(".o_tag .o_delete", { visible: false }).click();
     expect(queryAllTexts(".o_tag")).toEqual(["bar"]);
     expect(model.getters.getGlobalFilterValue("42")).toEqual({
         operator: "ilike",

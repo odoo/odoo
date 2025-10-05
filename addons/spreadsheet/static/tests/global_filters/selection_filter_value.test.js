@@ -68,6 +68,6 @@ test("Can click on delete", async function () {
         },
     });
     expect.verifySteps([]);
-    await contains(".o_badge:first .o_delete").click();
+    await contains(".o_badge:first .o_delete", { visible: false }).click();
     expect.verifySteps(["onValueChanged"]);
 });

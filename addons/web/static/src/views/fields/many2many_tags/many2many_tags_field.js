@@ -133,6 +133,24 @@ export class Many2ManyTagsField extends Component {
         }
     }
 
+    get many2XAutocompleteProps() {
+        return {
+            id: this.props.id,
+            placeholder: this.tags.length ? '' : this.props.placeholder,
+            resModel: this.relation,
+            autoSelect: true,
+            fieldString: this.string,
+            activeActions: this.activeActions,
+            update: this.update,
+            quickCreate: this.activeActions.create ? this.quickCreate : null,
+            context: this.props.context,
+            getDomain: this.getDomain.bind(this),
+            isToMany: true,
+            nameCreateField: this.props.nameCreateField,
+            searchThreshold: this.props.searchThreshold,
+        };
+    }
+
     get relation() {
         return this.props.record.fields[this.props.name].relation;
     }
