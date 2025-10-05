@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-10-03 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_check_printing
@@ -184,8 +184,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr "한 번에 여러 장의 수표를 인쇄하려면 은행 계좌가 동일해야 합니다."
 
 #. module: account_check_printing
@@ -213,18 +213,29 @@ msgstr "번호 수기 지정"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "수동 결제: Odoo 외부에서 여러 가지 수단으로 결제하거나 지급받습니다.\n"
-"결제대행업체: 결제업체마다 자체 결제 수단을 지정하고 있습니다. 온라인 구매나 구독을 할 경우, 협력사에서 저장한 결제 토큰을 사용하여 카드로 결제를 요청합니다.\n"
+"결제대행업체: 결제업체마다 자체 결제 수단을 지정하고 있습니다. 온라인 구매나 "
+"구독을 할 경우, 협력사에서 저장한 결제 토큰을 사용하여 카드로 결제를 요청합니"
+"다.\n"
 "수표: Odoo에서 수표로 청구 금액을 지급하고 수표 인쇄도 할 수 있습니다.\n"
-"일괄 입금: 고객 수표를 여러 개 수령한 후 한 번에 일괄 입금을 생성하여 은행에 입금합니다.  account_batch_payment 모듈을 설치해야 합니다.\n"
-"SEPA 계좌이체: 은행으로 SEPA 계좌이체 파일을 전송하여 SEPA 지역에서 결제할 수 있습니다. account_sepa 모듈을 설치해야 합니다.\n"
-"SEPA 자동이체: 협력사에서 위임한 권한을 통해 SEPA 지역에서 결제를 진행합니다. account_sepa 모듈을 설치해야 합니다.\n"
+"일괄 입금: 고객 수표를 여러 개 수령한 후 한 번에 일괄 입금을 생성하여 은행에 "
+"입금합니다.  account_batch_payment 모듈을 설치해야 합니다.\n"
+"SEPA 계좌이체: 은행으로 SEPA 계좌이체 파일을 전송하여 SEPA 지역에서 결제할 "
+"수 있습니다. account_sepa 모듈을 설치해야 합니다.\n"
+"SEPA 자동이체: 협력사에서 위임한 권한을 통해 SEPA 지역에서 결제를 진행합니"
+"다. account_sepa 모듈을 설치해야 합니다.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -271,13 +282,15 @@ msgstr "결제"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "수표를 인쇄하려면 반드시 결제 방법으로 '수표'를 선택해야 합니다. 결제 항목이 조정되기 전이어야 합니다."
+msgstr ""
+"수표를 인쇄하려면 반드시 결제 방법으로 '수표'를 선택해야 합니다. 결제 항목이 "
+"조정되기 전이어야 합니다."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr "인쇄하려는 첫 사전 인쇄 수표의 번호를 입력하세요."
 
 #. module: account_check_printing
@@ -324,7 +337,8 @@ msgstr "오른쪽 여백"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "수표 용지에 인쇄할 양식을 선택하세요.\n"
@@ -351,7 +365,17 @@ msgstr "수표 번호 표시"
 msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
-msgstr "수표 레이아웃에 문제가 발생했습니다. 청구서/회계 설정에서 다른 레이아웃을 선택한 후 다시 시도하세요."
+msgstr ""
+"수표 레이아웃에 문제가 발생했습니다. 청구서/회계 설정에서 다른 레이아웃을 선"
+"택한 후 다시 시도하세요."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
@@ -369,7 +393,9 @@ msgstr ""
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr "마지막 수표 번호는 %s입니다. 은행에서 수표가 거부되지 않도록 더 큰 번호만 사용할 수 있습니다."
+msgstr ""
+"마지막 수표 번호는 %s입니다. 은행에서 수표가 거부되지 않도록 더 큰 번호만 사"
+"용할 수 있습니다."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -378,8 +404,9 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
-"선택한 전표에서 수표 번호를 인쇄하도록 설정되어 있습니다. 미리 인쇄된 수표에 이미 번호가 있거나 현재 번호가 잘못되어 있으면 전표 환경"
-" 설정 페이지에서 수정할 수 있습니다."
+"선택한 전표에서 수표 번호를 인쇄하도록 설정되어 있습니다. 미리 인쇄된 수표에 "
+"이미 번호가 있거나 현재 번호가 잘못되어 있으면 전표 환경 설정 페이지에서 수정"
+"할 수 있습니다."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -387,7 +414,9 @@ msgstr ""
 msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
-msgstr "이 옵션을 선택하면 수표 세부 정보 (스텁)가 한 페이지에 들어가지 않는 경우 여러 페이지에 인쇄할 수 있습니다."
+msgstr ""
+"이 옵션을 선택하면 수표 세부 정보 (스텁)가 한 페이지에 들어가지 않는 경우 여"
+"러 페이지에 인쇄할 수 있습니다."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -397,7 +426,8 @@ msgid ""
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
 "이 옵션을 사용하면 CPA별로 수표에 날짜 라벨을 인쇄할 수 있습니다.\n"
-"미리 인쇄된 수표에 날짜 라벨이 포함되어 있는 경우에는 이 옵션을 비활성화하세요."
+"미리 인쇄된 수표에 날짜 라벨이 포함되어 있는 경우에는 이 옵션을 비활성화하세"
+"요."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -421,4 +451,6 @@ msgstr "무효 수표"
 msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
-msgstr "수표 레이아웃을 선택하세요. 선택하려면 청구서/회계 설정에서 '수표 레이아웃'을 검색하여 설정하세요."
+msgstr ""
+"수표 레이아웃을 선택하세요. 선택하려면 청구서/회계 설정에서 '수표 레이아"
+"웃'을 검색하여 설정하세요."

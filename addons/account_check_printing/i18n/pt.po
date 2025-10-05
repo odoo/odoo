@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
 # NumerSpiral HBG, 2025
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
@@ -11,20 +11,21 @@
 # Pilar Vargas, 2025
 # Wil Odoo, 2025
 # Daniel Reis, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-10-03 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Daniel Reis, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -191,8 +192,8 @@ msgstr "Id."
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "Para poder imprimir vários cheques de uma vez só, estes devem pertencer ao "
 "mesmo diário bancário."
@@ -222,18 +223,31 @@ msgstr "Numeração Manual"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Manual: pagar ou ser pago por qualquer método fora do Odoo.\n"
-"Provedores de pagamento: cada provedor de pagamento tem seu próprio método de pagamento. Solicite uma transação em/para um cartão graças a um token de pagamento salvo pelo usuário ao comprar ou assinar online.\n"
+"Provedores de pagamento: cada provedor de pagamento tem seu próprio método "
+"de pagamento. Solicite uma transação em/para um cartão graças a um token de "
+"pagamento salvo pelo usuário ao comprar ou assinar online.\n"
 "Cheque: pague contas com cheque e imprima-o no Odoo.\n"
-"Depósito em lote: colete vários cheques de clientes de uma só vez, gerando e enviando um depósito em lote ao seu banco. É necessário o módulo account_batch_payment.\n"
-"Transferência de crédito SEPA: Pague na zona SEPA enviando um arquivo de transferência de crédito SEPA para o seu banco. O módulo account_sepa é necessário.\n"
-"Débito direto SEPA: receba pagamentos na zona SEPA graças a um mandato que seu usuário lhe concederá. O módulo account_sepa é necessário.\n"
+"Depósito em lote: colete vários cheques de clientes de uma só vez, gerando e "
+"enviando um depósito em lote ao seu banco. É necessário o módulo "
+"account_batch_payment.\n"
+"Transferência de crédito SEPA: Pague na zona SEPA enviando um arquivo de "
+"transferência de crédito SEPA para o seu banco. O módulo account_sepa é "
+"necessário.\n"
+"Débito direto SEPA: receba pagamentos na zona SEPA graças a um mandato que "
+"seu usuário lhe concederá. O módulo account_sepa é necessário.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -287,8 +301,8 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr ""
 "Por favor, insira o número do primeiro cheque pré-impresso que está prestes "
 "a imprimir."
@@ -337,7 +351,8 @@ msgstr "Margem Direita"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 
@@ -366,6 +381,14 @@ msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
+
+#. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
 "The following numbers are already used:\n"
@@ -389,8 +412,8 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
-"O diário selecionado está configurado para imprimir os números do cheque. Se"
-" os seus cheques pré-impressos já estão numerados ou se a numeração atual "
+"O diário selecionado está configurado para imprimir os números do cheque. Se "
+"os seus cheques pré-impressos já estão numerados ou se a numeração atual "
 "estiver errada, pode alterá-la na página de configuração do diário."
 
 #. module: account_check_printing

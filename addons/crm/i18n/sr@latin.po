@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2025-10-03 18:38+0000\n"
 "PO-Revision-Date: 2025-08-19 22:21+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -111,15 +111,6 @@ msgstr ""
 "<b>Upišite nekoliko slova</b> da pretražite kompaniju, ili kreirajte novu."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
-msgid ""
-"<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
-"title=\"Opportunities\"/>"
-msgstr ""
-"<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
-"title=\"Opportunities\"/>"
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
@@ -133,6 +124,20 @@ msgstr ""
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 msgstr ""
 "<i class=\"fa fa-info-circle me-2\" title=\"Brojač dodeljenih lidova\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
+msgid ""
+"<i class=\"fa fa-star me-1\" aria-label=\"Opportunities\" role=\"img\" "
+"title=\"Opportunities\"/>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                Install Extension"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -150,9 +155,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
-"\"Čuvanjem ove promene, email korisnika će takođe biti ažuriran.\" invisible="
-"\"not partner_email_update\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Čuvanjem ove promene, email korisnika će takođe biti ažuriran.\" "
+"invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -161,9 +166,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
-"\"Čuvanjem ove promene, broj telefona korisnika će takođe biti ažuriran.\" "
-"invisible=\"not partner_phone_update\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Čuvanjem ove promene, broj telefona korisnika će takođe biti "
+"ažuriran.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -175,8 +180,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Slični "
 "lidovi</span>\n"
-"                                    <span class=\"o_stat_text\" invisible="
-"\"duplicate_lead_count &gt; 1\">Sličan lid</span>"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"duplicate_lead_count &gt; 1\">Sličan lid</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -186,8 +191,8 @@ msgid ""
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Lidovi</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"use_leads\""
-">Prilike</span>"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Prilike</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -196,8 +201,8 @@ msgstr "<span class=\"o_stat_text\"> Lidovi</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
-msgstr "<span class=\"oe_grey p-2 text-nowrap\"> u </span>"
+msgid "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> at </span>"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -207,10 +212,10 @@ msgid ""
 "                                        <span class=\"oe_grey p-2\" "
 "groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
-"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + "
-"</span>\n"
-"                                        <span class=\"oe_grey p-2\" groups="
-"\"!crm.group_use_recurring_revenues\"> u </span>"
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </"
+"span>\n"
+"                                        <span class=\"oe_grey p-2\" "
+"groups=\"!crm.group_use_recurring_revenues\"> u </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -226,11 +231,6 @@ msgstr "<span class=\"oe_inline\"> (max) </span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"oe_inline\"> / </span>"
 msgstr "<span class=\"oe_inline\"> / </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-msgid "<span class=\"text-bg-danger\">Lost</span>"
-msgstr "<span class=\"text-bg-danger\">Izgubljeno</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -263,8 +263,8 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span>Periodično dodelite lidove na osnovu pravila</span><br/>\n"
-"                                <span invisible="
-"\"not crm_use_auto_assignment\">\n"
+"                                <span invisible=\"not "
+"crm_use_auto_assignment\">\n"
 "                                    Svi prodajni timovi će koristiti ova "
 "podešavanja kao podrazumevana osim ako\n"
 "                                    nije navedeno drugačije.\n"
@@ -290,22 +290,22 @@ msgid ""
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
-"width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:"
-"separate;\">\n"
+"width=\"100%\" style=\"background-color: white; padding: 0; border-"
+"collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</"
-"span><br>\n"
+"span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
 "out=\"object.name or ''\">Interest in your products</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id."
-"id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-"
-"alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?"
+"company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -319,23 +319,23 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object."
-"partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Hi <t t-out=\"object.partner_id and "
+"object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or "
 "''\">My Company (San Francisco)</t>.\n"
 "                            It's great to meet you! Now that you're on "
 "board, you'll discover what <t t-out=\"object.company_id.name or ''\">My "
-"Company (San Francisco)</t> has to offer. My name is <t t-out=\"object."
-"user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of "
-"Odoo. Could we plan a quick demo soon?<br>\n"
-"                            Feel free to reach out at any time!<br><br>\n"
-"                            Best,<br>\n"
+"Company (San Francisco)</t> has to offer. My name is <t t-"
+"out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the "
+"most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or "
 "''\">Marc Demo</t></b>\n"
-"                                <br>Email: <t t-out=\"object.user_id.email "
+"                                <br/>Email: <t t-out=\"object.user_id.email "
 "or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Phone: <t t-out=\"object.user_id.phone "
+"                                <br/>Phone: <t t-out=\"object.user_id.phone "
 "or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
@@ -352,23 +352,23 @@ msgid ""
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
 "font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);"
-"border:medium none;clear:both;display:block;font-size:0px;min-height:1px;"
-"line-height:0; margin: 16px 0px 4px 0px;\">\n"
+"            <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
 "            <b t-out=\"object.company_id.name or ''\">My Company (San "
-"Francisco)</b><br>\n"
+"Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</"
 "t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
-"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id."
-"email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object."
-"company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    | <a t-attf-href=\"'mailto:%s' % "
+"{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+"#999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                </t>\n"
 "                <t t-if=\"object.company_id.website\">\n"
-"                    | <a t-attf-href=\"'%s' % {{ object.company_id."
-"website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object."
-"company_id.website or ''\">http://www.example.com</a>\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}"
+"\" style=\"text-decoration:none; color: #999999;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
 "                </t>\n"
 "            </div>\n"
 "        </td>\n"
@@ -384,116 +384,6 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
-"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
-"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
-"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 24px; background-color: white; color: #454748; border-"
-"collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"100%\" style=\"background-color: white; padding: 0; border-"
-"collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Vaš Lid/"
-"Prilija</span><br>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;"
-"\" t-out=\"object.name or ''\">Interesovanje za vaše proizvode</span>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src="
-"\"/logo.png?company={{ object.company_id.id }}\" style="
-"\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt="
-"\"object.company_id.name\">\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <div>\n"
-"                            Zdravo <t t-out="
-"\"object.partner_id and object.partner_id.name or ''\">Deco "
-"Addict</t>,<br><br>\n"
-"                            Dobro došli u <t t-out="
-"\"object.company_id.name or ''\">Moja Kompanija (San Francisko)</t>.\n"
-"                            Drago mi je da se upoznajemo! Sada kada ste nam "
-"se pridružili, otkrićete šta <t t-out=\"object.company_id.name or ''\">Moja "
-"Kompanija (San Francisko)</t> ima da ponudi. Moje ime je <t t-out="
-"\"object.user_id.name or ''\">Marc Demo</t> i ja ću Vam pomoći da dobijete "
-"najviše od Odoo-a. Možemo li da planiramo kratki demo uskoro?<br>\n"
-"                            Slobodno se obratite u bilo koje vreme!<br><br>\n"
-"                            Srdačno,<br>\n"
-"                            <t t-if=\"object.user_id\">\n"
-"                                <b><t t-out=\"object.user_id.name or ''\""
-">Marc Demo</t></b>\n"
-"                                <br>Email: <t t-out="
-"\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Phone: <t t-out="
-"\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                            </t>\n"
-"                            <t t-else=\"\">\n"
-"                                <t t-out=\"object.company_id.name or ''\""
-">Moja Kompanija (San Francisko)</t>\n"
-"                            </t>\n"
-"                        </div>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
-"font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">Moja Kompanija (San "
-"Francisko)</b><br>\n"
-"            <div style=\"color: #999999;\">\n"
-"                <t t-out=\"object.company_id.phone or ''\">+1 "
-"650-123-4567</t>\n"
-"                <t t-if=\"object.company_id.email\">\n"
-"                    | <a t-attf-href="
-"\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none;"
-" color: #999999;\" t-out=\"object.company_id.email or ''\""
-">info@yourcompany.com</a>\n"
-"                </t>\n"
-"                <t t-if=\"object.company_id.website\">\n"
-"                    | <a t-attf-href="
-"\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; "
-"color: #999999;\" t-out=\"object.company_id.website or ''\""
-">http://www.example.com</a>\n"
-"                </t>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    Platformu pokreće <a target=\"_blank\" href="
-"\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style="
-"\"color: #875A7B;\">Odoo</a>\n"
-"</td></tr>\n"
-"</table>\n"
-"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -576,6 +466,14 @@ msgstr "Analiza aktivnosti"
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
 msgid "Activities Done Target"
 msgstr "Završene aktivnosti Cilj"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
+msgid ""
+"Activities marked as Done on Leads will appear here, providing an overview "
+"of lead interactions."
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -955,6 +853,13 @@ msgid "Channel"
 msgstr "Kanal"
 
 #. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
+msgid ""
+"Check the Stage Tracker of Leads to identify bottlenecks in your Sales "
+"process."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_leads
 msgid ""
 "Check this box to filter and qualify incoming requests as leads before "
@@ -1065,8 +970,7 @@ msgid "Configuration"
 msgstr "Podešavanje"
 
 #. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/js/tours/crm.js:0
+#: model_terms:web_tour.tour,rainbow_man_message:crm.crm_tour
 msgid "Congrats, best of luck catching such big fish! :)"
 msgstr "Čestitamo, srećno u hvatanju tako velike ribe! :)"
 
@@ -1077,6 +981,8 @@ msgstr "Uzmi u obzir lidove kreirano počev od:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -1324,7 +1230,6 @@ msgstr "Prilagođena odbijena poruka"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Customer"
@@ -1695,12 +1600,8 @@ msgid ""
 "For a sales team, there is nothing worse than being dry on leads. "
 "Fortunately, in just a few clicks, you can generate leads specifically "
 "targeted to your needs: company size, industry, etc. To help you test the "
-"feature, we offer you 200 credits for free."
+"feature, we offer you 20 credits for free."
 msgstr ""
-"Za prodajni tim, nema ništa gore nego ostati bez lidova. Srećom, u samo "
-"nekoliko klikova možete generisati lidove posebno ciljane prema vašim "
-"potrebama: veličini kompanije, industriji itd. Da bismo vam pomogli da "
-"testirate ovu funkciju, nudimo vam 200 besplatnih kredita."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -2294,6 +2195,12 @@ msgid "Let's <b>Schedule an Activity.</b>"
 msgstr "Hajde da <b>zakažemo aktivnost.</b>"
 
 #. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
+#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
+msgid "Let's get to work!"
+msgstr ""
+
+#. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Let’s have a look at an Opportunity."
@@ -2397,6 +2304,13 @@ msgstr "Napravi Ponudu"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
+"messages, and get AI-powered transcripts of your conversations."
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manage Recurring Plans"
 msgstr "Upravljaj ponavljajućim planovima"
 
@@ -2407,8 +2321,8 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
-"Ručno dodeljivanje omogućava pokretanje dodele iz prikaza timske forme pomoć"
-"u dugmeta za akciju. Automatski konfiguriše cron koji više puta pokreće "
+"Ručno dodeljivanje omogućava pokretanje dodele iz prikaza timske forme "
+"pomoću dugmeta za akciju. Automatski konfiguriše cron koji više puta pokreće "
 "dodelu u svim timovima."
 
 #. module: crm
@@ -2709,12 +2623,6 @@ msgid "No data found!"
 msgstr "Nema pronađenih podataka!"
 
 #. module: crm
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
-msgid "No data yet!"
-msgstr "Još uvek nema podataka!"
-
-#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid ""
@@ -2920,8 +2828,6 @@ msgstr "Prodajne prilike koje su dodeljene meni"
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__name
-#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__lead_type__opportunity
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2930,6 +2836,12 @@ msgstr "Prodajne prilike koje su dodeljene meni"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunity"
 msgstr "Prodajna prilika"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
+msgid "Opportunity Count"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -2985,11 +2897,6 @@ msgstr ""
 "Opcioni ID niza (zapisa) kom će biti dodate kao prilog sve dolazne mail "
 "poruke, čak i ako na njih nisu odgovorili. Ako je podešeno, ovo ć́e u "
 "potpunosti onemogućiti stvaranje novih zapisa."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
-msgid "Organization / Contact"
-msgstr "Organizacija / Kontakt"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -3322,6 +3229,11 @@ msgid "Restore"
 msgstr "Obnovi"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Ringover VOIP Phone"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
 msgstr "Dodeljivanje na osnovu pravila"
@@ -3578,12 +3490,6 @@ msgstr ""
 "                          pozicionirana u prodajnom ciklusu."
 
 #. module: crm
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
-#: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
-msgid "Start scheduling activities on your opportunities"
-msgstr "Počnite da zakazujete aktivnosti na svojim prilikama"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "State"
@@ -3753,7 +3659,8 @@ msgstr "Ova analiza vam pokazuje koliko je lidova kreirano mesečno."
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
-msgstr "Ova traka omogućava filtriranje prilika na osnovu zakazanih aktivnosti."
+msgstr ""
+"Ova traka omogućava filtriranje prilika na osnovu zakazanih aktivnosti."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3855,6 +3762,12 @@ msgid "Tip: Do not waste time recording customers' data"
 msgstr "Savet: Ne gubite vreme beležeći podatke kupaca"
 
 #. module: crm
+#: model:digest.tip,name:crm.digest_tip_crm_6
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
+msgid "Tip: Identify Bottlenecks at a glance"
+msgstr ""
+
+#. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
 msgid "Tip: Manage your pipeline"
@@ -3865,6 +3778,12 @@ msgstr "Savet: Upravljajte svojim prodajnim levkom"
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
 msgid "Tip: Opportunity win rate is predicted with AI"
 msgstr "Savet: Stopa dobitka prilika je predviđena pomoću AI-a"
+
+#. module: crm
+#: model:digest.tip,name:crm.digest_tip_crm_7
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
+msgid "Tip: Turn Sales Forecasting into Child's Play"
+msgstr ""
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -4063,6 +3982,13 @@ msgid ""
 msgstr ""
 "Koristi <i>Novo</i> dugme, ili pošalji email %(email_link)s da testiraš "
 "email gateway."
+
+#. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
+msgid ""
+"Use the CRM Forecast Kanban to easily define when Opportunities are expected "
+"to be won."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4297,6 +4223,11 @@ msgid "generate opportunities in your pipeline?<br>"
 msgstr "generišite prilike u svom prodajnom levku?<br>"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "lost"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
 msgstr "team_count"
@@ -4309,13 +4240,266 @@ msgstr "da testirate email server."
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr "u vaš CRM. Ovu email adresu mogu da konfigurišu članovi prodajnog tima."
+msgstr ""
+"u vaš CRM. Ovu email adresu mogu da konfigurišu članovi prodajnog tima."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "unknown"
 msgstr "nepoznato"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
+#~ "title=\"Opportunities\"/>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
+#~ "title=\"Opportunities\"/>"
+
+#~ msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
+#~ msgstr "<span class=\"oe_grey p-2 text-nowrap\"> u </span>"
+
+#~ msgid "<span class=\"text-bg-danger\">Lost</span>"
+#~ msgstr "<span class=\"text-bg-danger\">Izgubljeno</span>"
+
+#~ msgid ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#~ "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#~ "serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+#~ "align=\"center\">\n"
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#~ "style=\"padding: 24px; background-color: white; color: #454748; border-"
+#~ "collapse:separate;\">\n"
+#~ "<tbody>\n"
+#~ "    <!-- HEADER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"100%\" style=\"background-color: white; padding: 0; border-"
+#~ "collapse:separate;\">\n"
+#~ "                <tr><td valign=\"middle\">\n"
+#~ "                    <span style=\"font-size: 10px;\">Your Lead/"
+#~ "Opportunity</span><br>\n"
+#~ "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+#~ "out=\"object.name or ''\">Interest in your products</span>\n"
+#~ "                </td><td valign=\"middle\" align=\"right\">\n"
+#~ "                    <img t-attf-src=\"/logo.png?"
+#~ "company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+#~ "height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+#~ "                </td></tr>\n"
+#~ "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+#~ "                    <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+#~ "                </td></tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- CONTENT -->\n"
+#~ "    <tr>\n"
+#~ "        <td style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#~ "0px 8px 0px 8px; border-collapse:separate;\">\n"
+#~ "                <tr>\n"
+#~ "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+#~ "                        <div>\n"
+#~ "                            Hi <t t-out=\"object.partner_id and "
+#~ "object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+#~ "                            Welcome to <t t-out=\"object.company_id.name "
+#~ "or ''\">My Company (San Francisco)</t>.\n"
+#~ "                            It's great to meet you! Now that you're on "
+#~ "board, you'll discover what <t t-out=\"object.company_id.name or ''\">My "
+#~ "Company (San Francisco)</t> has to offer. My name is <t t-"
+#~ "out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the "
+#~ "most out of Odoo. Could we plan a quick demo soon?<br>\n"
+#~ "                            Feel free to reach out at any time!<br><br>\n"
+#~ "                            Best,<br>\n"
+#~ "                            <t t-if=\"object.user_id\">\n"
+#~ "                                <b><t t-out=\"object.user_id.name or "
+#~ "''\">Marc Demo</t></b>\n"
+#~ "                                <br>Email: <t t-"
+#~ "out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+#~ "                                <br>Phone: <t t-"
+#~ "out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+#~ "                            </t>\n"
+#~ "                            <t t-else=\"\">\n"
+#~ "                                <t t-out=\"object.company_id.name or "
+#~ "''\">My Company (San Francisco)</t>\n"
+#~ "                            </t>\n"
+#~ "                        </div>\n"
+#~ "                    </td>\n"
+#~ "                </tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- FOOTER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 "
+#~ "8px; font-size:11px;\">\n"
+#~ "            <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
+#~ "            <b t-out=\"object.company_id.name or ''\">My Company (San "
+#~ "Francisco)</b><br>\n"
+#~ "            <div style=\"color: #999999;\">\n"
+#~ "                <t t-out=\"object.company_id.phone or ''\">+1 "
+#~ "650-123-4567</t>\n"
+#~ "                <t t-if=\"object.company_id.email\">\n"
+#~ "                    | <a t-attf-href=\"'mailto:%s' % "
+#~ "{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</"
+#~ "a>\n"
+#~ "                </t>\n"
+#~ "                <t t-if=\"object.company_id.website\">\n"
+#~ "                    | <a t-attf-href=\"'%s' % "
+#~ "{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.website or ''\">http://"
+#~ "www.example.com</a>\n"
+#~ "                </t>\n"
+#~ "            </div>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "</tbody>\n"
+#~ "</table>\n"
+#~ "</td></tr>\n"
+#~ "<!-- POWERED BY -->\n"
+#~ "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?"
+#~ "utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+#~ "</td></tr>\n"
+#~ "</table>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+#~ "top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-"
+#~ "serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+#~ "align=\"center\">\n"
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#~ "style=\"padding: 24px; background-color: white; color: #454748; border-"
+#~ "collapse:separate;\">\n"
+#~ "<tbody>\n"
+#~ "    <!-- HEADER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"100%\" style=\"background-color: white; padding: 0; border-"
+#~ "collapse:separate;\">\n"
+#~ "                <tr><td valign=\"middle\">\n"
+#~ "                    <span style=\"font-size: 10px;\">Vaš Lid/Prilija</"
+#~ "span><br>\n"
+#~ "                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+#~ "out=\"object.name or ''\">Interesovanje za vaše proizvode</span>\n"
+#~ "                </td><td valign=\"middle\" align=\"right\">\n"
+#~ "                    <img t-attf-src=\"/logo.png?"
+#~ "company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+#~ "height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+#~ "                </td></tr>\n"
+#~ "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+#~ "                    <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+#~ "                </td></tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- CONTENT -->\n"
+#~ "    <tr>\n"
+#~ "        <td style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#~ "0px 8px 0px 8px; border-collapse:separate;\">\n"
+#~ "                <tr>\n"
+#~ "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+#~ "                        <div>\n"
+#~ "                            Zdravo <t t-out=\"object.partner_id and "
+#~ "object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+#~ "                            Dobro došli u <t t-"
+#~ "out=\"object.company_id.name or ''\">Moja Kompanija (San Francisko)</t>.\n"
+#~ "                            Drago mi je da se upoznajemo! Sada kada ste "
+#~ "nam se pridružili, otkrićete šta <t t-out=\"object.company_id.name or "
+#~ "''\">Moja Kompanija (San Francisko)</t> ima da ponudi. Moje ime je <t t-"
+#~ "out=\"object.user_id.name or ''\">Marc Demo</t> i ja ću Vam pomoći da "
+#~ "dobijete najviše od Odoo-a. Možemo li da planiramo kratki demo uskoro?"
+#~ "<br>\n"
+#~ "                            Slobodno se obratite u bilo koje vreme!"
+#~ "<br><br>\n"
+#~ "                            Srdačno,<br>\n"
+#~ "                            <t t-if=\"object.user_id\">\n"
+#~ "                                <b><t t-out=\"object.user_id.name or "
+#~ "''\">Marc Demo</t></b>\n"
+#~ "                                <br>Email: <t t-"
+#~ "out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+#~ "                                <br>Phone: <t t-"
+#~ "out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+#~ "                            </t>\n"
+#~ "                            <t t-else=\"\">\n"
+#~ "                                <t t-out=\"object.company_id.name or "
+#~ "''\">Moja Kompanija (San Francisko)</t>\n"
+#~ "                            </t>\n"
+#~ "                        </div>\n"
+#~ "                    </td>\n"
+#~ "                </tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "    <!-- FOOTER -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 "
+#~ "8px; font-size:11px;\">\n"
+#~ "            <hr width=\"100%\" style=\"background-"
+#~ "color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+#~ "size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
+#~ "            <b t-out=\"object.company_id.name or ''\">Moja Kompanija (San "
+#~ "Francisko)</b><br>\n"
+#~ "            <div style=\"color: #999999;\">\n"
+#~ "                <t t-out=\"object.company_id.phone or ''\">+1 "
+#~ "650-123-4567</t>\n"
+#~ "                <t t-if=\"object.company_id.email\">\n"
+#~ "                    | <a t-attf-href=\"'mailto:%s' % "
+#~ "{{ object.company_id.email }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</"
+#~ "a>\n"
+#~ "                </t>\n"
+#~ "                <t t-if=\"object.company_id.website\">\n"
+#~ "                    | <a t-attf-href=\"'%s' % "
+#~ "{{ object.company_id.website }}\" style=\"text-decoration:none; color: "
+#~ "#999999;\" t-out=\"object.company_id.website or ''\">http://"
+#~ "www.example.com</a>\n"
+#~ "                </t>\n"
+#~ "            </div>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "</tbody>\n"
+#~ "</table>\n"
+#~ "</td></tr>\n"
+#~ "<!-- POWERED BY -->\n"
+#~ "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "    Platformu pokreće <a target=\"_blank\" href=\"https://www.odoo.com?"
+#~ "utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+#~ "</td></tr>\n"
+#~ "</table>\n"
+#~ "        "
+
+#~ msgid ""
+#~ "For a sales team, there is nothing worse than being dry on leads. "
+#~ "Fortunately, in just a few clicks, you can generate leads specifically "
+#~ "targeted to your needs: company size, industry, etc. To help you test the "
+#~ "feature, we offer you 200 credits for free."
+#~ msgstr ""
+#~ "Za prodajni tim, nema ništa gore nego ostati bez lidova. Srećom, u samo "
+#~ "nekoliko klikova možete generisati lidove posebno ciljane prema vašim "
+#~ "potrebama: veličini kompanije, industriji itd. Da bismo vam pomogli da "
+#~ "testirate ovu funkciju, nudimo vam 200 besplatnih kredita."
+
+#~ msgid "No data yet!"
+#~ msgstr "Još uvek nema podataka!"
+
+#~ msgid "Organization / Contact"
+#~ msgstr "Organizacija / Kontakt"
+
+#~ msgid "Start scheduling activities on your opportunities"
+#~ msgstr "Počnite da zakazujete aktivnosti na svojim prilikama"
 
 #~ msgid "# Meetings"
 #~ msgstr "# Sastanaka"
@@ -4335,13 +4519,13 @@ msgstr "nepoznato"
 #~ msgid ""
 #~ "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
 #~ "title=\"By saving this change, the customer phone number will also be "
-#~ "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', "
-#~ "False)]}\"/>"
+#~ "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}"
+#~ "\"/>"
 #~ msgstr ""
 #~ "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
 #~ "title=\"By saving this change, the customer phone number will also be "
-#~ "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', "
-#~ "False)]}\"/>"
+#~ "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}"
+#~ "\"/>"
 
 #~ msgid ""
 #~ "<span class=\"o_stat_text\" attrs=\"{'invisible': "
