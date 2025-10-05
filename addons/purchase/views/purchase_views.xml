@@ -209,6 +209,7 @@
                              readonly="state in ['cancel', 'purchase']"/>
                             <field name="partner_ref"/>
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1" readonly="state in ['cancel', 'purchase']"/>
+                            <field name="payment_term_id" readonly="invoice_status == 'invoiced' or locked" options="{'no_create': True}"/>
                             <field name="id" invisible="1"/>
                             <field name="company_id" invisible="1" readonly="state in ['cancel', 'purchase']"/>
                             <field name="currency_id" invisible="1" readonly="state in ['cancel', 'purchase']" groups="!base.group_multi_currency"/>
@@ -393,17 +394,18 @@
                             </group>
                             <div class="clearfix"/>
                         </page>
-                        <page string="Other Information" name="purchase_delivery_invoice">
+                        <page string="Other Info" name="purchase_delivery_invoice">
                             <group>
-                                <group name="other_info">
+                                <group name="purchase_info" string="purchase">
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
-                                    <field name="origin"/>
                                 </group>
-                                <group name="invoice_info">
+                                <group name="billing_info" string="billing">
                                     <field name="invoice_status" invisible="state in ('draft', 'sent', 'to approve', 'cancel')"/>
-                                    <field name="payment_term_id" readonly="invoice_status == 'invoiced' or locked" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or locked"/>
+                                </group>
+                                <group name="tracking_info" string="tracking">
+                                    <field name="origin"/>
                                 </group>
                             </group>
                         </page>
