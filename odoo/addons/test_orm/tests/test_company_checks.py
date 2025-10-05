@@ -208,16 +208,12 @@ class TestCompanyCheck(common.TransactionCase):
         comp_a_user = user.with_company(user.company_id)
         comp_a_user2 = user.with_context(allowed_company_ids=user.company_id.ids)
 
-        # Using with_company(c) or with_context(allowed_company_ids=[c])
-        # should return the same context
-        # and the same environment (reused if no changes)
-        self.assertEqual(comp_a_user.env, comp_a_user2.env)
-        self.assertEqual(comp_a_user.env.context, comp_a_user2.env.context)
-
-        # When there were no company in the context, using with_company
-        # restricts both env.company and env.companies.
+        # with_company() adds the company to the allowed_company_ids context key
         self.assertEqual(comp_a_user.env.company, user.company_id)
-        self.assertEqual(comp_a_user.env.companies, user.company_id)
+        self.assertEqual(comp_a_user.env.companies, user.company_ids)
+        # with_context() restricts the companies to only the values set
+        self.assertEqual(comp_a_user2.env.company, user.company_id)
+        self.assertEqual(comp_a_user2.env.companies, user.company_id)
 
         # Reordering allowed_company_ids ctxt key
         # Ensure with_company reorders the context key content
@@ -248,7 +244,7 @@ class TestCompanyCheck(common.TransactionCase):
 
         comp_user = none_user.with_company(user.company_id)
         self.assertEqual(comp_user.env.company, user.company_id)
-        self.assertEqual(comp_user.env.companies, user.company_id)
+        self.assertEqual(comp_user.env.companies, user.company_ids)
 
     def test_company_sticky_with_context(self):
         context = frozendict({'nothing_to_see_here': True})

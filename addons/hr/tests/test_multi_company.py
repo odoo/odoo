@@ -38,8 +38,8 @@ class TestMultiCompanyReport(TestHrCommon):
 
     def test_single_company_report(self):
         with self.assertRaises(AccessError):  # CacheMiss followed by AccessError
-            self.env['ir.actions.report'].with_user(self.res_users_hr_officer).with_company(
-                self.company_1
+            self.env['ir.actions.report'].with_user(self.res_users_hr_officer).with_context(
+                allowed_company_ids=self.company_1.ids,
             )._render_qweb_pdf('hr.hr_employee_print_badge', res_ids=self.employees.ids)
 
 
