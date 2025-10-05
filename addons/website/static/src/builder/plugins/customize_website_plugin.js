@@ -58,6 +58,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        discard_handlers: this.onDiscard.bind(this),
     };
 
     async onSave() {
@@ -70,6 +71,32 @@ export class CustomizeWebsitePlugin extends Plugin {
             });
         }
     }
+
+    async onDiscard() {
+        const original_theme_data = JSON.parse(
+            localStorage.getItem("website-theme-data-rollback") || "[]"
+        );
+        const original_footer_data = JSON.parse(
+            localStorage.getItem("website-footer-data-rollback") || "[]"
+        );
+        const original_scss_data = JSON.parse(
+            localStorage.getItem("website-customization-rollback") || "[]"
+        );
+
+        if (
+            original_theme_data.length ||
+            original_footer_data?.template_key ||
+            original_scss_data.length
+        ) {
+            await rpc("/website/revert_changes", {
+                theme_data: original_theme_data,
+                footer_data: original_footer_data,
+                scss_data: original_scss_data,
+            });
+            this.window.location.reload();
+        }
+    }
+
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
@@ -192,9 +219,46 @@ export class CustomizeWebsitePlugin extends Plugin {
         await this.makeSCSSCusto(url, colors, nullValue);
     }, 0);
     async makeSCSSCusto(url, values, defaultValue = "null") {
-        Object.keys(values).forEach((key) => {
+        const old_values = {};
+
+        for (const key of Object.keys(values)) {
             values[key] = values[key] || defaultValue;
+            old_values[key] =
+                getComputedStyle(this.document.documentElement).getPropertyValue("--" + key) ||
+                defaultValue;
+        }
+
+        // Each first overwritten value is stored to
+        // be reverted in case of a discard.
+        // Values are grouped by scss urls to minimize
+        // the amount of backend operations necessary.
+        const original_backend_values = JSON.parse(
+            localStorage.getItem("website-customization-rollback") || "[]"
+        );
+        Object.entries(old_values).forEach((old_value) => {
+            const [key, value] = old_value;
+            if (
+                original_backend_values.length === 0 ||
+                !original_backend_values.some(
+                    (original_backend_value) => url === original_backend_value.url
+                )
+            ) {
+                original_backend_values.push({
+                    url: url,
+                    data: {},
+                });
+            }
+            original_backend_values.forEach((original_backend_value) => {
+                if (original_backend_value.url === url && !(key in original_backend_value.data)) {
+                    original_backend_value.data[key] = value;
+                }
+            });
         });
+        localStorage.setItem(
+            "website-customization-rollback",
+            JSON.stringify(original_backend_values)
+        );
+
         await this.services.orm.call("website.assets", "make_scss_customization", [url, values]);
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
@@ -692,6 +756,27 @@ export class WebsiteConfigAction extends BuilderAction {
                 defs.map((def) => def.resolve());
                 return;
             } else {
+                // Compose an object that contains the necessary
+                // information for a rollback
+                // Views that were enabled and are beign disabled
+                // should be reenabled in a rollback
+                // The opposite is true for disabled views
+                const all = [...aggregatedToDisable.union(aggregatedToEnable)];
+                const enable = [...aggregatedToDisable].filter((view) =>
+                    this.dependencies.customizeWebsite.getConfigKey(view)
+                );
+                const disable = all.filter((view) => !enable.includes(view));
+                handleThemeDataRollback(
+                    {
+                        is_view_data: isViewData,
+                        enable: enable,
+                        disable: disable,
+                        reset_view_arch: shouldReset,
+                        all: all,
+                    },
+                    "website-theme-data-rollback"
+                );
+
                 rpc("/website/theme_customize_data", {
                     is_view_data: isViewData,
                     enable: [...aggregatedToEnable],
@@ -704,6 +789,43 @@ export class WebsiteConfigAction extends BuilderAction {
         }, 0);
         return def;
     }
+}
+
+function handleThemeDataRollback(data, localStorageItem) {
+    const original_theme_data = JSON.parse(localStorage.getItem(localStorageItem) || "[]");
+    // Collapses all the rollback steps into a single one
+    // Example:
+    // I have A enabled
+    // To enable B I have to disable A and enable B
+    // to then enable C I have to disable B and enable C
+    // and to enable D I have to disable C and enable D
+    // If I wanto to roll back to the original status, I
+    // just need to disable D and enable A, I can skip all
+    // the intermediate steps
+    original_theme_data.forEach((theme_data) => {
+        // Check if it's the same operation
+        if (
+            JSON.stringify(theme_data.all) === JSON.stringify(data.all) &&
+            theme_data.is_view_data === data.is_view_data &&
+            theme_data.reset_view_arch === data.reset_view_arch
+        ) {
+            // If A -> B and B -> C, then A -> C
+            const valsToDisable = theme_data.disable;
+            valsToDisable.forEach((val) => {
+                if (data.enable.includes(val)) {
+                    theme_data.disable = theme_data.disable.filter((data) => data != val);
+                    data.enable = data.enable.filter((data) => data != val);
+                }
+            });
+            theme_data.enable = theme_data.enable.concat(data.enable);
+            theme_data.disable = theme_data.disable.concat(data.disable);
+            data = null;
+        }
+    });
+    if (data) {
+        original_theme_data.push(data);
+    }
+    localStorage.setItem(localStorageItem, JSON.stringify(original_theme_data));
 }
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {

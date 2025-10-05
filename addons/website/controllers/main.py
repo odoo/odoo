@@ -1024,6 +1024,22 @@ class Website(Home):
         records = self._get_customize_data(keys, is_view_data)
         return records.filtered('active').mapped('key')
 
+    @http.route(['/website/revert_changes'], type='jsonrpc', auth='user', website=True)
+    def revert_changes(self, theme_data=None, footer_data=None, scss_data=None):
+        """
+        Groups multiple calls to allow reverting with a single rpc
+        """
+        if theme_data:
+            for value in theme_data:
+                self.theme_customize_data(value['is_view_data'], value['enable'], value['disable'], value['reset_view_arch'])
+
+        if footer_data:
+            self.update_footer_template(footer_data['template_key'], footer_data['possible_values'])
+
+        if scss_data:
+            for value in scss_data:
+                self.env['website.assets'].make_scss_customization(value['url'], value['data'])
+
     @http.route(['/website/theme_customize_data'], type='jsonrpc', auth='user', website=True)
     def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
         """
