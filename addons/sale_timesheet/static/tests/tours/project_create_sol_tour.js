@@ -6,7 +6,7 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
     steps() {
         const originalSteps = super.steps();
         const saleTimesheet = originalSteps.findIndex((step) => step.id === "project_sale_timesheet_start");
-        originalSteps.splice(saleTimesheet  + 1, 1, {
+        originalSteps.splice(saleTimesheet - 1, 0, {
             trigger: 'a.nav-link:contains(Invoicing)',
             content: 'Click on Invoicing tab to configure the invoicing of this project.',
             run: "click",
@@ -39,7 +39,7 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
             content: "Select the customer in the autocomplete dropdown",
             run: "click",
         }, {
-            trigger: ".modal:not(.o_inactive_modal) button:contains(save & close)",
+            trigger: ".modal .o_form_button_save:enabled",
             content: "Save project",
             run: "click",
         });
