@@ -11,6 +11,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
 import { highlightIdToName } from "@website/builder/plugins/highlight/highlight_configurator";
 import { textHighlightFactory } from "@website/js/highlight_utils";
+import { unformat } from "@html_editor/../tests/_helpers/format";
 
 defineMailModels();
 
@@ -191,4 +192,131 @@ test("each highlight has a name", () => {
     highlightWithAName.sort();
     highlightWithAPath.sort();
     expect(highlightWithAPath).toEqual(highlightWithAName);
+});
+
+test("Should override existing highlight (1)", async () => {
+    const { el } = await setupEditor(
+        unformat(
+            `<p>
+                [a
+                <span class="o_text_highlight o_text_highlight_freehand_1" style="--text-highlight-width: 4px;">
+                    <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">b</span>
+                </span>
+                c]
+            </p>`
+        ),
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    await contains("p>.o_text_highlight_underline").click(1);
+    expect(el.innerHTML).toBe(
+        unformat(
+            `<p>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">a</span>
+                <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">
+                    <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">b</span>
+                </span>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">c</span>
+            </p>`
+        )
+    );
+});
+
+test("Should override existing highlight (2)", async () => {
+    const { el } = await setupEditor(
+        unformat(
+            `<p>
+                [a
+                <span class="o_text_highlight o_text_highlight_freehand_1" style="--text-highlight-width: 4px;">
+                    b
+                    <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">c</span>
+                    d
+                </span>
+                e]
+            </p>`
+        ),
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    await contains("p>.o_text_highlight_underline").click(1);
+    expect(el.innerHTML).toBe(
+        unformat(
+            `<p>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">ab</span>
+                <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">
+                    <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">c</span>
+                </span>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">de</span>
+            </p>`
+        )
+    );
+});
+
+test("Should override existing highlight (3)", async () => {
+    const { el } = await setupEditor(
+        unformat(
+            `<p>
+                a
+                <span class="o_text_highlight o_text_highlight_freehand_1" style="--text-highlight-width: 4px;">
+                    [b
+                    <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">c</span>
+                    d
+                </span>
+                e]
+            </p>`
+        ),
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    await contains("p>.o_text_highlight_underline").click(1);
+    expect(el.innerHTML).toBe(
+        unformat(
+            `<p>
+                a
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">b</span>
+                <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">
+                    <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">c</span>
+                </span>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">de</span>
+            </p>`
+        )
+    );
+});
+
+test("Should override existing highlight (4)", async () => {
+    const { el } = await setupEditor(
+        unformat(
+            `<p>
+                <span class="o_text_highlight o_text_highlight_freehand_1" style="--text-highlight-width: 4px;">
+                    [<span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">c</span>
+                    d]
+                </span>
+            </p>`
+        ),
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    await contains("p>.o_text_highlight_underline").click(1);
+    expect(el.innerHTML).toBe(
+        unformat(
+            `<p>
+                <span class="o_animated_text o_animate o_anim_fade_in o_visible o_animated" style="visibility: visible; animation-play-state: running;">
+                    <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">c</span>
+                </span>
+                <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 4px;">d</span>
+            </p>`
+        )
+    );
 });
