@@ -510,6 +510,10 @@ export function makeActionManager(env, router = _router) {
         // If this method is called because of a company switch, the
         // stored allowed_company_ids is incorrect.
         delete lastAction.context?.allowed_company_ids;
+        // If the language has changed, clear current_action in sessionStorage 
+        if (lastAction.context?.lang !== user.context.lang) {
+            Object.keys(lastAction).forEach(key => delete lastAction[key]);
+        }
         if (lastAction.help) {
             lastAction.help = markup(lastAction.help);
         }
