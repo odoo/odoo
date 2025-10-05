@@ -156,7 +156,11 @@ export function renderField(field, resetId = false) {
     template.content.querySelectorAll("[data-name]").forEach((el) => {
         el.dataset.name = getQuotesEncodedName(el.dataset.name);
     });
-    return template.content.firstElementChild;
+    const fieldEl = template.content.firstElementChild;
+    if (field.formCopyEmail) {
+        fieldEl.classList.add("s_website_form_copy_email");
+    }
+    return fieldEl;
 }
 
 /**
@@ -540,6 +544,9 @@ export function setVisibilityDependency(fieldEl, value) {
 export function rerenderField(fieldEl, fields) {
     const field = getActiveField(fieldEl, { fields });
     delete field.id;
+    if (fieldEl.classList.contains("s_website_form_copy_email")) {
+        field.formCopyEmail = true;
+    }
     const newFieldEl = renderField(field);
     replaceFieldElement(fieldEl, newFieldEl);
 }

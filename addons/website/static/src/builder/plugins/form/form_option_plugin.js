@@ -63,6 +63,7 @@ export class FormOptionPlugin extends Plugin {
         "setLabelsMark",
         "clearValidationDataset",
         "defaultMessage",
+        "setSendCopyEmailField",
     ];
     resources = {
         builder_header_middle_buttons: [
@@ -87,8 +88,9 @@ export class FormOptionPlugin extends Plugin {
         ],
         clone_disabled_reason_providers: ({ el, reasons }) => {
             if (
-                el.classList.contains("s_website_form_field") &&
-                !el.classList.contains("s_website_form_custom")
+                (el.classList.contains("s_website_form_field") &&
+                    !el.classList.contains("s_website_form_custom")) ||
+                el.classList.contains("s_website_form_copy_email")
             ) {
                 reasons.push(_t("You cannot duplicate this field."));
             }
@@ -103,6 +105,8 @@ export class FormOptionPlugin extends Plugin {
                         "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
                     )
                 );
+            } else if (el.classList.contains("s_website_form_copy_email")) {
+                reasons.push(_t("This field is mandatory for the option 'Send a Copy'."));
             }
             if (el.classList.contains("s_website_form_submit")) {
                 reasons.push(_t("You can't remove the submit button of the form"));
@@ -168,6 +172,7 @@ export class FormOptionPlugin extends Plugin {
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
+            PrepareEmailFieldAction,
         },
         force_not_editable_selector: ".s_website_form form",
         force_editable_selector: [
@@ -486,6 +491,29 @@ export class FormOptionPlugin extends Plugin {
         const newFieldEl = renderField(field);
         fieldEl.insertAdjacentElement("afterend", newFieldEl);
         this.dependencies["builderOptions"].setNextTarget(newFieldEl);
+    }
+    /**
+     * Adds a "Send a copy" email field if not present.
+     * If it already exists, adds the `s_website_form_copy_email` class for
+     * identification.
+     */
+    setSendCopyEmailField(formEl) {
+        const emailFieldEl = formEl.querySelector("div[data-name='Field'][data-type='email']");
+        if (emailFieldEl) {
+            emailFieldEl.classList.add("s_website_form_copy_email");
+            this.dependencies.builderOptions.updateContainers(emailFieldEl, {
+                forceUpdate: true,
+            });
+        } else {
+            const field = getCustomField("email", _t("Your Email"), "email_from");
+            field.formatInfo = getDefaultFormat(formEl);
+            const fieldEl = renderField(field);
+            const locationEl = formEl.querySelector(
+                ".s_website_form_submit, .s_website_form_recaptcha"
+            );
+            fieldEl.classList.add("s_website_form_copy_email", "s_send_a_copy_field_remove");
+            locationEl.insertAdjacentElement("beforebegin", fieldEl);
+        }
     }
     /**
      * To be used in load for any action that uses getActiveField or
@@ -925,6 +953,10 @@ export class SelectAction extends BuilderAction {
             parseInt(modelId),
             loadResult.formInfo
         );
+
+        if (el.classList.contains("o_website_form_copy_enabled")) {
+            this.dependencies.websiteFormOption.setSendCopyEmailField(el);
+        }
     }
     isApplied({ editingElement: el, value: modelId }) {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
@@ -1438,6 +1470,28 @@ class SetMultipleFilesAction extends BuilderAction {
     static id = "setMultipleFiles";
     apply({ editingElement }) {
         editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
+    }
+}
+/**
+ * Custom action for "Send a copy" that ensures the email field is present.
+ * In cleanup, removes the `s_website_form_copy_email` class if it already
+ * exists, or removes the field if it was newly created.
+ */
+export class PrepareEmailFieldAction extends BuilderAction {
+    static id = "prepareEmailField";
+    static dependencies = ["websiteFormOption", "builderOptions"];
+    apply({ editingElement: formEl }) {
+        this.dependencies.websiteFormOption.setSendCopyEmailField(formEl);
+    }
+    clean({ editingElement: formEl }) {
+        formEl.querySelector("div.s_send_a_copy_field_remove")?.remove();
+        const emailFieldEl = formEl.querySelector("div.s_website_form_copy_email");
+        if (emailFieldEl) {
+            emailFieldEl.classList.remove("s_website_form_copy_email");
+            this.dependencies.builderOptions.updateContainers(emailFieldEl, {
+                forceUpdate: true,
+            });
+        }
     }
 }
 

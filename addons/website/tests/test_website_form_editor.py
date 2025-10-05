@@ -29,7 +29,8 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_contact_us_edition_with_email(self):
         self.start_tour('/odoo', 'website_form_contactus_edition_with_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
-        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        # Skip visitor copy (most recent) and check the company mail instead
+        mail = self.env['mail.mail'].search([], order='id desc', limit=1, offset=1)
         self.assertEqual(
             mail.email_to,
             'test@test.test',
@@ -39,11 +40,20 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.env.company.email = 'website_form_contactus_edition_no_email@mail.com'
         self.start_tour('/odoo', 'website_form_contactus_edition_no_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
-        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        mails = self.env['mail.mail'].search([], order='id desc', limit=2)
+        # With "send a copy" (enabled by default), two mails are created:
+        # - [0] Visitor copy (most recent)
+        # - [1] Company mail (second most recent)
+        visitor_mail = mails[0]
+        company_mail = mails[1]
         self.assertEqual(
-            mail.email_to,
+            company_mail.email_to,
             self.env.company.email,
             'The email was not edited, the form should still have been sent to the company email')
+        self.assertEqual(
+            visitor_mail.email_to,
+            self.partner_portal.email,
+            'Visitor copy should go to the email entered in the form (here the portal user auto-filled email).')
 
     def test_website_form_conditional_required_checkboxes(self):
         self.start_tour('/', 'website_form_conditional_required_checkboxes', login="admin")
