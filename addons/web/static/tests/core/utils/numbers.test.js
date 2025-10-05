@@ -297,21 +297,21 @@ describe("formatFloat", () => {
         });
 
         const options = { humanReadable: true };
-        expect(formatFloat(1e18, options)).toBe("1E");
-        expect(formatFloat(-1e18, options)).toBe("-1E");
+        expect(formatFloat(1e18, options)).toBe("1,000,000T");
+        expect(formatFloat(-1e18, options)).toBe("-1,000,000T");
 
         Object.assign(options, { decimals: 2, minDigits: 1 });
-        expect(formatFloat(1020, options)).toBe("1.02k");
-        expect(formatFloat(1002, options)).toBe("1.00k");
+        expect(formatFloat(1020, options)).toBe("1.02K");
+        expect(formatFloat(1002, options)).toBe("1.00K");
         expect(formatFloat(101, options)).toBe("101.00");
         expect(formatFloat(64.2, options)).toBe("64.20");
-        expect(formatFloat(1020, options)).toBe("1.02k");
+        expect(formatFloat(1020, options)).toBe("1.02K");
         expect(formatFloat(1e21, options)).toBe("1e+21");
         expect(formatFloat(1.0045e22, options)).toBe("1e+22");
         expect(formatFloat(1.012e43, options)).toBe("1.01e+43");
-        expect(formatFloat(-1020, options)).toBe("-1.02k");
-        expect(formatFloat(-1020, options)).toBe("-1.02k");
-        expect(formatFloat(-1002, options)).toBe("-1.00k");
+        expect(formatFloat(-1020, options)).toBe("-1.02K");
+        expect(formatFloat(-1020, options)).toBe("-1.02K");
+        expect(formatFloat(-1002, options)).toBe("-1.00K");
         expect(formatFloat(-101, options)).toBe("-101.00");
         expect(formatFloat(-64.2, options)).toBe("-64.20");
         expect(formatFloat(-1e21, options)).toBe("-1e+21");
@@ -320,10 +320,10 @@ describe("formatFloat", () => {
         expect(formatFloat(-0.0000001, options)).toBe("0.00");
 
         Object.assign(options, { decimals: 2, minDigits: 2 });
-        expect(formatFloat(1020000, options)).toBe("1,020k");
+        expect(formatFloat(1020000, options)).toBe("1,020.00K");
         expect(formatFloat(10200000, options)).toBe("10.20M");
         expect(formatFloat(1.012e43, options)).toBe("1.01e+43");
-        expect(formatFloat(-1020000, options)).toBe("-1,020k");
+        expect(formatFloat(-1020000, options)).toBe("-1,020.00K");
         expect(formatFloat(-10200000, options)).toBe("-10.20M");
         expect(formatFloat(-1.012e43, options)).toBe("-1.01e+43");
 

@@ -1,5 +1,4 @@
 import { localization as l10n } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
 import { intersperse } from "@web/core/utils/strings";
 
 /**
@@ -171,28 +170,33 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
         number = Math.round(number * Math.pow(10, decimals - numberMagnitude)) / d2;
         return `${number}e+${numberMagnitude}`;
     }
-    // note: we need to call toString here to make sure we manipulate the resulting
-    // string, not an object with a toString method.
-    const unitSymbols = _t("kMGTPE").toString();
     const sign = Math.sign(number);
     number = Math.abs(number);
+
+    const units = [
+        { value: 1e12, symbol: "T" },
+        { value: 1e9, symbol: "B" },
+        { value: 1e6, symbol: "M" },
+        { value: 1e3, symbol: "K" },
+    ];
+
     let symbol = "";
-    for (let i = unitSymbols.length; i > 0; i--) {
-        const s = Math.pow(10, i * 3);
-        if (s <= number / Math.pow(10, minDigits - 1)) {
-            number = Math.round((number * d2) / s) / d2;
-            symbol = unitSymbols[i - 1];
+    for (const unit of units) {
+        const scaled = number / unit.value;
+        const intPart = Math.floor(Math.abs(scaled));
+        if (intPart > 0 && intPart.toString().length >= minDigits) {
+            number = scaled;
+            symbol = unit.symbol;
             break;
         }
     }
     const { decimalPoint, grouping, thousandsSep } = l10n;
 
     // determine if we should keep the decimals (we don't want to display 1,020.02k for 1020020)
-    const decimalsToKeep = number >= 1000 ? 0 : decimals;
     number = sign * number;
-    const [integerPart, decimalPart] = formatFixedDecimals(number, decimalsToKeep).split(".");
+    const [integerPart, decimalPart] = formatFixedDecimals(number, decimals).split(".");
     const int = insertThousandsSep(integerPart, thousandsSep, grouping);
-    if (!decimalPart) {
+    if (!decimalPart || decimals === 0) {
         return int + symbol;
     }
     return int + decimalPoint + decimalPart + symbol;
