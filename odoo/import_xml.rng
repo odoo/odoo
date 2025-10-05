@@ -65,34 +65,6 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="report">
-        <rng:element name="report">
-            <rng:optional><rng:attribute name="id"/></rng:optional>
-            <rng:attribute name="string"/>
-            <rng:attribute name="model"/>
-            <rng:attribute name="name"/>
-            <rng:optional><rng:attribute name="print_report_name"/></rng:optional>
-            <rng:optional><rng:attribute name="report_type"/></rng:optional>
-            <rng:optional><rng:attribute name="multi"/></rng:optional>
-            <rng:optional><rng:attribute name="menu"/></rng:optional>
-            <rng:optional><rng:attribute name="keyword"/></rng:optional>
-            <rng:optional><rng:attribute name="file"/></rng:optional>
-            <rng:optional><rng:attribute name="xml"/></rng:optional>
-            <rng:optional><rng:attribute name="parser"/></rng:optional>
-            <rng:optional> <rng:attribute name="auto" /> </rng:optional>
-            <rng:optional> <rng:attribute name="header" /> </rng:optional>
-            <rng:optional> <rng:attribute name="attachment" /> </rng:optional>
-            <rng:optional> <rng:attribute name="attachment_use" /> </rng:optional>
-            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
-            <rng:optional> <rng:attribute name="paperformat"/> </rng:optional>
-            <!-- `Usage` may help identify the best report for a certain task,
-                 for example usage="default" for reports that are attached by
-                 default in EDI exports -->
-            <rng:optional><rng:attribute name="usage"/></rng:optional>
-            <rng:empty />
-        </rng:element>
-    </rng:define>
-
     <rng:define name="field">
         <rng:element name="field">
             <rng:attribute name="name" />
@@ -273,39 +245,6 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="act_window">
-        <rng:element name="act_window">
-            <rng:attribute name="id" />
-            <rng:attribute name="name" />
-            <rng:attribute name="res_model" />
-            <rng:optional><rng:attribute name="domain" /> </rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:optional> <rng:attribute name="view_id"/> </rng:optional>
-            <rng:optional> <rng:attribute name="view_mode"/> </rng:optional>
-            <rng:optional> <rng:attribute name="target"/> </rng:optional>
-            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
-            <rng:optional> <rng:attribute name="limit"/> </rng:optional>
-            <rng:optional> <rng:attribute name="usage"/> </rng:optional>
-            <rng:optional>
-                <rng:attribute name="binding_model"/>
-                <rng:optional>
-                    <rng:attribute name="binding_type">
-                        <rng:choice>
-                            <rng:value>action</rng:value>
-                            <rng:value>report</rng:value>
-                        </rng:choice>
-                    </rng:attribute>
-                </rng:optional>
-                <rng:optional>
-                    <rng:attribute name="binding_views">
-                        <rng:ref name="views"/>
-                    </rng:attribute>
-                </rng:optional>
-            </rng:optional>
-            <rng:empty />
-        </rng:element>
-    </rng:define>
-
     <rng:define name="odoo_openerp_data">
         <rng:element>
             <rng:choice>
@@ -324,8 +263,6 @@
                     <rng:ref name="record" />
                     <rng:ref name="template" />
                     <rng:ref name="delete" />
-                    <rng:ref name="act_window" />
-                    <rng:ref name="report" />
                     <rng:ref name="function" />
                 </rng:choice>
             </rng:zeroOrMore>
