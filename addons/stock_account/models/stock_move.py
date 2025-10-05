@@ -80,7 +80,7 @@ class StockMove(models.Model):
         self.ensure_one()
         res = OrderedSet()
         for move_line in self.move_line_ids:
-            if not move_line.picked:
+            if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=self.product_id.uom_id.rounding):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
@@ -110,7 +110,7 @@ class StockMove(models.Model):
         """
         res = self.env['stock.move.line']
         for move_line in self.move_line_ids:
-            if not move_line.picked:
+            if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=self.product_id.uom_id.rounding):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
