@@ -11,7 +11,7 @@ patch(ChatHub.prototype, {
         useExternalListener(document, "scroll", this._onScroll);
     },
     _onScroll(ev) {
-        if (this.position.dragged) {
+        if (this.position.dragged || this._isWhatsAppActive) {
             return;
         }
         const container = document.querySelector("html");

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="s_whatsapp" name="WhatsApp Snippet">
+        <section class="s_whatsapp o_not_editable">
+            <div class="s_whatsapp_container position-fixed bottom-0 mb-3">
+                <div class="wa-icon-wrapper position-relative d-inline-flex">
+                    <i class="fa fa-whatsapp rounded-circle d-flex align-items-center justify-content-center shadow-lg" id="wa-fab"></i>
+                    <span class="notification-badge position-absolute rounded-circle"></span>
+                </div>
+                <div class="chatbox bg-white rounded-3 position-absolute shadow-lg overflow-hidden mb-2 end-0 d-none">
+                    <div class="header d-flex align-items-center p-2 text-white">
+                        <img class="agent-img rounded-circle" src="https://randomuser.me/api/portraits/women/44.jpg" alt="agent"/>
+                        <div class="agent-info ms-2 me-auto flex-grow-1">
+                            <strong class="agent-name">Jane Doe</strong>
+                            <span class="agent-description">Online</span>
+                        </div>
+                        <button class="close-btn btn btn-link text-white">×</button>
+                    </div>
+                    <div class="messages p-2">
+                        <div class="agent-chat">
+                            <p class="agent-msg bg-white rounded-3 p-2 m-0 fs-6">Hi there 👋
+                                <br/>How can I help you?
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Regular input box -->
+                    <div class="input-box border-top">
+                        <input type="text" class="wa-user-message flex-grow-1 p-2 border-0" placeholder="Enter Your Message..."/>
+                        <button class="wa-send border-0 p-2 text-white fs-5">➤</button>
+                    </div>
+                    <!-- CTA mode -->
+                    <div class="cta-box justify-content-center p-2 border-top">
+                        <button class="cta-btn d-flex align-items-center gap-2 px-5 py-3 fw-semibold rounded-4 shadow-sm border-0 text-white" >
+                            <i class="fa fa-whatsapp"></i>Start Conversation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <record id="website.s_whatsapp_000_scss" model="ir.asset">
+        <field name="name">Whatsapp 000 SCSS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website/static/src/snippets/s_whatsapp/000.scss</field>
+    </record>
+
+</odoo>
