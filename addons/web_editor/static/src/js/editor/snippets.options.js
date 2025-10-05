@@ -6040,6 +6040,22 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     },
 });
 
+registry.AlignImage = SnippetOptionWidget.extend({
+    selectClass: function (previewMode, widgetValue, params) {
+        // if we are changing the alignment
+        // (alignment select has data-state-to-first-class="true") and
+        // if the link was created after this fix, `a` isn't `display: contents`
+        // we set its display to contents when aligning the image.
+        if (params.stateToFirstClass === "true") {
+            const node = this.$target.get(0);
+            if (node.nodeName === "IMG" && node.parentNode?.nodeName === "A") {
+                node.parentNode.style.display = "contents";
+            }
+        }
+        this._super(...arguments);
+    },
+})
+
 /**
  * Allows for media to be replaced.
  */
@@ -6102,6 +6118,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName !== 'A') {
             const wrapperEl = document.createElement('a');
+            // Set the link display to contents to
+            // preserve the image alignment.
+            wrapperEl.style.display === "contents";
             this.$target[0].after(wrapperEl);
             wrapperEl.appendChild(this.$target[0]);
             // TODO Remove when bug fixed in Chrome.
