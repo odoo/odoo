@@ -2,9 +2,11 @@
 
 import pytz
 from datetime import datetime
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.tests import new_test_user
 from odoo.tests.common import tagged, TransactionCase
 
@@ -35,11 +37,15 @@ class TestHrAttendance(TransactionCase):
 
     def test_employee_state(self):
         # Make sure the attendance of the employee will display correctly
-        assert self.test_employee.attendance_state == 'checked_out'
-        self.test_employee._attendance_action_change()
-        assert self.test_employee.attendance_state == 'checked_in'
-        self.test_employee._attendance_action_change()
-        assert self.test_employee.attendance_state == 'checked_out'
+        with freeze_time('2025-01-01 10:00:00'):
+            self.assertEqual(self.test_employee.attendance_state, 'checked_out')
+            self.test_employee._attendance_action_change()
+            self.assertEqual(self.test_employee.attendance_state, 'checked_in')
+            with self.assertRaises(ValidationError):  # check out cannot be at same time as check in
+                self.test_employee._attendance_action_change()
+        with freeze_time('2025-01-01 11:00:00'):
+            self.test_employee._attendance_action_change()
+            self.assertEqual(self.test_employee.attendance_state, 'checked_out')
 
     def test_hours_today(self):
         """ Test day start is correctly computed according to the employee's timezone """
