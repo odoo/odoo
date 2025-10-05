@@ -570,8 +570,8 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         self.env['hr.attendance'].create({
             'employee_id': self.flexible_employee.id,
-            'check_in': datetime(2024, 2, 1, 8, 0),
-            'check_out': datetime(2024, 2, 1, 16, 0)
+            'check_in': datetime(2024, 3, 1, 8, 0),
+            'check_out': datetime(2024, 3, 1, 16, 0)
         })
 
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
