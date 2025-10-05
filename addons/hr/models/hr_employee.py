@@ -824,7 +824,7 @@ class HrEmployee(models.Model):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
         if demo_tag:
             return
-        convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
+        convert.convert_file(self.sudo().env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
 
     # ---------------------------------------------------------
     # Business Methods
