@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
-"PO-Revision-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
+"PO-Revision-Date: 2025-10-03 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -5053,6 +5053,14 @@ msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Consider paying the amount with %(btn_start)searly payment "
+"discount%(btn_end)s instead."
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
 msgstr ""
@@ -9735,7 +9743,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices in error"
 msgstr ""
 
@@ -9752,13 +9760,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent"
 msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent successfully."
 msgstr ""
 
@@ -11929,7 +11937,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr ""
 
@@ -12017,7 +12025,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
 msgstr ""
@@ -14766,7 +14774,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Sent invoices"
 msgstr ""
 
@@ -17823,6 +17831,8 @@ msgid "True"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr ""
@@ -18047,6 +18057,8 @@ msgid "Untaxed amount"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
 msgstr ""

@@ -3,13 +3,14 @@
 # * mail_group
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-16 02:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-04 02:31+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/de/>\n"
 "Language: de\n"
@@ -44,6 +45,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hallo,<br><br>\n"
+"                Sie möchten sich auf die Mailingliste <strong t-out="
+"\"object.name or ''\"></strong> setzen lassen.\n"
+"                <br><br>\n"
+"                Bestätigen Sie dies über den folgenden Link: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Falls Sie dies nicht beabsichtigt hatten, können Sie diese "
+"Nachricht einfach ignorieren.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -58,6 +72,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hallo,<br><br>\n"
+"                Sie möchten sich auf Mailingliste <strong t-out="
+"\"object.name or ''\"></strong> setzen lassen.\n"
+"                <br><br>\n"
+"                Bestätigen Sie dies über den folgenden Link: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Falls Sie dies nicht beabsichtigt hatten, können Sie diese "
+"Nachricht einfach ignorieren.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -69,6 +96,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hallo <t t-out=\"object.partner_id.name or ''\"></t>,</p>"
+"\n"
+"                <p>Unten finden Sie die Richtlinien der Mailingliste <t "
+"t-out=\"object.mail_group_id.name\"></t>.</p>\n"
+"                <p><t t-out="
+"\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer

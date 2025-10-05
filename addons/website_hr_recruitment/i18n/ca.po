@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 02:33+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -38,15 +38,25 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "%s open positions"
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
+msgid ""
+"\n"
+"            <span class=\"text-muted small\">Time to Answer</span>\n"
+"            <h6>2 open days</h6>\n"
+"            <span class=\"text-muted small\">Process</span>\n"
+"            <h6>1 Phone Call</h6>\n"
+"            <h6>1 Onsite Interview</h6>\n"
+"            <span class=\"text-muted small\">Days to get an Offer</span>\n"
+"            <h6>4 Days after Interview</h6>\n"
+"        "
 msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "%s's Application"
-msgstr "Aplicació de %s"
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -55,7 +65,7 @@ msgstr "'. Mostrant els resultats per'"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
-msgid "+1 (650) 691-3277"
+msgid "+1 (650) 555-0187"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -64,18 +74,11 @@ msgid "12 days / year, including <br/>6 of your choice."
 msgstr "12 dies / any, inclosos <br/>6 de la vostra elecció."
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_kanban_referal_extends
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
-"<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
-"                        Job Page"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
-"                        Pàgina de treball"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
-msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -84,7 +87,9 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" aria-label=\"Employment type\"/>"
+msgid ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
+"aria-label=\"Employment type\"/>"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -93,25 +98,11 @@ msgid "<i class=\"oi oi-arrow-left\"/> Job Description"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "<small><b>READ</b></small>"
-msgstr "<small><b>LLEGIR</b></small>"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
-msgid "<span class=\"fst-italic\">No address specified</span>"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
-"                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
-msgstr ""
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Our Job Offers</span>"
+"                                            <span class=\"h3 mt8 mb32 fw-"
+"bold\">Take a look around our website:</span>"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -143,33 +134,36 @@ msgstr "<span class=\"s_website_form_label_content\">Introducció breu</span>"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Email</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"<span class=\"s_website_form_label_content\">El vostre correu electrònic</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"<span class=\"s_website_form_label_content\">El vostre correu electrònic</"
+"span>\n"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">El vostre nom</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Phone Number</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"<span class=\"s_website_form_label_content\">El vostre número de telèfon</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "<span class=\"text-bg-success\">Published</span>"
-msgstr ""
+"<span class=\"s_website_form_label_content\">El vostre número de telèfon</"
+"span>\n"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -193,8 +187,35 @@ msgstr "<span class=\"text-muted small\">Ubicació</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">The resume is optional if you have a Linkedin profile</span>"
-msgstr "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">La represa és opcional si teniu un perfil de Linkedin</span>"
+msgid ""
+"<span class=\"text-muted small\">Provide either a resume file or a linkedin "
+"profile</span>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -222,34 +243,33 @@ msgid "Additional languages"
 msgstr "Idiomes addicionals"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Administrative Work"
-msgstr "Treball Administratiu"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base_mobile
+msgid "All"
+msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
-msgid "All Countries"
-msgstr "Tots els països"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
+msgid "All websites"
+msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
-msgid "All Departments"
-msgstr "Tots els departaments"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
-msgid "All Offices"
-msgstr "Totes les oficines"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
-msgid "All Types"
-msgstr "Tots els tipus"
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. %"
+"(recruiter_contact)s"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
 msgid "Applicant"
 msgstr "Candidat"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
+msgid "Application Info"
+msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -268,32 +288,50 @@ msgid "Apply Now!"
 msgstr "Aplica ara!"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid ""
-"As an employee of our company, you will <b>collaborate with each department\n"
-"                        to create and deploy disruptive products.</b> Come work at a growing company\n"
-"                        that offers great benefits with opportunities to moving forward and learn\n"
-"                        alongside accomplished leaders. We're seeking an experienced and outstanding\n"
-"                        member of staff.\n"
-"                        <br/><br/>\n"
-"                        This position is both <b>creative and rigorous</b> by nature you need to think\n"
-"                        outside the box. We expect the candidate to be proactive and have a \"get it done\"\n"
-"                        spirit. To be successful, you will have solid solving problem skills."
+#: model:ir.model,website_form_label:website_hr_recruitment.model_hr_applicant
+msgid "Apply for a Job"
 msgstr ""
-"Com a empleat de la nostra empresa, <b>col·laborareu amb cada departament\n"
-"                        per crear i desplegar productes disruptius.</b> Vine a treballar en una empresa en creixement\n"
-"                        això ofereix grans beneficis amb oportunitats per a avançar i aprendre\n"
-"                        juntament amb líders consumats. Busquem una experimentada i excepcional\n"
-"                        Membre del personal.\n"
-"                        <br/><br/>\n"
-"                        Aquesta posició és alhora <b>creativa i rigorosa</b> per naturalesa, cal pensar\n"
-"                        fora de la caixa. Esperem que el candidat sigui proactiu i tingui una \"feta\"\n"
-"                        L'esperit. Per tenir èxit, tindràs sòlides habilitats per resoldre problemes."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Autonomy"
-msgstr "Autonomia"
+msgid ""
+"As an employee of our company, you will <b>collaborate with each department\n"
+"                        to create and deploy disruptive products.</b> Come "
+"work at a growing company\n"
+"                        that offers great benefits with opportunities to "
+"moving forward and learn\n"
+"                        alongside accomplished leaders. We're seeking an "
+"experienced and outstanding\n"
+"                        member of staff.\n"
+"                        <br/><br/>\n"
+"                        This position is both <b>creative and rigorous</b> "
+"by nature you need to think\n"
+"                        outside the box. We expect the candidate to be "
+"proactive and have a \"get it done\"\n"
+"                        spirit. To be successful, you will have solid "
+"solving problem skills."
+msgstr ""
+"Com a empleat de la nostra empresa, <b>col·laborareu amb cada departament\n"
+"                        per crear i desplegar productes disruptius.</b> Vine "
+"a treballar en una empresa en creixement\n"
+"                        això ofereix grans beneficis amb oportunitats per a "
+"avançar i aprendre\n"
+"                        juntament amb líders consumats. Busquem una "
+"experimentada i excepcional\n"
+"                        Membre del personal.\n"
+"                        <br/><br/>\n"
+"                        Aquesta posició és alhora <b>creativa i rigorosa</b> "
+"per naturalesa, cal pensar\n"
+"                        fora de la caixa. Esperem que el candidat sigui "
+"proactiu i tingui una \"feta\"\n"
+"                        L'esperit. Per tenir èxit, tindràs sòlides "
+"habilitats per resoldre problemes."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "Autosave"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -306,9 +344,15 @@ msgid "Can Publish"
 msgstr "Pot publicar"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.topbar_customizations
+msgid "Close"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
 msgid "Complementary information that will appear on the job submission page"
-msgstr "Informació complementària que apareixerà a la pàgina de tramesa de la tasca"
+msgstr ""
+"Informació complementària que apareixerà a la pàgina de tramesa de la tasca"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -321,7 +365,19 @@ msgid "Contact us"
 msgstr "Contacta amb nosaltres"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Copied"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
+msgid "Countries"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Countries Filter"
 msgstr "Filtre de països"
 
@@ -332,13 +388,9 @@ msgstr "Crear contingut que ajudi els nostres usuaris a diari"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
+msgid ""
+"Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
 msgstr ""
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Customer Relationship"
-msgstr "Relació amb el client"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -348,12 +400,19 @@ msgid "Department"
 msgstr "Departament"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
+msgid "Departments"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Departments Filter"
 msgstr "Filtre de departaments"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option_plugin.js:0
 msgid "Description"
 msgstr "Descripció"
 
@@ -363,19 +422,27 @@ msgid "Discover our products."
 msgstr "Descobreix els nostres productes."
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                You can make a real contribution to the success of the company.\n"
-"                <br/>\n"
-"                Several activities are often organized all over the year, such as weekly\n"
-"                sports sessions, team building events, monthly drink, and much more"
+"                    You can make a real contribution to the success of the "
+"company.\n"
+"                    <br/>\n"
+"                    Several activities are often organized all over the "
+"year, such as weekly\n"
+"                    sports sessions, team building events, monthly drink, "
+"and much more"
 msgstr ""
-"Cada empleat té l'oportunitat de veure l'impacte del seu treball.\n"
-"                Pots fer una veritable contribució a l'èxit de l'empresa.\n"
-"                <br/>\n"
-"                Diverses activitats s'organitzen sovint durant tot l'any, com ara setmanals\n"
-"                sessions esportives, esdeveniments de construcció d'equips, begudes mensuals i molt més"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -383,7 +450,8 @@ msgid "Eat &amp; Drink"
 msgstr "Menjar &amp; Beure"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Employment Types Filter"
 msgstr "Filtre de tipus d'ocupació"
 
@@ -396,6 +464,21 @@ msgstr "Amplieu els vostres coneixements sobre diferents sectors empresarials"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Experience in writing online content"
 msgstr "Experiència en la redacció de continguts en línia"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "Facebook"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
+msgid "Filter by country"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.topbar_customizations
+msgid "Filters"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -432,10 +515,13 @@ msgstr "Inici"
 msgid ""
 "I usually <strong>answer applications within 3 days</strong>.\n"
 "                                                <br/><br/>\n"
-"                                                The next step is either a call or a meeting in our offices.\n"
+"                                                The next step is either a "
+"call or a meeting in our offices.\n"
 "                                                <br/><br/>\n"
-"                                                Feel free to <strong>contact me if you want a faster\n"
-"                                                feedback</strong> or if you don't get news from me\n"
+"                                                Feel free to <strong>contact "
+"me if you want a faster\n"
+"                                                feedback</strong> or if you "
+"don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
 
@@ -445,13 +531,40 @@ msgid "I'm feeling lucky"
 msgstr "Em sento afortunat"
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
+msgid "ID"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid ""
+"If checked, the record will be saved immediately when the field is modified."
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_industries
+msgid "Industries"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
+msgid "Industries Filter"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
 msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 msgid "Is Published"
 msgstr "Està publicat"
 
@@ -464,6 +577,11 @@ msgstr "Formulari de sol·licitud de feina"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__description
 msgid "Job Description"
 msgstr "Descripció de la feina"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "Job Page"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_window,name:website_hr_recruitment.action_job_pages_list
@@ -487,16 +605,20 @@ msgid "Job not found"
 msgstr ""
 
 #. module: website_hr_recruitment
+#. odoo-javascript
 #. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 #: code:addons/website_hr_recruitment/models/website.py:0
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_searchbar_option.xml:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
+#: model:website.menu,name:website_hr_recruitment.website_menu_jobs
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Jobs"
 msgstr "Treballs"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option_plugin.js:0
 msgid "Jobs Page"
 msgstr "Pàgina de treballs"
 
@@ -504,6 +626,17 @@ msgstr "Pàgina de treballs"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Lead the entire sales cycle"
 msgstr "Liderar tot el cicle de vendes"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "LinkedIn"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "LinkedIn Profile"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -526,14 +659,11 @@ msgid "Nice to have"
 msgstr "Es valorara"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
-msgid "No address specified"
-msgstr ""
-
-#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "Sense gestors estúpids, sense eines estúpides per utilitzar, sense hores de treball rígides"
+msgstr ""
+"Sense gestors estúpids, sense eines estúpides per utilitzar, sense hores de "
+"treball rígides"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -542,16 +672,26 @@ msgstr "No s'han trobat resultats per a '"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "Sense pèrdua de temps en processos empresarials, responsabilitats reals i autonomia"
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr ""
+"Sense pèrdua de temps en processos empresarials, responsabilitats reals i "
+"autonomia"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
-msgid "Not published"
-msgstr "No publicat"
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
+msgid "Not Published"
+msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
+msgid "Offices"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Offices Filter"
 msgstr "Filtre d'Oficines"
 
@@ -567,9 +707,19 @@ msgid "Others"
 msgstr "Altres"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "Our Job Offers"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Our Product"
 msgstr "El nostre producte"
+
+#. module: website_hr_recruitment
+#: model:ir.model,name:website_hr_recruitment.model_website_page
+msgid "Page"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -587,17 +737,20 @@ msgid "Perks"
 msgstr "Avantatges"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Personal Evolution"
-msgstr "Evolució personal"
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Phone Number"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
-msgstr "Juga qualsevol esport amb els seus col·legues, <br/>la factura està coberta."
+msgstr ""
+"Juga qualsevol esport amb els seus col·legues, <br/>la factura està coberta."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Process Details"
 msgstr "Detalls del procés"
 
@@ -607,8 +760,11 @@ msgid "Products"
 msgstr "Productes"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_search_view_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_tree_inherit_website
 msgid "Published"
 msgstr "Publicat"
@@ -629,10 +785,21 @@ msgid "Real responsibilities and challenges in a fast evolving company"
 msgstr "Responsabilitats i reptes reals en una empresa en ràpida evolució"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
 msgstr "Remot"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
+msgid "Reset Filter"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_reset_filters
+msgid "Reset Filters"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -641,13 +808,8 @@ msgstr "Responsabilitats"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr "Restringir les publicacions en aquest portal web."
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
-msgid "SEO Optimized"
-msgstr "SEO optimitzat"
+msgid "Restrict to a specific website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
@@ -655,7 +817,8 @@ msgid "SEO optimized"
 msgstr "Optimització SEO"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Search Bar"
 msgstr "Barra de cerca"
 
@@ -670,7 +833,26 @@ msgid "Set if the application is published on the website of the company."
 msgstr "Marqueu si l'aplicació es publica al lloc web de l'empresa"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Share Job"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Short Introduction"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid "Short introduction from applicant"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Sidebar"
 msgstr "Barra lateral"
 
@@ -690,20 +872,50 @@ msgid "Strong analytical skills"
 msgstr "Fortes habilitats analítiques"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Technical Expertise"
-msgstr "Experiència tècnica"
+#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
-msgstr "L'URL completa per accedir al document a través del lloc web."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "The job link has been copied to the clipboard."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
+msgid "The job offer has been closed."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/interactions/hr_recruitment_form.js:0
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
-"                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
+"                                            but feel free to <span "
+"class=\"fw-bold\">contact us</span> for a spontaneous application."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
+msgid "ToggleLabeled"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
+msgid "Tracker URL"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -713,13 +925,14 @@ msgstr "Entrenaments"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
-msgid "Unspecified type"
+msgid "Types"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
-msgid "Url Parameters"
-msgstr "Paràmetres URL"
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base_mobile
+msgid "Unspecified"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -734,17 +947,42 @@ msgstr "Visible al lloc web actual"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid ""
-"We are a team of passionate people whose goal is to improve everyone's life through disruptive products.\n"
-"                                We build great products to solve your business problems."
+"We are a team of passionate people whose goal is to improve everyone's life "
+"through disruptive products.\n"
+"                                We build great products to solve your "
+"business problems."
 msgstr ""
-"Som un equip de persones apassionades l'objectiu de les quals és millorar la vida de totes les persones mitjançant productes disruptius.\n"
-"                                Construïm grans productes per resoldre els vostres problemes de negoci."
+"Som un equip de persones apassionades l'objectiu de les quals és millorar la "
+"vida de totes les persones mitjançant productes disruptius.\n"
+"                                Construïm grans productes per resoldre els "
+"vostres problemes de negoci."
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"We found a recent application with a similar name, email, phone number. You "
+"can continue if it's not a mistake."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"We've found a previous closed application in our system within the last 6 "
+"months. Please consider before applying in order not to duplicate efforts."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
 msgid "Website"
 msgstr "Lloc web"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
@@ -792,21 +1030,20 @@ msgid "What's great in the job?"
 msgstr "Què és genial en la feina?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_description
-msgid ""
-"You can customize this sample job description with a short overview of\n"
-"        the job position, defining specific terms and benefits. Keep it simple\n"
-"        an clear."
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+msgid "Your <b>contact</b> information is:"
 msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
-msgid "You can write here a short description of your Job Description that will be displayed on the main Jobs' list page."
-msgstr "Podeu escriure aquí una breu descripció de la descripció de la vostra tasca que es mostrarà a la pàgina principal de la llista de tasques."
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Email"
+msgstr ""
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-msgid "Your <b>contact</b> information is:"
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Name"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -822,9 +1059,16 @@ msgid "breadcrumb"
 msgstr "fil d'Ariadna"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
+msgid ""
+"e.g. Summarize the position in one or two lines that will be displayed on "
+"the Jobs list page..."
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "e.g. https://www.linkedin.com/in/fpodoo/"
-msgstr "p. ex. https://www.linkedin.com/in/fpodoo/"
+msgid "e.g. https://www.linkedin.com/in/fpodoo"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -832,11 +1076,118 @@ msgid "info@yourcompany.example.com"
 msgstr "info@yourcompany.example.com"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_recruitment_source_kanban_inherit_website
-msgid "share it"
-msgstr "comparteix-la"
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
+msgid "job URL"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open position"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open positions"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "no publicat"
+
+#~ msgid "%s's Application"
+#~ msgstr "Aplicació de %s"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
+#~ "                        Job Page"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
+#~ "                        Pàgina de treball"
+
+#~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+#~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
+
+#~ msgid "<small><b>READ</b></small>"
+#~ msgstr "<small><b>LLEGIR</b></small>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
+#~ "0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+#~ msgstr ""
+#~ "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
+#~ "0.8rem\">La represa és opcional si teniu un perfil de Linkedin</span>"
+
+#~ msgid "Administrative Work"
+#~ msgstr "Treball Administratiu"
+
+#~ msgid "All Countries"
+#~ msgstr "Tots els països"
+
+#~ msgid "All Departments"
+#~ msgstr "Tots els departaments"
+
+#~ msgid "All Offices"
+#~ msgstr "Totes les oficines"
+
+#~ msgid "All Types"
+#~ msgstr "Tots els tipus"
+
+#~ msgid "Autonomy"
+#~ msgstr "Autonomia"
+
+#~ msgid "Customer Relationship"
+#~ msgstr "Relació amb el client"
+
+#~ msgid ""
+#~ "Each employee has a chance to see the impact of his work.\n"
+#~ "                You can make a real contribution to the success of the "
+#~ "company.\n"
+#~ "                <br/>\n"
+#~ "                Several activities are often organized all over the year, "
+#~ "such as weekly\n"
+#~ "                sports sessions, team building events, monthly drink, and "
+#~ "much more"
+#~ msgstr ""
+#~ "Cada empleat té l'oportunitat de veure l'impacte del seu treball.\n"
+#~ "                Pots fer una veritable contribució a l'èxit de "
+#~ "l'empresa.\n"
+#~ "                <br/>\n"
+#~ "                Diverses activitats s'organitzen sovint durant tot l'any, "
+#~ "com ara setmanals\n"
+#~ "                sessions esportives, esdeveniments de construcció "
+#~ "d'equips, begudes mensuals i molt més"
+
+#~ msgid "Not published"
+#~ msgstr "No publicat"
+
+#~ msgid "Personal Evolution"
+#~ msgstr "Evolució personal"
+
+#~ msgid "Restrict publishing to this website."
+#~ msgstr "Restringir les publicacions en aquest portal web."
+
+#~ msgid "SEO Optimized"
+#~ msgstr "SEO optimitzat"
+
+#~ msgid "Technical Expertise"
+#~ msgstr "Experiència tècnica"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "L'URL completa per accedir al document a través del lloc web."
+
+#~ msgid "Url Parameters"
+#~ msgstr "Paràmetres URL"
+
+#~ msgid ""
+#~ "You can write here a short description of your Job Description that will "
+#~ "be displayed on the main Jobs' list page."
+#~ msgstr ""
+#~ "Podeu escriure aquí una breu descripció de la descripció de la vostra "
+#~ "tasca que es mostrarà a la pàgina principal de la llista de tasques."
+
+#~ msgid "e.g. https://www.linkedin.com/in/fpodoo/"
+#~ msgstr "p. ex. https://www.linkedin.com/in/fpodoo/"
+
+#~ msgid "share it"
+#~ msgstr "comparteix-la"

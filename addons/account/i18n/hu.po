@@ -20,13 +20,14 @@
 # Martin Trigaux, 2023
 # Szabolcs Rádi, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Nagy Géza <geza.nagy@oregional.hu>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
-"PO-Revision-Date: 2025-09-29 19:47+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
+"PO-Revision-Date: 2025-10-04 02:31+0000\n"
+"Last-Translator: Nagy Géza <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "account/hu/>\n"
 "Language: hu\n"
@@ -48,11 +49,11 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Válassza az 'Értékesítés'-t a vevői számlák naplókhoz.\n"
-"        Válassza a 'Beszerzés'-t a szállítói számlák naplókhoz.\n"
+"        Válassza az 'Értékesítés'-t vevői számlák naplókhoz.\n"
+"        Válassza a 'Beszerzés'-t szállítói számlák naplókhoz.\n"
 "        Válassza a 'Készpénz', 'Bank' vagy 'Hitelkártya'-t olyan naplókhoz "
 "melyek a vevői vagy szállítói fizetéseket rögzítik.\n"
-"        Válassza az 'Általános'-t az különféle műveleti naplókhoz.\n"
+"        Válassza az 'Általános'-t a vegyes könyvelési naplókhoz.\n"
 "        "
 
 #. module: account
@@ -111,13 +112,13 @@ msgstr "# Kivonat sorok egyeztetése"
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "# Beszállítói számlák"
+msgstr "# Szállítói számlák"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "#Created by: %s"
-msgstr "#Készítette: %s"
+msgstr "#Létrehozta: %s"
 
 #. module: account
 #. odoo-python
@@ -276,7 +277,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 msgid "%s is not a stored field"
-msgstr "%s egy nem tárolt mező"
+msgstr "%s nem tárolt mező"
 
 #. module: account
 #. odoo-python
@@ -591,7 +592,7 @@ msgstr "30% előleg a következő hónap végéig"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr "30% Most, Kiegyenlítés: 60 Nap"
+msgstr "30% Most, Kiegyenlítés: 60 nap"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1065,7 +1066,8 @@ msgstr "<em>Számlatervezet</em>"
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+"<i class=\"fa fa-clock-o\" aria-label=\"Dátum\" role=\"img\" title=\"Dátum\"/"
+">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -1080,7 +1082,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Fizetve\" title=\"Fizetve\" "
 "role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Fizetve</span>"
@@ -5470,6 +5472,14 @@ msgstr ""
 msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
 msgstr ""
 "Fontolja meg, hogy a %(btn_start)s teljes összeget %(btn_end)s fizesse."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Consider paying the amount with %(btn_start)searly payment discount%"
+"(btn_end)s instead."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
@@ -10293,7 +10303,7 @@ msgstr "A számlák a háttérben kerülnek elküldésre"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices in error"
 msgstr "Hibás számlák"
 
@@ -10310,13 +10320,13 @@ msgstr "Számlák melyekkel tartoznak"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent"
 msgstr "Küldött számlák"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent successfully."
 msgstr "Sikeresen elküldött számlák."
 
@@ -12555,7 +12565,7 @@ msgstr "Miután a számlája elkészült, erősítse meg azt"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "Egy vagy több számlát nem sikerült feldolgozni"
 
@@ -12648,7 +12658,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
 msgstr "Megnyitás"
@@ -15443,7 +15453,7 @@ msgstr "Elküldött"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Sent invoices"
 msgstr "Küldött számlák"
 
@@ -18777,6 +18787,8 @@ msgid "True"
 msgstr "Igaz"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr "Megbízható"
@@ -19005,6 +19017,8 @@ msgid "Untaxed amount"
 msgstr "Nettó érték"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
 msgstr "Megbízhatatlan"

@@ -38,13 +38,15 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Vytenis Viruišis <vytenis@users.noreply.translate.odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
-"PO-Revision-Date: 2025-09-16 18:42+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
+"PO-Revision-Date: 2025-10-04 02:31+0000\n"
+"Last-Translator: Vytenis Viruišis "
+"<vytenis@users.noreply.translate.odoo.com>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "account/lt/>\n"
 "Language: lt\n"
@@ -108,13 +110,13 @@ msgstr "# Sudengtos sąskaitos faktūros"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "#  Suderintos ataskaitos eilutės"
+msgstr "# Suderintos ataskaitos eilutės"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "# tiekėjų sąskaitų"
+msgstr "Tiekėjų sąskaitų sk."
 
 #. module: account
 #. odoo-python
@@ -176,10 +178,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s  pasiekė netinkamą būseną, susijusią su jos atitinkama ataskaitos "
+"%(move)s pasiekė netinkamą būseną, susijusią su jos atitinkama ataskaitos "
 "eilute.\n"
-" Norint išlaikyti nuoseklumą, žurnalo įrašas turi turėti tik vieną "
-"neapmokėtą eilutę."
+"Norint išlaikyti nuoseklumą, žurnalo įrašas turi turėti tik vieną neapmokėtą "
+"eilutę."
 
 #. module: account
 #. odoo-python
@@ -5390,6 +5392,14 @@ msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Consider paying the amount with %(btn_start)searly payment discount%"
+"(btn_end)s instead."
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
 msgstr ""
@@ -10117,7 +10127,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices in error"
 msgstr ""
 
@@ -10134,13 +10144,13 @@ msgstr "Sąskaitos, kurias jums turi apmokėti."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent"
 msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent successfully."
 msgstr ""
 
@@ -12372,7 +12382,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr ""
 
@@ -12461,7 +12471,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
 msgstr "Atidaryti"
@@ -15222,7 +15232,7 @@ msgstr "Išsiųsta"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Sent invoices"
 msgstr ""
 
@@ -18355,6 +18365,8 @@ msgid "True"
 msgstr "Teigiamas"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr ""
@@ -18579,6 +18591,8 @@ msgid "Untaxed amount"
 msgstr "Suma be mokesčių"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-03 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 02:35+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -134,9 +134,15 @@ msgid "Discount & Loyalty"
 msgstr "Chiết khấu & khách hàng thân thiết"
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_reward__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -151,12 +157,6 @@ msgid "Expired Date:"
 msgstr "Ngày hết hạn:"
 
 #. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Free Product - %(product)s"
-msgstr "Sản phẩm miễn phí - %(product)s"
-
-#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift #"
 msgstr "Quà tặng #"
@@ -165,6 +165,18 @@ msgstr "Quà tặng #"
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift Card Code"
 msgstr "Mã thẻ quà tặng"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
+msgid "Gift Card Count"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Gift Cards"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -183,9 +195,15 @@ msgstr ""
 "Cần bao nhiêu điểm trên thẻ khách hàng thân thiết để đổi phần thưởng này."
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_reward__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -276,17 +294,11 @@ msgstr "Đa sản phẩm"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
+"No card found for this loyalty program and no points will be given with this "
+"order."
 msgstr ""
 "Không tìm thấy thẻ nào cho chương trình khách hàng thân thiết này, nên sẽ "
 "không có điểm nào được tặng cho đơn hàng này."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "No product is compatible with this promotion."
-msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -365,6 +377,12 @@ msgid "Reward Products"
 msgstr "Sản phẩm thưởng"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "Rewards Available"
+msgstr ""
+
+#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
 msgstr "Khách hàng thân thiết bán hàng - Công cụ áp dụng phiếu giảm giá"
@@ -381,6 +399,11 @@ msgid ""
 msgstr ""
 "Điểm phiếu giảm giá đơn bán hàng - Theo dõi cách đơn bán hàng tác động đến "
 "phiếu giảm giá"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
+msgid "Sale Order Customer"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -426,7 +449,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "The coupon can only be claimed on future orders."
-msgstr "Chỉ có thể áp dụng phiếu giảm giá cho các đơn đặt hàng trong tương lai."
+msgstr ""
+"Chỉ có thể áp dụng phiếu giảm giá cho các đơn đặt hàng trong tương lai."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -449,6 +473,12 @@ msgstr "Chương trình không khả dụng cho đơn hàng này."
 #: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
 msgid "The sales order from which coupon is generated"
 msgstr "Đơn bán hàng tạo ra phiếu giảm giá này"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "There are available rewards not added to this order."
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -555,3 +585,12 @@ msgid ""
 msgstr ""
 "Phía dưới là mã thẻ quà tặng của bạn. Email chứa mã thẻ đã được gửi tới bạn "
 "và bạn có thể sử dụng ngay bây giờ."
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "order_id"
+msgstr ""
+
+#~ msgid "Free Product - %(product)s"
+#~ msgstr "Sản phẩm miễn phí - %(product)s"

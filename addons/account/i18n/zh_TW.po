@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -5412,6 +5412,14 @@ msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
 msgstr "你可考慮 %(btn_start)s全額付款%(btn_end)s 。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Consider paying the amount with %(btn_start)searly payment discount%"
+"(btn_end)s instead."
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
 msgstr ""
@@ -10138,7 +10146,7 @@ msgstr "發票正在後台發送。"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices in error"
 msgstr "發票有錯誤"
 
@@ -10155,13 +10163,13 @@ msgstr "您的應收憑單"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent"
 msgstr "發票已發送"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent successfully."
 msgstr "發票已成功發送。"
 
@@ -12387,7 +12395,7 @@ msgstr "發票就緒時，請確認它。"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "有一張或多張發票未能處理。"
 
@@ -12475,7 +12483,7 @@ msgstr "哎唷！已完成過賬的記項，只可更改期間或記賬賬戶，
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
 msgstr "開啟"
@@ -15237,7 +15245,7 @@ msgstr "發送"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Sent invoices"
 msgstr "已發送發票"
 
@@ -18439,6 +18447,8 @@ msgid "True"
 msgstr "True（真）"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr "信任"
@@ -18664,6 +18674,8 @@ msgid "Untaxed amount"
 msgstr "未連稅金額"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
 msgstr "不信任"

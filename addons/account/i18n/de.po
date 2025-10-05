@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
 "PO-Revision-Date: 2025-10-01 11:09+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
@@ -2163,8 +2163,8 @@ msgid ""
 "            "
 msgstr ""
 "<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
-"<t t-set=\"invoice_preview_ids\" t-value="
-"\"','.join([str(i) for i in invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in "
+"invoices.ids]) if invoices else ''\"/>\n"
 "<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
 "<t t-set=\"MAX_INVOICES_TO_DISPLAY\" t-value=\"5\"/>\n"
 "\n"
@@ -2186,15 +2186,15 @@ msgstr ""
 "                                <tr>\n"
 "                                    <td align=\"left\" style=\"padding-left: "
 "16px;\">\n"
-"                                        Sie haben <t t-if="
-"\"invoice_count &gt; 1\">neue elektronische Rechnungen!</t><t t-else=\"\""
-">eine neue elektronische Rechnung!</t>\n"
+"                                        Sie haben <t t-if=\"invoice_count "
+"&gt; 1\">neue elektronische Rechnungen!</t><t t-else=\"\">eine neue "
+"elektronische Rechnung!</t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
-"                                        <img alt=\"Odoo\" src="
-"\"/web/static/img/logo_inverse_white_206px.png\" style="
-"\"height: 2em; object-fit: contain;\" class=\"align-baseline w-auto\"/>\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -2204,56 +2204,56 @@ msgstr ""
 "                    <tr>\n"
 "                        <td align=\"center\">\n"
 "                            <table width=\"590\" cellpadding=\"0\" "
-"cellspacing=\"0\" style="
-"\"padding: 16px 32px; background-color: white; border-collapse:separate;\">\n"
+"cellspacing=\"0\" style=\"padding: 16px 32px; background-color: white; "
+"border-collapse:separate;\">\n"
 "                                <tr>\n"
 "                                    <td style=\"font-size: 14px;\">\n"
 "                                        <h3 style=\"font-size: 20px; margin-"
 "bottom: 20px;\">\n"
-"                                            <t t-if="
-"\"object.company_id.name\">\n"
-"                                                Hallo <t t-out="
-"\"object.company_id.name\"/>,\n"
+"                                            <t t-"
+"if=\"object.company_id.name\">\n"
+"                                                Hallo <t t-"
+"out=\"object.company_id.name\"/>,\n"
 "                                            </t>\n"
 "                                            <t t-else=\"\">\n"
 "                                                Hallo,\n"
 "                                            </t>\n"
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
-"                                            Sie haben <t t-if="
-"\"invoice_count &gt; 1\">neue elektronische Rechnungen</t><t t-else=\"\""
-">eine neue elektronische Rechnung</t>!\n"
+"                                            Sie haben <t t-"
+"if=\"invoice_count &gt; 1\">neue elektronische Rechnungen</t><t t-"
+"else=\"\">eine neue elektronische Rechnung</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
-"                                        <t t-foreach="
-"\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-as=\"inv\">\n"
+"                                        <t t-"
+"foreach=\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-as=\"inv\">\n"
 "                                            <t t-if=\"not inv_first\">\n"
 "                                                <div style=\"background-"
 "color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;\"/>\n"
 "                                            </t>\n"
 "                                            <p style=\"line-height: 1.7em; "
 "padding-top: 16px;\">\n"
-"                                                <t t-if="
-"\"inv.name or inv.ref\">\n"
+"                                                <t t-if=\"inv.name or "
+"inv.ref\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Rechnungsref.:</span> <t t-out=\"inv.name or inv.ref\"/><br/>"
-"\n"
+"weight:bold;\">Rechnungsref.:</span> <t t-out=\"inv.name or inv.ref\"/><br/"
+">\n"
 "                                                </t>\n"
-"                                                <t t-if="
-"\"inv.partner_id.name\">\n"
+"                                                <t t-"
+"if=\"inv.partner_id.name\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">Lieferant:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-if=\"inv.amount_total\">"
-"\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Betrag:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Betrag:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-if="
-"\"inv.invoice_date_due\">\n"
+"                                                <t t-"
+"if=\"inv.invoice_date_due\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">Fällig:</span> <t t-out=\"inv.invoice_date_due\"/>\n"
 "                                                </t>\n"
@@ -2262,19 +2262,20 @@ msgstr ""
 "\n"
 "                                        <div style=\"text-align: center; "
 "padding-top: 24px;\">\n"
-"                                            <a t-if=\"invoice_count != 1\" t"
-"-attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids "
-"}}\" target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; "
-"font-weight: bold; color: #FFFFFF; text-decoration: none !important; "
-"background-color: #008384; border-radius:3px; display: inline-block;\">\n"
+"                                            <a t-if=\"invoice_count != 1\" t-"
+"attf-href=\"/odoo/accounting/action-"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
 "                                               Rechnungen einsehen\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
-"odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" target=\""
-"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-weight: "
-"bold; color: #FFFFFF; text-decoration: none !important; background-color: "
-"#008384; border-radius:3px; display: inline-block;\">\n"
+"odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" "
+"target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-"
+"weight: bold; color: #FFFFFF; text-decoration: none !important; background-"
+"color: #008384; border-radius:3px; display: inline-block;\">\n"
 "                                               Rechnung einsehen\n"
 "                                            </a>\n"
 "                                            <p style=\"font-size: 11px; "
@@ -2284,8 +2285,8 @@ msgstr ""
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
 "                                            Wenn Sie sich vom Erhalt von E-"
-"Mails für eingehende Rechnungen abmelden möchten, klicken Sie <a t-attf-href="
-"\"/my/journal/{{ object.id }}/unsubscribe\">hier</a>.\n"
+"Mails für eingehende Rechnungen abmelden möchten, klicken Sie <a t-attf-"
+"href=\"/my/journal/{{ object.id }}/unsubscribe\">hier</a>.\n"
 "                                        </p>\n"
 "                                    </td>\n"
 "                                </tr>\n"
@@ -5903,6 +5904,14 @@ msgstr ""
 "Erwägen Sie stattdessen, den %(btn_start)sGesamtbetrag%(btn_end)s zu zahlen."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Consider paying the amount with %(btn_start)searly payment discount%"
+"(btn_end)s instead."
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
 msgstr "Bau von Gebäuden und mit den Gebäuden verbundene Kosten"
@@ -8537,7 +8546,8 @@ msgstr "Aufwand"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_meals
 msgid "Expenses incurred when eating or drinking at bars or restaurants"
-msgstr "Ausgaben, die beim Essen oder Trinken in Bars oder Restaurants anfallen"
+msgstr ""
+"Ausgaben, die beim Essen oder Trinken in Bars oder Restaurants anfallen"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicles_expense
@@ -10803,7 +10813,7 @@ msgstr "Rechnungen werden im Hintergrund versendet."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices in error"
 msgstr "Rechnungen mit Fehler"
 
@@ -10820,13 +10830,13 @@ msgstr "Ihnen zugeordnete Rechnungen"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent"
 msgstr "Rechnungen versendet"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent successfully."
 msgstr "Rechnungen erfolgreich versendet."
 
@@ -11953,8 +11963,8 @@ msgstr ""
 "Zahlungsanbieter: Jeder Zahlungsanbieter hat seine eigene Zahlungsmethode. "
 "Beantragen Sie eine Transaktion mithilfe eines Zahlungstokens, das der "
 "Partner beim Online-Kauf oder -Abonnement gespeichert hat.\n"
-"Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie ihn aus Odoo aus."
-"\n"
+"Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie ihn aus Odoo "
+"aus.\n"
 "Sammeleinzahlung: Sammeln Sie mehrere Kundenschecks auf einmal, indem Sie "
 "eine Sammeleinzahlung erstellen und an Ihre Bank übermitteln. Das Modul "
 "account_batch_payment ist erforderlich.\n"
@@ -11964,8 +11974,8 @@ msgstr ""
 "SEPA-Lastschrift: Bezahlen Sie in der SEPA-Zone dank eines Mandats, das "
 "Ihnen Ihr Partner erteilt hat. Das Modul account_iso20022 ist erforderlich.\n"
 "USA ISO20022: Führen Sie Zahlungen in den USA durch, indem Sie eine ISO20022-"
-"Datei an Ihre Bank übermitteln. Das Modul account_iso20022 ist erforderlich."
-"\n"
+"Datei an Ihre Bank übermitteln. Das Modul account_iso20022 ist "
+"erforderlich.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
@@ -13123,7 +13133,7 @@ msgstr "Sobald Ihre Rechnung bereit ist, bestätigen Sie sie."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "Eine oder mehrere Rechnungen konnten nicht verarbeitet werden."
 
@@ -13225,7 +13235,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
 msgstr "Offen"
@@ -13322,8 +13332,8 @@ msgstr ""
 "Optionale Übersetzungssprache (ISO-Code), die beim Versenden einer E-Mail "
 "ausgewählt werden kann. Wenn keine Einstellung vorgenommen wird, wird die "
 "Hauptsprache des Partners verwendet. In der Regel sollte dies ein "
-"Platzhalterausdruck sein, der die entsprechende Sprache angibt, z. B. {{ "
-"object.partner_id.lang }}."
+"Platzhalterausdruck sein, der die entsprechende Sprache angibt, z. B. "
+"{{ object.partner_id.lang }}."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -16065,7 +16075,7 @@ msgstr "Gesendet"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Sent invoices"
 msgstr "gesendete Rechnungen"
 
@@ -16172,8 +16182,8 @@ msgid ""
 "Services incurred for the administration of your business (excluding "
 "supplies)"
 msgstr ""
-"Dienstleistungen, die für die Verwaltung Ihres Unternehmens anfallen ("
-"ausgenommen Lieferungen)"
+"Dienstleistungen, die für die Verwaltung Ihres Unternehmens anfallen "
+"(ausgenommen Lieferungen)"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_maintenance
@@ -19513,6 +19523,8 @@ msgid "True"
 msgstr "Wahr"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr "Vertrauenswürdig"
@@ -19746,6 +19758,8 @@ msgid "Untaxed amount"
 msgstr "Nettobetrag"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
 msgstr "Nicht vertrauenswürdig"
@@ -20312,7 +20326,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "We've noticed some empty lines on your invoice."
-msgstr "Wir haben festgestellt, dass Ihre Rechnung einige leere Zeilen enthält."
+msgstr ""
+"Wir haben festgestellt, dass Ihre Rechnung einige leere Zeilen enthält."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding

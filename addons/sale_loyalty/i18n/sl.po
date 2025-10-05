@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-03 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 21:18+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -135,9 +135,15 @@ msgid "Discount & Loyalty"
 msgstr "Popust in zvestoba"
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_reward__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Prikazani naziv"
 
@@ -152,12 +158,6 @@ msgid "Expired Date:"
 msgstr "Datum poteka:"
 
 #. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Free Product - %(product)s"
-msgstr "Brezplačen izdelek - %(product)s"
-
-#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift #"
 msgstr "Darilo #"
@@ -166,6 +166,18 @@ msgstr "Darilo #"
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift Card Code"
 msgstr "Koda darilne kartice"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
+msgid "Gift Card Count"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Gift Cards"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -183,9 +195,15 @@ msgid "How much point this reward costs on the loyalty card."
 msgstr ""
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_reward__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -276,14 +294,8 @@ msgstr "Več izdelkov"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
-msgstr ""
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "No product is compatible with this promotion."
+"No card found for this loyalty program and no points will be given with this "
+"order."
 msgstr ""
 
 #. module: sale_loyalty
@@ -363,6 +375,12 @@ msgid "Reward Products"
 msgstr "Nagradni izdelki"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "Rewards Available"
+msgstr ""
+
+#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
 msgstr ""
@@ -376,6 +394,11 @@ msgstr ""
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
 msgid ""
 "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
+msgstr ""
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
+msgid "Sale Order Customer"
 msgstr ""
 
 #. module: sale_loyalty
@@ -442,6 +465,12 @@ msgstr "Program ni na voljo za to naročilo."
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
 msgid "The sales order from which coupon is generated"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "There are available rewards not added to this order."
 msgstr ""
 
 #. module: sale_loyalty
@@ -549,3 +578,12 @@ msgid ""
 msgstr ""
 "Spodaj boste našli kodo vaše darilne kartice. Kodo smo vam poslali tudi na "
 "email. Uporabite jo lahko od tega trenutka dalje."
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "order_id"
+msgstr ""
+
+#~ msgid "Free Product - %(product)s"
+#~ msgstr "Brezplačen izdelek - %(product)s"

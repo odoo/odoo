@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:20+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/account/"
@@ -5571,6 +5571,14 @@ msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
 msgstr "Paga %(btn_start)s l'importo totale %(btn_end)s."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid ""
+"Consider paying the amount with %(btn_start)searly payment discount%"
+"(btn_end)s instead."
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
 msgstr ""
@@ -10437,7 +10445,7 @@ msgstr "Le fatture sono inviate in background."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices in error"
 msgstr "Fatture in errore"
 
@@ -10454,13 +10462,13 @@ msgstr "Fatture dovute"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent"
 msgstr "Fatture inviate"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Invoices sent successfully."
 msgstr "Fatture inviate con successo."
 
@@ -12736,7 +12744,7 @@ msgstr "Una volta che la fattura è pronta, confermala."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "One or more invoices couldn't be processed."
 msgstr "Non è stato possibile elaborare una o più fatture."
 
@@ -12838,7 +12846,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 msgid "Open"
 msgstr "Apri"
@@ -15642,7 +15650,7 @@ msgstr "Inviato"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_send.py:0
 msgid "Sent invoices"
 msgstr "Fatture inviate"
 
@@ -19052,6 +19060,8 @@ msgid "True"
 msgstr "Vero"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Trusted"
 msgstr "Sicuro"
@@ -19284,6 +19294,8 @@ msgid "Untaxed amount"
 msgstr "Importo imponibile"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
 msgstr "Nons icuro"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 04:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
@@ -968,14 +968,6 @@ msgstr "Kolom teknis yang digunakan untuk menampilkan Alamat Dropship"
 
 #. module: purchase_stock
 #. odoo-python
-#: code:addons/purchase_stock/models/product.py:0
-msgid ""
-"The 'Buy' route cannot be assigned to a product that is not purchasable. "
-"Enable 'Can be Purchased' boolean to use this route."
-msgstr ""
-
-#. module: purchase_stock
-#. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 msgid "The following replenishment order has been generated"
 msgstr "Replenishment order berikut telah dibuat"
@@ -1049,6 +1041,12 @@ msgstr ""
 "dropship akan membuat permintaan pembelian untuk penawaran ketika order "
 "penjualan dikonfirmasi. Ini adalah alur on-demand. Alamat pengiriman adalah "
 "alamat pelanggan Anda dan bukan alamat gudang Anda."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/product.py:0
+msgid "This product has the \"Buy\" route checked but is not purchasable."
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -1155,6 +1153,12 @@ msgstr "Pemasok"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
 msgid "Warehouse"
 msgstr "Gudang"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/product.py:0
+msgid "Warning!"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__3
