@@ -46,6 +46,9 @@ patch(PosOrderline.prototype, {
         const json = super.serialize(...arguments);
         if (options.orm && json.coupon_id < 0) {
             json.coupon_id = undefined;
+            // It's necessary to do this before sending the data to the server for synchronization,
+            // so that the other sessions can compute the coupons themselves.
+            json.is_reward_line = false;
         }
         return json;
     },
