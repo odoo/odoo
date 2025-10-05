@@ -81,7 +81,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - _compute_message_needaction
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 36
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _get_channels_as_member)
@@ -154,7 +154,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 64
+    _query_count_discuss_channels = 66
 
     def setUp(self):
         super().setUp()
@@ -871,6 +871,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_conversation_tag_ids": [self.conversation_tag.id],
+                "livechat_ended_is_invited": False,
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
@@ -901,6 +902,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
                 "livechat_conversation_tag_ids": [],
+                "livechat_ended_is_invited": False,
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",

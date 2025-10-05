@@ -14,6 +14,7 @@ patch(Thread.prototype, {
         });
         this.country_id = fields.One("res.country");
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
+        this.livechat_ended_is_invited = fields.Attr(false);
     },
     _computeDiscussAppCategory() {
         if (this.channel?.channel_type !== "livechat") {

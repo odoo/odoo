@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, tools
+from odoo import api, Command, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
@@ -174,6 +174,13 @@ class DiscussChannel(models.Model):
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
     rating_last_text = fields.Selection(store=True)
+    livechat_ended_invited_guest_ids = fields.Many2many('mail.guest', string='Invited Guests')
+    livechat_ended_invited_partner_ids = fields.Many2many('res.partner', string='Invited Partners')
+    livechat_ended_is_invited = fields.Boolean(
+        compute='_compute_livechat_ended_is_invited',
+        search='_search_livechat_ended_is_invited',
+        compute_sudo=True
+    )
 
     _livechat_operator_id = models.Constraint(
         "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
@@ -395,6 +402,28 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.livechat_week_day = str(channel.create_date.weekday())
 
+    @api.depends_context('uid', 'guest')
+    def _compute_livechat_ended_is_invited(self):
+        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        for channel in self:
+            has_invitation = False
+            if current_guest:
+                has_invitation = current_guest.id in channel.livechat_ended_invited_guest_ids.ids
+            elif current_partner:
+                has_invitation = current_partner.id in channel.livechat_ended_invited_partner_ids.ids
+            channel.livechat_ended_is_invited = has_invitation
+
+    def _search_livechat_ended_is_invited(self, operator, operand):
+        if operator != 'in':
+            return NotImplemented
+        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        if current_guest:
+            return [('livechat_ended_invited_guest_ids', 'in', [current_guest.id])]
+        elif current_partner:
+            return [('livechat_ended_invited_partner_ids', 'in', [current_partner.id])]
+        else:
+            return [('livechat_ended_invited_partner_ids', 'in', [])]
+
     def _sync_field_names(self):
         field_names = super()._sync_field_names()
         field_names[None].append(
@@ -462,6 +491,10 @@ class DiscussChannel(models.Model):
                         sudo=True,
                     ),
                 ],
+            )
+        if target.is_current_user(self.env):
+            fields.append(
+                Store.Attr("livechat_ended_is_invited", predicate=is_livechat_channel)
             )
         return super()._to_store_defaults(target) + fields
 
@@ -989,3 +1022,31 @@ class DiscussChannel(models.Model):
                     "operatorFound": True,
                 },
             ).bus_send()
+
+    def _find_or_create_persona_for_channel(
+        self,
+        guest_name,
+        timezone,
+        country_code,
+        create_member_params=None,
+        post_joined_message=True,
+    ):
+        self.ensure_one()
+        if self.livechat_end_dt:
+            guest = self.env["mail.guest"]
+            if self.env.user._is_public():
+                guest = guest._get_or_create_guest(
+                guest_name=guest_name, country_code=country_code, timezone=timezone
+                )
+            if guest:
+                self.write({"livechat_ended_invited_guest_ids": [Command.link(guest.id)]})
+            else:
+                self.write({"livechat_ended_invited_partner_ids": [Command.link(self.env.user.partner_id.id)]})
+            return self.env.user.partner_id if not guest else self.env["res.partner"], guest
+        return super()._find_or_create_persona_for_channel(
+            guest_name,
+            timezone,
+            country_code,
+            create_member_params=create_member_params,
+            post_joined_message=post_joined_message,
+        )

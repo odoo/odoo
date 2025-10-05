@@ -23,4 +23,11 @@ patch(DiscussAppCategory.prototype, {
         }
         return super.sortThreads(t1, t2);
     },
+
+    get isVisible() {
+        return (
+            super.isVisible ||
+            this.threads.some((thread) => thread.livechat_ended_is_invited)
+        );
+    },
 });
