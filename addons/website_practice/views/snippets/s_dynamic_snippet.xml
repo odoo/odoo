@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_practice.s_dynamic_snippet_template_addon" inherit_id="website.s_dynamic_snippet_template">
+        <xpath expr="//div[@t-if='main_page_url']" position="before">
+            <button type="button" class="btn btn-primary SHSApractice">
+                Show Popup
+            </button>
+        </xpath>
+    </template>
+</odoo>
