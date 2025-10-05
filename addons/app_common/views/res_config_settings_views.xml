@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="app_res_config_settings_view_form" model="ir.ui.view">
+			<field name="name">res.config.settings.view.form.inherit.app_common</field>
+			<field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//app[@name='general_settings']" position="before">
+					<app name="app_common" data-string="odoAi Cloud" string="odooAi Cloud" data-key="app_common"
+                         logo="/app_common/static/description/odooai.png" groups="base.group_erp_manager">
+                        <div id="app_slot1" class="o_hidden"></div>
+						<div id="app_odooai_banner" class="row app_settings_header my-0 ms-0 mw-100 bg-warning bg-opacity-25">
+							<div class="col-lg-12 col-md-12 ms-0 o_setting_box">
+								<div class="o_setting_right_pane border-start-0 ms-0 ps-0">
+									<div class="content-group">
+										<div class="row mt8">
+											<div name="app_odooai_link">
+												<a href="https://www.odooai.cn" target="_blank">Visit our website for more apps and Support.
+													https://www.odooai.cn
+												</a>
+											</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <block title="odooAi Cloud" class="mt16" name="odooai_cloud_block">
+                            <setting id="odooai_cloud_block_title" title="Setup the communication to odooAi Cloud" string="Setup the communication to odooAi Cloud">
+                                <div name="app_odooapp_link">
+                                    <a href="https://www.odooapp.cn" target="_blank">Get the Industry Apps, Themes and Support from China odooapp store.
+                                        https://www.odooapp.cn
+                                    </a>
+                                </div>
+                            </setting>
+                            <setting id="odooai_cloud_saas_ok" string="Enable CN SaaS" documentation="https://www.odooapp.cn/faq">
+                                <field name="app_saas_ok"/>
+                                <div class="content-group">
+                                    <div>
+                                        <p class="text-warning">Checked and Save to Enable odoo China cloud service.</p>
+                                        <p class="ml4">
+                                            Easy Get Odoo Chinese App, Theme, and industry solution. You can get the SaaS client from<br/>
+                                            <a href="https://www.odooapp.cn/apps/modules/app_saas" class="o_doc_link ml8"
+                                               target="_blank">https://www.odooapp.cn/apps/modules/app_saas
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </setting>
+                        </block>
+                        <div id="app_slot2" class="o_hidden"></div>
+                    </app>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="action_odooai_cloud_config" model="ir.actions.act_window">
+			<field name="name">odooAi Cloud</field>
+			<field name="res_model">res.config.settings</field>
+			<field name="view_mode">form</field>
+			<field name="context">{'module' : 'app_common', 'bin_size': False}</field>
+		</record>
+	</data>
+</odoo>

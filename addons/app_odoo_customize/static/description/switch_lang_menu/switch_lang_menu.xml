@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.SwitchLangMenu" owl="1">
+    <Dropdown class="'o_switch_Lang_menu d-none d-md-block'" position="'bottom-end'">
+        <t t-set-slot="toggler">
+            <i class="fa fa-building d-lg-none"/>
+            <span class="oe_topbar_name d-none d-lg-block" t-esc="currentLang.name"/>
+        </t>
+        <t t-foreach="Object.values(LangService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="Lang" t-key="Lang.id">
+            <t t-call="web.SwitchLangItem">
+                <t t-set="Lang" t-value="Lang" />
+            </t>
+        </t>
+    </Dropdown>
+</t>
+
+
+<t t-name="web.SwitchLangItem" owl="1">
+    <DropdownItem class="'p-0 bg-white'">
+        <t t-set="isLangSelected" t-value="selectedCompanies.includes(Lang.id)"/>
+        <t t-set="isCurrent" t-value="Lang.id === LangService.currentLang.id"/>
+        <div class="d-flex" data-menu="Lang" t-att-data-Lang-id="Lang.id">
+            <div
+                role="menuitemcheckbox"
+                t-att-aria-checked="isLangSelected ? 'true' : 'false'"
+                t-att-aria-label="Lang.name"
+                t-att-title="(isLangSelected ? 'Hide ' : 'Show ') + Lang.name + ' content.'"
+                tabindex="0"
+                class="border-end toggle_Lang"
+                t-attf-class="{{isCurrent ? 'border-primary' : ''}}"
+                t-on-click.stop="() => this.setLang(Lang.id)">
+
+                <span class="btn btn-light border-0 p-2">
+                    <i class="fa fa-fw py-2" t-att-class="isLangSelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+                </span>
+            </div>
+
+            <div
+                role="button"
+                t-att-aria-pressed="isCurrent ? 'true' : 'false'"
+                t-att-aria-label="'Switch to ' + Lang.name "
+                t-att-title="'Switch to ' + Lang.name "
+                tabindex="0"
+                class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
+                t-att-class="isCurrent ? 'alert-primary ms-1 me-2' : 'btn btn-light fw-normal border-0'"
+                t-on-click="() => this.logIntoLang(Lang.id)">
+
+                <span
+                    class='Lang_label pe-3'
+                    t-att-class="isCurrent ? 'text-900 fw-bold' : 'ms-1'">
+                    <t t-esc="Lang.name"/>
+                </span>
+            </div>
+        </div>
+    </DropdownItem>
+</t>
+
+</templates>

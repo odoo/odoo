@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="app_odoo_customize.UserMenu" t-inherit="web.UserMenu" t-inherit-mode="extension">
+        <xpath expr="//t[@t-key='element_index']" position="before">
+            <t t-if="app_show_lang">
+                <t t-foreach="app_lang_list" t-as="lang" t-key="lang.id">
+                    <DropdownItem attrs="{ 'data-lang': lang.id, 'data-code': lang.code }"
+                                  onSelected="() => this.setLang(lang.code)">
+                        <img class="flag"  t-att-src="'/app_odoo_customize/static/src/img/flags/' + lang['code'] + '.png'"/>
+                        <t t-out="lang.name"/>
+                        <i class="fa fa-check" t-if="user_lang == lang.code"></i>
+                    </DropdownItem>
+                </t>
+            </t>
+        </xpath>
+    </t>
+<!--    移动端独立-->
+    <t t-name="app_odoo_customize.UserMenu" t-inherit="web.BurgerUserMenu" t-inherit-mode="extension">
+        <xpath expr="//t[@t-key='element_index']" position="before">
+            <t t-if="app_show_lang">
+                <t t-foreach="app_lang_list" t-as="lang" t-key="lang.id">
+                    <DropdownItem attrs="{ 'data-lang': lang.id, 'data-code': lang.code }" class="'py-3 fs-4'"
+                                  onSelected="() => this.setLang(lang.code)">
+                        <img class="flag"  t-att-src="'/app_odoo_customize/static/src/img/flags/' + lang['code'] + '.png'"/>
+                        <t t-out="lang.name"/>
+                        <i class="fa fa-check" t-if="user_lang == lang.code"></i>
+                    </DropdownItem>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

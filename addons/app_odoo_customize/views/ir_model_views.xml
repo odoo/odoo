@@ -1,0 +1,21 @@
+<odoo>
+  <data>
+    <record id="app_view_model_form" model="ir.ui.view">
+        <field name="name">app.ir.model.form</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="%(base.action_model_fields)d"
+                            context="{'search_default_model_id': id, 'default_model_id': id}"
+                            type="action" class="oe_stat_button" icon="fa-list" string="Fields List"/>
+                    <button name="%(base.action_ui_view)d"
+                            context="{'search_default_model': model}"
+                            type="action" class="oe_stat_button" icon="fa-list" string="Views List"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

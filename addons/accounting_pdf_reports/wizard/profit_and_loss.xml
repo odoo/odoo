@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_account_report_pl" model="ir.actions.act_window">
+        <field name="name">Profit and Loss</field>
+        <field name="res_model">accounting.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="accounting_report_view"/>
+        <field name="target">new</field>
+        <field name="context" eval="{'default_account_report_id':ref('accounting_pdf_reports.account_financial_report_profitandloss0')}"/>
+    </record>
+
+    <menuitem id="menu_account_report_pl"
+              name="Profit and Loss"
+              sequence="6"
+              action="action_account_report_pl"
+              parent="accounting_pdf_reports.menu_finance_legal_statement"
+              groups="account.group_account_user,account.group_account_manager"/>
+
+</odoo>

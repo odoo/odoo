@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- 更好的group分类， 全局级别的扩展选项。非公司级，纳入base.group_no_one的-->
+        <!-- 销售扩展选项-->
+        <record id="module_category_sale_option" model="ir.module.category">
+            <field name="name">Sale Option Extra</field>
+            <field name="description">Extra sale option setup</field>
+            <field name="sequence">101</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="module_category_service_option" model="ir.module.category">
+            <field name="name">Service Option Extra</field>
+            <field name="sequence">102</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="module_category_account_option" model="ir.module.category">
+            <field name="name">Accounting Option Extra</field>
+            <field name="sequence">103</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="module_category_inventory_option" model="ir.module.category">
+            <field name="name">Inventory Option Extra</field>
+            <field name="sequence">104</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="module_category_manufacturing_option" model="ir.module.category">
+            <field name="name">Manufacturing Option Extra</field>
+            <field name="sequence">105</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="module_category_hr_option" model="ir.module.category">
+            <field name="name">Employees Option Extra</field>
+            <field name="sequence">106</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="module_category_productivity_option" model="ir.module.category">
+            <field name="name">Productivity Option Extra</field>
+            <field name="sequence">107</field>
+            <field name="parent_id" ref="base.module_category_hidden"/>
+        </record>
+    </data>
+</odoo>

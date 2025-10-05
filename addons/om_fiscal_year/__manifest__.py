@@ -1,0 +1,23 @@
+{
+    'name': 'Odoo 19 Fiscal Year & Lock Date',
+    'version': '1.0.1',
+    'category': 'Accounting',
+    'summary': 'Odoo 19 Fiscal Year, Fiscal Year in Odoo 19, Lock Date in Odoo 19',
+    'description': 'Odoo 19 Fiscal Year, Fiscal Year in Odoo 19',
+    'live_test_url': 'https://www.youtube.com/watch?v=Kj4hR7_uNs4',
+    'sequence': '1',
+    'website': 'https://www.odoomates.tech',
+    'author': 'Odoo Mates, Odoo SA',
+    'maintainer': 'Odoo Mates',
+    'license': 'LGPL-3',
+    'support': 'odoomates@gmail.com',
+    'depends': ['account'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'wizard/change_lock_date.xml',
+        'views/fiscal_year.xml',
+        'views/settings.xml',
+    ],
+    'images': ['static/description/banner.png'],
+}
