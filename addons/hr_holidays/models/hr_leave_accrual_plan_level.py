@@ -35,6 +35,7 @@ class HrLeaveAccrualLevel(models.Model):
         store=True, export_string_translation=False,
         default='creation', required=True
     )
+    is_anniversary_plan = fields.Boolean(related='accrual_plan_id.is_anniversary_plan')
     # Accrue of
     added_value = fields.Float(digits=(16, 5), required=True, default=1, export_string_translation=False)
     added_value_type = fields.Selection([
@@ -262,6 +263,12 @@ class HrLeaveAccrualLevel(models.Model):
                 level.milestone_date = 'creation'
 
     def _inverse_milestone_date(self):
+        for level in self:
+            if level.milestone_date == 'creation':
+                level.start_count = 0
+
+    @api.onchange('milestone_date')
+    def _onchange_milestone_date(self):
         for level in self:
             if level.milestone_date == 'creation':
                 level.start_count = 0
