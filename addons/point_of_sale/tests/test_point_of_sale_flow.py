@@ -2253,7 +2253,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'company_id': new_company.id,
         })
         self.env.transaction.clear()
-        data = current_session.with_company(self.env.company).filter_local_data({'product.product': [product.id]})
+        data = current_session.with_context(allowed_company_ids=self.env.company.ids).filter_local_data({'product.product': [product.id]})
         self.assertIn(product.id, data['product.product'])
 
     def test_string_sequence_number(self):

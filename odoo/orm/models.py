@@ -5396,7 +5396,9 @@ class BaseModel(metaclass=MetaModel):
         """ Return a new version of this recordset with a modified context, such that::
 
             result.env.company = company
-            result.env.companies = self.env.companies | company
+            result.env.companies = company | self.env.companies
+
+        Note that the second equality specifies the order of ``result.env.companies``.
 
         .. warning::
 
@@ -5409,12 +5411,9 @@ class BaseModel(metaclass=MetaModel):
             return self
 
         company_id = int(company)
-        allowed_company_ids = self.env.context.get('allowed_company_ids') or []
-        if allowed_company_ids and company_id == allowed_company_ids[0]:
+        allowed_company_ids = self.env.companies.ids
+        if company_id == allowed_company_ids[0]:
             return self
-        # Copy the allowed_company_ids list
-        # to avoid modifying the context of the current environment.
-        allowed_company_ids = list(allowed_company_ids)
         if company_id in allowed_company_ids:
             allowed_company_ids.remove(company_id)
         allowed_company_ids.insert(0, company_id)

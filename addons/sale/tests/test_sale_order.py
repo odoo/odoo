@@ -496,12 +496,11 @@ class TestSaleOrder(SaleCommon):
             patched.assert_not_called()
 
     def test_so_company_empty(self):
-        """Test that emptying company on SO form should raise."""
-        company_2 = self.env["res.company"].create({"name": "Company 2"})
-        self.env = self.env(
-            context=dict(self.env.context, allowed_company_ids=[self.env.company.id, company_2.id])
-        )
-        so_form = Form(self.env["sale.order"])
+        """Check emptying company on SO form"""
+        self.env['res.company'].create({  # activate multi company for the form view
+            'name': 'Company 2'
+        })
+        so_form = Form(self.env['sale.order'])
         with self.assertRaises(ValidationError):
             so_form.company_id = self.env["res.company"]
 
