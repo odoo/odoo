@@ -57,6 +57,7 @@ $o-color-extras-nesting-selector: '&' !default;
         --bg-light: #{$color};
         --color-light: #{$-yiq-color};
 
+        background-image: inherit; 
         background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 

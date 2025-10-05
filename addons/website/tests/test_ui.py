@@ -756,3 +756,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_popup_visibility_option(self):
         self.start_tour("/", "website_popup_visibility_option", login="admin")
+
+    def test_background_color_gradient_precedence(self):
+        self.start_tour("/", "background_color_gradient_precedence", login="admin")
