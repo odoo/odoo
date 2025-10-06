@@ -4,6 +4,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +111,8 @@ class ResPartner(models.Model):
         pan_number = vat[2:12].upper()
         pan_entity = self.env['l10n_in.pan.entity'].search([('name', '=', pan_number)], limit=1)
         if not pan_entity:
-            pan_entity = self.env['l10n_in.pan.entity'].create({'name': pan_number})
+            context = clean_context(self.env.context)
+            pan_entity = self.env['l10n_in.pan.entity'].with_context(context).create({'name': pan_number})
         return pan_entity
 
     def action_l10n_in_verify_gstin_status(self):
