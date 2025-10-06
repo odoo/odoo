@@ -8,8 +8,6 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='right_event_details']/field[@name='company_id']" position="after">
-                <field name="website_id" invisible="1"/>
-                <field name="website_published" invisible="1"/>
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
                 <label for="website_visibility" string="Visibility"/>
                 <div class="d-flex row">
@@ -32,18 +30,13 @@
             <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
                 <field name="is_published" widget="website_redirect_button"/>
             </xpath>
-            <div name="button_box" position="inside">
-                <field name="website_url" invisible="1"/>
-            </div>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="event_menu_configuration" groups="base.group_no_one">
                     <label for="website_menu" string="Website Submenu" class="me-1"/>
                     <field name="website_menu" class="me-3"/>
                     <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
-                    <field name="introduction_menu" invisible="1"/>
-                    <field name="register_menu" invisible="1"/>
                     <label for="community_menu" string="Community" invisible="1" class="me-1"/>
-                    <field name="community_menu" invisible="1" class="me-3"/>
+                    <field name="community_menu" invisible="1" class="me-3"/>  <!-- The computation relies on `_origin` for an `onchange` context. Changed from a template that has no community menu to one that has a community menu. -->
                 </div>
             </xpath>
             <field name="tag_ids" position="attributes">
@@ -64,7 +57,6 @@
         <field name="inherit_id" ref="event.view_event_tree"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="company_id" column_invisible="True"/>
                 <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" optional="show"/>
             </field>
         </field>

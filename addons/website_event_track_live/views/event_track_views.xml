@@ -6,7 +6,7 @@
         <field name="model">event.track</field>
         <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='active']" position="after">
+            <xpath expr="//field[@name='duration']" position="after">
                 <field name="youtube_video_url" widget="url" />
                 <field name="is_youtube_replay"
                     invisible="not youtube_video_url or youtube_video_url == ''" />

@@ -54,8 +54,6 @@
     <field name="arch" type="xml">
         <xpath expr="//group/*" position="before"> <!-- Top -->
             <field name="name" string="Page Title" placeholder="e.g. Home Page"/>
-            <field name="website_id" invisible="1"/>
-
             <label for="url" string="Page URL"/>
             <div class="o_col">
                 <field name="url" widget="page_url"/>
@@ -98,7 +96,7 @@
     <field name="priority">99</field>
     <field name="arch" type="xml">
         <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc">
-            <field name="is_homepage" column_invisible="True"/>
+            <field name="is_homepage" column_invisible="True"/>  <!-- Use to to display the small house icon from javascript ui -->
             <field name="name" string="Page Title"/>
             <field name="website_url" string="Page URL"/>
 
@@ -212,7 +210,6 @@
                 <field name="key"/>
                 <button title="Show site map" invisible="type != 'qweb'" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
             </div>
-            <field name="page_ids" invisible="1" />
             <field name="first_page_id" invisible="not page_ids" />
             <label for="visibility"/>
             <div>
@@ -244,7 +241,6 @@
             <attribute name="decoration-muted">not active</attribute>
         </list>
         <field name="name" position="after">
-            <field name="active" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>
         </field>
         <field name="xml_id" position="before">

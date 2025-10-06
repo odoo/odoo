@@ -45,7 +45,6 @@
                                  documentation="/applications/websites/website/configuration/translate.html">
                             <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" required="website_id"/>
                             <div class="row mt8" invisible="website_language_count &lt; 2">
-                                <field name="website_language_count" invisible="1"/>
                                 <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
                                 <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" required="website_id"/>
                             </div>

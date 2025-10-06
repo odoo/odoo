@@ -58,7 +58,7 @@
             <attribute name="default_group_by">user_id</attribute>
         </xpath>
         <xpath expr="//kanban" position="inside">
-            <field name="website_url" invisible="1"/>
+            <field name="website_url"/>
         </xpath>
         <xpath expr="//main" position="inside">
             <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">

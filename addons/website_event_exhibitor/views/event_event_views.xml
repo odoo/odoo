@@ -7,7 +7,7 @@
         <field name="priority" eval="5"/>
         <field name="inherit_id" ref="website_event.event_event_view_form"/>
         <field name="arch" type="xml">
-            <field name="website_url" position="before">
+            <field name="is_published" position="before">
                 <button name="%(event_sponsor_action_from_event)d"
                         type="action"
                         class="oe_stat_button"
@@ -15,7 +15,7 @@
                     <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                 </button>
             </field>
-            <xpath expr="//label[@for='community_menu']" position="before">
+            <xpath expr="//label[@for='website_menu']" position="before">
                 <label for="exhibitor_menu" class="me-1"/>
                 <field name="exhibitor_menu" class="me-3"/>
             </xpath>
