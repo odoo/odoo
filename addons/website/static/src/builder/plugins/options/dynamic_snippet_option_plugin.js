@@ -3,6 +3,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 /**
  * @typedef {object} Template
@@ -77,6 +78,7 @@ export class DynamicSnippetOptionPlugin extends Plugin {
             DynamicRecordAction,
             CustomizeTemplateAction,
             NumberOfRecordsAction,
+            SetSectionTitlePositionAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         is_unremovable_selectors: ".s_dynamic_snippet_title",
@@ -292,6 +294,10 @@ export class DynamicSnippetOptionPlugin extends Plugin {
     }
 }
 
+export class SetSectionTitlePositionAction extends ClassAction {
+    static id = "setSectionTitlePosition";
+}
+
 export class DynamicFilterAction extends BuilderAction {
     static id = "dynamicFilter";
     static dependencies = ["dynamicSnippetOption"];
@@ -422,7 +428,8 @@ export class NumberOfRecordsAction extends BuilderAction {
             }
             // Update the snippet title section.
             const titleEl = el.querySelector(".s_dynamic_snippet_title");
-            const classAction = this.dependencies.builderActions.getAction("classAction");
+            const titlePositionAction =
+                this.dependencies.builderActions.getAction("setSectionTitlePosition");
             const titleClasses = Object.values(this.utils.getSnippetTitleClasses()).find(
                 (classes) =>
                     titleEl.matches(
@@ -432,11 +439,11 @@ export class NumberOfRecordsAction extends BuilderAction {
                             .join("")
                     )
             );
-            classAction.clean({
+            titlePositionAction.clean({
                 editingElement: titleEl,
                 params: { mainParam: titleClasses },
             });
-            classAction.apply({
+            titlePositionAction.apply({
                 editingElement: titleEl,
                 params: {
                     mainParam: this.utils.getSnippetTitleClasses(

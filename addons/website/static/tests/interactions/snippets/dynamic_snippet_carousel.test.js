@@ -56,14 +56,15 @@ const singleScrollTemplate = /* xml */ `
     </div>;
 `;
 
+onRpc("/website/snippet/filters", async () => [
+    `<div class="s_test_dynamic_carousel_single_item">Test Record 1</div>`,
+    `<div class="s_test_dynamic_carousel_single_item">Test Record 2</div>`,
+    `<div class="s_test_dynamic_carousel_single_item">Test Record 3</div>`,
+    `<div class="s_test_dynamic_carousel_single_item">Test Record 4</div>`,
+]);
+
 test.tags("desktop");
 test("dynamic carousel snippet doesn't slide when number of records is less than chunksize", async () => {
-    onRpc("/website/snippet/filters", async () => [
-        `<div class="s_test_dynamic_carousel_single_item">Test Record 1</div>`,
-        `<div class="s_test_dynamic_carousel_single_item">Test Record 2</div>`,
-        `<div class="s_test_dynamic_carousel_single_item">Test Record 3</div>`,
-        `<div class="s_test_dynamic_carousel_single_item">Test Record 4</div>`,
-    ]);
     await startInteractions(singleScrollTemplate);
     expect(".carousel").not.toHaveClass("o_carousel_multi_items");
     const carouselItemEls = queryAll(".carousel-item");
@@ -190,4 +191,29 @@ test("dynamic snippet carousel loads items and displays them through template (m
     core.stopInteractions();
     // Make sure element interactions are stopped.
     expect(core.interactions).toHaveLength(0);
+});
+
+test.tags("desktop");
+test("dynamic snippet carousel sets numberOfElements based on section title position and content-width", async () => {
+    const carouselWithTitleTemplate = /* xml */ `
+        <div id="wrapwrap">
+            <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic pt32 pb32 o_colored_level" data-name="Dynamic Carousel"
+                    data-filter-id="1"
+                    data-template-key="website.dynamic_filter_template_test_item"
+                    data-number-of-records="4"
+                    data-carousel-interval="5000">
+                <div class="container">
+                    <div class="s_dynamic_snippet_title_aside">Title</div>
+                    <div class="row s_nb_column_fixed">
+                        <section class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col o_colored_level">
+                            <div class="dynamic_snippet_template"></div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>`;
+
+    await startInteractions(carouselWithTitleTemplate);
+    const carouselEl = queryOne(".s_dynamic_snippet_carousel");
+    expect(carouselEl.dataset.numberOfElements).toBe("2");
 });

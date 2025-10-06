@@ -1,7 +1,16 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { setDatasetIfUndefined } from "./dynamic_snippet_option_plugin";
+import { patch } from "@web/core/utils/patch";
+import {
+    setDatasetIfUndefined,
+    SetSectionTitlePositionAction,
+} from "./dynamic_snippet_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { SetContainerWidthAction } from "../content_width_option_plugin";
+import {
+    DEFAULT_NUMBER_OF_ELEMENTS,
+    DEFAULT_NUMBER_OF_ELEMENTS_FOR_TITLE_LEFT,
+} from "@website/utils/constants";
 
 /**
  * @typedef { Object } DynamicSnippetCarouselOptionShared
@@ -68,6 +77,35 @@ export class SetCarouselSliderSpeedAction extends BuilderAction {
             : editingElement.dataset.carouselInterval / 1000;
     }
 }
+
+patch(SetContainerWidthAction.prototype, {
+    apply({ editingElement: el, params: { mainParam: className } }) {
+        super.apply(...arguments);
+        const dynamicCarouselEl = el.closest(".o_dynamic_snippet_carousel");
+        if (!dynamicCarouselEl || !el.querySelector(".s_dynamic_snippet_title_aside")) {
+            return;
+        }
+        dynamicCarouselEl.dataset.numberOfElements =
+            className !== "container-fluid"
+                ? DEFAULT_NUMBER_OF_ELEMENTS_FOR_TITLE_LEFT
+                : DEFAULT_NUMBER_OF_ELEMENTS;
+    },
+});
+
+patch(SetSectionTitlePositionAction.prototype, {
+    apply({ editingElement: el, params: { mainParam: classNames } }) {
+        super.apply(...arguments);
+        const dynamicCarouselEl = el.closest(".o_dynamic_snippet_carousel");
+        if (!dynamicCarouselEl || el.closest(".container-fluid")) {
+            return;
+        }
+        dynamicCarouselEl.dataset.numberOfElements = classNames.includes(
+            "s_dynamic_snippet_title_aside"
+        )
+            ? DEFAULT_NUMBER_OF_ELEMENTS_FOR_TITLE_LEFT
+            : DEFAULT_NUMBER_OF_ELEMENTS;
+    },
+});
 
 registry
     .category("website-plugins")

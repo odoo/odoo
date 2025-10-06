@@ -20,7 +20,7 @@ export const getWebsiteSnippets = () => {
         websiteSnippetsPromise = unmockedOrm(
             "ir.ui.view",
             "render_public_asset",
-            ["website.snippets"],
+            ["website.snippets", { debug: true }],
             {}
         ).then((snippets) => removeImageSrc(snippets.trim()));
     }

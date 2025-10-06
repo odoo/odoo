@@ -16,6 +16,36 @@
         }
     }
 
+    &.o_dynamic_snippet_carousel {
+        // Reverse CSS to nullify the effect of CSS writen in "000.scss" of
+        // "s_dynamic_snippet" for dynamic carousel snippets.
+        > .container {
+            .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
+                @include media-breakpoint-up(lg) {
+                    flex: initial;
+                }
+            }
+        }
+
+        > .o_container_small {
+            .s_dynamic_snippet_row > * {
+                @include media-breakpoint-up(lg) {
+                    flex: initial;
+                }
+            }
+
+            .s_dynamic_snippet_title.s_dynamic_snippet_title_aside {
+                min-width: auto;
+
+                + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
+                    @include media-breakpoint-up(lg) {
+                        flex: initial;
+                    }
+                }
+            }
+        }
+    }
+
     .o_carousel_arrow_wrap {
         display: contents;
     }
