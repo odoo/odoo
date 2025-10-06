@@ -1,11 +1,11 @@
-import { useEnv, useState } from "@odoo/owl";
+import { useEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { AccountProductCatalogSearchPanel } from "@account/components/product_catalog/search/search_panel";
 import { TimePeriodSelectionField } from "./time_period_selection_fields";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { clamp } from "@web/core/utils/numbers";
 
-export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSearchPanel {
+export class PurchaseStockProductCatalogSearchPanel extends AccountProductCatalogSearchPanel {
     static template = "purchase_stock.ProductCatalogSearchPanel";
     static components = { TimePeriodSelectionField };
     static basedOnOptions = [
@@ -22,8 +22,8 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
 
     setup() {
         super.setup();
-        this.suggestState = useState(useEnv().suggestState);
-        this.suggestParams = useState(useEnv().suggestParams);
+        this.suggestState = useEnv().suggestState;
+        this.suggestParams = useEnv().suggestParams;
         this.toggleSuggest = useEnv().toggleSuggest;
         this.reloadKanban = useEnv().reloadKanban;
         this.addAllProducts = useEnv().addAllProducts;

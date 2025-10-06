@@ -68,8 +68,9 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             content: "Toggling Suggestion activates filter for products in PO or suggested",
             trigger: '.o_facet_value:contains("Suggested")', // Suggested
         },
-        ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
+        { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" }, // Check compute price on toggling
+        ...setSuggestParameters({ basedOn: "Last 3 months", nbDays: 180, factor: 100 }),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 40.00')" }, // 1 unit / quarter * 2 quarter
         ...goToPOFromCatalog(),
         ...selectPOWarehouse("Base Warehouse: Receipts"), // Still the same PO, no need to reset vendor
         ...goToCatalogFromPO(),
@@ -101,6 +102,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...selectPOVendor("Julia Agrolait"),
         ...selectPOWarehouse("Base Warehouse: Receipts"),
         ...goToCatalogFromPO(),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" }, // Check compute on first load with suggest already ON
         {
             content: "Check number days saved",
             trigger: "input.o_PurchaseSuggestInput:eq(0)",
