@@ -7,6 +7,7 @@ import { Reactive } from "@web/core/utils/reactive";
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
     SUCCESS: "SUCCESS",
+    IMPORTANT_BADGE: "IMPORTANT_BADGE",
     WARNING_BADGE: "WARNING_BADGE",
     CALL_LAYOUT: "CALL_LAYOUT",
     JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
@@ -18,6 +19,9 @@ export const ACTION_TAGS = Object.freeze({
 
 /**
  * @typedef {Object} ActionDefinition
+ * @property {boolean|(action: Action) => boolean} [badge]
+ * @property {string|(action: Action) => string} [badgeIcon]
+ * @property {string|(action: Action) => string} [badgeText]
  * @property {Object|(action: Action) => Object} [btnAttrs]
  * @property {string|(action: Action) => string} [btnClass]
  * @property {Component} [component]
@@ -72,6 +76,42 @@ export class Action {
 
     get params() {
         return { action: this, store: this.store, owner: this.owner };
+    }
+
+    /** @param {Action} action @returns {boolean|undefined} */
+    _badge(action) {}
+    /** Condition for showing badge on this action */
+    get badge() {
+        return (
+            this._badge(this.params) ??
+            (typeof this.definition.badge === "function"
+                ? this.definition.badge.call(this, this.params)
+                : this.definition.badge)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _badgeIcon(action) {}
+    /** When action shows badge @see badge this property tells the icon inside badge */
+    get badgeIcon() {
+        return (
+            this._badgeIcon(this.params) ??
+            (typeof this.definition.badgeIcon === "function"
+                ? this.definition.badgeIcon.call(this, this.params)
+                : this.definition.badgeIcon)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _badgeText(action) {}
+    /** When action shows badge @see badge this property tells the text inside badge. */
+    get badgeText() {
+        return (
+            this._badgeText(this.params) ??
+            (typeof this.definition.badgeText === "function"
+                ? this.definition.badgeText.call(this, this.params)
+                : this.definition.badgeText)
+        );
     }
 
     /** @param {Action} action @returns {Object|undefined} */
@@ -149,7 +189,7 @@ export class Action {
 
     /** @param {Action} action @returns {boolean|undefined} */
     _dropdown(action) {}
-    /** Determines whether this action opens a dropdown on selection. Value is shaped { template, menuClass } */
+    /** Determines whether this action opens a dropdown on selection. */
     get dropdown() {
         return this._dropdown(this.params) ?? this.definition.dropdown;
     }
