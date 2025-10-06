@@ -78,8 +78,8 @@ class TestSanitizer(BaseCase):
         self.assertNotIn('alert(1)', html_result)
 
     def test_evil_malicious_code(self):
-        # taken from https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Tests
         cases = [
+            # payloads taken from https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Tests
             ("<IMG SRC=javascript:alert('XSS')>"),  # no quotes and semicolons
             ("<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>"),  # UTF-8 Unicode encoding
             ("<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>"),  # hex encoding
@@ -112,6 +112,12 @@ class TestSanitizer(BaseCase):
             ("<META HTTP-EQUIV=\"Link\" Content=\"<http://ha.ckers.org/xss.css>; REL=stylesheet\">"),  # remote style sheet 3
             ("<STYLE>BODY{-moz-binding:url(\"http://ha.ckers.org/xssmoz.xml#xss\")}</STYLE>"),  # remote style sheet 4
             ("<IMG STYLE=\"xss:expr/*XSS*/ession(alert('XSS'))\">"),  # style attribute using a comment to break up expression
+
+            # custom payloads
+            ("<a href=j\u0000avascript:alert(1)>Hello</a>"),  # unicode control character in the scheme
+            ("<a href=j\u0020avascript:alert(1)>Hello</a>"),  # unicode control character in the scheme
+            ("<a href=j\u001bavascript:alert(1)>Hello</a>"),  # unicode control character in the scheme
+            ("<a href=j\x1bavascript:alert(1)>Hello</a>"),  # ascii control character in the scheme
         ]
         for content in cases:
             html = html_sanitize(content)
