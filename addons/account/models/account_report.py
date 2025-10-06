@@ -22,6 +22,24 @@ FIGURE_TYPE_SELECTION_VALUES = [
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
 CROSS_REPORT_REGEX = re.compile(r'^cross_report\((.+)\)$')
 
+ACCOUNT_CODES_ENGINE_SPLIT_REGEX = re.compile(r"(?=[+-])")
+ACCOUNT_CODES_ENGINE_TERM_REGEX = re.compile(
+    r"^(?P<sign>[+-]?)"
+    r"(?P<prefix>([A-Za-z\d.]*|tag\([\w.]+\))((?=\\)|(?<=[^CD])))"
+    r"(\\\((?P<excluded_prefixes>([A-Za-z\d.]+,)*[A-Za-z\d.]*)\))?"
+    r"(?P<balance_character>[DC]?)$"
+)
+
+number_regex = r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
+report_line_code_regex = r"[+-]?[\s(]*[^().\s*/+\-]+\.[^().\s*/+\-]+"
+operator_regex = r"[\s*/+\-]"
+hard_formulas = ['sum_children']
+AGGREGATION_ENGINE_FORMULA_REGEX = re.compile(
+    f'{"|".join(hard_formulas)}|'
+    rf"[\s(]*(?:{number_regex}|{report_line_code_regex})[\s)]*"
+    rf"(?:{operator_regex}[\s(]*(?:{number_regex}|{report_line_code_regex})[\s)]*)*"
+)
+
 
 class AccountReport(models.Model):
     _name = 'account.report'
@@ -618,14 +636,32 @@ class AccountReportExpression(models.Model):
                 raise UserError(_("When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"))
 
     @api.constrains('formula')
-    def _check_domain_formula(self):
-        for expression in self.filtered(lambda expr: expr.engine == 'domain'):
+    def _check_formula(self):
+        def raise_formula_error(expression):
+            raise ValidationError(_("Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s",
+                                    label=expression.label, line=expression.report_line_name,
+                                    formula=expression.formula))
+
+        expressions_by_engine = self.grouped('engine')
+        for expression in expressions_by_engine.get('domain', []):
             try:
                 domain = ast.literal_eval(expression.formula)
                 self.env['account.move.line']._search(domain)
             except:
-                raise UserError(_("Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s",
-                                label=expression.label, line=expression.report_line_name, formula=expression.formula))
+                raise_formula_error(expression)
+
+        for expression in expressions_by_engine.get('account_codes', []):
+            for token in ACCOUNT_CODES_ENGINE_SPLIT_REGEX.split(expression.formula.replace(' ', '')):
+                if token:  # e.g. if the first character of the formula is "-", the first token is ''
+                    token_match = ACCOUNT_CODES_ENGINE_TERM_REGEX.match(token)
+                    prefix = token_match['prefix']
+                    if not prefix:
+                        raise_formula_error(expression)
+
+        for expression in expressions_by_engine.get('aggregation', []):
+            if not AGGREGATION_ENGINE_FORMULA_REGEX.fullmatch(expression.formula):
+                raise_formula_error(expression)
+
 
     @api.depends('engine')
     def _compute_auditable(self):

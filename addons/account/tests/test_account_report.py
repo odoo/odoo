@@ -34,7 +34,7 @@ class TestAccountReport(AccountTestInvoicingCommon):
                         Command.create({
                             'date_scope': 'strict_range',
                             'engine': 'aggregation',
-                            'formula': 'test_line_1',
+                            'formula': 'test_line_1.balance',
                             'subformula': 'if_other_expr_above(test_line_1.balance, USD(0))',
                             'label': 'balance',
                         })
@@ -48,5 +48,5 @@ class TestAccountReport(AccountTestInvoicingCommon):
         self.assertEqual(copy.line_ids[1].code, 'test_line_2_COPY')
         # Ensure that the line 2 expression formula and subformula point to the correct code.
         expression = copy.line_ids[1].expression_ids
-        self.assertEqual(expression.formula, 'test_line_1_COPY')
+        self.assertEqual(expression.formula, 'test_line_1_COPY.balance')
         self.assertEqual(expression.subformula, 'if_other_expr_above(test_line_1_COPY.balance, USD(0))')
