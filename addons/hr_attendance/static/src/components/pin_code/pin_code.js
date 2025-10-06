@@ -3,12 +3,19 @@ import { Component, onWillStart, onWillDestroy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { range } from "@web/core/utils/numbers";
 
+import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
+
 export class KioskPinCode extends Component {
     static template = "hr_attendance.KioskPinConfirm";
     static props = {
         employeeData: { type: Object },
         onClickBack: { type: Function },
         onPinConfirm: { type: Function },
+        captureCheckInImage: { type: Boolean },
+        exposeCameraCapture: { type: Function },
+    };
+    static components = {
+        AttendanceVideoStream,
     };
 
     setup() {
@@ -20,6 +27,7 @@ export class KioskPinCode extends Component {
         ];
         this.state = useState({
             codePin: "",
+            streamAvailable: null,
         });
         this.lockPad = false;
         this.checkedIn = this.props.employeeData.attendance_state === "checked_in";
@@ -61,5 +69,17 @@ export class KioskPinCode extends Component {
         } else {
             this.state.codePin += value;
         }
+    }
+
+    get showVideoStream() {
+        return (
+            this.props.captureCheckInImage &&
+            !this.checkedIn &&
+            this.state.streamAvailable !== false
+        );
+    }
+
+    setStreamAvailable(isAvailable) {
+        this.state.streamAvailable = isAvailable;
     }
 }

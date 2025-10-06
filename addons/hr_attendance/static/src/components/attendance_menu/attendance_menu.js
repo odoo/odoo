@@ -11,9 +11,10 @@ import { formatFloatTime } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
 export class ActivityMenu extends Component {
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, AttendanceVideoStream };
     static props = [];
     static template = "hr_attendance.attendance_menu";
 
@@ -26,10 +27,11 @@ export class ActivityMenu extends Component {
         this.state = useState({
             checkedIn: false,
             isDisplayed: false,
+            captureCheckInImage: false,
+            streamAvailable: null,
         });
-
+        this.cameraCapture = null;
         this.dropdown = useDropdownState();
-
         onWillStart(() => {
             this.lazySession.getValue("attendance_user_data", (employee) => {
                 if (employee) {
@@ -54,6 +56,8 @@ export class ActivityMenu extends Component {
         this.employeeName = this.employee.name;
         this.state.isDisplayed = this.employee.display_systray;
         this.state.checkedIn = this.employee.attendance_state === "checked_in";
+        this.state.captureCheckInImage =
+            this.employee.capture_check_in_image && !this.state.checkedIn;
 
         this.hoursToday = formatFloatTime(this.employee.hours_today, { numeric: true });
 
@@ -86,13 +90,36 @@ export class ActivityMenu extends Component {
         return { h, m };
     }
 
-    async checking(latitude = false, longitude = false) {
+    setCameraCapture(capturePicture) {
+        this.cameraCapture = capturePicture;
+    }
+
+    setStreamAvailable(isAvailable) {
+        this.state.streamAvailable = isAvailable;
+    }
+
+    get showVideoStream() {
+        return this.state.captureCheckInImage && this.state.streamAvailable !== false;
+    }
+
+    beforeDropdownOpen() {
+        this.setStreamAvailable(null);
+        this.searchReadEmployee();
+    }
+
+    async checking({ latitude = false, longitude = false, checkInImage = null } = {}) {
         try {
             this.employee = await rpc("/hr_attendance/systray_check_in_out", {
                 latitude,
                 longitude,
+                check_in_image: checkInImage,
             });
             this._searchReadEmployeeFill();
+            if (this.employee?.notification?.message) {
+                this.notification.add(this.employee.notification.message, {
+                    type: this.employee.notification.type,
+                });
+            }
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 this.notification.add(_t("Connection lost. Check in/out could not be recorded."), {
@@ -108,13 +135,13 @@ export class ActivityMenu extends Component {
         }
     }
 
-    confirmChecking() {
+    confirmChecking(checkInImage = null) {
         this.dialogService.add(ConfirmationDialog, {
             body: _t(
                 "Unable to get a valid location. Do you want to proceed with your check-in/out anyway?"
             ),
             confirmLabel: _t("Proceed Anyway"),
-            confirm: async () => await this.checking(),
+            confirm: async () => await this.checking({ checkInImage }),
             cancel: () => (this._attendanceInProgress = false),
         });
     }
@@ -124,6 +151,7 @@ export class ActivityMenu extends Component {
     }
 
     async signInOut() {
+        const checkInImage = this.cameraCapture?.();
         if (this.closeSystrayOnCheckIn) {
             this.dropdown.close();
         }
@@ -137,10 +165,10 @@ export class ActivityMenu extends Component {
             // iOS app lacks permissions to call `getCurrentPosition`
             navigator.geolocation.getCurrentPosition(
                 async ({ coords: { latitude, longitude } }) => {
-                    await this.checking(latitude, longitude);
+                    await this.checking({ latitude, longitude, checkInImage });
                 },
                 () => {
-                    this.confirmChecking();
+                    this.confirmChecking(checkInImage);
                 },
                 {
                     enableHighAccuracy: true,
@@ -148,9 +176,9 @@ export class ActivityMenu extends Component {
                 }
             );
         } else if (trackingEnabled) {
-            this.confirmChecking();
+            this.confirmChecking(checkInImage);
         } else {
-            await this.checking();
+            await this.checking({ checkInImage });
         }
     }
 }
