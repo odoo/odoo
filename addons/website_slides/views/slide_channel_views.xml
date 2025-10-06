@@ -68,7 +68,6 @@
                             <h1><field name="name" options="{'line_breaks': False}" widget="text" default_focus="1" placeholder='e.g. "Computer Science for kids"'/></h1>
                         </div>
                         <div>
-                            <field name="active" invisible="1"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                         </div>
                         <notebook colspan="4">
@@ -82,7 +81,6 @@
                                         <field name="total_views" invisible="slide_category == 'category'"/>
                                         <field name="is_preview" string="Preview"/>
                                         <field name="is_published" string="Published"/>
-                                        <field name="is_category" column_invisible="True"/>
                                         <control>
                                             <create name="add_slide_section" string="Add Section" context="{'default_is_category': True}"/>
                                             <create name="add_slide_lesson" string="Add Content"/>
@@ -100,7 +98,6 @@
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
-                                        <field name="website_published" invisible="1"/>
                                         <field name="prerequisite_channel_ids" widget="many2many_tags"/>
                                         <field name="prerequisite_of_channel_ids" widget="many2many_tags"
                                                readonly="1"
@@ -167,7 +164,6 @@
                     <field name="visibility"/>
                     <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'" optional="hide"/>
                     <field name="is_published" string="Published"/>
-                    <field name="active" column_invisible="True"/>
                 </list>
             </field>
         </record>
@@ -212,12 +208,12 @@
                 <graph string="Courses" sample="1">
                     <field name="name"/>
                     <field name="total_views" type="measure"/>
-                    <field name="karma_slide_comment" invisible="1"/>
-                    <field name="karma_review" invisible="1"/>
-                    <field name="color" invisible="1"/>
-                    <field name="karma_gen_channel_finish" invisible="1"/>
-                    <field name="karma_gen_channel_rank" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="karma_slide_comment"/>
+                    <field name="karma_review"/>
+                    <field name="color"/>
+                    <field name="karma_gen_channel_finish"/>
+                    <field name="karma_gen_channel_rank"/>
+                    <field name="sequence"/>
                 </graph>
             </field>
         </record>
@@ -229,12 +225,12 @@
                 <pivot string="Pivot" default_order="create_date desc" sample="1">
                     <field type="row" name="name" />
                     <field type="measure" name="total_views"/>
-                    <field name="karma_slide_comment" invisible="1"/>
-                    <field name="karma_review" invisible="1"/>
-                    <field name="color" invisible="1"/>
-                    <field name="karma_gen_channel_finish" invisible="1"/>
-                    <field name="karma_gen_channel_rank" invisible="1"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="karma_slide_comment"/>
+                    <field name="karma_review"/>
+                    <field name="color"/>
+                    <field name="karma_gen_channel_finish"/>
+                    <field name="karma_gen_channel_rank"/>
+                    <field name="sequence"/>
                 </pivot>
             </field>
         </record>

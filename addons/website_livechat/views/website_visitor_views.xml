@@ -88,7 +88,7 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='email']" position="after">
+            <xpath expr="//field[@name='last_visited_page_id']" position="after">
                 <field name="livechat_operator_id" optional="hide"/>
                 <button name="action_send_chat_request" string="Chat" type="object" icon="fa-comments"
                         invisible="livechat_operator_id or not is_connected"/>

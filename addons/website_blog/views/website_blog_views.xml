@@ -10,7 +10,6 @@
                     <field name="name"/>
                     <field name="blog_post_count"/>
                     <field name="website_id" groups="website.group_multi_website"/>
-                    <field name="active" column_invisible="True"/>
                 </list>
             </field>
         </record>
@@ -22,7 +21,6 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
-                            <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="subtitle"/>
                             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
