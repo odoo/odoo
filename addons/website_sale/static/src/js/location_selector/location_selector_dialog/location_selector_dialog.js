@@ -7,8 +7,10 @@ import { _t } from '@web/core/l10n/translation';
 patch(LocationSelectorDialog, {
     props: {
         ...LocationSelectorDialog.props,
-        orderId: { type: Number, optional: true },
         isFrontend: { type: Boolean, optional: true },
+        countryCode: { type: String, optional: true},
+        carrierId: Number,
+        carrierType: String,
     },
 });
 

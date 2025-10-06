@@ -9,6 +9,51 @@
                 separator=" || "
             />
         </button>
+        <button id="submit_location_small" position="after">
+            <div
+                class="alert alert-warning mt-3"
+                t-if="taxRecomputationWarning"
+            >
+                <span t-out="taxRecomputationWarning"/>
+            </div>
+        </button>
+        <MapContainer position="attributes">
+            <attribute name="taxRecomputationWarning">taxRecomputationWarning</attribute>
+        </MapContainer>
+    </t>
+
+    <t t-inherit="delivery.locationSelector.searchbar" t-inherit-mode="extension">
+        <input id="o_location_selector_search" position="before">
+            <!-- Country selector -->
+            <SelectMenu
+                t-if="isClickAndCollect"
+                choices="state.countries"
+                searchable="state.countries.length > 10"
+                required="true"
+                onSelect.bind="setSelectedCountry"
+                class="'rounded-end-0 border-0'"
+                togglerClass="'rounded-end-0 pe-2'"
+                menuClass="'o_location_selector_country_selector'"
+            >
+                <img
+                    t-att-src="state.selectedCountry.image_url"
+                    class="pe-2"
+                    style="height: auto; width: 30px;"
+                    t-att-alt="state.selectedCountry.name"
+                />
+                <t t-set-slot="choice" t-slot-scope="choice">
+                    <span class="text-truncate">
+                        <img
+                            t-att-src="choice.data.value.image_url"
+                            class="pe-2"
+                            style="height: auto; width: 30px;"
+                            t-att-alt="choice.data.label"
+                        />
+                        <t t-out="choice.data.label"/>
+                    </span>
+                </t>
+            </SelectMenu>
+        </input>
     </t>
 
 </templates>

@@ -89,6 +89,25 @@ class SaleOrder(models.Model):
                 pickup_location = None
             self.pickup_location_data = pickup_location
 
+    def _get_pickup_partner_address(self, zip_code=None, country=None, **kwargs):
+        """return the address that will be used to compute the closest pickup location.
+
+        :param int zip_code: The zip code to look up to, optional.
+        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :return: The close pickup locations data.
+        :rtype: res.partner
+        """
+        if zip_code:
+            assert country  # country is required if zip_code is provided.
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
+                'zip': zip_code,
+            })
+        else:
+            partner_address = self.partner_shipping_id
+        return partner_address
+
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """ Return the pickup locations of the delivery method close to a given zip code.
 
@@ -103,15 +122,7 @@ class SaleOrder(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        if zip_code:
-            assert country  # country is required if zip_code is provided.
-            partner_address = self.env['res.partner'].new({
-                'active': False,
-                'country_id': country.id,
-                'zip': zip_code,
-            })
-        else:
-            partner_address = self.partner_shipping_id
+        partner_address = self._get_pickup_partner_address(zip_code, country, **kwargs)
         try:
             error = {'error': _("No pick-up points are available for this delivery address.")}
             function_name = f'_{self.carrier_id.delivery_type}_get_close_locations'

@@ -4,7 +4,6 @@ import json
 
 from odoo import models
 from odoo.exceptions import ValidationError
-from odoo.http import request
 
 
 class SaleOrder(models.Model):
@@ -65,23 +64,28 @@ class SaleOrder(models.Model):
         else:
             self._compute_warehouse_id()
 
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
-        """ Override of `website_sale` to ensure that a country is provided when there is a zip
-        code.
+    def _get_pickup_partner_address(self, zip_code=None, country=None, **kwargs):
+        """ Override of `website_sale` to include the selected country from the location selector.
 
-        If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
-        prevent the parent method's assertion to fail.
+        :param int zip_code: The zip code to look up to, optional.
+        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :return: The close pickup locations data.
+        :rtype: res.partner
         """
-        if zip_code and not country:
-            country_code = None
-            if self.pickup_location_data:
-                country_code = self.pickup_location_data['country_code']
-            elif request.geoip.country_code:
-                country_code = request.geoip.country_code
-            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
-            if not country:
-                zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
-        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
+        if self.carrier_id.delivery_type == 'in_store':
+            if country and zip_code:
+                return self.env['res.partner'].new({
+                    'active': False,
+                    'country_id': country.id,
+                    'zip': zip_code,
+                })
+            if country:
+                return self.env['res.partner'].new({
+                    'active': False,
+                    'country_id': country.id,
+                })
+
+        return super()._get_pickup_partner_address(zip_code, country, **kwargs)
 
     def _get_shop_warehouse_id(self):
         """Override of `website_sale_stock` to consider the chosen warehouse."""

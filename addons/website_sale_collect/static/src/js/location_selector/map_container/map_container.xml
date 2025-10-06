@@ -16,6 +16,11 @@
                 separator=" || "
             />
         </button>
+        <button id="submit_location_large" position="after">
+            <div class="alert alert-warning mt-3" t-if="this.props.taxRecomputationWarning">
+                <span t-out="this.props.taxRecomputationWarning" />
+            </div>
+        </button>
     </t>
 
 </templates>
