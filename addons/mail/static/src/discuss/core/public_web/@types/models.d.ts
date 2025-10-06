@@ -10,6 +10,19 @@ declare module "models" {
         computeChats: () => object;
         unreadChannels: Thread[];
     }
+    export interface DiscussChannel {
+        appAsUnreadChannels: DiscussApp;
+        categoryAsThreadWithCounter: DiscussAppCategory;
+        discussAppCategory: DiscussAppCategory;
+        displayInSidebar: boolean;
+        from_message_id: Message;
+        hasSubChannelFeature: Readonly<boolean>;
+        isBusSubscribed: boolean;
+        lastSubChannelLoaded: Thread|null;
+        loadSubChannelsDone: boolean;
+        parent_channel_id: Thread;
+        sub_channel_ids: Thread[];
+    }
     export interface Message {
         linkedSubChannel: Thread;
     }

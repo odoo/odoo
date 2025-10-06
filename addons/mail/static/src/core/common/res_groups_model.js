@@ -5,6 +5,8 @@ export class ResGroups extends Record {
     static id = "id";
     /** @type {string} */
     full_name;
+    /** @type {number} */
+    id;
     partners = fields.Many("res.partner", { inverse: "group_ids" });
     privilege_id = fields.One("res.groups.privilege");
 }

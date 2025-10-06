@@ -60,6 +60,8 @@ patch(Thread, threadStaticPatch);
 const threadPatch = {
     setup() {
         super.setup();
+        /** @type {string} */
+        this.avatar_cache_key = undefined;
         this.channel = fields.One("discuss.channel", {
             inverse: "thread",
             /** @this {import("models").Thread} */
@@ -73,6 +75,8 @@ const threadPatch = {
             onDelete: (r) => r.delete(),
             sort: (m1, m2) => m1.id - m2.id,
         });
+        /** @type {string} */
+        this.channel_type = undefined;
         this.correspondent = fields.One("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {

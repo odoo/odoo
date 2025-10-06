@@ -25,6 +25,14 @@ declare module "models" {
     export interface DataResponse {
         chatbot_step: ChatbotStep;
     }
+    export interface DiscussChannel {
+        composerHidden: Readonly<boolean>;
+        livechat_conversation_tag_ids: LivechatConversationTag[];
+        livechat_end_dt: import("luxon").DateTime;
+        livechat_operator_id: ResPartner;
+        livechatVisitorMember: ChannelMember;
+        open_chat_window: true|undefined;
+    }
     export interface Message {
         chatbotStep: ChatbotStep;
     }
@@ -46,7 +54,7 @@ declare module "models" {
     export interface Thread {
         composerHidden: Readonly<boolean>;
         livechat_conversation_tag_ids: LivechatConversationTag[];
-        livechat_end_dt: luxon.DateTime;
+        livechat_end_dt: import("luxon").DateTime;
         livechat_operator_id: ResPartner;
         livechatVisitorMember: ChannelMember;
         open_chat_window: true|undefined;

@@ -9,7 +9,6 @@ export const storeInsertFns = {
     getActualModelName(store, ctx, pyOrJsModelName) {
         return pyOrJsModelName;
     },
-    getExtraFieldsFromModel(store) {},
 };
 
 export class Store extends Record {
@@ -212,13 +211,6 @@ export class Store extends Record {
                 }
                 const insertData = [];
                 for (const vals of Array.isArray(data) ? data : [data]) {
-                    const extraFields = storeInsertFns.getExtraFieldsFromModel(
-                        store,
-                        pyOrJsModelName
-                    );
-                    if (extraFields) {
-                        Object.assign(vals, extraFields);
-                    }
                     if (vals._DELETE) {
                         delete vals._DELETE;
                         recordsDataToDelete.push([modelName, vals]);

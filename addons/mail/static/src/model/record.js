@@ -8,6 +8,7 @@ import {
     isRecord,
     isRelation,
     modelRegistry,
+    technicalKeysOnRecords,
 } from "./misc";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
@@ -367,16 +368,7 @@ export class Record {
     }
 
     _cleanupData(data) {
-        const fieldsToDelete = [
-            "_",
-            "_fieldsValue",
-            "_proxy",
-            "_proxyInternal",
-            "_raw",
-            "env",
-            "Model",
-        ];
-        fieldsToDelete.forEach((field) => delete data[field]);
+        technicalKeysOnRecords.forEach((field) => delete data[field]);
     }
 
     _getActualModelName() {
