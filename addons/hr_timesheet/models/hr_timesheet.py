@@ -218,7 +218,7 @@ class AccountAnalyticLine(models.Model):
         employee_ids = []
         # If batch creating from the calendar view, prefetch all employees to avoid fetching them one by one in the loop
         if self.env.context.get('timesheet_calendar'):
-            self.env['hr.employee'].browse([vals.get('employee_id') for vals in vals_list])
+            self.env['hr.employee'].browse([vals['employee_id'] for vals in vals_list if vals.get('employee_id')])
         # 1/ Collect the user_ids and employee_ids from each timesheet vals
         for vals in vals_list[:]:
             if self.env.context.get('timesheet_calendar'):

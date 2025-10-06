@@ -861,6 +861,14 @@ class TestTimesheet(TestCommonTimesheet):
         """
         HrTimesheet = self.env['account.analytic.line'].with_context(timesheet_calendar=True)
 
+        timesheet = HrTimesheet.with_user(self.user_manager).create({
+            'name': 'Timesheet',
+            'task_id': self.task1.id,
+            'unit_amount': 1,
+        })
+        self.assertEqual(timesheet.employee_id, self.user_manager.employee_id)
+        self.assertTrue(timesheet, "Timesheet should be created even without an employee")
+
         timesheet = HrTimesheet.create({
             'project_id': self.project_customer.id,
             'unit_amount': 1,
