@@ -249,7 +249,11 @@ class ResUsers(models.Model):
     def action_get(self):
         if self.env.user.employee_id:
             action = self.env['ir.actions.act_window']._for_xml_id('hr.res_users_action_my')
-            groups = {group_xml_id[0]: True for group_xml_id in self.env.user.all_group_ids._get_external_ids().values()}
+            groups = {
+                group_xml_id[0]: True
+                for group_xml_id in self.env.user.all_group_ids._get_external_ids().values()
+                if group_xml_id
+            }
             action_context = ast.literal_eval(action['context']) if action['context'] else {}
             action_context.update(groups)
             action['context'] = str(action_context)
