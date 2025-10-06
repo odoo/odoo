@@ -189,7 +189,7 @@
 <template id="partner_detail" inherit_id="website_partnership.partner_detail">
     <xpath expr="//a[@id='link_back_to_partners']" position="replace">
         <a t-attf-href="/partners?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" aria-label="Back to resellers list">
-            <i class="oi oi-chevron-left me-2"/>Back to resellers
+            <i class="oi oi-chevron-left me-2"/>Back
         </a>
     </xpath>
 </template>

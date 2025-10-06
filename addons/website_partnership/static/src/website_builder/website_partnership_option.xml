@@ -4,9 +4,6 @@
         <BuilderRow label.translate="Companies only">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.companies_only_setting']}" />
         </BuilderRow>
-        <BuilderRow label.translate="Search">
-            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.search_setting']}" />
-        </BuilderRow>
         <BuilderRow label.translate="Partner page">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.linked_partner_page_setting']}" />
         </BuilderRow>
@@ -16,6 +13,9 @@
                 <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partnership.image_six_five_partner_page']}">6:5</BuilderSelectItem>
                 <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partnership.image_four_five_partner_page']}">4:5</BuilderSelectItem>
             </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Search" id="'search_opt'">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.search_setting']}" />
         </BuilderRow>
     </t>
 </templates>
