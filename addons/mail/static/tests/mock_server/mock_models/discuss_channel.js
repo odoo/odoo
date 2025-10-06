@@ -805,7 +805,12 @@ export class DiscussChannel extends models.ServerModel {
         const store = new mailDataHelpers.Store(
             mentionSuggestions,
             makeKwArgs({
-                fields: ["name", "channel_type", "group_public_id", "parent_channel_id"],
+                fields: [
+                    "name",
+                    "channel_type",
+                    "group_public_id",
+                    mailDataHelpers.Store.one("parent_channel_id"),
+                ],
             })
         );
         return store.get_result();

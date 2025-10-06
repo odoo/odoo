@@ -531,6 +531,7 @@ test("[text composer] mention a channel thread", async () => {
         channel_type: "channel",
     });
     pyEnv["discuss.channel"].create({
+        channel_member_ids: [],
         name: "ThreadOne",
         parent_channel_id: channelId,
     });
@@ -563,6 +564,7 @@ test("mention a channel thread", async () => {
         channel_type: "channel",
     });
     pyEnv["discuss.channel"].create({
+        channel_member_ids: [],
         name: "ThreadOne",
         parent_channel_id: channelId,
     });
