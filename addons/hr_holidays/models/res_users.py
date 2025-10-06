@@ -34,15 +34,32 @@ class ResUsers(models.Model):
     def _get_on_leave_ids(self, partner=False):
         now = fields.Datetime.now()
         field = 'partner_id' if partner else 'id'
+
         self.flush_model(['active'])
         self.env['hr.leave'].flush_model(['user_id', 'state', 'date_from', 'date_to'])
-        self.env.cr.execute('''SELECT res_users.%s FROM res_users
-                            JOIN hr_leave ON hr_leave.user_id = res_users.id
-                            AND hr_leave.state = 'validate'
-                            AND res_users.active = 't'
-                            AND hr_leave.date_from <= %%s AND hr_leave.date_to >= %%s
-                            RIGHT JOIN hr_leave_type ON hr_leave.holiday_status_id = hr_leave_type.id
-                            AND hr_leave_type.time_type = 'leave';''' % field, (now, now))
+        self.env['resource.calendar.leaves'].flush_model(['company_id', 'date_from', 'date_to'])
+
+        self.env.cr.execute(f'''
+            SELECT DISTINCT res_users.{field}
+            FROM res_users
+            WHERE res_users.active = TRUE AND (
+                EXISTS (
+                    SELECT 1 FROM hr_leave
+                    WHERE hr_leave.user_id = res_users.id
+                    AND hr_leave.state = 'validate'
+                    AND hr_leave.date_from <= %s
+                    AND hr_leave.date_to >= %s
+                )
+                OR EXISTS (
+                    SELECT 1 FROM resource_calendar_leaves rcl
+                    WHERE rcl.resource_id IS NULL
+                    AND rcl.company_id = res_users.company_id
+                    AND rcl.date_from <= %s
+                    AND rcl.date_to >= %s
+                )
+            )
+        ''', (now, now, now, now))
+
         return [r[0] for r in self.env.cr.fetchall()]
 
     def _clean_leave_responsible_users(self):
