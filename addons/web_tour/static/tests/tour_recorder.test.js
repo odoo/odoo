@@ -7,7 +7,6 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
-    preloadBundle,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -22,8 +21,6 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
-
-preloadBundle("web_tour.recorder");
 
 let tourRecorder;
 
