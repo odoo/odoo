@@ -54,6 +54,7 @@ patch(PosOrder.prototype, {
                 for (const child_table of child_tables) {
                     name += ` & ${child_table.table_number}`;
                 }
+                name += ` - ${this.tracking_number}`;
                 return name;
             }
         }
@@ -129,6 +130,16 @@ patch(PosOrder.prototype, {
             // Neither has sequence sort by index
             return a.index - b.index;
         });
+    },
+    get isTippedAfterPayment() {
+        if (
+            this.state === "paid" &&
+            this.config.set_tip_after_payment &&
+            this.totalDue != this.amount_paid
+        ) {
+            return true;
+        }
+        return false;
     },
     hasCourses() {
         return this.course_ids.length > 0;

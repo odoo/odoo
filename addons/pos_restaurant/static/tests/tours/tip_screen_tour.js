@@ -9,6 +9,7 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as TipScreen from "@point_of_sale/../tests/pos/tours/utils/tip_screen_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTipScreenTour", {
@@ -161,6 +162,70 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
             FloorScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            // tip from payment screen
+            FloorScreen.clickTable("2"),
+            ProductScreen.addOrderline("Minute Maid", "1", "3"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickTipButton(),
+            {
+                content: "click numpad button: 1",
+                trigger: ".modal div.numpad button:contains(/^1/)",
+                run: "click",
+            },
+            Dialog.confirm(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "4.00"),
+            PaymentScreen.remainingIs("0"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickEditPayment(),
+            PaymentScreen.clickTipButton(),
+            {
+                content: "click numpad button: 5",
+                trigger: ".modal div.numpad button:contains(/^5/)",
+                run: "click",
+            },
+            Dialog.confirm(),
+            // The selected payment line amount should be updated
+            PaymentScreen.selectedPaymentlineHas("Cash", "8.00"),
+            PaymentScreen.remainingIs("0"),
+            // Edit paymentlines
+            PaymentScreen.clickPaymentlineDelButton("Cash", "8.00"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "2"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("000001"),
+            TicketScreen.clickControlButton("Details"),
+            // Check the order details dialog
+            TicketScreen.checkOrderDetailsDialog("000001", "$ 8.00", {
+                Bank: "$ 2.00",
+                Cash: "$ 6.00",
+            }),
+            Dialog.discard(),
+            // Tip after payment case
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.addOrderline("Minute Maid", "1", "3"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            TipScreen.isShown(),
+            TipScreen.setCustomTip("1.00"),
+            TipScreen.clickSettle(),
+            Dialog.confirm(),
+            // Edit payment button shouldn't be available for posted orders
+            negateStep({ trigger: ".feedback-screen .edit-order-payment:contains(Edit Payment)" }),
         ].flat(),
 });
 

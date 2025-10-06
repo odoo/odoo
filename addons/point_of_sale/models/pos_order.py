@@ -75,12 +75,7 @@ class PosOrder(models.Model):
             order['source'] = 'pos'
 
         if order.get('partner_id'):
-            partner_id = self.env['res.partner'].browse(order['partner_id'])
-            if not partner_id.exists():
-                order.update({
-                    "partner_id": False,
-                    "to_invoice": False,
-                })
+            self.update_order_partner(order)
 
         pos_order = False
         record_uuid_mapping = order.pop('relations_uuid_mapping', {})
@@ -97,17 +92,7 @@ class PosOrder(models.Model):
             if order.get('session_id') and order['session_id'] != pos_order.session_id.id:
                 pos_order.write({'session_id': order['session_id']})
 
-            # Save lines and payments before to avoid exception if a line is deleted
-            # when vals change the state to 'paid'
-            for field in ['lines', 'payment_ids']:
-                if order.get(field):
-                    existing_ids = set(pos_order[field].ids)
-                    pos_order.write({field: order[field]})
-                    added_ids = set(pos_order[field].ids) - existing_ids
-                    if added_ids:
-                        _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
-                    order[field] = []
-
+            self._update_lines(order, pos_order, ['lines', 'payment_ids'])
             del order['uuid']
             del order['access_token']
             if order.get('state') == 'paid':
@@ -146,13 +131,51 @@ class PosOrder(models.Model):
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
 
+        self._generate_order_invoice()
+        return self.id
+
+    def _update_lines(self, order, pos_order, fields=[]):
+        # Save lines and payments before to avoid exception if a line is deleted
+        # when vals change the state to 'paid'
+        for field in fields:
+            if order.get(field):
+                existing_ids = set(pos_order[field].ids)
+                pos_order.write({field: order[field]})
+                added_ids = set(pos_order[field].ids) - existing_ids
+                if added_ids:
+                    _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
+                order[field] = []
+
+    def _generate_order_invoice(self):
         if self.to_invoice and self.state == 'paid' and self.config_id.invoice_journal_id:
             self._generate_pos_order_invoice()
         elif not self.config_id.invoice_journal_id:
             _logger.warning('Trying to create an invoice without any journal configured')
             raise UserError(_('No invoice journal configured for this POS session.'))
 
-        return self.id
+    def update_order_partner(self, order):
+        partner_id = self.env['res.partner'].browse(order['partner_id'])
+        if not partner_id.exists():
+            order.update({
+                "partner_id": False,
+                "to_invoice": False,
+            })
+
+    def process_saved_payments(self, order, existing_order):
+        """This will process and save payment related changes by ensuring necessary updates are performed on UI"""
+        # don't directly write the order - on continuing from feedback screen it syncs with wrong amounts
+        if order.get('partner_id'):
+            self.update_order_partner(order)
+            existing_order.write({'partner_id': order.get('partner_id'), 'to_invoice': order.get('to_invoice', False)})
+        # update pickings
+        if order.get('shipping_date'):
+            existing_order.write({'shipping_date': order.get('shipping_date')})
+            existing_order.picking_ids.filtered(lambda p: p.state not in ['done', 'cancel']).write({'scheduled_date': order.get('shipping_date')})
+        # payments
+        if order.get('payment_ids'):
+            self._update_lines(order, existing_order, ['lines', 'payment_ids'])
+            self._process_payment_lines(order, existing_order, existing_order.session_id, False)
+        existing_order._generate_order_invoice()
 
     def _clean_payment_lines(self):
         self.ensure_one()
@@ -1197,6 +1220,9 @@ class PosOrder(models.Model):
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
                 existing_order._ensure_to_keep_last_preparation_change(order)
+                # This will update the order if edited after payent from UI.
+                if existing_order.state == "paid" and not existing_order.nb_print:
+                    self.process_saved_payments(order, existing_order)
                 order_ids.append(existing_order.id)
                 _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
@@ -1227,7 +1253,7 @@ class PosOrder(models.Model):
         account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
-            'pos.session': [],
+            'pos.session': self.env['pos.session']._load_pos_data_read(self.session_id, config) if config else [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],

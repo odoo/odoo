@@ -138,7 +138,10 @@ export default class OrderPaymentValidation {
             this.pos.openCashbox();
         }
 
-        this.order.date_order = serializeDateTime(luxon.DateTime.now());
+        if (!this.order.finalized) {
+            // Only update the datetime for normal orders not for the update
+            this.order.date_order = serializeDateTime(luxon.DateTime.now());
+        }
         for (const line of this.paymentLines) {
             if (!line.amount === 0) {
                 this.order.removePaymentline(line);

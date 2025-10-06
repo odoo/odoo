@@ -95,8 +95,12 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.selectFilter("Paid"),
             TicketScreen.nthRowContains(1, "Partner Test 2", false),
             TicketScreen.nthRowContains(2, "003"),
-            // Invoice order
             TicketScreen.selectOrder("003"),
+            TicketScreen.clickControlButton("Details"),
+            TicketScreen.checkOrderDetailsDialog("003", "$ 8.00", { Bank: "$ 8.00" }),
+            Dialog.discard(),
+            TicketScreen.back(),
+            // Invoice order
             inLeftSide(Order.hasLine()),
             TicketScreen.clickControlButton("Invoice"),
             Dialog.confirm(),

@@ -123,10 +123,6 @@ export class FeedbackScreen extends Component {
         return true;
     }
 
-    get canEditPayment() {
-        return !this.pos.config.iface_print_auto && this.currentOrder.nb_print === 0;
-    }
-
     clickPrint() {
         this.stopAutomaticSkip();
         this.dialog.add(PrintPopup, {
@@ -145,7 +141,7 @@ export class FeedbackScreen extends Component {
 
     clickEditPayment() {
         this.stopAutomaticSkip();
-        this.pos.orderDetails(this.currentOrder);
+        this.pos.editPayment(this.currentOrder);
     }
 }
 

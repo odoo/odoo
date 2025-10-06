@@ -35,7 +35,6 @@
         </xpath>
         <xpath expr="//button[hasclass('orders-button')]" position="attributes">
             <attribute name="t-att-class">{'active': mainButton === 'order', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}</attribute>
-            <attribute name="t-on-click">() => this.onTicketButtonClick()</attribute>
         </xpath>
     </t>
 </templates>

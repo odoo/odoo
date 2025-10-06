@@ -103,7 +103,7 @@
             </button>
         </t>
         <t t-else="">
-            <button class="button back back-button validation btn btn-secondary btn-lg w-50 py-3 lh-lg "
+            <button t-att-disabled="currentOrder.finalized" class="button back back-button validation btn btn-secondary btn-lg w-50 py-3 lh-lg "
                 t-on-click="() => pos.onClickBackButton()">
                 <span class="back_text" t-esc="uiBackText" />
             </button>

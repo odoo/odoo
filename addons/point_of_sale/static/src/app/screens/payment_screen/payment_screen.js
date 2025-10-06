@@ -36,9 +36,7 @@ export class PaymentScreen extends Component {
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
         this.printer = useService("printer");
-        this.payment_methods_from_config = this.pos.config.payment_method_ids
-            .slice()
-            .sort((a, b) => a.sequence - b.sequence);
+        this.payment_methods_from_config = this.configPaymentMethods || [];
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
         useRouterParamsChecker();
@@ -49,6 +47,9 @@ export class PaymentScreen extends Component {
         onMounted(this.onMounted);
     }
 
+    get configPaymentMethods() {
+        return this.pos.config.payment_method_ids.slice().sort((a, b) => a.sequence - b.sequence);
+    }
     async validateOrder(isForceValidate = false) {
         const validation = new OrderPaymentValidation({
             pos: this.pos,
@@ -421,6 +422,5 @@ registry.category("pos_pages").add("PaymentScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/payment/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: false,
     },
 });

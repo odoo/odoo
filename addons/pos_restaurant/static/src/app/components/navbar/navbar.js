@@ -36,7 +36,7 @@ patch(Navbar.prototype, {
         return true;
     },
     onTicketButtonClick() {
-        return this.canClick() && this.pos.navigate("TicketScreen");
+        return this.canClick() && super.onTicketButtonClick();
     },
     onClickPlanButton() {
         this.pos.getOrder()?.cleanCourses();

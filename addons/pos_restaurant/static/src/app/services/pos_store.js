@@ -439,6 +439,9 @@ patch(PosStore.prototype, {
             ...(noteCount > 0 ? [{ count: noteCount, name: _t("Message") }] : []),
         ];
     },
+    canEditPayment(order) {
+        return order.isTippedAfterPayment ? false : super.canEditPayment(order);
+    },
     get selectedTable() {
         return this.getOrder()?.table_id;
     },
@@ -532,7 +535,12 @@ patch(PosStore.prototype, {
     },
     async _askForPreparation() {
         const order = this.getOrder();
-        if (this.config.module_pos_restaurant && this.categoryCount.length && !order.isRefund) {
+        if (
+            !order.finalized &&
+            this.config.module_pos_restaurant &&
+            this.categoryCount.length &&
+            !order.isRefund
+        ) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Warning !"),
                 body: _t(

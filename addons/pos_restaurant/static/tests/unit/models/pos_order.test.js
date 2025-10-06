@@ -55,10 +55,10 @@ describe("pos.order restaurant patches", () => {
         const order = store.addNewOrder({ table_id: table });
         const child = store.models["restaurant.table"].get(3);
         let name = order.getName();
-        expect(name).toBe("T 1");
+        expect(name).toBe("T 1 - 1001");
         child.parent_id = table;
         name = order.getName();
-        expect(name).toBe("T 1 & 2");
+        expect(name).toBe("T 1 & 2 - 1001");
     });
 
     test("ensureCourseSelection and getSelectedCourse", async () => {

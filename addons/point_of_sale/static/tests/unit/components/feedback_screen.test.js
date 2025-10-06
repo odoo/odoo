@@ -30,13 +30,12 @@ test("Total on receipt always incl", async () => {
 test("canEditPayment", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
-    const feedbackScreen = await mountWithCleanup(FeedbackScreen, {
-        props: { orderUuid: order.uuid },
-    });
+    // edit
+    order.state = "paid";
     store.config.iface_print_auto = true;
-    expect(feedbackScreen.canEditPayment).toBe(false);
+    expect(store.canEditPayment(order)).toBe(false);
     store.config.iface_print_auto = false;
-    expect(feedbackScreen.canEditPayment).toBe(true);
+    expect(store.canEditPayment(order)).toBe(true);
     order.nb_print = 1;
-    expect(feedbackScreen.canEditPayment).toBe(false);
+    expect(store.canEditPayment(order)).toBe(false);
 });
