@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
 
         ...catalogSuggestion.setParameters({ basedOn: "Last 3 months", factor: 500 }), // 2 orders of 12
         { trigger: "span[name='suggest_total']:visible:contains('740')" },
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 7.94, suggest: 37 }),
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 8, suggest: 37 }),
 
         // --- Check with Forecasted quantities
         ...catalogSuggestion.setParameters({ basedOn: "Forecasted", factor: 100 }),
@@ -133,6 +133,42 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         // Should go back to displaying suggested qtys
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
         ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
+        /*
+         * -------------------  PART 4 : KANBAN FILTERS ---------------------
+         * Checks suggest and searchModel (filters) interactions
+         * (Add / Remove with filters), category filters
+         * ------------------------------------------------------------------
+         */
+
+        // ---- Check Adding non suggested product works with suggest
+        ...catalogSuggestion.toggleSuggest(false),
+        ...productCatalog.addProduct("Courage"),
+        ...productCatalog.waitForQuantity("Courage", 1),
+        ...catalogSuggestion.toggleSuggest(true),
+
+        // ---- Check toggling suggest OFF with filters manually removed still works
+        ...catalogSuggestion.removeSuggestFilter(),
+        ...catalogSuggestion.toggleSuggest(false),
+        ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0), // == suggest is off
+
+        // --- Turning suggest on with non suggested product works as expected
+        // Because Add product can be slow to reach server and because when toggling suggest we filter
+        // products in the order, we go back to catalog and come back (similar to an await).
+        // (This will probably not be need in following PR when we remove debounce on AddProduct)
+        ...productCatalog.goBackToOrder(),
+        ...purchaseForm.openCatalog(),
+        ...catalogSuggestion.toggleSuggest(true),
+        ...catalogSuggestion.checkKanbanRecordPosition("Courage", 1), // Courage still shown because in order but after suggested products
+
+        // Check that categories work well with suggestions
+        ...productCatalog.selectSearchPanelCategory("Goods"),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Should recompute estimated price
+        ...productCatalog.selectSearchPanelCategory("Test Category"),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+        ...catalogSuggestion.removeSuggestFilter(), // Shouldn't impact categories
+        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+
+        // ---- Finally done :)
         ...productCatalog.goBackToOrder(),
         {
             content: "Go back to the dashboard",
