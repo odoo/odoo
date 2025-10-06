@@ -4,6 +4,7 @@ import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { press } from "@odoo/hoot-dom";
+import { unformat } from "../_helpers/format";
 
 describe("collapsed selection", () => {
     test("should insert a char into an empty span without removing the zws", async () => {
@@ -54,6 +55,24 @@ describe("collapsed selection", () => {
                 await insertText(editor, "x");
             },
             contentAfter: "<h1>x[]<br></h1>",
+        });
+    });
+
+    test("should insert text formatted empty node", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <div class="o-paragraph">
+                    <strong data-oe-zws-empty-inline="">[]\ufeff</strong>
+                </div>
+            `),
+            stepFunction: async (editor) => {
+                await insertText(editor, "abc");
+            },
+            contentAfterEdit: unformat(`
+                <div class="o-paragraph">
+                    <strong>abc[]</strong>
+                </div>
+            `),
         });
     });
 });
