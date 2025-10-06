@@ -1245,3 +1245,49 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
             'so_line': so_line.id,
         })
+
+    def test_timesheet_link_credit_note(self):
+        """
+        Test that the timesheets are correctly linked to a credit note
+
+        Test Case:
+        ==========
+        1. Create a sale order with a timesheet product (10H for example).
+        2. Confirm the sale order.
+        3. take 50% advance payment.
+        4. Create a timesheet for 4H.
+        5. Create a credit note for the sale order to refund the remaining 1H.
+        6. Check that the timesheet is linked to the credit note.
+        """
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+                'product_uom_qty': 10,  # 10 hours
+            })],
+        })
+        sale_order.action_confirm()
+
+        # Create timesheets linked to the sale order
+        timesheets = self.env['account.analytic.line'].create([{
+            'name': 'Timesheet',
+            'task_id': task.id,
+            'project_id': task.project_id.id,
+            'unit_amount': 4,
+            'employee_id': self.employee_user.id,
+        } for task in sale_order.tasks_ids])
+
+        # Create an advance payment invoice
+        wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=sale_order.ids).create({
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+        })
+
+        wizard._create_invoices(sale_order)
+        wizard.advance_payment_method = 'delivered'
+        credit_note = wizard._create_invoices(sale_order)
+
+        # Check that the timesheets are linked to the credit note
+        self.assertTrue(all(ts.timesheet_invoice_id == credit_note for ts in timesheets),
+                        "All timesheets should be linked to the created invoice.")
