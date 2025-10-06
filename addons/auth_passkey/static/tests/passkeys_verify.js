@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add('passkeys_tour_verify', {
     steps: () => [
         {
             content: 'Open user account menu',
-            trigger: '.o_user_menu .dropdown-toggle',
+            trigger: '.o_user_menu',
             run: 'click',
         }, {
             content: "Open preferences / profile screen",

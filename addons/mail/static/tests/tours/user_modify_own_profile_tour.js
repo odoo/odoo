@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
     steps: () => [
         {
             content: "Open user account menu",
-            trigger: ".o_user_menu button",
+            trigger: ".o_user_menu",
             run: "click",
         },
         {

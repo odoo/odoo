@@ -52,8 +52,8 @@ beforeEach(() => {
 test("basic rendering", async () => {
     await createSwitchCompanyMenu();
 
-    expect("div.o_switch_company_menu").toHaveCount(1);
-    expect("div.o_switch_company_menu").toHaveText("Hermit");
+    expect("button.o_switch_company_menu").toHaveCount(1);
+    expect("button.o_switch_company_menu").toHaveText("Hermit");
 
     await openCompanyMenu();
 

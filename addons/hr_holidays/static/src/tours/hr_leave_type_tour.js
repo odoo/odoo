@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
                 "Make sure that the leave is approved by checking that the cancel button appears",
         },
         {
-            trigger: ".o_switch_company_menu button",
+            trigger: ".o_switch_company_menu",
             content: "Open the companies selection menu",
             tooltipPosition: "bottom",
             run: "click",
