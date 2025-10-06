@@ -31,7 +31,14 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
  */
 
-const TRANSLATED_ATTRS = ["placeholder", "title", "alt", "value", "data-oe-translatable-link"];
+const TRANSLATED_ATTRS = [
+    "placeholder",
+    "title",
+    "alt",
+    "value",
+    "data-oe-translatable-link",
+    "data-oe-expression",
+];
 const TRANSLATION_ATTRIBUTES_SELECTOR = TRANSLATED_ATTRS.map(
     (att) => `[${att}*="data-oe-translation-source-sha="]`
 ).join(", ");
@@ -217,7 +224,7 @@ export class TranslationPlugin extends Plugin {
         const translationRegex =
             /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
-        const matchTag = (el) => el.matches("input, select, textarea, img");
+        const matchTag = (el) => el.matches("input, select, textarea, img, div, iframe");
         for (const translatedAttr of TRANSLATED_ATTRS) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>

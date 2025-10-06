@@ -12,6 +12,17 @@ registerWebsitePreviewTour(
     },
     () => [
         ...insertSnippet({ id: "s_picture", name: "Title - Image", groupName: "Images" }),
+        ...insertSnippet({ id: "s_video", name: "Video" }, { ignoreLoading: true }),
+        {
+            content: "Add a video URL",
+            trigger: ".o_select_media_dialog #o_video_text",
+            run: `edit https://www.youtube.com/watch?v=G8b4UZIcTfg`,
+        },
+        {
+            content: "Add the video",
+            trigger: ".o_select_media_dialog .modal-footer .btn-primary",
+            run: "click",
+        },
         ...clickOnSave(),
         {
             content: "Change the language to French",
@@ -60,12 +71,42 @@ registerWebsitePreviewTour(
             content: "Check: image is marked as translated",
             trigger: ":iframe .s_picture img.o_savable_attribute.o_modified_image_to_save",
         },
+        // Video translation
+        {
+            content: "Click on video",
+            trigger: ":iframe .media_iframe_video.o_savable_attribute",
+            run: "click",
+        },
+        {
+            content: "Open the media dialog",
+            trigger:
+                ".options-container [data-action-id='translateMediaSrc'][data-action-param='videos']",
+            run: "click",
+        },
+        {
+            content: "Select another video",
+            trigger: ".o_select_media_dialog #o_video_text",
+            run: "edit https://www.youtube.com/watch?v=qxb74CMR748",
+        },
+        {
+            content: "Check that the preview was updated",
+            trigger: ".o_select_media_dialog .o_video_dialog_iframe[src*='qxb74CMR748']",
+        },
+        {
+            content: "Add the video",
+            trigger: ".o_select_media_dialog .modal-footer .btn-primary",
+            run: "click",
+        },
         ...clickOnSave(),
         // Translations checks
         {
             content: "Check: image has been replaced",
             trigger:
                 ":iframe .s_picture img:not([src='/web/image/website.s_picture_default_image'])",
+        },
+        {
+            content: "Check: video has been replaced",
+            trigger: ":iframe .media_iframe_video[data-oe-expression*='qxb74CMR748']",
         },
         {
             content: "open language selector",
@@ -81,6 +122,10 @@ registerWebsitePreviewTour(
         {
             content: "Check: original image is still there",
             trigger: ":iframe .s_picture img[src='/web/image/website.s_picture_default_image']",
+        },
+        {
+            content: "Check: original video is still there",
+            trigger: ":iframe .media_iframe_video[data-oe-expression*='G8b4UZIcTfg']",
         },
     ]
 );

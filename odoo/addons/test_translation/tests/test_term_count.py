@@ -429,6 +429,8 @@ class TestTranslationFlow(common.TransactionCase):
 
         # src (MANUALLY_TRANSLATED_ATTRS)
         self.assertNotIn('/web/image/partner/2/avatar_128', trans_view)
+        # data-oe-expression (MANUALLY_TRANSLATED_ATTRS)
+        self.assertNotIn('//www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0', trans_view)
         # alt (plain TRANSLATED_ATTRS)
         self.assertIn('Image alt', trans_view)
 

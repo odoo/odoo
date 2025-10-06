@@ -2,7 +2,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     &, &[data-oe-field="mega_menu_content"] * {
         background-color: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
-    &:where(img) {
+    &:where(img, .media_iframe_video) {
         outline: 4px solid rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
@@ -10,7 +10,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         &, &[data-oe-field="mega_menu_content"] * {
             background-color: rgba($o-we-translated-content-color, 0.5) !important;
         }
-        &:where(img) {
+        &:where(img, .media_iframe_video) {
             outline: 4px solid rgba($o-we-translated-content-color, 0.5) !important;
         }
     }
@@ -22,7 +22,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             background-color: rgba($o-we-translated-content-color, 0.25) !important;
         }
 
-        &:where(img) {
+        &:where(img, .media_iframe_video) {
             outline: 4px solid rgba($o-we-translated-content-color, 0.5) !important;
         }
     }
