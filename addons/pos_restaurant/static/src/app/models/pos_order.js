@@ -54,6 +54,7 @@ patch(PosOrder.prototype, {
                 for (const child_table of child_tables) {
                     name += ` & ${child_table.table_number}`;
                 }
+                name += ` - ${this.tracking_number}`;
                 return name;
             }
         }

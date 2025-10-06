@@ -372,7 +372,7 @@ export class PosOrder extends Base {
     }
 
     assertEditable() {
-        if (this.finalized) {
+        if (this.finalized && (this.nb_print || this.account_move)) {
             throw new Error("Finalized Order cannot be modified");
         }
         return true;

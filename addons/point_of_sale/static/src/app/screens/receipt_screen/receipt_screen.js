@@ -112,6 +112,6 @@ registry.category("pos_pages").add("ReceiptScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/receipt/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: true,
+        orderFinalized: [true],
     },
 });

@@ -11,7 +11,7 @@ export const useRouterParamsChecker = () => {
 
     if (params.orderUuid) {
         const order = pos.models["pos.order"].getBy("uuid", router.state.params.orderUuid);
-        if (!order || order.finalized !== params.orderFinalized) {
+        if (!order || !(params.orderFinalized || []).includes(order.finalized)) {
             const params = pos.defaultPage;
             router.navigate(params.page, params.params);
         }

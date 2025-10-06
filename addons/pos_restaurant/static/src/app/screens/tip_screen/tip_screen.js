@@ -134,6 +134,6 @@ registry.category("pos_pages").add("TipScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/tipping/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: true,
+        orderFinalized: [true],
     },
 });

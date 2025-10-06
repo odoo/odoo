@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.orderDetailsDialog">
+        <Dialog title="title" size="'md'">
+            <!-- Order Info -->
+            <div class="bg-secondary border p-2 w-100">
+                <i class="fa fa-lg fa-bookmark"/>
+                <span class="mx-2 fs-5">Order Info <t t-out="props.order.create_date.toFormat('MMM dd, h:mm a')"/></span>
+            </div>
+            <div class="order-details mt-3 fs-6">
+                <p class="my-1"><strong>Session :</strong> <t t-esc="props.order.session_id.name"/></p>
+                <p class="my-1"><strong>Order Reference :</strong> <t t-esc="props.order.pos_reference"/></p>
+                <p t-if="props.order.user_id" class="my-1">
+                    <strong>Served by :</strong> <t t-esc="props.order.user_id.name"/>
+                </p>
+                <div class="extra-info">
+                    <p t-if="props.order.guest_count" class="my-1">
+                        <strong>Guest :</strong><t t-esc="props.order.guest_count"/>
+                    </p>
+                    <p t-if="props.order.partner_id" class="my-1">
+                        <strong>Customer :</strong> <t t-esc="props.order.partner_id.name"/>
+                    </p>
+                </div>
+            </div>
+            <!-- Payment Info -->
+            <div class="d-flex justify-content-between align-items-center bg-secondary border p-2 mt-3 w-100">
+                <div class="payment-header">
+                    <i class="fa fa-lg fa-credit-card"/>
+                    <span class="ms-2 fs-5">Payment Info : <b><t t-out="env.utils.formatCurrency(props.order.amount_total)"/></b></span>
+                </div>
+                <button t-if="!props.order.nb_print and !props.order.account_move" t-on-click="editPayment" class="bg-success px-2 text-white rounded border-0">Edit Payment</button>
+            </div>
+            <div class="order-payments mt-3">
+                <p class="my-1"><strong>Date : </strong><t t-esc="props.order.payment_ids[0].payment_date.toFormat('MMM dd, h:mm a')"/></p>
+                <ul class="p-0 m-0">
+                    <t t-foreach="props.order.payment_ids" t-as="payment" t-key="payment.id">
+                        <li class="my-1">
+                            <b><t t-esc="payment.payment_method_id.name"/></b> :
+                            <t t-esc="env.utils.formatCurrency(payment.amount)"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" tabindex="1" t-on-click="props.close">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

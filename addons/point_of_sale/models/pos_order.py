@@ -1183,6 +1183,9 @@ class PosOrder(models.Model):
                 # In practice it can happen when "Tip later" option is used
                 existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(existing_order.id)
+                # Needed to sync the updates from ui for paid orders
+                if existing_order.state != "done":
+                    existing_order.write(order)
                 _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
         # Sometime pos_orders_ids can be empty.
@@ -1212,7 +1215,7 @@ class PosOrder(models.Model):
         account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
-            'pos.session': [],
+            'pos.session': self.env['pos.session']._load_pos_data_read(self.session_id, config) if config else [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],

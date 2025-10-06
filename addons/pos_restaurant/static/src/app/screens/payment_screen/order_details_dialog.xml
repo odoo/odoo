@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.orderDetailsDialog" t-inherit="point_of_sale.orderDetailsDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('extra-info')]" position="inside">
+            <t t-if="props.order.table_id">
+                <p class="my-1"><strong>Table : </strong>
+                    <t t-out="this.props.order.table_id.floor_id.name"/>, <t t-out="props.order.table_id.table_number"/>
+                </p>
+            </t>
+        </xpath>
+    </t>
+</templates>

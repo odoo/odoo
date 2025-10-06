@@ -418,6 +418,6 @@ registry.category("pos_pages").add("ProductScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/product/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: false,
+        orderFinalized: [false],
     },
 });
