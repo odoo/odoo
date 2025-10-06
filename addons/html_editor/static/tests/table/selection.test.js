@@ -1,10 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor } from "../_helpers/user_actions";
-import { getContent } from "../_helpers/selection";
-import { queryAll } from "@odoo/hoot-dom";
+import { getContent, setSelection } from "../_helpers/selection";
+import { manuallyDispatchProgrammaticEvent, queryAll } from "@odoo/hoot-dom";
+import { nodeSize } from "@html_editor/utils/position";
 
 describe("custom selection", () => {
     test("should indicate selected cells with blue background", async () => {
@@ -457,6 +458,73 @@ describe("select a full table on cross over", () => {
                     <p><font style="color: aquamarine;">a]</font>bc</p>`),
             });
         });
+    });
+});
+
+describe("single cell selection", () => {
+    test("should not select single cell via mouse movement if content is not fully selected", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>abcd</p>
+                        </td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el } = await setupEditor(content);
+
+        const firstTd = el.querySelector("td");
+        const firstP = firstTd.firstElementChild;
+        const textNode = firstP.firstChild;
+
+        // Get bounding rect of selection range at the end of text.
+        const range = document.createRange();
+        range.setStart(textNode, nodeSize(textNode));
+        range.setEnd(textNode, nodeSize(textNode));
+        const rangeRect = range.getBoundingClientRect();
+
+        // Simulate mousedown at the end of text.
+        await manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+        });
+
+        // Put cursor at the end of text.
+        setSelection({
+            anchorNode: textNode,
+            anchorOffset: nodeSize(textNode),
+        });
+        await animationFrame();
+
+        // Simulate attempt to select single cell.
+        manuallyDispatchProgrammaticEvent(firstP, "mousemove", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+        });
+        manuallyDispatchProgrammaticEvent(firstP, "mousemove", {
+            detail: 1,
+            clientX: rangeRect.right + 15,
+            clientY: rangeRect.top,
+        });
+        manuallyDispatchProgrammaticEvent(firstP, "mouseup", {
+            detail: 1,
+            clientX: rangeRect.right + 15,
+            clientY: rangeRect.top,
+        });
+
+        await animationFrame();
+        expect(firstTd).not.toHaveClass("o_selected_td");
     });
 });
 
