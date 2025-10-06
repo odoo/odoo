@@ -133,5 +133,21 @@
         action="mail_activity_type_action_config_hr_holidays"
         parent="menu_hr_holidays_configuration"
         groups="base.group_no_one"/>
+    
+    <menuitem
+        id="menu_cash_out_my"
+        name="My Leave Cash-out"
+        parent="hr_holidays.menu_hr_holidays_my_leaves"
+        action="hr_leave_action_cash_out_my"
+        sequence="3"
+    />
+
+    <menuitem
+        id="menu_cash_out_manger"
+        name="Cash-out"
+        parent="hr_holidays.menu_hr_holidays_management"
+        action="hr_leave_action_cash_out_manager"
+        sequence="6"
+    />
 
 </odoo>
