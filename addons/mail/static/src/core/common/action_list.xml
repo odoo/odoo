@@ -81,12 +81,9 @@
     </DropdownItem>
     <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey" t-att-style="props.style">
         <t t-call="mail.Action.content"/>
-        <span
-            t-if="action.tags.includes('WARNING_BADGE')"
-            class="position-absolute me-n1 mt-n1 end-0 fw-bolder badge p-0 rounded-circle bg-warning d-flex justify-content-center align-items-center" style="aspect-ratio: 1; font-size: 0.6rem;"
-        >
-            <i class="fa fa-exclamation"/>
-        </span>
+        <t t-if="action.badge" t-call="mail.Action.badge">
+            <t t-set="extraBadgeClass" t-value="'position-absolute me-n1 mt-n1 end-0'"/>
+        </t>
     </button>
 </t>
 
@@ -97,6 +94,13 @@
     <i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown, 'fa-fw': props.fw }"/>
     <i t-elif="props.dropdown" class="fa-question fa-fw opacity-0" t-att-class="props.fw ? 'fa-fw' : ''"/>
     <span t-if="action.name and (props.dropdown or (props.inline and (!action.icon or action.inlineName)))" class="o-mail-ActionList-actionLabel" t-attf-class="{{ action.nameClass }}" t-att-class="{ 'mx-1': props.dropdown }" t-out="(props.inline and action.inlineName) or action.name"/>
+    <t t-if="props.dropdown and action.badge" t-call="mail.Action.badge"/>
+</t>
+
+<t t-name="mail.Action.badge">
+    <span class="fw-bolder badge p-0 rounded-circle d-flex justify-content-center align-items-center" t-attf-class="{{ extraBadgeClass }}" t-att-class="{ 'bg-warning': action.tags.includes('WARNING_BADGE'), 'o-discuss-badge': action.tags.includes('IMPORTANT_BADGE') }" style="aspect-ratio: 1; font-size: 0.6rem;">
+        <i t-if="action.badgeIcon" t-att-class="action.badgeIcon"/><span t-elif="action.badgeText" t-esc="action.badgeText"/>
+    </span>
 </t>
 
 </templates>
