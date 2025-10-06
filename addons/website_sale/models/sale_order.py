@@ -617,7 +617,8 @@ class SaleOrder(models.Model):
         :returns: whether the combo quantities had to be updated
         """
         # Ensure all combo lines have the same quantity
-        combo_lines = line.linked_line_ids
+        if not (combo_lines := line.linked_line_ids):
+            return False
         available_combo_quantity = min(line.product_uom_qty for line in combo_lines)
         if available_combo_quantity < line.product_uom_qty:
             line._set_shop_warning_stock(
