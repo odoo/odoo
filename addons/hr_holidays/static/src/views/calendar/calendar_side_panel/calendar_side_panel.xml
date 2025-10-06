@@ -24,10 +24,12 @@
                 <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
                     <h5>Mandatory Days</h5>
                     <ul class="ps-0">
-                        <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">
-                            <strong
+                        <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled"
+                            t-att-class="mandatoryDay.end &lt; currentDateTime ? 'text-muted' : 'fw-bold'">
+                            <span
                                     t-esc="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
-                                    t-att-class="'hr_mandatory_day_'+mandatoryDay.colorIndex"/>
+                                    t-attf-class="hr_mandatory_day_{{ mandatoryDay.colorIndex }}"
+                                    t-att-class="{ 'opacity-50': mandatoryDay.end &lt; currentDateTime }"/>
                             : <t t-esc="mandatoryDay.title"/>
                         </li>
                     </ul>
@@ -36,8 +38,9 @@
                 <div class="d-flex flex-column mt-4" t-if="leaveState.bankHolidays.length">
                     <h5>Public Holidays</h5>
                     <ul class="ps-0">
-                        <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
-                            <strong
+                        <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled"
+                            t-att-class="bankHoliday.end &lt; currentDateTime ? 'text-muted' : 'fw-bold'">
+                            <span
                                     t-esc="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
                             : <t t-esc="bankHoliday.title"/>
                         </li>
