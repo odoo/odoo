@@ -4816,7 +4816,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
         only_log_modules = (
             'account',
             'account_accountant',
-            'account_accountant_batch_payment',
             'account_asset',
             'account_asset_fleet',
             'account_auto_transfer',
