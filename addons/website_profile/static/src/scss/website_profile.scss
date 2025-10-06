@@ -95,68 +95,6 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 }
 
-/// Progress Circle
-.o_wprofile_progress_circle {
-    position: relative;
-    max-width: 300px;
-
-    svg.o_pc_circular_chart {
-        // Allow hover effect on svg paths in order to display bootstrap tooltip,
-        // by pushing the circular chart above the next rank info.
-        z-index: 1;
-        position: relative;
-        display: block;
-        max-width: 100%;
-
-        .o_pc_circle_bg, .o_pc_circle {
-            fill: none;
-            stroke-width: 1.5px;
-            stroke-linecap: round;
-        }
-
-        .o_pc_circle_bg {
-            stroke: rgba(black, 0.1);
-        }
-
-        .o_pc_circle {
-            animation: progress 1s ease-out forwards;
-        }
-
-        #gradient {
-            --o-pc-color-stop-1: #{lighten(map-get($theme-colors, 'primary'), 10%)};
-            --o-pc-color-stop-2: #{map-get($theme-colors, 'primary')};
-        }
-    }
-
-    .o_pc_overlay {
-        @include o-position-absolute(0,0,0,0);
-        h4 {
-            width: 60%;
-            // only apply ellipsis when in non-edit mode, that way the editor can see the full value
-            &:not(.o_editable) {
-                @include o-text-overflow();
-            }
-            margin-bottom: 0 !important;
-        }
-
-        small.text-center {
-            display: -webkit-box;
-            line-height: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 75% !important;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-    }
-
-    @keyframes progress {
-        0% {
-            stroke-dasharray: 0 100;
-        }
-    }
-}
-
 // All Users Page
 .o_wprofile_all_users_nav {
     border-width: 1px 0;
@@ -277,12 +215,4 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 // Own profile border
 .o_wprofile_border_focus {
     border-left: 4px solid map-get($theme-colors, 'secondary');
-}
-
-// Edition mode
-.editor_enable {
-    // Allow to edit rank picture in edit mode
-    .o_wprofile_progress_circle .o_pc_overlay {
-        z-index: initial;
-    }
 }
