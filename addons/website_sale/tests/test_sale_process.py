@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+
 import lxml.html
 
 from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 _logger = logging.getLogger(__name__)
 
@@ -204,7 +205,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         self.assertEqual(len(root.xpath(f'//a[@name="website_sale_main_button"][not(@href)]//span[text()="{next_step.main_button_label}"]')), 2)
 
     def test_update_same_address_billing_shipping_edit(self):
-        ''' Phone field should be required when updating an adress for billing and shipping '''
+        """Phone field should be required when updating an adress for billing and shipping"""
         self.env['product.product'].create({
             'name': 'Office Chair Black TEST',
             'list_price': 12.50,

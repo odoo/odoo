@@ -8,7 +8,7 @@ from odoo.tests import HttpCase, tagged
 class TestSitemap(HttpCase):
 
     def setUp(self):
-        super(TestSitemap, self).setUp()
+        super().setUp()
 
         self.cats = self.env['product.public.category'].create([{
             'name': 'Level 0',

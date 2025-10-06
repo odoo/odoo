@@ -7,7 +7,9 @@ from PIL import Image
 
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
+
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
@@ -332,6 +334,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
 
         # when there is a template image, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleRemoveImage(HttpCase):

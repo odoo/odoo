@@ -106,7 +106,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         )
 
     def test_03_public_tour_shop_dynamic_variants(self):
-        """ The goal of this test is to make sure product variants with dynamic
+        """The goal of this test is to make sure product variants with dynamic
         attributes can be created by the public user (when being added to cart).
         """
         product_attribute = self.env['product.attribute'].create({
@@ -151,7 +151,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
 
         Using "portal" to have various users in the tests.
         """
-
         # create the attribute
         product_attribute = self.env['product.attribute'].create({
             'name': "My Attribute",
@@ -197,7 +196,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
 
         Using "demo" to have various users in the tests.
         """
-
         product_attribute_no_variant = self.env['product.attribute'].create({
             'name': "No Variant Attribute",
             'create_variant': 'no_variant',
@@ -250,7 +248,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
 
         Using "portal" to have various users in the tests.
         """
-
         attributes = self.env['product.attribute'].create([
             {
                 'name': 'Size',
@@ -310,7 +307,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
 
         Using "portal" to have various users in the tests.
         """
-
         attribute_size = self.env['product.attribute'].create({
             'name': 'Size',
             'create_variant': 'always',

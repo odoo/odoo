@@ -18,9 +18,9 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
 
     def test_toggle_contact_us_button_visibility(self):
         """Check that the "Contact Us" button:
-          - is shown for zero-priced products
-          - is hidden for other products
-          - is not displayed at the same time as the "Add to Cart" button
+        - is shown for zero-priced products
+        - is hidden for other products
+        - is not displayed at the same time as the "Add to Cart" button
         """
         self.website.prevent_zero_price_sale = True
 
@@ -31,7 +31,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         self.start_tour(red_sofa.website_url, 'website_sale.contact_us_button')
 
     def test_product_reviews_reactions_public(self):
-        """ Check that public users can not react to reviews """
+        """Check that public users can not react to reviews"""
         password = "Pl1bhD@2!kXZ"
         manager = self.env.ref("base.user_admin")
         manager.write({"password": password})

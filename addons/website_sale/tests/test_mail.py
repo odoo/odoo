@@ -3,7 +3,6 @@
 from unittest.mock import patch
 
 import odoo
-
 from odoo import SUPERUSER_ID, fields
 from odoo.tests import HttpCase, tagged
 

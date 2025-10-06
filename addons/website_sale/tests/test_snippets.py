@@ -6,7 +6,6 @@ from odoo.tests import HttpCase, tagged
 
 from odoo.addons.http_routing.tests.common import MockRequest
 
-
 _logger = logging.getLogger(__name__)
 
 
