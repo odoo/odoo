@@ -159,9 +159,9 @@ export class FormatPlugin extends Plugin {
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
-    unwrapEmptyFormat(insertedNode, block) {
+    unwrapEmptyFormat(insertedNode) {
         const anchorNode = this.dependencies.selection.getEditableSelection().anchorNode;
-        if (!block.contains(anchorNode)) {
+        if (!allWhitespaceRegex.test(insertedNode.textContent)) {
             return insertedNode;
         }
         const emptyZWS = closestElement(anchorNode, "[data-oe-zws-empty-inline]");
