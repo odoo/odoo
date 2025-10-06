@@ -559,18 +559,14 @@ class HrAttendance(models.Model):
         employee_domain = Domain('company_id', 'in', self.env.context.get('allowed_company_ids', []))
         if not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
             employee_domain &= Domain('attendance_manager_id', '=', self.env.user.id)
-        if user_domain.is_true():
-            # Workaround to make it work only for list view.
-            if 'gantt_start_date' in self.env.context:
-                return self.env['hr.employee'].search(employee_domain)
+        if user_domain.is_true() and 'gantt_start_date' not in self.env.context:
             return resources & self.env['hr.employee'].search(employee_domain)
-        else:
-            employee_name_domain = Domain.OR(
-                Domain('name', condition.operator, condition.value)
-                for condition in user_domain.iter_conditions()
-                if condition.field_expr == 'employee_id'
-            )
-            return resources | self.env['hr.employee'].search(employee_name_domain & employee_domain)
+        employee_name_domain = Domain.OR(
+            Domain('name', condition.operator, condition.value)
+            for condition in user_domain.iter_conditions()
+            if condition.field_expr == 'employee_id'
+        )
+        return resources | self.env['hr.employee'].search(employee_name_domain & employee_domain)
 
     def _linked_overtimes(self):
         return self.env['hr.attendance.overtime.line'].search([
