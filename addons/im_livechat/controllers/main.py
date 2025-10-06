@@ -128,8 +128,9 @@ class LivechatController(http.Controller):
                 "fetchChannelInfoState": "fetched",
                 "id": channel_id,
                 "isLoaded": True,
-                "livechat_operator_id": Store.One(
-                    operator_info["operator_partner"], self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                "livechat_main_agent_partner_id": Store.One(
+                    operator_info["operator_partner"],
+                    self.env["discuss.channel"]._store_livechat_agent_fields(),
                 ),
                 "scrollUnread": False,
                 "channel_type": "livechat",
@@ -158,8 +159,8 @@ class LivechatController(http.Controller):
             channel_id = channel.id
             if is_chatbot_script:
                 chatbot_script._post_welcome_steps(channel)
-            if not is_chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
-                channel._broadcast([channel.livechat_operator_id.id])
+            if channel.livechat_main_agent_partner_id:
+                channel._broadcast([channel.livechat_main_agent_partner_id.id])
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
         request.env["res.users"]._init_store_data(store)

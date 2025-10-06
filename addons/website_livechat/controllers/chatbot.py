@@ -37,7 +37,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                 ),
                 Command.create({"partner_id": request.env.user.partner_id.id}),
             ],
-            'livechat_operator_id': chatbot_script.operator_partner_id.id,
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id,
             'channel_type': 'livechat',
             'name': chatbot_script.title,

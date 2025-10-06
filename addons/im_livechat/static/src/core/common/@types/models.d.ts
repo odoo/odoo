@@ -47,8 +47,7 @@ declare module "models" {
         composerHidden: Readonly<boolean>;
         livechat_conversation_tag_ids: LivechatConversationTag[];
         livechat_end_dt: luxon.DateTime;
-        livechat_operator_id: ResPartner;
-        livechatVisitorMember: ChannelMember;
+        livechat_customer_member_id: ChannelMember;
         open_chat_window: true|undefined;
     }
 

@@ -85,7 +85,7 @@ export class LivechatChannelInfoList extends Component {
     }
 
     get visitorProfileURL() {
-        const visitorMember = this.props.thread?.livechatVisitorMember;
+        const visitorMember = this.props.thread?.livechat_customer_member_id;
         if (visitorMember?.partner_id) {
             return url(`/${startUrl()}/res.partner/${visitorMember.partner_id.id}`);
         }

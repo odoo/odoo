@@ -23,14 +23,13 @@ patch(Thread, threadStaticPatch);
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.livechat_operator_id = fields.One("res.partner");
         this.chatbotTypingMessage = fields.One("mail.message", {
             compute() {
                 if (this.chatbot) {
                     return {
                         id: -0.1 - this.id,
                         thread: this,
-                        author_id: this.livechat_operator_id,
+                        author_id: this.livechat_main_agent_partner_id,
                     };
                 }
             },
@@ -43,7 +42,7 @@ patch(Thread.prototype, {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
                         thread: this,
-                        author_id: this.livechat_operator_id,
+                        author_id: this.livechat_main_agent_partner_id,
                     };
                 }
             },
@@ -93,13 +92,13 @@ patch(Thread.prototype, {
 
     get avatarUrl() {
         if (this.channel?.channel_type === "livechat") {
-            return this.livechat_operator_id.avatarUrl;
+            return this.livechat_main_agent_partner_id.avatarUrl;
         }
         return super.avatarUrl;
     },
     get displayName() {
-        if (this.channel?.channel_type === "livechat" && this.livechat_operator_id) {
-            return this.getPersonaName(this.livechat_operator_id);
+        if (this.channel?.channel_type === "livechat" && this.livechat_main_agent_partner_id) {
+            return this.getPersonaName(this.livechat_main_agent_partner_id);
         }
         return super.displayName;
     },

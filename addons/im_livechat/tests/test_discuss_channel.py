@@ -5,6 +5,7 @@ from odoo import Command, fields
 from odoo.tests import new_test_user, tagged
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
+from odoo.exceptions import UserError
 
 
 @tagged("-at_install", "post_install")
@@ -246,3 +247,14 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             channel._gc_bot_only_ongoing_sessions()
         self.assertTrue(channel.livechat_end_dt)
+
+    def test_last_agent_joining_chat_considered_as_main_agent(self):
+        bob = self._create_operator()
+        jane = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Livechat Channel", "user_ids": (bob + jane).ids},
+        )
+        chat = self._create_conversation(livechat_channel, bob)
+        self.assertEqual(chat.livechat_main_agent_partner_id, bob.partner_id)
+        chat._add_members(users=jane)
+        self.assertEqual(chat.livechat_main_agent_partner_id, jane.partner_id)

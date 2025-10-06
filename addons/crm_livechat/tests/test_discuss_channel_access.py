@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests.common import HttpCase, new_test_user, tagged
 
@@ -26,7 +27,14 @@ class TestDiscussChannelAccess(HttpCase):
             channel = self.env["discuss.channel"].create(
                 {
                     "name": f"channel_{idx}",
-                    "livechat_operator_id": self.env.user.partner_id.id,
+                    "channel_member_ids": [
+                        Command.create(
+                            {
+                                "livechat_member_type": "agent",
+                                "partner_id": self.env.user.partner_id.id,
+                            },
+                        ),
+                    ],
                     "channel_type": "livechat",
                     "lead_ids": crm_lead.ids,
                 }
@@ -44,8 +52,15 @@ class TestDiscussChannelAccess(HttpCase):
             self.env["discuss.channel"]
             .create(
                 {
-                    "name": f"Visitor #11",
-                    "livechat_operator_id": self.env.user.partner_id.id,
+                    "name": "Visitor #11",
+                    "channel_member_ids": [
+                        Command.create(
+                            {
+                                "livechat_member_type": "agent",
+                                "partner_id": self.env.user.partner_id.id,
+                            },
+                        ),
+                    ],
                     "channel_type": "livechat",
                 }
             )

@@ -7,27 +7,9 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
-        this.livechat_operator_id = fields.One("res.partner");
         this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
-        this.livechatVisitorMember = fields.One("discuss.channel.member", {
-            compute() {
-                if (this.channel?.channel_type !== "livechat") {
-                    return;
-                }
-                // For livechat threads, the correspondent is the first
-                // channel member that is not the operator.
-                const orderedChannelMembers = [...this.channel.channel_member_ids].sort(
-                    (a, b) => a.id - b.id
-                );
-                const isFirstMemberOperator = orderedChannelMembers[0]?.partner_id?.eq(
-                    this.livechat_operator_id
-                );
-                const visitor = isFirstMemberOperator
-                    ? orderedChannelMembers[1]
-                    : orderedChannelMembers[0];
-                return visitor;
-            },
-        });
+        this.livechat_customer_member_id = fields.One("discuss.channel.member");
+        this.livechat_main_agent_partner_id = fields.One("res.partner");
         /** @type {true|undefined} */
         this.open_chat_window = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
@@ -48,7 +30,8 @@ patch(Thread.prototype, {
     get showCorrespondentCountry() {
         if (this.channel?.channel_type === "livechat") {
             return (
-                this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
+                this.livechat_main_agent_partner_id?.eq(this.store.self) &&
+                Boolean(this.correspondentCountry)
             );
         }
         return super.showCorrespondentCountry;

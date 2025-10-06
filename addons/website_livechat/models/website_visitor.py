@@ -10,28 +10,34 @@ from odoo.tools.sql import column_exists, create_column
 class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
-    livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
-    livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")
+    livechat_main_agent_partner_id = fields.Many2one(
+        "res.partner",
+        compute="_compute_livechat_main_agent_partner_id",
+        store=True,
+        string="Speaking with",
+        index="btree_not_null",
+    )
+    livechat_main_agent_name = fields.Char('Operator Name', related="livechat_main_agent_partner_id.name")
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
 
     def _auto_init(self):
-        # Skip the computation of the field `livechat_operator_id` at the module installation
+        # Skip the computation of the field `livechat_main_agent_partner_id` at the module installation
         # We can assume no livechat operator attributed to visitor if it was not installed
-        if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):
-            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
+        if not column_exists(self.env.cr, "website_visitor", "livechat_main_agent_partner_id"):
+            create_column(self.env.cr, "website_visitor", "livechat_main_agent_partner_id", "int4")
         return super()._auto_init()
 
-    @api.depends('discuss_channel_ids.livechat_end_dt', 'discuss_channel_ids.livechat_operator_id')
-    def _compute_livechat_operator_id(self):
+    @api.depends('discuss_channel_ids.livechat_end_dt', 'discuss_channel_ids.livechat_main_agent_partner_id')
+    def _compute_livechat_main_agent_partner_id(self):
         results = self.env["discuss.channel"].search_read(
             [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)],
-            ["livechat_visitor_id", "livechat_operator_id"],
+            ["livechat_visitor_id", "livechat_main_agent_partner_id"],
         )
-        visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_operator_id'][0]) for result in results}
+        visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_main_agent_partner_id'][0]) for result in results}
         for visitor in self:
-            visitor.livechat_operator_id = visitor_operator_map.get(visitor.id, False)
+            visitor.livechat_main_agent_partner_id = visitor_operator_map.get(visitor.id, False)
 
     @api.depends('discuss_channel_ids')
     def _compute_session_count(self):
@@ -72,7 +78,6 @@ class WebsiteVisitor(models.Model):
                 'channel_partner_ids': members_to_add,
                 "is_pending_chat_request": True,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
-                'livechat_operator_id': self.env.user.partner_id.id,
                 'channel_type': 'livechat',
                 'country_id': country.id,
                 'name': ', '.join([visitor_name, operator.livechat_username if operator.livechat_username else operator.name]),

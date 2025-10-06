@@ -22,13 +22,13 @@ export class TranscriptSender extends Component {
     setup() {
         this.isValidEmail = isValidEmail;
         this.state = useState({
-            email: this.props.thread.livechatVisitorMember?.persona.email,
+            email: this.props.thread.livechat_customer_member_id?.persona.email,
             status: this.STATUS.IDLE,
         });
         this.store = useService("mail.store");
         onWillUpdateProps((newProps) => {
             if (this.props.thread?.notEq(newProps.thread)) {
-                this.state.email = newProps.thread.livechatVisitorMember?.persona.email;
+                this.state.email = newProps.thread.livechat_customer_member_id?.persona.email;
                 this.state.status = this.STATUS.IDLE;
             }
         });

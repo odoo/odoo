@@ -13,11 +13,11 @@ patch(Thread.prototype, {
         Object.assign(this.state, { isVisitorOffline: false }); // starting online avoids flickering
         useEffect(
             () => {
-                if (!this.props.thread.livechatVisitorMember?.im_status) {
+                if (!this.props.thread.livechat_customer_member_id?.im_status) {
                     return;
                 }
                 clearTimeout(this.imStatusTimeoutId);
-                if (this.props.thread.livechatVisitorMember.im_status.includes("offline")) {
+                if (this.props.thread.livechat_customer_member_id.im_status.includes("offline")) {
                     this.imStatusTimeoutId = setTimeout(
                         () => (this.state.isVisitorOffline = true),
                         this.IM_STATUS_DELAY
@@ -27,19 +27,19 @@ patch(Thread.prototype, {
                 }
                 return () => clearTimeout(this.imStatusTimeoutId);
             },
-            () => [this.props.thread.livechatVisitorMember?.im_status]
+            () => [this.props.thread.livechat_customer_member_id?.im_status]
         );
     },
     get showVisitorDisconnected() {
         return (
-            this.store.self.notEq(this.props.thread.livechatVisitorMember?.persona) &&
+            this.store.self.notEq(this.props.thread.livechat_customer_member_id?.persona) &&
             !this.props.thread.livechat_end_dt &&
-            this.props.thread.livechatVisitorMember &&
+            this.props.thread.livechat_customer_member_id &&
             this.state.isVisitorOffline
         );
     },
     get disconnectedText() {
-        const offlineSince = this.props.thread.livechatVisitorMember.persona.offline_since;
+        const offlineSince = this.props.thread.livechat_customer_member_id.persona.offline_since;
         if (!offlineSince) {
             return _t("Visitor is disconnected");
         }

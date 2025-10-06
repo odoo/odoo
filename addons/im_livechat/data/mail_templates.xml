@@ -23,8 +23,8 @@
                         </span>
                     </td>
                     <td valign="middle" align="right" style="padding-right: 20px;" t-if="not company.uses_default_logo">
-                        <img t-att-src="'/logo.png?company=%s' % company.id" 
-                             style="border-radius:0.5rem; max-height: 48px; max-width: 48px; width: auto; height: auto; display: block; object-fit: contain;" 
+                        <img t-att-src="'/logo.png?company=%s' % company.id"
+                             style="border-radius:0.5rem; max-height: 48px; max-width: 48px; width: auto; height: auto; display: block; object-fit: contain;"
                              t-att-alt="'%s' % company.name"/>
                       </td>
                 </tr>
@@ -41,7 +41,7 @@
             <div style="font-size: 13px; padding: 5px 0; white-space:nowrap;">
                 Here's a copy of your conversation with
                 <!-- sudo: res.users - visitor can access the name of the operator -->
-                <span t-attf-style="color: {{header_background_color}};" t-out="channel.livechat_operator_id.sudo().user_livechat_username or channel.livechat_operator_id.sudo().name"/> on
+                <span t-attf-style="color: {{header_background_color}};" t-out="channel.livechat_main_agent_member_id.sudo().user_livechat_username or channel.livechat_main_agent_member_id.sudo().name"/> on
                 <span t-out="channel.create_date.astimezone(tz).strftime('%m/%d/%y')"/> at
                 <span t-out="channel.create_date.astimezone(tz).strftime('%I:%M %p')"/>.
             </div>

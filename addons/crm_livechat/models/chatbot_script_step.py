@@ -106,7 +106,6 @@ class ChatbotScriptStep(models.Model):
             and member._get_assignment_quota() > 0
             and lead.filtered_domain(literal_eval(member.assignment_domain or "[]"))
         ]
-        previous_operator = discuss_channel.livechat_operator_id
         users = self.env["res.users"]
         if discuss_channel.livechat_channel_id:
             # sudo: im_livechat.channel - getting available operators is acceptable
@@ -114,8 +113,8 @@ class ChatbotScriptStep(models.Model):
                 self.env["res.users"].browse(assignable_user_ids)
             )[discuss_channel.livechat_channel_id]
         message = discuss_channel._forward_human_operator(self, users=users)
-        if previous_operator != discuss_channel.livechat_operator_id:
-            user = next(user for user in users if user.partner_id == discuss_channel.livechat_operator_id)
+        if discuss_channel.livechat_main_agent_partner_id:
+            user = next(user for user in users if user.partner_id == discuss_channel.livechat_main_agent_partner_id)
             lead.user_id = user
             lead.team_id = next(team for team in teams if user in team.crm_team_member_ids.user_id)
             msg = self.env._("Created a new lead: %s", lead._get_html_link())

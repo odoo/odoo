@@ -132,7 +132,7 @@ class Im_LivechatReportChannel(models.Model):
                     WHEN C.rating_last_value = 3 THEN 'Neutral'
                     ELSE null
                 END as rating_text,
-                C.livechat_operator_id as partner_id,
+                C.livechat_main_agent_partner_id as partner_id,
                 CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
                 CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
                 CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id,
@@ -219,7 +219,7 @@ class Im_LivechatReportChannel(models.Model):
                 SELECT COUNT(DISTINCT M.id) AS message_count,
                        MIN(CASE WHEN H.livechat_member_type = 'agent' THEN M.create_date END) AS first_agent_message_dt,
                        MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt,
-                       MIN(CASE WHEN M.author_id = C.livechat_operator_id THEN M.create_date END) AS first_agent_message_dt_legacy
+                       MIN(CASE WHEN M.author_id = C.livechat_main_agent_partner_id THEN M.create_date END) AS first_agent_message_dt_legacy
                   FROM mail_message M
              LEFT JOIN im_livechat_channel_member_history H on H.channel_id = M.res_id AND (M.author_id = H.partner_id OR M.author_guest_id = H.guest_id)
                  WHERE M.res_id = C.id and M.model = 'discuss.channel'
