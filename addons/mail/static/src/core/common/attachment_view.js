@@ -58,7 +58,7 @@ class AbstractAttachmentView extends Component {
     }
 
     updateFromProps(props) {
-        this.state.thread = this.store.Thread.insert({
+        this.state.thread = this.store["mail.thread"].insert({
             id: props.threadId,
             model: props.threadModel,
         });

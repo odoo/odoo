@@ -74,7 +74,7 @@ export class PortalChatterService {
                 dev: env.debug,
             }).mount(shadow);
         });
-        const thread = this.store.Thread.insert({ model: props.resModel, id: props.resId });
+        const thread = this.store["mail.thread"].insert({ model: props.resModel, id: props.resId });
         Object.assign(thread, {
             access_token: chatterEl.getAttribute("data-token"),
             hash: chatterEl.getAttribute("data-hash"),

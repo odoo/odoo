@@ -1,4 +1,4 @@
-import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
+import { Store as BaseStore, fields, makeStore } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
 
@@ -13,7 +13,6 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
-import { patch } from "@web/core/utils/patch";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
 import { cookie } from "@web/core/browser/cookie";
@@ -24,30 +23,6 @@ import { cookie } from "@web/core/browser/cookie";
 
 let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
-
-export const pyToJsModels = {
-    "mail.thread": "Thread",
-};
-
-patch(storeInsertFns, {
-    makeContext(store) {
-        if (!(store instanceof Store)) {
-            return super.makeContext(...arguments);
-        }
-        return { pyModels: Object.values(pyToJsModels) };
-    },
-    getActualModelName(store, ctx, pyOrJsModelName) {
-        if (!(store instanceof Store)) {
-            return super.getActualModelName(...arguments);
-        }
-        if (ctx.pyModels.includes(pyOrJsModelName)) {
-            console.warn(
-                `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
-            );
-        }
-        return pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
-    },
-});
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
@@ -63,7 +38,7 @@ export class Store extends BaseStore {
     get self() {
         return this.self_partner || this.self_guest;
     }
-    allChannels = fields.Many("Thread", {
+    allChannels = fields.Many("mail.thread", {
         inverse: "storeAsAllChannels",
         onUpdate() {
             const busService = this.store.env.services.bus_service;
@@ -143,12 +118,12 @@ export class Store extends BaseStore {
 
     messagePostMutex = new Mutex();
 
-    menuThreads = fields.Many("Thread", {
+    menuThreads = fields.Many("mail.thread", {
         /** @this {import("models").Store} */
         compute() {
             /** @type {import("models").Thread[]} */
             const searchTerm = cleanTerm(this.discuss.searchTerm);
-            let threads = Object.values(this.Thread.records).filter(
+            let threads = Object.values(this["mail.thread"].records).filter(
                 (thread) =>
                     (thread.displayToSelf ||
                         (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
@@ -384,7 +359,7 @@ export class Store extends BaseStore {
         const id = Number(link.dataset.oeId);
         if (link.classList.contains("o_channel_redirect") && model && id) {
             ev.preventDefault();
-            this.Thread.getOrFetch({ model, id }).then((thread) => {
+            this["mail.thread"].getOrFetch({ model, id }).then((thread) => {
                 if (thread) {
                     thread.open({ focus: true });
                 } else {
@@ -450,7 +425,7 @@ export class Store extends BaseStore {
             const { type, payload } = data;
             if (type === "notification-display-request") {
                 const { correlationId, model, res_id } = payload;
-                const thread = this.Thread.get({ model, id: res_id });
+                const thread = this["mail.thread"].get({ model, id: res_id });
                 let isTabFocused;
                 try {
                     isTabFocused = parent.document.hasFocus();

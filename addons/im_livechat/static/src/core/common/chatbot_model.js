@@ -24,7 +24,7 @@ export class Chatbot extends Record {
         },
     });
     steps = fields.Many("ChatbotStep");
-    thread = fields.One("Thread", {
+    thread = fields.One("mail.thread", {
         inverse: "chatbot",
         onDelete() {
             this.delete();

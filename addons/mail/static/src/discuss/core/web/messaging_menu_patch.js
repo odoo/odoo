@@ -26,7 +26,7 @@ patch(MessagingMenu.prototype, {
         const channelsContribution =
             this.store.channels.status !== "fetched"
                 ? this.store.initChannelsUnreadCounter
-                : Object.values(this.store.Thread.records).filter(
+                : Object.values(this.store["mail.thread"].records).filter(
                       (thread) =>
                           thread.displayToSelf &&
                           !thread.self_member_id?.mute_until_dt &&
@@ -34,7 +34,7 @@ patch(MessagingMenu.prototype, {
                               thread.message_needaction_counter)
                   ).length;
         // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
-        const channelsNeedactionCounter = Object.values(this.store.Thread.records).reduce(
+        const channelsNeedactionCounter = Object.values(this.store["mail.thread"].records).reduce(
             (acc, thread) =>
                 acc + (thread.model === "discuss.channel" ? thread.message_needaction_counter : 0),
             0

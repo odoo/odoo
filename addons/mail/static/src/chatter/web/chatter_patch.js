@@ -95,7 +95,10 @@ patch(Chatter.prototype, {
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(
-            this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
+            this.store["mail.thread"].insert({
+                model: this.props.threadModel,
+                id: this.props.threadId,
+            })
         );
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();

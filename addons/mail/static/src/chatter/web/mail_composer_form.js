@@ -46,7 +46,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
 
         const getActiveMailThreads = () =>
             JSON.parse(this.props.record.data.res_ids).map((resId) => {
-                const thread = this.mailStore.Thread.insert({
+                const thread = this.mailStore["mail.thread"].insert({
                     model: this.props.record.data.model,
                     id: resId,
                 });

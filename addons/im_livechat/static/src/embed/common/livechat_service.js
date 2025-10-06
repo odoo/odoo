@@ -54,7 +54,7 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async open(options = {}) {
-        const thread = await this._createThread({ persist: false, options});
+        const thread = await this._createThread({ persist: false, options });
         await thread?.openChatWindow({ focus: true });
         return thread;
     }
@@ -116,7 +116,9 @@ export class LivechatService {
             {
                 channel_id: options.channel_id ?? this.options.channel_id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
-                chatbot_script_id: originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id,
+                chatbot_script_id:
+                    originThread?.chatbot?.script.id ??
+                    this.store.livechat_rule?.chatbot_script_id?.id,
                 persisted: options.persist ?? persist,
                 ...this.getSessionExtraParams(originThread, options),
             },
@@ -127,7 +129,7 @@ export class LivechatService {
             return;
         }
         this.store.insert(store_data);
-        const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
+        const thread = this.store["mail.thread"].get({ id: channel_id, model: "discuss.channel" });
         const ONE_DAY_TTL = 60 * 60 * 24;
         expirableStorage.setItem(
             "im_livechat_previous_operator",

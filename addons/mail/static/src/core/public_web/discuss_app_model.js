@@ -55,10 +55,10 @@ export class DiscussApp extends Record {
             }
         },
     });
-    thread = fields.One("Thread", {
+    thread = fields.One("mail.thread", {
         /** @this {import("models").DiscussApp} */
         onUpdate() {
-            this.lastActiveId = this.store.Thread.localIdToActiveId(this.thread?.localId);
+            this.lastActiveId = this.store["mail.thread"].localIdToActiveId(this.thread?.localId);
         },
     });
     hasRestoredThread = false;

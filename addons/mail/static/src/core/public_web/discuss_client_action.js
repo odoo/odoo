@@ -39,7 +39,7 @@ export class DiscussClientAction extends Component {
         return (
             props.action.context.active_id ??
             props.action.params?.active_id ??
-            this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
+            this.store["mail.thread"].localIdToActiveId(this.store.discuss.thread?.localId) ??
             (this.env.services.ui.isSmall ? undefined : this.store.discuss.lastActiveId)
         );
     }
@@ -76,7 +76,7 @@ export class DiscussClientAction extends Component {
             return;
         }
         const [model, id] = parsedActiveId;
-        const activeThread = await this.store.Thread.getOrFetch({ model, id });
+        const activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             const highlight_message_id =
                 props.action?.params?.highlight_message_id || router.current.highlight_message_id;

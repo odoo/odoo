@@ -95,7 +95,7 @@ export class ChatHub extends Record {
     async _load(str) {
         /** @type {{ opened: Object[], folded: Object[] }} */
         const { opened = [], folded = [] } = JSON.parse(str);
-        const getThread = (data) => this.store.Thread.getOrFetch(data, ["display_name"]);
+        const getThread = (data) => this.store["mail.thread"].getOrFetch(data, ["display_name"]);
         const openPromises = opened.map(getThread);
         const foldPromises = folded.map(getThread);
         this.preFirstFetchPromise.resolve();

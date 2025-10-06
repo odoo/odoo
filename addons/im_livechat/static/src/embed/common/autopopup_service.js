@@ -13,19 +13,19 @@ export class AutopopupService {
      * ui: typeof import("@web/core/ui/ui_service").uiService.start,
      * }} services
      */
-    constructor(env, { "im_livechat.livechat": livechatService, "mail.store": storeService, ui }) {
-        this.storeService = storeService;
+    constructor(env, { "im_livechat.livechat": livechatService, "mail.store": store, ui }) {
+        this.store = store;
         this.livechatService = livechatService;
         this.ui = ui;
 
-        storeService.isReady.then(() => { 
+        store.isReady.then(() => {
             browser.setTimeout(async () => {
-                await storeService.chatHub.initPromise;
+                await store.chatHub.initPromise;
                 if (this.allowAutoPopup) {
                     expirableStorage.setItem(AutopopupService.STORAGE_KEY, true);
                     livechatService.open();
                 }
-            }, storeService.livechat_rule?.auto_popup_timer * 1000);
+            }, store.livechat_rule?.auto_popup_timer * 1000);
         });
     }
 
@@ -33,9 +33,9 @@ export class AutopopupService {
         return Boolean(
             !expirableStorage.getItem(AutopopupService.STORAGE_KEY) &&
                 !this.ui.isSmall &&
-                this.storeService.livechat_rule?.action === "auto_popup" &&
-                this.storeService.livechat_available &&
-                this.storeService.activeLivechats.length === 0
+                this.store.livechat_rule?.action === "auto_popup" &&
+                this.store.livechat_available &&
+                this.store.activeLivechats.length === 0
         );
     }
 }

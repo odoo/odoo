@@ -44,8 +44,8 @@ export class ChannelMember extends Record {
     get persona() {
         return this.partner_id || this.guest_id;
     }
-    channel_id = fields.One("Thread", { inverse: "channel_member_ids" });
-    threadAsSelf = fields.One("Thread", {
+    channel_id = fields.One("mail.thread", { inverse: "channel_member_ids" });
+    threadAsSelf = fields.One("mail.thread", {
         compute() {
             if (this.store.self?.eq(this.persona)) {
                 return this.channel_id;
@@ -99,7 +99,7 @@ export class ChannelMember extends Record {
             }
         },
     });
-    threadAsTyping = fields.One("Thread", {
+    threadAsTyping = fields.One("mail.thread", {
         compute() {
             return this.isTyping ? this.channel_id : undefined;
         },

@@ -26,9 +26,9 @@ const StorePatch = {
                 return getSortId(g1) - getSortId(g2);
             },
         });
-        this.inbox = fields.One("Thread");
-        this.starred = fields.One("Thread");
-        this.history = fields.One("Thread");
+        this.inbox = fields.One("mail.thread");
+        this.starred = fields.One("mail.thread");
+        this.history = fields.One("mail.thread");
     },
     async initialize() {
         await Promise.all([
@@ -117,7 +117,7 @@ const StorePatch = {
                 break;
             }
             case "RELOAD_CHATTER": {
-                const thread = this.Thread.insert({
+                const thread = this["mail.thread"].insert({
                     model: data.payload.model,
                     id: data.payload.id,
                 });

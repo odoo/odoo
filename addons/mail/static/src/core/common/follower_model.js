@@ -5,7 +5,7 @@ export class Follower extends Record {
     static _name = "mail.followers";
     static id = "id";
 
-    thread = fields.One("Thread");
+    thread = fields.One("mail.thread");
     /** @type {number} */
     id;
     /** @type {boolean} */

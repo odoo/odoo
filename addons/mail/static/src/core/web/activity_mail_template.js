@@ -44,7 +44,7 @@ export class ActivityMailTemplate extends Component {
                 force_email: true,
             },
         };
-        const thread = this.store.Thread.insert({
+        const thread = this.store["mail.thread"].insert({
             model: this.props.activity.res_model,
             id: this.props.activity.res_id,
         });
@@ -61,7 +61,7 @@ export class ActivityMailTemplate extends Component {
         ev.stopPropagation();
         ev.preventDefault();
         this.props.onClickButtons();
-        const thread = this.store.Thread.insert({
+        const thread = this.store["mail.thread"].insert({
             model: this.props.activity.res_model,
             id: this.props.activity.res_id,
         });

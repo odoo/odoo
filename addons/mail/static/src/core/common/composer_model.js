@@ -45,7 +45,7 @@ export class Composer extends Record {
     message = fields.One("mail.message");
     mentionedPartners = fields.Many("res.partner");
     mentionedRoles = fields.Many("res.role");
-    mentionedChannels = fields.Many("Thread");
+    mentionedChannels = fields.Many("mail.thread");
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
     composerText = fields.Attr("", {
@@ -90,7 +90,7 @@ export class Composer extends Record {
             }
         },
     });
-    thread = fields.One("Thread");
+    thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
         start: 0,

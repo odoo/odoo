@@ -13,7 +13,7 @@ const StorePatch = {
                 return {};
             },
         });
-        this.ringingThreads = fields.Many("Thread", {
+        this.ringingThreads = fields.Many("mail.thread", {
             /** @this {import("models").Store} */
             onUpdate() {
                 if (this.ringingThreads.length > 0) {
@@ -27,7 +27,7 @@ const StorePatch = {
         });
         this.allActiveRtcSessions = fields.Many("discuss.channel.rtc.session");
         this.nextTalkingTime = 1;
-        this.fullscreenChannel = fields.One("Thread");
+        this.fullscreenChannel = fields.One("mail.thread");
         this._hasFullscreenUrl = fields.Attr(false, {
             compute() {
                 return this.discuss?.thread?.eq(this.fullscreenChannel);

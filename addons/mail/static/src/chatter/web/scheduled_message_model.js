@@ -29,7 +29,7 @@ export class ScheduledMessage extends Record {
             return htmlToTextContentInline(this.body);
         },
     });
-    thread = fields.One("Thread");
+    thread = fields.One("mail.thread");
     // Editors of the records can delete scheduled messages
     get deletable() {
         return this.store.self.main_user_id?.is_admin || this.thread.hasWriteAccess;

@@ -25,7 +25,7 @@ export class MailAttachments extends Component {
 
     async onFileUploaded({ name, data, type }) {
         const resIds = JSON.parse(this.props.record.data.res_ids);
-        const thread = await this.mailStore.Thread.insert({
+        const thread = await this.mailStore["mail.thread"].insert({
             model: this.props.record.data.model,
             id: resIds[0],
         });

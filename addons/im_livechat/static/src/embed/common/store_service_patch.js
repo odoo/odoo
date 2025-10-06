@@ -9,7 +9,7 @@ export const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.activeLivechats = fields.Many("Thread", { inverse: "storeAsActiveLivechats" });
+        this.activeLivechats = fields.Many("mail.thread", { inverse: "storeAsActiveLivechats" });
         expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
         this.guest_token = fields.Attr(null, {
             compute() {

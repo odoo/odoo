@@ -29,7 +29,7 @@ test("Handle livechat history command", async () => {
     await contains(".o-mail-Composer-input").edit("Hello World!", { confirm: false });
     await press("Enter");
     await waitFor(".o-mail-Message:contains(Hello World!)");
-    const thread = Object.values(getService("mail.store").Thread.records).at(-1);
+    const thread = Object.values(getService("mail.store")["mail.thread"].records).at(-1);
     const guestId = pyEnv.cookie.get("dgid");
     const [guest] = pyEnv["mail.guest"].read(guestId);
     pyEnv["bus.bus"]._sendone(guest, "im_livechat.history_command", {

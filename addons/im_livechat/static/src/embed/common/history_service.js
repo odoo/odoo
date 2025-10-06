@@ -11,13 +11,13 @@ export class HistoryService {
         /** @type {ReturnType<typeof import("@bus/services/bus_service").busService.start>} */
         this.busService = services.bus_service;
         /** @type {import("models").Store} */
-        this.storeService = services["mail.store"];
+        this.store = services["mail.store"];
     }
 
     setup() {
         this.updateHistory();
         this.busService.subscribe("im_livechat.history_command", async (payload) => {
-            const thread = await this.storeService.Thread.getOrFetch({
+            const thread = await this.store["mail.thread"].getOrFetch({
                 id: payload.id,
                 model: "discuss.channel",
             });
