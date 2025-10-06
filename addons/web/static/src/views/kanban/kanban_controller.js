@@ -162,16 +162,60 @@ export class KanbanController extends Component {
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
         });
-        useSetupAction({
+        const { setScrollFromState } = useSetupAction({
             rootRef: this.rootRef,
             beforeLeave: () =>
                 // wait for potential pending write operations (e.g. records being moved)
                 this.model.mutex.getUnlockedDef(),
-            getLocalState: () => ({
-                activeBars: this.progressBarState?.activeBars,
-                modelState: this.model.exportState(),
-            }),
+            getLocalState: () => {
+                const state = {
+                    activeBars: this.progressBarState?.activeBars,
+                    modelState: this.model.exportState(),
+                };
+                if (this.env.isSmall && this.model.root.isGrouped) {
+                    const columnScrollTops = [];
+                    const sel = ".o_kanban_group:not(.o_column_folded)";
+                    const columnEls = this.rootRef.el.querySelectorAll(sel);
+                    const groups = this.model.root.groups;
+                    for (const columnEl of columnEls) {
+                        const scrollTop = columnEl.scrollTop;
+                        if (scrollTop > 0) {
+                            const group = groups.find((g) => g.id === columnEl.dataset.id);
+                            columnScrollTops.push([group.serverValue, columnEl.scrollTop]);
+                        }
+                    }
+                    state.scrollPositions = {
+                        scrollLeft: this.rootRef.el.querySelector(".o_renderer")?.scrollLeft || 0,
+                        columnScrollTops,
+                    };
+                }
+                return state;
+            },
         });
+        useEffect(
+            (isReady) => {
+                if (isReady) {
+                    if (this.env.isSmall && this.model.root.isGrouped) {
+                        const { scrollPositions } = this.props.state || {};
+                        if (scrollPositions) {
+                            const { scrollLeft, columnScrollTops } = scrollPositions;
+                            this.rootRef.el.querySelector(".o_renderer").scrollLeft = scrollLeft;
+                            const groups = this.model.root.groups;
+                            for (const [serverValue, scrollTop] of columnScrollTops) {
+                                const group = groups.find((g) => g.serverValue === serverValue);
+                                if (group) {
+                                    const sel = `.o_kanban_group[data-id=${group.id}]`;
+                                    this.rootRef.el.querySelector(sel).scrollTop = scrollTop;
+                                }
+                            }
+                        }
+                    } else {
+                        setScrollFromState();
+                    }
+                }
+            },
+            () => [this.model.isReady]
+        );
         usePager(() => {
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
