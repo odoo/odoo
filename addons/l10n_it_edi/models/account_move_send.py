@@ -97,6 +97,9 @@ class AccountMoveSend(models.AbstractModel):
                 attachment_data = results.get(attachment['name'], {})
                 if attachment_data.get('signed') and (signed_data := attachment_data.get('signed_data')):
                     attachment['raw'] = signed_data
+                # Show that those moves couldn't be sent
+                if 'error_message' in attachment_data:
+                    moves_data[move]['error'] = attachment_data['error_message']
 
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
