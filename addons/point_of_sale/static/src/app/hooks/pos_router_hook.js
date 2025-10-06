@@ -9,7 +9,7 @@ export const useRouterParamsChecker = () => {
     const routeParams = registry.category("pos_pages").get(component.constructor.name);
     const params = routeParams.params;
 
-    if (params.orderUuid) {
+    if (params.orderUuid && Object.keys(params).includes("orderFinalized")) {
         const order = pos.models["pos.order"].getBy("uuid", router.state.params.orderUuid);
         if (!order || order.finalized !== params.orderFinalized) {
             const params = pos.defaultPage;

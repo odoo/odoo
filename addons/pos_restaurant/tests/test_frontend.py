@@ -281,6 +281,18 @@ class TestFrontend(TestFrontendCommon):
 
         order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000004')], limit=1, order='id desc')
         self.assertEqual(order4.customer_count, 2)
+        self.start_pos_tour('test_edit_payments_with_tip')
+        edited_orders = self.env['pos.order'].search([], limit=2)
+        # Tip from payment screen - tip should be the part of amount total and amount paid
+        payments_order1 = {p.payment_method_id.name: p.amount for p in edited_orders[1].payment_ids}
+        self.assertEqual(payments_order1, {'Cash': 6.0, 'Bank': 2.0})
+        self.assertEqual(edited_orders[1].amount_total, 8.0)
+        self.assertEqual(edited_orders[1].amount_paid, 8.0)
+        # verify tip is recorded correctly - should be counted as a part of inclusive and subtotal.
+        tip_line_order1 = edited_orders[1].lines.filtered(lambda l: l.product_id == self.env.ref('point_of_sale.product_product_tip'))
+        self.assertEqual(tip_line_order1.price_unit, 5.0)
+        self.assertEqual(tip_line_order1.price_subtotal, 5.0)
+        self.assertEqual(tip_line_order1.price_subtotal_incl, 5.0)
 
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()

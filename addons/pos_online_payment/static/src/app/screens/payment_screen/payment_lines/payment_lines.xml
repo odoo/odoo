@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('delete-button')]" position="attributes">
+            <!-- You can't cancel a payment if it's paid online payment line. -->
+            <attribute name="t-if" add="!line.online_account_payment_id" separator="and"/>
+        </xpath>
+    </t>
+</templates>

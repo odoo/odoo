@@ -11,6 +11,7 @@ import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receip
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
+import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
 import {
@@ -26,7 +27,6 @@ import {
     filterChangeByCategories,
 } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
@@ -2040,7 +2040,7 @@ export class PosStore extends WithLazyGetterTrap {
     async editPartner(partner) {
         const record = await makeActionAwaitable(
             this.action,
-            "point_of_sale.res_partner_action_edit_pos",
+            await this.data.call("res.partner", "action_open_partner_view", [partner?.id]),
             {
                 props: { resId: partner?.id },
                 additionalContext: this.editPartnerContext(),
@@ -2096,20 +2096,36 @@ export class PosStore extends WithLazyGetterTrap {
     async allowProductCreation() {
         return await user.hasGroup("base.group_system");
     }
-    orderDetailsProps(order) {
-        return {
-            resModel: "pos.order",
-            resId: order.id,
-            onRecordSaved: async (record) => {
-                await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
-                this.action.doAction({
-                    type: "ir.actions.act_window_close",
-                });
-            },
-        };
+    editPayment(order) {
+        this.setOrder(order);
+        this.navigate("PaymentScreen", {
+            orderUuid: order.uuid,
+        });
     }
-    async orderDetails(order) {
-        this.dialog.add(FormViewDialog, this.orderDetailsProps(order));
+    showOrderDetails(order, props = {}) {
+        this.dialog.add(OrderDetailsDialog, {
+            order: order,
+            editPayment: () => {
+                this.dialog.closeAll();
+                this.editPayment(order);
+            },
+            ...props,
+        });
+    }
+    canEditPayment(order) {
+        return !this.config.iface_print_auto && order.nb_print === 0 && order.state === "paid";
+    }
+    openFinalizedOrders() {
+        const order = this.getOrder();
+        const partner = order.getPartner();
+        const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
+        return this.navigate("TicketScreen", {
+            stateOverride: {
+                filter: "SYNCED",
+                search: searchDetails,
+                destinationOrder: order,
+            },
+        });
     }
     async closePos() {
         this._resetConnectedCashier();

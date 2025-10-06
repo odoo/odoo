@@ -160,6 +160,25 @@ export function nthRowContains(n, string, viewMode) {
         },
     ];
 }
+export function checkOrderDetailsDialog(orderRef, totalPayment, payments) {
+    const steps = [
+        {
+            trigger: `.modal-content .field-details:contains("Order Reference"):contains(${orderRef})`,
+        },
+        {
+            trigger: ".modal-content .field-details:contains('Origin')",
+        },
+        {
+            trigger: `.modal-content .card-header h5:contains("Payment Info"):contains(${totalPayment})`,
+        },
+    ];
+    for (const pm in payments) {
+        steps.push({
+            trigger: `.modal-content table tr:contains("${pm}"):contains(${payments[pm]})`,
+        });
+    }
+    return steps;
+}
 export function nthRowIsHighlighted(n) {
     return [
         {

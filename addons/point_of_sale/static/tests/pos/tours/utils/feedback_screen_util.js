@@ -415,6 +415,15 @@ function clickPrintButton() {
     ];
 }
 
+export function clickEditPayment() {
+    return [
+        {
+            trigger: ".feedback-screen .edit-order-payment:contains(Edit)",
+            run: "click",
+        },
+    ];
+}
+
 export function printTicket(ticketLabel) {
     return [
         ...clickPrintButton(),

@@ -23,11 +23,70 @@
             </field>
         </record>
 
-        <record id="res_partner_action_edit_pos" model="ir.actions.act_window">
-            <field name="name">Edit Partner</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="view_id" ref="base.view_partner_form"/>
+        <record id="view_partner_form_pos_ui" model="ir.ui.view">
+            <field name="name">res.partner.form.pos.ui</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Partners">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="mb8">
+                            <div class="d-flex gap-3">
+                                <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
+                                <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                                <div class="d-flex flex-column flex-grow-1">
+                                    <h1 class="mb-0 w-75">
+                                        <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="Name (company or person)" required="type == 'contact'"/>
+                                    </h1>
+                                    <div class="d-flex align-items-baseline w-md-50">
+                                        <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
+                                        <field name="parent_id" class="w-100"
+                                            widget="res_partner_many2one"
+                                            placeholder="Company Employer"
+                                            domain="[('parent_id', '=', False)]"
+                                            context="{'default_user_id': user_id}"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline w-md-50">
+                                        <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                        <field name="email" class="w-100" widget="email" required="user_ids" placeholder="Email"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline w-md-50">
+                                        <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                        <field name="phone" class="w-100" widget="phone" placeholder="Phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <span class="o_form_label o_td_label o_address_type" name="address_name">
+                                    <field name="type_address_label" readonly="1" class="fw-bold"/>
+                                </span>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="state_id" placeholder="State" class="o_address_state"
+                                        options="{'no_open': True, 'no_quick_create': True}"
+                                        context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <div name="partner_address_country" class="d-flex justify-content-between">
+                                        <field name="country_id" placeholder="Country" class="o_address_country"
+                                            options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </div>
+                                <field name="vat" placeholder="e.g. BE0477472701"/>
+                            </group>
+                            <group>
+                                <field name="barcode"/>
+                                <field name="lang" invisible="active_lang_count &lt;= 1"/>
+                                <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
+                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
         </record>
 </odoo>

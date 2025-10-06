@@ -12,7 +12,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged, loaded_demo_data
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
 from freezegun import freeze_time
@@ -2127,6 +2127,19 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertEqual(len(self.main_pos_config.current_session_id.statement_line_ids), 1, "There should be one cash in/out statement line")
         self.assertEqual(self.main_pos_config.current_session_id.statement_line_ids[0].amount, -5, "The cash in/out amount should be -5")
+
+    def test_edit_paid_order(self):
+        self.main_pos_config.write({'ship_later': True})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_edit_paid_order', login="pos_user")
+        edited_orders = self.env['pos.order'].search([], limit=2)
+        # check edited shiping date
+        next_year = date.today().year + 1
+        self.assertEqual(edited_orders[0].shipping_date, date(next_year, 5, 30))
+        self.assertEqual(edited_orders[0].picking_ids[0].scheduled_date, datetime(next_year, 5, 30, 0, 0, 0))
+        # check invoice created
+        self.assertTrue(edited_orders[1].account_move)
+        self.assertEqual(edited_orders[1].partner_id.name, 'Partner Test 1')
 
     def test_reuse_empty_floating_order(self):
         """ Verify that after a payment, POS should reuse an existing empty floating order if available, instead of always creating new ones """

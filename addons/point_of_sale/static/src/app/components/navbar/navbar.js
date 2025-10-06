@@ -101,6 +101,13 @@ export class Navbar extends Component {
         this.pos.navigateToOrderScreen(order);
     }
 
+    onTicketButtonClick() {
+        // select default selected order and apply paid filter while editing paid order payments
+        if (this.pos.router.state.current == "PaymentScreen" && this.pos.getOrder()?.finalized) {
+            return this.pos.openFinalizedOrders();
+        }
+        return this.pos.navigate("TicketScreen");
+    }
     noOpenDialogs() {
         return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
     }

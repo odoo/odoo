@@ -69,8 +69,7 @@ export class PosOrderAccounting extends Base {
      */
     get remainingDue() {
         const isNegative = this.totalDue < 0;
-        const total = this.totalDue;
-        const remaining = total - this.amountPaid;
+        const remaining = this.totalDue - this.amountPaid;
 
         // Amount paid covers the total due
         if ((isNegative && remaining >= 0) || (!isNegative && remaining <= 0)) {

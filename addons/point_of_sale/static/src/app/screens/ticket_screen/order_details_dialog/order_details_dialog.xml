@@ -1,0 +1,80 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderDetailsDialog">
+        <Dialog size="'md'" title="title">
+            <div class="d-flex flex-column gap-3 rounded-2">
+                <t t-foreach="this.orderDetails" t-as="card" t-key="card.title">
+                    <div class="card border rounded-2">
+                        <!-- Header -->
+                        <div class="card-header d-flex justify-content-between align-items-center bg-secondary py-2 px-3">
+                            <div class="d-flex align-items-center">
+                                <i t-att-class="`fa ${card.icon} fs-6`" aria-hidden="true"/>
+                                <h5 class="ms-2 mb-0 fw-semibold text-dark">
+                                    <t t-esc="card.title"/>
+                                    <small class="text-muted ms-2"><b><t t-out="card.subtitle"/></b></small>
+                                </h5>
+                            </div>
+                            <!-- Buttons -->
+                            <t t-if="card.buttons">
+                                <div class="d-flex gap-2">
+                                    <t t-foreach="card.buttons" t-as="btn" t-key="btn_index">
+                                        <button t-if="btn.visible and btn.action" t-on-click="btn.action" t-attf-class="btn rounded-2 btn-sm btn-{{btn.color}} rounded-2" t-esc="btn.label" />
+                                        <BadgeTag t-if="!btn.action" color="btn.colorIndex" text="btn.label"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+
+                        <!-- Fields -->
+                        <div t-if="card.fields" class="p-3">
+                            <div class="row g-3">
+                                <t t-foreach="card.fields" t-as="field" t-key="field_index">
+                                    <div t-if="field.value" class="col-md-6">
+                                        <div class="d-flex field-details flex-column">
+                                            <div class="text-muted small"><t t-esc="field.label"/></div>
+                                            <div class="fw-medium">
+                                                <t t-esc="field.value"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div t-if="card.table" class="table-responsive p-3">
+                            <table class="table table-bordered table-sm align-middle mb-0">
+                                <thead class="bg-secondary-subtle">
+                                    <tr>
+                                        <t t-foreach="card.table.headers" t-as="head" t-key="head_index">
+                                            <th class="fw-semibold text-dark text-capitalize px-3 py-2">
+                                                <t t-esc="head"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="card.table.rows" t-as="row" t-key="row_index">
+                                        <tr>
+                                            <t t-foreach="card.table.headers" t-as="head" t-key="head_index">
+                                                <td class="px-3 py-2">
+                                                    <t t-esc="row[head] or ''"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Footer -->
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="props.close">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -29,7 +29,10 @@ patch(OrderPaymentValidation.prototype, {
             return;
         }
         // No need to do an rpc if no existing coupon is being used.
-        if (Object.keys(pointChanges || {}).length > 0 || newCodes.length) {
+        if (
+            this.order.state != "paid" &&
+            (Object.keys(pointChanges || {}).length > 0 || newCodes.length)
+        ) {
             try {
                 const { successful, payload } = await this.pos.data.call(
                     "pos.order",

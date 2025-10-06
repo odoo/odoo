@@ -189,7 +189,7 @@
                         <div class="pads">
                             <t t-if="isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">
-                                    <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.orderDetails(_selectedSyncedOrder)">
+                                    <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.showOrderDetails(_selectedSyncedOrder)">
                                         <i class="fa fa-pencil-square-o me-1" /> Details
                                     </button>
                                     <InvoiceButton

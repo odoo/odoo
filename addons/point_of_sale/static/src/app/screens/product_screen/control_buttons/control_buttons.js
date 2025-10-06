@@ -123,16 +123,7 @@ export class ControlButtons extends Component {
     }
 
     clickRefund() {
-        const order = this.pos.getOrder();
-        const partner = order.getPartner();
-        const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
-        this.pos.navigate("TicketScreen", {
-            stateOverride: {
-                filter: "SYNCED",
-                search: searchDetails,
-                destinationOrder: order,
-            },
-        });
+        this.pos.openFinalizedOrders();
     }
 
     get buttonClass() {

@@ -275,7 +275,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     assertEditable() {
-        if (this.finalized) {
+        if (this.finalized && (this.nb_print || this.state == "done")) {
             throw new Error("Finalized Order cannot be modified");
         }
         return true;
