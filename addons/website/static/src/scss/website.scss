@@ -1756,19 +1756,11 @@ ul.o_checklist > li.o_checked::after {
 input[value*="data-oe-translation-initial-sha"] {
     @extend .o_text_content_invisible;
 }
-[data-oe-translation-initial-sha] {
-    > .o_translation_select {
-        border: $input-border-width solid $input-border-color;
-        @include border-radius($input-border-radius, 0);
-
-        // Hide translatable `<select/>`s since we use `.o_translation_select`
-        // elements to handle translations.
-        + select {
-            display: none !important;
-        }
-        > div:not(:last-child) {
-            border-bottom: inherit;
-        }
+.o_translation_select {
+    // Hide translatable `<select/>`s since we use `.o_translation_select`
+    // elements to handle translations.
+    + select {
+        display: none !important;
     }
 }
 
