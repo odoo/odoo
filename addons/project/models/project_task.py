@@ -277,7 +277,7 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     # Task Dependencies fields
-    allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies', export_string_translation=False)
+    allow_task_dependencies = fields.Boolean(compute='_compute_allow_task_dependencies', export_string_translation=False)
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
@@ -295,7 +295,7 @@ class ProjectTask(models.Model):
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
-    allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks', export_string_translation=False)
+    allow_recurring_tasks = fields.Boolean(compute='_compute_allow_recurring_tasks', export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
@@ -334,8 +334,8 @@ class ProjectTask(models.Model):
         'You cannot convert this task into a sub-task because it is recurrent.',
     )
     _private_task_has_no_parent = models.Constraint(
-        'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))',
-        'A private task cannot have a parent.',
+        'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL) OR is_template IS TRUE)',
+        'A private (non-template) task cannot have a parent.',
     )
 
     _is_template_idx = models.Index('(is_template) WHERE is_template IS TRUE')
@@ -351,7 +351,7 @@ class ProjectTask(models.Model):
     def _ensure_super_task_is_not_private(self):
         """ Ensures that the company of the task is valid for the partner. """
         for task in self:
-            if not task.project_id and task.subtask_count:
+            if not task.project_id and task.subtask_count and not task.is_template:
                 raise ValidationError(_('This task has sub-tasks, so it can\'t be private.'))
 
     @property
@@ -509,6 +509,14 @@ class ProjectTask(models.Model):
             'repeat_type',
             'repeat_until',
         ]
+
+    @api.depends('project_id.allow_task_dependencies', 'is_template')
+    def _compute_allow_task_dependencies(self):
+        for task in self:
+            if task.project_id:
+                task.allow_task_dependencies = task.project_id.allow_task_dependencies
+            else:
+                task.allow_task_dependencies = task.is_template
 
     @api.depends('recurring_task')
     def _compute_repeat(self):
@@ -669,6 +677,9 @@ class ProjectTask(models.Model):
     @api.depends('project_id')
     def _compute_stage_id(self):
         for task in self:
+            if not task.project_id and task.is_template:
+                task.stage_id = False
+                continue
             project = task.project_id or task.parent_id.project_id
             if project:
                 if project not in task.stage_id.project_ids:
@@ -815,6 +826,14 @@ class ProjectTask(models.Model):
         for task in self:
             task.has_template_ancestor = task.is_template or (task.parent_id and task.parent_id.sudo().has_template_ancestor)
 
+    @api.depends('project_id.allow_recurring_tasks', 'is_template')
+    def _compute_allow_recurring_tasks(self):
+        for task in self:
+            if task.project_id:
+                task.allow_recurring_tasks = task.project_id.allow_recurring_tasks
+            else:
+                task.allow_recurring_tasks = task.is_template
+
     def _search_has_template_ancestor(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             return NotImplemented
@@ -856,7 +875,7 @@ class ProjectTask(models.Model):
                 vals['active'] = True
             if not default.get('name'):
                 vals['name'] = task.name if self.env.context.get('copy_project') or copy_from_template else _("%s (copy)", task.name)
-            if task.recurrence_id and not default.get('recurrence_id'):
+            if task.recurrence_id and 'recurrence_id' not in default:
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
                 vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
@@ -953,7 +972,11 @@ class ProjectTask(models.Model):
             mail_create_nolog=True,
         )).copy(default=default)
 
-        self._resolve_copied_dependencies(copied_tasks)
+        if (
+            not self.env.context.get('copy_from_template')
+            or self.env['project.project'].browse(default.get('project_id')).allow_task_dependencies
+        ):
+            self._resolve_copied_dependencies(copied_tasks)
         log_message = _("Task Created")
         copied_tasks._message_log_batch(bodies={task.id: log_message for task in copied_tasks})
 
@@ -1134,7 +1157,7 @@ class ProjectTask(models.Model):
             if not project_id and ("stage_id" in vals or self_ctx.env.context.get('default_stage_id')):
                 vals["stage_id"] = False
 
-            if project_id and "stage_id" not in vals:
+            if (project_id and "stage_id" not in vals) or (project_id and not vals.get("stage_id") and self.env.context.get("copy_from_template")):
                 # 1) Allows keeping the batch creation of tasks
                 # 2) Ensure the defaults are correct (and computed once by project),
                 # by using default get (instead of _get_default_stage_id or _stage_find),
@@ -1940,7 +1963,7 @@ class ProjectTask(models.Model):
 
     def action_convert_to_subtask(self):
         self.ensure_one()
-        if self.project_id:
+        if self.project_id or self.is_template:
             return {
                 'name': _('Convert to Task/Sub-Task'),
                 'type': 'ir.actions.act_window',
@@ -1954,21 +1977,12 @@ class ProjectTask(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'danger',
-                'message': _('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
+                'message': self.env._('Private (non-template) tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
             }
         }
 
     def action_convert_to_template(self):
         self.ensure_one()
-        if not self.project_id:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'type': 'danger',
-                    'message': _('Private tasks cannot be converted into templates'),
-                },
-            }
         if self.is_template:
             return {
                 'type': 'ir.actions.client',
@@ -1995,6 +2009,15 @@ class ProjectTask(models.Model):
     def action_undo_convert_to_template(self):
         self.ensure_one()
         self.is_template = False
+        if (self.parent_id or self.child_ids) and not self.project_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'danger',
+                    'message': self.env._('Cannot convert back to regular task because the task has no project defined but has a parent or sub-tasks.'),
+                },
+            }
         self.message_post(body=_("Template converted back to regular task"))
         return {
             'type': 'ir.actions.client',
@@ -2020,6 +2043,7 @@ class ProjectTask(models.Model):
         """
         return [
             "parent_id",
+            "project_id",
         ]
 
     @api.model
@@ -2027,9 +2051,13 @@ class ProjectTask(models.Model):
         """
         Blacklist of fields to not copy when creating a task from a template.
         """
-        return [
+        fields = [
             "partner_id",
         ]
+        project_id = self.env.context.get('default_project_id')
+        if project_id and not self.env['project.project'].browse(project_id).allow_recurring_tasks:
+            fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
+        return fields
 
     def action_create_from_template(self, values=None):
         self.ensure_one()

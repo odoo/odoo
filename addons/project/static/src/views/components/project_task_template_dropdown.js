@@ -1,7 +1,9 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 import { ProjectTemplateButtons } from "./project_template_buttons";
 
@@ -39,8 +41,18 @@ export class ProjectTaskTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.addDialog = useOwnedDialogs();
+        this.displayTasksLimit = 10;
         this.state = useState({ taskTemplates: [] });
         onWillStart(this.onWillStart);
+    }
+
+    get displayViewMoreButton() {
+        return this.state.taskTemplates.length > this.displayTasksLimit;
+    }
+
+    get displayedtaskTemplates() {
+        return this.state.taskTemplates.slice(0, this.displayTasksLimit);
     }
 
     async onWillStart() {
@@ -74,6 +86,22 @@ export class ProjectTaskTemplateDropdown extends Component {
                 }
             ),
             focusTitle: true,
+        });
+    }
+
+    onClickViewMore() {
+        this.addDialog(SelectCreateDialog, {
+            title: _t("Tasks Templates"),
+            noCreate: true,
+            multiSelect: false,
+            resModel: "project.task",
+            domain: [
+                ["is_template", "=", true],
+                ["project_id", "in", [this.props.projectId, false]],
+            ],
+            onSelected: ([taskTemplateId]) => {
+                this.createTaskFromTemplate(taskTemplateId);
+            },
         });
     }
 }

@@ -12,13 +12,17 @@
                 </DropdownItem>
                 <div role="separator" class="dropdown-divider"/>
                 <div class="dropdown-header">Task Templates</div>
-                <t t-foreach="state.taskTemplates" t-as="template" t-key="template.id">
+                <t t-foreach="displayedtaskTemplates" t-as="template" t-key="template.id">
                     <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center pe-0'"
                         onSelected="() => this.createTaskFromTemplate(template.id)">
                         <span class="text-truncate" t-out="template.name"/>
                         <ProjectTemplateButtons resModel="'project.task'" resId="template.id"/>
                     </DropdownItem>
                 </t>
+                <div t-if="displayViewMoreButton" role="separator" class="dropdown-divider"/>
+                <DropdownItem t-if="displayViewMoreButton" tag="'button'" class="'btn btn-link'" onSelected="() => this.onClickViewMore()">
+                    View More
+                </DropdownItem>
             </t>
         </Dropdown>
     </t>

@@ -536,7 +536,7 @@ class TestProjectSubtasks(TestProjectCommon):
             'tag': 'display_notification',
             'params': {
                 'type': 'danger',
-                'message': 'Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.',
+                'message': 'Private (non-template) tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.',
             },
         })
 
