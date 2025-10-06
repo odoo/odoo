@@ -55,7 +55,7 @@ class Driver(Thread):
         action = data.get('action', '')
         session_id = data.get('session_id')
         if session_id:
-            self.data["owner"] = session_id
+            self.data["session_id"] = session_id
         try:
             response = {'status': 'success', 'result': self._actions[action](data), 'action_args': {**data}}
         except Exception as e:
