@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from lxml import etree
 from urllib.parse import urlparse
+
+from lxml import etree
 
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
@@ -238,10 +239,10 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.update_items()
 
         self.assertListEqual(
-            list(
+            [
                 name.replace('/', '>')
                 for name in self.public_categories.sorted('sequence').mapped('display_name')
-            ),
+            ],
             self.red_sofa_item['product_type']
         )
 

@@ -1,4 +1,5 @@
 from odoo.tests import tagged
+
 from odoo.addons.website.tests.test_website_technical_page import TestWebsiteTechnicalPage
 
 

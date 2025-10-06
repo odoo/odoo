@@ -39,8 +39,8 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
         self.start_tour('/', 'website_sale.cart_notification')
 
     def test_website_sale_cart_notification_qty_and_total(self):
-        """ Check that adding product into cart which is already in the cart only display newly
-        added qty count and total."""
-
+        """Check that adding product into cart which is already in the cart only display newly
+        added qty count and total.
+        """
         self.env.ref('website_sale.product_search').active = True
         self.start_tour('/', 'website_sale.cart_notification_qty_and_total')

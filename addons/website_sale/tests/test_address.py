@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-
 from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
@@ -48,12 +47,12 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         )
 
     def _get_last_address(self, partner):
-        """ Useful to retrieve the last created address (shipping or billing) """
+        """Useful to retrieve the last created address (shipping or billing)"""
         return partner.child_ids.sorted('id', reverse=True)[0]
 
     # TEST WEBSITE
     def test_01_create_shipping_address_specific_user_account(self):
-        ''' Ensure `website_id` is correctly set (specific_user_account) '''
+        """Ensure `website_id` is correctly set (specific_user_account)"""
         p = self.env.user.partner_id
         p.active = True
         so = self._create_so(partner_id=p.id)
@@ -70,10 +69,10 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     # TEST COMPANY
     def _setUp_multicompany_env(self):
-        ''' Have 2 companies A & B.
-            Have 1 website 1 which company is B
-            Have admin on company A
-        '''
+        """Have 2 companies A & B.
+        Have 1 website 1 which company is B
+        Have admin on company A
+        """
         self.company_a, self.company_b, self.company_c = self.env['res.company'].create([
             {'name': 'Company A'},
             {'name': 'Company B'},
@@ -91,12 +90,12 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.portal_partner = self.portal_user.partner_id
 
     def test_02_demo_address_and_company(self):
-        ''' This test ensure that the company_id of the address (partner) is
-            correctly set and also, is not wrongly changed.
-            eg: new shipping should use the company of the website and not the
-                one from the admin, and editing a billing should not change its
-                company.
-        '''
+        """This test ensure that the company_id of the address (partner) is
+        correctly set and also, is not wrongly changed.
+        eg: new shipping should use the company of the website and not the
+            one from the admin, and editing a billing should not change its
+            company.
+        """
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.demo_partner.id)
 
@@ -118,7 +117,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertNotEqual(self.demo_partner.email, self.default_address_values['email'], "Employee cannot change their email during the checkout process.")
 
     def test_03_public_user_address_and_company(self):
-        ''' Same as test_02 but with public user '''
+        """Same as test_02 but with public user"""
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.website.user_id.partner_id.id)
 
@@ -139,8 +138,9 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertEqual(new_partner.company_id, self.website.company_id, "Public user edited billing (the partner itself) should not get its company modified.")
 
     def test_03_carrier_rate_on_shipping_address_change(self):
-        """ Test that when a shipping address is changed the price of delivery is recalculated
-        and updated on the order."""
+        """Test that when a shipping address is changed the price of delivery is recalculated
+        and updated on the order.
+        """
         shipping_partner = self.env['res.partner'].create({
             'name': 'dummy',
             'parent_id': self.partner.id,
@@ -175,7 +175,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             )
 
     def test_04_apply_empty_pl(self):
-        ''' Ensure empty pl code reset the applied pl '''
+        """Ensure empty pl code reset the applied pl"""
         self._enable_pricelists()
         so = self._create_so(partner_id=self.env.user.partner_id.id)
         eur_pl = self.env['product.pricelist'].create({
@@ -229,9 +229,9 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     # TEST WEBSITE & MULTI COMPANY
 
     def test_05_create_so_with_website_and_multi_company(self):
-        ''' This test ensure that the company_id of the website set on the order
-            is the same as the env company or the one set on the order.
-        '''
+        """This test ensure that the company_id of the website set on the order
+        is the same as the env company or the one set on the order.
+        """
         self._setUp_multicompany_env()
         # No company on the SO
         so = self._create_so(partner_id=self.demo_partner.id)
@@ -250,7 +250,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self._create_so(partner_id=self.demo_partner.id, company_id=self.company_c.id)
 
     def test_06_portal_user_address_and_company(self):
-        ''' Same as test_03 but with portal user '''
+        """Same as test_03 but with portal user"""
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.portal_partner.id)
 
@@ -272,8 +272,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_07_change_fiscal_position(self):
         """
-            Check that the sale order is updated when you change fiscal position.
-            Change fiscal position by modifying address during checkout process.
+        Check that the sale order is updated when you change fiscal position.
+        Change fiscal position by modifying address during checkout process.
         """
         self.env.company.country_id = self.country_us
         be_address_POST, nl_address_POST = [
@@ -358,7 +358,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             )
 
     def test_08_new_user_address_state(self):
-        ''' Test the billing and shipping addresses creation values. '''
+        """Test the billing and shipping addresses creation values."""
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.demo_partner.id)
 
@@ -662,7 +662,6 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_imported_user_with_trailing_name_can_checkout(self):
         """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
-
         imported_user = self.env['res.users'].create({
             'name': 'Imported User ',  # trailing space
             'login': 'imported_user',

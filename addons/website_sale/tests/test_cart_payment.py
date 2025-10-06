@@ -29,8 +29,9 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         cls.cart.write({'transaction_ids': [Command.set([cls.tx.id])]})
 
     def test_unpaid_orders_can_be_retrieved(self):
-        """ Test that fetching sales orders linked to a payment transaction in the states 'draft',
-        'cancel', or 'error' returns the orders. """
+        """Test that fetching sales orders linked to a payment transaction in the states 'draft',
+        'cancel', or 'error' returns the orders.
+        """
         for unpaid_order_tx_state in ('draft', 'cancel', 'error'):
             self.tx.state = unpaid_order_tx_state
             with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id) as request:
@@ -42,8 +43,9 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
                 )
 
     def test_paid_orders_cannot_be_retrieved(self):
-        """ Test that fetching sales orders linked to a payment transaction in the states 'pending',
-        'authorized', or 'done' returns an empty recordset to prevent updating the paid orders. """
+        """Test that fetching sales orders linked to a payment transaction in the states 'pending',
+        'authorized', or 'done' returns an empty recordset to prevent updating the paid orders.
+        """
         self.tx.provider_id.support_manual_capture = 'full_only'
         for paid_order_tx_state in ('pending', 'authorized', 'done'):
             self.tx.state = paid_order_tx_state

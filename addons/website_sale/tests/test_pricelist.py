@@ -39,7 +39,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         super().setUpClass()
         cls.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
 
-        cls.pricelist.name = "Public Pricelist" # reduce diff in existing tests
+        cls.pricelist.name = "Public Pricelist"  # reduce diff in existing tests
         cls.country_be = cls.env.ref('base.be')
         cls.benelux = cls.env['res.country.group'].create({
             'name': 'BeNeLux',
@@ -286,7 +286,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(sol.price_total, 60.0)
 
     def test_pricelist_item_based_on_cost_for_templates(self):
-        """ Test that `_get_sales_prices` from `product_template` computes the correct price when
+        """Test that `_get_sales_prices` from `product_template` computes the correct price when
         the pricelist item is based on the cost of the product.
         """
         pricelist = self.env['product.pricelist'].create({
@@ -373,8 +373,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             self.assertEqual(res[product_tmpl.id]['base_price'], 75)
 
     def test_pricelist_item_validity_period(self):
-        """ Test that if a cart was created before a validity period,
-            the correct prices will still apply.
+        """Test that if a cart was created before a validity period,
+        the correct prices will still apply.
         """
         today = datetime.today()
         tomorrow = today + timedelta(days=1)
@@ -443,9 +443,10 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             website.env, website=website,
             website_sale_current_pl=list_benelux_2.id,
             website_sale_selected_pl_id=list_benelux_2.id
-        ) as request:
+        ):
             order_sudo._update_address({'partner_id': partner.id})
         self.assertEqual(order_sudo.pricelist_id, list_benelux_2)
+
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
@@ -660,7 +661,8 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
     def test_get_pricelist_available_geoip6(self):
         """Remove country group from certain pricelists, and check that pricelists
-        with country group get prioritized when geoip is available."""
+        with country group get prioritized when geoip is available.
+        """
         exclude = self.backend_pl + self.generic_pl_code + self.w1_pl_select + self.w1_pl_code
         exclude.country_group_ids = False
         self.website1_be_pl -= exclude
@@ -687,14 +689,14 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
     def test_get_pricelist_available_multi_company(self):
-        ''' Test that the `property_product_pricelist` of `res.partner` is not
-            computed as SUPERUSER_ID.
-            Indeed, `property_product_pricelist` is a _compute that ends up
-            doing a search on `product.pricelist` that woule bypass the
-            pricelist multi-company `ir.rule`. Then it would return pricelists
-            from another company and the code would raise an access error when
-            reading that `property_product_pricelist`.
-        '''
+        """Test that the `property_product_pricelist` of `res.partner` is not
+        computed as SUPERUSER_ID.
+        Indeed, `property_product_pricelist` is a _compute that ends up
+        doing a search on `product.pricelist` that woule bypass the
+        pricelist multi-company `ir.rule`. Then it would return pricelists
+        from another company and the code would raise an access error when
+        reading that `property_product_pricelist`.
+        """
         test_company = self.env['res.company'].create({'name': 'Test Company'})
         test_company.flush_recordset()
         self.env['product.pricelist'].create({
@@ -712,13 +714,13 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
     def setUp(self):
-        ''' Create a basic multi-company pricelist environment:
+        """Create a basic multi-company pricelist environment:
         - Set up 2 companies with their own company-restricted pricelist each.
         - Add demo user in those 2 companies
         - For each company, add that company pricelist to the demo user partner.
         - Set website's company to company 2
         - Demo user will still be in company 1
-        '''
+        """
         super().setUp()
 
         self.demo_user = self.user_demo
@@ -761,16 +763,16 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.assertEqual((cache_rp1, cache_rp2), (self.c1_pl.id, self.c2_pl.id), "Ensure the pricelist is the company specific one.")
 
     def test_property_product_pricelist_multi_company(self):
-        ''' Test that the `property_product_pricelist` of `res.partner` is read
-            for the company of the website and not the current user company.
-            This is the case if the user visit a website for which the company
-            is not the same as its user's company.
+        """Test that the `property_product_pricelist` of `res.partner` is read
+        for the company of the website and not the current user company.
+        This is the case if the user visit a website for which the company
+        is not the same as its user's company.
 
-            Here, as demo user (company1), we will visit website1 (company2).
-            It should return the data for demo user for company2 and not
-            for the company1 as we should get the website's company pricelist
-            and not the demo user's current company pricelist.
-        '''
+        Here, as demo user (company1), we will visit website1 (company2).
+        It should return the data for demo user for company2 and not
+        for the company1 as we should get the website's company pricelist
+        and not the demo user's current company pricelist.
+        """
         simulate_frontend_context(self, self.website.id)
 
         # First check: It should return c2_pl as company_id is
@@ -787,11 +789,10 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.env(user=self.user_demo)['product.pricelist'].browse(demo_pl.id).name
 
     def test_archive_pricelist_1(self):
-        ''' Test that when a pricelist is archived, the check that verify that
-            all website have at least one pricelist have access to all
-            pricelists (considering all companies).
-        '''
-
+        """Test that when a pricelist is archived, the check that verify that
+        all website have at least one pricelist have access to all
+        pricelists (considering all companies).
+        """
         self.c2_pl.website_id = self.website
         c2_pl2 = self.c2_pl.copy({'name': 'Copy of c2_pl'})
         self.env['product.pricelist'].search([
@@ -818,8 +819,8 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
 
     def test_update_pricelist_user_session(self):
         """
-            The objective is to verify that the pricelist
-            changes correctly according to the user.
+        The objective is to verify that the pricelist
+        changes correctly according to the user.
         """
         self.env.user.write(
             {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}

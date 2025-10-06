@@ -436,7 +436,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
 
     def test_remove_archived_product_line(self):
         """If an order has a line containing an archived product,
-        it is removed when opening the order in the cart."""
+        it is removed when opening the order in the cart.
+        """
         # Arrange
         user = self.public_user
         website = self.website.with_user(user)
@@ -468,7 +469,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
 
     def test_keep_note_line(self):
         """If an order has a line containing a note,
-        it is not removed when opening the order in the cart."""
+        it is not removed when opening the order in the cart.
+        """
         # Arrange
         user = self.public_user
         website = self.website.with_user(user)
@@ -518,7 +520,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
 
     def test_add_to_cart_company_branch(self):
         """Test that a product/website from a company branch
-        can be added to the cart."""
+        can be added to the cart.
+        """
         branch_a = self.env["res.company"].create(
             {
                 "name": "Branch A",

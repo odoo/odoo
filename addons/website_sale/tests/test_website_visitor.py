@@ -49,7 +49,8 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
 
     def test_dynamic_filter_newest_products(self):
         """Test that a product is not displayed anymore after
-        changing it company."""
+        changing it company.
+        """
         new_company = self.env['res.company'].create({
             'name': 'Test Company',
         })
@@ -79,7 +80,8 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
     def test_recently_viewed_company_changed(self):
         """Test that a product is :
         - displayed after visiting it
-        - not displayed after changing it company."""
+        - not displayed after changing it company.
+        """
         new_company = self.env['res.company'].create({
             'name': 'Test Company',
         })

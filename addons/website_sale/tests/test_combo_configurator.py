@@ -54,7 +54,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         self.start_tour(combo_product.website_url, 'website_sale.combo_configurator')
 
     def test_website_sale_combo_configurator_single_configuration(self):
-        """ Test that the combo configurator isn't shown if there's a single configuration. """
+        """Test that the combo configurator isn't shown if there's a single configuration."""
         no_variant_attribute = self.env['product.attribute'].create({
             'name': "No variant attribute",
             'create_variant': 'no_variant',
@@ -85,7 +85,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
         )
 
     def test_website_sale_combo_configurator_single_configurable_item(self):
-        """ Test that the combo configurator is shown if there's a single combo item, but that combo
+        """Test that the combo configurator is shown if there's a single combo item, but that combo
         item is configurable.
         """
         no_variant_attribute = self.env['product.attribute'].create({

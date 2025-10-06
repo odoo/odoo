@@ -29,7 +29,6 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         If the information is not correctly transmitted,
         the default values of the variants will be used (the first one).
         """
-
         always_attribute, dynamic_attribute, never_attribute, never_attribute_custom = self.env['product.attribute'].create([
             {
                 'name': 'Always attribute size',
@@ -130,7 +129,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
 
     def test_product_configurator_optional_products(self):
-        """ Test that the product configurator is shown if the product has optional products. """
+        """Test that the product configurator is shown if the product has optional products."""
         main_product = self.env['product.template'].create({
             'name': "Main product",
             'website_published': True,
@@ -150,7 +149,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertTrue(show_configurator)
 
     def test_product_configurator_single_variant(self):
-        """ Test that the product configurator isn't shown if the product has a single variant. """
+        """Test that the product configurator isn't shown if the product has a single variant."""
         attribute = self.env['product.attribute'].create({
             'name': "Attribute",
             'value_ids': [Command.create({'name': "A"})],
@@ -174,7 +173,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertFalse(show_configurator)
 
     def test_product_configurator_configured_with_empty_multi_checkbox(self):
-        """ Test that the product configurator isn't shown if the product is configured and has a
+        """Test that the product configurator isn't shown if the product is configured and has a
         multi-checkbox attribute with no selected values.
         """
         multi_attribute = self.env['product.attribute'].create({
@@ -205,7 +204,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertFalse(show_configurator)
 
     def test_product_configurator_only_no_variant_attributes(self):
-        """ Test that the product configurator is shown if the product isn't configured and has only
+        """Test that the product configurator is shown if the product isn't configured and has only
         no_variant attributes.
         """
         no_variant_attribute = self.env['product.attribute'].create({
@@ -235,7 +234,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertTrue(show_configurator)
 
     def test_product_configurator_only_dynamic_attributes(self):
-        """ Test that the product configurator is shown if the product isn't configured and has only
+        """Test that the product configurator is shown if the product isn't configured and has only
         dynamic attributes.
         """
         dynamic_attribute = self.env['product.attribute'].create({
@@ -265,7 +264,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertTrue(show_configurator)
 
     def test_product_configurator_single_custom_attribute(self):
-        """ Test that the product configurator is shown if the product isn't configured and has a
+        """Test that the product configurator is shown if the product isn't configured and has a
         single custom attribute.
         """
         custom_attribute = self.env['product.attribute'].create({
@@ -296,7 +295,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertTrue(show_configurator)
 
     def test_product_configurator_sale_not_ok(self):
-        """ Test that the product configurator skips optional products which aren't `sale_ok`. """
+        """Test that the product configurator skips optional products which aren't `sale_ok`."""
         optional_product = self.env['product.template'].create({
             'name': "Optional product",
             'website_published': True,
@@ -324,7 +323,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertListEqual(configurator_values['optional_products'], [])
 
     def test_product_configurator_extra_price_taxes(self):
-        """ Test that the product configurator applies taxes to PTAV extra prices. """
+        """Test that the product configurator applies taxes to PTAV extra prices."""
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Tax", 'amount': 10})
         attribute = self.env['product.attribute'].create({
@@ -354,7 +353,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertEqual(ptav_price_extra, 1.1)
 
     def test_product_configurator_zero_priced(self):
-        """ Test that the product configurator prevents the sale of zero-priced products. """
+        """Test that the product configurator prevents the sale of zero-priced products."""
         self.website.prevent_zero_price_sale = True
         price_attribute = self.env['product.attribute'].create({
             'name': "Price",
@@ -385,7 +384,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         )
 
     def test_product_configurator_strikethrough_price(self):
-        """ Test that the product configurator displays the strikethrough price correctly. """
+        """Test that the product configurator displays the strikethrough price correctly."""
         self.env['res.config.settings'].create({
             'group_product_price_comparison': True,
             # Need to enable pricelists for self.pricelist to be considered and applied
