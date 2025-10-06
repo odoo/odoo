@@ -1,7 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { setDatasetIfUndefined } from "./dynamic_snippet_option_plugin";
+import { patch } from "@web/core/utils/patch";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import {
+    setDatasetIfUndefined,
+    SetSectionTitlePositionAction,
+} from "./dynamic_snippet_option_plugin";
+import { SetContainerWidthAction } from "../content_width_option_plugin";
+import { updateDynamicCarouselNumberOfElements } from "@website/utils/dynamic_snippets";
 
 /**
  * @typedef { Object } DynamicSnippetCarouselOptionShared
@@ -68,6 +74,20 @@ export class SetCarouselSliderSpeedAction extends BuilderAction {
             : editingElement.dataset.carouselInterval / 1000;
     }
 }
+
+patch(SetContainerWidthAction.prototype, {
+    apply({ editingElement: el }) {
+        super.apply(...arguments);
+        updateDynamicCarouselNumberOfElements(el);
+    },
+});
+
+patch(SetSectionTitlePositionAction.prototype, {
+    apply({ editingElement: el }) {
+        super.apply(...arguments);
+        updateDynamicCarouselNumberOfElements(el);
+    },
+});
 
 registry
     .category("website-plugins")

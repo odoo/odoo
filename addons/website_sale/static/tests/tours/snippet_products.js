@@ -17,6 +17,10 @@ registerWebsitePreviewTour(
     () => {
         return [
             ...insertSnippet(productsSnippet),
+            {
+                content: "Verify that the `o_dynamic_carousel_snippet` class is present",
+                trigger: ":iframe .o_dynamic_carousel_snippet",
+            },
             ...clickOnSnippet(productsSnippet),
             ...clickOnSave(),
             {
