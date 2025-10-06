@@ -602,6 +602,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         test_product = self.env['product.product'].create([{
             'name': "test_product",
             'is_storable': True,
+            'categ_id': self.product_category.id,
         }])
         self.env['product.supplierinfo'].create([{
             'partner_id': self.partner_1.id,
