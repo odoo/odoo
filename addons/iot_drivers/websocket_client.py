@@ -1,6 +1,5 @@
 import json
 import logging
-import platform
 import pprint
 import requests
 import time
@@ -9,10 +8,8 @@ import websocket
 
 from threading import Thread
 
-from odoo.addons.iot_drivers import main
-from odoo.addons.iot_drivers.tools import helpers, system
+from odoo.addons.iot_drivers.tools import communication, helpers, system
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
-from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
 from odoo.addons.iot_drivers.webrtc_client import webrtc_client
 
 _logger = logging.getLogger(__name__)
@@ -59,66 +56,21 @@ class WebsocketClient(Thread):
         for message in json.loads(messages):
             _logger.debug("websocket received a message: %s", pprint.pformat(message))
             payload = message['message']['payload']
+            message_type = message['message']['type']
 
-            if not IOT_IDENTIFIER in payload.get('iot_identifiers', []):
+            if payload.get('iot_identifier') != IOT_IDENTIFIER:
                 continue
 
-            match message['message']['type']:
-                case 'iot_action':
-                    for device_identifier in payload['device_identifiers']:
-                        if device_identifier in main.iot_devices:
-                            _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
-                            main.iot_devices[device_identifier].action(payload)
-                        else:
-                            # Notify the controller that the device is not connected
-                            send_to_controller({
-                                'session_id': payload.get('session_id', '0'),
-                                'iot_box_identifier': IOT_IDENTIFIER,
-                                'device_identifier': device_identifier,
-                                'status': 'disconnected',
-                            })
-                case 'server_clear':
-                    helpers.disconnect_from_server()
-                    close_server_log_sender_handler()
-                case 'server_update':
-                    system.update_conf({
-                        'remote_server': payload['server_url']
-                    })
-                    helpers.get_odoo_server_url.cache_clear()
-                case 'restart_odoo':
-                    helpers.odoo_restart()
-                case 'webrtc_offer':
-                    answer = webrtc_client.offer(payload['offer'])
-                    send_to_controller({
-                        'iot_box_identifier': IOT_IDENTIFIER,
-                        'answer': answer,
-                    }, method="webrtc_answer")
-                case 'remote_debug':
-                    if platform.system() == 'Windows':
-                        continue
-                    if not payload.get("status"):
-                        system.toggle_remote_connection(payload.get("token", ""))
-                        time.sleep(1)
-                    send_to_controller({
-                        'session_id': 0,
-                        'iot_box_identifier': IOT_IDENTIFIER,
-                        'device_identifier': None,
-                        'status': 'success',
-                        'result': {'enabled': system.is_ngrok_enabled()}
-                    })
-                case "test_connection":
-                    send_to_controller({
-                        'session_id': payload['session_id'],
-                        'iot_box_identifier': IOT_IDENTIFIER,
-                        'device_identifier': IOT_IDENTIFIER,
-                        'status': 'success',
-                        'result': {
-                            'lan_quality': helpers.check_network(),
-                            'wan_quality': helpers.check_network("www.odoo.com"),
-                        }
-                    })
-                case _:
-                    continue
+            if message_type == 'webrtc_offer':
+                answer = webrtc_client.offer(payload['offer'])
+                send_to_controller({
+                    'iot_box_identifier': IOT_IDENTIFIER,
+                    'answer': answer,
+                }, method="webrtc_answer")
+            else:
+                result = communication.handle_message(message_type, **payload)
+                if result:
+                    send_to_controller(result)
 
     def on_close(self, ws, close_status_code, close_msg):
         _logger.debug("websocket closed with status: %s", close_status_code)
