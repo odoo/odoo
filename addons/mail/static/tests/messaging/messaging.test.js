@@ -10,10 +10,11 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -67,6 +68,9 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
         },
     ]);
     await start();
+    getService("bus_service").subscribe("discuss.channel/new_message", () =>
+        expect.step("discuss.channel/new_message")
+    );
     // simulate receiving new message (chat, outside discuss app)
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -75,8 +79,12 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
             thread_model: "discuss.channel",
         })
     );
+    await expect.waitForSteps(["discuss.channel/new_message"]);
+    await contains(".o-mail-ChatBubble .badge:contains(1)", { count: 1 });
     await click(".o-mail-ChatBubble[name='Dumbledore']");
     await contains(".o-mail-ChatWindow-header:contains('Dumbledore')");
+    await contains(".o-mail-Message:contains('Chat Message 1')");
+    await contains(".badge", { count: 0 });
     await click(".o-mail-ChatWindow [title*='Close Chat Window']");
     // simulate receiving new message (group chat, outside discuss app)
     await withUser(userId, () =>
@@ -86,10 +94,12 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
             thread_model: "discuss.channel",
         })
     );
+    await expect.waitForSteps(["discuss.channel/new_message"]);
     await contains(".o-mail-ChatBubble[name='GroupChat']");
     await openDiscuss();
     await contains(".o-mail-Discuss[data-active]");
     // simulate receiving new message (chat, inside discuss app)
+    await contains(".o-mail-DiscussSidebar-item:contains('Dumbledore') .badge", { count: 0 });
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Tricky", message_type: "comment" },
@@ -97,6 +107,7 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
             thread_model: "discuss.channel",
         })
     );
+    await expect.waitForSteps(["discuss.channel/new_message"]);
     await click(".o-mail-DiscussSidebar-item:contains('Dumbledore'):has(.badge:contains(1))");
     await contains(".o-mail-Message:contains('Tricky')");
     // check no new chat window/bubble while in discuss app
