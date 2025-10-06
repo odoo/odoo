@@ -18865,3 +18865,56 @@ test(`basic open record with allowOpenAction`, async () => {
     await contains(".o_field_cell").click();
     expect.verifySteps([]);
 });
+
+test.tags("mobile");
+test("scroll position is restored when coming back to list view", async () => {
+    Foo._views = {
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 30; i++) {
+        Foo._records.push({ id: 100 + i, foo: `Record ${i}` });
+    }
+
+    let def;
+    onRpc("web_search_read", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // simulate a scroll in the list view
+    queryOne(".o_list_view").scrollTop = 200;
+
+    await getService("action").switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+
+    // the list is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_renderer").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_renderer").toHaveCount(1);
+    expect(".o_list_view").toHaveProperty("scrollTop", 200);
+});

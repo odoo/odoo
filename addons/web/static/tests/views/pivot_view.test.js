@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts, queryFirst, queryOne, queryText } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryFirst, queryOne, queryText, resize } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import {
@@ -3914,4 +3914,103 @@ test("pivot views make their control panel available directly", async () => {
     def.resolve();
     await animationFrame();
     expect(".o_pivot_view .o_pivot").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("scroll position is restored when coming back to pivot view", async () => {
+    Partner._views = {
+        kanban: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 20; i++) {
+        Partner._records.push({ id: 100 + i, foo: 100 + i });
+    }
+
+    let def;
+    onRpc("formatted_read_group", () => def);
+    await resize({ width: 800, height: 300 });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "pivot"],
+            [false, "list"],
+        ],
+        context: {
+            group_by: ["foo"],
+        },
+    });
+
+    expect(".o_pivot_view").toHaveCount(1);
+    // simulate a scroll in the pivot view
+    queryOne(".o_content").scrollTop = 200;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the pivot is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("pivot");
+    expect(".o_pivot_view").toHaveCount(1);
+    expect(".o_content .o_pivot").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_content .o_pivot").toHaveCount(1);
+    expect(".o_content").toHaveProperty("scrollTop", 200);
+});
+
+test.tags("mobile");
+test("scroll position is restored when coming back to pivot view (mobile)", async () => {
+    Partner._views = {
+        kanban: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 20; i++) {
+        Partner._records.push({ id: 100 + i, foo: 100 + i });
+    }
+
+    let def;
+    onRpc("formatted_read_group", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "pivot"],
+            [false, "list"],
+        ],
+        context: {
+            group_by: ["foo"],
+        },
+    });
+
+    expect(".o_pivot_view").toHaveCount(1);
+    // simulate a scroll in the pivot view
+    queryOne(".o_pivot_view").scrollTop = 200;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the pivot is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("pivot");
+    expect(".o_pivot_view").toHaveCount(1);
+    expect(".o_content .o_pivot").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_content .o_pivot").toHaveCount(1);
+    expect(".o_pivot_view").toHaveProperty("scrollTop", 200);
 });
