@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests.common import new_test_user
 
 
 @tagged("recruitment")
@@ -579,3 +580,21 @@ class TestRecruitmentSkills(TransactionCase):
         applicant_skills_name_list = applicant.applicant_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         employee_skills_name_list = applicant.employee_id.employee_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         self.assertCountEqual(applicant_skills_name_list, employee_skills_name_list)
+
+    def test_interviewer_skills_access(self):
+        """
+        Test that an interviewer can see the skills of an applicant
+        """
+        interviewer_user = new_test_user(self.env, 'itw',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer', email='itw@example.com')
+
+        self.t_job.expected_degree = self.env['hr.recruitment.degree'].create({
+            'name': 'Master',
+            'score': 0.5,
+        })
+        self.t_applicant.interviewer_ids = interviewer_user.ids
+        # flush to force compute methods when reading fields
+        self.env.flush_all()
+        matching_skill_ids = self.t_applicant.with_user(interviewer_user).matching_skill_ids
+        self.assertEqual(matching_skill_ids, self.t_applicant.matching_skill_ids, "The interviewer should see the skills of the applicant")
