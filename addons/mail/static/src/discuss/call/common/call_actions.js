@@ -30,6 +30,8 @@ export function registerCallAction(id, definition) {
 }
 
 export const muteAction = {
+    badge: ({ store }) => store.rtc.microphonePermission !== "granted",
+    badgeIcon: "fa fa-exclamation",
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) =>
@@ -83,6 +85,8 @@ registerCallAction("deafen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
+    badge: ({ store }) => store.rtc.cameraPermission !== "granted",
+    badgeIcon: "fa fa-exclamation",
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
