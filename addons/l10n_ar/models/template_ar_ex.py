@@ -26,5 +26,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'base_deudores_por_ventas_pos',
                 'income_currency_exchange_account_id': 'base_diferencias_de_cambio',
                 'expense_currency_exchange_account_id': 'base_diferencias_de_cambio',
+                'display_invoice_tax_company_currency': False,
             },
         }
