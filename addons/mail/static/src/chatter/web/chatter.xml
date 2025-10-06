@@ -95,6 +95,9 @@
                         </FileUploader>
                     </div>
                 </div>
+                <t t-if="state.thread.userNotificationMessages.length and !messageSearch.searching and !messageSearch.searched">
+                    <t t-call="mail.NotificationsList"/>
+                </t>
                 <SearchMessageResult t-if="messageSearch.searching or messageSearch.searched" thread="state.thread"  messageSearch="messageSearch" onClickJump.bind="closeSearch"/>
                 <Thread t-else="" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
             </t>
@@ -137,6 +140,25 @@
                 <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged.bind="onScheduledMessageChanged"/>
             </t>
         </div>
+    </div>
+</t>
+
+<t t-name="mail.NotificationsList">
+    <div class="o-mail-NotificationsList">
+        <div class="d-flex pt-2 px-2 cursor-pointer fw-bolder" t-on-click="toggleNotifications">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showNotifications ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Notifications
+                <span t-if="!state.showNotifications" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="state.thread.userNotificationMessages.length"/></span>
+            </div>
+            <hr class="flex-grow-1 fe-3"/>
+        </div>
+        <t t-if="state.showNotifications">
+            <t t-foreach="state.thread.userNotificationMessages" t-as="msg" t-key="msg.id">
+                <Message message="msg" thread="props.thread"/>
+            </t>
+        </t>
     </div>
 </t>
 

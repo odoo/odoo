@@ -17,6 +17,10 @@ const threadPatch = {
             },
             inverse: "thread",
         });
+        this.userNotificationMessages = fields.Many("mail.message", {
+            inverse: "threadAsUserNotification",
+            sort: (message1, message2) => message1.id - message2.id,
+        });
     },
 
     /** @param {string[]} requestList */

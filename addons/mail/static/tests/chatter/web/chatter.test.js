@@ -64,6 +64,7 @@ test("simple chatter on a record", async () => {
                         "followers",
                         "scheduledMessages",
                         "suggestedRecipients",
+                        "userNotifications",
                     ],
                     thread_id: partnerId,
                     thread_model: "res.partner",

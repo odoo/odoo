@@ -5016,6 +5016,15 @@ class MailThread(models.AbstractModel):
                 res["scheduledMessages"] = Store.Many(self.env['mail.scheduled.message'].search([
                     ['model', '=', self._name], ['res_id', '=', thread.id]
                 ]))
+            if "userNotifications" in request_list:
+                user_notifications = self.env["mail.message"].search(Domain.AND((
+                    Domain("model", "=", self._name),
+                    Domain("res_id", "=", thread.id),
+                    Domain("message_type", "=", "user_notification"),
+                    Domain("needaction", "=", True),
+                )))
+                res["userNotifications"] = Store.Many(user_notifications)
+                user_notifications.set_message_done()
             if "suggestedRecipients" in request_list:
                 res["suggestedRecipients"] = thread._message_get_suggested_recipients(
                     reply_discussion=True, no_create=True,

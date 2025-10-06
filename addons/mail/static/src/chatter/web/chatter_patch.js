@@ -3,6 +3,7 @@ import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
+import { Message } from "@mail/core/common/message";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -34,6 +35,7 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    Message,
     RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
@@ -90,6 +92,7 @@ patch(Chatter.prototype, {
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             isSearchOpen: false,
             showActivities: true,
+            showNotifications: true,
             showAttachmentLoading: false,
             showScheduledMessages: true,
         });
@@ -277,6 +280,7 @@ patch(Chatter.prototype, {
             "followers",
             "scheduledMessages",
             "suggestedRecipients",
+            "userNotifications",
         ];
     },
 
@@ -462,6 +466,10 @@ patch(Chatter.prototype, {
 
     toggleScheduledMessages() {
         this.state.showScheduledMessages = !this.state.showScheduledMessages;
+    },
+
+    toggleNotifications() {
+        this.state.showNotifications = !this.state.showNotifications;
     },
 
     async unlinkAttachment(attachment) {
