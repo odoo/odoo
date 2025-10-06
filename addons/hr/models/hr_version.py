@@ -29,7 +29,7 @@ class HrVersion(models.Model):
     _rec_name = 'name'
 
     def _get_default_address_id(self):
-        address = self.env.user.company_id.partner_id.address_get(['default'])
+        address = self.env.company.partner_id.address_get(['default'])
         return address['default'] if address else False
 
     def _default_salary_structure(self):
