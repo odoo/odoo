@@ -280,7 +280,7 @@
 
     <template id="address_layout">
         <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ms-auto'"/>
-        <div t-if="address" t-attf-class="address row mb-4" title="This block is not always present depending on the printed document.">
+        <div t-if="address" t-attf-class="address row {{custom_address_spacing or 'mb-4'}}" title="This block is not always present depending on the printed document.">
             <t t-if="information_block">
                 <t t-set="colclass" t-value="'col-5 offset-1'"/>
                 <div name="information_block" class="col-6">
@@ -555,6 +555,35 @@
         </div>
     </template>
 
+    <template id="external_layout_center">
+        <div t-attf-class="o_company_#{company.id}_layout header">
+            <div class="o_layout_center_header">
+                <table class="w-100 table-borderless">
+                    <tr>
+                        <td class="align-top" style="width: 33.33%;">
+                            <t t-call="web.company_address_list"/>
+                        </td>
+                        <td class="align-top text-center" style="width: 33.33%;">
+                            <img t-if="company.logo" class="o_company_logo_mid mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+                        </td>
+                        <td class="align-top text-end" style="width: 33.33%;">
+                            <t t-call="web.address_layout" custom_layout_address="True" information_block="False" custom_address_spacing="'mb-0'"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+            <div class="mb-3" t-if="information_block" t-out="information_block"/>
+            <h2 t-out="layout_document_title"/>
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <t t-call="web.external_layout_footer_content" is_centered_footer="True" footer_content_classes="'text-center'"/>
+        </div>
+    </template>
+
 
     <!-- Public api: layout to t-call from reports -->
     <template id="external_layout">
@@ -795,6 +824,11 @@
                         rect, path {
                             fill: mix(white, <t t-out='primary'/>, 92%);
                         }
+                    }
+                </t>
+                <t t-elif="layout == 'web.external_layout_center'">
+                    &amp; .o_layout_center_header {
+                        background-color: mix(white, <t t-out='primary'/>, 90%);
                     }
                 </t>
             }
