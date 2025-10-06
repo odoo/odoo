@@ -2,6 +2,7 @@
 import io
 import importlib.util
 import logging
+import re
 import xml.dom.minidom
 import zipfile
 
@@ -10,8 +11,8 @@ from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
-if not importlib.util.find_spec('pdfminer'):
-    _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer' Python library cannot be found on the system. "
+if not importlib.util.find_spec('pdfminer.high_level'):
+    _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer.six' Python library cannot be found on the system. "
                     "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)")
 
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
@@ -27,6 +28,18 @@ def textToString(element):
         elif node.nodeType == xml.dom.Node.ELEMENT_NODE:
             buff += textToString(node)
     return buff
+
+def _clean_pdf_content(buf):
+    """
+    Clean the PDF content by removing unwanted characters and formatting.
+    Remove NUL characters and Normalizes line breaks and whitespace for cleaner
+    indexing.
+    """
+    buf = buf.replace('\x00', '')
+    buf = buf.replace('\r\n', '\n').replace('\r', '\n')
+    paragraphs = re.split(r'\n\s*\n', buf)
+    paragraphs = [re.sub(r'[ \t]+', ' ', p.strip()) for p in paragraphs]
+    return '\n'.join(paragraphs)
 
 
 class IrAttachment(models.Model):
@@ -104,6 +117,7 @@ class IrAttachment(models.Model):
         try:
             from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter  # noqa: PLC0415
             from pdfminer.converter import TextConverter  # noqa: PLC0415
+            from pdfminer.layout import LAParams  # noqa: PLC0415
             from pdfminer.pdfpage import PDFPage  # noqa: PLC0415
             logging.getLogger("pdfminer").setLevel(logging.CRITICAL)
         except ImportError:
@@ -112,13 +126,26 @@ class IrAttachment(models.Model):
         f = io.BytesIO(bin_data)
         try:
             resource_manager = PDFResourceManager()
-            with io.StringIO() as content, TextConverter(resource_manager, content) as device:
-                interpreter = PDFPageInterpreter(resource_manager, device)
+            laparams = LAParams(
+                line_margin=0.5,
+                char_margin=2.0,
+                word_margin=0.1,
+                boxes_flow=0.5,
+                detect_vertical=True,
+            )
 
+            with io.StringIO() as content, TextConverter(
+                resource_manager,
+                content,
+                laparams=laparams
+            ) as device:
+                interpreter = PDFPageInterpreter(resource_manager, device)
                 for page in PDFPage.get_pages(f):
                     interpreter.process_page(page)
 
-                return content.getvalue()
+                buf = content.getvalue()
+
+            return _clean_pdf_content(buf)
         except Exception:  # noqa: BLE001
             return ""
 
