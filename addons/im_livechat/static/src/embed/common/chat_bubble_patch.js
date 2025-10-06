@@ -6,7 +6,10 @@ patch(ChatBubble.prototype, {
     get showImStatus() {
         return (
             super.showImStatus &&
-            !(this.thread?.correspondent?.livechat_member_type === "bot" && this.env.embedLivechat)
+            !(
+                this.thread?.channel?.correspondent?.livechat_member_type === "bot" &&
+                this.env.embedLivechat
+            )
         );
     },
 });

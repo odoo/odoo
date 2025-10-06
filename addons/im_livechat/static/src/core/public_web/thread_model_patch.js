@@ -29,35 +29,24 @@ patch(Thread.prototype, {
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
     },
-    get correspondents() {
-        return super.correspondents.filter(
-            (correspondent) => correspondent.livechat_member_type !== "bot"
-        );
-    },
-
-    computeCorrespondent() {
-        const correspondent = super.computeCorrespondent();
-        if (this.channel?.channel_type === "livechat" && !correspondent) {
-            return this.livechatVisitorMember;
-        }
-        return correspondent;
-    },
-
     get displayName() {
         if (
             this.channel?.channel_type !== "livechat" ||
-            !this.correspondent ||
+            !this.channel?.correspondent ||
             this.self_member_id?.custom_channel_name
         ) {
             return super.displayName;
         }
-        if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
-            return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
+        if (
+            !this.channel?.correspondent.persona.is_public &&
+            this.channel?.correspondent.persona.country
+        ) {
+            return `${this.channel.correspondent.name} (${this.channel.correspondent.persona.country.name})`;
         }
         if (this.country_id) {
-            return `${this.correspondent.name} (${this.country_id.name})`;
+            return `${this.channel.correspondent.name} (${this.country_id.name})`;
         }
-        return this.correspondent.name;
+        return this.channel.correspondent.name;
     },
 
     get inChathubOnNewMessage() {

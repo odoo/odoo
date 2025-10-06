@@ -240,7 +240,7 @@ export class DiscussCommandPalette {
                     channel: thread.channel?.channel_type !== "chat" ? thread : undefined,
                     persona:
                         thread.channel?.channel_type === "chat"
-                            ? thread.correspondent.persona
+                            ? thread.channel.correspondent.persona
                             : undefined,
                     counter: thread.importantCounter,
                 },
