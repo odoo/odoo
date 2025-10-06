@@ -69,7 +69,7 @@ class HrApplicant(models.Model):
 
             matching_skill_ids = matching_applicant_skills.mapped("skill_id")
             missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
-            matching_score = round(applicant_total / job_total * 100)
+            matching_score = round(applicant_total / job_total * 100) if job_total else 100
 
             applicant.matching_skill_ids = matching_skill_ids
             applicant.missing_skill_ids = missing_skill_ids
