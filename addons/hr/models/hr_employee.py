@@ -154,7 +154,9 @@ class HrEmployee(models.Model):
         }
     }
     """
-
+    bank_name = fields.Char(string="Bank Name", compute='_compute_bank_account_details', groups="hr.group_hr_user")
+    bank_bic = fields.Char(string="Bank Identification Code", compute='_compute_bank_account_details', groups="hr.group_hr_user")
+    bank_account_number = fields.Char(string="Bank Account Number", compute='_compute_bank_account_details', groups="hr.group_hr_user")
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
     visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_user", tracking=True)
@@ -290,6 +292,12 @@ class HrEmployee(models.Model):
                 employee.has_multiple_bank_accounts = True
             else:
                 employee.has_multiple_bank_accounts = False
+
+    def _compute_bank_account_details(self):
+        for rec in self:
+            rec.bank_bic = rec.primary_bank_account_id.bank_bic if rec.primary_bank_account_id else False
+            rec.bank_name = rec.primary_bank_account_id.bank_name if rec.primary_bank_account_id else False
+            rec.bank_account_number = rec.primary_bank_account_id.acc_number if rec.primary_bank_account_id else False
 
     @api.depends('bank_account_ids')
     def _sync_salary_distribution(self):
