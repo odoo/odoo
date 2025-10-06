@@ -144,9 +144,20 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'nuvei':
             return super()._compare_notification_data(notification_data)
 
+        # When a user declines to pay and leaves the payment page, no information
+        # is sent back to odoo via the endpoint. As such there is no currency or
+        # amount set so we return early. This only occurs in the leaving flow so
+        # no issue should arise leaving early.
+        if not notification_data:
+            return
+
         amount = notification_data.get('totalAmount')
         currency_code = notification_data.get('currency')
-        self._validate_amount_and_currency(amount, currency_code)
+
+        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
+        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
+
+        self._validate_amount_and_currency(amount, currency_code, precision_digits=rounding)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Nuvei data.
@@ -171,7 +182,7 @@ class PaymentTransaction(models.Model):
         # Update the payment method.
         payment_option = notification_data.get('payment_method', '')
         payment_method = self.env['payment.method']._get_from_code(
-            payment_option.lower(), mapping=const.PAYMENT_METHODS_MAPPING
+            payment_option, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
