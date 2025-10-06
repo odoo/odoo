@@ -417,6 +417,10 @@ class AccountMoveLine(models.Model):
     analytic_distribution = fields.Json(
         inverse="_inverse_analytic_distribution",
     ) # add the inverse function used to trigger the creation/update of the analytic lines accordingly (field originally defined in the analytic mixin)
+    has_invalid_analytics = fields.Boolean(
+        string="Is Analytic Distribution Valid",
+        compute='_compute_has_invalid_analytics',
+    )
 
     # === Early Pay fields === #
     discount_date = fields.Date(
@@ -1882,6 +1886,31 @@ class AccountMoveLine(models.Model):
     def _compute_display_name(self):
         for line in self:
             line.display_name = line._format_aml_name(line.name or line.product_id.display_name, line.ref, line.move_id.name)
+
+    @api.depends('account_id', 'company_id', 'move_id', 'product_id', 'display_type', 'analytic_distribution')
+    def _compute_has_invalid_analytics(self):
+        for line in self:
+            line.has_invalid_analytics = (
+                line.display_type == 'product' and
+                line.has_invalid_analytics_for_account(line.account_id.id)
+            )
+
+    def has_invalid_analytics_for_account(self, account_id):
+        try:
+            business_domain = (
+                'invoice' if self.move_id.is_sale_document(True)
+                else 'bill' if self.move_id.is_purchase_document(True)
+                else 'general'
+            )
+            self.with_context(validate_analytic=True)._validate_distribution(
+                company_id=self.company_id.id,
+                product=self.product_id.id,
+                account=account_id,
+                business_domain=business_domain,
+            )
+            return False
+        except ValidationError:
+            return True
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
