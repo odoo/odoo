@@ -113,6 +113,28 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="l10n_be_leave_type_paternity_paid_company" model="hr.leave.type">
+        <field name="name">Paternity Time Off (Paid By Company)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_paternity_legal" model="hr.leave.type">
+        <field name="name">Paternity Time Off (Legal)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="l10n_be_leave_type_unpredictable" model="hr.leave.type">
         <field name="name">Unpredictable Reason</field>
         <field name="requires_allocation">False</field>
