@@ -60,6 +60,20 @@ export class TranslationPlugin extends Plugin {
             for (const translationSavableEl of translationSavableEls) {
                 translationSavableEl.classList.add("o_editable_attribute");
             }
+            // Apply data-oe-readonly on wrapping editor
+            const editableEls = [
+                ...translationSavableEls,
+                ...this.services.website.pageDocument.querySelectorAll(".o_editable"),
+            ];
+            for (const editableEl of editableEls) {
+                if (
+                    editableEls.some(
+                        (otherEl) => editableEl != otherEl && editableEl.contains(otherEl)
+                    )
+                ) {
+                    editableEl.setAttribute("data-oe-readonly", "true");
+                }
+            }
             return true;
         },
         start_edition_handlers: withSequence(5, () => {
@@ -100,18 +114,6 @@ export class TranslationPlugin extends Plugin {
 
         if (!browser.localStorage.getItem(localStorageNoDialogKey)) {
             this.dialogService.add(TranslatorInfoDialog);
-        }
-
-        // Apply data-oe-readonly on nested data
-        const translatableElSelector = ".o_editable, .o_editable_attribute";
-        const translationSavableEls = [
-            ...this.websiteService.pageDocument.querySelectorAll(translatableElSelector),
-        ];
-        for (const translationSavableEl of translationSavableEls) {
-            if (translationSavableEl.querySelectorAll(translatableElSelector).length) {
-                translationSavableEl.setAttribute("data-oe-readonly", "true");
-                translationSavableEl.removeAttribute("contenteditable");
-            }
         }
 
         const showNotification = (ev) => {
