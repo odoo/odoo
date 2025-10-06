@@ -249,6 +249,12 @@
                       <strong>Receipt Date:</strong><span class="ms-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>
                     </div>
                   </div>
+                  <t t-if="order.dest_address_id">
+                    <div class="col-lg-6">
+                      <strong class="d-block mb-1">Shipping address:</strong>
+                      <address t-field="order.dest_address_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                  </t>
               </div>
 
               <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
