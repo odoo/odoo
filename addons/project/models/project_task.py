@@ -294,7 +294,7 @@ class ProjectTask(models.Model):
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
-    allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks', export_string_translation=False)
+    allow_recurring_tasks = fields.Boolean(compute='_compute_allow_recurring_tasks', export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
@@ -812,6 +812,13 @@ class ProjectTask(models.Model):
         for task in self:
             task.has_template_ancestor = task.is_template or (task.parent_id and task.parent_id.sudo().has_template_ancestor)
 
+    def _compute_allow_recurring_tasks(self):
+        for task in self:
+            if task.project_id:
+                task.allow_recurring_tasks = task.project_id.allow_recurring_tasks
+            else:
+                task.allow_recurring_tasks = task.is_template
+
     def _search_has_template_ancestor(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             return NotImplemented
@@ -851,7 +858,7 @@ class ProjectTask(models.Model):
                 vals['active'] = True
             if not default.get('name'):
                 vals['name'] = task.name if self.env.context.get('copy_project') or self.env.context.get('copy_from_template') else _("%s (copy)", task.name)
-            if task.recurrence_id and not default.get('recurrence_id'):
+            if task.recurrence_id and 'recurrence_id' not in default:
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
                 vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
@@ -1110,7 +1117,7 @@ class ProjectTask(models.Model):
             if not project_id and ("stage_id" in vals or self_ctx.env.context.get('default_stage_id')):
                 vals["stage_id"] = False
 
-            if project_id and "stage_id" not in vals:
+            if (project_id and "stage_id" not in vals) or (project_id and not vals.get("stage_id") and self.env.context.get("copy_from_template")):
                 # 1) Allows keeping the batch creation of tasks
                 # 2) Ensure the defaults are correct (and computed once by project),
                 # by using default get (instead of _get_default_stage_id or _stage_find),
@@ -1958,15 +1965,6 @@ class ProjectTask(models.Model):
 
     def action_convert_to_template(self):
         self.ensure_one()
-        if not self.project_id:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'type': 'danger',
-                    'message': _('Private tasks cannot be converted into templates'),
-                },
-            }
         if self.is_template:
             return {
                 'type': 'ir.actions.client',
@@ -2018,6 +2016,7 @@ class ProjectTask(models.Model):
         """
         return [
             "parent_id",
+            "project_id",
         ]
 
     @api.model
@@ -2025,9 +2024,13 @@ class ProjectTask(models.Model):
         """
         Blacklist of fields to not copy when creating a task from a template.
         """
-        return [
+        fields = [
             "partner_id",
         ]
+        project_id = self.env.context.get('default_project_id')
+        if project_id and not self.env['project.project'].browse(project_id).allow_recurring_tasks:
+            fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
+        return fields
 
     def action_create_from_template(self, values=None):
         self.ensure_one()

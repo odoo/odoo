@@ -761,8 +761,9 @@ class ProjectProject(models.Model):
     def get_template_tasks(self):
         self.ensure_one()
         return self.env['project.task'].search_read(
-            [('project_id', '=', self.id), ('is_template', '=', True)],
-            ['id', 'name'],
+            domain=[('project_id', 'in', [self.id, False]), ('is_template', '=', True)],
+            fields=['id', 'name'],
+            order='project_id',
         )
 
     @api.model
