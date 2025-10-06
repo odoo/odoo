@@ -551,19 +551,16 @@ class ProductProduct(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         is_positive = operator not in expression.NEGATIVE_TERM_OPERATORS
-        combine = expression.OR if is_positive else expression.AND
         template_domains = [[('name', operator, value)]]
         product_domains = [[('default_code', operator, value)]]
-        supplier_domain = []
-        where_clause_data = [
-            ("product.template", "id", combine, template_domains),
-            ("product.product", "product_tmpl_id", combine, product_domains),
-        ]
+
         if operator in ('=', 'in') or (operator.endswith('like') and is_positive):
             barcode_values = [value] if operator != 'in' else value
             product_domains.append([('barcode', 'in', barcode_values)])
         if operator == '=' and isinstance(value, str) and (m := re.search(r'(\[(.*?)\])', value)):
             product_domains.append([('default_code', '=', m.group(2))])
+
+        supplier_domain = []
         if partner_id := self.env.context.get('partner_id'):
             supplier_domain = [
                 ('partner_id', '=', partner_id),
@@ -571,20 +568,29 @@ class ProductProduct(models.Model):
                 ('product_code', operator, value),
                 ('product_name', operator, value),
             ]
-            where_clause_data.append(('product.supplierinfo', 'product_tmpl_id', lambda x: x, supplier_domain))
+
         # AND clauses properly hit indexes so no need for custom sql in this case.
-        if combine == expression.AND:
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
             domains = template_domains + product_domains
             domains.append([('product_tmpl_id.seller_ids', 'any', supplier_domain)])
-            return combine(domains)
+            return expression.AND(domains)
+
+        # OR clause converted to an UNION for performance purposes
+        where_clause_data = [
+            ('product.template', 'id', expression.OR(template_domains)),
+            ('product.product', 'product_tmpl_id', expression.OR(product_domains)),
+        ]
+        if supplier_domain:
+            where_clause_data.append(('product.supplierinfo', 'product_tmpl_id', supplier_domain))
+
         clauses = []
-        for model_name, fname, combine, domains in where_clause_data:
+        for model_name, fname, domain in where_clause_data:
             clauses.append(
                 SQL(
                     """(SELECT %s FROM %s WHERE %s)""",
                     self.env[model_name]._field_to_sql(self.env[model_name]._table, fname),
                     SQL.identifier(self.env[model_name]._table),
-                    self.env[model_name]._where_calc(combine(domains)).where_clause,
+                    self.env[model_name]._where_calc(domain).where_clause,
                 )
             )
         query = SQL("""(%s)""", SQL("UNION ALL").join(clauses))
