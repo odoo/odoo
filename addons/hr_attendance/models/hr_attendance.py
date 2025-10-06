@@ -83,7 +83,7 @@ class HrAttendance(models.Model):
     @api.depends("check_in", "employee_id")
     def _compute_date(self):
         for attendance in self:
-            if not attendance.employee_id:  # weird precompute edge cases. Never after creation
+            if not attendance.employee_id or not attendance.check_in:  # weird precompute edge cases. Never after creation
                 attendance.date = datetime.today()
                 continue
             tz = timezone(attendance.employee_id._get_tz())
