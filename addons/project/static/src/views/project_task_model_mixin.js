@@ -1,27 +1,46 @@
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 
-export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends T {
-    _processSearchDomain(domain) {
-        const { my_tasks, subtask_action, activity_action } = this.env.searchModel.globalContext;
-        const showSubtasks = my_tasks || subtask_action || activity_action || JSON.parse(browser.localStorage.getItem("showSubtasks"));
-        if (['project.task', 'report.project.task.user'].includes(this.env.searchModel.resModel) && !showSubtasks) {
-            domain = Domain.and([
-                domain,
-                [['display_in_project', '=', true]],
-            ]).toList({});
+export const ProjectTaskModelMixin = (T) =>
+    class ProjectTaskModelMixin extends T {
+        _processSearchDomain(domain) {
+            const { my_tasks, subtask_action, activity_action } =
+                this.env.searchModel.globalContext;
+            const showSubtasks =
+                my_tasks ||
+                subtask_action ||
+                activity_action ||
+                JSON.parse(browser.localStorage.getItem("showSubtasks"));
+            if (
+                ["project.task", "report.project.task.user"].includes(
+                    this.env.searchModel.resModel
+                ) &&
+                !showSubtasks
+            ) {
+                domain = Domain.and([domain, [["display_in_project", "=", true]]]).toList({});
+            }
+            if (this.env.searchModel.context?.render_task_templates) {
+                domain = Domain.removeDomainLeaves(domain, [
+                    "has_template_ancestor",
+                    "has_project_template",
+                ]);
+                const templateTaskDomain = Domain.or([
+                    [["has_template_ancestor", "=", true]],
+                    "default_project_id" in this.env.searchModel.globalContext
+                        ? Domain.TRUE
+                        : [["has_project_template", "=", true]],
+                ]);
+                domain = Domain.and([domain, templateTaskDomain]);
+                // Allow to filter on task templates having no project
+                const projectId = this.env.searchModel.context?.default_project_id || false;
+                if (projectId) {
+                    domain = Domain.and([
+                        Domain.removeDomainLeaves(domain, ["project_id"]).toList(),
+                        [["project_id", "in", [projectId, false]]],
+                    ]);
+                }
+                domain = domain.toList({});
+            }
+            return domain;
         }
-        if (this.env.searchModel.context?.render_task_templates) {
-            domain = Domain.removeDomainLeaves(domain, [
-                "has_template_ancestor",
-                "has_project_template",
-            ]);
-            const templateTaskDomain = Domain.or([[["has_template_ancestor", "=", true]],
-                "default_project_id" in this.env.searchModel.globalContext ?
-                        Domain.TRUE :
-                        [["has_project_template", "=", true]]]);
-            domain = Domain.and([domain, templateTaskDomain]).toList({});
-        }
-        return domain;
-    }
-}
+    };
