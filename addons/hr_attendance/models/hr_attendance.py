@@ -33,7 +33,7 @@ class HrAttendance(models.Model):
         return self.env.user.employee_id
 
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
-        ondelete='cascade', index=True, group_expand='_read_group_employee_id')
+        ondelete='cascade', index=True)
     department_id = fields.Many2one('hr.department', string="Department", related="employee_id.department_id",
         readonly=True)
     manager_id = fields.Many2one(comodel_name='hr.employee', related="employee_id.parent_id", readonly=True,
@@ -540,27 +540,6 @@ class HrAttendance(models.Model):
             'target': 'self',
             'url': self.env.company.attendance_kiosk_url + '?from_trial_mode=True'
         }
-
-    def _read_group_employee_id(self, resources, domain):
-        user_domain = Domain(self.env.context.get('user_domain') or Domain.TRUE)
-        employee_domain = Domain('company_id', 'in', self.env.context.get('allowed_company_ids', []))
-        if self.env.user.has_group('hr_attendance.group_hr_attendance_officer') \
-            and not self.env.user.has_group('hr_attendance.group_hr_attendance_user'):
-            employee_domain &= Domain('attendance_manager_id', '=', self.env.user.id)
-        elif not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
-            employee_domain &= Domain('user_id', '=', self.env.user.id)  # user can only see his own attendances
-        if user_domain.is_true():
-            # Workaround to make it work only for list view.
-            if 'gantt_start_date' in self.env.context:
-                return self.env['hr.employee'].search(employee_domain)
-            return resources & self.env['hr.employee'].search(employee_domain)
-        else:
-            employee_name_domain = Domain.OR(
-                Domain('name', condition.operator, condition.value)
-                for condition in user_domain.iter_conditions()
-                if condition.field_expr == 'employee_id'
-            )
-            return resources | self.env['hr.employee'].search(employee_name_domain & employee_domain)
 
     def _linked_overtimes(self):
         return self.env['hr.attendance.overtime.line'].search([

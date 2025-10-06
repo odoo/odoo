@@ -76,8 +76,9 @@ class TestHrAttendance(TransactionCase):
 
         grouped_employee_ids = [g['employee_id'][0] for g in groups]
 
-        # Check that both employees appears
-        self.assertIn(self.test_employee.id, grouped_employee_ids)
+        # Result should still be the same - test_employee is only added in
+        # overridden get_gantt_data()
+        self.assertNotIn(self.test_employee.id, grouped_employee_ids)
         self.assertIn(self.employee_kiosk.id, grouped_employee_ids)
 
     def test_hours_today(self):
