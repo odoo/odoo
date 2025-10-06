@@ -184,9 +184,9 @@ export class FormatPlugin extends Plugin {
         }
     }
 
-    unwrapEmptyFormat(insertedNode, block) {
+    unwrapEmptyFormat(insertedNode) {
         const anchorNode = this.dependencies.selection.getEditableSelection().anchorNode;
-        if (!block.contains(anchorNode)) {
+        if (!allWhitespaceRegex.test(insertedNode.textContent)) {
             return insertedNode;
         }
         const emptyZWS = closestElement(anchorNode, "[data-oe-zws-empty-inline]");
