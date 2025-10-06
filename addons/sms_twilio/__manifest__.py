@@ -16,6 +16,11 @@ up their account to start sending SMS messages.
         'wizard/sms_twilio_account_manage_views.xml',
         'security/ir.model.access.csv'
     ],
+    'assets': {
+        'web.assets_backend': [
+            'sms_twilio/static/src/**/*',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

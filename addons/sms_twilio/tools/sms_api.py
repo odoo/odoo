@@ -15,6 +15,7 @@ class SmsApiTwilio(SmsApiBase):
         'twilio_callback': 'twilio_callback',
         'twilio_from_missing': 'twilio_from_missing',
         'twilio_from_to': 'twilio_from_to',
+        'twilio_wrong_credentials': 'twilio_wrong_credentials',
     }
 
     def _sms_twilio_send_request(self, session, to_number, body, uuid):
@@ -95,6 +96,8 @@ class SmsApiTwilio(SmsApiBase):
         elif error_code == 21609:
             # Twilio StatusCallback URL is incorrect
             return "twilio_callback"
+        elif error_code == 20003:
+            return "twilio_wrong_credentials"
         _logger.warning('Twilio SMS: Unknown error "%s" (code: %s)', response_json.get('message'), error_code)
         return "unknown"
 
@@ -110,6 +113,7 @@ class SmsApiTwilio(SmsApiBase):
             'twilio_from_missing': ("A 'From' number is required to send a message"),
             'twilio_from_to': _("'To' and 'From' numbers cannot be the same"),
             'wrong_number_format': _("The number you're trying to reach is not correctly formatted"),
+            'twilio_wrong_credentials': _("Recheck your credentials"),
             # fallback
             'unknown': _("Unknown error, please contact Odoo support"),
         })
