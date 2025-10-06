@@ -3062,6 +3062,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_preset_customer_selection')
 
+    def test_pos_large_amount_confirmation_dialog(self):
+        """Test that the Large amount confirmation dialog appears
+        and closes properly after clicking 'OK'."""
+        self.env['product.product'].create({
+            'name': 'Overpay Test Product',
+            'list_price': 1.0,
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_pos_large_amount_confirmation_dialog')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
