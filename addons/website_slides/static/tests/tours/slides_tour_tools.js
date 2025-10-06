@@ -16,7 +16,7 @@ var addSection = function (sectionName, backend = false) {
 	return [
 {
     content: 'eLearning: click on Add Section',
-    trigger: prefix + 'a.o_wslides_js_slide_section_add',
+    trigger: prefix + 'button.o_wslides_js_slide_section_add',
     run: "click",
 }, {
     content: 'eLearning: set section name',
@@ -35,7 +35,7 @@ var addSection = function (sectionName, backend = false) {
 
 const addContentToSection = (prefix, sectionName) => ({
     content: `eLearning: click on add content for section ${sectionName}`,
-    trigger: `${prefix} div.o_wslides_slide_list_category_header:contains(${sectionName}) a:contains(Add Content)`,
+    trigger: `${prefix} div.o_wslides_slide_list_category_header:contains(${sectionName}) button:contains(Add Content)`,
     run: "click",
 });
 
@@ -62,7 +62,7 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
         addContentToSection(prefix, sectionName),
         {
             content: "eLearning: click on video",
-            trigger: prefix + "a[data-slide-category=video]",
+            trigger: prefix + "button[data-slide-category=video]",
             run: "click",
         },
         {
@@ -112,7 +112,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
         addContentToSection(prefix, sectionName),
         {
 	content: 'eLearning: click on article',
-	trigger: prefix + 'a[data-slide-category=article]',
+	trigger: prefix + 'button[data-slide-category=article]',
     run: "click",
 }, {
 	content: 'eLearning: fill article title',
@@ -163,7 +163,7 @@ const addImageToSection = (sectionName, pageName, backend) => {
         addContentToSection(prefix, sectionName),
         {
     content: 'eLearning: click on image',
-    trigger: `${prefix}a[data-slide-category=infographic]`,
+    trigger: `${prefix}button[data-slide-category=infographic]`,
     run: "click",
 }, {
     content: 'eLearning: choose upload from device',
@@ -225,7 +225,7 @@ const addPdfToSection = function (sectionName, pageName, backend) {
         addContentToSection(prefix, sectionName),
         {
     content: 'eLearning: click on document',
-    trigger: `${prefix}a[data-slide-category=document]`,
+    trigger: `${prefix}button[data-slide-category=document]`,
     run: "click",
 }, {
     content: 'eLearning: choose upload from device',
