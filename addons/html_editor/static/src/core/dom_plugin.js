@@ -371,9 +371,9 @@ export class DomPlugin extends Plugin {
             }
             // Ensure that all adjacent paragraph elements are converted to
             // <li> when inserting in a list.
-            const container = closestBlock(currentNode);
+            const block = closestBlock(currentNode);
             for (const processor of this.getResource("node_to_insert_processors")) {
-                nodeToInsert = processor({ nodeToInsert, container });
+                nodeToInsert = processor({ nodeToInsert, container: block });
             }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
