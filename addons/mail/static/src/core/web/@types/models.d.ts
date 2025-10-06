@@ -8,6 +8,13 @@ declare module "models" {
         markAsDoneAndScheduleNext: () => Promise<ActionDescription>;
         remove: (param0: { broadcast: boolean }) => void;
     }
+    export interface DiscussChannel {
+        activities: Activity[];
+        isDisplayedInDiscussAppDesktop: boolean;
+        recipients: Follower[];
+        recipientsCount: number|undefined;
+        recipientsFullyLoaded: Readonly<boolean>;
+    }
     export interface Message {
         canForward: (thread: Thread) => boolean;
         canReplyAll: (thread: Thread) => boolean;

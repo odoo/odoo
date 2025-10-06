@@ -204,3 +204,5 @@ export const fields = {
         };
     },
 };
+
+export const technicalKeysOnRecords = ["_", "_proxy", "_proxyInternal", "_raw", "env", "Model"];

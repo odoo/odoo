@@ -29,6 +29,12 @@ export class ModelInternal {
     fieldsSort = new Map();
     /** @type {Map<string, string>} */
     fieldsType = new Map();
+    /**
+     * Map of field name to the name of the relation field through which this field should be read.
+     *
+     * @type {Map<string, string>}
+     * */
+    parentFields = new Map();
 
     prepareField(fieldName, data) {
         this.fields.set(fieldName, true);

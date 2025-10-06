@@ -3,6 +3,9 @@ declare module "models" {
 
     export interface ScheduledMessage extends ScheduledMessageClass {}
 
+    export interface DiscussChannel {
+        scheduledMessages: ScheduledMessage[];
+    }
     export interface Store {
         "mail.scheduled.message": StaticMailRecord<ScheduledMessage, typeof ScheduledMessageClass>;
     }

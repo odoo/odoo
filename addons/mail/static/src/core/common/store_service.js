@@ -26,12 +26,7 @@ let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
-    "discuss.channel": "Thread",
     "mail.thread": "Thread",
-};
-
-export const addFieldsByPyModel = {
-    "discuss.channel": { model: "discuss.channel" },
 };
 
 patch(storeInsertFns, {
@@ -51,12 +46,6 @@ patch(storeInsertFns, {
             );
         }
         return pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
-    },
-    getExtraFieldsFromModel(store, pyOrJsModelName) {
-        if (!(store instanceof Store)) {
-            return super.getExtraFieldsFromModel(...arguments);
-        }
-        return addFieldsByPyModel[pyOrJsModelName];
     },
 });
 

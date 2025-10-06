@@ -7,6 +7,8 @@ export class Failure extends Record {
     static nextId = markRaw({ value: 1 });
     static id = "id";
 
+    /** @type {number} */
+    id;
     notifications = fields.Many("mail.notification", {
         /** @this {import("models").Failure} */
         onUpdate() {
