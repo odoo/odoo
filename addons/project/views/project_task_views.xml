@@ -243,6 +243,24 @@
             <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
         </record>
 
+    <record id="project_embedded_action_project_burndown_chart" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">120</field>
+        <field name="name">Burndown Chart</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="action_id" ref="project.action_project_task_burndown_chart_report"/>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
+    </record>
+
+    <record id="project_embedded_action_update_burndown_chart" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">120</field>
+        <field name="name">Burndown Chart</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="action_id" ref="project.action_project_task_burndown_chart_report"/>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
+    </record>
+
     <!-- Set pivot view and arrange in order -->
     <record id="project_task_kanban_action_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
