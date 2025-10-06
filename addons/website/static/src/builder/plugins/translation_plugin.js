@@ -8,7 +8,14 @@ import {
 } from "../translation_components/translatorInfoDialog";
 import { withSequence } from "@html_editor/utils/resource";
 
-const TRANSLATED_ATTRS = ["placeholder", "title", "alt", "value", "data-oe-translatable-link"];
+const TRANSLATED_ATTRS = [
+    "placeholder",
+    "title",
+    "alt",
+    "value",
+    "data-oe-translatable-link",
+    "data-oe-expression",
+];
 const TRANSLATION_ATTRIBUTES_SELECTOR = TRANSLATED_ATTRS.map(
     (att) => `[${att}*="data-oe-translation-source-sha="]`
 ).join(", ");
@@ -171,7 +178,7 @@ export class TranslationPlugin extends Plugin {
         const translationRegex =
             /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
-        const matchTag = (el) => el.matches("input, select, textarea, img");
+        const matchTag = (el) => el.matches("input, select, textarea, img, div");
         for (const translatedAttr of TRANSLATED_ATTRS) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>

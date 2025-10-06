@@ -80,7 +80,7 @@ TRANSLATED_ATTRS = {
 
 # These attributes must not be exported to .po(t) files and `t-attf-` attributes
 # should not be translated.
-NO_EXPORT_TRANSLATED_ATTRS = {'src'}
+NO_EXPORT_TRANSLATED_ATTRS = {'src', 'data-oe-expression'}
 
 TRANSLATED_ATTRS.update(
     {f't-attf-{attr}' for attr in TRANSLATED_ATTRS},

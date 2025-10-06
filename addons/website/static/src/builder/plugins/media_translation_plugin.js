@@ -13,6 +13,11 @@ export class MediaTranslationPlugin extends Plugin {
                 selector: "img[data-oe-translatable-link]",
                 isTranslationOption: true,
             },
+            {
+                template: "website.VideoTranslationOption",
+                selector: ".media_iframe_video:has(iframe[data-oe-translatable-link])",
+                isTranslationOption: true,
+            },
         ],
         builder_actions: {
             TranslateMediaSrcAction,
@@ -34,11 +39,12 @@ registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTra
 
 export class TranslateMediaSrcAction extends BuilderAction {
     static id = "translateMediaSrc";
-    static dependencies = ["imagePostProcess", "media"];
+    static dependencies = ["history", "imagePostProcess", "media", "translation"];
 
     setup() {
         this.savingMap = {
             images: this.saveImage.bind(this),
+            videos: this.saveVideo.bind(this),
         };
     }
 
@@ -80,6 +86,40 @@ export class TranslateMediaSrcAction extends BuilderAction {
             });
             updateImageAttributes();
             editingElement.dataset.oeTranslatableLink = editingElement.getAttribute("src");
+        }
+    }
+
+    async saveVideo(editingElement, newVideoEl) {
+        if (newVideoEl && editingElement.classList.contains("media_iframe_video")) {
+            const originalLink = editingElement.getAttribute("data-oe-expression");
+            const newSrc = newVideoEl.querySelector("iframe").getAttribute("src");
+            editingElement.setAttribute("data-oe-expression", newSrc);
+            const iframeEl = editingElement.querySelector("iframe");
+            iframeEl.setAttribute("src", newSrc);
+            iframeEl.dataset.oeTranslatableLink = newSrc;
+            // We force the replacement of the iframe because of a content
+            // caching problem with Chrome: after save, the src is correct, but
+            // the iframe's document still shows the previous src.
+            iframeEl.replaceWith(iframeEl.cloneNode());
+            editingElement.classList.add("oe_translated");
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    this.dependencies.translation.updateTranslationMap(
+                        iframeEl,
+                        newSrc,
+                        "data-oe-translatable-link"
+                    );
+                    // No need to also update `data-oe-expression` in the map,
+                    // as it's the same link.
+                },
+                revert: () => {
+                    this.dependencies.translation.updateTranslationMap(
+                        iframeEl,
+                        originalLink,
+                        "data-oe-translatable-link"
+                    );
+                },
+            });
         }
     }
 }
