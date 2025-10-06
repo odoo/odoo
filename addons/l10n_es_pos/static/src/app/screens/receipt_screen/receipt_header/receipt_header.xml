@@ -11,7 +11,7 @@
                 <div t-if="order.company.street" t-esc="order.company.street" />
                 <div t-if="order.company.zip" t-esc="order.company.zip" />
                 <div t-if="order.company.city" t-esc="order.company.city" />
-                <div t-if="order.company.state_id">(<t t-esc="order.company.state_id[1]"/>)</div>
+                <div t-if="order.company.state_id">(<t t-esc="order.company.state_id.name"/>)</div>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
