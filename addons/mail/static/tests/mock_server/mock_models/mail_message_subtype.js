@@ -4,6 +4,7 @@ export class MailMessageSubtype extends models.ServerModel {
     _name = "mail.message.subtype";
 
     default = fields.Generic({ default: true });
+    internal = fields.Boolean({ default: false });
     subtype_xmlid = fields.Char();
 
     _records = [
