@@ -160,10 +160,10 @@ class StockMove(models.Model):
                 continue
             aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += aml.quantity
+                aml_quantity += aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
                 value += aml.price_subtotal
             elif aml.move_type == 'in_refund':
-                aml_quantity -= aml.quantity
+                aml_quantity -= aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
                 value -= aml.price_subtotal
 
         if aml_quantity <= 0:
