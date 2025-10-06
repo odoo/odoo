@@ -23,11 +23,30 @@
             </field>
         </record>
 
+        <record id="view_partner_form_inherit_pos" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.pos</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet//group//field[@name='function']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//sheet//group//field[@name='website']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//sheet/notebook" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="res_partner_action_edit_pos" model="ir.actions.act_window">
             <field name="name">Edit Partner</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="view_id" ref="point_of_sale.view_partner_form_inherit_pos"/>
         </record>
 </odoo>
