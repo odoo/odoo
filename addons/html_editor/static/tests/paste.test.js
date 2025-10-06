@@ -68,7 +68,7 @@ describe("Html Paste cleaning - whitelist", () => {
                 );
             },
             contentAfter:
-                '<p>123a</p><table class="table table-bordered"><tbody><tr><td>h</td></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
+                '<p>123a</p><table class="table table-bordered o_table"><tbody><tr><td>h</td></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
         });
     });
 
@@ -3785,7 +3785,7 @@ describe("Paste HTML tables", () => {
 </div>`
                 );
             },
-            contentAfter: `<table class="table table-bordered">
+            contentAfter: `<table class="table table-bordered o_table">
 ${"            "}
 ${"            "}
             <tbody><tr>
@@ -3884,7 +3884,7 @@ ${"            "}
 </google-sheets-html-origin>`
                 );
             },
-            contentAfter: `<table class="table table-bordered">
+            contentAfter: `<table class="table table-bordered o_table">
 ${"        "}
 ${"            "}
 ${"            "}
@@ -4019,7 +4019,7 @@ ${"        "}
 </html>`
                 );
             },
-            contentAfter: `<table class="table table-bordered">
+            contentAfter: `<table class="table table-bordered o_table">
 ${"        "}
 ${"        "}
         <tbody><tr>
@@ -4052,6 +4052,39 @@ ${"        "}
     </tbody></table><p>[]<br></p>`,
         });
     });
+
+    test("should apply default table classes (table, table-bordered, o_table) on paste", async () => {
+        await testEditor({
+            contentBefore: `
+                <p>[]<br></p>
+            `,
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `)
+                );
+            },
+            contentAfter: unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>[]<br></p>
+            `),
+        });
+    });
+
     test("should move all rows from thead to tbody", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
@@ -4081,7 +4114,7 @@ ${"        "}
                 );
             },
             contentAfter: unformat(`
-                        <table class="table table-bordered">
+                        <table class="table table-bordered o_table">
                             <tbody>
                                 <tr>
                                     <td>1</td>
@@ -4120,7 +4153,7 @@ ${"        "}
                 );
             },
             contentAfter: unformat(`
-                        <table class="table table-bordered">
+                        <table class="table table-bordered o_table">
                             <tbody>
                                 <tr>
                                     <td>1</td>
