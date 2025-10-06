@@ -15,7 +15,12 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     incoterm = fields.Many2one(
-        'account.incoterms', 'Incoterm',
+        comodel_name='account.incoterms',
+        string='Incoterm',
+        compute='_compute_incoterm',
+        precompute=True,
+        store=True,
+        readonly=False,
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     incoterm_location = fields.Char(string='Incoterm Location')
     picking_policy = fields.Selection([
@@ -112,6 +117,11 @@ class SaleOrder(models.Model):
             order.late_availability = any(
                 picking.products_availability_state == 'late' for picking in order.picking_ids
             )
+
+    @api.depends('partner_id.incoterm_id')
+    def _compute_incoterm(self):
+        for order in self:
+            order.incoterm = order.partner_id.incoterm_id
 
     def _search_late_availability(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
