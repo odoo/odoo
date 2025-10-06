@@ -132,6 +132,7 @@ export default class OrderPaymentValidation {
             }
 
             await this.shouldHideValidationBehindFeedbackScreen();
+            return true;
         }
 
         return false;
@@ -367,11 +368,11 @@ export default class OrderPaymentValidation {
                 body:
                     _t("Are you sure that the customer wants to  pay") +
                     " " +
-                    this.env.utils.formatCurrency(this.order.getTotalPaid()) +
+                    this.pos.env.utils.formatCurrency(this.order.getTotalPaid()) +
                     " " +
                     _t("for an order of") +
                     " " +
-                    this.env.utils.formatCurrency(this.order.getTotalWithTax()) +
+                    this.pos.env.utils.formatCurrency(this.order.getTotalWithTax()) +
                     " " +
                     _t('? Clicking "Confirm" will validate the payment.'),
                 confirm: () => this.validateOrder(true),
