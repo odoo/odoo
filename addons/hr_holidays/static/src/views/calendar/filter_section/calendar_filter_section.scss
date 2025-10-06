@@ -20,6 +20,9 @@
         .hr_mandatory_day_#{$size - 1}:not(.fc-disabled-day) {
             color: nth($o-colors, $size) !important;
         }
+        .hr_mandatory_day_light_#{$size - 1}:not(.fc-disabled-day) {
+            color: lighten(nth($o-colors, $size), 30) !important;
+        }
     }
 }
 

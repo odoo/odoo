@@ -35,6 +35,8 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             (start, end) => `${serializeDateTime(start)},${serializeDateTime(end)}`
         );
 
+        this.currentDateTime = luxon.DateTime.now();
+
         onWillStart(this.updateSpecialDays);
         onWillUpdateProps(this.updateSpecialDays);
     }

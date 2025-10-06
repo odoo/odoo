@@ -6,7 +6,7 @@
                 <h5>Optional Holidays</h5>
                 <ul class="ps-0">
                     <li t-foreach="leaveState.optionalHolidays" t-as="optionalHoliday" t-key="optionalHoliday.id"
-                        class="mt-2 list-unstyled">
+                        t-att-class="{'mt-2 list-unstyled': true, 'text-muted': optionalHoliday.end.startOf('day') &lt; currentDateTime.startOf('day')}">
                         <strong t-out="getFormattedDateSpan(optionalHoliday.start, optionalHoliday.end)"/>
                         : <t t-out="optionalHoliday.title"/>
                     </li>
