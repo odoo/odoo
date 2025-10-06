@@ -9,12 +9,12 @@
 }
 
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+    &, &[data-oe-field="mega_menu_content"] * {
         background-color: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
     &[data-oe-translation-state="translated"] {
-        &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+        &, &[data-oe-field="mega_menu_content"] * {
             background-color: rgba($o-we-translated-content-color, 0.5) !important;
         }
     }
