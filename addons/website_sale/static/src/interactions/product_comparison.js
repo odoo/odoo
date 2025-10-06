@@ -17,6 +17,9 @@ export class ProductComparison extends Interaction {
         '.o_add_compare, .o_add_compare_dyn': { 't-on-click': this.addProduct },
         'input.product_id': { 't-on-change': this.onChangeVariant },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
+        '.wishlist-section .o_add_to_compare': {
+            't-on-click': this.addProductFromWishlist.bind(this),
+        },
     };
 
     setup() {
@@ -87,6 +90,25 @@ export class ProductComparison extends Interaction {
         const productIds = comparisonUtils.getComparisonProductIds();
         const comparisonUrl = `/shop/compare?products=${encodeURIComponent(productIds.join(','))}`;
         redirect(productIds.length ? comparisonUrl : '/shop');
+    }
+
+    /**
+     * Add a product to the comparison from the wishlist page.
+     *
+     * @param {Event} ev
+     */
+    addProductFromWishlist(ev) {
+        if (this._checkMaxComparisonProducts()) return;
+
+        const el = ev.currentTarget;
+        const productId = parseInt(el.dataset.productId);
+        if (!productId || this._checkProductAlreadyInComparison(productId)) {
+            comparisonUtils.updateDisabled(el, true);
+            return;
+        }
+
+        comparisonUtils.addComparisonProduct(productId, this.bus);
+        comparisonUtils.updateDisabled(el, true);
     }
 
     //--------------------------------------------------------------------------
