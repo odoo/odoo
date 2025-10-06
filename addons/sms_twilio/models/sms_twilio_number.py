@@ -18,9 +18,3 @@ class SmsTwilioNumber(models.Model):
     def _compute_display_name(self):
         for record in self:
             record.display_name = f"{record.number} ({record.country_id.name})"
-
-    def action_unlink(self):
-        # First create the action while self exists as it's going to be unlink right after
-        action = self.company_id._action_open_sms_twilio_account_manage()
-        self.unlink()
-        return action

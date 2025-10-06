@@ -11,8 +11,8 @@
                     <label for="sms_twilio_account_sid"/>
                     <div class="d-flex align-items-center">
                         <field name="sms_twilio_account_sid" placeholder="ACabcde12345abcde12345abcde12345ab"
-                            required="1"/>
-                        <a target="_blank" class="btn btn-link ms-1 w-25"
+                            required="1" class="w-75"/>
+                        <a target="_blank" class="btn btn-link ms-1 w-25 p-0"
                             role="button"
                             href="https://www.odoo.com/documentation/latest/applications/marketing/sms_marketing/twilio.html">
                             Need help ?
@@ -20,26 +20,25 @@
                         </a>
                     </div>
                     <field name="sms_twilio_auth_token" password="True" placeholder="abcde12345abcde12345abcde12345ab"
-                        required="1"/>
+                        required="1" class="w-75"/>
                     <label for="test_number"/>
                     <div class="d-flex align-items-center">
-                        <field name="test_number" placeholder="+1 555-123-4567"/>
+                        <field name="test_number" placeholder="+1 555-123-4567" class="w-auto"/>
                         <button name="action_send_test" string="Send test SMS"
                             icon="fa-send" type="object"
-                            class="btn btn-link w-25 ms-1"/>
+                            class="btn btn-link w-auto ms-1 p-0"/>
                     </div>
                 </group>
                 <group string="Phone Numbers">
                     <button
                         class="btn btn-secondary" colspan="2"
                         type="object" name="action_reload_numbers"
-                        string="Reload Numbers from Twilio" icon="fa-refresh"/>
+                        string="Load from Twilio" icon="fa-refresh"/>
                     <field name="sms_twilio_number_ids" colspan="2" nolabel="1">
-                        <list editable="bottom" delete="0">
+                        <list editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="country_id"/>
                             <field name="number" placeholder="+1 555-123-4567"/>
-                            <button name="action_unlink" title="Delete" icon="fa-trash" type="object"/>
                         </list>
                     </field>
                 </group>
