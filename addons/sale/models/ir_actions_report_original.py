@@ -7,7 +7,7 @@ from odoo import models, api
 from odoo.tools import config
 
 
-class IrActionsReport(models.Model):
+class IrActionsReportOriginal(models.Model):
     _inherit = 'ir.actions.report'
 
     def _build_wkhtmltopdf_args(self, paperformat_id, landscape, specific_paperformat_args=None, set_viewport_size=False):
@@ -21,14 +21,12 @@ class IrActionsReport(models.Model):
         # Add only supported options for macOS
         command_args.extend([
             '--disable-local-file-access',
+            '--quiet',
             '--no-pdf-compression',
             '--disable-smart-shrinking',
             '--print-media-type',
             '--no-stop-slow-scripts'
         ])
-        
-        # Add quiet mode at the beginning
-        command_args.insert(0, '--quiet')
         
         # Add javascript delay based on system resources
         try:

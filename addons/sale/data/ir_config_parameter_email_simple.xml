@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Simple Email Configuration Parameters -->
+    <record id="mail_default_from" model="ir.config_parameter">
+        <field name="key">mail.default.from</field>
+        <field name="value">noreply@localhost</field>
+    </record>
+
+    <record id="mail_catchall_domain" model="ir.config_parameter">
+        <field name="key">mail.catchall.domain</field>
+        <field name="value">localhost</field>
+    </record>
+
+    <!-- Simple SMTP Server Configuration -->
+    <record id="mail_server_simple" model="ir.mail_server">
+        <field name="name">Simple SMTP Server</field>
+        <field name="smtp_host">localhost</field>
+        <field name="smtp_port">25</field>
+        <field name="smtp_encryption">none</field>
+        <field name="smtp_user"></field>
+        <field name="smtp_pass"></field>
+        <field name="active">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+</odoo>
