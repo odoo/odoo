@@ -789,6 +789,8 @@ class ProjectTask(models.Model):
 
     def _inverse_display_name(self):
         for task in self:
+            if not task.display_name:
+                continue
             pattern = re.compile(r'^%s.+?%s$' % (
                 ('').join(task._get_cannot_start_with_patterns()),
                 ('').join(task._get_groups_patterns()))
