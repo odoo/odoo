@@ -1543,13 +1543,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
 
     def _get_shop_payment_values(self, order, **kwargs):
+        shop_warnings = order._pop_shop_warnings()
         checkout_page_values = {
             'sale_order': order,
             'website_sale_order': order,
-            'shop_warnings': order._pop_shop_warnings(),
+            'shop_warnings': shop_warnings,
             'partner': order.partner_invoice_id,
             'order': order,
+            'only_services': order and order.only_services,
             'submit_button_label': _("Pay now"),
+            **request.website._get_checkout_step_values(),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
@@ -1560,6 +1563,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'landing_route': '/shop/payment/validate',
             'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
         }
+        if shop_warnings:
+            payment_form_values.pop('payment_methods_sudo', '')
+            payment_form_values.pop('tokens_sudo', '')
         return checkout_page_values | payment_form_values
 
     @route('/shop/payment', type='http', auth='public', website=True, sitemap=False, list_as_website_content=_lt("Shop Payment"))
@@ -1578,16 +1584,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo = request.cart
         order_sudo._recompute_cart()
-        render_values = self._get_shop_payment_values(order_sudo, **post)
-        render_values['only_services'] = order_sudo and order_sudo.only_services
 
-        if render_values.get('shop_warnings'):
-            render_values.pop('payment_methods_sudo', '')
-            render_values.pop('tokens_sudo', '')
-
-        render_values.update(request.website._get_checkout_step_values())
-
-        return request.render("website_sale.payment", render_values)
+        return request.render(
+            'website_sale.payment',
+            self._get_shop_payment_values(order_sudo, **post),
+        )
 
     @route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)
     def shop_payment_validate(self, sale_order_id=None, **post):

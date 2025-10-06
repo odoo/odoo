@@ -10,8 +10,10 @@ class SaleOrder(models.Model):
         """Override of `website_sale` to check that Point Relais® is used with the correct delivery
         method, and vice versa."""
         if (
-            self.partner_shipping_id.is_mondialrelay and self.delivery_set
-            and self.carrier_id and not self.carrier_id.is_mondialrelay
+            self.partner_shipping_id.is_mondialrelay
+            and self.delivery_set
+            and self.carrier_id
+            and not self.carrier_id.is_mondialrelay
         ):
             self.shop_warning = self.env._(
                 "Point Relais® can only be used with the delivery method Mondial Relay."

@@ -904,14 +904,18 @@ class SaleOrder(models.Model):
         :rtype: dict[sale.order | sale.order.line, str]
         """
         warnings = {}
-        orders_with_warning = self.filtered('shop_warning')
-        for order in orders_with_warning:
-            warnings[order] = order.shop_warning
+        if not self:
+            return warnings
+
+        self.ensure_one()
+        if (warning := self.shop_warning):
+            warnings[self] = warning
+
         order_lines_with_warning = self.order_line.filtered('shop_warning')
         for line in order_lines_with_warning:
             warnings[line] = line.shop_warning
 
-        orders_with_warning.shop_warning = False
+        self.shop_warning = False
         order_lines_with_warning.shop_warning = False
         return warnings
 
