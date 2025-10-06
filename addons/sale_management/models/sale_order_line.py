@@ -40,8 +40,21 @@ class SaleOrderLine(models.Model):
 
     # === TOOLING ===#
 
+<<<<<<< 3557de4232ebc307c8861379f6573d7b36cd8db6
     def _is_line_optional(self):
         """ Returns whether the line is optional or not.
+||||||| 33c64684d169bb86e56c973f68567172936d9f80
+    def _lines_without_price_recomputation(self):
+        """ Hook to allow filtering the lines to avoid the recomputation of the price. """
+        return self.filtered('sale_order_option_ids')
+=======
+    def _lines_without_price_recomputation(self):
+        """ Hook to allow filtering the lines to avoid the recomputation of the price. """
+        if self.env.context.get('pricelist_update'):
+            # Recompute the optional products only if the pricelist got updated
+            return self.env['sale.order.line']
+        return self.filtered('sale_order_option_ids')
+>>>>>>> 3a9d9a3f00bc855d9e20531e8f1768a956a92698
 
         A line is optional if it is directly under an optional (sub)section, or under a subsection
         which is itself under an optional section.
