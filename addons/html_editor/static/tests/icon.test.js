@@ -7,6 +7,7 @@ import { undo } from "./_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -422,7 +423,9 @@ describe("selection", () => {
         setSelection({ anchorNode: icon, anchorOffset: 0 });
         await tick();
         expect(getContent(el)).toBe(
-            `<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>`
+            wrapInPlaceholders(
+                '<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>'
+            )
         );
     });
 });

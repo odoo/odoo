@@ -8,6 +8,7 @@ import { cleanHints } from "../_helpers/dispatch";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { addStep } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
+import { PLACEHOLDER } from "../_helpers/selection_placeholder";
 
 function span(text) {
     const span = document.createElement("span");
@@ -161,7 +162,11 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p class="oe_unbreakable">content[]</p><table><tbody><tr><td></td></tr></tbody></table>`
+            unformat(
+                `<p class="oe_unbreakable">content[]</p>
+                <table><tbody><tr><td></td></tr></tbody></table>
+                ${PLACEHOLDER()}`
+            )
         );
     });
 
@@ -259,7 +264,7 @@ describe("collapsed selection", () => {
         editor.shared.history.addStep();
         cleanHints(editor);
         expect(getContent(editor.editable, { sortAttrs: true })).toBe(
-            `<p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
+            `${PLACEHOLDER()}<p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
         );
     });
 

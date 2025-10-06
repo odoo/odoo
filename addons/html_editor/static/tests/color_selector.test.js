@@ -20,6 +20,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -968,8 +969,10 @@ describe("color preview", () => {
         await animationFrame();
         // Hover a color
         await hover(queryOne("button[data-color='#CE0000']"));
-        expect(getContent(el)).toBe(`
-            <table class="table table-bordered o_table o_selected_table">
+        expect(getContent(el)).toBe(
+            `
+            ` +
+                wrapInPlaceholders(`<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td o_selected_td_bg_color_preview" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
@@ -982,13 +985,17 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        `);
+            </table>`) +
+                `
+        `
+        );
         // Hover out
         await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
         await animationFrame();
-        expect(getContent(el)).toBe(`
-            <table class="table table-bordered o_table o_selected_table">
+        expect(getContent(el)).toBe(
+            `
+            ` +
+                wrapInPlaceholders(`<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td">
@@ -1001,8 +1008,10 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        `);
+            </table>`) +
+                `
+        `
+        );
         await expectElementCount(".o-we-toolbar", 1);
     });
 
@@ -1036,8 +1045,10 @@ describe("color preview", () => {
         await animationFrame();
         // Hover a color
         await hover(queryOne("button[data-color='black']"));
-        expect(getContent(el)).toBe(`
-            <table class="table table-bordered o_table o_selected_table">
+        expect(getContent(el)).toBe(
+            `
+            ` +
+                wrapInPlaceholders(`<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td o_selected_td_bg_color_preview bg-black" style="${defaultTextColor}">
@@ -1050,13 +1061,17 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        `);
+            </table>`) +
+                `
+        `
+        );
         // Hover out
         await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
         await animationFrame();
-        expect(getContent(el)).toBe(`
-            <table class="table table-bordered o_table o_selected_table">
+        expect(getContent(el)).toBe(
+            `
+            ` +
+                wrapInPlaceholders(`<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td">
@@ -1069,8 +1084,10 @@ describe("color preview", () => {
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        `);
+            </table>`) +
+                `
+        `
+        );
         await expectElementCount(".o-we-toolbar", 1);
     });
 

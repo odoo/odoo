@@ -15,6 +15,7 @@ import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 test("getEditableSelection should work, even if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
@@ -188,7 +189,9 @@ test("press 'ctrl+a' in 'contenteditable' should only select his content", async
     );
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        `<div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div>`
+        wrapInPlaceholders(
+            `<div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div>`
+        )
     );
 });
 

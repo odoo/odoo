@@ -28,6 +28,8 @@ import { withSequence } from "@html_editor/utils/resource";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { VideoPlugin } from "@html_editor/main/media/video_plugin";
+import { unformat } from "./_helpers/format";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -506,8 +508,26 @@ test("should insert a 3x3 table on type `/table`", async () => {
 
     await press("Enter");
     await tick();
+    const emptyColumn = "<td><p><br></p></td>";
+    const rowWithThreeEmptyColumns = `<tr>${emptyColumn}${emptyColumn}${emptyColumn}</tr>`;
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        unformat(
+            `${PLACEHOLDER()}
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+                        </td>
+                        ${emptyColumn}
+                        ${emptyColumn}
+                    </tr>
+                    ${rowWithThreeEmptyColumns}
+                    ${rowWithThreeEmptyColumns}
+                </tbody>
+            </table>
+            <p><br></p>`
+        )
     );
 });
 
@@ -519,7 +539,7 @@ test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `${PLACEHOLDER()}<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
     );
 });
 

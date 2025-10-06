@@ -45,6 +45,7 @@ import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/use
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -639,10 +640,14 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
             </form>`,
     });
     expect.verifySteps(["setup_wysiwyg"]);
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("inside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        wrapInPlaceholders(getTxtValue("inside", true), { tag: "div" })
+    );
     setSelectionInHtmlField();
     pasteOdooEditorHtml(htmlEditor, "addon");
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("addoninside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        wrapInPlaceholders(getTxtValue("addoninside", true), { tag: "div" })
+    );
     await clickSave();
     expect.verifySteps(["update_value", "web_save"]);
 });
@@ -2503,7 +2508,7 @@ describe("codeview enabled", () => {
     });
 });
 
-test("should never insert Table of Contents as the first child of the editable", async () => {
+test("should always have a block before a Table of Contents", async () => {
     Partner._records = [
         {
             id: 1,

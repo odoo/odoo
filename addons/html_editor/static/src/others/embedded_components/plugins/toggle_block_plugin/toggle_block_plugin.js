@@ -85,6 +85,18 @@ export class ToggleBlockPlugin extends Plugin {
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: withSequence(1, this.handleSplitElementBlock.bind(this)),
         tab_overrides: this.handleTab.bind(this),
+        is_safe_for_selection_placeholder_predicates: [
+            (blocker, sibling) =>
+                // Prevent the insertion of selection placeholders between toggle blocks.
+                ![blocker, sibling].every(
+                    (element) => element && element.dataset.embedded === "toggleBlock"
+                ),
+            (blocker) =>
+                !(
+                    blocker.dataset.embedded === "toggleBlock" &&
+                    closestElement(blocker.parentElement, '[data-embedded="toggleBlock"]')
+                ),
+        ],
 
         power_buttons_visibility_predicates: this.showPowerButtons.bind(this),
 

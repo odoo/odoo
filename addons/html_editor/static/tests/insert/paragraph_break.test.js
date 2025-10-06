@@ -13,6 +13,7 @@ import {
     patchPrism,
 } from "../_helpers/syntax_highlighting";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 describe("Selection collapsed", () => {
     describe("Basic", () => {
@@ -143,12 +144,14 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "abcd" }),
+                    contentBeforeEdit: wrapInPlaceholders(highlightedPre({ value: "abcd" })),
                     stepFunction: testEnterInCodeBlock(2), // "ab[]cd"
-                    contentAfterEdit: highlightedPre({
-                        value: "ab\ncd",
-                        textareaRange: 3, // "ab\n[]cd"
-                    }),
+                    contentAfterEdit: wrapInPlaceholders(
+                        highlightedPre({
+                            value: "ab\ncd",
+                            textareaRange: 3, // "ab\n[]cd"
+                        })
+                    ),
                     contentAfter: `<pre data-language-id="plaintext">ab<br>cd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -157,13 +160,15 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abc</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "abc" }),
+                    contentBeforeEdit: wrapInPlaceholders(highlightedPre({ value: "abc" })),
                     stepFunction: testEnterInCodeBlock(3), // "abc[]"
-                    contentAfterEdit: highlightedPre({
-                        value: "abc\n",
-                        preHtml: "abc<br><br>",
-                        textareaRange: 4, // "abc\n[]"
-                    }),
+                    contentAfterEdit: wrapInPlaceholders(
+                        highlightedPre({
+                            value: "abc\n",
+                            preHtml: "abc<br><br>",
+                            textareaRange: 4, // "abc\n[]"
+                        })
+                    ),
                     contentAfter: `<pre data-language-id="plaintext">abc<br><br></pre>[]`,
                     config: configWithEmbeddings,
                 });

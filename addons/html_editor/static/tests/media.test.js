@@ -11,6 +11,7 @@ import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actio
 import { MAIN_PLUGINS, NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS } from "@html_editor/plugin_sets";
 import { delay } from "@web/core/utils/concurrency";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -177,7 +178,7 @@ describe("(non-)editable media", () => {
             await animationFrame();
             await expectElementCount(".o-we-toolbar", 0);
             expect(getContent(editor.editable)).toBe(
-                `<div contenteditable="false">[<img src="${base64Img}">]</div>`
+                wrapInPlaceholders(`<div contenteditable="false">[<img src="${base64Img}">]</div>`)
             );
         });
         test("toolbar should open when clicking on an editable image in a non-editable context", async () => {
@@ -189,7 +190,9 @@ describe("(non-)editable media", () => {
             await expectElementCount(".o-we-toolbar", 1);
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
-            expect(getContent(editor.editable)).toBe(`<div contenteditable="false">[]<br></div>`);
+            expect(getContent(editor.editable)).toBe(
+                wrapInPlaceholders(`<div contenteditable="false">[]<br></div>`)
+            );
         });
     });
     describe("delete", () => {

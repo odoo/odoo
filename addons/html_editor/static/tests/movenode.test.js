@@ -8,6 +8,7 @@ import { unformat } from "./_helpers/format";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 describe.current.tags("desktop");
 
@@ -314,6 +315,7 @@ describe("click", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER()}
                 <table class="o_selected_table">
                     <tbody>
                         <tr>

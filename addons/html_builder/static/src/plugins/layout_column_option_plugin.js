@@ -22,6 +22,9 @@ class LayoutColumnOptionPlugin extends Plugin {
         builder_actions: {
             ChangeColumnCountAction,
         },
+        uncrossable_context_blocks_providers: (root) => [...root.querySelectorAll(".row > div")],
+        is_safe_for_selection_placeholder_predicates: (blocker) =>
+            !blocker.classList?.contains("row"),
     };
     onCloned({ cloneEl }) {
         const cloneElClassList = cloneEl.classList;

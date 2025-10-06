@@ -4,6 +4,7 @@ import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { animationFrame } from "@odoo/hoot-dom";
+import { PLACEHOLDER } from "../_helpers/selection_placeholder";
 
 async function insertSeparator(editor) {
     execCommand(editor, "insertSeparator");
@@ -14,7 +15,7 @@ describe("insert separator", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: insertSeparator,
-            contentAfterEdit: `<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfterEdit: `${PLACEHOLDER()}<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
             contentAfter: "<hr><p>[]<br></p>",
         });
     });

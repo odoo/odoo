@@ -10,6 +10,7 @@ import {
     alignBottom,
 } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 test("should have align tool only if the block is content editable", async () => {
     for (const [contenteditable, count] of [
@@ -36,9 +37,11 @@ describe("left", () => {
     test("should not align left a non-editable node", async () => {
         await testEditor({
             contentBefore: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
-            contentBeforeEdit: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
+            contentBeforeEdit:
+                '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>' + PLACEHOLDER(),
             stepFunction: alignLeft,
-            contentAfterEdit: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
+            contentAfterEdit:
+                '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>' + PLACEHOLDER(),
             contentAfter: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
         });
     });

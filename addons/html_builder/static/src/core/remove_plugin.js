@@ -81,7 +81,7 @@ export class RemovePlugin extends Plugin {
             (el.textContent.trim() === "" &&
                 childrenEls.every((el) =>
                     // Consider layout-only elements (like bg-shapes) as empty
-                    el.matches(layoutElementsSelector)
+                    el.matches("[data-selection-placeholder], " + layoutElementsSelector)
                 ));
 
         return (

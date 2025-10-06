@@ -1,6 +1,7 @@
 import { test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
+import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 test("should remove empty class attribute", async () => {
     // content after is compared after cleaning up DOM
@@ -18,14 +19,15 @@ test("should remove `style.color` from table and apply it to tds", async () => {
                     <tr><td>ab</td></tr>
                 </tbody></table>
             `),
-        contentBeforeEdit: unformat(`
-            <table style="" class="o_selected_table">
+        contentBeforeEdit: wrapInPlaceholders(
+            `<table style="" class="o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td" style="color: red;">ab</td></tr>
                     <tr><td style="color: red;">ab</td></tr>
                 </tbody>
-            </table>
-        `),
+            </table>`,
+            { doUnformat: true }
+        ),
     });
 });
 
@@ -37,13 +39,14 @@ test("should remove `style.color` from table and apply it to td without `style.c
                     <tr><td style="color: green;">ab</td></tr>
                 </tbody></table>
             `),
-        contentBeforeEdit: unformat(`
-            <table style="">
+        contentBeforeEdit: wrapInPlaceholders(
+            `<table style="">
                 <tbody>
                     <tr><td style="color: red;">ab</td></tr>
                     <tr><td style="color: green;">ab</td></tr>
                 </tbody>
-            </table>
-        `),
+            </table>`,
+            { doUnformat: true }
+        ),
     });
 });

@@ -4,6 +4,7 @@ import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
 import { FilePlugin } from "@html_editor/main/media/file_plugin";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
+import { PLACEHOLDER } from "../_helpers/selection_placeholder";
 
 function findAdjacentPosition(editor, direction) {
     const deletePlugin = editor.plugins.find((p) => p.constructor.id === "delete");
@@ -140,6 +141,7 @@ describe("findAdjacentPosition method", () => {
     describe("Different editable zones", () => {
         test("should find adjacent character", async () => {
             const previous = unformat(`
+                ${PLACEHOLDER()}
                 <div contenteditable="false">
                     <p>abc</p>
                     <p contenteditable="true">[]def</p>
@@ -147,6 +149,7 @@ describe("findAdjacentPosition method", () => {
                 <p>fgh</p>
             `);
             const next = unformat(`
+                ${PLACEHOLDER()}
                 <div contenteditable="false">
                     <p>abc</p>
                     <p contenteditable="true">d[]ef</p>
@@ -201,6 +204,7 @@ describe("findAdjacentPosition method", () => {
                 // it's the desirable one to compose a range for deletion,
                 // allowing to remove the div with deleteBackward
                 unformat(`
+                    ${PLACEHOLDER()}
                     []<div contenteditable="false">
                         <p>abc</p>
                         <p contenteditable="true">def</p>
@@ -231,6 +235,7 @@ describe("findAdjacentPosition method", () => {
                         <p>abc</p>
                         <p contenteditable="true">def</p>
                     </div>[]
+                    ${PLACEHOLDER()}
                 `)
             );
         });

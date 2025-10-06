@@ -13,6 +13,7 @@ import {
     undo,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 test("should make a few characters strikeThrough", async () => {
     await testEditor({
@@ -230,8 +231,8 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                 </tbody>
             </table>`),
         stepFunction: strikeThrough,
-        contentAfterEdit: unformat(`
-            <table class="table table-bordered o_table o_selected_table">
+        contentAfterEdit: wrapInPlaceholders(
+            `<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><p>${s(`[abc`)}</p></td>
@@ -249,7 +250,9 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`),
+            </table>`,
+            { doUnformat: true }
+        ),
     });
 });
 
