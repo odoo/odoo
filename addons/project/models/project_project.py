@@ -1265,6 +1265,7 @@ class ProjectProject(models.Model):
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
+                "type": "success",
                 "message": self.env._("Template converted back to regular project."),
                 "next": {
                     "type": "ir.actions.client",
