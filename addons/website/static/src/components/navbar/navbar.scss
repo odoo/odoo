@@ -4,13 +4,12 @@
     --NavBar-separator-margin-v: 10px; // equal to $o-navbar-padding-v in web_enterprise
     --border-color: #{darken($primary, 10%)};
 
+    .o_nav_entry,
+    .o_menu_systray_item > a,
+    .o_menu_systray_item > button,
     .o_user_menu {
-        margin: -$o-navbar-padding-v 0;
-        border-right: $border-width solid var(--border-color);
-        padding: $o-navbar-padding-v 0;
-    }
+        --NavBar-entry-borderColor-active: transparent;
 
-    .o_nav_entry, .o_menu_systray_item > a, .o_menu_systray_item > button {
         height: auto;
         margin-top: -$o-navbar-padding-v;
         margin-bottom: -$o-navbar-padding-v;

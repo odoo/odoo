@@ -20,7 +20,7 @@ function logout() {
         },
         {
             content: "check we're logged in",
-            trigger: ".o_user_menu .dropdown-toggle",
+            trigger: ".o_user_menu",
             run: "click",
         },
         {

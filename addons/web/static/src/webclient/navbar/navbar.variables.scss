@@ -5,10 +5,9 @@ $o-navbar-padding-v: 0px !default;
 $o-navbar-font-size: $o-font-size-base !default;
 
 $o-navbar-background: $o-brand-odoo !default;
-$o-navbar-border-bottom: 1px solid darken($o-brand-odoo, 10%) !default;
 
 $o-navbar-entry-margin-h: 0 !default;
-$o-navbar-entry-padding-h: .63em !default;
+$o-navbar-entry-padding-h: $o-spacer * .5 !default;
 $o-navbar-entry-border-radius: 0 !default;
 $o-navbar-entry-color: rgba($o-white, .9) !default;
 $o-navbar-entry-color--hover: $o-white !default;
@@ -36,8 +35,8 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
     display: flex;
     align-items: center;
     width: auto;
-    height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
-    border-radius: $o-navbar-entry-border-radius;
+    height: var(--Navbar-entry-height, calc(var(--o-navbar-height) - #{$o-navbar-padding-v} * 2));
+    border-radius: var(--NavBar-entry-borderRadius, #{$o-navbar-entry-border-radius});
     user-select: none;
     background-color: inherit;
     font-size: $o-navbar-entry-font-size;
@@ -49,7 +48,7 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
 }
 
 %-main-navbar-entry-spacing {
-    margin: 0;
+    margin: var(--Navbar-entry-margin, 0);
     margin-left: var(--NavBar-entry-margin-left, #{$o-navbar-entry-margin-h});
     margin-right: var(--NavBar-entry-margin-right, #{$o-navbar-entry-margin-h});
     padding: 0;

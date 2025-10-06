@@ -21,7 +21,7 @@ function openRoot() {
 function openUserPreferencesAtSecurityTab() {
     return [{
         content: 'Open user account menu',
-        trigger: '.o_user_menu .dropdown-toggle',
+        trigger: '.o_user_menu',
         run: 'click',
     }, {
         content: "Open My Preferences",
@@ -199,7 +199,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     expectUnloadPage: true,
 }, {
     content: "check we're logged in",
-    trigger: ".o_user_menu .dropdown-toggle",
+    trigger: ".o_user_menu",
 }]});
 
 registry.category("web_tour.tours").add('totp_login_device', {
@@ -264,7 +264,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },
 {
     content: "check we're logged in",
-    trigger: ".o_user_menu .dropdown-toggle",
+    trigger: ".o_user_menu",
     run: 'click',
 }, {
     content: "click the Log out button",
@@ -290,7 +290,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     expectUnloadPage: true,
 },  {
     content: "check we're logged in without 2FA",
-    trigger: ".o_user_menu .dropdown-toggle",
+    trigger: ".o_user_menu",
 },
 // now go and disable two-factor authentication would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't

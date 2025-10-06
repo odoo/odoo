@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
             trigger: ".o_form_view .o_last_breadcrumb_item:contains(p2)",
         },
         {
-            trigger: ".o_switch_company_menu button",
+            trigger: ".o_switch_company_menu",
             run: "click",
         },
         {
