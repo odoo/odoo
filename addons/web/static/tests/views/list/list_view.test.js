@@ -10934,6 +10934,48 @@ test(`list daterange with empty start date and end date`, async () => {
     ]);
 });
 
+test(`list daterange in form: open/close picker`, async () => {
+    Foo._fields.foo_o2m = fields.One2many({ relation: "foo" });
+    Foo._fields.date_end = fields.Date();
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="foo_o2m">
+                        <list editable="bottom">
+                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': '1'}"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(".o_field_daterange[name=date]").click();
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toBeDisplayed();
+    expect("input[data-field=date]").toBeFocused();
+
+    await contains(getPickerCell("15")).click();
+    await contains(getPickerCell("20")).click();
+
+    // Close picker
+    await pointerDown(`.o_view_controller`);
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+
+    // Wait to check if the picker is still closed
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+});
+
 test.tags("desktop");
 test(`editable list view: contexts are correctly sent`, async () => {
     serverState.userContext = { someKey: "some value" };
