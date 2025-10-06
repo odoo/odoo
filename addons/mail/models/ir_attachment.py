@@ -11,6 +11,7 @@ from odoo.addons.mail.tools.discuss import Store
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
+    message_ids = fields.Many2many("mail.message", "message_attachment_rel", "attachment_id", "message_id", copy=False)
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
 
@@ -86,8 +87,17 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _get_store_ownership_fields(self):
-        return [Store.Attr("ownership_token", lambda a: a._get_ownership_token())]
+    def _get_store_ownership_fields(self, check_is_message_author=False):
+        return [
+            Store.Attr(
+                "ownership_token",
+                lambda a: a._get_ownership_token(),
+                predicate=lambda a: (
+                    not check_is_message_author or
+                    any(a.message_ids.mapped("is_current_user_or_guest_author"))
+                )
+            ),
+        ]
 
     def _to_store_defaults(self, target):
         return [

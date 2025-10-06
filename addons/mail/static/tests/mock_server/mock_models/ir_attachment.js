@@ -54,6 +54,7 @@ export class IrAttachment extends webModels.IrAttachment {
                           )
                         : false;
             }
+            data.ownership_token = "abc123";
             store._add_record_fields(this.browse(attachment.id), data);
         }
     }

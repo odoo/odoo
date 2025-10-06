@@ -172,8 +172,13 @@ class ChannelController(http.Controller):
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
         return {
-
-            "store_data": Store().add(attachments).get_result(),
+            "store_data": Store().add(
+                attachments,
+                extra_fields=[
+                    Store.Many("message_ids", Store.One("thread", [], as_thread=True)),
+                    *attachments._get_store_ownership_fields(check_is_message_author=True),
+                ],
+            ).get_result(),
             "count": len(attachments),
         }
 

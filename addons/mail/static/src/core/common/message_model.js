@@ -34,7 +34,7 @@ export class Message extends Record {
         }
     }
 
-    attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
+    attachment_ids = fields.Many("ir.attachment", { inverse: "message_ids" });
     author_id = fields.One("res.partner");
     author_guest_id = fields.One("mail.guest");
     get author() {
