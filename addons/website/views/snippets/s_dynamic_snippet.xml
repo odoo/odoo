@@ -7,7 +7,7 @@
         <section t-att-data-snippet="snippet_name"
             t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_snippet_empty pt64 pb64"
             t-att-data-custom-template-data="custom_template_data or '{}'"
-            t-att-data-number-of-records="is_single_record and '1' or ''">
+            t-att-data-number-of-records="is_single_record and '1' or ''" data-vcss="001">
             <div t-attf-class="s_dynamic_snippet_container {{container_classes or 'container'}}">
                 <div class="row s_nb_column_fixed">
                     <!-- Dynamic snippet loading effect -->
@@ -49,9 +49,14 @@
             snippet_name.f="s_dynamic_snippet"/>
     </template>
 
-<asset id="website.s_dynamic_snippet_000_scss" name="Dynamic snippet 000 SCSS">
+<asset id="website.s_dynamic_snippet_000_scss" name="Dynamic snippet 000 SCSS" active="False">
     <bundle>web.assets_frontend</bundle>
     <path>website/static/src/snippets/s_dynamic_snippet/000.scss</path>
+</asset>
+
+<asset id="website.s_dynamic_snippet_001_scss" name="Dynamic snippet 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet/001.scss</path>
 </asset>
 
 <asset id="website.s_dynamic_snippet_000_xml" name="Dynamic snippet 000 XML">

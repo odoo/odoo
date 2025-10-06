@@ -7,6 +7,9 @@ import {
     DynamicSnippetProductsOption,
     getContextualFilterDomain,
 } from "./dynamic_snippet_products_option";
+import { patch } from "@web/core/utils/patch";
+import { SetContainerWidthAction } from "@website/builder/plugins/content_width_option_plugin";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
@@ -15,6 +18,9 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
     modelNameFilter = "product.product";
     resources = {
         builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, DynamicSnippetProductsOption),
+        builder_actions: {
+            SectionTitlePositionAction,
+        },
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
@@ -70,6 +76,37 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
             ["id", "name"],
             { order: "name asc" }
         );
+    }
+}
+
+patch(SetContainerWidthAction.prototype, {
+    apply({ editingElement, params: { mainParam: className } }) {
+        super.apply(...arguments);
+        if (!editingElement.closest(".s_dynamic_snippet_products")) {
+            return;
+        }
+        const isContentWidthMax = className === "container-fluid";
+        const titleAsideEl = editingElement.querySelector(".s_dynamic_snippet_title_aside");
+        const parentEl = editingElement.parentElement;
+        const updatedNumberOfElements = !isContentWidthMax && titleAsideEl ? "2" : "4";
+        if (parentEl.dataset.numberOfElements !== updatedNumberOfElements) {
+            parentEl.dataset.numberOfElements = updatedNumberOfElements;
+        }
+    },
+});
+
+export class SectionTitlePositionAction extends BuilderAction {
+    static id = "sectionTitlePosition";
+    apply({ editingElement: el, params: { mainParam: position } }) {
+        // Adjust dataset if title is aside and content-width is not max.
+        if (el.closest(".container-fluid")) {
+            return;
+        }
+        const productSnippetEl = el.closest(".s_dynamic_snippet_products");
+        const updatedNumberOfElements = position === "left" ? "2" : "4";
+        if (productSnippetEl.dataset.numberOfElements !== updatedNumberOfElements) {
+            productSnippetEl.dataset.numberOfElements = updatedNumberOfElements;
+        }
     }
 }
 
