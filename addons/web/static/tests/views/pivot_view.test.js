@@ -3570,8 +3570,8 @@ test("filter -> sort -> unfilter should not crash", async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("xphone");
     expect(getFacetTexts()).toEqual([]);
-    expect(queryAllTexts("tbody th")).toEqual(["Total", "xphone", "Yes", "xpad"]);
-    expect(getCurrentValues()).toBe(["4", "1", "1", "3"].join());
+    expect(queryAllTexts("tbody th")).toEqual(["Total", "xphone", "Yes", "xpad", "No", "Yes"]);
+    expect(getCurrentValues()).toBe(["4", "1", "1", "3", "1", "2"].join());
 });
 
 test("no class 'o_view_sample_data' when real data are presented", async () => {
