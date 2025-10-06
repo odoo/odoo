@@ -13,7 +13,6 @@ import {
     models,
     fields,
     defineModels,
-    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -22,8 +21,6 @@ import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
-
-preloadBundle("web_tour.interactive");
 
 class Partner extends models.Model {
     _name = "partner";
