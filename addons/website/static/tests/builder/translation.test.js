@@ -119,6 +119,16 @@ test("add text in translate mode do not split", async () => {
     expect(":iframe .s_allow_columns p").toHaveCount(1);
 });
 
+test("only have translation editors on deepest nodes", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: getTranslateEditable({ inWrap: "Hello" }).match(/<span.*<\/span>/)[0],
+        }),
+    });
+    expect(":iframe .o_editable:has(.o_editable)").not.toHaveAttribute("contenteditable");
+    expect(":iframe .o_editable .o_editable").toHaveAttribute("contenteditable", "true");
+});
+
 test("404 page in translate mode", async () => {
     patchWithCleanup(EditWebsiteSystrayItem.prototype, {
         setup() {
