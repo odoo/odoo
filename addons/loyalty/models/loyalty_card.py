@@ -57,6 +57,14 @@ class LoyaltyCard(models.Model):
         "A coupon/loyalty card must have a unique code.",
     )
 
+    @api.constrains('expiration_date')
+    def _check_expiration_date(self):
+        for card in self:
+            if card.expiration_date and card.expiration_date < fields.Date.today():
+                raise ValidationError(
+                    _("The expiry date cannot be in the past. Please select a valid date.")
+                )
+
     @api.constrains('code')
     def _contrains_code(self):
         # Prevent a coupon from having the same code a program
