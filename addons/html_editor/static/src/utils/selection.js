@@ -239,32 +239,48 @@ export const callbacksForCursorUpdate = {
  * @param {Selection} selection
  * @param {"previous"|"next"} side
  * @param {HTMLElement} editable
+ * @param {"move"|"extend"} [mode]
  * @returns {string | undefined}
  */
-export function getAdjacentCharacter(selection, side, editable) {
-    let { focusNode, focusOffset } = selection;
-    [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
-    const originalBlock = closestBlock(focusNode);
+export function getAdjacentCharacter(selection, side, editable, mode = "extend") {
+    const { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed } = selection;
+
+    let node, offset;
+    if (mode === "extend" || isCollapsed) {
+        [node, offset] = getDeepestPosition(focusNode, focusOffset);
+    } else {
+        const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
+        let useFocusNode = false;
+        if (side === "previous" && direction === DIRECTIONS.LEFT) {
+            useFocusNode = true;
+        } else if (side === "next" && direction === DIRECTIONS.RIGHT) {
+            useFocusNode = true;
+        }
+        node = useFocusNode ? focusNode : anchorNode;
+        offset = useFocusNode ? focusOffset : anchorOffset;
+        [node, offset] = getDeepestPosition(node, offset);
+    }
+    const originalBlock = closestBlock(node);
     let adjacentCharacter;
-    while (!adjacentCharacter && focusNode) {
+    while (!adjacentCharacter && node) {
         if (side === "previous") {
-            adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+            adjacentCharacter = offset > 0 && node.textContent[offset - 1];
         } else {
-            adjacentCharacter = focusNode.textContent[focusOffset];
+            adjacentCharacter = node.textContent[offset];
         }
         if (!adjacentCharacter) {
             if (side === "previous") {
-                focusNode = previousLeaf(focusNode, editable);
-                focusOffset = focusNode && nodeSize(focusNode);
+                node = previousLeaf(node, editable);
+                offset = node && nodeSize(node);
             } else {
-                focusNode = nextLeaf(focusNode, editable);
-                focusOffset = 0;
+                node = nextLeaf(node, editable);
+                offset = 0;
             }
-            const characterIndex = side === "previous" ? focusOffset - 1 : focusOffset;
-            adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
+            const characterIndex = side === "previous" ? offset - 1 : offset;
+            adjacentCharacter = node && node.textContent[characterIndex];
         }
     }
-    if (!focusNode || !isContentEditable(focusNode) || closestBlock(focusNode) !== originalBlock) {
+    if (!node || !isContentEditable(node) || closestBlock(node) !== originalBlock) {
         return undefined;
     }
     return adjacentCharacter;

@@ -990,7 +990,12 @@ export class SelectionPlugin extends Plugin {
             const shouldSkipCallbacks = this.getResource(
                 "intangible_char_for_keyboard_navigation_predicates"
             );
-            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let adjacentCharacter = getAdjacentCharacter(
+                selection,
+                domDirection,
+                this.editable,
+                mode
+            );
             let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
             while (shouldSkip) {
@@ -1001,7 +1006,12 @@ export class SelectionPlugin extends Plugin {
                 const hasSelectionChanged =
                     nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
                 const lastSkippedChar = adjacentCharacter;
-                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                adjacentCharacter = getAdjacentCharacter(
+                    selection,
+                    domDirection,
+                    this.editable,
+                    mode
+                );
 
                 shouldSkip =
                     hasSelectionChanged &&
