@@ -1,13 +1,10 @@
 import asyncio
 import json
 import logging
-import pprint
 from threading import Thread
-import time
 from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
 
-from odoo.addons.iot_drivers import main
-from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
+from odoo.addons.iot_drivers.tools import communication
 
 _logger = logging.getLogger(__name__)
 
@@ -55,30 +52,15 @@ class WebRtcClient(Thread):
 
                 # Handle regular message
                 message = json.loads(message_str)
-                message_type = message["message_type"]
-                _logger.info("Received message of type %s:\n%s", message_type, pprint.pformat(message))
-                if message_type == "iot_action":
-                    device_identifier = message["device_identifier"]
-                    data = message["data"]
-                    data["session_id"] = message["session_id"]
-                    if device_identifier in main.iot_devices:
-                        _logger.info("device '%s' action started with: %s", device_identifier, pprint.pformat(data))
-                        await self.event_loop.run_in_executor(None, lambda: main.iot_devices[device_identifier].action(data))
-                    else:
-                        # Notify that the device is not connected
-                        self.send({
-                            'owner': message['session_id'],
-                            'device_identifier': device_identifier,
-                            'time': time.time(),
-                            'status': 'disconnected',
-                        })
-                elif message_type == "test_protocol":
-                    self.send({
-                        'owner': message['session_id'],
-                        'device_identifier': IOT_IDENTIFIER,
-                        'time': time.time(),
-                        'status': 'success',
-                    })
+                message["data"]["session_id"] = message["session_id"]
+                result = await self.event_loop.run_in_executor(
+                    None,
+                    lambda: communication.handle_message(
+                        message["message_type"], device_identifier=message["device_identifier"], **message["data"]
+                    )
+                )
+                if result:
+                    self.send(result)
 
             @channel.on("close")
             def on_close():
