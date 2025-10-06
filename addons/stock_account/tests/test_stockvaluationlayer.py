@@ -33,7 +33,7 @@ class TestStockValuationCommon(TransactionCase):
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None, lot_ids=False):
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None, lot_ids=False, validate_move=True):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
@@ -71,13 +71,14 @@ class TestStockValuationCommon(TransactionCase):
         else:
             in_move._action_assign()
 
-        in_move.picked = True
-        in_move._action_done()
+        if validate_move:
+            in_move.picked = True
+            in_move._action_done()
 
         self.days += 1
         return in_move.with_context(svl=True)
 
-    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None, lot_ids=False):
+    def _make_out_move(self, product, quantity, force_assign=None, create_picking=False, loc_src=None, pick_type=None, lot_ids=False, validate_move=True):
         """ Helper to create and validate a delivery move.
         """
         loc_src = loc_src or self.stock_location
@@ -121,8 +122,10 @@ class TestStockValuationCommon(TransactionCase):
             }) for lot in lot_ids]
         else:
             out_move.move_line_ids.quantity = quantity
-        out_move.picked = True
-        out_move._action_done()
+
+        if validate_move:
+            out_move.picked = True
+            out_move._action_done()
 
         self.days += 1
         return out_move.with_context(svl=True)
