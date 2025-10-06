@@ -29,6 +29,7 @@ def textToString(element):
             buff += textToString(node)
     return buff
 
+
 def _clean_pdf_content(buf):
     """
     Clean the PDF content by removing unwanted characters and formatting.
@@ -86,10 +87,46 @@ class IrAttachment(models.Model):
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
-                content = xml.dom.minidom.parseString(zf.read("xl/sharedStrings.xml"))
-                for val in ["t"]:
-                    for element in content.getElementsByTagName(val):
-                        buf += textToString(element) + "\n"
+                # Load shared strings if present
+                shared_strings = []
+                if "xl/sharedStrings.xml" in zf.namelist():
+                    ss_content = xml.dom.minidom.parseString(zf.read("xl/sharedStrings.xml"))
+                    for si in ss_content.getElementsByTagName("si"):
+                        text = ""
+                        for t in si.getElementsByTagName("t"):
+                            text += textToString(t)
+                        shared_strings.append(text)
+
+                sheet_files = [n for n in zf.namelist() if n.startswith("xl/worksheets/sheet") and n.endswith(".xml")]
+                for sheet_file in sorted(sheet_files):
+                    sheet_lines = []
+                    sheet_content = xml.dom.minidom.parseString(zf.read(sheet_file))
+                    rows = sheet_content.getElementsByTagName("row")
+                    for row in rows:
+                        cells = row.getElementsByTagName("c")
+                        row_values = []
+                        for cell in cells:
+                            cell_type = cell.getAttribute("t")
+                            # inlineStr support for shared strings
+                            if cell_type == "inlineStr":
+                                is_elements = cell.getElementsByTagName("is")
+                                if is_elements:
+                                    t_nodes = is_elements[0].getElementsByTagName("t")
+                                    if t_nodes:
+                                        row_values.append(textToString(t_nodes[0]))
+                                        continue
+                            v_elements = cell.getElementsByTagName("v")
+                            if not v_elements:
+                                continue
+                            value = textToString(v_elements[0])
+                            if cell_type == "s":
+                                idx = int(value)
+                                value = shared_strings[idx]
+                            row_values.append(value)
+                        if row_values:
+                            sheet_lines.append(", ".join(row_values))
+                    if sheet_lines:
+                        buf += "\n".join(sheet_lines) + "\n\n"
             except Exception:
                 pass
         return buf
@@ -103,9 +140,35 @@ class IrAttachment(models.Model):
             try:
                 zf = zipfile.ZipFile(f)
                 content = xml.dom.minidom.parseString(zf.read("content.xml"))
-                for val in ["text:p", "text:h", "text:list"]:
-                    for element in content.getElementsByTagName(val):
-                        buf += textToString(element) + "\n"
+                mime_type = zf.read("mimetype").decode("utf-8").strip()
+                if mime_type == "application/vnd.oasis.opendocument.spreadsheet":
+                    tables = content.getElementsByTagName("table:table")
+                    if tables:
+                        # Extract rows and cells as CSV
+                        for table in tables:
+                            table_lines = []
+                            rows = table.getElementsByTagName("table:table-row")
+                            for row in rows:
+                                cells = row.getElementsByTagName("table:table-cell")
+                                row_values = []
+                                for cell in cells:
+                                    # Concatenate all paragraphs within the cell
+                                    cell_paragraphs = cell.getElementsByTagName("text:p")
+                                    cell_text_parts = []
+                                    for p in cell_paragraphs:
+                                        text_part = textToString(p)
+                                        if text_part.strip():
+                                            cell_text_parts.append(text_part)
+                                    if cell_text_parts:
+                                        row_values.append(" ".join(cell_text_parts))
+                                if row_values:
+                                    table_lines.append(", ".join(row_values))
+                            if table_lines:
+                                buf += "\n".join(table_lines) + "\n\n"
+                else:
+                    for val in ["text:p", "text:h", "text:list"]:
+                        for element in content.getElementsByTagName(val):
+                            buf += textToString(element) + "\n"
             except Exception:
                 pass
         return buf
