@@ -40,6 +40,14 @@
         <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_maternity"/>
     </record>
 
+    <record id="hr_holidays.l10n_be_leave_type_paternity_paid_company" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_paternity_company"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_leave_type_paternity_legal" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_paternity_legal"/>
+    </record>
+
     <record id="hr_holidays.l10n_be_leave_type_unpredictable" model="hr.leave.type">
         <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_unpredictable"/>
     </record>
