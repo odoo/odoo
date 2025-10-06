@@ -202,6 +202,11 @@
             "barcodes/static/tests/legacy/helpers.js",
             "web/static/tests/legacy/helpers/utils.js",
             "web/static/tests/legacy/helpers/cleanup.js",
+            'mail/static/src/views/web/fields/many2one_avatar_user_field/*',
+            'mail/static/src/views/web/fields/assign_user_command_hook.js',
+            'mail/static/src/views/web/fields/avatar/avatar.js',
+            'mail/static/src/discuss/web/avatar_card/avatar_card_popover.js',
+            'mail/static/src/core/web/open_chat_hook.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
