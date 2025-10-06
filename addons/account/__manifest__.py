@@ -48,6 +48,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/res_partner_bank_views.xml',
         'views/report_statement.xml',
         'views/terms_template.xml',
+        'wizard/account_move_set_journal_wizard_views.xml',
         'wizard/account_validate_move_view.xml',
         'views/res_company_views.xml',
         'views/product_view.xml',

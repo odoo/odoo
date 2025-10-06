@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_set_journal_wizard_form" model="ir.ui.view">
+            <field name="name">account.move.set.journal.wizard.form</field>
+            <field name="model">account.move.set.journal.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Set Journal">
+                    <group>
+                        <field name="journal_id" options="{'no_create': True, 'no_edit': True}"/>
+                    </group>
+                    <footer>
+                        <button string="Confirm"
+                            name="action_set_journal"
+                            type="object"
+                            default_focus="1"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_move_set_journal_action" model="ir.actions.act_window">
+            <field name="name">Set Journal</field>
+            <field name="res_model">account.move.set.journal.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_move_set_journal_wizard_form"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list,kanban</field>
+        </record>
+    </data>
+</odoo>

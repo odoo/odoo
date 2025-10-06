@@ -11,6 +11,16 @@ import re
 _logger = logging.getLogger(__name__)
 
 
+JOURNAL_TYPE = [
+    ('sale', 'Sales'),
+    ('purchase', 'Purchase'),
+    ('cash', 'Cash'),
+    ('bank', 'Bank'),
+    ('credit', 'Credit Card'),
+    ('general', 'Miscellaneous'),
+]
+
+
 class AccountJournalGroup(models.Model):
     _name = 'account.journal.group'
     _description = "Account Journal Group"
@@ -93,14 +103,9 @@ class AccountJournal(models.Model):
              "The journal entries of this journal will also be named using this prefix by default."
     )
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
-    type = fields.Selection([
-            ('sale', 'Sales'),
-            ('purchase', 'Purchase'),
-            ('cash', 'Cash'),
-            ('bank', 'Bank'),
-            ('credit', 'Credit Card'),
-            ('general', 'Miscellaneous'),
-        ], required=True,
+    type = fields.Selection(
+        selection=JOURNAL_TYPE,
+        required=True,
         help="""
         Select 'Sale' for customer invoices journals.
         Select 'Purchase' for vendor bills journals.
