@@ -28,6 +28,7 @@
                         invisible="preview_variants == 'hidden'"
                         force_save="1"
                     />
+                    <field name="category_id"/>
                 </group>
             </group>
         </field>
@@ -40,6 +41,9 @@
         <field name="arch" type="xml">
             <field name="create_variant" position="after">
                 <field name="visibility" string="eCommerce Filter Visibility"/>
+            </field>
+            <field name="name" position="after">
+               <field name="category_id"/>
             </field>
         </field>
     </record>

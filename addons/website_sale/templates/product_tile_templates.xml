@@ -279,9 +279,12 @@
                     <span t-else="" class="o_label small ms-2">In your wishlist</span>
                 </button>
             </t>
+            <t
+                t-set="isCompareAvailable"
+                t-value="product and product.valid_product_template_attribute_line_ids"
+            />
             <t t-if="isCompareAvailable" t-call="website_sale.product_tile_element_visibility">
                 <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_comparison'"/>
-
                 <t
                     t-set="attrib_categories"
                     t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"

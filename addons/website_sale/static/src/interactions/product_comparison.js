@@ -5,10 +5,10 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
-import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
+import comparisonUtils from '@website_sale/js/website_sale_comparison_utils';
 import {
     ProductComparisonBottomBar
-} from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
+} from '@website_sale/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ProductComparison extends Interaction {
     static selector = '.js_sale:not(.o_wsale_comparison_page)';
@@ -139,4 +139,4 @@ export class ProductComparison extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_comparison.product_comparison', ProductComparison);
+    .add('website_sale.product_comparison', ProductComparison);

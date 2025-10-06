@@ -189,7 +189,7 @@
 
                                     <div
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_accordion mb-4"
-                                        t-if="is_view_active('website_sale_comparison.accordion_specs_item') or is_view_active('website_sale.accordion_more_information')"
+                                        t-if="is_view_active('website_sale.accordion_specs_item') or is_view_active('website_sale.accordion_more_information')"
                                     >
                                         <t t-call="website_sale.product_accordion"/>
                                     </div>
@@ -270,7 +270,7 @@
                                 <div class="row">
                                     <t t-foreach="attrib_categories" t-as="category">
                                         <div class="col-lg-6">
-                                            <t t-call="website_sale_comparison.specifications_table"/>
+                                            <t t-call="website_sale.specifications_table"/>
                                         </div>
                                     </t>
                                 </div>
@@ -675,7 +675,7 @@
                     t-valuef="o_add_compare_dyn btn btn-outline-primary order-last flex-grow-1 flex-sm-grow-0"
                 />
                 <t
-                    t-if="not is_view_active('website_sale_wishlist.product_add_to_wishlist') and not is_view_active('website_sale.cta_wrapper_default')"
+                    t-if="not is_view_active('website_sale.product_add_to_wishlist') and not is_view_active('website_sale.cta_wrapper_default')"
                     t-set="_button_classes"
                     t-value="_button_classes + ' w-100'"
                 />
@@ -695,7 +695,7 @@
                     data-action="o_comparelist"
                 >
                     <span class="fa fa-exchange"/>
-                    <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale_wishlist.product_add_to_wishlist') else '')">Add to compare</span>
+                    <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale.product_add_to_wishlist') else '')">Add to compare</span>
                 </button>
             </div>
         </div>
@@ -788,7 +788,7 @@
 
     <template id="website_sale.product_accordion" name="Accordion On Product Page">
         <div
-            t-if="is_view_active('website_sale_comparison.accordion_specs_item')
+            t-if="is_view_active('website_sale.accordion_specs_item')
                   or is_view_active('website_sale.accordion_more_information')"
             id="product_accordion"
             class="o_accordion_not_initialized accordion accordion-flush my-4"
@@ -870,7 +870,7 @@
                             data-bs-parent="#product_accordion"
                         >
                             <div class="accordion-body pt-0">
-                                <t t-call="website_sale_comparison.specifications_table">
+                                <t t-call="website_sale.specifications_table">
                                     <t t-set="is_accordion" t-value="True"/>
                                 </t>
                             </div>

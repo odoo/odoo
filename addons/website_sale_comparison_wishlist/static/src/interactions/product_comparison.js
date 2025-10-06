@@ -1,7 +1,7 @@
 import { patch } from '@web/core/utils/patch';
 import { patchDynamicContent } from '@web/public/utils';
-import { ProductComparison } from '@website_sale_comparison/interactions/product_comparison';
-import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
+import { ProductComparison } from '@website_sale/interactions/product_comparison';
+import comparisonUtils from '@website_sale/js/website_sale_comparison_utils';
 
 patch(ProductComparison.prototype, {
     setup() {

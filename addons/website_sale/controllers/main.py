@@ -1979,7 +1979,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # use search to check read access on each record/ids
         products = request.env['product.product'].search([('id', 'in', product_ids)])
         return request.render(
-            'website_sale_comparison.product_compare',
+            'website_sale.product_compare',
             {
                 'products': products.with_context(display_default_code=False),
             }

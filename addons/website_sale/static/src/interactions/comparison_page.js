@@ -1,6 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
-import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
+import comparisonUtils from '@website_sale/js/website_sale_comparison_utils';
 import { redirect } from '@web/core/utils/urls';
 
 export class ComparisonPage extends Interaction {
@@ -16,9 +16,7 @@ export class ComparisonPage extends Interaction {
     };
 
     dynamicContent = {
-        "button[name='comparison_add_to_cart']": {
-            "t-on-click": this.locked(this.addToCart, true),
-        },
+        'button[name="comparison_add_to_cart"]': { 't-on-click': this.addToCart },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
         _backButton: { 't-on-click': () => redirect('/shop') },
         _clearAllButton: { 't-on-click': this.clearAllProducts },
@@ -133,13 +131,13 @@ export class ComparisonPage extends Interaction {
      *
      * @param {Event} ev
      */
-    async addToCart(ev) {
+    addToCart(ev) {
         const button = ev.currentTarget;
         const productId = parseInt(button.dataset.productProductId);
         const productTemplateId = parseInt(button.dataset.productTemplateId);
         const showQuantity = Boolean(button.dataset.showQuantity);
 
-        await this.services["cart"].add({
+        this.services['cart'].add({
             productTemplateId: productTemplateId,
             productId: productId,
         }, {
@@ -168,4 +166,4 @@ export class ComparisonPage extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_comparison.comparison_page', ComparisonPage);
+    .add('website_sale.comparison_page', ComparisonPage);
