@@ -18,6 +18,7 @@ import {
     stepAllNetworkCalls,
     toggleMenuItem,
     toggleSearchBarMenu,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -1416,12 +1417,15 @@ describe(`new urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
             "get menu_id-null",
+            "get current_lang-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","res_id":1,"views":[[false,"form"]]}',
+            "set current_lang-en",
             'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            "set current_lang-en",
         ]);
 
         expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1/m-partner");
@@ -1433,10 +1437,12 @@ describe(`new urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
             "get menu_id-null",
+            "get current_lang-en",
             'get current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
             'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            "set current_lang-en",
         ]);
     });
 
@@ -1488,12 +1494,15 @@ describe(`new urls`, () => {
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
             "get menu_id-null",
+            "get current_lang-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"views":[[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
             'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban"}],"action":200}',
             'set current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
+            "set current_lang-en",
         ]);
 
         expect(browser.location.href).toBe("http://example.com/odoo/action-100/1/action-200");
@@ -1510,10 +1519,12 @@ describe(`new urls`, () => {
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
             "get menu_id-null",
+            "get current_lang-en",
             'get current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban"}],"action":200}',
             'get current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
             'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban","active_id":1}],"action":200,"active_id":1}',
             'set current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
+            "set current_lang-en",
         ]);
     });
 
@@ -1572,16 +1583,20 @@ describe(`new urls`, () => {
         expect.verifySteps([
             "get menu_id-null",
             "set menu_id-100",
+            "get current_lang-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
             "pushState http://example.com/odoo/action-9001",
             "get menu_id-100", // F5 reload checks stored menu
+            "get current_lang-en",
             'get current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
             'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
@@ -1670,14 +1685,18 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "get menu_id-null",
+            "get current_lang-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"}],"action":200}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":200,"type":"ir.actions.act_window","xml_id":200,"res_model":"partner","name":"Kanban Partners","views":[[1,"kanban"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
             'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5}],"action":300,"active_id":5}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":300,"type":"ir.actions.act_window","xml_id":300,"res_model":"partner","context":{"active_id":5},"name":"List Partners with active id","views":[[false,"list"]],"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
             'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
         ]);
 
         // Emulate a Reload
@@ -1735,10 +1754,12 @@ describe(`new urls`, () => {
         ]);
         expect.verifySteps([
             "get menu_id-null",
+            "get current_lang-en",
             'get current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200},{"displayName":"List Partners with active id","action":300,"active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "set current_lang-en",
         ]);
     });
 
@@ -1771,6 +1792,97 @@ describe(`new urls`, () => {
         // and we set `pointer-events: none` during the loadState. In this case,
         // we assert that the rule has been correctly removed.
         expect(document.body.style.pointerEvents).not.toBe("none");
+    });
+
+    test(`reload without lang change`, async () => {
+        onRpc("/web/action/load_breadcrumbs", () => {
+            expect.step(`/web/action/load_breadcrumbs`);
+        });
+        onRpc("/web/action/load", () => {
+            expect.step(`/web/action/load`);
+        });
+
+        defineActions([
+            {
+                id: 100,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                name: "Partners",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+            {
+                id: 200,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                name: "Kanban Partners",
+                views: [[1, "kanban"]],
+            },
+        ]);
+
+        await mountWebClient();
+        await getService("action").doAction(100);
+        await contains(".o_data_cell").click();
+        await getService("action").doAction(200);
+        expect.verifySteps(["/web/action/load", "/web/action/load"]);
+
+        await runAllTimers(); // wait for the router to be updated
+        expect(router.stateToUrl(router.current)).toBe("/odoo/action-100/1/action-200");
+
+        // simulate a reload
+        await startRouter();
+        routerBus.trigger("ROUTE_CHANGE");
+        await runAllTimers();
+        // assert that we didn't reload the action or breadcrumbs as they are stored in session storage
+        expect.verifySteps([]);
+    });
+
+    test(`reload with lang change`, async () => {
+        onRpc("/web/action/load_breadcrumbs", () => {
+            expect.step(`/web/action/load_breadcrumbs`);
+        });
+        onRpc("/web/action/load", () => {
+            expect.step(`/web/action/load`);
+        });
+
+        defineActions([
+            {
+                id: 100,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                name: "Partners",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+            {
+                id: 200,
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                name: "Kanban Partners",
+                views: [[1, "kanban"]],
+            },
+        ]);
+
+        await mountWebClient();
+        await getService("action").doAction(100);
+        await contains(".o_data_cell").click();
+        await getService("action").doAction(200);
+        expect.verifySteps(["/web/action/load", "/web/action/load"]);
+
+        await runAllTimers(); // wait for the router to be updated
+        expect(router.stateToUrl(router.current)).toBe("/odoo/action-100/1/action-200");
+
+        // simulate a reload with a new lang
+        serverState.lang = "fr_FR";
+        await startRouter();
+        routerBus.trigger("ROUTE_CHANGE");
+        await runAllTimers();
+        // assert that we properly reload action and breacrumbs as lang changed
+        expect.verifySteps(["/web/action/load_breadcrumbs", "/web/action/load"]);
     });
 });
 
