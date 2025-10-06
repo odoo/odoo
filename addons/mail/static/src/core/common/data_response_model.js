@@ -54,8 +54,8 @@ export class DataResponse extends Record {
      * other fields can be added if necessary.
      */
     attachments = fields.Many("ir.attachment");
-    channel = fields.One("Thread");
-    channels = fields.Many("Thread");
+    channel = fields.One("mail.thread");
+    channels = fields.Many("mail.thread");
     /** @type {number} */
     count;
     message = fields.One("mail.message");

@@ -271,13 +271,13 @@ export class Rtc extends Record {
             );
         },
     });
-    channel = fields.One("Thread", {
+    channel = fields.One("mail.thread", {
         compute() {
             if (this.state.channel) {
                 return this.state.channel;
             }
             if (this._remotelyHostedChannelId) {
-                return this.store.Thread.insert({
+                return this.store["mail.thread"].insert({
                     model: "discuss.channel",
                     id: this._remotelyHostedChannelId,
                 });
@@ -287,7 +287,7 @@ export class Rtc extends Record {
             if (!this.channel) {
                 return;
             }
-            this.store.Thread.getOrFetch({
+            this.store["mail.thread"].getOrFetch({
                 model: "discuss.channel",
                 id: this.channel.id,
             });

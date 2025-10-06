@@ -90,13 +90,13 @@ export class DiscussAppCategory extends Record {
 
     /** @type {string} */
     serverStateKey;
-    threads = fields.Many("Thread", {
+    threads = fields.Many("mail.thread", {
         sort(t1, t2) {
             return this.sortThreads(t1, t2);
         },
         inverse: "discussAppCategory",
     });
-    threadsWithCounter = fields.Many("Thread", { inverse: "categoryAsThreadWithCounter" });
+    threadsWithCounter = fields.Many("mail.thread", { inverse: "categoryAsThreadWithCounter" });
 }
 
 DiscussAppCategory.register();

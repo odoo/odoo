@@ -72,7 +72,7 @@ export class Chatter extends Component {
     }
 
     changeThread(threadModel, threadId) {
-        this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
+        this.state.thread = this.store["mail.thread"].insert({ model: threadModel, id: threadId });
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({

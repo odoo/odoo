@@ -175,7 +175,7 @@ export class DiscussCommandPalette {
             // selfPersona filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
-        const channels = Object.values(this.store.Thread.records)
+        const channels = Object.values(this.store["mail.thread"].records)
             .filter(
                 (thread) =>
                     thread.channel?.channel_type &&
@@ -230,7 +230,7 @@ export class DiscussCommandPalette {
             return {
                 Component: DiscussCommand,
                 action: async () => {
-                    const channel = await this.store.Thread.getOrFetch(thread);
+                    const channel = await this.store["mail.thread"].getOrFetch(thread);
                     channel.open({ focus: true, bypassCompact: true });
                 },
                 name: thread.displayName,

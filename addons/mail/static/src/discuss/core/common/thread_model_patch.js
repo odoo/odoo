@@ -20,7 +20,7 @@ const threadStaticPatch = {
         if (data.model !== "discuss.channel" || data.id < 1) {
             return super.getOrFetch(...arguments);
         }
-        const thread = this.store.Thread.get({ id: data.id, model: data.model });
+        const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
         if (thread?.fetchChannelInfoState === "fetched") {
             return Promise.resolve(thread);
         }
@@ -33,7 +33,7 @@ const threadStaticPatch = {
         this.store.fetchChannel(data.id).then(
             () => {
                 this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store.Thread.get({ id: data.id, model: data.model });
+                const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
                 if (thread?.exists()) {
                     thread.fetchChannelInfoState = "fetched";
                     def.resolve(thread);
@@ -43,7 +43,7 @@ const threadStaticPatch = {
             },
             () => {
                 this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store.Thread.get({ id: data.id, model: data.model });
+                const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
                 if (thread?.exists()) {
                     def.reject(thread);
                 } else {

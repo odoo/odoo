@@ -30,7 +30,7 @@ export class LivechatSessionFormRenderer extends FormRenderer {
      * @param {Props} props
      */
     async getChannel(props) {
-        this.thread = await this.store.Thread.getOrFetch({
+        this.thread = await this.store["mail.thread"].getOrFetch({
             model: "discuss.channel",
             id: props.record.resId,
         });

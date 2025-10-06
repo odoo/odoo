@@ -353,7 +353,7 @@ export class Record {
      * @returns {Object} A data object grouped by model names.
      */
     toData(options = { depth: false }) {
-        const prefix = this._getActualModelName();
+        const prefix = this.Model.getName();
         const ongoing = {
             seenRecords: new Set(),
             storeData: {},
@@ -369,10 +369,6 @@ export class Record {
 
     _cleanupData(data) {
         technicalKeysOnRecords.forEach((field) => delete data[field]);
-    }
-
-    _getActualModelName() {
-        return this.Model.getName();
     }
 
     /**
@@ -423,9 +419,9 @@ export class Record {
         }
 
         this._cleanupData(data);
-        const pyModelName = record._getActualModelName();
-        ongoing.storeData[pyModelName] ||= [];
-        ongoing.storeData[pyModelName].push(data);
+        const modelName = record.Model.getName();
+        ongoing.storeData[modelName] ||= [];
+        ongoing.storeData[modelName].push(data);
     }
 
     /**

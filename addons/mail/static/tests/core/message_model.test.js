@@ -15,7 +15,7 @@ test("Message model properties", async () => {
     store.Store.insert({
         self_partner: { id: serverState.partnerId },
     });
-    store.Thread.insert({
+    store["mail.thread"].insert({
         id: serverState.partnerId,
         model: "res.partner",
         name: "general",

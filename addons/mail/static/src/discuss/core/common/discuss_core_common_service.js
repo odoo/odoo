@@ -18,7 +18,7 @@ export class DiscussCoreCommon {
 
     setup() {
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
-            const thread = this.store.Thread.insert({
+            const thread = this.store["mail.thread"].insert({
                 id: payload.id,
                 model: "discuss.channel",
             });
@@ -79,7 +79,7 @@ export class DiscussCoreCommon {
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
         const { data, id: channelId, silent, temporary_id } = payload;
-        const thread = await this.store.Thread.getOrFetch({
+        const thread = await this.store["mail.thread"].getOrFetch({
             model: "discuss.channel",
             id: channelId,
         });

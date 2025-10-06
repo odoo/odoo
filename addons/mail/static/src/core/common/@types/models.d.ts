@@ -80,6 +80,7 @@ declare module "models" {
         "mail.message.subtype": StaticMailRecord<MailMessageSubtype, typeof MailMessageSubtypeClass>;
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
         "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
+        "mail.thread": StaticMailRecord<Thread, typeof ThreadClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
         "res.company": StaticMailRecord<ResCompany, typeof ResCompanyClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
@@ -90,7 +91,6 @@ declare module "models" {
         "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
         "res.users": StaticMailRecord<ResUsers, typeof ResUsersClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
-        Thread: StaticMailRecord<Thread, typeof ThreadClass>;
         Volume: StaticMailRecord<Volume, typeof VolumeClass>;
     }
 
@@ -113,6 +113,7 @@ declare module "models" {
         "mail.message.subtype": MailMessageSubtype;
         "mail.notification": Notification;
         "mail.template": MailTemplate;
+        "mail.thread": Thread;
         MessageReactions: MessageReactions;
         "res.company": ResCompany;
         "res.country": Country;
@@ -123,7 +124,6 @@ declare module "models" {
         "res.role": ResRole;
         "res.users": ResUsers;
         Settings: Settings;
-        Thread: Thread;
         Volume: Volume;
     }
 }

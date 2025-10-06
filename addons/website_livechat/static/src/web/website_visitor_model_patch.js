@@ -7,12 +7,15 @@ import { WebsiteVisitor } from "@website/common/website_visitor_model";
 
 const { DateTime } = luxon;
 
-patch(WebsiteVisitor.prototype, {
+/** @type {import("models").WebsiteVisitor} */
+const websiteVisitorPatch = {
     setup() {
         super.setup();
+        /** @type {Array<[string, string]>} */
         this.page_visit_history = [];
-        this.discuss_channel_ids = fields.Many("Thread");
+        this.discuss_channel_ids = fields.Many("mail.thread");
     },
+    /** @returns {string} */
     get pageVisitHistoryText() {
         const history = [];
         for (const h of this.page_visit_history) {
@@ -22,4 +25,5 @@ patch(WebsiteVisitor.prototype, {
         }
         return history.join(" → ");
     },
-});
+};
+patch(WebsiteVisitor.prototype, websiteVisitorPatch);

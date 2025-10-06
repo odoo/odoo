@@ -308,7 +308,7 @@ export class SuggestionService {
     }
 
     searchChannelSuggestions(cleanedSearchTerm) {
-        const suggestionList = Object.values(this.store.Thread.records).filter(
+        const suggestionList = Object.values(this.store["mail.thread"].records).filter(
             (thread) =>
                 thread.channel?.channel_type === "channel" &&
                 thread.displayName &&

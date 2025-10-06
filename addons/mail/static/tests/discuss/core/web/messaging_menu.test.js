@@ -236,7 +236,9 @@ test("counter is taking into account non-fetched channels", async () => {
     await start();
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     expect(
-        Boolean(getService("mail.store").Thread.get({ model: "discuss.channel", id: channelId }))
+        Boolean(
+            getService("mail.store")["mail.thread"].get({ model: "discuss.channel", id: channelId })
+        )
     ).toBe(false);
 });
 
@@ -263,7 +265,9 @@ test("counter is updated on receiving message on non-fetched channels", async ()
     await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     expect(
-        Boolean(getService("mail.store").Thread.get({ model: "discuss.channel", id: channelId }))
+        Boolean(
+            getService("mail.store")["mail.thread"].get({ model: "discuss.channel", id: channelId })
+        )
     ).toBe(false);
     withUser(userId, () =>
         rpc("/mail/message/post", {

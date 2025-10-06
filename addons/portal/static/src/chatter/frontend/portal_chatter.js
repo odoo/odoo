@@ -25,7 +25,7 @@ export class PortalChatter extends Component {
     }
 
     async _reloadChatterContent(data) {
-        const thread = this.store.Thread.get({
+        const thread = this.store["mail.thread"].get({
             id: this.props.resId,
             model: this.props.resModel,
         });

@@ -34,7 +34,7 @@ export class ActivityMarkAsDone extends Component {
 
     async onClickDone() {
         const { res_id, res_model } = this.props.activity;
-        const thread = this.env.services["mail.store"].Thread.insert({
+        const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
         });
@@ -45,7 +45,7 @@ export class ActivityMarkAsDone extends Component {
 
     async onClickDoneAndScheduleNext() {
         const { res_id, res_model } = this.props.activity;
-        const thread = this.env.services["mail.store"].Thread.insert({
+        const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
         });

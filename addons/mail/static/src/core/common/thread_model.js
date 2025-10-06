@@ -17,6 +17,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 
 export class Thread extends Record {
     static id = AND("model", "id");
+    static _name = "mail.thread";
     /**
      * @param {string} localId
      * @returns {string}
@@ -404,7 +405,7 @@ export class Thread extends Record {
     }
 
     async checkReadAccess() {
-        await this.store.Thread.getOrFetch(this, ["hasReadAccess"]);
+        await this.store["mail.thread"].getOrFetch(this, ["hasReadAccess"]);
         return this.hasReadAccess;
     }
 
@@ -670,7 +671,7 @@ export class Thread extends Record {
     }
 
     async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact, swapOpened } = {}) {
-        const thread = await this.store.Thread.getOrFetch(this);
+        const thread = await this.store["mail.thread"].getOrFetch(this);
         if (!thread) {
             return;
         }
@@ -784,10 +785,6 @@ export class Thread extends Record {
                 this.messages.splice(afterIndex - 1, 0, message);
             }
         }
-    }
-
-    _getActualModelName() {
-        return this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
     }
 }
 

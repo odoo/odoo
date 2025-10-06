@@ -2,7 +2,7 @@ import { fields, Record } from "@mail/core/common/record";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
-    static _inherits = { Thread: "thread" };
+    static _inherits = { "mail.thread": "thread" };
     static id = "id";
 
     static new() {
@@ -14,7 +14,7 @@ export class DiscussChannel extends Record {
 
     /** @type {number} */
     id;
-    thread = fields.One("Thread", {
+    thread = fields.One("mail.thread", {
         inverse: "channel",
         onDelete: (r) => r.delete(),
     });

@@ -126,16 +126,16 @@ export class Message extends Record {
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
     partner_ids = fields.Many("res.partner");
     subtype_id = fields.One("mail.message.subtype");
-    thread = fields.One("Thread");
-    threadAsNeedaction = fields.One("Thread", {
+    thread = fields.One("mail.thread");
+    threadAsNeedaction = fields.One("mail.thread", {
         compute() {
             if (this.needaction) {
                 return this.thread;
             }
         },
     });
-    threadAsNewest = fields.One("Thread");
-    threadAsInEdition = fields.One("Thread", {
+    threadAsNewest = fields.One("mail.thread");
+    threadAsInEdition = fields.One("mail.thread", {
         compute() {
             if (this.composer) {
                 return this.thread;
@@ -585,7 +585,10 @@ export class Message extends Record {
                 Array.from(
                     doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
                 ).map(async (el) =>
-                    this.store.Thread.getOrFetch({ id: el.dataset.oeId, model: "discuss.channel" })
+                    this.store["mail.thread"].getOrFetch({
+                        id: el.dataset.oeId,
+                        model: "discuss.channel",
+                    })
                 )
             )
         ).filter((channel) => channel?.exists());
