@@ -95,6 +95,7 @@
         'views/snippets/s_references.xml',
         'views/snippets/s_references_social.xml',
         'views/snippets/s_references_grid.xml',
+        'views/snippets/s_references_carousel.xml',
         'views/snippets/s_popup.xml',
         'views/snippets/s_faq_list.xml',
         'views/snippets/s_faq_collapse.xml',
@@ -446,6 +447,7 @@
             'website/static/src/snippets/s_color_blocks_2/s_color_blocks_2.scss',
             'website/static/src/snippets/s_ecomm_categories_showcase/categories_showcase.scss',
             'website/static/src/snippets/s_floating_blocks/floating_blocks.scss',
+            'website/static/src/snippets/s_references_carousel/references_carousel.scss',
         ],
     },
     'configurator_snippets': {
