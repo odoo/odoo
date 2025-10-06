@@ -21,4 +21,4 @@ class TestCaseIndexation(TransactionCase):
         with file_open(os.path.join(directory, 'files', 'test_content.pdf'), 'rb') as file:
             pdf = file.read()
             text = self.env['ir.attachment']._index(pdf, 'application/pdf')
-            self.assertEqual(text, 'TestContent!!\x0c', 'the index content should be correct')
+            self.assertEqual(text, 'TestContent!!', 'the index content should be correct')
