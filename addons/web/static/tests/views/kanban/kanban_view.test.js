@@ -14165,3 +14165,183 @@ test(`kanban with custom cog action that has a confirmation target="new" action`
         "web_read",
     ]);
 });
+
+test.tags("desktop");
+test("scroll position is restored when coming back to kanban view", async () => {
+    Partner._views = {
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 10; i++) {
+        Product._records.push({ id: 100 + i, name: `Product ${i}` });
+        for (let j = 1; j < 20; j++) {
+            Partner._records.push({
+                id: 100 * i + j,
+                product_id: 100 + i,
+                foo: `Record ${i}/${j}`,
+            });
+        }
+    }
+
+    let def;
+    onRpc("web_search_read", () => def);
+    await resize({ width: 800, height: 300 });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    // simulate scrolls in the kanban view
+    queryOne(".o_content").scrollTop = 100;
+    queryOne(".o_content").scrollLeft = 400;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_renderer").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_renderer").toHaveCount(1);
+    expect(".o_content").toHaveProperty("scrollTop", 100);
+    expect(".o_content").toHaveProperty("scrollLeft", 400);
+});
+
+test.tags("mobile");
+test("scroll position is restored when coming back to kanban view (mobile)", async () => {
+    Partner._views = {
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    for (let i = 1; i < 20; i++) {
+        Partner._records.push({
+            id: 100 + i,
+            foo: `Record ${i}`,
+        });
+    }
+
+    let def;
+    onRpc("web_search_read", () => def);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    // simulate a scroll in the kanban view
+    queryOne(".o_kanban_view").scrollTop = 100;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_renderer").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_renderer").toHaveCount(1);
+    expect(".o_kanban_view").toHaveProperty("scrollTop", 100);
+});
+
+test.tags("mobile");
+test("scroll position is restored when coming back to kanban view (grouped, mobile)", async () => {
+    Partner._views = {
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search />`,
+    };
+
+    Partner._records = [];
+    for (let i = 1; i < 5; i++) {
+        Product._records.push({ id: 100 + i, name: `Product ${i}` });
+        for (let j = 1; j < 20; j++) {
+            Partner._records.push({
+                id: 100 * i + j,
+                product_id: 100 + i,
+                foo: `Record ${i}/${j}`,
+            });
+        }
+    }
+
+    let def;
+    onRpc("web_read_group", () => def);
+    await resize({ width: 375, height: 667 }); // iphone se
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+        ],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    // simulate scrolls in the kanban view
+    queryOne(".o_kanban_renderer").scrollLeft = 656; // scroll to the third column
+    queryAll(".o_kanban_group")[2].scrollTop = 200;
+
+    await getService("action").switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+
+    // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
+    // the data => simulate this and check that the scroll position is correctly restored
+    def = new Deferred();
+    await getService("action").switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_renderer").toHaveCount(0);
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_renderer").toHaveCount(1);
+    expect(".o_kanban_group:eq(2)").toHaveProperty("scrollTop", 200);
+    expect(".o_kanban_renderer").toHaveProperty("scrollLeft", 656);
+});

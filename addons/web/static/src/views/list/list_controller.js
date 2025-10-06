@@ -104,18 +104,6 @@ export class ListController extends Component {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
 
-        let { rendererScrollPositions } = this.props.state || {};
-        useEffect(() => {
-            if (rendererScrollPositions) {
-                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                if (renderer) {
-                    renderer.scrollLeft = rendererScrollPositions.left;
-                    renderer.scrollTop = rendererScrollPositions.top;
-                    rendererScrollPositions = null;
-                }
-            }
-        });
-
         this.archiveEnabled =
             "active" in this.props.fields
                 ? !this.props.fields.active.readonly
@@ -128,7 +116,7 @@ export class ListController extends Component {
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
         });
-        useSetupAction({
+        const { setScrollFromState } = useSetupAction({
             rootRef: this.rootRef,
             beforeLeave: async () => this.model.root.leaveEditMode(),
             beforeUnload: async (ev) => {
@@ -152,6 +140,24 @@ export class ListController extends Component {
             },
             getOrderBy: () => this.model.root.orderBy,
         });
+
+        useEffect(
+            (isReady) => {
+                if (isReady) {
+                    if (this.env.isSmall) {
+                        setScrollFromState();
+                    } else {
+                        const { rendererScrollPositions } = this.props.state || {};
+                        if (rendererScrollPositions) {
+                            const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                            renderer.scrollLeft = rendererScrollPositions.left;
+                            renderer.scrollTop = rendererScrollPositions.top;
+                        }
+                    }
+                }
+            },
+            () => [this.model.isReady]
+        );
 
         usePager(() => {
             if (this.model.useSampleModel) {
