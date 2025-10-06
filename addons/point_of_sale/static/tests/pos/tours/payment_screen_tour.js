@@ -253,3 +253,21 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dialog", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Overpay Test Product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "1500"),
+            PaymentScreen.clickValidate(),
+            {
+                trigger: ".modal .modal-footer .btn-primary",
+                run: "click",
+            },
+            Chrome.endTour(),
+        ].flat(),
+});
