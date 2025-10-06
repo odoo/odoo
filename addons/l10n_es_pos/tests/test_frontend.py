@@ -13,6 +13,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         cls.company_data["company"].country_id = cls.env.ref("base.es").id
         cls.company_data["company"].currency_id = cls.env.ref("base.EUR").id
         cls.company_data["company"].vat = "ESA12345674"
+        cls.company_data["company"].state_id = cls.env.ref("base.state_es_ba").id
         return cls.company_data["company"]
 
     def test_spanish_pos(self):
