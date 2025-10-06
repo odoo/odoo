@@ -96,6 +96,12 @@
             .modal-body {
                 overflow-y: auto;
             }
+
+            @media (prefers-reduced-motion: no-preference) {
+                .modal-content {
+                    animation: modal-in-sm $o-modal-animation-duration $o-easing-enter;
+                }
+            }
         }
     }
 }
@@ -123,5 +129,11 @@
     .modal-fs {
         width: calc(100% - #{2 * $modal-dialog-margin-y-sm-up});
         max-width: none;
+    }
+}
+
+@keyframes modal-in-sm {
+    from {
+        transform: translateX(100%);
     }
 }
