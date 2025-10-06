@@ -555,7 +555,7 @@ export class ClipboardPlugin extends Plugin {
      * @returns {boolean}
      */
     isWhitelisted(item) {
-        if (item instanceof Attr) {
+        if (item.nodeType === Node.ATTRIBUTE_NODE) {
             return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
         } else if (typeof item === "string") {
             return CLIPBOARD_WHITELISTS.classes.some((okClass) =>
