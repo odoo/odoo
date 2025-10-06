@@ -25,3 +25,4 @@ Arnau Cruz arnau.cruz@forgeflow.com https://github.com/ArnauCForgeFlow
 Ricard Calvo ricard.calvo@forgeflow.com https://github.com/RicardCForgeFlow
 Marina Alapont marina.alapont@forgeflow.com https://github.com/MarinaAForgeFlow
 Thiago Mulero thiago.mulero@forgeflow.com https://github.com/ThiagoMForgeFlow
+Laura Cazorla laura.cazorla@forgeflow.com https://github.com/LauraCForgeFlow
