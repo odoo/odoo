@@ -18,7 +18,7 @@ class LivechatAttachmentController(AttachmentController):
             raise NotFound()
         if (
             thread_model == "discuss.channel"
-            and thread.channel_type == "livechat"
+            and thread.channel?.channel_type == "livechat"
             and thread.livechat_end_dt
             and not request.env.user._is_internal()
         ):

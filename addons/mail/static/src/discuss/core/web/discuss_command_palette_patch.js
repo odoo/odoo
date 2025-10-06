@@ -14,32 +14,32 @@ commandCategoryRegistry
 
 patch(DiscussCommandPalette.prototype, {
     buildResults() {
-        const importantThreads = this.store.getSelfImportantChannels();
+        const importantChannels = this.store.getSelfImportantChannels();
         const recentChannels = this.store.getSelfRecentChannels();
         const mentionedSet = new Set();
         const recentSet = new Set();
         const CATEGORY_LIMIT = 3;
         if (!this.cleanedTerm) {
-            const limitedMentioned = importantThreads.slice(0, CATEGORY_LIMIT);
+            const limitedMentioned = importantChannels.slice(0, CATEGORY_LIMIT);
             for (const thread of limitedMentioned) {
                 this.commands.push(this.makeDiscussCommand(thread, DISCUSS_MENTIONED));
                 if (thread.channel?.channel_type === "chat") {
-                    mentionedSet.add(thread.correspondent.persona);
+                    mentionedSet.add(thread.channel.correspondent.persona);
                 } else {
                     mentionedSet.add(thread);
                 }
             }
             const limitedRecent = recentChannels
                 .filter(
-                    (channel) =>
-                        !mentionedSet.has(channel) &&
-                        !mentionedSet.has(channel.correspondent?.persona)
+                    (thread) =>
+                        !mentionedSet.has(thread) &&
+                        !mentionedSet.has(thread.channel.correspondent?.persona)
                 )
                 .slice(0, CATEGORY_LIMIT);
             for (const thread of limitedRecent) {
                 this.commands.push(this.makeDiscussCommand(thread, DISCUSS_RECENT));
                 if (thread.channel?.channel_type === "chat") {
-                    recentSet.add(thread.correspondent.persona);
+                    recentSet.add(thread.channel.correspondent.persona);
                 } else {
                     recentSet.add(thread);
                 }
