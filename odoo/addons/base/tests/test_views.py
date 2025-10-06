@@ -4815,7 +4815,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
         # NEVER add new name in this list ! The new addons must add comment for all always invisible field.
         only_log_modules = (
             'account',
-            'account_3way_match',
             'account_accountant',
             'account_accountant_batch_payment',
             'account_asset',
