@@ -1141,7 +1141,7 @@ class SaleOrder(models.Model):
     def action_update_prices(self):
         self.ensure_one()
 
-        self._recompute_prices()
+        self.with_context(pricelist_update=True)._recompute_prices()
 
         if self.pricelist_id:
             message = _("Product prices have been recomputed according to pricelist %s.",
