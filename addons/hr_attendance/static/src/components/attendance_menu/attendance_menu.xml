@@ -16,17 +16,22 @@
 
             <t t-set-slot="content">
                 <div class="att_container d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
-                        <h3 class="mb-0">
-                            <t t-if="this.hasCheckedInToday">
-                                <small>Welcome back</small> <span class="d-block"><t t-esc="this.employeeName"/>!</span>
-                            </t>
-                            <t t-else="">
-                                <small>Welcome,</small> <span class="d-block"><t t-esc="this.employeeName"/>.</span>
-                            </t>
-                        </h3>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
+                            <h3 class="mb-0">
+                                <t t-if="this.hasCheckedInToday">
+                                    <small>Welcome back</small> <span class="d-block"><t t-esc="this.employeeName"/>!</span>
+                                </t>
+                                <t t-else="">
+                                    <small>Welcome,</small> <span class="d-block"><t t-esc="this.employeeName"/>.</span>
+                                </t>
+                            </h3>
+                        </div>
+                        <div class="d-flex justify-content-center p-3" t-if="this.state.displayVideoStream">
+                            <AttendanceVideoStream height="200" width="240" expose="(api) => { this.cameraApi = api }"/>
+                        </div>
                     </div>
-                    
+
                     <div class="o_att_today_wrap px-3">
                         <table class="table mb-0">
                             <tbody>

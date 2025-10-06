@@ -79,6 +79,7 @@ class HrAttendance(models.Model):
                                 default='manual')
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
+    capture_check_in_image = fields.Boolean(related="employee_id.company_id.attendance_capture_check_in")
     linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
 
     @api.depends("check_in", "employee_id")

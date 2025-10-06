@@ -177,7 +177,7 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
-    def _attendance_action_change(self, geo_information=None):
+    def _attendance_action_change(self, geo_information=None, check_in_image=None):
         """ Check In/Check Out action
             Check In: create a new attendance record
             Check Out: modify check_out field of appropriate attendance record
@@ -186,20 +186,27 @@ class HrEmployee(models.Model):
         action_date = fields.Datetime.now()
 
         if self.attendance_state != 'checked_in':
+            vals = {
+                'employee_id': self.id,
+                'check_in': action_date,
+            }
             if geo_information:
-                vals = {
-                    'employee_id': self.id,
-                    'check_in': action_date,
-                    **{'in_%s' % key: geo_information[key] for key in geo_information}
-                }
-            else:
-                vals = {
-                    'employee_id': self.id,
-                    'check_in': action_date,
-                }
-            res = self.env['hr.attendance'].create(vals)
+                vals.update({'in_%s' % key: geo_information[key] for key in geo_information})
+
+            attendance = self.env['hr.attendance'].create(vals)
+
+            if check_in_image:
+                file_name = f"{self.display_name.replace(' ', '_')}_{str(attendance.check_in).replace(' ', '_')}_UTC"
+                self.env['ir.attachment'].create({
+                    'name': file_name,
+                    'mimetype': 'image/webp',
+                    'res_model': 'hr.attendance',
+                    'res_id': attendance.id,
+                    'datas': check_in_image,
+                })
             self._notify_employee_presence_status()
-            return res
+            return attendance
+
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
             if geo_information:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_attendance.public_kiosk_manual_selection">
-        <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="position-absolute start-0 w-100 h-100" t-attf-class="#{this.props.captureCheckInPicture ? '' : 'top-0'}">
             <div class="d-flex gap-2 p-2 bg-white" style="top: 0px;">
                     <button
                         t-on-click="() => this.props.onClickBack()"
@@ -15,7 +15,7 @@
                         <div class="d-flex flex-row align-items-center rounded-pill border flex-grow-1">
                             <i class="o_searchview_icon d-print-none oi oi-search m-2" aria-label="Search..." title="Search..."/>
                             <div class="o_searchview_input_container position-relative w-100">
-                                <input t-on-input="onSearchInput" type="text" class="d-print-none border-0" style="width: 95%;" placeholder="Search..."/>
+                                <input t-on-input="onSearchInput" type="text" class="d-print-none border-0" style="width: 95%; outline: none;" placeholder="Search..."/>
                             </div>
                         </div>
                     </div>

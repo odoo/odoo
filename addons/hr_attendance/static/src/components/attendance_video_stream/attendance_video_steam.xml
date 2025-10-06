@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.AttendanceVideoStream">
+        <div
+            t-if="streamAvailable"
+            class="overflow-hidden rounded-2"
+            t-att-style="`height: ${props.height}px; width: ${props.width}px;`"
+        >
+            <video
+                id="attendance_video_stream"
+                class="w-100 h-100 object-fit-cover"
+                style="transform: scaleX(-1);"
+                t-on-contextmenu.prevent=""
+            />
+        </div>
+    </t>
+</templates>
