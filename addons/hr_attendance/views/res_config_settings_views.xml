@@ -31,6 +31,9 @@
                         <setting string="Device &amp; Location Tracking" company_dependent="1" help="Allow the collection of GPS location, IP address, and browser/device details used to track employee access and attendance">
                             <field name="attendance_device_tracking"/>
                         </setting>
+                        <setting string="Take Pictures on Check-In" company_dependent="1" help="Capture a photo at the time of check-in using the device camera (if available). Images are automatically optimized for performance and storage.">
+                            <field name="attendance_capture_check_in"/>
+                        </setting>
                     </block>
                     <block title="Kiosk Settings">
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">

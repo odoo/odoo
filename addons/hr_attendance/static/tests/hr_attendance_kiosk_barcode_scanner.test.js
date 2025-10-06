@@ -27,6 +27,8 @@ test("KioskBarcodeScanner can be opened and closed", async () => {
             kioskMode: "manual",
             fromTrialMode: false,
             onBarcodeScanned: () => {},
+            captureCheckInImage: false,
+            exposeCameraCapture: () => {},
         },
     });
     await contains("button.o_mobile_barcode").click();

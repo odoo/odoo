@@ -5,7 +5,8 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from odoo.tools.intervals import Intervals
-from odoo import models, fields, api, exceptions, _
+from odoo import SUPERUSER_ID, models, fields, api, exceptions, _
+from odoo.tools import BinaryBytes
 
 
 class HrEmployee(models.Model):
@@ -212,35 +213,54 @@ class HrEmployee(models.Model):
         }
         self._bus_send("hr.employee/presence", payload)
 
-    def _attendance_action_change(self, geo_information=None):
+    def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
         """ Check In/Check Out action
-            Check In: create a new attendance record
+            Check In: create a new attendance record and attach check-in image to it, if available
             Check Out: modify check_out field of appropriate attendance record
         """
         self.ensure_one()
         action_date = fields.Datetime.now()
+        notification = False
 
         if self.attendance_state != 'checked_in':
+            vals = {
+                'employee_id': self.id,
+                'check_in': action_date,
+            }
             if geo_information:
-                vals = {
-                    'employee_id': self.id,
-                    'check_in': action_date,
-                    **{'in_%s' % key: geo_information[key] for key in geo_information}
+                vals.update({'in_%s' % key: geo_information[key] for key in geo_information})
+
+            attendance = self.env['hr.attendance'].create(vals)
+            if check_in_image_data:
+                attendance.in_image = BinaryBytes(check_in_image_data['image'])
+                attachment = self.env['ir.attachment'].search([
+                    ('res_model', '=', attendance._name),
+                    ('res_id', '=', attendance.id),
+                    ('res_field', '=', 'in_image'),
+                ], limit=1)
+                attachment.name = f"{self.display_name.replace(' ', '_')}_{str(attendance.check_in).replace(' ', '_')}_UTC"
+                message_vals = {
+                    'body': self.env._("Check-in image captured"),
+                    'attachment_ids': [attachment.id],
                 }
-            else:
-                vals = {
-                    'employee_id': self.id,
-                    'check_in': action_date,
+                if self.env.user._is_internal():
+                    attendance.message_post(**message_vals)
+                else:
+                    attendance.with_user(SUPERUSER_ID).message_post(**message_vals)
+            elif self.company_id.attendance_capture_check_in:
+                notification = {
+                    'type': 'warning',
+                    'message': self.env._("Check-in is recorded, but picture could not be captured"),
                 }
-            res = self.env['hr.attendance'].create(vals)
             self._notify_employee_presence_status()
-            return res
+            return notification
+
         attendance = self.env['hr.attendance'].search([('employee_id', '=', self.id), ('check_out', '=', False)], limit=1)
         if attendance:
             if not self.version_id.is_flexible and self.company_id.single_check_in:
                 if self.env.context.get('is_from_systray_check_in_out', False):  # throw user error if user tries to checkout from systray.
                     raise exceptions.UserError(self.env._("You've already checked in."))
-                return attendance  # no need to checkout the user if single checkin enabled.
+                return notification  # no need to checkout the user if single checkin enabled.
             if geo_information:
                 attendance.write({
                     'check_out': action_date,
@@ -256,7 +276,7 @@ class HrEmployee(models.Model):
                 'Cannot perform check out on %(empl_name)s, could not find corresponding check in. '
                 'Your attendances have probably been modified manually by human resources.',
                 empl_name=self.sudo().name))
-        return attendance
+        return notification
 
     def action_open_last_month_attendances(self):
         self.ensure_one()

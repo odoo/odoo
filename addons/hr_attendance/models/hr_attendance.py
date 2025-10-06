@@ -65,6 +65,7 @@ class HrAttendance(models.Model):
                                           ('technical', 'Technical')],
                                readonly=True,
                                default='manual')
+    in_image = fields.Binary(string="Check-In Image")
     out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_longitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
