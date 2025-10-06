@@ -74,6 +74,8 @@ export const CLIPBOARD_WHITELISTS = {
         "img-thumbnail",
         "rounded",
         "rounded-circle",
+        // Odoo tables
+        "o_table",
         "table",
         "table-bordered",
         /^padding-/,
