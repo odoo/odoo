@@ -7,6 +7,14 @@ import { Component, whenReady } from "@odoo/owl";
 import { rpc } from "./core/network/rpc";
 import { PersistentCache } from "./core/utils/persistent_cache";
 
+// Chrome iOS wraps some text nodes (like measures, email...)
+// with a `<chrome_annotation>` tag, which breaks OWL rendering.
+// This meta tag allows to disable this behavior.
+const chromeMetaTag = document.createElement("meta");
+chromeMetaTag.setAttribute("name", "chrome");
+chromeMetaTag.setAttribute("content", "nointentdetection");
+document.head.appendChild(chromeMetaTag);
+
 /**
  * Function to start a webclient.
  * It is used both in community and enterprise in main.js.
