@@ -6,7 +6,7 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useEffect, useRef } from "@odoo/owl";
 
 export class PivotController extends Component {
     static template = "web.PivotView";
@@ -26,7 +26,7 @@ export class PivotController extends Component {
             this.modelOptions
         );
 
-        useSetupAction({
+        const { setScrollFromState } = useSetupAction({
             rootRef: useRef("root"),
             getLocalState: () => {
                 const { data, metaData } = this.model;
@@ -34,6 +34,14 @@ export class PivotController extends Component {
             },
             getContext: () => this.getContext(),
         });
+        useEffect(
+            (isReady) => {
+                if (isReady) {
+                    setScrollFromState();
+                }
+            },
+            () => [this.model.isReady]
+        );
         this.searchBarToggler = useSearchBarToggler();
     }
 
