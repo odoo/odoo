@@ -24,11 +24,16 @@ patch(TicketScreen.prototype, {
         const orders = super.getFilteredOrderList();
         orders.forEach((order) => {
             if (
-                (order.pos_reference.includes("Self-Order") ||
-                    order.pos_reference.includes("Kiosk")) &&
-                !order.online_payment_method_id &&
-                !Object.keys(order.last_order_preparation_change.lines).length
+                ((order.pos_reference.includes("Kiosk") && !order.online_payment_method_id) ||
+                    (order.pos_reference.includes("Self-Order") &&
+                        !order.use_self_order_online_payment)) &&
+                this.pos.getOrderChanges(order).nbrOfChanges
             ) {
+                const orderChange = this.pos.changesToOrder(
+                    order,
+                    this.pos.config.printerCategories
+                );
+                order.uiState.lastPrint = orderChange;
                 order.updateLastOrderChange();
             }
         });

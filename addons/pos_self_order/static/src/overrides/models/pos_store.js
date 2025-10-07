@@ -26,4 +26,18 @@ patch(PosStore.prototype, {
             params: { data: user_data },
         });
     },
+    setOrder(order) {
+        super.setOrder(order);
+        if (
+            order &&
+            ((order.pos_reference.includes("Kiosk") && !order.online_payment_method_id) ||
+                (order.pos_reference.includes("Self-Order") &&
+                    !order.use_self_order_online_payment)) &&
+            this.getOrderChanges(order).nbrOfChanges
+        ) {
+            const orderChange = this.changesToOrder(order, this.config.printerCategories);
+            order.uiState.lastPrint = orderChange;
+            order.updateLastOrderChange();
+        }
+    },
 });

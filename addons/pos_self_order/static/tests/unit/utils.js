@@ -10,6 +10,8 @@ import {
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 import { selfOrderIndex } from "@pos_self_order/app/self_order_index";
+import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import { unpatchSelf } from "@pos_self_order/app/services/data_service";
 
 export function initMockRpc() {
     onRpc("/pos-self/relations/1", () =>
@@ -30,6 +32,12 @@ export function initMockRpc() {
     onRpc("/pos-self-order/process-order/mobile", mockProcssOrder);
     onRpc("/pos-self-order/get-slots/", () => ({ usage_utc: {} }));
 }
+
+export const setupPoSEnvForSelfOrder = async () => {
+    unpatchSelf();
+    registry.category("services").remove("self_order");
+    return await setupPosEnv();
+};
 
 export const setupSelfPosEnv = async (mode = "kiosk") => {
     // Do not change these variables, they are in accordance with the setup data
