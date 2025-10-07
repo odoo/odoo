@@ -1,8 +1,9 @@
-import { onWillUnmount, useEffect, useRef } from "@odoo/owl";
+import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { throttleForAnimation } from "@web/core/utils/timing";
+import { browser } from "@web/core/browser/browser";
 
 export const ACTIVE_ELEMENT_CLASS = "focus";
 const throttledFocus = throttleForAnimation((el) => el?.focus());
@@ -91,7 +92,10 @@ class NavigationItem {
      * @private
      */
     _onMouseMove() {
-        if (this._navigator.activeItem !== this) {
+        if (
+            this._navigator.activeItem !== this &&
+            this._navigator._isNavigationAvailable(this.target)
+        ) {
             this.setActive(false);
             this._options.onMouseEnter?.(this);
         }
@@ -121,7 +125,8 @@ export class Navigator {
         /**@private*/
         this._options = deepMerge(
             {
-                isNavigationAvailable: ({ target }) => this.contains(target),
+                isNavigationAvailable: ({ target }) =>
+                    this.contains(target) && (this.isFocused || this._options.virtualFocus),
                 shouldFocusChildInput: true,
                 shouldFocusFirstItem: false,
                 shouldRegisterHotkeys: true,
@@ -164,15 +169,23 @@ export class Navigator {
     }
 
     /**
+     * Returns true if the current active item is not null and still inside the DOM
+     * @type {boolean}
+     */
+    get hasActiveItem() {
+        return Boolean(this.activeItem?.el.isConnected);
+    }
+
+    /**
      * Returns true if the focus is on any of the navigable items
      * @type {boolean}
      */
     get isFocused() {
-        return Boolean(this.activeItem?.el.isConnected);
+        return this.items.some((item) => item.target.contains(document.activeElement));
     }
 
     next() {
-        if (!this.isFocused) {
+        if (!this.hasActiveItem) {
             this.items[0]?.setActive();
         } else {
             this.items[(this.activeItemIndex + 1) % this.items.length]?.setActive();
@@ -181,7 +194,7 @@ export class Navigator {
 
     previous() {
         const index = this.activeItemIndex - 1;
-        if (!this.isFocused || index < 0) {
+        if (!this.hasActiveItem || index < 0) {
             this.items.at(-1)?.setActive();
         } else {
             this.items[index % this.items.length]?.setActive();
@@ -248,7 +261,7 @@ export class Navigator {
      * @returns {boolean}
      */
     contains(target) {
-        return this.items.some((item) => item.target === target);
+        return this.items.some((item) => item.target.contains(target));
     }
 
     registerHotkeys() {
@@ -275,7 +288,7 @@ export class Navigator {
                     global: true,
                     allowRepeat,
                     isAvailable: (target) =>
-                        this._options.isNavigationAvailable({ navigator: this, target }) &&
+                        this._isNavigationAvailable(target) &&
                         isAvailable({ navigator: this, target }),
                     bypassEditableProtection,
                 })
@@ -306,9 +319,13 @@ export class Navigator {
      */
     _setActiveItem(index) {
         this.activeItem?.setInactive(false);
-        this.activeItem = this.items[index];
         this.activeItemIndex = index;
-        this._options.onItemActivated?.(this.activeItem.el);
+        if (index >= 0) {
+            this.activeItem = this.items[index];
+            this._options.onItemActivated?.(this.activeItem.el);
+        } else {
+            this.activeItem = null;
+        }
     }
 
     /**
@@ -320,6 +337,22 @@ export class Navigator {
         } else {
             this.activeItemIndex = -1;
             this.activeItem = null;
+        }
+    }
+
+    /**
+     * @private
+     */
+    _isNavigationAvailable(target) {
+        return this._options.isNavigationAvailable({ navigator: this, target });
+    }
+
+    /**
+     * @private
+     */
+    _checkFocus(target) {
+        if (!(target instanceof HTMLElement) || !this._isNavigationAvailable(target)) {
+            this._setActiveItem(-1);
         }
     }
 }
@@ -412,6 +445,7 @@ export function useNavigation(containerRef, options = {}) {
         () => [containerRef.el]
     );
 
+    useExternalListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);
     onWillUnmount(() => navigator._destroy());
 
     return navigator;
