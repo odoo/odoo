@@ -16,7 +16,8 @@ class AccountMoveSend(models.AbstractModel):
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
-        res.update({'tr_nilvera': {'label': _("by Nilvera"), 'is_applicable': self._is_tr_nilvera_applicable}})
+        label = _("by Nilvera (Demo)") if self.env.company.l10n_tr_nilvera_use_test_env else _("by Nilvera")
+        res.update({'tr_nilvera': {'label': label, 'is_applicable': self._is_tr_nilvera_applicable}})
         return res
 
     # -------------------------------------------------------------------------
@@ -28,13 +29,6 @@ class AccountMoveSend(models.AbstractModel):
 
         # Filter for moves that have 'tr_nilvera' in their EDI data
         tr_nilvera_moves = moves.filtered(lambda m: 'tr_nilvera' in moves_data[m]['extra_edis'])
-
-        # Show alert if the current company is in Türkiye and test mode is enabled for Nilvera
-        if self.env.company.account_fiscal_country_id.code == 'TR' and self.env.company.l10n_tr_nilvera_use_test_env:
-            alerts['l10n_tr_nilvera_einvoice_test_mode'] = {
-                'level': 'info',
-                'message': _("Testing mode is enabled."),
-            }
 
         if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())):
             alerts["tr_companies_missing_required_codes"] = {
