@@ -341,7 +341,7 @@ class MrpWorkorder(models.Model):
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
         for order in self:
-            order.duration = sum(order.time_ids.mapped('duration'))
+            order.duration = order.get_duration()
             order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
             if order.duration_expected:
                 order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
@@ -356,7 +356,7 @@ class MrpWorkorder(models.Model):
             return minutes * 60 + seconds
 
         for order in self:
-            old_order_duration = sum(order.time_ids.mapped('duration'))
+            old_order_duration = order.get_duration()
             new_order_duration = order.duration
             if new_order_duration == old_order_duration:
                 continue
