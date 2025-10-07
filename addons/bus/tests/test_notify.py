@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
 import selectors
 import threading
 
@@ -9,9 +8,6 @@ import odoo
 from odoo.tests import TransactionCase
 
 from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH, ODOO_NOTIFY_FUNCTION
-
-
-_logger = logging.getLogger(__name__)
 
 
 class NotifyTests(TransactionCase):
@@ -76,20 +72,23 @@ class NotifyTests(TransactionCase):
                 conn = cr._cnx
                 sel.register(conn, selectors.EVENT_READ)
                 selector_ready_event.set()
-                while not stop_event.is_set():
+                found = False
+                while not stop_event.is_set() and not found:
                     if sel.select(timeout=5):
                         conn.poll()
-                        channels_received = json.loads(conn.notifies.pop().payload)
-                        _logger.info("[TEST_NOTIFY] 3. channels received: %s", channels_received)
-                        channels = [c for c in channels_received if c[0] == self.env.cr.dbname]
-                        if channels:
-                            break
-                _logger.info("[TEST_NOTIFY] 4. exiting listen loop")
+                        while conn.notifies:
+                            if notify_channels := [
+                                c
+                                for c in json.loads(conn.notifies.pop().payload)
+                                if c[0] == self.env.cr.dbname
+                            ]:
+                                channels = notify_channels
+                                found = True
+                                break
 
         thread = threading.Thread(target=single_listen)
         thread.start()
-        is_selector_ready = selector_ready_event.wait(timeout=5)
-        _logger.info("[TEST_NOTIFY] 1. selector ready: %s", is_selector_ready)
+        selector_ready_event.wait(timeout=5)
         self.env["bus.bus"].search([]).unlink()
         self.env["bus.bus"]._sendone("channel 1", "test 1", {})
         self.env["bus.bus"]._sendone("channel 2", "test 2", {})
@@ -99,10 +98,8 @@ class NotifyTests(TransactionCase):
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(channels, [])
-        _logger.info("[TEST_NOTIFY] 2. running postcommit. Data: %s.", self.env.cr.postcommit.data)
         self.env.cr.postcommit.run()  # notify
         thread.join(timeout=5)
-        _logger.info("[TEST_NOTIFY] 5. thread joined. Alive: %s", thread.is_alive())
         stop_event.set()
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(
