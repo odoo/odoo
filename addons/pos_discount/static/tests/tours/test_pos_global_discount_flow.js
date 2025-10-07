@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("test_pos_global_discount_sell_and_refun
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
-            TicketScreen.toRefundTextContains("To Refund: 1"),
+            TicketScreen.toRefundTextContains("1"),
             ProductScreen.clickLine("discount"),
             ProductScreen.clickNumpad("1"),
             Dialog.confirm(),

@@ -130,7 +130,7 @@ export function confirmRefund() {
     return [
         ProductScreen.clickReview(),
         {
-            trigger: ".ticket-screen .btn-primary.pay-order-button",
+            trigger: ".ticket-screen .btn-primary.pay-order-button:not(.disabled)",
             run: "click",
         },
     ];
@@ -217,7 +217,7 @@ export function invoicePrinted() {
 }
 export function toRefundTextContains(text) {
     return inLeftSide({
-        trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
+        trigger: `.ticket-screen .qty .refund:contains("${text}")`,
     });
 }
 export function refundedNoteContains(text) {

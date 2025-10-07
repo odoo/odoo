@@ -223,9 +223,44 @@ export class TicketScreen extends Component {
         const order = this.pos.models["pos.order"].get(orderId);
         this.setSelectedOrder(order);
     }
+    getRefundableQty(orderline) {
+        const toRefundDetails = orderline
+            .getAllLinesInCombo()
+            .map((line) => this.getToRefundDetail(line));
+        for (const toRefundDetail of toRefundDetails) {
+            toRefundDetail.refundableQty = 0;
+            if (toRefundDetail.destination_order_id) {
+                this.numberBuffer.reset();
+                continue;
+            }
+            const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
+            if (refundableQty <= 0 || refundableQty <= toRefundDetail.qty) {
+                this.numberBuffer.reset();
+                continue;
+            }
+            toRefundDetail.refundableQty = refundableQty;
+        }
+        return toRefundDetails;
+    }
     onClickOrderline(orderline) {
-        if (this.getSelectedOrder()?.finalized) {
-            const order = this.getSelectedOrder();
+        const order = this.getSelectedOrder();
+        if (order?.finalized) {
+            if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
+                const toRefundDetails = this.getRefundableQty(orderline);
+                for (const toRefundDetail of toRefundDetails) {
+                    if (
+                        Object.values(toRefundDetails).some(
+                            (detail) => detail.destination_order_uuid
+                        )
+                    ) {
+                        continue;
+                    }
+                    toRefundDetail.qty = Math.min(
+                        toRefundDetail.qty + 1,
+                        toRefundDetail.refundableQty
+                    );
+                }
+            }
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
         }
@@ -249,25 +284,13 @@ export class TicketScreen extends Component {
             return this.numberBuffer.reset();
         }
 
-        const toRefundDetails = orderline
-            .getAllLinesInCombo()
-            .map((line) => this.getToRefundDetail(line));
+        const toRefundDetails = this.getRefundableQty(orderline);
         for (const toRefundDetail of toRefundDetails) {
-            // When already linked to an order, do not modify the to refund quantity.
-            if (toRefundDetail.destionation_order_id) {
-                return this.numberBuffer.reset();
-            }
-
-            const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
-            if (refundableQty <= 0) {
-                return this.numberBuffer.reset();
-            }
-
             if (buffer == null || buffer == "") {
                 toRefundDetail.qty = 0;
             } else {
                 const quantity = Math.abs(parseFloat(buffer));
-                if (quantity > refundableQty) {
+                if (quantity > toRefundDetail.refundableQty) {
                     this.numberBuffer.reset();
                     if (!toRefundDetail.line.combo_parent_id) {
                         this.dialog.add(AlertDialog, {
@@ -275,14 +298,14 @@ export class TicketScreen extends Component {
                             body: _t(
                                 "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
                                 quantity,
-                                refundableQty
+                                toRefundDetail.refundableQty
                             ),
                         });
                     }
                 } else {
                     toRefundDetail.qty = quantity;
                     // Automatically select the next orderline if the refund quantity equals the refundable quantity
-                    if (quantity === refundableQty) {
+                    if (quantity === toRefundDetail.refundableQty) {
                         const orderlines = order.getOrderlines();
                         const currentIndex = orderlines.findIndex(
                             (line) => line.id === selectedOrderlineId
@@ -576,7 +599,9 @@ export class TicketScreen extends Component {
             return true;
         }
         const total = Object.values(order.uiState.lineToRefund).reduce((acc, val) => {
-            acc += val.qty;
+            if (!val.destination_order_uuid) {
+                acc += val.qty;
+            }
             return acc;
         }, 0);
 

@@ -122,10 +122,6 @@ export class ControlButtons extends Component {
         }
     }
 
-    clickRefund() {
-        this.pos.openFinalizedOrders();
-    }
-
     get buttonClass() {
         return this.props.showRemainingButtons
             ? this.ui.isSmall

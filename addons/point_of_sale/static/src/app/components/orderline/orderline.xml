@@ -10,6 +10,12 @@
                 <div class="line-details d-flex justify-content-between">
                     <div class="product-name d-flex flex-grow-1 pe-2 text-truncate">
                         <span class="qty d-inline-block fw-bolder px-1">
+                            <t t-if="props.toRefund">
+                                <span class="refund">
+                                    <t t-esc="props.toRefund" />
+                                </span>
+                                /
+                            </t>
                             <t t-esc="vals.unitPart"/>
                             <small t-if="vals.decimalPart" t-out="vals.decimalPart" class="fw-normal" style="font-size: 85%;" />
                         </span>
