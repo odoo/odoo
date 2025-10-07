@@ -1533,6 +1533,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             leave_type = leave.holiday_status_id
             date = leave.date_from.date()
             leave_type_data = leave_type.get_allocation_data(leave.employee_id, date)
+            if not leave_type_data:
+                continue
             exceeding_duration = leave_type_data[leave.employee_id][0][1]['total_virtual_excess']
             excess_limit = leave_type.max_allowed_negative if leave_type.allows_negative else 0
             if exceeding_duration <= excess_limit:
