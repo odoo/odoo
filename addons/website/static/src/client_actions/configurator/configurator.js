@@ -28,6 +28,7 @@ import {
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -185,6 +186,8 @@ export class DescriptionScreen extends Component {
                 this.purposeSelectionRef.el.focus();
             }
         }, () => [this.state.selectedType, this.state.selectedIndustry]);
+
+        this.dropdownSafariHack = false;
     }
 
     onMounted() {
@@ -362,8 +365,29 @@ export class DescriptionScreen extends Component {
      * @param {FocusEvent} ev
      */
     onDropdownFocusout(ev) {
+        if (this.dropdownSafariHack) {
+            return;
+        }
         if (ev.relatedTarget?.closest(".dropdown") !== ev.currentTarget) {
             window.Dropdown.getOrCreateInstance(ev.currentTarget).hide();
+        }
+    }
+    // Because of focus problems with safari on buttons, we need to block the focusout
+    // until the pointer is up.
+    onDropdownPointerDown() {
+        if (isBrowserSafari()) {
+            this.dropdownSafariHack = true;
+        }
+    }
+    onDropdownPointerUp(ev) {
+        if (!isBrowserSafari()) {
+            return;
+        }
+        const dropdown = ev.currentTarget;
+        this.dropdownSafariHack = false;
+        const active = document.activeElement;
+        if (!active || !dropdown.contains(active)) {
+            window.Dropdown.getOrCreateInstance(dropdown).hide();
         }
     }
 
