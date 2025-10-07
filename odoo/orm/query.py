@@ -101,10 +101,17 @@ class Query:
             table = SQL.identifier(table)
 
         if alias in self._joins:
-            assert self._joins[alias] == (sql_kind, table, condition)
-        else:
-            self._joins[alias] = (sql_kind, table, condition)
-            self._ids = self._ids and None
+            entry = self._joins[alias]
+            if entry == (sql_kind, table, condition):
+                return
+            # this permits changing the kind to a non LEFT JOIN, as long as the
+            # rest remains the same
+            force_kind = kind != 'LEFT JOIN'
+            if not (force_kind and entry[1:3] == (table, condition)):
+                raise ValueError(f"Cannot change the JOIN condition from {entry!r}")
+
+        self._joins[alias] = (sql_kind, table, condition)
+        self._ids = self._ids and None
 
     def add_where(self, where_clause: LiteralString | SQL, where_params=()):
         """ Add a condition to the where clause. """

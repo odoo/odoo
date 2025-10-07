@@ -2014,7 +2014,9 @@ class BaseModel(metaclass=MetaModel):
             if field.type != 'many2one':
                 raise ValueError(f"Only many2one path is accepted for the {groupby_spec!r} groupby spec")
 
-            comodel, coalias = field.join(self, alias, query)
+            cotable = field.join(TableSQL(alias, self, query))
+            comodel = cotable._model
+            coalias = cotable._alias
             return comodel._read_group_groupby(coalias, f"{seq_fnames}:{granularity}" if granularity else seq_fnames, query)
 
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
@@ -4700,7 +4702,7 @@ class BaseModel(metaclass=MetaModel):
             # LEFT JOIN the comodel table, in order to include NULL values, too
             # Run as sudo because we can order by inaccessible models as we can
             # only order by the default order or the id.
-            _comodel, coalias = field.join(self.sudo(), alias, query)
+            coalias = TableSQL(alias, self.sudo(), query)._join(field.name)._alias
 
             # delegate the order to the comodel
             reverse = direction._sql_tuple[0] == 'DESC'
