@@ -1340,6 +1340,33 @@ test("bold the searchValue on the commands with accents", async () => {
     expect(queryAllTexts(".o_command .fw-bolder")).toEqual(["éd"]);
 });
 
+test("bolds repeated searchValue without skipping any characters", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    const action = () => {};
+    const providers = [
+        {
+            provide: () => [
+                {
+                    name: "Rooms",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        searchValue: "o",
+        providers,
+    };
+    getService("dialog").add(CommandPalette, {
+        config,
+    });
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(1);
+    expect(".o_command").toHaveCount(1);
+    expect(queryAllTexts(".o_command")).toEqual(["Rooms"]);
+    expect(queryAllTexts(".o_command .fw-bolder")).toEqual(["o", "o"]);
+});
+
 test("remove namespace with backspace", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const provide = () => [];
