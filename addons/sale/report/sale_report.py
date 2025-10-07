@@ -188,7 +188,7 @@ class SaleReport(models.Model):
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
             LEFT JOIN uom_uom u ON u.id=l.product_uom_id
             LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
-            JOIN {currency_table} ON account_currency_table.company_id = s.company_id
+            JOIN {currency_table} AS account_currency_table ON account_currency_table.company_id = s.company_id
             """
 
     def _where_sale(self):

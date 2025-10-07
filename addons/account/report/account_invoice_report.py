@@ -142,7 +142,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-                JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
+                JOIN %(currency_table)s AS account_currency_table ON account_currency_table.company_id = line.company_id
             ''',
             currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
         )
