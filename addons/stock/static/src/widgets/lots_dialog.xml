@@ -10,7 +10,7 @@
         <Dialog size="size" title="title" withBodyPadding="false">
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_onGenerate">
-                    <t t-if="props.mode === 'generate'">Generate</t>
+                    <t t-if="props.mode === 'generate'">Validate</t>
                     <t t-if="props.mode === 'import'">Import</t>
                 </button>
                 <button class="btn btn-secondary" t-on-click="() => this.props.close()">
@@ -23,7 +23,7 @@
                         <div class="row mb-2">
                             <div class="col-3">
                                 <label class="o_form_label" for="next_serial_0">
-                                    <t t-if="props.move.data.has_tracking === 'lot'">First Lot Number</t>
+                                    <t t-if="isLotTracking">First Lot Number</t>
                                     <t t-else="">First Serial Number</t>
                                 </label>
                             </div>
@@ -32,14 +32,11 @@
                                     <input placeholder="e.g. LOT-PR-00012" class="o_input" t-ref="nextSerial" id="next_serial_0" type="text"/>
                                 </div>
                             </div>
-                            <div class="col">
-                                <button class="btn btn-primary py-1" t-on-click="_onGenerateCustomSerial">New</button>
-                            </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col">
                                 <label class="o_form_label" for="next_serial_count_0">
-                                    <t t-if="props.move.data.has_tracking === 'lot'">Quantity per Lot</t>
+                                    <t t-if="isLotTracking">Quantity per Lot</t>
                                     <t t-else="">Number of SN</t>
                                 </label>
                             </div>
@@ -47,10 +44,10 @@
                                 <div name="next_serial_count" class="o_field_widget o_field_integer">
                                     <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="text"/>
                                 </div>
-                                <span t-if="props.move.data.has_tracking === 'lot' &amp;&amp; displayUOM" t-esc="props.move.data.product_uom.display_name"/>
+                                <span t-if="isLotTracking &amp;&amp; displayUOM" t-esc="props.move.data.product_uom.display_name"/>
                             </div>
                         </div>
-                        <div t-if="props.move.data.has_tracking === 'lot'" class="row mb-2">
+                        <div t-if="isLotTracking" class="row mb-2">
                             <div class="col">
                                 <label class="o_form_label" for="total_received_0">Quantity Received</label>
                             </div>
@@ -78,7 +75,7 @@
                         <div class="d-flex">
                             <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
                                 <label class="o_form_label" for="next_serial_0">
-                                    <t t-if="props.move.data.has_tracking==='lot'">Lot numbers</t>
+                                    <t t-if="isLotTracking">Lot numbers</t>
                                     <t t-else="">Serial numbers</t>
                                 </label>
                             </div>
