@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template name="VoiceSearch" id="search" xml:space="preserve">
+    <!--This is used to extending the CommandPalette to add the voice recognition button-->
+    <t t-name="voicesearch" t-inherit="web.CommandPalette"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_command_palette_search')]/div"
+               position="inside">
+            <button class="o_Composer_button  o_Composer_toolButton btn btn-light fa fa-microphone border-0 rounded-pill mx-1"
+                    id="record_voice" title="Voice" aria-label="Voice"
+                    type="button"
+                    t-on-click="recordVoice">
+            </button>
+        </xpath>
+    </t>
+</template>
+

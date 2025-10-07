@@ -1,0 +1,102 @@
+/***********************************************************
+        Variables
+************************************************************/
+
+$input-border-color: #cccccc;
+$input-border-color-focus: #71639e;
+$input-background-color-required: #d2d2ff;
+$input-color-placeholder-required: #6c757d;
+
+$button-border-color: #dee2e6;
+
+/***********************************************************
+        Form View : Handle Fields Borders
+************************************************************/
+
+.o_input,
+.o_field_html > .note-editable {
+    /* Add border for all editable fields */
+    border: 1px solid $input-border-color !important;
+    border-radius: 3px;
+
+    /* add darker border on focus */
+    &:focus {
+        border-color: $input-border-color-focus !important;
+    }
+}
+
+.o_field_many2many_selection {
+    .o_input {
+        /* Prevent to have double border for many2many tags input fields */
+        border: 0px solid !important;
+    }
+}
+
+/***********************************************************
+        Form View : Handle Button Borders
+************************************************************/
+
+.btn-secondary,
+.btn-light {
+    border-color: $button-border-color;
+}
+
+.btn-light {
+    &:hover {
+        border-color: $button-border-color;
+    }
+}
+
+/***********************************************************
+        Form View : Handle Background for required fields
+************************************************************/
+
+.o_required_modifier:not(.o_readonly_modifier) {
+    .o_input {
+        /* Add background for all editable and required fields */
+        background-color: $input-background-color-required !important;
+
+        /* darker placeholder as the background is darker */
+        &::placeholder {
+            color: $input-color-placeholder-required;
+        }
+    }
+}
+
+.o_required_modifier.o_field_selection:not(.o_readonly_modifier) {
+    /* Specific case for field selection */
+    background-color: $input-background-color-required !important;
+}
+
+/***********************************************************
+        Search View : Search Bar Input
+************************************************************/
+div.o_searchview[role="search"] {
+    /* Add border for the searchable zone */
+    border: 1px solid $input-border-color !important;
+    border-radius: 3px;
+
+    /* add darker border when input inside has focus */
+    &:focus-within {
+        border-color: $input-border-color-focus !important;
+    }
+}
+
+/* Adjust padding to avoid items to be sticked to borders */
+div.o_searchview_facet[role="img"] {
+    padding-left: 2px;
+}
+
+i.o_searchview_icon[role="img"] {
+    padding-right: 2px;
+}
+
+/***********************************************************
+        Tree View : Handle style for required fields
+************************************************************/
+.o_list_renderer
+    .o_data_row.o_selected_row
+    > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+    /* Disable border bottom as the field has now a background */
+    border-bottom: 0px solid;
+}

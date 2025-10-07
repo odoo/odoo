@@ -1,0 +1,337 @@
+ .o_input {
+    border: 1px solid #ccc;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+}
+//
+// This file regroups all the rules which apply to field widgets wherever they
+// are in the DOM, in the community version.
+//
+
+// Required
+.o_required_modifier {
+    &.o_input, .o_input {
+        border-bottom: 2px solid #666666;
+		background-color:transparent !important
+    }
+}
+
+
+
+//------------------------------------------------------------------------------
+// Fields
+//------------------------------------------------------------------------------
+
+.o_field_widget {
+
+
+    // Many2one#
+    &.o_field_many2one .o_external_button {
+       color: $o-brand-odoo;
+
+    }
+
+
+}
+
+
+
+ // Button box
+    .oe_button_box {
+
+
+
+        .oe_stat_button {
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.03) !important;
+            }
+            .o_button_icon {
+                color: #666666 !important;
+            }
+        }
+    }
+
+
+
+.o_form_sheet_bg {
+        border-bottom: 1px solid #dee2e6 !important;
+        background: #f9f9f9 !important;
+}
+
+
+.o_searchview .o_searchview_facet {
+    border: 1px solid #8f8f8f;
+    background: #f8f9fa;
+    color: #8f8f8f;
+}
+
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: none;
+    padding-left: 0px;
+}
+
+
+.o_list_view thead {
+    background-color: white;
+    border: none;
+    border-bottom: 5px solid #cacaca;
+}
+
+ .o_list_view thead > tr > th {
+    border-left: 0px solid #fff;
+    padding: 12px 4px;
+}
+
+ .o_list_view .o_optional_columns_dropdown_toggle {
+   padding: 8px 10px;
+}
+.o_list_view {
+    background-color: transparent;
+}
+
+.table td {
+    padding: 0.35rem;
+    vertical-align: top;
+    height: 10px;
+    border-top: 1px solid #dee2e6;
+}
+
+
+.o_list_view thead {
+    background-color: white;
+    border: none;
+}
+.o_list_view .o_list_table > thead {
+    background-color: white;
+    border: none;
+}
+
+.o_list_view .o_list_record_selector, .o_list_view .o_list_record_remove, .o_list_view .o_handle_cell {
+    width: 39px;
+    padding-left: 16px !important;
+    padding-right: 5px !important;
+}
+
+
+.o_list_view .o_list_table thead > tr > th:not(.o_list_record_selector) {
+    border-left: 0px solid #dfdfdf;
+    display: table-cell;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+
+.custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.625rem;
+    padding-left: 1.5rem;
+}
+
+.o_control_panel > .o_cp_right {
+    max-height: 60px;
+}
+
+
+.o_dropdown_toggler_btn {
+    padding: 0;
+    color: #666666;
+    text-transform: initial;
+}
+
+.btn-group .o_dropdown {
+    border: none;
+}
+
+.o_dropdown_toggler_btn {
+    text-transform: none !important;
+    background-color: transparent !important;
+    border: none;
+}
+
+
+.o_dropdown_toggler_btn, .o_dropdown_toggler_btn:hover, .o_dropdown_toggler_btn:focus, .o_dropdown_toggler_btn:hover, .o_dropdown_toggler_btn:focus, .btn-icon, .o_graph_button {
+    text-transform: none !important;
+    background-color: transparent !important;
+    border: 0px solid grey;
+}
+
+.o_dropdown_toggler_btn:focus, .o_dropdown_toggler_btn:hover, .btn-icon, .o_graph_button {
+    text-transform: none !important;
+    background-color: transparent !important;
+    border: 0.5px solid #d1d1d1;
+}
+
+.btn-secondary {
+    color: #5a5a5a;
+    background-color: #ffffff;
+    border: none;
+}
+
+.btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
+    color: #212529;
+    background-color: #e6e5e5;
+    border: none
+}
+
+.o_searchview {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    align-items: flex-end;
+    position: relative;
+    padding: 0 20px 1px 0;}
+
+
+.o_main_navbar {
+    border-bottom: 1px solid #875A7B;
+    background: #875A7B;
+    }
+
+
+.o_main_navbar {
+        --o-navbar-height: 46px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        height: var(--o-navbar-height);
+        min-width: min-content;
+        border-bottom: 1px solid #875A7B;
+        background: #875A7B;
+    }
+.nav-tabs .nav-link {
+    color: #666666;
+    background-color: white;
+    border-color: #ced4da;
+}
+
+ .nav-tabs .nav-link:hover, .nav-tabs .nav-item.show .nav-link{
+  color: #008784
+}
+
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #212529;
+    background-color: white;
+    border-top-color: #875A7B;
+}
+
+.o_list_view .text-info {
+    color: #666666 !important;
+}
+
+.btn, .o_account_reports_page .oe_link_reports, .o_radio_hide_bullet label {
+    display: inline-block;
+    font-weight: 500;
+    color: #666666;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1.08333333rem;
+    line-height: 1.5;
+    border-radius: 0;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn, .o_account_reports_page .oe_link_reports, .o_radio_hide_bullet label, .btn-group > .btn, .o_account_reports_page .btn-group > .oe_link_reports, .o_radio_hide_bullet .btn-group > label {
+    border-radius: 0px;
+}
+
+.btn-primary, .btn-secondary, .o_radio_hide_bullet label {
+//    text-transform: uppercase;
+}
+
+.btn-primary {
+    color: #FFFFFF;
+    background-color: #00A09D;
+    border-color: #00A09D;
+}
+
+
+.btn-group > .btn:not(:last-child):not(.dropdown-toggle), .o_account_reports_page .btn-group > .oe_link_reports:not(:last-child):not(.dropdown-toggle), .o_radio_hide_bullet .btn-group > label:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn, .o_account_reports_page .btn-group > .btn-group:not(:last-child) > .oe_link_reports, .o_radio_hide_bullet .btn-group > .btn-group:not(:last-child) > label {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+
+.o_field_widget.o_field_many2one .o_external_button {
+    color: #6c757d;
+}
+//
+// This file regroups all the rules which apply to field widgets wherever they
+// are in the DOM, in enterprise version.
+//
+
+// Required
+.o_required_modifier {
+    &.o_input, .o_input {
+        border-bottom: 2px solid $o-main-text-color;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Fields
+//------------------------------------------------------------------------------
+
+.o_field_widget {
+    // Dropdowns input carret
+    .o_input_dropdown .o_dropdown_button {
+        @include o-position-absolute(0, 0);
+    }
+
+    // Percent pie field
+    &.o_field_percent_pie {
+        $pie-dimension: $o-statbutton-height - 2 * $o-statbutton-vpadding;
+        $pie-ring-width: 4px;
+
+        .o_pie {
+            width: $pie-dimension;
+            height: $pie-dimension;
+
+            &:after { // Outside pie border to go over border-radius irregularities
+                border: 1px solid $o-brand-secondary;
+            }
+
+            .o_pie_value {
+                @include o-position-absolute($pie-ring-width, $pie-ring-width);
+                width: $pie-dimension - 2 * $pie-ring-width;
+                height: $pie-dimension - 2 * $pie-ring-width;
+                border: 1px solid $o-brand-secondary;
+                background-color: $o-brand-lightsecondary;
+            }
+        }
+    }
+}
+
+.o_field_many2one {
+    input[type="text"]:disabled{
+        background-color:#FFF;
+    }
+}
+
+
+
+
+.o_main_navbar {
+    border-bottom: 1px solid #875A7B;
+    background: #875A7B;
+    }
+
+
+.o_main_navbar {
+        --o-navbar-height: 46px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        height: var(--o-navbar-height);
+        min-width: min-content;
+        border-bottom: 1px solid #875A7B;
+        background: #875A7B;
+    }

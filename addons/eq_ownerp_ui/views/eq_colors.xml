@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="eq_colors_form" model="ir.ui.view">
+            <field name="name">eq.colors.form</field>
+            <field name="model">eq.colors</field>
+            <field name="arch" type="xml">
+                <form string="Color Picker" class="oe_form_configuration">
+                    <header>
+                        <button string="Save" type="object" class="btn-primary" special="save"/>
+                        <button string="Discard" type="object" class="btn btn-secondary" special="cancel"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <separator string="Basic Colors"/>
+                                <field name="eq_basic_text_color" widget="eq_color"/>
+                                <field name="eq_basic_secondary_color" widget="eq_color"/>
+                                <field name="eq_link_color" widget="eq_color"/>
+                            </group>
+                            <group name="eq_es_group_config">
+                                <separator string="Navigation"/>
+                                <field name="eq_apps_color" widget="eq_color"/>
+                                <field name="eq_navi_background" widget="eq_color"/>
+                                <field name="eq_navi_fontcolor" widget="eq_color"/>
+                                <field name="eq_navi_hover" widget="eq_color"/>
+                                <field name="eq_navi_hover_fontcolor" widget="eq_color"/>
+                            </group>
+                            <group>
+                                <separator string="Buttons"/>
+                                <field name="eq_btn_primary_background" widget="eq_color"/>
+                                <field name="eq_btn_primary_fontcolor" widget="eq_color"/>
+                                <field name="eq_btn_secondary_background" widget="eq_color"/>
+                                <field name="eq_btn_secondary_fontcolor" widget="eq_color"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="eq_colors_tree" model="ir.ui.view">
+            <field name="name">eq.colors.tree</field>
+            <field name="model">eq.colors</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="eq_colors_action" model="ir.actions.act_window">
+                <field name="name">Template Colors</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">eq.colors</field>
+                <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="eq_color_template_menu" action="eq_colors_action" name="Templates" parent="eq_ownerp_ui.eq_template_colors_menu" sequence="2"/>
+        
+    </data>
+</odoo>

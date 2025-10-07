@@ -1,0 +1,143 @@
+# Odoo Forge Sale Map
+
+<t t-name="website.customer-sale-map">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty"><section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title" data-name="Title" style="background-image: none;">
+        <div class="container s_allow_columns">
+            <h1 style="text-align: center;"><font style="font-size: 62px;">Customer Sale Map</font><br/></h1>
+        </div>
+    </section><section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
+        <div class="s_allow_columns o_container_small">
+            <p style="text-align: center;">Designed to enhance your sales strategy with a detailed geographical visualization of your sales data. The interface offers a clear and interactive map view of your sale orders, enabling you to track customer distribution and sales performance in various regions. This tool is particularly useful for understanding market penetration and sales trends, helping you make informed decisions based on real-time sales information. With this module, you can easily locate and analyze individual sale orders, like the displayed Lumber Inc order in Stockton, providing valuable insights for business growth and customer engagement.<br/></p><p style="text-align: center;"><a href="https://apps.odoo.com/apps/modules/16.0/odoo_forge_sale_map//" target="_blank" class="btn btn-primary" data-bs-original-title="" title="">Get the App Free!</a><br/></p></div>
+    </section><section class="s_picture pt48 o_cc o_cc2 o_colored_level pb0" data-snippet="s_picture" data-name="Picture" style="background-image: none;">
+        <div class="container">
+            <h2 style="text-align: center;"><font style="font-size: 62px;">Drag-and-Drop Design</font><br/></h2>
+            <p style="text-align: center;">The "Customer Sale Map" includes an interactive feature where users can click on markers placed on the map, each representing a sale order. Upon clicking a marker, a detailed information pop-up is displayed, providing specifics about the sale, such as the customer's name, order date, total amount, and the items purchased.&amp;nbsp;<br/></p>
+            <p style="text-align: center;"><br/></p>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-10 offset-lg-1 pb24 o_colored_level" style="text-align: center;">
+                    <figure class="figure">
+                        <img src="https://odooforge.s3.amazonaws.com/markers.gif" class="img-fluid" loading="lazy" style=""/><br/><br/>For instance, clicking on a marker reveals details about a purchase from 'Deco Addict', including an office lamp for $405. Additionally, users have the convenience of a direct link labeled 'OPEN ORDER' which, when clicked, opens the specific sale order in a new browser tab for further action or examination. This functionality enhances user experience by streamlining access to sales data directly from the map interface.<br/><br/><img src="/web/image/557-3186f410/marker%20details.png" alt="" class="figure-img img-thumbnail padding-large img img-fluid o_we_custom_image" data-original-id="552" data-original-src="/web/image/552-318b4933/marker%20details.png" data-mimetype="image/png" data-resize-width="760" loading="lazy" style=""/><br/><br/><br/><br/><br/></figure></div>
+            </div>
+        </div>
+    </section><section class="s_picture pt48 pb24 o_cc o_cc2 o_colored_level" data-snippet="s_picture" data-name="Picture" style="background-image: none;">
+        <div class="container">
+            <h2 style="text-align: center;"><font style="font-size: 62px;">Sale Order View</font><br/></h2>
+            <p style="text-align: center;">You can view each sale order's customer location here!</p>
+            <p style="text-align: center;"><br/></p>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-10 offset-lg-1 pb24 o_colored_level" style="text-align: center;">
+                    <figure class="figure">
+                        <img src="https://odooforge.s3.amazonaws.com/customer's+map.png" alt="" class="figure-img img-thumbnail padding-large img img-fluid o_we_custom_image" data-resize-width="undefined" data-bs-original-title="" title="" aria-describedby="tooltip542773" loading="lazy" style=""/>
+                        <figcaption class="figure-caption text-muted py-3 o_default_snippet_text">Add a caption to enhance the meaning of this image.</figcaption>
+                    <img src="https://odooforge.s3.amazonaws.com/customer's+map+2.png" alt="" class="figure-img img-thumbnail padding-large img img-fluid o_we_custom_image" data-resize-width="undefined" loading="lazy" style=""/></figure>
+                </div>
+            </div>
+        </div>
+    </section><section class="s_picture pb24 o_cc o_cc2 o_colored_level pt4" data-snippet="s_picture" data-name="Picture" style="background-image: none;" id="A-punchy-Headline" data-anchor="true">
+        <div class="container">
+            <h2 style="text-align: center;"><font style="font-size: 62px;">Zoom to view details</font><br/></h2>
+            <p style="text-align: center;"><br/></p>
+            <p style="text-align: center;"><br/></p>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-10 offset-lg-1 pb24 o_colored_level" style="text-align: center;">
+                    <figure class="figure">
+                        <img src="/web/image/556-a6c630a4/zoom%20feature.png" alt="" class="figure-img img-thumbnail padding-large img img-fluid o_we_custom_image" data-original-id="553" data-original-src="/web/image/553-19149421/zoom%20feature.png" data-mimetype="image/png" data-resize-width="933" loading="lazy" style=""/></figure></div>
+            </div>
+        </div>
+    </section><section class="s_picture pb24 o_cc o_cc2 o_colored_level pt4" data-snippet="s_picture" data-name="Picture" style="background-image: none;">
+        <div class="container">
+            <h2 style="text-align: center;"><font style="font-size: 62px;">Toggle Top Sales</font><br/></h2>
+            
+            <p style="text-align: center;"><br/></p>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-10 offset-lg-1 pb24 o_colored_level" style="text-align: center;">
+                    <figure class="figure">
+                        <img src="/web/image/555-dae9b92e/group%20toggle.png" alt="" class="figure-img img-thumbnail padding-large img img-fluid o_we_custom_image" data-original-id="554" data-original-src="/web/image/554-ac226675/group%20toggle.png" data-mimetype="image/png" data-resize-width="458" loading="lazy" style=""/></figure></div>
+            </div>
+        </div>
+    </section><section class="s_picture pt48 pb24 o_cc o_cc2 o_colored_level" data-snippet="s_picture" data-name="Picture" style="background-image: none;">
+        <div class="container">
+            <p style="text-align: center;"><font style="font-size: 62px;" class="text-o-color-1">Example videos</font><br/></p>
+            <p style="text-align: center;"><br/><img src="https://odooforge.s3.amazonaws.com/full+map+vid.gif" alt="" class="img img-fluid o_we_custom_image" data-resize-width="undefined" loading="lazy" style=""/></p><p style="text-align: center;"><br/></p><p style="text-align: center;"><br/></p>
+            <p style="text-align: center;"><br/></p>
+            
+        </div>
+    </section><section class="s_features pt32 pb32 o_colored_level" data-snippet="s_features" data-name="Features" style="background-image: none;">
+        <div class="container">
+            <div class="row">
+                <div class="pt32 pb32 text-center o_colored_level col-lg-4" style="">
+                    <i class="fa fa-3x fa-gear rounded bg-primary m-3"/>
+                    <h3><strong>Seamless Navigation</strong><br/></h3>
+                    <p>Streamline your workflow with intuitive navigation controls, ensuring that all your sales data is just a click away.<br/></p>
+                </div>
+                
+                <div class="pt32 pb32 text-center o_colored_level col-lg-4" style="">
+                    <i class="fa fa-database m-3 rounded fa-3x bg-o-color-2" data-bs-original-title="" title="" aria-describedby="tooltip482790" style=""/>
+                    <h3><strong><strong>Data-driven Insights</strong></strong><br/></h3>
+                    <p>Harness the power of advanced analytics to gain actionable insights into sales patterns and customer behaviors, enabling strategic decision-making.<br/></p>
+                </div><div class="pt32 pb32 text-center o_colored_level col-lg-4" style="">
+                    <i class="fa fa-user m-3 rounded fa-3x" data-bs-original-title="" title="" aria-describedby="tooltip482790" style="background-color: rgb(148, 189, 123);"/>
+                    <h3><strong>User-friendly Interface</strong><br/></h3>
+                    <p>Engage with a user-friendly dashboard that simplifies complex data, making it accessible for users of all technical levels to understand and act upon.<br/></p>
+                </div>
+            </div>
+        </div>
+    </section><section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title" data-name="Title" style="background-image: none;">
+        <div class="container s_allow_columns">
+            <h1 style="text-align: center;"><font style="font-size: 62px;">Installation Guide</font><br/></h1>
+        </div>
+    </section><section class="s_text_image pt32 o_colored_level pb0" data-snippet="s_image_text" data-name="Image - Text" style="background-image: none;">
+        <div class="container">
+            <div class="row align-items-center">
+                
+                <div class="pt16 pb16 o_colored_level offset-lg-2 col-lg-7" style="">
+                    
+                    <h4><strong>Introduction:</strong></h4><p>Download the app and either place it in your custom addons folder or use the upload app feature with v17.
+                </p></div>
+            </div>
+        </div>
+    </section><section class="s_text_image pb32 o_colored_level pt0" data-snippet="s_image_text" data-name="Image - Text" style="background-image: none;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pt16 pb16 o_colored_level" style="">
+                    <img src="/web/image/561-39ec634f/Install%20App.png" alt="" class="img img-fluid mx-auto o_we_custom_image" data-original-id="558" data-original-src="/web/image/558-ba4e25bc/Install%20App.png" data-mimetype="image/png" data-resize-width="355" loading="lazy" style=""/>
+                </div>
+                <div class="col-lg-6 pt16 pb16 o_colored_level" style="">
+                    <h4><strong>1. Install Customer Sale&amp;nbsp;App on Odoo</strong>:<br/></h4>
+                    <p style="text-align: left;">a. Log in to your Odoo instance as an administrator.</p><p style="text-align: left;">b. Navigate to the Apps module.</p><p style="text-align: left;">c. Click on "Update Apps List" once you have downloaded the app.</p><p style="text-align: left;">d. Use the search bar and type in "Customer Sale Map" to locate the app.</p><p style="text-align: left;">e. Click on the 'Activate' button next to the "Customer Sale Map" app.
+                    </p></div>
+            </div>
+        </div>
+    </section><section class="s_text_image pt32 o_colored_level pb0" data-snippet="s_image_text" data-name="Image - Text" style="background-image: none;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pt16 pb16 o_colored_level" style="">
+                    <img src="/web/image/562-c5e10184/Sale%20Map%20Menu.png" alt="" class="img img-fluid mx-auto o_we_custom_image" data-original-id="559" data-original-src="/web/image/559-bb3710bb/Sale%20Map%20Menu.png" data-mimetype="image/png" data-resize-width="690" loading="lazy" style=""/>
+                </div>
+                <div class="col-lg-6 pt16 pb16 o_colored_level" style="">
+                    <h2><strong>Sale Menu</strong><br/></h2>
+                    <p>a. The map can be found in the main Sales menu under "Sale Map"</p><p>b. Click the "Update Map" button to load your sales onto the map.</p><p><span class="oe-tabs" style="width: 23px;">	</span>​- We've limited the amount of sale orders / quotations to 1000.<br/></p></div></div>
+        </div>
+    </section><section class="s_text_image o_colored_level pt0 pb0" data-snippet="s_image_text" data-name="Image - Text" style="background-image: none;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="pt16 pb16 o_colored_level col-lg-12" style="">
+                    <img src="https://odooforge.s3.amazonaws.com/refresh+makers+sale+map.png" alt="" class="img img-fluid mx-auto o_we_custom_image" data-resize-width="undefined"/><br/><br/><br/><br/>
+                </div>
+                
+            </div>
+        </div>
+    </section><section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
+        <div class="s_allow_columns o_container_small">
+            <p><strong>Note</strong>:&amp;nbsp;</p><p>1. This app requires folium, pandas, and geopy on your&amp;nbsp;server&amp;nbsp;and will install this libraries if missing.</p><p>2. Map is limited to the most recent 2000 sale orders.&amp;nbsp;</p><p>3. Only tested in USA.</p><p>4. Please contact us for any customizations! I'm happy to work on minor updates or any bug fixes.&amp;nbsp;</p>
+            <p class="o_default_snippet_text"><br/></p>
+        </div>
+    </section><section class="s_text_block o_colored_level pb256 pt0" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
+        <div class="s_allow_columns container">
+            <p style="text-align: center;"><a href="/contactus" class="btn btn-primary" data-bs-original-title="" title="">Contact Us</a><br/></p>
+            <p style="text-align: center;"><a href="https://apps.odoo.com/apps/modules/16.0/odoo_forge_sale_map/" target="_blank" class="btn btn-primary" data-bs-original-title="" title="">Get the App Free!</a></p><p style="text-align: center;"><a href="/stripo-connector-1" target="_blank" class="btn btn-primary" data-bs-original-title="" title="">Tell me more!</a><br/></p>
+        </div>
+    </section></div>
+    </t>
+</t>

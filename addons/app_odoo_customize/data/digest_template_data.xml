@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="digest.digest_mail_template" model="mail.template">
+        <field name="body_html"><![CDATA[
+<table style="width: 100%; border-spacing: 0; font-family: Helvetica,Arial,Verdana,sans-serif;">
+    <tr>
+        <td align="center" valign="top" style="border-collapse: collapse; padding: 0">
+            % set user = ctx.get('user', user)
+            % set company = user.company_id
+            % set data = object.compute_kpis(company, user)
+            % set tips = object.compute_tips(company, user)
+            % set kpi_actions = object.compute_kpis_actions(company, user)
+            % set kpis = data.yesterday.keys()
+            <table style="width: 100%; max-width: 600px; border-spacing: 0; border: 1px solid #e7e7e7; border-bottom: none; color: #6e7172; line-height: 23px; text-align: left;">
+                <tr>
+                    <td style="border-collapse: collapse; padding: 10px 40px; text-align: left;">
+                        <strong style="margin-left: -22px; color: #000000; font-size: 22px; line-height: 32px;">${company.name} at a glance</strong>
+                        <div style="color: #000000; font-size: 15px; margin-left:-22px;">${datetime.date.today().strftime('%B %d, %Y')}</div>
+                    </td>
+                    <td style="text-align: right; padding: 10px 40px">
+                        <img style="padding: 0px; margin: 0px; height: auto; width: 80px;" src="/logo.png?company=${company.id}"/>
+                    </td>
+                </tr>
+                <tr><td colspan="2" style="text-align: center;">
+                    <hr width="95%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 14px;"/>
+                </td></tr>
+            </table>
+            % for kpi in kpis:
+                <table style="border-spacing: 0; width: 100%; max-width: 600px;">
+                    <tr>
+                        <td style="border-collapse: collapse; background-color: #ffffff; border-left: 1px solid #e7e7e7; border-right: 1px solid #e7e7e7; line-height: 21px; padding: 0 20px 10px 20px; text-align: left;"><br/>
+                            <span style="color: #3d466e; font-size: 18px; font-weight: 500; line-height: 23px;">${object.fields_get()[kpi]['string']}</span>
+                            %if kpi in kpi_actions:
+                                <span style="float: right;">
+                                    <a href="/web#action=${kpi_actions[kpi]}">View more</a>
+                                </span>
+                            %endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-collapse: collapse; margin: 0; padding:0;">
+                            <table style="width: 100%; border-spacing: 0; background-color: #f9f9f9; border: 1px solid #e7e7e7; border-top: none;">
+                                <tr>
+                                    <td style="border-collapse: collapse; margin: 0; padding: 0; display: block; border-top: 2px solid #56b3b5;">
+                                        <table style="width: 100%; max-width: 199px; border-spacing: 0;">
+                                            <tr>
+                                                <td style="border-collapse: collapse; padding: 20px; text-align: center;">
+                                                    <span style="color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['yesterday'][kpi][kpi]}</span><br/>
+                                                    <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Yesterday</span>
+                                                    % if data['yesterday'][kpi]['margin'] != 0.0:
+                                                        <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
+                                                            % if data['yesterday'][kpi]['margin'] > 0.0:
+                                                                <span style="color: #0bbc22;">▲</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
+                                                            % endif
+                                                            % if data['yesterday'][kpi]['margin'] < 0.0:
+                                                                <span style="color: #ff0000;">▼</span>${"%.2f" % data['yesterday'][kpi]['margin']} %
+                                                            % endif
+                                                        </span>
+                                                    % endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="border-collapse: collapse; margin: 0; padding: 0; border-top: 2px solid #9a5b82;">
+                                        <table style="width: 100%; max-width: 199px; border-spacing: 0; margin: 0; padding: 0;">
+                                            <tr>
+                                                <td style="border-collapse: collapse; padding: 20px; text-align: center;">
+                                                    <span style="color: #9a5b82; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px;">${data['lastweek'][kpi][kpi]}</span><br/>
+                                                    <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 7 Days</span>
+                                                    % if data['lastweek'][kpi]['margin'] != 0.0:
+                                                        <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
+                                                            % if data['lastweek'][kpi]['margin'] > 0.0:
+                                                                <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
+                                                            % endif
+                                                            % if data['lastweek'][kpi]['margin'] < 0.0:
+                                                                <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastweek'][kpi]['margin']} %
+                                                            %endif
+                                                        </span>
+                                                    %endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="border-collapse: collapse; margin: 0; padding: 0; border-top: 2px solid #56b3b5;">
+                                        <table style="width: 100%; max-width: 199px; border-spacing: 0; margin: 0; padding: 0;">
+                                            <tr>
+                                                <td style="border-collapse: collapse; margin: 0; padding: 20; text-align: center;">
+                                                    <span style="color: #56b3b5; font-size: 35px; font-weight: bold; text-decoration: none; line-height: 36px">${data['lastmonth'][kpi][kpi]}</span><br/>
+                                                    <span style="color: #888888; display: inline-block; font-size: 12px; line-height: 18px; text-transform: uppercase;">Last 30 Days</span>
+                                                    % if data['lastmonth'][kpi]['margin'] != 0.0:
+                                                        <span style="color: #888888; display: block; font-size: 12px; line-height: 18px; text-transform: uppercase;">
+                                                             % if data['lastmonth'][kpi]['margin'] > 0.0:
+                                                                <span style="color: #0bbc22;">▲</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
+                                                            % endif
+                                                            % if data['lastmonth'][kpi]['margin'] < 0.0:
+                                                                <span style="color: #ff0000;">▼</span>${"%.2f" % data['lastmonth'][kpi]['margin']} %
+                                                            %endif
+                                                        </span>
+                                                    %endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            % endfor
+            % if tips:
+                <table style="width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
+                    <tr>
+                        <td style="border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0px 20px;"><br/>
+                            <div style="color: #3d466e; line-height: 23px;">${ctx['tip_description']|safe}</div>
+                        </td>
+                    </tr>
+                </table>
+            % endif
+            <table style="width: 100%; max-width: 600px; margin-top: 5px; border: 1px solid #e7e7e7;">
+                <tr>
+                    <td style="border-collapse: collapse; background-color: #ffffff; line-height: 21px; padding: 0 20px 10px 20px; text-align: center;"><br/>
+                        <div style="color: #3d466e; font-size: 16px; font-weight: 600; line-height: 23px;">Run your business from anywhere with Odoo Mobile.</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="text-align: center;"><a href="https://www.odooai.cn" target="_blank"><img src="/digest/static/src/img/google_play.png" style="display: inline-block; height: 30px; margin-left: auto; margin-right: 12px;"/></a><a href="https://www.odooai.cn" target="_blank"><img src="/digest/static/src/img/app_store.png" style="display: inline-block; height: 30px; margin-left: 12px; margin-right: auto;"/></a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <table style="margin-top: 5px; border: 1px solid #e7e7e7; font-size: 15px; width: 100%; max-width: 600px;">
+                <tr>
+                    <td style="border-collapse: collapse; margin: 0; padding: 10px 20px;">
+                        % if user.has_group('base.group_system'):
+                            <div style="margin-top: 20px;"> 
+                                Want to customize the email?
+                                <a href="/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="color: #875A7B;">Choose the metrics you care about</a>
+                            </div>
+                            <br />
+                        % endif
+                        <p style="font-size: 11px; margin-top: 10px;">
+                            <strong>
+                                Sent by
+                                <a href="https://www.odoo.com" style="text-decoration: none; color: #875A7B;">Odoo</a> - <a href="/web#view_type=form&amp;model=digest.digest&amp;id=${object.id}" target="_blank" style="color: #888888;">Unsubscribe</a>
+                            </strong>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+        ]]></field>
+    </record>
+</odoo>

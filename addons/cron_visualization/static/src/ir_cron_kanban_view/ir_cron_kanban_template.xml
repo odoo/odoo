@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+<!--    <t t-name="KanbanView.Buttons" t-inherit="web.KanbanView.Buttons">-->
+<!--       <xpath expr="//*[@class='btn btn-primary o-kanban-button-new']" position="after">-->
+<!--           <button type="button" class="btn btn-primary" style="margin-left: 10px;" t-on-click="OnTestClick">-->
+<!--               Redmine Update-->
+<!--           </button>-->
+<!--       </xpath>-->
+<!--    </t>-->
+
+    <t t-name="cron_visualization.IrCronKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class">o_kanban_renderer o_renderer d-flex ir_cron_kanban_style</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <IrCronDashboard/>
+        </xpath>
+    </t>
+</templates>

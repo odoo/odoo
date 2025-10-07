@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    This record defines an access control rule for the OpenAcademy course model.
+    It restricts write access to only users belonging to the 'open_academy.
+    openacademy_course_group_manager' group-->
+    <record id="openacademy_course_rule_manager" model="ir.rule">
+        <field name="name">Only Responsible can modify Course</field>
+        <field name="model_id" ref="model_openacademy_course"/>
+        <field name="groups"
+               eval="[(4, ref('open_academy.openacademy_course_group_manager'))]"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="domain_force">
+            ['|', ('responsible_id','=',False),
+            ('responsible_id','=',user.id)]
+        </field>
+    </record>
+</odoo>

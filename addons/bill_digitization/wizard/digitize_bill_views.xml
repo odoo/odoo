@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Wizard view to upload files -->
+    <record id="digitize_bill_view_form" model="ir.ui.view">
+        <field name="name">digitize.bill.view.form</field>
+        <field name="model">digitize.bill</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p><center><i>Upload images or pdf file format</i></center>
+                    </p>
+                    <group>
+                        <group>
+                            <field name="bill" filename="file_name"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_add_document" class="oe_highlight"
+                                string="ADD" type="object"
+                                help="Add a bill document"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Record for wizard action -->
+    <record id="digitize_bill_action" model="ir.actions.act_window">
+        <field name="name">Digitize Bill</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">digitize.bill</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="digitize_bill_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

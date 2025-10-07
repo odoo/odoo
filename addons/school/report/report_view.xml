@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="report_student_student" model="ir.actions.report">
+        <field name="name">Identity Card</field>
+        <field name="model">student.student</field>
+        <field name="binding_model_id" ref="model_student_student" />
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school.identity_card</field>
+        <field name="report_file">school.identity_card</field>
+        <field name="binding_type">report</field>
+        <field
+            name="groups_id"
+            eval="[(4, ref('school.group_school_administration')),
+                                       (4, ref('school.group_school_teacher')),
+                                       (4, ref('school.group_school_student'))]"
+        />
+    </record>
+
+    <record id="report_student_student_leaving_certificate" model="ir.actions.report">
+        <field name="name">Leaving Certificate</field>
+        <field name="model">student.student</field>
+        <field name="binding_model_id" ref="model_student_student" />
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school.leaving_certificate</field>
+        <field name="report_file">school.leaving_certificate</field>
+        <field name="binding_type">report</field>
+        <field
+            name="groups_id"
+            eval="[(4, ref('school.group_school_administration')),
+                                       (4, ref('school.group_school_teacher'))]"
+        />
+    </record>
+
+    <record id="report_school_school_identity_card" model="ir.actions.report">
+        <field name="name">Identity Card</field>
+        <field name="model">school.teacher</field>
+        <field name="binding_model_id" ref="model_school_teacher" />
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school.teacher_identity_card</field>
+        <field name="report_file">school.teacher_identity_card</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

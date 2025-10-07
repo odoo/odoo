@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="hide_or_show_password_signup_view" inherit_id="auth_signup.fields">
+        <xpath expr="//div[@class='form-group field-password pt-2']//input" position="replace">
+            <div class="input-group show__password__wrapper">
+                <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if only_passwords else None"/>
+                <div class="d-flex align-items-center justify-content-center">
+                    <button class="show__password__button btn-primary">
+                        <i class="fa fa-eye show__password__icon"></i>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@class='form-group field-confirm_password']//input" position="replace">
+            <div class="input-group show__password__wrapper">
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required="required"/>
+                <div class="d-flex align-items-center justify-content-center">
+                    <button class="show__password__button btn-primary">
+                        <i class="fa fa-eye show__password__icon"></i>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="hide_or_show_password_login_view" inherit_id="web.login">
+        <xpath expr="//div[@class='form-group field-password']//input" position="replace">
+            <div class="input-group show__password__wrapper">
+                <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                <div class="d-flex align-items-center justify-content-center">
+                    <button class="show__password__button btn-primary">
+                        <i class="fa fa-eye show__password__icon"></i>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

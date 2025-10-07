@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="WooCommerceImportList.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="after">
+            <button type="button" t-if="props.resModel == 'product.template'" class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooProductImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if="props.resModel == 'account.tax'" class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooTaxImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if="props.resModel == 'account.move'" class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooRefundImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if="props.resModel == 'product.template'" class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooUpdateQuantity">
+                Update Stock Quantity
+            </button>
+
+            <button type="button" t-if='props.resModel == "product.category"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooProductCategoryImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "product.attribute"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooProductAttributeImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "product.attribute.value"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooProductAttributeValueImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "product.tag.woo"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooProductTagWooImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "sale.order"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooSaleOrderImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "sale.order"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooRefundImport">
+                Import Refund from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "res.partner"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooCustomerImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "loyalty.program"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooCouponImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "delivery.carrier"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooShippingMethodImport">
+                Import from WooCommerce
+            </button>
+
+            <button type="button" t-if='props.resModel == "payment.provider"' class="btn btn-primary"
+                    style="margin-left: 5px;" t-on-click="onClickWooPaymentMethodImport">
+                Import from WooCommerce
+            </button>
+        </xpath>
+
+<!--        <xpath expr="//button[hasclass('o_list_export_xlsx')]" position="before">-->
+<!--            <button type="button" t-if='props.resModel == "payment.provider"' class="btn btn-primary"-->
+<!--                    style="margin-left: 5px;" t-on-click="onClickWooPaymentMethodImport">-->
+<!--                Import from WooCommerce-->
+<!--            </button>-->
+<!--        </xpath>-->
+
+    </t>
+</templates>

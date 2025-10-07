@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Define the stock location for sale stock reservations -->
+        <record id="sale_stock_reservation" model="stock.location">
+            <field name="name">Stock Reservation Location</field>
+            <field name="location_id" ref="stock.stock_location_locations"/>
+        </record>
+    </data>
+</odoo>

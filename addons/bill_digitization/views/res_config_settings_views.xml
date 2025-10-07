@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inheriting the view of res_config_setting -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.bill.digitization</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_vendor_bills']"
+                   position="inside">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="digitize_bill">
+                    <div class="o_setting_left_pane">
+                        <field name="digitize_bill"/>
+                    </div>
+                    <div class="o_setting_right_pane"
+                         name="digitize_bill_right_pane">
+                        <label for="digitize_bill"/>
+                        <div class="text-muted">
+                            Digitize bill from scanned documents with .jpg, .jpeg or .png extension using OCR and Artificial Intelligence
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

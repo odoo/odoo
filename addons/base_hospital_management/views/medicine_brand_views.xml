@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Medicine brand tree view-->
+    <record id="medicine_brand_view_tree" model="ir.ui.view">
+        <field name="name">medicine.brand.view.tree</field>
+        <field name="model">medicine.brand</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Medicine brand form view-->
+    <record id="medicine_brand_view_form" model="ir.ui.view">
+        <field name="name">medicine.brand.view.form</field>
+        <field name="model">medicine.brand</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <field name="medicine_ids">
+                        <tree>
+                            <field name="default_code"
+                                   string="Internal Reference"/>
+                            <field name="name" string="Medicine Name"/>
+                            <field name="vaccine_ok" string="Vaccine"/>
+                            <field name="list_price" string="Price"/>
+                            <field name="qty_available" string="Available"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Medicine brand menu action-->
+    <record id="medicine_brand_action" model='ir.actions.act_window'>
+        <field name="name">Brands</field>
+        <field name="res_model">medicine.brand</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Brand
+            </p>
+        </field>
+    </record>
+    <!--    Medicine brand menu-->
+    <menuitem id="medicine_brand_menu"
+              name="Medicine Brand"
+              sequence="3"
+              parent="hospital_menu_configuration"
+              action="medicine_brand_action"/>
+</odoo>

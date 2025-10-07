@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Form view of the dashboard block-->
+    <record id="dashboard_block_view_form" model="ir.ui.view">
+        <field name="name">dashboard.block.view.form</field>
+        <field name="model">dashboard.block</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <div>
+                                <field name="name" class="oe_inline"
+                                       style="font-size: 30px;"
+                                       placeholder="Block Name" required="1"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="model_id"
+                                   attrs="{'required':[('edit_mode','=', True)]}"
+                                   options="{'no_create_edit': True, 'no_create': True,}"/>
+                            <field name="client_action_id" invisible="1"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="edit_mode" invisible="1"/>
+                            <field name="operation"
+                                   attrs="{'required':[('edit_mode','=', True)]}"/>
+                            <field name="measured_field_id" required="1"
+                                   domain="[('model_id','=',model_id), ('ttype','in',['float','integer','monetary']), ('store', '=', True)]"
+                                   attrs="{'required':[('edit_mode','=', True)]}"
+                                   options="{'no_create_edit': True, 'no_create': True,}"/>
+                            <field name="filter" widget="domain"
+                                   options="{'model': 'model_name'}"/>
+                        </group>
+                    </group>
+                    <group string="Block Information">
+                        <group>
+                            <field name="type" required="1"/>
+                            <field name="graph_type"
+                                   attrs="{'invisible': [('type','not in', 'graph')]}"/>
+                            <field name="fa_icon"
+                                   attrs="{'invisible': [('type','not in', 'tile')]}"/>
+                            <field name="group_by_id"
+                                   attrs="{'invisible': [('type','not in', 'graph')], 'required':[('edit_mode','=', True),('type','=','graph')]}"
+                                   domain="[('model_id','=',model_id), ('ttype','!=','one2many'), ('store', '=', True)]"
+                                   options="{'no_create_edit': True, 'no_create': True,}"/>
+                            <field name="tile_color"
+                                   attrs="{'invisible': [('type','not in', 'tile')]}"
+                                   widget="color"/>
+                            <field name="val_color"
+                                   attrs="{'invisible': [('type','not in', 'tile')]}"
+                                   widget="color"/>
+                            <field name="text_color"
+                                   attrs="{'invisible': [('type','not in', 'tile')]}"
+                                   widget="color"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Tree view of the dashboard block-->
+    <record id="dashboard_block_view_tree" model="ir.ui.view">
+        <field name="name">dashboard.block.view.tree</field>
+        <field name="model">dashboard.block</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Action specified for the dashboard block-->
+    <record id="dashboard_block_action" model="ir.actions.act_window">
+        <field name="name">Dashboard Block</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dashboard.block</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_edit_mode' : True}</field>
+    </record>
+    <!--    Menu for Dashboard Blocks   -->
+    <menuitem name="Dashboard Blocks" id="dashboard_block_view_menu"
+              parent="advanced_dynamic_dashboard.dynamic_dashboard_menu"
+              sequence="0" action="dashboard_block_action"/>
+</odoo>

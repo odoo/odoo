@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="mis_report_view_tree">
+        <field name="name">mis.report.view.tree</field>
+        <field name="model">mis.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mis_report_view_form">
+        <field name="name">mis.report.view.form</field>
+        <field name="model">mis.report</field>
+        <field name="arch" type="xml">
+            <form string="MIS Report">
+                <sheet>
+                    <group col="2">
+                        <field name="name" />
+                        <field name="description" />
+                        <field name="style_id" />
+                        <field name="move_lines_source" options="{'no_open': true}" />
+                    </group>
+                    <notebook>
+                        <page string="KPI's">
+                            <field
+                                name="kpi_ids"
+                                nolabel="1"
+                                colspan="2"
+                                context="{'default_report_id': id}"
+                            >
+                                <tree>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="description" />
+                                    <field name="name" />
+                                    <field name="type" />
+                                    <field
+                                        name="compare_method"
+                                        attrs="{'invisible': [('type', '=', 'str')]}"
+                                    />
+                                    <field
+                                        name="accumulation_method"
+                                        attrs="{'invisible': [('type', '=', 'str')]}"
+                                    />
+                                    <field name="expression" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Queries">
+                            <field
+                                name="query_ids"
+                                nolabel="1"
+                                colspan="2"
+                                context="{'default_report_id': id}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field name="model_id" />
+                                    <field
+                                        name="field_ids"
+                                        domain="[('model_id', '=', model_id)]"
+                                        widget="many2many_tags"
+                                    />
+                                    <field name="field_names" />
+                                    <field name="aggregate" />
+                                    <field
+                                        name="date_field"
+                                        domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"
+                                    />
+                                    <field name="domain" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sub KPI's">
+                            <field name="subkpi_ids" nolabel="1" colspan="2">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="description" />
+                                    <field name="name" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sub Reports">
+                            <field
+                                name="subreport_ids"
+                                nolabel="1"
+                                colspan="2"
+                                context="{'default_report_id': id}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field
+                                        name="subreport_id"
+                                        domain="[('id', '!=', parent.id)]"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_report_view_kpi_form" model="ir.ui.view">
+        <field name="name">mis.report.view.kpi.form</field>
+        <field name="model">mis.report.kpi</field>
+        <field name="arch" type="xml">
+            <form string="MIS Report KPI">
+                <group col="4">
+                    <field name="description" />
+                    <field name="name" />
+                    <field name="type" />
+                    <newline />
+                    <field name="compare_method" />
+                    <field name="accumulation_method" />
+                    <field name="style_id" />
+                    <field name="style_expression" />
+                    <field name='id' invisible='1' />
+                    <field
+                        name="report_id"
+                        invisible="1"
+                        attrs="{'required': [('id', '!=', False)]}"
+                    />
+                </group>
+                <notebook>
+                    <page string="Expressions">
+                        <group col="2">
+                            <field name="multi" />
+                            <newline />
+                            <field
+                                name="expression_ids"
+                                colspan="2"
+                                nolabel="1"
+                                attrs="{'invisible': [('multi', '=', False)]}"
+                            >
+                                <tree editable="bottom">
+                                    <field
+                                        name="subkpi_id"
+                                        domain="[('report_id', '=', parent.report_id)]"
+                                    />
+                                    <field name="name" />
+                                </tree>
+                            </field>
+                            <field
+                                name="expression"
+                                colspan="2"
+                                nolabel="1"
+                                attrs="{'invisible': [('multi', '=', True)],
+                                           'readonly': [('multi', '=', True)]}"
+                                placeholder="Enter expression here, for example balp[70%]. See also help tab."
+                            />
+                        </group>
+                        <group col="4" string="Auto expand">
+                            <field name="auto_expand_accounts" />
+                            <field
+                                name="auto_expand_accounts_style_id"
+                                attrs="{'invisible': [('auto_expand_accounts', '!=', True)]}"
+                            />
+                        </group>
+                    </page>
+                    <page string="Help (for KPI expressions)">
+                        <div style="display: flex; width: 100;">
+                            <div>
+                                <p>
+                                    Expressions can be any valid python expressions.
+                                </p>
+                                <p
+                                > The following special elements are recognized in the expressions
+                                    to compute accounting data: <code
+                                    >{bal|crd|deb|pbal|nbal}{pieu}[account
+                                    selector][journal items domain]</code>. </p>
+                                <ul>
+                                    <li>
+                                        <code>bal</code>, <code>crd</code>, <code
+                                        >deb</code>, <code>
+                                        pbal</code>, <code
+                                        >nbal</code> : balance, debit, credit,
+                                        positive balance, negative balance. </li>
+                                    <li>
+                                        <code>p</code>, <code>i</code>, <code
+                                        >e</code> : respectively variation over the period,
+                                        initial balance, ending balance </li>
+                                    <li> The <b
+                                        >account selector</b> is a like expression on the
+                                        account code (eg <code
+                                        >70%</code>, etc), or a domain over accounts
+                                        (eg <code
+                                        >[('code', 'like', '60%')]</code>). </li>
+                                    <li> The <b
+                                        >journal items domain</b> is an Odoo domain filter on
+                                        journal items. </li>
+                                    <li>
+                                        <code>balu[]</code> : (<code
+                                        >u</code> for unallocated) is a special expression
+                                        that shows the unallocated profit/loss of previous fiscal
+                                        years. </li>
+                                </ul>
+                                <p>
+                                    Expressions can involve other KPI, sub KPI and
+                                    query results by name (eg <code>kpi1 + kpi2</code>,
+                                    <code>kpi2.subkpi1</code>, <code
+                                    >query1.field1</code>).
+                                </p>
+                                <p>
+                                    Additionally following variables are available
+                                    in the evaluation context:
+                                </p>
+                                <ul>
+                                    <li>
+                                        <code>sum</code>, <code>min</code>,
+                                        <code>max</code>, <code>len</code>,
+                                        <code>avg</code> : behave as expected, very
+                                        similar to the python builtins. </li>
+                                    <li>
+                                        <code>datetime</code>, <code
+                                        >datetime</code>, <code
+                                        >dateutil</code> : the python modules. </li>
+                                    <li>
+                                        <code>date_from</code>, <code
+                                        >date_to</code> : beginning and end date of the
+                                        period. </li>
+                                    <li>
+                                        <code
+                                        >AccountingNone</code> : a null value that behaves as 0 in
+                                        arithmetic operations. </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p>Examples:</p>
+                                <ul>
+                                    <li>
+                                        <code
+                                        >bal[70]</code> : variation of the balance of account 70 over
+                                        the period (it is the same as <code
+                                        >balp[70]</code>. </li>
+                                    <li>
+                                        <code
+                                        >bali[70,60]</code> : initial balance of accounts 70 and 60. </li>
+                                    <li>
+                                        <code
+                                        >bale[1%%]</code> : balance of accounts starting with 1 at
+                                        end of period. </li>
+                                    <li>
+                                        <code
+                                        >crdp[40%]</code> : sum of all credits on accounts starting
+                                        with 40 during the period. </li>
+                                    <li>
+                                        <code>
+                                            debp[55%][('journal_id.code', '=',
+                                            'BNK1')]
+                                        </code>
+                                        : sum of all debits on accounts 55 and journal BNK1 during
+                                        the period. </li>
+                                    <li>
+                                        <code>
+                                            balp[('user_type_id', '=',
+                                            ref('account.
+                                            data_account_type_receivable').id)][]
+                                        </code>
+                                        : variation of the balance of all receivable accounts over
+                                        the period. </li>
+                                    <li>
+                                        <code>
+                                            balp[][('tax_line_id.tag_ids', '=', ref('l10n_be.tax_tag_56').id)]
+                                        </code>
+                                        : balance of move lines related to tax grid 56. </li>
+                                    <li>
+                                        <code
+                                        >pbale[55%]</code> : sum of all ending balances of accounts
+                                        starting with 55 whose ending balance is positive. </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="mis_report_view_action">
+        <field name="name">MIS Report Templates</field>
+        <field name="view_id" ref="mis_report_view_tree" />
+        <field name="res_model">mis.report</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="mis_report_conf_menu"
+        parent="account.menu_finance_configuration"
+        name="MIS Reporting"
+        sequence="90"
+    />
+    <menuitem
+        id="mis_report_view_menu"
+        parent="mis_report_conf_menu"
+        name="MIS Report Templates"
+        action="mis_report_view_action"
+        sequence="21"
+    />
+</odoo>

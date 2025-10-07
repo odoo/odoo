@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_account_chart_template_form" model="ir.ui.view">
+        <field name="name">account.chart.template.form</field>
+        <field name="model">account.chart.template</field>
+        <field name="arch" type="xml">
+            <form string="Chart of Accounts Template">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="bank_account_code_prefix"/>
+                    <field name="cash_account_code_prefix"/>
+                    <field name="transfer_account_code_prefix"/>
+                    <field name="code_digits"/>
+                    <field name="visible"/>
+                    <field name="use_anglo_saxon" />
+<!--                    <field name="complete_tax_set"/>-->
+                </group>
+                <separator string="Default Taxes" colspan="4"/>
+                <field name="tax_template_ids" colspan="4" nolabel="1"/>
+                <separator string="Properties" colspan="4"/>
+                <group col="4">
+                    <field name="property_account_receivable_id"/>
+                    <field name="property_account_payable_id"/>
+                    <field name="property_account_expense_categ_id"/>
+                    <field name="property_account_income_categ_id"/>
+                    <field name="property_account_expense_id"/>
+                    <field name="property_account_income_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_chart_template_seacrh" model="ir.ui.view">
+        <field name="name">account.chart.template.search</field>
+        <field name="model">account.chart.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Chart of Account Templates">
+                <field name="name" string="Account Template"/>
+                <field name="bank_account_code_prefix"/>
+                <field name="cash_account_code_prefix"/>
+                <field name="transfer_account_code_prefix"/>
+                <group expand="0" string="Group By">
+                    <filter string="Receivable Account" name="receivalbeacc" domain="[]"
+                            context="{'group_by':'property_account_receivable_id'}"/>
+                    <filter string="Payable Account" name="payableacc" domain="[]"
+                            context="{'group_by':'property_account_payable_id'}"/>
+                    <filter string="Income Account" name="incomeacc" domain="[]"
+                            context="{'group_by':'property_account_income_categ_id'}"/>
+                    <filter string="Expense Account" name="expenseacc" domain="[]"
+                            context="{'group_by':'property_account_expense_categ_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_account_chart_template_tree" model="ir.ui.view">
+        <field name="name">account.chart.template.tree</field>
+        <field name="model">account.chart.template</field>
+        <field name="arch" type="xml">
+            <tree string="Chart of Accounts Template">
+                <field name="name"/>
+                <field name="property_account_receivable_id" invisible="1"/>
+                <field name="property_account_payable_id" invisible="1"/>
+                <field name="property_account_expense_categ_id" invisible="1"/>
+                <field name="property_account_income_categ_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_chart_template_form" model="ir.actions.act_window">
+        <field name="name">Chart of Accounts Templates</field>
+        <field name="res_model">account.chart.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_account_group_action" model="ir.actions.act_window">
+        <field name="name">Account Groups</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.group</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_account_coa_template"
+              action="om_account_accountant.action_account_chart_template_form"
+              parent="menu_account_templates"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--  Equipment Action  -->
+    <record id="gym_mgmt_system_equipments_action" model="ir.actions.act_window">
+        <field name="name">Equipments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('gym_product','=','True')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Equipment!
+            </p>
+        </field>
+    </record>
+<!-- inherits product template-->
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.gym.mgmt.system</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='detailed_type']" position="after">
+                <field name="gym_product"/>
+            </xpath>
+        </field>
+    </record>
+<!--        parent menu     -->
+    <menuitem id="gym_mgmt_system_menu_root"
+              name="Gym Management" sequence="10"
+              web_icon="gym_mgmt_system,static/description/icon.png"
+    />
+<!--            sub menu    -->
+    <menuitem id="equipment_menu_configuration_root"
+              name="Configuration"
+              parent="gym_mgmt_system_menu_root"
+              sequence="40"/>
+    <menuitem id="equipments_menu_action"
+              name="Equipments"
+              parent="equipment_menu_configuration_root"
+              action="gym_mgmt_system_equipments_action"
+              sequence="10"/>
+</odoo>

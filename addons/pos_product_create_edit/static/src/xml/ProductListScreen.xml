@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+	<t t-name="ProductListScreen" owl="1">
+		<div class="partnerlist-screen screen">
+			<div class="screen-content">
+				<div class="top-content">
+					<div class="button new-customer highlight" role="img"
+                         aria-label="Create"
+                         t-on-click="createProduct"
+                         title="Create">
+						<i class="fa fa-plus create_btn"/>
+                        <t t-if="!env.isMobile"> Create</t>
+					</div>
+					<div class="button back" t-on-click="back">
+						<i t-if="env.isMobile" class="fa fa-angle-double-left"/>
+						<t t-if="!env.isMobile"> Discard</t>
+					</div>
+					<div class="top-right-buttons">
+						<div class="search-bar-container sb-partner">
+							<div class="pos-search-bar">
+								<i class="fa fa-search" t-on-click="_onPressEnterKey"/>
+								<input t-ref="search-word-input-product"
+                                                       placeholder="SearchProducts..." size="1"
+                                                       t-on-keyup="updateProductList"/>
+								<i class="fa fa-times" t-on-click="_clearSearch"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<section class="full-content">
+					<div class="partner-window">
+						<section class="subwindow list">
+							<div class="subwindow-container">
+								<div class="subwindow-container-fix scrollable-y">
+									<table class="partner-list">
+										<thead>
+											<tr>
+												<th> </th>
+												<th>Name</th>
+												<th t-if="!env.isMobile">Default Code</th>
+												<th t-if="!env.isMobile" class="partner-line-category">Category</th>
+												<th t-if="!env.isMobile" class="partner-line-price">List Price</th>
+												<th t-if="!env.isMobile" class="partner-line-price">Barcode</th>
+												<th>Edit</th>
+											</tr>
+										</thead>
+										<tbody class="partner-list-contents">
+											<t t-foreach="products" t-as="product"
+                                               t-key="product.id">
+												<ProductLine product="product"/>
+											</t>
+										</tbody>
+									</table>
+									<div t-if="!products.length" class="no-results-message">
+                                        <p t-if="env.pos.isEveryProductLoaded and state.search">
+                                            No Product found for <b>"<t t-esc="state.search"/>"</b>.
+                                        </p>
+                                        <p t-elif="env.pos.isEveryProductLoaded and !state.search">
+                                            There are no products.
+                                        </p>
+                                        <p t-elif="!env.pos.isEveryProductLoaded and !state.search">
+                                            There are no loaded products.
+                                        </p>
+                                        <t t-elif="!env.pos.isEveryProductLoaded and state.search">
+                                            <p> No product found for <b>"<t t-esc="state.query"/>"</b>. </p>
+                                            <div class="button highlight" t-on-click="_onPressEnterKey">
+                                                <i class="fa fa-search"/> Search database
+                                            </div>
+                                        </t>
+                                    </div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</section>
+			</div>
+		</div>
+	</t>
+</templates>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright 2024 Akretion
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<template>
+    <t
+        t-name="barcode_web_widget_numeric_step"
+        t-inherit="web_widget_numeric_step.web_widget_numeric_step"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-on-focus">_onFocus</attribute>
+        </xpath>
+    </t>
+</template>

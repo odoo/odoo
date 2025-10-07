@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+      <menuitem id="izi_dashboard_root" web_icon="izi_dashboard,static/description/icon.png" name="Analytics" sequence="-2"/>
+      
+      <menuitem id="izi_data_menu" parent="izi_dashboard_root" name="Data Source" sequence="30"/>
+      <menuitem id="izi_data_source_menu" parent="izi_data_menu" name="Data Source" sequence="10" action="izi_data.izi_data_source_action" />
+      <menuitem id="izi_table_menu" parent="izi_data_menu" name="Tables" sequence="20" action="izi_data.izi_table_action" />
+      <menuitem id="izi_schedule_menu" parent="izi_data_menu" name="Scheduler" sequence="30" action="izi_data.ir_cron_act" />
+      <menuitem id="izi_attachment_menu" parent="izi_data_menu" name="Attachments" sequence="40" action="izi_data.action_attachment" groups="izi_data.group_manager_analysis"/>
+      <menuitem id="izi_analysis_data_menu" parent="izi_data_menu" name="Analysis" sequence="100" action="izi_data.izi_analysis_action" />
+      
+      <menuitem id="izi_kpi_menu" parent="izi_data_menu" name="Key Performance Indicator" sequence="200" action="izi_kpi_action" />
+      <menuitem id="izi_kpi_line_menu" parent="izi_data_menu" name="Key Performance Indicator Lines" sequence="210" action="izi_kpi_line_action" />
+  </data>
+</odoo>

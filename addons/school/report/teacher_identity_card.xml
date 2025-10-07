@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="teacher_identity_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="height: 2px;">
+                        <div class="oe_structure" />
+                        <t t-foreach="o" t-as="teacher">
+                        <table
+                                width="40%"
+                                height="280px"
+                                style="border: 3px solid black;"
+                                align="center"
+                            >
+                            <tr style="margin-top:5px">
+                                <td colspan="2" align="center">
+                                    <h1><strong>
+                                        <span t-field="teacher.sudo().school_id.name" />
+                                    </strong></h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="top">
+                                    <img
+                                            t-if="teacher.avatar_128"
+                                            t-att-src="'data:image/png;base64,%s' % teacher.avatar_128.decode('utf-8')"
+                                        />
+                                </td>
+                                <td align="left">
+                                    <table width="100%">
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Name</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="teacher.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Gender</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="teacher.sudo().gender" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>BirthDate</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="teacher.sudo().birthday"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Standard</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="teacher.sudo().standard_id.name"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Email</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="teacher.sudo().work_email"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Contact</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="teacher.sudo().mobile_phone"
+                                                    />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                </td>
+                            </tr>
+                        </table>
+                      </t>
+                   </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

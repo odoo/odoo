@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        Odoo 13 Development Tutorial-->
+        <record id="slide_channel_odoo_development" model="slide.channel">
+            <field name="name">Odoo 13 Development Tutorial</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="enroll">public</field>
+            <field name="sequence">0</field>
+            <field name="channel_type">training</field>
+            <field name="allow_comment" eval="False"/>
+            <field name="promote_strategy">most_voted</field>
+            <field name="is_published" eval="True"/>
+            <field name="tag_ids" eval="[]"/>
+            <field name="description">Learn how to build a module for Odoo 13
+            </field>
+            <field name="create_date"
+                   eval="DateTime.now() - relativedelta(days=8)"/>
+        </record>
+
+<!--        Odoo 13 Development Tutorial slides-->
+        <record id="slide_slide_odoo_dev_1" model="slide.slide">
+            <field name="name">1-How to Install Pycharm and Configure
+                PostgreSQL on Ubuntu
+            </field>
+            <field name="sequence">1</field>
+            <field name="url">https://youtu.be/V8JxrYLX0VM</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_2" model="slide.slide">
+            <field name="name">2-How to Configure Odoo 13 on Pycharm Ubuntu
+            </field>
+            <field name="sequence">2</field>
+            <field name="url">https://youtu.be/nKguOFx0L08</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_3" model="slide.slide">
+            <field name="name">3-Components and Structure of Odoo 13 Module
+            </field>
+            <field name="sequence">3</field>
+            <field name="url">https://youtu.be/7vkRCzvnhHs</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_4" model="slide.slide">
+            <field name="name">4-How to Create an Empty Module Structure
+                Scaffold Command in Odoo 13
+            </field>
+            <field name="sequence">4</field>
+            <field name="url">https://youtu.be/YbKbYHt3quw</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_5" model="slide.slide">
+            <field name="name">5-Building a module in Odoo 13</field>
+            <field name="sequence">5</field>
+            <field name="url">https://youtu.be/9AvMGOn2ZIw</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_6" model="slide.slide">
+            <field name="name">6-Relations Between Models on Odoo: Many2One
+                Fields in Odoo 13
+            </field>
+            <field name="sequence">6</field>
+            <field name="url">https://youtu.be/MY2bmJmvjSw</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_7" model="slide.slide">
+            <field name="name">7-Relations Between Models in Odoo: One2Many
+                Fields in Odoo 13
+            </field>
+            <field name="sequence">7</field>
+            <field name="url">https://youtu.be/r23BsiktP5g</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_8" model="slide.slide">
+            <field name="name">8-Relations Between Models in Odoo: Many2Many
+                Fields in Odoo 13
+            </field>
+            <field name="sequence">8</field>
+            <field name="url">https://youtu.be/Mgr4M59KjhM</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_9" model="slide.slide">
+            <field name="name">9-Inheritance - Traditional Class Inheritance in
+                Odoo 13
+            </field>
+            <field name="sequence">9</field>
+            <field name="url">https://youtu.be/9AvMGOn2ZIw</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_10" model="slide.slide">
+            <field name="name">10-Inheritance - Traditional Prototype
+                Inheritance in Odoo 13
+            </field>
+            <field name="sequence">10</field>
+            <field name="url">https://youtu.be/WfYN_-AZqio</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_11" model="slide.slide">
+            <field name="name">11-Inheritance - Delegation Inheritance in Odoo
+                13
+            </field>
+            <field name="sequence">11</field>
+            <field name="url">https://youtu.be/46V3kD5O1sw</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_12" model="slide.slide">
+            <field name="name">12-View Inheritance in Odoo 13</field>
+            <field name="sequence">12</field>
+            <field name="url">https://youtu.be/nTXZOSWhqQs</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_13" model="slide.slide">
+            <field name="name">13-Computed fields and @api.depends in Odoo 13
+            </field>
+            <field name="sequence">13</field>
+            <field name="url">https://youtu.be/eNEgnJGXf68</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_14" model="slide.slide">
+            <field name="name">14-Setting Default Value for Fields in Odoo 13
+            </field>
+            <field name="sequence">14</field>
+            <field name="url">https://youtu.be/pwgFTIKmH4g</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_15" model="slide.slide">
+            <field name="name">15-Onchange mechanism - @api.onchange in Odoo
+                13
+            </field>
+            <field name="sequence">15</field>
+            <field name="url">https://youtu.be/NVr5rqklowQ</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_16" model="slide.slide">
+            <field name="name">16-Model Constraints - Python Constraints in
+                Odoo 13
+            </field>
+            <field name="sequence">16</field>
+            <field name="url">https://youtu.be/GTpoo7dgcOY</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_17" model="slide.slide">
+            <field name="name">17-Model Constraints - SQL Constraints in Odoo
+                13
+            </field>
+            <field name="sequence">17</field>
+            <field name="url">https://youtu.be/EgijG79thgw</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_18" model="slide.slide">
+            <field name="name">18-Tree View Decoration Attribute in odoo 13
+            </field>
+            <field name="sequence">18</field>
+            <field name="url">https://youtu.be/UkBQZeTVLuo</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_19" model="slide.slide">
+            <field name="name">19-Advanced Views - Calendar View in Odoo 13
+            </field>
+            <field name="sequence">19</field>
+            <field name="url">https://youtu.be/gJdRL7Nlmno</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_20" model="slide.slide">
+            <field name="name">20-Advanced Views - Search View in Odoo 13
+            </field>
+            <field name="sequence">20</field>
+            <field name="url">https://youtu.be/b5pxrpntIqE</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_21" model="slide.slide">
+            <field name="name">21-Advanced Views - Gantt View in Odoo 13
+            </field>
+            <field name="sequence">21</field>
+            <field name="url">https://youtu.be/xvGZ9at5c_w</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_22" model="slide.slide">
+            <field name="name">22-Pivot View in Odoo</field>
+            <field name="sequence">22</field>
+            <field name="url">https://youtu.be/t9233sxQVIc</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_23" model="slide.slide">
+            <field name="name">23-Graph View in Odoo</field>
+            <field name="sequence">23</field>
+            <field name="url">https://youtu.be/8-cup65wEF4</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_24" model="slide.slide">
+            <field name="name">24-Kanban View in Odoo 13</field>
+            <field name="sequence">24</field>
+            <field name="url">https://youtu.be/Hj4lbg_uwJA</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_25" model="slide.slide">
+            <field name="name">25-Pivot View in Odoo</field>
+            <field name="sequence">25</field>
+            <field name="url">https://youtu.be/t9233sxQVIc</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_26" model="slide.slide">
+            <field name="name">26-Security - Groups and access rights in Odoo
+            </field>
+            <field name="sequence">26</field>
+            <field name="url">https://youtu.be/wgPtgPbY4uc</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_27" model="slide.slide">
+            <field name="name">27-Wizards - Defining and Launching in Odoo
+            </field>
+            <field name="sequence">27</field>
+            <field name="url">https://youtu.be/KT5Vj0P8f8c</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_28" model="slide.slide">
+            <field name="name">28-Odoo Development - URL Actions in Odoo 13
+            </field>
+            <field name="sequence">28</field>
+            <field name="url">https://youtu.be/HxiBsiMCqDY</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_29" model="slide.slide">
+            <field name="name">29-Odoo Development - Server Actions in Odoo
+                13
+            </field>
+            <field name="sequence">29</field>
+            <field name="url">https://youtu.be/dS3EVb-Xjms</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+
+        <record id="slide_slide_odoo_dev_30" model="slide.slide">
+            <field name="name">30-Odoo Development - Automated Actions in Odoo
+                13
+            </field>
+            <field name="sequence">30</field>
+            <field name="url">https://youtu.be/dS3EVb-Xjms</field>
+            <field name="slide_category">video</field>
+            <field name="channel_id"
+                   ref="open_academy.slide_channel_odoo_development"/>
+            <field name="is_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+        </record>
+    </data>
+</odoo>

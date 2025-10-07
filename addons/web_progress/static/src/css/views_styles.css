@@ -1,0 +1,110 @@
+/**
+ * Style for nyan progress bar
+ */
+
+#progress_outline.nyan {
+    background: 0 url('/web_progress/static/src/img/nyancat_bckgr.gif');
+    color: #aaaaaa;
+}
+
+#progress_frame.nyan {
+    border: 0;
+    border-radius: 0;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#progress_bar.nyan {
+    width: 1%;
+    height: 35px;
+    /* background-image: linear-gradient(to top, violet, indigo, blue, green, yellow, orange, red);*/
+    background: repeat-x url('/web_progress/static/src/img/nyancat_rainbow.gif');
+    border-radius: 0;
+    z-index: 199;
+    overflow: initial !important;
+    position: relative;
+}
+
+#progress_bar.nyan:after {
+    background-image: url('/web_progress/static/src/img/nyanimated.gif');
+    position: absolute;
+    margin-top: -5px;
+    margin-left: -25px;
+    left: 100%;
+    z-index: 200;
+    background-size: 71px 50px;
+    display: inline-block;
+    width: 71px;
+    height: 50px;
+    content: "";
+}
+
+/**
+ * Style for simple progress bar
+ */
+
+
+#progress_outline.simple {
+    padding: 5px;
+    font-size: 10px;
+}
+
+#progress_frame.simple {
+    border: 0;
+    border-radius: 0;
+}
+
+#progress_bar.simple {
+    width: 1%;
+    height: 2px;
+    border-radius: 0;
+}
+
+#progress_user.simple, #progress_message.simple {
+    display: none;
+}
+
+#progress_percent.simple {
+    font-size: 15px;
+}
+
+/*
+Styles menu
+ */
+.dropbtn {
+    padding: 4px;
+    font-size: 8px;
+    border: none;
+    background-color: transparent;
+}
+
+#progress_style {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.progress_style {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 80px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 210;
+    font-size: 10px;
+}
+
+.progress_style a {
+    color: black;
+    padding: 1px 1px;
+    text-decoration: none;
+    display: block;
+}
+
+.progress_style a:hover {
+    background-color: #ddd;
+}
+
+#progress_style:hover .progress_style {
+    display: block;
+}

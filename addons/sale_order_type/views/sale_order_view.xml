@@ -1,0 +1,30 @@
+<odoo>
+    <record id="sot_view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="type_id" required="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="arch" type="xml">
+            <field name="analytic_account_id" position="after">
+                <field name="type_id" />
+            </field>
+            <filter name="order_month" position="after">
+                <filter
+                    string="Type"
+                    name="sale_type"
+                    domain="[]"
+                    context="{'group_by': 'type_id'}"
+                />
+            </filter>
+        </field>
+    </record>
+</odoo>

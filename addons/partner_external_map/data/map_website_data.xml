@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2015-2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl-3). -->
+<odoo>
+    <!-- Interesting source of information: http://northwestspatial.com/wp/?p=38 -->
+    <record id="google_maps" model="map.website">
+        <field name="name">Google Maps</field>
+        <field
+            name="address_url"
+        >https://www.google.com/maps?ie=UTF8&amp;q={ADDRESS}</field>
+        <field
+            name="lat_lon_url"
+        >https://www.google.com/maps?z=15&amp;q={LATITUDE},{LONGITUDE}</field>
+        <field
+            name="route_address_url"
+        >https://www.google.com/maps?saddr={START_ADDRESS}&amp;daddr={DEST_ADDRESS}&amp;directionsmode=driving</field>
+        <field
+            name="route_lat_lon_url"
+        >https://www.google.com/maps?saddr={START_LATITUDE},{START_LONGITUDE}&amp;daddr={DEST_LATITUDE},{DEST_LONGITUDE}&amp;directionsmode=driving</field>
+    </record>
+    <record id="openstreetmap" model="map.website">
+        <field name="name">OpenStreetMap</field>
+        <field
+            name="address_url"
+        >https://nominatim.openstreetmap.org/search?q={ADDRESS}</field>
+        <field
+            name="lat_lon_url"
+        >https://www.openstreetmap.org/?zoom=15&amp;mlat={LATITUDE}&amp;mlon={LONGITUDE}</field>
+        <field
+            name="route_lat_lon_url"
+        >https://www.openstreetmap.org/directions/?engine=orsm_car&amp;route={START_LATITUDE},{START_LONGITUDE};{DEST_LATITUDE},{DEST_LONGITUDE}</field>
+    </record>
+    <record id="bing_maps" model="map.website">
+        <field name="name">Bing Maps</field>
+        <field
+            name="address_url"
+        >https://www.bing.com/maps/default.aspx?where1={ADDRESS}</field>
+        <field
+            name="lat_lon_url"
+        >https://www.bing.com/maps/default.aspx?where1={LATITUDE},{LONGITUDE}&amp;lvl=15</field>
+    </record>
+    <record id="here" model="map.website">
+        <field name="name">Here Maps</field>
+        <field name="address_url">https://here.com/search/{ADDRESS}</field>
+        <field
+            name="lat_lon_url"
+        >https://www.here.com/?map={LATITUDE},{LONGITUDE},15,normal</field>
+        <!-- TODO : for here maps, try to find a lat_lon_url with dot -->
+        <field
+            name="route_lat_lon_url"
+        >https://www.here.com/directions/drive/:{START_LATITUDE},{START_LONGITUDE}/:{DEST_LATITUDE},{DEST_LONGITUDE}</field>
+    </record>
+    <record id="mapquest" model="map.website">
+        <field name="name">MapQuest</field>
+        <field name="address_url">https://www.mapquest.com/?q={ADDRESS}</field>
+        <field
+            name="lat_lon_url"
+        >https://www.mapquest.com/?center={LATITUDE},{LONGITUDE}</field>
+        <field
+            name="route_address_url"
+        >https://www.mapquest.com/directions?q1={START_ADDRESS}&amp;q2={DEST_ADDRESS}</field>
+        <field
+            name="route_lat_lon_url"
+        >https://www.mapquest.com/directions/from/near-{START_LATITUDE},{START_LONGITUDE}/to/near-{DEST_LATITUDE},{DEST_LONGITUDE}</field>
+    </record>
+    <!-- On June 4, 2015, Yahoo! announced that Yahoo! Maps would be shut down
+https://www.cnet.com/news/yahoo-to-shut-down-its-maps-site/
+-->
+</odoo>

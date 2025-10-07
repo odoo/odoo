@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_no_negative
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-12-06 08:10+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: stock_no_negative
+#. odoo-python
+#: code:addons/stock_no_negative/models/stock_quant.py:0
+#, python-format
+msgid " lot {}"
+msgstr " lotto {}"
+
+#. module: stock_no_negative
+#: model:ir.model.fields,field_description:stock_no_negative.field_product_category__allow_negative_stock
+#: model:ir.model.fields,field_description:stock_no_negative.field_product_product__allow_negative_stock
+#: model:ir.model.fields,field_description:stock_no_negative.field_product_template__allow_negative_stock
+#: model:ir.model.fields,field_description:stock_no_negative.field_stock_location__allow_negative_stock
+msgid "Allow Negative Stock"
+msgstr "Consenti giacenze negative"
+
+#. module: stock_no_negative
+#: model:ir.model.fields,help:stock_no_negative.field_product_category__allow_negative_stock
+msgid ""
+"Allow negative stock levels for the stockable products attached to this "
+"category. The options doesn't apply to products attached to sub-categories "
+"of this category."
+msgstr ""
+"Consente giacenze negative per prodotti stoccabili associati a questa "
+"categoria. Questa opzione non si applica ai prodotti associati alle sotto "
+"categorie della categoria."
+
+#. module: stock_no_negative
+#: model:ir.model.fields,help:stock_no_negative.field_stock_location__allow_negative_stock
+msgid ""
+"Allow negative stock levels for the stockable products attached to this "
+"location."
+msgstr ""
+"Consente giacenze negative per prodotti stoccabili associati a questa "
+"ubicazione."
+
+#. module: stock_no_negative
+#: model:ir.model.fields,help:stock_no_negative.field_product_product__allow_negative_stock
+#: model:ir.model.fields,help:stock_no_negative.field_product_template__allow_negative_stock
+msgid ""
+"If this option is not active on this product nor on its product category and"
+" that this product is a stockable product, then the validation of the "
+"related stock moves will be blocked if the stock level becomes negative with"
+" the stock move."
+msgstr ""
+"Se questa opzione non è attiva nè in questo prodotto nè nella sua categoria "
+"e il prodotto è stoccabile, se la giacenza diventa negativa con il movimento "
+"di magazzino allora la validazione del relativo movimento verrà bloccata ."
+
+#. module: stock_no_negative
+#: model:ir.model,name:stock_no_negative.model_stock_location
+msgid "Inventory Locations"
+msgstr "Ubicazioni di inventario"
+
+#. module: stock_no_negative
+#: model:ir.model,name:stock_no_negative.model_product_template
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: stock_no_negative
+#: model:ir.model,name:stock_no_negative.model_product_category
+msgid "Product Category"
+msgstr "Categoria prodotto"
+
+#. module: stock_no_negative
+#: model:ir.model,name:stock_no_negative.model_stock_quant
+msgid "Quants"
+msgstr "Quanti"
+
+#. module: stock_no_negative
+#. odoo-python
+#: code:addons/stock_no_negative/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You cannot validate this stock operation because the stock level of the "
+"product '{name}'{name_lot} would become negative ({q_quantity}) on the stock"
+" location '{complete_name}' and negative stock is not allowed for this "
+"product and/or location."
+msgstr ""
+"Questa operazione di magazzino non può essere validata perché la giacenza "
+"del prodotto '{name}'{name_lot} diventerebbe negativa ({q_quantity}) "
+"nell'ubicazione '{complete_name}' e per questo prodotto e/o ubicazione non è "
+"consentata la giacenza negativa."

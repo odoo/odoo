@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- CRON JOBS FOR IMPORTING -->
+    <record id="cron_import_customers_from_woo" model="ir.cron">
+        <field name="name">Auto Import Customers from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="code">model.cron_import_customer()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_products_from_woo" model="ir.cron">
+        <field name="name">Auto Import Products from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="code">model.cron_import_product()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_products_categ" model="ir.cron">
+        <field name="name">Auto Import Products Category from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_category"/>
+        <field name="code">model.cron_import_product_categ()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_products_attribute" model="ir.cron">
+        <field name="name">Auto Import Products Attribute from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_attribute"/>
+        <field name="code">model.cron_import_product_attr()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_products_attr_value" model="ir.cron">
+        <field name="name">Auto Import Products Attribute Values from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_attribute_value"/>
+        <field name="code">model.cron_import_product_attr_value()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_products_tag" model="ir.cron">
+        <field name="name">Auto Import Product Tag from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_tag_woo"/>
+        <field name="code">model.cron_import_product_tag()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_account_tax" model="ir.cron">
+        <field name="name">Auto Import Taxes from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_tax"/>
+        <field name="code">model.cron_import_account_tax()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_sale_order" model="ir.cron">
+        <field name="name">Auto Import Sale Orders from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="code">model.cron_import_sale_order()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <!-- CRON JOBS FOR EXPORTING -->
+    <record id="cron_export_customers_from_woo" model="ir.cron">
+        <field name="name">Auto Export Customers from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="code">model.cron_export_customer()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_products_from_woo" model="ir.cron">
+        <field name="name">Auto Export Products from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="code">model.cron_export_product()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_products_categ" model="ir.cron">
+        <field name="name">Auto Export Products Category from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_category"/>
+        <field name="code">model.cron_export_product_categ()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_products_attribute" model="ir.cron">
+        <field name="name">Auto Export Products Attribute from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_attribute"/>
+        <field name="code">model.cron_export_product_attr()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_products_attr_value" model="ir.cron">
+        <field name="name">Auto Export Products Attribute Values from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_attribute_value"/>
+        <field name="code">model.cron_export_product_attr_value()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_products_tag" model="ir.cron">
+        <field name="name">Auto Export Product Tag from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_product_tag_woo"/>
+        <field name="code">model.cron_export_product_tag()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_account_tax" model="ir.cron">
+        <field name="name">Auto Export Taxes from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_tax"/>
+        <field name="code">model.cron_export_account_tax()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_sale_order" model="ir.cron">
+        <field name="name">Auto Export Sale Orders from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="code">model.cron_export_sale_order()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_coupon_from_woo" model="ir.cron">
+        <field name="name">Auto Import Coupon from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_loyalty_program"/>
+        <field name="code">model.cron_import_coupon()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_export_coupon_from_odoo" model="ir.cron">
+        <field name="name">Auto Export Coupons from Odoo to Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_loyalty_program"/>
+        <field name="code">model.cron_export_coupon()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_shipping_from_woo" model="ir.cron">
+        <field name="name">Auto Import Shipping Methods from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_delivery_carrier"/>
+        <field name="code">model.cron_import_shipping()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cron_import_payment_from_woo" model="ir.cron">
+        <field name="name">Auto Import Payment Gateway from Woocommerce</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_payment_provider"/>
+        <field name="code">model.cron_import_payment()</field>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+    </record>
+
+</odoo>
+

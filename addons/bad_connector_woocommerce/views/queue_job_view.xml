@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherited queue.job form view to make Result in one line -->
+    <record id="queue_job_form_inherited_view" model="ir.ui.view">
+        <field name="name">queue.job.inherit.form</field>
+        <field name="model">queue.job</field>
+        <field name="inherit_id" ref="queue_job.view_queue_job_form" />
+        <field name="arch" type="xml">
+            <field name="result" position="attributes">
+                <attribute name="colspan">4</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

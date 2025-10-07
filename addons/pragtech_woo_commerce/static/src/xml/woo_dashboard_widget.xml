@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pragtech_woo_commerce.woo_graph_dashboard_widget" name="WooCommerce Dashboard Graph" owl="1">
+        <div class="dashboard_graph_woo" t-att-class="props.className"
+             t-attf-class="o_graph_{{ props.graphType }}chart">
+
+            <select class="border-0 h7 position-absolute select_time_period" id="sort_order_data" t-on-click="_sortOrders">
+                <option value="week" t-att-selected="data.sort_on == 'week' ? 'selected' : undefined">
+                    Current Week
+                </option>
+                <option value="month" t-att-selected="data.sort_on == 'month' ? 'selected' : undefined">
+                    Current Month
+                </option>
+                <option value="year" t-att-selected="data.sort_on == 'year' ? 'selected' : undefined">
+                    Current Year
+                </option>
+                <option value="all" t-att-selected="data.sort_on == 'all' ? 'selected' : undefined">
+                    All
+                </option>
+            </select>
+
+            <div class="container o_kanban_card_content p-0 kanban_graph">
+                <div class="row mt8 mb8 mx-0 align-items-center woo_graph_details">
+                    <div class="col-3 pr-2">
+                        <p class="mb0" style="font-size: 15px;">Sales</p>
+                        <h4 class="mb0">
+                            <b>
+                                <span style="font-size: 15px !important; color:red;">
+                                    <t t-esc="data.currency_symbol + data.total_sales"/>
+                                </span>
+                            </b>
+                        </h4>
+                    </div>
+                </div>
+                <div class="woo_graph" style="max-height: 200px !important;width:1150px;">
+                    <canvas t-ref="canvas"/>
+                </div>
+            </div>
+
+            <div class="row woo_class">
+                <div class="col-12 mt4 synced_data_box">
+                    <a id="instance_product" class="boxes box_one col-2" t-on-click="_SyncedProducts">
+                        <p class="text-center mb0 font-weight-bold">
+                            <img src="/pragtech_woo_commerce/static/src/img/product.png"/>
+                            <br/>
+                            <t t-if="data.product_data">
+                                <t t-esc="data.product_data.product_count"/>
+                            </t>
+                        </p>
+                        <p class="text-center mb0">Products</p>
+                    </a>
+
+                    <a id="instance_customer" class="boxes box_two" t-on-click="_SyncedCustomers">
+                        <p class="text-center mb0 font-weight-bold">
+                            <img src="/pragtech_woo_commerce/static/src/img/contact.png"/>
+                            <br/>
+                            <t t-if="data.customer_data">
+                                <t t-esc="data.customer_data.customer_count"/>
+                            </t>
+                        </p>
+                        <p class="text-center mb0">Customers</p>
+                    </a>
+
+                    <a id="instance_order" class="boxes box_three" t-on-click="_SyncedOrders">
+                        <p class="text-center mb0 font-weight-bold">
+                            <img src="/pragtech_woo_commerce/static/src/img/cart-69-24.png"/>
+                            <br/>
+                            <t t-if="data.order_data">
+                                <t t-esc="data.order_data.order_count"/>
+                            </t>
+                        </p>
+                        <p class="text-center mb0">Orders</p>
+                    </a>
+
+                    <a id="instance_tax" class="boxes box_four" t-on-click="_SyncedTaxes">
+                        <p class="text-center mb0 font-weight-bold">
+                            <img src="/pragtech_woo_commerce/static/src/img/taxa.png"/>
+                            <br/>
+                            <t t-if="data.tax_data">
+                                <t t-esc="data.tax_data.tax_count"/>
+                            </t>
+                        </p>
+                        <p class="text-center mb0">Taxes</p>
+                    </a>
+
+                    <a id="instance_category" class="boxes box_five" t-on-click="_SyncedCategories">
+                        <p class="text-center mb0 font-weight-bold">
+                            <img src="/pragtech_woo_commerce/static/src/img/categorize.png"/>
+                            <br/>
+                            <t t-if="data.category_data">
+                                <t t-esc="data.category_data.category_count"/>
+                            </t>
+                        </p>
+                        <p class="text-center mb0">Categories</p>
+                    </a>
+
+                    <a id="instance_attribute" class="boxes box_six" t-on-click="_SyncedAttributes">
+                        <p class="text-center mb0 font-weight-bold">
+                            <img src="/pragtech_woo_commerce/static/src/img/attr.png"/>
+                            <br/>
+                            <t t-if="data.attribute_data">
+                                <t t-esc="data.attribute_data.attribute_count"/>
+                            </t>
+                        </p>
+                        <p class="text-center mb0">Attributes</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
+

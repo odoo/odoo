@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- Create the Commission Types -->
+    <record id="demo_commission" model="commission">
+        <field name="name">10% fixed commission - Invoice Based</field>
+        <field name="fix_qty">10.0</field>
+    </record>
+    <!-- Create de Agents -->
+    <record id="res_partner_pritesh_sale_agent" model="res.partner">
+        <field name="name">Pritesh Sales Agent</field>
+        <field name="city">Ahmedabad</field>
+        <field name="zip">380007</field>
+        <field name="country_id" model="res.country" search="[('name','=','India')]" />
+        <field name="street">56 Beijing street</field>
+        <field name="agent" eval="1" />
+        <field name="commission_id" ref="demo_commission" />
+    </record>
+    <record id="res_partner_eiffel_sale_agent" model="res.partner">
+        <field name="name">Eiffel pvt ltd</field>
+        <field name="city">Ahmedabad</field>
+        <field name="zip">380007</field>
+        <field name="country_id" model="res.country" search="[('name','=','India')]" />
+        <field name="street">Wall Street 2</field>
+        <field name="agent" eval="1" />
+        <field name="commission_id" ref="demo_commission" />
+    </record>
+    <record id="res_partner_tiny_sale_agent" model="res.partner">
+        <field name="name">Tiny Belgium</field>
+        <field name="city">Belgium</field>
+        <field name="zip">2457</field>
+        <field name="country_id" model="res.country" search="[('name','=','India')]" />
+        <field name="street">Belgium Gao</field>
+        <field name="agent" eval="1" />
+        <field name="commission_id" ref="demo_commission" />
+    </record>
+</odoo>

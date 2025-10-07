@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--    处理 title 及 theme-color-->
+    <template id="app_layout" inherit_id="web.layout" name="app Web layout">
+        <xpath expr="//title" position="replace">
+            <title t-esc="title or 'odooAi'"/>
+        </xpath>
+    </template>
+    <!--    end-->
+    <template id="replace_login" name="Login Layout" inherit_id="web.login_layout">
+        <xpath expr="//a[@target='_blank']" position="replace">
+            <a href="https://www.odooai.cn" target="_blank">Powered by
+                <span>odooai.cn</span>
+            </a>
+        </xpath>
+    </template>
+    <template id="replace_copyright_name" name="Copyright Name" inherit_id="web.frontend_layout">
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="o_footer_copyright_name me-2">Copyright &amp;copy;
+	            <span class="copyright_name_before" contenteditable="true">2009-2024 </span>
+                <span t-field="res_company.name" itemprop="name"/>
+	            <span class="copyright_name_after" contenteditable="true"></span>
+            </span>
+        </xpath>
+    </template>
+</odoo>

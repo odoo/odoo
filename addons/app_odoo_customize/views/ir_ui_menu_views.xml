@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+<!--        将菜单管理在设置中提前-->
+        <record id="base.menu_grant_menu_access" model="ir.ui.menu">
+            <field name="parent_id" ref="base.menu_administration"/>
+        </record>
+        <record id="app_edit_menu" model="ir.ui.view">
+            <field name="name">app.ir.ui.menu.tree</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree"  position="attributes">
+                    <attribute name="multi_edit">1</attribute>
+                </xpath>
+                <field name="sequence" position="after">
+                    <field name="id" optional="hide"/>
+                </field>
+                <field name="complete_name" position="after">
+                    <field name="name" optional="show"/>
+                    <field name="parent_id" optional="show"/>
+                </field>
+            </field>
+        </record>
+        <record id="app_edit_menu_access_search" model="ir.ui.view">
+            <field name="name">app.ir.ui.menu.search</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu_access_search"/>
+            <field name="arch" type="xml">
+                <filter name="inactive" position="before">
+                    <filter string="Top Menu" name="top_menu" domain="[('parent_id','=', False)]"/>
+                </filter>
+            </field>
+        </record>
+<!--        <record id="base.grant_menu_access" model="ir.actions.act_window">-->
+<!--            <field name="context">{'ir.ui.menu.full_list': True, 'search_default_top_menu': 1}</field>-->
+<!--        </record>-->
+<!--        <record id="base.grant_menu_access" model="ir.actions.act_window">-->
+<!--            <field name="context">{'ir.ui.menu.full_list': True, 'search_default_top_menu': 1}</field>-->
+<!--        </record>-->
+        <menuitem
+                id="menu_app_group"
+                name="odooAi"
+                parent="base.menu_administration"
+                sequence="1"
+                groups="base.group_system"/>
+        <menuitem
+                id="menu_app_theme_config"
+                parent="menu_app_group"
+                sequence="1"
+                action="app_common.action_odooai_cloud_config"
+                groups="base.group_system"/>
+        <menuitem
+                id="menu_ir_cron"
+                name="Scheduled Actions"
+                parent="menu_app_group"
+                sequence="91"
+                action="base.ir_cron_act"
+                groups="base.group_system"/>
+        <menuitem
+                id="menu_ir_module_addons_path"
+                name="Addons Paths"
+                parent="menu_app_group"
+                sequence="92"
+                action="action_ir_module_addons_path"
+                groups="base.group_system"/>
+
+        <!--增加导入Demo数据-->
+        <menuitem
+                id="menu_app_demo_data"
+                parent="menu_app_group"
+                sequence="93"
+                action="base.demo_force_install_action"
+                groups="base.group_system"/>
+        <menuitem
+                id="menu_ir_config_list"
+                name="System Parameters"
+                parent="menu_app_group"
+                sequence="94"
+                action="base.ir_config_list_action"
+                groups="base.group_system"/>
+    </data>
+</odoo>

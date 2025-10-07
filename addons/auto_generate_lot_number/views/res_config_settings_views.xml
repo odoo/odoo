@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherited the res.config.settings form view for adding new fields to
+        choose lot/seral number in product wise or globally-->
+    <record id="res_config_settings_view_form_purchase" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.auto.generate.lot.number
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='purchase']" position="inside">
+                <h2>Auto Generate Lot Number</h2>
+                <div class="row mt16 o_settings_container"
+                     name="purchase_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="is_auto_generate"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="is_auto_generate"/>
+                            <div class="text-muted">Auto Generating Serial and
+                                Lot Number
+                            </div>
+                        </div>
+                    </div>
+                    <div attrs="{'invisible':[('is_auto_generate','!=',True)]}"
+                         style="padding-left: 48px;">
+                        <label for="serial_number_type"/>
+                        <div class="text-muted" style="padding-bottom:10px">
+                            Global and Product Wise
+                        </div>
+                        <div class="o_setting_left_pane "
+                             style="width:113px !important;">
+                            <field name="serial_number_type"
+                                   class="o_light_label" widget="radio"/>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="mt8" style="margin-left: 70px !important;"
+                             attrs="{'invisible':
+                              [('serial_number_type', '!=', 'product')]}">
+                            <button name="%(product.product_template_action)d"
+                                    icon="fa-arrow-right"
+                                    type="action"
+                                    string="Show Products" class="btn-link"
+                                    attrs="{'invisible':
+                                    ['|',('serial_number_type', '!=', 'product')
+                                    ,('is_auto_generate','!=',True)]}"/>
+                        </div>
+                    </div>
+                    <div style="margin-left:33px !important;">
+                        <div class="row mt16 o_settings_container"
+                             name="performance"
+                             style="margin-left:33px !important;">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="profiling_enabled_until1"
+                                 style="padding-left: 48px;">
+                                <label for="digits"
+                                       attrs="{'invisible':
+                                       ['|',('serial_number_type', '!=', 'global')
+                                       ,('is_auto_generate','!=',True)]} "
+                                       style="margin-right: 10px !important;"/>
+                                <field name="digits" attrs="{'invisible':
+                                ['|',('serial_number_type', '!=', 'global'),
+                                ('is_auto_generate','!=',True)],
+                            'required': [('serial_number_type', '=', 'global')]
+                            ,}"/>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="profiling_enabled_until">
+                                <label for="prefix"
+                                       attrs="{'invisible':
+                                        ['|',('serial_number_type', '!=', 'global')
+                                        ,('is_auto_generate','!=',True)],}"/>
+                                <field name="prefix" attrs="{'invisible':
+                                 ['|',('serial_number_type', '!=', 'global'),
+                                 ('is_auto_generate','!=',True)],
+                             'required': [('serial_number_type', '=', 'global'),('is_auto_generate','!=',False)]}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

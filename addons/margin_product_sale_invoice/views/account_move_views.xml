@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherited form view of account move-->
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.margin.product.sale.invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='price_unit']"
+                   position="after">
+                <field name="cost_price_amount"/>
+                <field name="margin_amount"/>
+            </xpath>
+            <xpath expr="//group[hasclass('oe_invoice_lines_tab')]" position="before">
+                <group>
+                    <field name="margin_amount_total" style="width:250px" readonly="1" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    <field name="margin_percent_amount" style="width:250px" readonly="1" widget="percentage"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

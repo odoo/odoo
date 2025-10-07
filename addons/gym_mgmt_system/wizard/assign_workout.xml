@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Form view for workout plan wizard -->
+    <record id="assign_workout_view_form" model="ir.ui.view">
+        <field name="name">assign.workout.view.form</field>
+        <field name="model">assign.workout</field>
+        <field name="arch" type="xml">
+            <form string="my">
+                <group col="4" colspan="6">
+                    <field name="assign_to_id"/>
+                    <field name="workout_plan_id"/>
+                </group>
+                <group col="4" colspan="6">
+                    <field name="from_date"/>
+                    <field name="to_date"/>
+                </group>
+                <footer>
+                    <button name="action_workout" string="Create" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+<!--Action for the assign workout -->
+    <record id="assign_workout_action" model="ir.actions.act_window">
+        <field name="name">Assign Workout Action</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">assign.workout</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

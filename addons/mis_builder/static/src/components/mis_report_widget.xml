@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+
+    <t t-name="mis_builder.MisReportWidget" owl="1">
+        <div class="oe_mis_builder_content">
+            <t t-if="state.mis_report_data">
+                <div class="oe_mis_builder_cp">
+                    <div class="oe_mis_builder_cp_left">
+                    </div>
+                    <div class="oe_mis_builder_cp_right">
+                        <div class="oe_mis_builder_cp_right_top">
+                            <SearchBar t-if="showSearchBar" />
+                        </div>
+                        <div class="oe_mis_builder_cp_right_bottom">
+                            <div class="oe_mis_builder_filter_buttons">
+                                <FilterMenu t-if="showSearchBar" />
+                                <DatePicker
+                                    date="state.pivot_date"
+                                    onDateTimeChanged="onDateTimeChanged.bind(this)"
+                                    placeholder="'Base date...'"
+                                    t-if="showPivotDate"
+                                />
+                            </div>
+                            <div class="oe_mis_builder_action_buttons">
+                                <button t-on-click="refresh" class="btn">
+                                    <span class="fa fa-refresh" /> Refresh </button>
+                                <button t-on-click="printPdf" class="btn">
+                                    <span class="fa fa-print" /> Print </button>
+                                <button t-on-click="exportXls" class="btn">
+                                    <span class="fa fa-download" /> Export </button>
+                                <button
+                                    t-on-click="displaySettings"
+                                    t-if="widget_show_settings_button"
+                                    class="btn"
+                                >
+                                    <span class="fa fa-cog" /> Settings </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_list_renderer o_renderer table-responsive">
+                    <table
+                        class="o_list_table table table-sm table-hover table-striped mis_builder"
+                    >
+                        <thead>
+                            <tr
+                                t-foreach="state.mis_report_data.header"
+                                t-as="row"
+                                t-key="row_index"
+                                class="oe_list_header_columns"
+                            >
+                                <th class="oe_list_header_char">
+
+                                </th>
+                                <th
+                                    t-foreach="row.cols"
+                                    t-as="col"
+                                    t-key="col_index"
+                                    class="oe_list_header_char mis_builder_collabel"
+                                    t-att-colspan="col.colspan"
+                                >
+                                    <t t-esc="col.label" />
+                                    <t t-if="col.description">
+                                        <br />
+                                        <t t-esc="col.description" />
+                                    </t>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                t-foreach="state.mis_report_data.body"
+                                t-as="row"
+                                t-key="row_index"
+                            >
+                                <td t-att="{'style': row.style}">
+                                    <t t-esc="row.label" />
+                                    <t t-if="row.description">
+                                        <br />
+                                        <t t-esc="row.description" />
+                                    </t>
+                                </td>
+                                <td
+                                    t-foreach="row.cells"
+                                    t-as="cell"
+                                    t-key="cell_index"
+                                    t-att="{'style': cell.style, 'title': cell.val_c}"
+                                    class="mis_builder_amount"
+                                >
+                                    <t t-if="cell.drilldown_arg">
+                                        <a
+                                            href="javascript:void(0)"
+                                            class="mis_builder_drilldown"
+                                            t-on-click="drilldown"
+                                            t-att-data-drilldown="JSON.stringify(cell.drilldown_arg)"
+                                        >
+                                            <t t-esc="cell.val_r" />
+                                        </a>
+                                    </t>
+                                    <t t-if="!cell.drilldown_arg">
+                                        <t t-esc="cell.val_r" />
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr />
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

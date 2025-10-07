@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Search Menu for Blood Bank -->
+    <record id="blood_bank_view_search" model="ir.ui.view">
+        <field name="model">blood.bank.view.search</field>
+        <field name="model">blood.bank</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="blood_type"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <separator/>
+                <filter name="state" string="Unavailable"
+                        domain="[('state','=','not')]"
+                />
+                <filter name="state" string="Available"
+                        domain="[('state','=','avail')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="date" domain="[]"
+                            context="{'group_by':'date'}"/>
+                    <filter string="Blood Type" name="blood_type" domain="[]"
+                            context="{'group_by':'blood_type'}"/>
+                    <filter string="State" name="state" domain="[]"
+                            context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- Form view for Blood Bank -->
+    <record id="blood_bank_view_form" model="ir.ui.view">
+        <field name="name">blood.bank.view.form</field>
+        <field name="model">blood.bank</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_blood_available" string="Assign"
+                            class="oe_highlight" type="object"
+                            attrs="{'invisible': [('state','=','not')]}">
+                    </button>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="blood_type"/>
+                            <field name="assigned_patient_id"  widget="selection"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contra Indications">
+                            <field name="blood_donation_ids">
+                                <tree editable="bottom">
+                                    <field name="questions"/>
+                                    <field name="is_true"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Blood bank tree view-->
+    <record id="blood_bank_view_tree" model="ir.ui.view">
+        <field name="name">blood.bank.view.tree</field>
+        <field name="model">blood.bank</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="blood_type"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Blood bank kanban view-->
+    <record id="blood_bank_view_kanban" model="ir.ui.view">
+        <field name="name">blood.bank.view.kanban</field>
+        <field name="model">blood.bank</field>
+        <field name="priority" eval="100"/>
+        <field name="arch" type="xml">
+            <kanban default_group_by="blood_type" default_order="blood_type"
+                    quick_add="False">
+                <field name="partner_id"/>
+                <field name="blood_type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div>
+                                <strong class="o_kanban_record_title">
+                                    <span>
+                                        <field name="name"/>
+                                    </span>
+                                </strong>
+                            </div>
+                            <div>
+                                <span class="o_kanban_record_subtitle">
+                                    <field name="partner_id"/>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="date"/>
+                                    <div class="kanban-ribbon">
+                                        <field name="state" widget="badge"
+                                               decoration-success="state == 'avail'"
+                                               decoration-danger="state == 'not'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--     Action of blood bank menu -->
+    <record id="blood_bank_action" model="ir.actions.act_window">
+        <field name="name">Blood bank</field>
+        <field name="res_model">blood.bank</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <!--    Blood bank menu-->
+    <menuitem id="blood_bank_menu"
+              name='Blood Bank'
+              parent="hospital_menu_configuration"
+              action="blood_bank_action"
+              sequence="7"/>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<odoo>
+<!--    -->
+    <data noupdate="1">
+        <record id="email_template_edi_deadline_reminder" model="mail.template">
+            <field name="name">Deadline Reminder...!!</field>
+            <field name="email_from">"{{object.company_id.name}}"&lt;{{object.company_id.email}}&gt;</field>
+            <field name="email_to">{{ctx.get('email_to')}}</field>
+            <field name="subject">Task due today -{{object.date_deadline or 'n/a' }}</field>
+           <field name="model_id" ref="task_deadline_reminder.model_project_task" />
+            <field name="auto_delete" eval="True" />
+            <field name="body_html"><![CDATA[
+               <div class="page">
+                    <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                        <p>Hi,</p>
+                        <p> This email is to remind you that the tasks listed below are due today. </p>
+                    </div>
+                    <div>
+                       <table class="table table-condensed">
+                             <thead>
+                                <tr>
+                                    <th style="background-color:#9b9da0 !important;">Task</th>
+                                    <th style="background-color:#9b9da0 !important;">Project</th>
+                                    <th style="background-color:#9b9da0 !important;">Deadline</th>
+                                    <th style="background-color:#9b9da0 !important;">Assigned To</th>
+                                    <th style="background-color:#9b9da0 !important;">Link</th>
+                                </tr>
+                             </thead>
+                             <tbody>
+                                    <tr>
+                                        <td><span><t t-out="object.name"/></span></td>
+                                        <td><span><t t-out="object.project_id.name"/></span></td>
+                                        <td><span><t t-out="object.date_deadline"/></span></td>
+                                        <td>
+                                            <span>
+                                                <t t-foreach="object.user_ids" t-as="user">
+                                                    <t t-out="user.name"/>,
+                                                </t>
+                                            </span>
+                                        </td>
+                                        <td style="padding: 7px;">
+                                            <a href="/web/login/" style="background-color: #743f74; height:18px;
+                                                      width:80px; color: white; padding-top:1px;
+                                                      border: none; border-radius: 5px;
+                                                      text-align: center; text-decoration: none;
+                                                      display: inline-block; font-size: 12px;">View Task</a>
+                                        </td>
+                                     </tr>
+                             </tbody>
+                       </table>
+                    </div>
+                </div>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

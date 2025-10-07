@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        inherited purchase report purchase order document-->
+        <template id="purchase_order_report" inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//table[hasclass('table')]//tr//th[@name='th_description']"
+                   position="before">
+                <th name="th_sequence" class="text-start">#</th>
+            </xpath>
+            <xpath expr="//tbody//tr//td"
+                   position="before">
+                <td name="td_sequence">
+                    <span t-esc="line.sequence_number"/>
+                </td>
+            </xpath>
+        </template>
+
+        <template id="purchase_quotation_report" inherit_id="purchase.report_purchasequotation_document">
+            <xpath expr="//table[hasclass('table')]//tr//th[@name='th_description']"
+                   position="before">
+                <th name="th_sequence" class="text-start">#</th>
+            </xpath>
+            <xpath expr="//tbody//tr//td"
+                   position="before">
+                <td name="td_sequence">
+                    <span t-esc="order_line.sequence_number"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

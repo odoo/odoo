@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--Add the fill and unfill button and product selection option -->
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.view.inherit.form.done.quantity.auto.fill</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids_without_package']" position="before">
+                <div style="display: flex; flex-direction: row-reverse; margin: 10px;">
+                    <field name="select_all_toggle" string="All" attrs="{'invisible': [('state','!=','assigned')]}"
+                           widget="boolean_toggle" style="display: flex; flex-direction: row; margin-left: 10px;"/>
+                    <button name="button_unfill_done_qty" class="oe_highlight" string="Unfill Done Qty" type="object"
+                            attrs="{'invisible': [('state','!=','assigned')]}"/>
+                    <button name="button_fill_done_qty" class="oe_highlight mx-2" string="Fill Done Qty" type="object"
+                            attrs="{'invisible': [('state','!=','assigned')]}"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="before">
+                <field name="product_select" attrs="{'invisible': [('state','!=','assigned')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

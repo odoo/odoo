@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_hospital" model="ir.sequence">
+        <field name="name">Hospital</field>
+        <field name="code">patient.appointment</field>
+        <field name="prefix">PATIN/%(range_year)s/</field>
+        <field eval="1" name="number_next"/>
+        <field eval="1" name="number_increment"/>
+        <field eval="True" name="use_date_range"/>
+        <field eval="1" name="number_next"/>
+        <field name="padding">3</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

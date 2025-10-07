@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Action for gym members -->
+    <record id="gym_member_action" model="ir.actions.act_window">
+        <field name="name">Gym Member</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('gym_member','=','True')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Member!
+            </p>
+        </field>
+    </record>
+<!-- Form view for member -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="gym_member" />
+                <field name="measurement_count" invisible="1"/>
+                <field name="membership_count" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+<!--Kanban view for member-->
+    <record id="res_partner_kanban_view" model="ir.ui.view">
+        <field name="name">res.partner.kanban.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_partner_categories')]" position="replace">
+                <div>
+                    <ul>
+                        <li t-if="record.gym_member.raw_value">
+                            Gym Member
+                            <field name="gym_member" invisible="1" />
+                            <li>
+                                <div class="oe_title" style="color:Brown;font-size: 15px;">Memberships :
+                                        <field name="membership_count"/>
+                                </div>
+                                <div class="oe_title" style="color:Brown;font-size: 15px;">Measurements :
+                                        <field name="measurement_count"/>
+                                </div>
+                            </li>
+                        </li>
+                    </ul>
+                </div>
+            </xpath>
+        </field>
+    </record>
+<!--  Menu and Sub Menu  -->
+    <menuitem
+            id="gym_member_root"
+            name="Members"
+            parent="gym_mgmt_system_menu_root"
+            sequence="10"/>
+
+    <menuitem
+            id="gym_member_menu_action"
+            name="Members"
+            parent="gym_member_root"
+            action="gym_member_action"
+            sequence="10"/>
+
+</odoo>

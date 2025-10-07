@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Patient booking tree view-->
+    <record id="patient_booking_view_tree" model="ir.ui.view">
+        <field name="name">patient.booking.view.tree</field>
+        <field name="model">patient.booking</field>
+        <field name="arch" type="xml">
+            <tree export_xlsx="0">
+                <field name="booking_reference"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="booking_date"/>
+                <field name="slot"  widget="float_time"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Patient booking form view-->
+    <record id="patient_booking_view_form" model="ir.ui.view">
+        <field name="name">patient.booking.view.form</field>
+        <field name="model">patient.booking</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_booking"
+                            string="Confirm"
+                            states="draft"
+                            class="oe_highlight"
+                            type="object"/>
+                    <button name="action_booking_cancel" string="Cancel"
+                            states="confirm"
+                            type="object"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet attrs="{'readonly': [('state', '!=', 'draft')]}">
+                    <h1>
+                        <field name="booking_reference"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="patient_id"  widget="selection"/>
+                            <field name="booking_date"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="consultation_fee" force_save="1"/>
+                            <field name="slot"
+                                   attrs="{'invisible': [('state', '=', 'draft')]}"
+                                   widget="float_time"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    Bookings menu action-->
+    <record id="patient_booking_action" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">patient.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record!
+            </p>
+        </field>
+    </record>
+    <!--    Bookings menu-->
+    <menuitem id="patient_booking_menu" name="Bookings" sequence="0"
+              parent="hospital_menu_appointment"
+              action="patient_booking_action"/>
+</odoo>

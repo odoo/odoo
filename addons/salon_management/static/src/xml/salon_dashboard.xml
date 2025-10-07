@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <t t-name="SalonDashboardMain">
+    <div class="salon_dashboards">
+      <div class="container-fluid spa_salon_dashboard">
+      </div>
+    </div>
+  </t>
+  <t t-name="SalonSpaDashBoard">
+    <link rel="stylesheet" href="/salon_management/static/src/css/salon_dashboard.css"/>
+    <div class="row main-section">
+      <div class="col-sm-6 col-md-3-12 col-md-6 col-lg-3 salon_spa_bookings salon salon_bookings">
+        <div class="salon-card">
+          <div class="salon-card-body">
+            <div class="stat-widget-one">
+              <div class="stat-icon">
+                <i class="fa fa-calendar"/>
+              </div>
+              <div class="stat-content">
+                <div class="stat-text">Bookings</div>
+                <div class="stat-digit" id="bookings_count">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3-12 col-md-6 col-lg-3 salon_spa_orders salon salon_orders">
+        <div class="salon-card">
+          <div class="salon-card-body">
+            <div class="stat-widget-one">
+              <div class="stat-icon">
+                <i class="fa fa-calendar"/>
+              </div>
+              <div class="stat-content">
+                <div class="stat-text">Salon Orders</div>
+                <div class="stat-digit" id="orders_count">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3-12 col-md-6 col-lg-3 salon_spa_sales salon salon_sales">
+        <div class="salon-card">
+          <div class="salon-card-body">
+            <div class="stat-widget-one">
+              <div class="stat-icon">
+                <i class="fa fa-money"/>
+              </div>
+              <div class="stat-content">
+                <div class="stat-text">Recent Works</div>
+                <div class="stat-digit" id="recent_count">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3-12 col-md-6 col-lg-3 salon_spa_clients salon salon_clients">
+        <div class="salon-card">
+          <div class="salon-card-body">
+            <div class="stat-widget-one">
+              <div class="stat-icon">
+                <i class="fa fa-user "/>
+              </div>
+              <div class="stat-content">
+                <div class="stat-text">Salon Clients</div>
+                <div class="stat-digit" id="clients_count">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <article role="main" id="chairs_dashboard_view">
+      <!--filled from js-->
+    </article>
+  </t>
+</templates>

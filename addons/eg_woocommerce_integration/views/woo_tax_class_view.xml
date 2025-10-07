@@ -1,0 +1,39 @@
+<odoo>
+    <record model="ir.ui.view" id="woo_tax_class_tree_view">
+        <field name="name">woo.tax.class.tree</field>
+        <field name="model">woo.tax.class</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="instance_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="woo_tax_class_form_view">
+        <field name="name">woo.tax.class.form</field>
+        <field name="model">woo.tax.class</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <field name="woo_tax_class_id"/>
+                        <field name="instance_id"/>
+                        <field name="provider" invisible="1"/>
+                        <field name="name"/>
+                        <field name="slug"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_woo_tax_class">
+        <field name="name">Woocommerce Tax class</field>
+        <field name="res_model">woo.tax.class</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_woo_tex_class" name="Tax Class" parent="eg_ecommerce_base.sale_order_mapping_id"
+              action="action_woo_tax_class" sequence="4"/>
+</odoo>

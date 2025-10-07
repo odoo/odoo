@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='wizard_product_dynamic_fields_form'>
+        <field name="name">product.dynamic.fields.form</field>
+        <field name="model">product.dynamic.fields</field>
+        <field name="arch" type="xml">
+            <form string="Dynamic Fields">
+                <sheet>
+                    <group>
+                        <group string="Field Info">
+                            <field name="name"/>
+                            <field name="field_description"/>
+                            <field name="state" readonly="1" groups="base.group_no_one"/>
+                            <field name="model_id" options='{"no_open": True, "no_create": True}'/>
+                            <field name="field_type"/>
+                            <field name="selection_field" placeholder="[('blue', 'Blue'),('yellow', 'Yellow')]"
+                                   attrs="{'required': [('field_type','in',['selection','reference'])],
+                                                    'readonly': [('field_type','not in',['selection','reference'])],
+                                                    'invisible': [('field_type','not in',['selection','reference'])]}"/>
+                            <field name="ref_model_id" options='{"no_open": True, "no_create": True}' attrs="{'required': [('field_type','in',['many2one','many2many'])],
+                                                                'readonly': [('field_type','not in',['many2one','many2many'])],
+                                                                'invisible': [('field_type','not in',['many2one','many2many'])]}"/>
+                            <field name="widget" widget="selection"
+                                   attrs="{'invisible': [('field_type','not in',['binary', 'many2many', 'selection', 'float', 'many2one'])]}"/>
+                            <field name="required"/>
+                        </group>
+                        <group string="Position">
+                            <field name="position_field" options='{"no_open": True, "no_create": True}'/>
+                            <field name="position"/>
+                        </group>
+                    </group>
+                    <group string="Extra Properties">
+                        <group>
+                            <field name="extra_features"/>
+                        </group>
+                        <group attrs="{'invisible': [('extra_features', '=', False)]}">
+                            <field name="help"/>
+                        </group>
+                        <group attrs="{'invisible': [('extra_features', '=', False)]}">
+                            <field name="readonly"/>
+                            <field name="store"/>
+                            <field name="index"/>
+                            <field name="copied"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="create_fields" string="Create Fields" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='action_product_dynamic_fields'>
+        <field name="name">Create Custom Fields</field>
+        <field name="res_model">product.dynamic.fields</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_product_dynamic_fields_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

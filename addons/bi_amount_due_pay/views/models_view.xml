@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="res_partner_viw">
+            <field name="name">res.partner.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_partner_invoices']" position="after">
+                    <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_amount_due"
+                        context="{'default_partner_id': active_id}">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="payment_amount_due_amt" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">Amount Due</span>
+                        </div>
+                    </button>
+                    <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_amount_to_pay"
+                        context="{'default_partner_id': active_id}">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="payment_amount_due_amt_supplier" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">Amount To Pay</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="res_partner_kanban_view_custom">
+            <field name="name">res.partner.kanban.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_kanban_details')]" position="replace">
+                    <div class="oe_kanban_details d-flex flex-column justify-content-betwee">
+                        <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                        <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                        <ul>
+                            <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                            <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                            <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                            <li t-if="record.city.raw_value or record.country_id.raw_value">
+                                <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
+                                <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
+                            </li>
+                            <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                        </ul>
+                        <div class="o_row">
+                            <span class="oe_kanban_partner_links"/>
+                        </div>
+                        <div>
+                            <span class="o_text_overflow">Amount Due:<field name="payment_amount_due_amt"/></span>
+                        </div>
+                        <div>
+                            <span  class="o_text_overflow">Amount To Pay:<field name="payment_amount_due_amt_supplier"/></span>
+                        </div>  
+                        <div class="o_kanban_record_bottom">
+                            <div class="oe_kanban_bottom_left"/>
+                            <div class="oe_kanban_bottom_right"/>
+                        </div>                                                                                                                       
+                     </div>
+                </xpath> 
+           </field>
+        </record> 
+
+
+        <record model="ir.ui.view" id="res_partner_list_view_custom">
+            <field name="name">res.partner.list.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="payment_amount_due_amt"/>
+                    <field name="payment_amount_due_amt_supplier"/>
+                    
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

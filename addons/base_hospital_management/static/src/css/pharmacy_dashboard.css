@@ -1,0 +1,382 @@
+.menu_item {
+    font-size: 26px;
+    list-style: none;
+    padding-bottom: 30px;
+    color: black;
+}
+.fa-plus-circle {
+    font-size: 30px;
+}
+.menu_ul {
+    margin-top: 200px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-top:1.6rem:
+}
+.menu_link {
+    text-decoration: none;
+}
+.menu_item:hover {
+    text-decoration: none;
+    color: rgb(113, 118, 185);
+}
+
+.menu_class {
+    margin-top: 20p;
+}
+.patient {
+    padding-top: 100px;
+}
+
+.main_div {
+    width: 600px;
+    background-color: rgb(255, 255, 255);
+    height: auto;
+    padding-left: 4px;
+}
+
+.profile_div {
+    width: 446px;
+    height: 210px;
+    background-color: rgb(113, 118, 185);
+    border-radius: 0px 40px 0px 0px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile_pic {
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    margin-top: 25px;
+    margin-left: 23px;
+    border: 8px rgb(173, 186, 243) solid;
+}
+
+.profile_name {
+    margin-top: -150px;
+    margin-left: 138px;
+    color: white;
+}
+
+.profile_code {
+    margin-top: -100px;
+    margin-left: 138px;
+    color: white;
+}
+
+.profile_gender {
+    margin-top: -50px;
+    margin-left: 138px;
+    color: white;
+}
+
+.profile_bloodgroup {
+    margin-top: -25px;
+    margin-left: 138px;
+    color: white;
+}
+
+.search_box {
+    margin-top: 25px;
+    margin-left: 10px;
+}
+
+.search_icon {
+    margin-left: 50px;
+}
+
+.medical_list {
+  width: 446px;
+    height: 572px;
+    background-color: white;
+    margin-top: 32px;
+    border-radius: 0px 0px 40px 0px;
+}
+
+.row-click{
+    cursor:pointer;
+}
+
+.saleorder{
+    width:130px;
+    margin-top : 12px;
+    font-size:11px;
+}
+
+.pharma_container {
+    background-color: rgb(173, 186, 243);
+    width: 1700px;
+    height: 800px;
+    border-radius: 44px;
+
+}
+.patient_search{
+     width:30vh; height:5vh;margin-left:3vh;
+
+}
+.p_search{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.g_total{
+     float: left; width: 20%;line-height: 37px;padding-right: 0;
+}
+
+
+.search_pe{
+    margin-left:1vh; width:5vh; height:5vh; font-size:20px;
+}
+
+.card {
+    width: 42%;
+    height: fit-content;
+    margin-top: 2rem;
+    margin-right: 2rem;
+}
+.add_medicine {
+    width:130px;
+    margin-top:12px;
+    font-size:11px;
+}
+.add_med{
+    display:flex;
+    gap:10px;
+}
+
+@media screen and (max-width:1400px){
+ #content_div h1{
+    padding-top:20px;
+ }
+ .pharma_container{
+    width: 100%!important;
+    height: 155px!important;
+    border-radius: 44px 44px 0px 0px;
+    }
+    .pharma_2 {
+        width: 98%!important;
+        height: 142px!important;
+        border-radius: 40px 40px 0px 0px!important;
+    }
+    .menu-ul {
+        display: flex!important;
+        gap:20%!important;
+        align-items:center!important;
+        justify-content:center!important;
+    }
+
+    .patient{
+        padding-top:0px;
+    }
+    .main_div {
+        width: 50%;
+    }
+    .profile_div {
+        width: 50%;
+        border-radius: 0px 0px 0px 0px;
+    }
+    .profile_pic {
+        margin-left: 0px;
+    }
+    .patient_search{
+         width:30vh;
+         height:5vh;
+         margin-left:2vh;
+    }
+    .medical_list {
+        width: 556px;
+    }
+
+    .ms-2 {
+        margin-left: 0 !important;
+    }
+}
+
+@media screen and (max-width:1200px){
+    .medical_list {
+        width: 454px;
+    }
+    .card {
+        width: 42%;
+        height: fit-content;
+        margin-top: 2rem;
+        margin-right: 2rem;
+    }
+    .card-title {
+        font-size:16px;
+    }
+}
+
+@media screen and (max-width:991px){
+    .tbl-medicine-list {
+        width: 679px;
+    }
+
+    .content_div container{
+        margin-top:22px;
+        overflow-y: auto;
+    }
+
+    .tbl-medicine-list .sub_total{
+
+        width:11vw !important;
+    }
+
+    .tbl-medicine-list .amount{
+
+        width:18vw !important;
+    }
+
+
+    .tbl-medicine-list .qty{
+
+        width:18vw !important;
+    }
+
+     .tbl-medicine-list  .sub_total{
+        width:24vw !important;
+
+     }
+
+
+    .container-tbl-medicine-list{
+        overflow-x:scroll;
+    }
+
+
+    .patient_search {
+        width: 24vh;
+        height: 5vh;
+
+    }
+    .profile_pic {
+        margin-left: 35px;
+    }
+    .medical_list {
+        width: 100%;
+    }
+    .btn-div{
+            display:flex;
+            gap:10px;
+        }
+        .g_total {
+             width:40%;
+         }
+    .card {
+        width: 100%;
+    }
+}
+@media screen and (max-width:768px){
+    .main_div {
+        width: 100%;
+    }
+    .profile_div {
+        width: 100%;
+        border-radius: 0px 0px 0px 0px;
+    }
+    .patient_search {
+        width: 26vh;
+        height: 5vh;
+
+    }
+    .medical_list {
+        width: 543px;
+    }
+    .medical_list {
+        width: 543px;
+    }
+    .card {
+        width: 44%;
+    }
+}
+
+@media screen and (max-width:574px){
+    .menu_item {
+        font-size: 20px;
+    }
+
+    .menu-ul {
+        display: flex!important;
+        gap: 5%!important;
+    }
+    .medical_list {
+        width: 520px;
+
+    }
+    #op_table label {
+        padding-left: 5px;
+    }
+    .btn-div{
+        display:flex;
+        gap:10px;
+    }
+    .g_total {
+         width:40%;
+     }
+     .search_pe{
+     font-size:16px;
+    }
+   .card {
+        width: 42%;
+    }
+    .pharma_2 {
+        width: 96%!important;
+    }
+    .add_medicine {
+    width: 102px;
+
+}
+}
+@media screen and (max-width:530px){
+
+.medical_list {
+        width: 400px;
+
+    }
+}
+}
+@media screen and (max-width:510px){
+ .card {
+    width: 60%;
+    }
+    .medical_list {
+        width: 350px;
+    }
+}
+
+@media screen and (max-width:420px){
+    .card {
+        width: 100%;
+    }
+     .medical_list {
+        width: 360px;
+    }
+}
+#order_items {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+}
+
+#order_items td{
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#order_items tr:nth-child(odd){background-color: #f2f2f2;}
+#order_items tr:hover {background-color: #ddd;}
+#order_items th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  position: sticky;
+  top:0px;
+  background-color: #f2f2f2;
+}
+@media screen and (max-width:370px){
+.patient_search {
+    width: 19vh;
+}
+}

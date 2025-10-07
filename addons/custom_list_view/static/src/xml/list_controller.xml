@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<!-- Extension template for adding buttons in the listview -->
+    <t t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
+        <!-- Add buttons after the 'Export Excel' button -->
+        <xpath expr="//*[@class='btn btn-secondary fa fa-download o_list_export_xlsx']"
+               position="after">
+            <!-- Print PDF button -->
+            <button type="button" class="btn btn-secondary "
+                    t-on-click="_onClickPDF" data-tooltip="Print PDF" >PDF</button>
+            <!-- Print Excel button -->
+            <button type="button" class="btn btn-secondary"
+                    t-on-click="_onClickExcel" data-tooltip="Print Excel" >Excel</button>
+            <!-- Print CSV button -->
+            <button type="button" class="btn btn-secondary"
+                    t-on-click="_onClickCSV" data-tooltip="Print CSV" >CSV</button>
+            <!-- Copy to Clipboard button -->
+            <button type="button" class="btn btn-secondary fa fa-clipboard"
+                    t-on-click="_onClickCopy" data-tooltip="Copy to Clipboard"/>
+        </xpath>
+    </t>
+    <!-- Extension template for adding buttons in the invoice listview -->
+    <t t-inherit="account.ListView.Buttons" t-inherit-mode="extension">
+        <!-- Add buttons after the 'Export Excel' button -->
+        <xpath expr="//*[@class='btn btn-secondary fa fa-download o_list_export_xlsx']"
+               position="after">
+            <!-- Print PDF button -->
+            <button type="button" class="btn btn-secondary"
+                    t-on-click="_onClickPDF" data-tooltip="Print PDF">PDF</button>
+            <!-- Print Excel button -->
+            <button type="button" class="btn btn-secondary"
+                    t-on-click="_onClickExcel" data-tooltip="Print Excel">Excel</button>
+            <!-- Print CSV button -->
+            <button type="button" class="btn btn-secondary"
+                    t-on-click="_onClickCSV" data-tooltip="Print CSV">CSV</button>
+            <!-- Copy to Clipboard button -->
+            <button type="button" class="btn btn-secondary fa fa-clipboard"
+                    t-on-click="_onClickCopy" data-tooltip="Copy to Clipboard"/>
+        </xpath>
+    </t>
+</templates>
