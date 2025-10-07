@@ -161,6 +161,12 @@ describe("field HTML", () => {
         // When those popovers are killed, OWL tries to reconcile its element List
         // in OverlayContainer, displaces the node that contains the iframe
         // and the editor subsequently crashes
+        const base64Img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        onRpc("/html_editor/get_image_info", () => {
+            return {
+                original: { image_src: base64Img },
+            };
+        });
         class SomeModel extends models.Model {
             _name = "some.model"
             mailing_ids = fields.One2many({relation: "mailing.mailing"});
