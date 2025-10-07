@@ -2781,11 +2781,10 @@ class CrmLead(models.Model):
 
             if use_tags:
                 # Get tags values
-                tag_rel_alias = query.left_join(table._alias, 'id', 'crm_tag_rel', 'lead_id', 'crm_tag_rel')
-                tag_alias = query.left_join(tag_rel_alias, 'tag_id', 'crm_tag', 'id', 'crm_tag')
+                tag_t = table._join('tag_ids', only_ids=True)
                 self.env.cr.execute(query.select(
                     SQL("%s AS lead_id", table.id),
-                    SQL("%s AS tag_id", SQL.identifier(tag_alias, "id")),
+                    SQL("%s AS tag_id", tag_t.id),
                 ))
                 tag_results = self.env.cr.dictfetchall()
             else:
