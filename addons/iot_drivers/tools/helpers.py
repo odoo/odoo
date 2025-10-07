@@ -502,7 +502,6 @@ def disconnect_from_server():
         'screen_orientation': '',
         'browser_url': '',
         'iot_handlers_etag': '',
-        'last_websocket_message_id': '',
     })
     odoo_restart()
 
