@@ -204,6 +204,8 @@ export class HistoryPlugin extends Plugin {
             { hotkey: "control+y", commandId: "historyRedo", global: true },
             { hotkey: "control+shift+z", commandId: "historyRedo", global: true },
         ],
+        unsplittable_node_predicates: (node) =>
+            this.isUnobservedNode(node) || this.isObserverDisabled,
         start_edition_handlers: () => {
             this.enableObserver();
             this.reset(this.config.content);
@@ -256,6 +258,7 @@ export class HistoryPlugin extends Plugin {
         /** @type {Set<string>} Steps reverted by restoring to a save point */
         this.discardedSteps = new Set();
         this.nodeMap = new NodeMap();
+        this.unobservedNodes = [];
         /** @type { WeakMap<Node, { attributes: Map<string, string>, classList: Map<string, boolean>, characterData: Map<string, string> }> } */
         this.lastObservedState = new WeakMap();
         this.setNodeId(this.editable);
@@ -429,12 +432,8 @@ export class HistoryPlugin extends Plugin {
                 // Filter out no-op
                 return record.value !== record.oldValue;
             case "childList":
-                return (
-                    // Filter out no-op
-                    (record.addedTrees.length || record.removedTrees.length) &&
-                    // Filter out mutation without a valid position for node insertion
-                    (record.previousSibling !== undefined || record.nextSibling !== undefined)
-                );
+                // Filter out no-op
+                return record.addedTrees.length || record.removedTrees.length;
         }
     }
 
@@ -732,6 +731,11 @@ export class HistoryPlugin extends Plugin {
             if (this.isObserverDisabled || !isRecordSavable(record)) {
                 if (record.type !== "childList") {
                     this.storeOldValue(record);
+                } else {
+                    record.addedTrees
+                        .flatMap(treeToNodes)
+                        .filter((node) => !this.isUnobservedNode(node))
+                        .forEach((node) => this.unobservedNodes.push(node));
                 }
                 continue;
             }
@@ -762,6 +766,18 @@ export class HistoryPlugin extends Plugin {
      */
     isObservedNode(node) {
         return this.nodeMap.hasNode(node);
+    }
+
+    /**
+     * Any node that was added to the DOM without a mutation record in a history
+     * step (tipically due to {@link ignoreDOMMutations}) is considered an
+     * unobserved node.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    isUnobservedNode(node) {
+        return this.unobservedNodes.includes(node);
     }
 
     /**
@@ -846,11 +862,16 @@ export class HistoryPlugin extends Plugin {
      * @returns {MutationRecordChildList}
      */
     updateChildListRecord(record) {
-        // Invalidate sibling references to unobserved nodes
+        // Invalid sibling references will be bypassed
         const isValidReference = (node) => node === null || this.isObservedNode(node);
-        const updateSibling = (sibling) => (isValidReference(sibling) ? sibling : undefined);
-        const previousSibling = updateSibling(record.previousSibling);
-        const nextSibling = updateSibling(record.nextSibling);
+        let previousSibling = record.previousSibling;
+        while (!isValidReference(previousSibling)) {
+            previousSibling = previousSibling.previousSibling;
+        }
+        let nextSibling = record.nextSibling;
+        while (!isValidReference(nextSibling)) {
+            nextSibling = nextSibling.nextSibling;
+        }
 
         // Filter out unobserved nodes in removedTrees
         const removeUnobservedNodes = (tree) => {

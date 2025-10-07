@@ -1053,6 +1053,99 @@ describe("unobserved mutations", () => {
             withAddStep(editor, () => nodeB.append(nodeC)); // should be an empty step
             expect(editor.shared.history.getHistorySteps().length).toBe(1);
         });
+        test("node addition sibblings of two unobserved node is observed", async () => {
+            const { editor, el } = await setupEditor(`<p></p>`);
+            const p = el.querySelector("p");
+            const nodeA = editor.document.createElement("span");
+            const nodeB = editor.document.createElement("b");
+            editor.shared.history.ignoreDOMMutations(() => p.append(nodeA));
+            editor.shared.history.ignoreDOMMutations(() => p.append(nodeB));
+            const nodeC = editor.document.createElement("span");
+            withAddStep(editor, () => nodeA.after(nodeC)); // should be a valid step
+            expect(editor.shared.history.getHistorySteps().length).toBe(2);
+        });
+        test("Replacing an unobserved node is observed", async () => {
+            const { editor, el } = await setupEditor(`<p></p>`);
+            const getEl = (tag, text = "") => {
+                const span = editor.document.createElement(tag);
+                span.textContent = text;
+                return span;
+            };
+            const p = el.querySelector("p");
+            const obsNode1 = getEl("b", "1");
+            const ignNode2 = getEl("i", "2");
+            const ignNode3 = getEl("u", "3");
+            const ignNode4 = getEl("b", "4");
+            const obsNode5 = getEl("i", "5");
+
+            withAddStep(editor, () => p.append(obsNode1));
+            editor.shared.history.ignoreDOMMutations(() => p.append(ignNode2, ignNode3, ignNode4));
+            withAddStep(editor, () => p.append(obsNode5));
+
+            const replacement = getEl("span", "R");
+            withAddStep(editor, () => ignNode3.replaceWith(replacement));
+
+            expect(el.innerHTML).toBe("<p><b>1</b><i>2</i><span>R</span><b>4</b><i>5</i></p>");
+            undo(editor);
+            expect(el.innerHTML).toBe("<p><b>1</b><i>2</i><b>4</b><i>5</i></p>");
+            undo(editor);
+            expect(el.innerHTML).toBe("<p><b>1</b><i>2</i><b>4</b></p>");
+            undo(editor);
+            expect(el.innerHTML).toBe("<p><i>2</i><b>4</b></p>");
+            undo(editor);
+            // no more mutations to undo since 2,3,4 were ignored
+            expect(el.innerHTML).toBe("<p><i>2</i><b>4</b></p>");
+        });
+        test("Replacing an unobserved node is observed (2)", async () => {
+            const { editor, el } = await setupEditor(`<p></p>`);
+            const getEl = (tag, text = "") => {
+                const span = editor.document.createElement(tag);
+                span.textContent = text;
+                return span;
+            };
+            const p = el.querySelector("p");
+            const obsNode1 = getEl("b", "1");
+            const ignNode2 = getEl("i", "2");
+            const ignNode3 = getEl("u", "3");
+            const ignNode4 = getEl("b", "4");
+            const obsNode5 = getEl("i", "5");
+
+            withAddStep(editor, () => p.append(obsNode1));
+            editor.shared.history.ignoreDOMMutations(() => p.append(ignNode2, ignNode3, ignNode4));
+            withAddStep(editor, () => p.append(obsNode5));
+
+            const replacement = getEl("span", "R");
+            withAddStep(editor, () => ignNode3.replaceWith(replacement));
+
+            expect(el.innerHTML).toBe("<p><b>1</b><i>2</i><span>R</span><b>4</b><i>5</i></p>");
+            ignNode2.remove();
+            ignNode4.remove();
+            expect(el.innerHTML).toBe("<p><b>1</b><span>R</span><i>5</i></p>");
+            undo(editor);
+            expect(el.innerHTML).toBe("<p><b>1</b><i>5</i></p>");
+            undo(editor);
+            expect(el.innerHTML).toBe("<p><b>1</b></p>");
+            undo(editor);
+            expect(el.innerHTML).toBe("<p></p>");
+            undo(editor);
+            // no more mutations to undo since 2,3,4 were ignored
+            expect(el.innerHTML).toBe("<p></p>");
+        });
+        test("unobserved node should never be merged with similar nodes", async () => {
+            const { editor, el } = await setupEditor(`<p></p>`);
+            const getEl = (tag, text = "") => {
+                const span = editor.document.createElement(tag);
+                span.textContent = text;
+                return span;
+            };
+            const p = el.querySelector("p");
+            const ignNode1 = getEl("span", "1");
+            const obsNode2 = getEl("span", "2");
+
+            editor.shared.history.ignoreDOMMutations(() => p.append(ignNode1));
+            withAddStep(editor, () => p.append(obsNode2));
+            expect(el.innerHTML).toBe("<p><span>1</span><span>2</span></p>");
+        });
     });
 
     describe("snapshot step", () => {
