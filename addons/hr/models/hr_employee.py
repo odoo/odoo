@@ -1198,6 +1198,7 @@ class HrEmployee(models.Model):
         # Only one write call for all the fields from hr.version
         new_vals = vals.copy()
         version_vals = {val: new_vals.pop(val) for val in vals if val in self._fields and self._fields[val].inherited}
+        self.env.flush_all()
         res = super().write(new_vals)
         if version_vals:
             version_vals['last_modified_date'] = fields.Datetime.now()
