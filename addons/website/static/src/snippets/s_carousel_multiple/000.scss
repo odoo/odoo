@@ -1,0 +1,77 @@
+.s_carousel_multiple_wrapper {
+    .s_carousel_multiple {
+        --o-carousel-multiple-items: 1;
+        --o-carousel-multiple-duration: .6s;
+
+        @extend %s_carousel_variants;
+
+        scroll-snap-type: x mandatory;
+
+        &.carousel-dark {
+            --IndicatorsNumbers__Scrollbar-color: #{rgba($carousel-dark-indicator-active-bg, .15)};
+
+            &:hover {
+                --IndicatorsNumbers__Scrollbar-color: #{$carousel-dark-indicator-active-bg};
+            }
+        }
+
+        .carousel-inner {
+            gap: var(--o-carousel-multiple-items-gap);
+            transition: transform var(--o-carousel-multiple-duration) ease;
+            overflow: visible;
+
+            &:has(.carousel-item-next) .carousel-item, &:has(.carousel-item-prev) .carousel-item {
+                // We need to remove these transform/transition to have a smooth slide
+                transform: none;
+                transition: none;
+            }
+        }
+
+        .carousel-item {
+            width: calc(100% / var(--o-carousel-multiple-items) - (var(--o-carousel-multiple-items-gap) * (var(--o-carousel-multiple-items) - 1)/var(--o-carousel-multiple-items)));
+            scroll-snap-align: center;
+
+        }
+
+        @for $i from 2 through 5 {
+            &.o_displayed_items_#{$i} {
+                @include media-breakpoint-between(md,xl) {
+                    $-display-on-tablet: $i - 1;
+                    --o-carousel-multiple-items: #{$-display-on-tablet};
+
+                    .carousel-indicators button:nth-last-child(-n + #{$-display-on-tablet - 1}) {
+                        display: none;
+                    }
+                }
+
+                @include media-breakpoint-up(xl) {
+                    --o-carousel-multiple-items: #{$i};
+
+                    .carousel-indicators button:nth-last-child(-n + #{$i - 1}) {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        // Scroll snap on mobile
+        @include media-breakpoint-down(md) {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)}) transparent;
+            scrollbar-width: thin;
+
+            #wrap &.container {
+                &::before, &::after {
+                    display: none;
+                }
+            }
+
+            .carousel-inner::after {
+                // Keep the padding right after scrolling to the last item.
+                flex-shrink: 0;
+                width: calc(var(--gutter-x) * .5);
+            }
+        }
+    }
+}

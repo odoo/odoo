@@ -152,6 +152,7 @@ class AddPageTemplatePreview extends Component {
                 section[data-snippet="s_carousel"],
                 section[data-snippet="s_carousel_intro"],
                 section[data-snippet="s_carousel_cards"],
+                section[data-snippet="s_carousel_multiple"],
                 section[data-snippet="s_quotes_carousel_minimal"],
                 section[data-snippet="s_quotes_carousel_compact"],
                 section[data-snippet="s_quotes_carousel"] {

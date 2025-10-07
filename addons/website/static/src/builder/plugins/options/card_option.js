@@ -26,7 +26,7 @@ export class BaseCardOption extends BaseOptionComponent {
 }
 
 export class CardOption extends BaseCardOption {
-    static selector = ".s_card";
+    static selector = ".s_card:not(.s_carousel_multiple_card)";
     static exclude = `div:is(${CARD_PARENT_HANDLERS}) > .s_card`;
 }
 

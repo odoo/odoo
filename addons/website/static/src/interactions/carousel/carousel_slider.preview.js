@@ -27,6 +27,27 @@ const CarouselSliderPreview = (I) =>
          */
         mouseEnter() {
             const carousel = window.Carousel.getOrCreateInstance(this.el);
+            const isMultipleCarousel = this.el.classList.contains("s_carousel_multiple");
+            const carouselInnerEl = this.el.querySelector(".carousel-inner");
+            const slidesElts = this.el.querySelectorAll(".carousel-item");
+            if (isMultipleCarousel) {
+                this.el.addEventListener("slid.bs.carousel", (event) => {
+                    const slideActive = this.el.querySelector(".carousel-item.active");
+                    const currentIndex = slideActive
+                        ? Array.from(slidesElts).indexOf(slideActive)
+                        : -1;
+                    const displayedSlides = Number(
+                        getComputedStyle(this.el).getPropertyValue("--o-carousel-multiple-items")
+                    );
+                    if (currentIndex >= slidesElts.length - displayedSlides) {
+                        carousel.to(0);
+                    }
+                    carouselInnerEl.style.transform =
+                        "translateX(calc(((100% - (var(--o-carousel-multiple-items-gap) * (var(--o-carousel-multiple-items) - 1))) / var(--o-carousel-multiple-items) + var(--o-carousel-multiple-items-gap)) * " +
+                        event.to +
+                        " * -1)";
+                });
+            }
             carousel.cycle();
         }
 

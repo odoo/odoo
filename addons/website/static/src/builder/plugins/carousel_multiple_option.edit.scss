@@ -1,0 +1,12 @@
+// Edit mode
+// =========
+.s_carousel_multiple_wrapper {
+    .s_carousel_multiple {
+        .carousel-inner:has(.carousel-item-next) .carousel-item,
+        .carousel-inner:has(.carousel-item-prev) .carousel-item {
+            // This is necessary to update the position of editing element overlay when sliding
+            transform: none;
+            transition-duration: .2s;
+        }
+    }
+}

@@ -7,6 +7,7 @@ import {
 } from "@website/builder/plugins/options/utils";
 import { BaseWebsiteBackgroundOption } from "./background_option";
 import { CarouselCardsItemOption } from "./carousel_cards_item_option";
+import { CarouselMultipleItemOption } from "./carousel_multiple_item_option";
 import { CardOption, CardWithoutWidthOption } from "./card_option";
 
 export class WebsiteBackgroundCardOption extends BaseWebsiteBackgroundOption {
@@ -35,6 +36,7 @@ export class CardOptionPlugin extends Plugin {
             CardWithoutWidthOption,
             WebsiteBackgroundCardOption,
             CarouselCardsItemOption,
+            CarouselMultipleItemOption,
         ],
         mark_color_level_selector_params: [
             { selector: CardOption.selector, exclude: CardOption.exclude },

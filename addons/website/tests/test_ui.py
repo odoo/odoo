@@ -741,3 +741,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_mega_footer(self):
         self.start_tour('/', 'mega_footer', login='admin')
+
+    def test_multiple_carousel(self):
+        self.start_tour("/", "carousel_multiple_edit", login="admin")
