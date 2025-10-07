@@ -3047,6 +3047,9 @@ class MrpProduction(models.Model):
         lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
         return lines.grouped(lambda line: line.product_id)
 
+    def _get_product_catalog_domain(self):
+        return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
+
     def _update_order_line_info(self, product_id, quantity, *, child_field=False, **kwargs):
         if not child_field:
             return 0
