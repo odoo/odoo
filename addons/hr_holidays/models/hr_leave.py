@@ -910,10 +910,15 @@ Versions:
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
 
+        validated_leaves_to_update = self.env['hr.leave']
+        if any(field in values for field in ['holiday_status_id', 'request_date_from', 'request_date_to', 'date_from', 'date_to']):
+            validated_leaves_to_update = self.filtered(lambda leave: leave.state == 'validate')
         # Unlink existing resource.calendar.leaves for validated time off
         if 'state' in values and values['state'] != 'validate':
             validated_leaves = self.filtered(lambda l: l.state == 'validate')
             validated_leaves._remove_resource_leave()
+        elif validated_leaves_to_update:
+            validated_leaves_to_update._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
@@ -934,6 +939,8 @@ Versions:
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 self._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+        if validated_leaves_to_update:
+            validated_leaves_to_update._create_resource_leave()
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:
