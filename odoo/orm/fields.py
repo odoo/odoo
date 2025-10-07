@@ -291,7 +291,7 @@ class Field(typing.Generic[T]):
     compute: str | Callable[[BaseModel], None] | None = None   # compute(recs) computes field on recs
     compute_sudo: bool = False          # whether field should be recomputed as superuser
     precompute: bool = False            # whether field has to be computed before creation
-    compute_sql: str | Callable[[BaseModel, str, Query], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
+    compute_sql: str | Callable[[BaseModel, TableSQL], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
     inverse: str | Callable[[BaseModel], None] | None = None  # inverse(recs) inverses field on recs
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None  # search(recs, operator, value) searches on self
     related: str | None = None          # sequence of field names, for related fields
@@ -723,10 +723,10 @@ class Field(typing.Generic[T]):
         for record, value in zip(records, values):
             record[self.name] = self._process_related(value[self.related_field.name], record.env)
 
-    def _compute_sql_related(self, model: BaseModel, alias: str, query: Query) -> SQL:
+    def _compute_sql_related(self, model, table: TableSQL) -> SQL:
         # traverse_related
         assert self.related and not self.store
-        table = TableSQL(alias, model, query)
+        assert model is table._model
 
         env = table._model.env
         if self.compute_sudo and not env.su:
@@ -1238,7 +1238,8 @@ class Field(typing.Generic[T]):
         if self.compute_sql:
             if self.compute_sudo:
                 model = model.sudo()
-            sql_field = determine(self.compute_sql, model, table._alias, table._query)
+                table = table._with_model(model)
+            sql_field = determine(self.compute_sql, model, table)
             assert isinstance(sql_field, SQL), f"{self} invalid return of compute_sql"
             return sql_field
         if not self.store or not self.column_type:

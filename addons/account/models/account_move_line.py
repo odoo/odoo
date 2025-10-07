@@ -1157,15 +1157,15 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
 
-    def _compute_sql_payment_date(self, alias, query):
+    def _compute_sql_payment_date(self, table):
         return SQL("""
             CASE
                 WHEN %(discount_date)s IS NOT NULL AND %(today)s <= %(discount_date)s THEN %(discount_date)s
                 ELSE %(date_maturity)s
             END""",
             today=fields.Date.context_today(self),
-            discount_date=self._field_to_sql(alias, "discount_date", query),
-            date_maturity=self._field_to_sql(alias, "date_maturity", query),
+            discount_date=table.discount_date,
+            date_maturity=table.date_maturity,
         )
 
     @api.depends('matched_debit_ids', 'matched_credit_ids')

@@ -818,9 +818,8 @@ class AccountMove(models.Model):
         for move in self:
             move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
 
-    def _compute_sql_move_sent_values(self, alias, query):
-        is_move_sent = self._field_to_sql(alias, 'is_move_sent', query)
-        return SQL("CASE WHEN %s THEN 'sent' ELSE 'not_sent' END", is_move_sent)
+    def _compute_sql_move_sent_values(self, table):
+        return SQL("CASE WHEN %s THEN 'sent' ELSE 'not_sent' END", table.is_move_sent)
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
@@ -1327,10 +1326,10 @@ class AccountMove(models.Model):
             if not move.status_in_payment:
                 move.status_in_payment = move.state
 
-    def _compute_sql_status_in_payment(self, alias, query):
+    def _compute_sql_status_in_payment(self, table):
         # TODO not the same logic as the compute?
-        state = self._field_to_sql(alias, 'state', query)
-        payment_state = self._field_to_sql(alias, 'payment_state', query)
+        state = table.state
+        payment_state = table.payment_state
         return SQL("""CASE
             WHEN %s = 'draft' THEN 'draft'
             WHEN %s = 'cancel' THEN 'cancel'

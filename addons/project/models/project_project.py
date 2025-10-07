@@ -77,10 +77,10 @@ class ProjectProject(models.Model):
         for project in self:
             project.is_favorite = project in favorite_project_ids
 
-    def _compute_sql_is_favorite(self, alias, query):
+    def _compute_sql_is_favorite(self, table):
         return SQL(
             "%s IN (SELECT project_id FROM project_favorite_user_rel WHERE user_id = %s)",
-            SQL.identifier(alias, 'id'), self.env.uid,
+            table.id, self.env.uid,
         )
 
     def _set_favorite_user_ids(self, is_favorite):
