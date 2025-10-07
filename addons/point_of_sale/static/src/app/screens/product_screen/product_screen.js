@@ -319,8 +319,18 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     async _parseElementsFromGS1(parsed_results) {
         const productBarcode = parsed_results.find((element) => element.type === "product");
         const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const qty = parsed_results.find((element) => element.type === "quantity");
         const product = await this._getProductByBarcode(productBarcode);
-        return { product, lotBarcode, customProductOptions: {} };
+        const customProductOptions = {};
+        if (
+            qty &&
+            product?.uom_id[0] &&
+            qty?.rule?.associated_uom_id &&
+            product.uom_id[0] == qty.rule.associated_uom_id[0]
+        ) {
+            customProductOptions.quantity = qty.value;
+        }
+        return { product, lotBarcode, customProductOptions };
     }
     /**
      * Add a product to the current order using the product identifier and lot number from parsed results.
