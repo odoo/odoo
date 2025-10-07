@@ -42,12 +42,12 @@ line 1 (sk_01) and its VAT label,
                                     <record id="sk_01_tag" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">01</field>
+                                        <field name="formula">-01</field>
                                     </record>
                                     <record id="sk_02_tag" model="account.report.expression">
                                         <field name="label">vat</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">02</field>
+                                        <field name="formula">-02</field>
                                     </record>
                                 </field>
                             </record>
@@ -59,12 +59,12 @@ line 1 (sk_01) and its VAT label,
                                     <record id="sk_01a_tag" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">01a</field>
+                                        <field name="formula">-01a</field>
                                     </record>
                                     <record id="sk_02a_tag" model="account.report.expression">
                                         <field name="label">vat</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">02a</field>
+                                        <field name="formula">-02a</field>
                                     </record>
                                 </field>
                             </record>
@@ -75,12 +75,12 @@ line 1 (sk_01) and its VAT label,
                                     <record id="sk_03_tag" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">03</field>
+                                        <field name="formula">-03</field>
                                     </record>
                                     <record id="sk_04_tag" model="account.report.expression">
                                         <field name="label">vat</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">04</field>
+                                        <field name="formula">-04</field>
                                     </record>
                                 </field>
                             </record>
@@ -346,7 +346,7 @@ line 1 (sk_01) and its VAT label,
                             <record id="sk_13_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">13</field>
+                                <field name="formula">-13</field>
                             </record>
                         </field>
                     </record>
@@ -358,7 +358,7 @@ line 1 (sk_01) and its VAT label,
                             <record id="sk_14_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">14</field>
+                                <field name="formula">-14</field>
                             </record>
                         </field>
                     </record>
@@ -370,7 +370,7 @@ line 1 (sk_01) and its VAT label,
                             <record id="sk_15_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">15</field>
+                                <field name="formula">-15</field>
                             </record>
                         </field>
                     </record>
@@ -382,7 +382,7 @@ line 1 (sk_01) and its VAT label,
                             <record id="sk_16_tag" model="account.report.expression">
                                 <field name="label">vat</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">16</field>
+                                <field name="formula">-16</field>
                             </record>
                         </field>
                     </record>
@@ -404,7 +404,7 @@ line 1 (sk_01) and its VAT label,
                                     + sk_05a.vat + sk_07.vat + sk_09.vat + sk_09a.vat + sk_09b.vat +
                                     sk_11.vat + sk_11a.vat + sk_11b.vat + sk_11c.vat + sk_11d.vat +
                                     sk_11e.vat + sk_16.vat</field>
-                                <field name="subformula">round(0)</field>
+                                <field name="subformula">round(2)</field>
                             </record>
                         </field>
                     </record>
