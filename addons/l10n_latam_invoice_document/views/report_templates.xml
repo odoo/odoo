@@ -130,15 +130,15 @@
         </xpath>
 
         <!-- support for custom footer -->
-        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center" position="attributes">
+        <xpath expr="//div[contains(@t-attf-class,'o_footer_content')]" position="attributes">
             <attribute name="t-if">not custom_footer</attribute>
-        </div>
-        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center" position="after">
-            <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center"
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class,'o_footer_content')]" position="after">
+            <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'mx-5'}} pt-5 text-center"
                  t-if="custom_footer and company._localization_use_documents()">
                 <t t-out="custom_footer"/>
             </div>
-        </div>
+        </xpath>
     </template>
 
     <template id="external_layout_folder" inherit_id="web.external_layout_folder">
