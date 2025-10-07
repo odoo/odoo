@@ -27,8 +27,8 @@ patch(TicketScreen.prototype, {
         const orders = super.getFilteredOrderList();
         orders.forEach((order) => {
             if (
-                ["kiosk", "mobile"].includes(order.source) &&
-                !order.online_payment_method_id &&
+                ((order.source === "kiosk" && !order.online_payment_method_id) ||
+                    (order.source === "mobile" && !order.use_self_order_online_payment)) &&
                 !Object.keys(order.last_order_preparation_change.lines).length
             ) {
                 order.updateLastOrderChange();
