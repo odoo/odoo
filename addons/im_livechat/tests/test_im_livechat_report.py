@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -108,4 +109,40 @@ class TestImLivechatReport(TestImLivechatCommon):
             f"/odoo/action-{report_action.id}?view_type=pivot",
             "im_livechat_report_pivot_redirect_tour",
             login="operator_1",
+        )
+
+    def test_day_of_week_ordering_week_start(self):
+        """Test that day of week grouping respects language week_start setting"""
+        operator = new_test_user(self.env, login="test_operator", groups="im_livechat.im_livechat_group_manager")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Test Support", "user_ids": [operator.id]}
+        )
+        base_date = datetime.now() - timedelta(days=7)
+        test_dates = [
+            (base_date.strftime("%Y-%m-%d 10:00:00"), "Sunday"),
+            ((base_date + timedelta(days=1)).strftime("%Y-%m-%d 10:00:00"), "Monday"),
+            ((base_date + timedelta(days=2)).strftime("%Y-%m-%d 10:00:00"), "Tuesday"),
+            ((base_date + timedelta(days=3)).strftime("%Y-%m-%d 10:00:00"), "Wednesday"),
+            ((base_date + timedelta(days=4)).strftime("%Y-%m-%d 10:00:00"), "Thursday"),
+            ((base_date + timedelta(days=5)).strftime("%Y-%m-%d 10:00:00"), "Friday"),
+            ((base_date + timedelta(days=6)).strftime("%Y-%m-%d 10:00:00"), "Saturday"),
+        ]
+
+        for date_str, day_name in test_dates:
+            with freeze_time(date_str):
+                channel_id = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"anonymous_name": f"Visitor_{day_name}", "channel_id": livechat_channel.id},
+                )["channel_id"]
+                channel = self.env['discuss.channel'].browse(channel_id)
+                self._create_message(channel, channel.livechat_operator_id, date_str)
+        en_lang = self.env["res.lang"].search([("code", "=", "en_US")])
+        if not en_lang:
+            en_lang = self.env["res.lang"]._activate_lang("en_US")
+        en_lang.week_start = "6"
+        report_action = self.env.ref("im_livechat.im_livechat_report_channel_action")
+        self.start_tour(
+            f"/odoo/action-{report_action.id}?view_type=pivot",
+            tour_name="day_of_week_ordering_tour",
+            login="test_operator",
         )
