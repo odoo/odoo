@@ -383,7 +383,7 @@ class AccountBankStatementLine(models.Model):
     def write(self, vals):
         # OVERRIDE
 
-        res = super().write(vals)
+        res = super(AccountBankStatementLine, self.with_context(skip_readonly_check=True)).write(vals)
         self._synchronize_to_moves(set(vals.keys()))
         return res
 
@@ -423,7 +423,7 @@ class AccountBankStatementLine(models.Model):
         self.payment_ids.unlink()
 
         for st_line in self:
-            st_line.with_context(force_delete=True).write({
+            st_line.with_context(force_delete=True, skip_readonly_check=True).write({
                 'to_check': False,
                 'line_ids': [Command.clear()] + [
                     Command.create(line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
@@ -840,7 +840,7 @@ class AccountBankStatementLine(models.Model):
                 st_line_vals['journal_id'] = journal.id
             if st_line.move_id.partner_id != st_line.partner_id:
                 st_line_vals['partner_id'] = st_line.partner_id.id
-            st_line.move_id.write(st_line_vals)
+            st_line.move_id.with_context(skip_readonly_check=True).write(st_line_vals)
 
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves

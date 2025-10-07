@@ -39,7 +39,7 @@ class TestEdiZatca(TestSaEdiCommon):
             self.skipTest("Sale module is not installed")
 
         def test_generated_file(move, test_file, xpath_to_apply):
-            move.write({
+            move.with_context(skip_readonly_check=True).write({
                 'invoice_date': '2022-09-05',
                 'invoice_date_due': '2022-09-22',
                 'state': 'posted',
