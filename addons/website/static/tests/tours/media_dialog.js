@@ -4,6 +4,7 @@ import {
     changeOption,
     clickOnSave,
     insertSnippet,
+    clickOnEditAndWaitEditMode,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -205,5 +206,83 @@ registerWebsitePreviewTour("website_media_dialog_insert_media", {
     {
         content: "Verify that the icon was inserted",
         trigger: ":iframe .s_text_block p > span.fa",
+    },
+]);
+
+registerWebsitePreviewTour("website_replace_remove_image", {
+    url: "/",
+    edition: true,
+}, () => [
+    ...insertSnippet({
+        id: "s_text_image",
+        name: "Text - Image",
+        groupName: "Content",
+    }),
+    {
+        content: "Open the media dialog from the snippet",
+        trigger: ":iframe .s_text_image img",
+        run: "dblclick",
+    },
+    {
+        content: "Click on the toolbar's 'Add URL' button",
+        trigger: ".o_upload_media_url_button",
+        run: "click",
+    },
+    {
+        content: "Edit input field value",
+        trigger: ".o_we_url_input",
+        run: "edit website/static/src/img/backgrounds/city.jpg",
+    },
+    {
+        content: "Click on the toolbar's 'Add URL' button",
+        trigger: ".o_upload_media_url_button",
+        run: "click",
+    },
+    {
+        content: "Open the media dialog from the snippet",
+        trigger: ":iframe .s_text_image img",
+        run: "dblclick",
+    },
+    {
+        content: "Click on remove attachment",
+        trigger: ".o_we_attachment_selected .fa-trash:not(:visible)",
+        run: "click",
+    },
+    {
+        content: "Confirm the removal of the attachment",
+        trigger: ".btn:contains('Ok')",
+        run: "click",
+    },
+    {
+        content: "Click 'Discard' to close the media dialog",
+        trigger: ".modal:not(.o_inactive_modal) .o_select_media_dialog .btn:contains(Discard)",
+        run: "click",
+    },
+    ...clickOnSave(),
+    {
+        content: "Ensure the image is replaced with a placeholder thumbnail",
+        trigger: ":iframe .s_text_image img[src='/html_editor/static/src/img/placeholder_thumbnail.png']",
+    },
+    ...clickOnEditAndWaitEditMode(),
+    ...insertSnippet({
+        id: "s_text_image",
+        name: "Text - Image",
+        groupName: "Content",
+    }),
+    {
+        content: "Use browser's go back button",
+        trigger: "body",
+        run() {
+            window.history.back();
+        },
+    },
+    {
+        content: "Check dialog is opened",
+        trigger: ".modal",
+    },
+    {
+        content: "Click on the 'Ok' button to close the dialog",
+        trigger: ".btn:contains(Ok)",
+        run: "click",
     },
 ]);

@@ -756,3 +756,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_popup_visibility_option(self):
         self.start_tour("/", "website_popup_visibility_option", login="admin")
+
+    def test_website_replace_remove_image(self):
+        self.start_tour("/", "website_replace_remove_image", login="admin")
