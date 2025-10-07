@@ -75,6 +75,8 @@ export class Thread extends Record {
                 "avatarCacheKey",
                 "description",
                 "hasWriteAccess",
+                "hasReadAccess",
+                "canPostOnreadonly",
                 "is_pinned",
                 "isLoaded",
                 "isLoadingAttachments",
