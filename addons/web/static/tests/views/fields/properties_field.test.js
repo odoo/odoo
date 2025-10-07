@@ -820,11 +820,9 @@ test("properties: tags", async () => {
     });
 
     const createNewTag = async (selector, text) => {
-        await click(selector);
-        await edit(text);
+        await contains(selector).edit(text, { confirm: false });
         await runAllTimers();
-        await click(".o_field_property_dropdown_add .dropdown-item");
-        await animationFrame();
+        await contains(".o_field_property_dropdown_add .dropdown-item").click();
     };
 
     await toggleActionMenu();
