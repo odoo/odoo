@@ -30,11 +30,11 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
         # update action: send an email
         self.action.write({
-            'mail_post_method': 'email',
             'state': 'mail_post',
             'template_id': self.template.id,
         })
-        self.assertFalse(self.action.mail_post_autofollow, 'Email action does not support autofollow')
+        self.assertTrue(self.action.mail_post_autofollow, 'Email action supports autofollow by default')
+        self.action.mail_post_autofollow = False
 
         with self.mock_mail_app():
             self.action.with_context(self.context).run()
@@ -43,13 +43,12 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         mail = self.env['mail.mail'].sudo().search([('subject', '=', 'About TestingPartner')])
         self.assertEqual(len(mail), 1)
         self.assertTrue(mail.auto_delete)
-        self.assertEqual(mail.body_html, '<p>Hello TestingPartner</p>')
-        self.assertFalse(mail.is_notification)
+        self.assertTrue('<p>Hello TestingPartner</p>' in mail.body_html)
+        self.assertTrue(mail.is_notification)
         with self.mock_mail_gateway(mail_unlink_sent=True):
             mail.send()
 
-        # no archive (message)
-        self.assertEqual(len(self.test_partner.message_ids), 1,
+        self.assertEqual(len(self.test_partner.message_ids), 2,
                          'Contains Contact created message')
         self.assertFalse(self.test_partner.message_partner_ids)
 
@@ -83,7 +82,6 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         # test without autofollow and comment
         self.action.write({
             'mail_post_autofollow': False,
-            'mail_post_method': 'comment',
             'state': 'mail_post',
             'template_id': self.template.id
         })
@@ -106,19 +104,20 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         # test with autofollow and note
         self.action.write({
             'mail_post_autofollow': True,
-            'mail_post_method': 'note'
+            'state': 'log_note',
+            'log_note_note': 'Hello %s' % self.test_partner.name
         })
         with self.assertSinglePostNotifications(
-                [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
+                [],
                 message_info={'content': 'Hello %s' % self.test_partner.name,
-                              'message_type': 'auto_comment',
+                              'message_type': 'comment',
                               'subtype': 'mail.mt_note',
                              }
             ):
             self.action.with_context(self.context).run()
         self.assertEqual(len(self.test_partner.message_ids), 3,
                          '2 new messages produced')
-        self.assertEqual(self.test_partner.message_partner_ids, self.test_partner)
+        self.assertFalse(self.test_partner.message_partner_ids, "No autofollow in log note")
 
     def test_action_next_activity(self):
         self.action.write({
@@ -356,7 +355,6 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
         # update action: send an email
         self.action.write({
-            'mail_post_method': 'email',
             'state': 'mail_post',
             'model_id': self.env['ir.model'].search([('model', '=', 'mail.test.nothread')], limit=1).id,
             'model_name': 'mail.test.nothread',

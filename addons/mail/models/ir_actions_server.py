@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -25,12 +24,14 @@ class IrActionsServer(models.Model):
         tracking=True,
         selection_add=[
             ('next_activity', 'Create Activity'),
-            ('mail_post', 'Send Email'),
+            ('mail_post', 'Send Message'),
+            ('log_note', 'Log Note'),
             ('followers', 'Add Followers'),
             ('remove_followers', 'Remove Followers'),
             ('code',),
         ],
         ondelete={'mail_post': 'cascade',
+                  'log_note': 'cascade',
                   'followers': 'cascade',
                   'remove_followers': 'cascade',
                   'next_activity': 'cascade',
@@ -59,20 +60,21 @@ class IrActionsServer(models.Model):
 
     # Message Post / Email
     template_id = fields.Many2one(
-        'mail.template', 'Email Template',
+        'mail.template', 'Mail Template',
         domain="[('model_id', '=', model_id)]",
         compute='_compute_template_id',
         ondelete='set null', readonly=False, store=True,
     )
-    # Message post
+
     mail_post_autofollow = fields.Boolean(
         'Subscribe Recipients', compute='_compute_mail_post_autofollow',
         readonly=False, store=True)
-    mail_post_method = fields.Selection(
-        selection=[('email', 'Email'), ('comment', 'Message'), ('note', 'Note')],
-        string='Send Email As',
-        compute='_compute_mail_post_method',
-        readonly=False, store=True)
+
+    # Log note
+    log_note_note = fields.Html(
+        'Internal Note',
+        translate=True,
+        compute='_compute_log_note_note', readonly=False, store=True)
 
     # Next Activity: plan-based
     has_activity_plans = fields.Boolean(compute='_compute_has_activity_plans')
@@ -134,13 +136,24 @@ class IrActionsServer(models.Model):
     @api.depends('state')
     def _compute_available_model_ids(self):
         mail_thread_based = self.filtered(
-            lambda action: action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'}
+            lambda action: action.state in {'log_note', 'followers', 'remove_followers', 'next_activity'}
         )
+        to_super = self
         if mail_thread_based:
             mail_models = self.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
             for action in mail_thread_based:
                 action.available_model_ids = mail_models.ids
-        super(IrActionsServer, self - mail_thread_based)._compute_available_model_ids()
+            to_super = to_super - mail_thread_based
+
+        need_concrete_model = self.filtered(lambda a: a.state == 'mail_post')
+        # Early mirror for mail_template._get_non_abstract_models_domain
+        if need_concrete_model:
+            models = self.env['ir.model'].search([('abstract', '=', False)])
+            for action in need_concrete_model:
+                action.available_model_ids = models.ids
+            to_super = to_super - need_concrete_model
+
+        super(IrActionsServer, to_super)._compute_available_model_ids()
 
     @api.depends('model_id', 'state')
     def _compute_template_id(self):
@@ -151,23 +164,16 @@ class IrActionsServer(models.Model):
         if to_reset:
             to_reset.template_id = False
 
-    @api.depends('state', 'mail_post_method')
+    @api.depends('state')
     def _compute_mail_post_autofollow(self):
-        to_reset = self.filtered(lambda act: act.state != 'mail_post' or act.mail_post_method == 'email')
-        if to_reset:
-            to_reset.mail_post_autofollow = False
-        other = self - to_reset
-        if other:
-            other.mail_post_autofollow = True
+        to_reset = self.filtered(lambda act: act.state != 'mail_post')
+        to_reset.mail_post_autofollow = False
+        (self - to_reset).mail_post_autofollow = True
 
     @api.depends('state')
-    def _compute_mail_post_method(self):
-        to_reset = self.filtered(lambda act: act.state != 'mail_post')
-        if to_reset:
-            to_reset.mail_post_method = False
-        other = self - to_reset
-        if other:
-            other.mail_post_method = 'comment'
+    def _compute_log_note_note(self):
+        to_reset = self.filtered(lambda act: act.state != 'log_note')
+        to_reset.log_note_note = False
 
     @api.depends('model_id', 'state')
     def _compute_followers_type(self):
@@ -266,7 +272,8 @@ class IrActionsServer(models.Model):
 
     @api.model
     def _warning_depends(self):
-        return super()._warning_depends() + [
+        return [
+            *super()._warning_depends(),
             'activity_date_deadline_range',
             'model_id',
             'template_id',
@@ -286,12 +293,11 @@ class IrActionsServer(models.Model):
         if self.state == 'mail_post' and self.template_id and self.template_id.model_id != self.model_id:
             warnings.append(_("Mail template model of $(action_name)s does not match action model.", action_name=self.name))
 
-        if self.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and self.model_id.transient:
-            warnings.append(_("This action cannot be done on transient models."))
+        if self.state in {'mail_post', 'log_note', 'followers', 'remove_followers', 'next_activity'} and (self.model_id.transient or self.model_id.abstract):
+            warnings.append(_("This action cannot be done on transient or abstract models."))
 
         if (
-            (self.state in {"followers", "remove_followers"}
-            or (self.state == "mail_post" and self.mail_post_method != "email"))
+            self.state in {"followers", "remove_followers", "log_note"}
             and not self.model_id.is_mail_thread
         ):
             warnings.append(_("This action can only be done on a mail thread models"))
@@ -367,8 +373,35 @@ class IrActionsServer(models.Model):
                     return True
         return False
 
+    def _run_action_log_note_multi(self, eval_context=None):
+        if (not self.env.context.get('active_ids') and not self.env.context.get('active_id')) or self._is_recompute():
+            return False
+        res_ids = self.env.context.get('active_ids', [self.env.context.get('active_id')])
+
+        # Clean context from default_type to avoid making attachment
+        # with wrong values in subsequent operations
+        cleaned_ctx = dict(self.env.context)
+        cleaned_ctx.pop('default_type', None)
+        cleaned_ctx.pop('default_parent_id', None)
+        cleaned_ctx['mail_post_autofollow_author_skip'] = True  # do not subscribe random people to records
+        cleaned_ctx['mail_post_autofollow'] = self.mail_post_autofollow
+        # Creating a virtual template record
+        template = self.env['mail.template'].new({
+            'model_id': self.env['ir.model'].search([('model', '=', self.model_name)], limit=1).id,
+            'body_html': self.log_note_note,
+            'use_default_to': False,
+        })
+
+        records = self.env[self.model_name].with_context(cleaned_ctx).browse(res_ids)
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        records.message_post_with_source(
+            template,
+            message_type='comment',
+            subtype_id=subtype_id,
+        )
+        return False
+
     def _run_action_mail_post_multi(self, eval_context=None):
-        # TDE CLEANME: when going to new api with server action, remove action
         if not self.template_id or (not self.env.context.get('active_ids') and not self.env.context.get('active_id')) or self._is_recompute():
             return False
         res_ids = self.env.context.get('active_ids', [self.env.context.get('active_id')])
@@ -380,20 +413,17 @@ class IrActionsServer(models.Model):
         cleaned_ctx.pop('default_parent_id', None)
         cleaned_ctx['mail_post_autofollow_author_skip'] = True  # do not subscribe random people to records
         cleaned_ctx['mail_post_autofollow'] = self.mail_post_autofollow
-
-        if self.mail_post_method in ('comment', 'note'):
+        if isinstance(self.env[self.model_name], self.env.registry.get("mail.thread")):
             records = self.env[self.model_name].with_context(cleaned_ctx).browse(res_ids)
-            message_type = 'auto_comment' if self.state == 'mail_post' else 'notification'
-            if self.mail_post_method == 'comment':
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-            else:
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             records.message_post_with_source(
                 self.template_id,
-                message_type=message_type,
+                message_type='auto_comment',
                 subtype_id=subtype_id,
             )
         else:
+            if res_ids and self.model_id != self.template_id.model_id:
+                raise ValueError(self.env._("The model of the mail template is different from the one on the action server"))
             template = self.template_id.with_context(cleaned_ctx)
             for res_id in res_ids:
                 template.send_mail(
