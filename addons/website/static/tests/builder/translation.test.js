@@ -943,6 +943,13 @@ describe("translate images", () => {
         },
     ]);
 
+    test("can double click on image to translate it", async () => {
+        await setupSidebarBuilderForTranslation({ websiteContent: baseImgHTML });
+        await contains(".modal .btn:contains(Ok, never show me this again)").click();
+        await contains(":iframe img").dblclick();
+        expect(".modal .o_select_media_dialog").toBeVisible();
+    });
+
     test("translating an image keeps the alt and title attributes", async () => {
         const { waitSidebarUpdated } = await setupSidebarBuilderForTranslation({
             websiteContent: baseImgHTML,

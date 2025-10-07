@@ -5,13 +5,34 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
+/**
+ * @typedef { Object } MediaTranslationShared
+ * @property { MediaTranslationPlugin['translateMedia'] } translateMedia
+ */
+
+export const translateImageOptionSelector = "img.o_savable_attribute";
+export const translateDocumentOptionSelector = ".o_file_box";
+
 export class MediaTranslationPlugin extends Plugin {
     static id = "mediaTranslation";
-    static dependencies = ["imagePostProcess"];
+    static dependencies = [
+        "domObserver",
+        "history",
+        "imagePostProcess",
+        "media",
+        "media_website",
+        "translation",
+    ];
+    static shared = ["translateMedia"];
+
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             TranslateMediaSrcAction,
+        },
+        builder_options_render_context: {
+            translateImageOptionSelector,
+            translateDocumentOptionSelector,
         },
         on_get_dirty_translations_handlers: this.registerImageDirtyTranslations.bind(this),
         on_image_saved_handlers: this.updateTranslationsOnImageSaved.bind(this),
@@ -22,10 +43,17 @@ export class MediaTranslationPlugin extends Plugin {
         // As long as image options are not available in translation, prevent
         // from modifying the resizeWidth or the mimetype.
         should_optimize_image_predicates: () => false,
+        replace_media_dialog_params_processors: (params) => {
+            const newParams = this.getMediaDialogProps({ mediaEl: params.node });
+            return Object.assign(params, newParams);
+        },
     };
 
     setup() {
         this.imageTranslationsMap = new Map();
+        this.savingMap = {
+            images: this.saveImage.bind(this),
+        };
     }
 
     async onWillSaveMediaDialogHandlers(elements, { node }) {
@@ -91,40 +119,43 @@ export class MediaTranslationPlugin extends Plugin {
             this.imageTranslationsMap.delete(imageEl);
         }
     }
-}
 
-registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTranslationPlugin);
-
-export class TranslateMediaSrcAction extends BuilderAction {
-    static id = "translateMediaSrc";
-    static dependencies = ["domObserver", "media", "translation"];
-    canTimeout = false;
-
-    setup() {
-        this.savingMap = {
-            images: this.saveImage.bind(this),
+    getMediaDialogProps({ mediaEl }) {
+        const mediaType = this.getMediaType(mediaEl);
+        return {
+            onlyImages: mediaType === "images",
+            noImages: mediaType !== "images",
+            visibleTabs: [mediaType.toUpperCase()],
+            node: mediaEl,
+            save:
+                mediaType === "documents"
+                    ? null
+                    : (newMediaEl) => {
+                          this.savingMap[mediaType](mediaEl, newMediaEl);
+                          mediaEl.classList.add("oe_translated");
+                          this.trigger("on_media_replaced_handlers", { newMediaEl: mediaEl });
+                          this.dependencies.history.commit(); // Needed for the dblclick
+                      },
         };
     }
 
-    async apply({ editingElement, params: { mainParam: mediaType } }) {
+    getMediaType(el) {
+        if (el.matches(translateImageOptionSelector)) {
+            return "images";
+        }
+        if (el.matches(translateDocumentOptionSelector)) {
+            return "documents";
+        }
+    }
+
+    /**
+     * Opens the media dialog to translate the source of the media.
+     * @param {HTMLElement} element - element that should be "translated"
+     */
+    async translateMedia(element) {
         await new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog(
-                {
-                    onlyImages: mediaType === "images",
-                    noImages: mediaType !== "images",
-                    visibleTabs: [mediaType.toUpperCase()],
-                    node: editingElement,
-                    save:
-                        mediaType === "documents"
-                            ? null
-                            : (newMediaEl) => {
-                                  this.savingMap[mediaType](editingElement, newMediaEl);
-                                  editingElement.classList.add("oe_translated");
-                                  this.trigger("on_media_replaced_handlers", {
-                                      newMediaEl: editingElement,
-                                  });
-                              },
-                },
+                this.getMediaDialogProps({ mediaEl: element }),
                 // Pass the editable to save media on the `ir.ui.view` model,
                 // not on `website`, in order to upload as a public image and
                 // reuse existing public images.
@@ -182,5 +213,17 @@ export class TranslateMediaSrcAction extends BuilderAction {
                 "srcset"
             );
         }
+    }
+}
+
+registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTranslationPlugin);
+
+export class TranslateMediaSrcAction extends BuilderAction {
+    static id = "translateMediaSrc";
+    static dependencies = ["mediaTranslation"];
+    canTimeout = false;
+
+    async apply({ editingElement }) {
+        await this.dependencies.mediaTranslation.translateMedia(editingElement);
     }
 }
