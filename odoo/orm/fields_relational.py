@@ -473,9 +473,8 @@ class Many2one(_Relational):
     def property_to_sql(self, field_sql: FieldSQL, property_name: str) -> SQL:
         # accessing a property on a many2one traverses the model
         # we can do this because it keeps the cardinality of the query the same
-        table = field_sql._table
-        comodel, coalias = self.join(table._model, table._alias, table._query)
-        return TableSQL(coalias, comodel, table._query)[property_name]
+        cotable = self.join(field_sql._table)
+        return cotable[property_name]
 
     def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         if operator not in ('any', 'not any', 'any!', 'not any!') or field_expr != self.name:
@@ -508,11 +507,11 @@ class Many2one(_Relational):
 
         if left_join:
             assert bypass_access
-            comodel, coalias = self.join(model.sudo(), table._alias, table._query)
-            comodel = comodel.with_env(model.env)
+            cotable = self.join(table._sudo())
+            cotable = cotable._with_model(comodel)  # reset env
             if not positive:
                 value = (~value).optimize_full(comodel)
-            sql = value._to_sql(TableSQL(coalias, comodel, table._query))
+            sql = value._to_sql(cotable)
             if self.company_dependent:
                 sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
             if can_be_null:
@@ -542,10 +541,11 @@ class Many2one(_Relational):
             sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
         return sql
 
-    def join(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, str]:
+    def join(self, table: TableSQL, kind='LEFT JOIN') -> TableSQL:
         """ Add a LEFT JOIN to ``query`` by following field ``self``,
         and return the joined table's corresponding model and alias.
         """
+        model = table._model
         comodel = model.env[self.comodel_name]
         if self.compute_sudo or self.inherited or model.env.su:
             coquery = None
@@ -554,17 +554,17 @@ class Many2one(_Relational):
             if not coquery.where_clause:
                 coquery = None
         if coquery is None:
-            coalias = query.make_alias(alias, self.name)
-            cotable = comodel._table
+            coalias = table._make_alias(self.name, comodel)
+            cotable = None
         else:
-            coalias = query.make_alias(alias, f'{self.name}__{model.env.uid}')
-            cotable = coquery.subselect(SQL('%s.*', SQL.identifier(comodel._table)))
-        query.add_join('LEFT JOIN', coalias, cotable, SQL(
+            coalias = table._make_alias(f'{self.name}__{model.env.uid}', comodel)
+            cotable = coquery.subselect(SQL('%s.*', coquery.table))
+        table._query.add_join(kind, coalias, cotable, SQL(
             "%s = %s",
-            model._field_to_sql(alias, self.name, query),
-            SQL.identifier(coalias, 'id'),
+            table[self.name],
+            coalias.id,
         ))
-        return (comodel, coalias)
+        return coalias
 
 
 class _RelationalMulti(_Relational):
