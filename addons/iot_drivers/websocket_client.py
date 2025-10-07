@@ -42,6 +42,7 @@ class WebsocketClient(Thread):
         """
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
+        self.connect_timestamp = time.monotonic()
         ws.send(json.dumps({
             'event_name': 'subscribe',
             'data': {
@@ -76,6 +77,11 @@ class WebsocketClient(Thread):
                                 'status': 'disconnected',
                             })
                 case 'server_clear':
+                    if time.monotonic() < self.connect_timestamp + 5.0:
+                        # This is a hacky way avoid processing an old server_clear message
+                        # In master we can fix this properly by providing the last message ID to the IoT box on connection
+                        _logger.warning("Ignoring server_clear message")
+                        continue
                     helpers.disconnect_from_server()
                     close_server_log_sender_handler()
                 case 'restart_odoo':
