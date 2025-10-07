@@ -39,7 +39,7 @@ const openCreatePageDialog = [
     },
     {
         content: "Create a new page",
-        trigger: 'button[title="New Page"]',
+        trigger: 'button[aria-label="New Page"]',
         run: "click",
     },
 ];
@@ -57,11 +57,11 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
     return [
         ...openCreatePageDialog,
         {
-            trigger: 'a[data-id="custom"]',
+            trigger: 'button[data-id="custom"]',
         },
         {
             content: "Go to custom section",
-            trigger: 'a[data-id="custom"]',
+            trigger: 'button[data-id="custom"]',
             run: "click",
         },
         ...(isTemplate
@@ -213,9 +213,14 @@ function testWebsitePageProperties() {
             run: "check",
         },
         {
-            content: "Set redirect type to temporary",
+            content: "Open redirect type popup",
             trigger: "#redirect_type_0",
-            run: 'select "302"',
+            run: "click"
+        },
+        {
+            content: "Set redirect type to temporary",
+            trigger: ".o-dropdown-item[data-choice-index='1']",
+            run: "click"
         },
         {
             // TODO: this needs to be tested
@@ -229,10 +234,15 @@ function testWebsitePageProperties() {
             run: "uncheck",
         },
         {
+            content: "Open visibility popup",
+            trigger: "#visibility_0",
+            run: "click",
+        },
+        {
             // TODO: this needs to be tested
             content: "Make visible with password only",
-            trigger: "#visibility_0",
-            run: 'select "password"',
+            trigger: ".o-dropdown-item[data-choice-index='3']",
+            run: "click",
         },
         {
             content: "Set password to 123",
@@ -271,9 +281,14 @@ function testWebsitePageProperties() {
             run: `edit new-page && press Enter`,
         },
         {
-            content: "Reset date published",
+            content: "Open date published popup",
             trigger: "#date_publish_0",
-            run: "edit ",
+            run: "click",
+        },
+        {
+            content: "Reset date published",
+            trigger: "button[title='Clear']",
+            run: "click",
         },
         {
             content: "Do index",
@@ -281,9 +296,14 @@ function testWebsitePageProperties() {
             run: "check",
         },
         {
-            content: "Make visibility Public",
+            content: "Open visibility popup",
             trigger: "#visibility_0",
-            run: 'select ""',
+            run: "click",
+        },
+        {
+            content: "Make visible public",
+            trigger: ".o-dropdown-item[data-choice-index='0']",
+            run: "click",
         },
         {
             content: "Remove from templates",
