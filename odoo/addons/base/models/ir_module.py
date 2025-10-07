@@ -404,17 +404,25 @@ class IrModuleModule(models.Model):
         #  - all its dependencies are installed or to be installed,
         #  - at least one dependency is 'to install'
         #  - if the module is country specific, at least one company is in one of the countries
+        #    or we have already installed a module from that country (only modules with exactly 1 country considered)
         install_states = frozenset(('installed', 'to install', 'to upgrade'))
+        accepted_country_ids = set(
+            company_countries.ids
+            + self.search([('state', 'in', list(install_states))]).filtered(lambda m: len(m.country_ids) == 1).country_ids.ids
+        )
         def must_install(module):
             states = {dep.state for dep in module.dependencies_id if dep.auto_install_required}
             return states <= install_states and 'to install' in states and (
-                not module.country_ids or module.country_ids & company_countries
+                not module.country_ids or set(module.country_ids.ids) & accepted_country_ids
             )
 
         modules = self
         while modules:
             # Mark the given modules and their dependencies to be installed.
             modules._state_update('to install', ['uninstalled'])
+
+            # Also consider the new modules for the country constraint
+            accepted_country_ids.update(modules.filtered(lambda m: len(m.country_ids) == 1).country_ids.ids)
 
             # Determine which auto-installable modules must be installed.
             modules = self.search(auto_domain).filtered(must_install)
