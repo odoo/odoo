@@ -135,7 +135,8 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        self.assertEqual(self._get_url_hot_query('/shop'), 37)  # To increase this number you must ask the permission to al
+        # Test in community: 36
+        self.assertLessEqual(self._get_url_hot_query('/shop'), 37)  # To increase this number you must ask the permission to al
 
     def _get_cart_quantity(self):
         return int(re.search(
@@ -257,4 +258,5 @@ class TestWebsiteAllPerformancePostInstall(TestWebsiteAllPerformance):
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        self.assertEqual(self._get_url_hot_query('/shop'), 47)  # To increase this number you must ask the permission to al
+        # Test in community: 45
+        self.assertLessEqual(self._get_url_hot_query('/shop'), 47)  # To increase this number you must ask the permission to al
