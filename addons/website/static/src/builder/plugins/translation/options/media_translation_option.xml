@@ -12,11 +12,25 @@
     </BuilderRow>
 </t>
 
+<t t-name="website.DocumentTranslationOption">
+    <BuilderRow label.translate="Document">
+        <BuilderButton
+            action="'translateMediaSrc'"
+            actionParam="'documents'"
+            label.translate="Replace"
+            type="'success'"
+            preview="false"/>
+    </BuilderRow>
+</t>
+
 <t t-inherit="website.TranslationBuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='translation_options']" position="before">
         <img_translation_option
             template="website.ImgTranslationOption"
             selector="img.o_savable_attribute"/>
+        <document_translation_option
+            template="website.DocumentTranslationOption"
+            selector=".o_file_box"/>
     </xpath>
 </t>
 

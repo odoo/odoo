@@ -114,11 +114,16 @@ export class TranslateMediaSrcAction extends BuilderAction {
                     noImages: mediaType !== "images",
                     visibleTabs: [mediaType.toUpperCase()],
                     node: editingElement,
-                    save: (newMediaEl) => {
-                        this.savingMap[mediaType](editingElement, newMediaEl);
-                        editingElement.classList.add("oe_translated");
-                        this.trigger("on_media_replaced_handlers", { newMediaEl: editingElement });
-                    },
+                    save:
+                        mediaType === "documents"
+                            ? null
+                            : (newMediaEl) => {
+                                  this.savingMap[mediaType](editingElement, newMediaEl);
+                                  editingElement.classList.add("oe_translated");
+                                  this.trigger("on_media_replaced_handlers", {
+                                      newMediaEl: editingElement,
+                                  });
+                              },
                 },
                 // Pass the editable to save media on the `ir.ui.view` model,
                 // not on `website`, in order to upload as a public image and

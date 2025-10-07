@@ -360,6 +360,16 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'raw': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
             'public': True,
         })
+        self.env['ir.attachment'].create({
+            'name': 'file.txt',
+            'raw': b'My attachment',
+            'public': True,
+        })
+        self.env['ir.attachment'].create({
+            'name': 'file_translated.txt',
+            'raw': b'tnemh cat taym',
+            'public': True,
+        })
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'translate_website_media', login='admin')
 
 
