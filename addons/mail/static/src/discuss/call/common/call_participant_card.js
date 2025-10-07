@@ -136,13 +136,6 @@ export class CallParticipantCard extends Component {
         }
     }
 
-    /**
-     * @deprecated use `showConnectionState` instead
-     */
-    get showServerState() {
-        return false;
-    }
-
     get name() {
         return this.channelMember?.name;
     }

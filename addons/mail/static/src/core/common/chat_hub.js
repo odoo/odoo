@@ -149,21 +149,6 @@ export class ChatHub extends Component {
         return counter;
     }
 
-    /** @deprecated */
-    get displayConversations() {
-        return this.chatHub.showConversations && !this.chatHub.compact;
-    }
-
-    /** @deprecated */
-    get isShown() {
-        return true;
-    }
-
-    /** @deprecated */
-    shouldDisplayChatWindow(cw) {
-        return cw.canShow;
-    }
-
     expand() {
         this.chatHub.compact = false;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
