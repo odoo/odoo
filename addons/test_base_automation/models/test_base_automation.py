@@ -63,6 +63,7 @@ class BaseAutomationLeadThreadTest(models.Model):
     _inherit = ['base.automation.lead.test', 'mail.thread']
 
     user_id = fields.Many2one("res.users")
+    partner_id = fields.Many2one("res.partner", related="user_id.partner_id")
 
 class BaseAutomationLineTest(models.Model):
     _name = 'base.automation.line.test'
@@ -153,6 +154,8 @@ class BaseAutomationLeadThreadTest(models.Model):  # noqa: F811
     _name = 'base.automation.lead.thread.test'
     _inherit = ["base.automation.lead.test", "mail.thread"]
     _description = "Threaded Lead Test"
+
+    partner_id = fields.Many2one("res.partner", related="user_id.partner_id")
 
 
 class BaseAutomationModelWithRecnameChar(models.Model):
