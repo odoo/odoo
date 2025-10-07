@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -125,4 +126,35 @@ class TestImLivechatReport(TestImLivechatCommon):
             f"/odoo/action-{session_report_action.id}?view_type=pivot",
             "im_livechat_sessions_report_pivot_redirect_tour",
             login="operator_1",
+        )
+
+    def test_day_of_week_ordered_by_lang_week_start(self):
+        agent = new_test_user(self.env, login="test_agent", groups="im_livechat.im_livechat_group_manager")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Test Support", "user_ids": [agent.id]}
+        )
+        today_dt = datetime.now()
+        for i in range(1, 8):
+            date = today_dt + timedelta(days=i)
+            with freeze_time(date):
+                channel_id = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"anonymous_name": f"Visitor_{i}", "channel_id": livechat_channel.id},
+                )["channel_id"]
+                channel = self.env["discuss.channel"].browse(channel_id)
+                self._create_message(channel, channel.livechat_operator_id, date)
+        en_lang = self.env["res.lang"]._activate_lang("en_US")
+        report_model = self.env["im_livechat.report.channel"].with_user(agent)
+        result = report_model.formatted_read_group(domain=[], groupby=["day_number"])
+        expected_order = ["0", "1", "2", "3", "4", "5", "6"]
+        actual_order = [group["day_number"] for group in result]
+        self.assertEqual(actual_order, expected_order)
+        en_lang.week_start = "6"
+        result = report_model.formatted_read_group(domain=[], groupby=["day_number"])
+        expected_order = ["6", "0", "1", "2", "3", "4", "5"]
+        actual_order = [group["day_number"] for group in result]
+        self.assertEqual(
+            actual_order,
+            expected_order,
+            f"Days should be ordered starting from Saturday. Got {actual_order}, expected {expected_order}"
         )
