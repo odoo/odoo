@@ -53,6 +53,10 @@ class ResCompany(models.Model):
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
             raise UserError(_("Everything is correctly closed"))
+        if not self.account_stock_journal_id:
+            raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
+        if not self.account_stock_valuation_id:
+            raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
 
         moves_vals = {
             'journal_id': self.account_stock_journal_id.id,

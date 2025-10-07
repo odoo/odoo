@@ -969,6 +969,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
             'property_stock_journal': cls.stock_journal.id,
         })
+        cls.env.company.account_stock_valuation_id = cls.stock_valuation_account
 
     def test_standard_manual_to_auto_1(self):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
