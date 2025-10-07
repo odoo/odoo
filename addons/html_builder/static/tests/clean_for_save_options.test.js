@@ -1,12 +1,11 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
 test("clean for save of option with selector that matches an element on the page", async () => {
-    onRpc("ir.ui.view", "save", ({ args }) => true);
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`
@@ -29,7 +28,6 @@ test("clean for save of option with selector that matches an element on the page
 });
 
 test("clean for save of option with selector and exclude that matches an element on the page", async () => {
-    onRpc("ir.ui.view", "save", ({ args }) => true);
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`

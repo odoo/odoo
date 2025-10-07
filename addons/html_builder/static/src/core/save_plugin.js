@@ -1,4 +1,3 @@
-import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
@@ -6,7 +5,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "saveView", "ignoreDirty"];
+    static shared = ["save", "ignoreDirty"];
     static dependencies = ["history"];
 
     resources = {
@@ -33,7 +32,6 @@ export class SavePlugin extends Plugin {
             // async (el) => {
             //     called when saving an element (in parallel to saving the view)
             // }
-            this.saveView.bind(this),
         ],
         save_handlers: [
             // async () => {
@@ -106,36 +104,6 @@ export class SavePlugin extends Plugin {
         const willSaves = this.getResource("save_handlers").map((c) => c());
         await Promise.all(saveProms.concat(willSaves));
         this.dependencies.history.reset();
-    }
-
-    /**
-     * Saves one (dirty) element of the page.
-     *
-     * @param {HTMLElement} el - the element to save.
-     */
-    saveView(el, delayTranslations = true) {
-        const viewID = Number(el.dataset["oeId"]);
-        if (!viewID) {
-            return;
-        }
-
-        let context = {};
-        if (this.services.website) {
-            const delay = delayTranslations ? { delay_translations: true } : {};
-            context = {
-                website_id: this.services.website.currentWebsite.id,
-                lang: this.services.website.currentWebsite.metadata.lang,
-                ...delay,
-            };
-        }
-
-        escapeTextNodes(el);
-        return this.services.orm.call(
-            "ir.ui.view",
-            "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
-            { context }
-        );
     }
 
     startObserving() {

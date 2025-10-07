@@ -407,6 +407,49 @@ class TestViewSaving(TestViewSavingCommon):
             'text node characters wrongly unescaped when rendering'
         )
 
+    def test_oe_structure_as_inherited_view(self):
+        View = self.env['ir.ui.view']
+        View.create({
+            'name': 'Test View 1',
+            'type': 'qweb',
+            'arch': '<div>Hello World</div>',
+            'key': 'website.test_first_view',
+        })
+        second_view = View.create({
+            'name': 'Test View 2',
+            'type': 'qweb',
+            'arch': '<div><t t-call="website.test_first_view"/></div>',
+            'key': 'website.test_second_view',
+        })
+
+        base = View.create({
+            'name': 'Test View oe_structure',
+            'type': 'qweb',
+            'arch': """<xpath expr='//t[@t-call="website.test_first_view"]' position='after'>
+                        <div class="oe_structure" id='oe_structure_test_view_oe_structure'/>
+                    </xpath>""",
+            'key': 'website.oe_structure_view',
+            'inherit_id': second_view.id
+        })
+
+        # check view mode
+        self.assertEqual(base.mode, 'extension')
+
+        # update content of the oe_structure
+        value = '''<div class="oe_structure" id="oe_structure_test_view_oe_structure" data-oe-id="%s"
+                         data-oe-xpath="/div" data-oe-model="ir.ui.view" data-oe-field="arch">
+                        <p>Hello World!</p>
+                   </div>''' % base.id
+
+        base.with_context(website_id=1).save(value=value, xpath='/xpath/div')
+
+        self.assertEqual(len(base.with_context(website_id=1).inherit_children_ids), 1)
+        self.assertEqual(base.with_context(website_id=1).inherit_children_ids.mode, 'extension')
+        self.assertIn(
+            '<p>Hello World!</p>',
+            base.with_context(website_id=1).inherit_children_ids.get_combined_arch(),
+        )
+
     def test_save_oe_structure_with_attr(self):
         """ Test saving oe_structure with attributes """
         view = self.env['ir.ui.view'].create({
