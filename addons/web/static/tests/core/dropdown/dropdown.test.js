@@ -1546,3 +1546,21 @@ test("dropdown: no BottomSheet", async () => {
     expect(DROPDOWN_MENU).toHaveCount(1);
     expect(".o_bottom_sheet").toHaveCount(0);
 });
+
+test("can be toggled with the UP/DOWN arrow keys", async () => {
+    class Parent extends SimpleDropdown {}
+
+    await mountWithCleanup(Parent);
+
+    await contains(DROPDOWN_TOGGLE).focus();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+    await press("ArrowDown");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    await press("Escape");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+    await press("ArrowUp");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+});
