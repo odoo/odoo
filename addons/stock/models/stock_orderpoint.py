@@ -342,7 +342,7 @@ class StockWarehouseOrderpoint(models.Model):
         now = self.env.cr.now()
         if force_to_max:
             for orderpoint in self:
-                orderpoint.qty_to_order = orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast)
+                orderpoint.qty_to_order = orderpoint.qty_to_order_manual or orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast)
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
