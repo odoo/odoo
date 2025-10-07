@@ -49,6 +49,9 @@ export class DocumentFileUploader extends Component {
     async onUploadComplete() {
         const resModal = this.getResModel();
         let action;
+        if (!this.attachmentIdsToProcess.length) {
+            return;
+        }
         try {
             action = await this.orm.call(
                 resModal,

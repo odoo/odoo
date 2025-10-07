@@ -46,6 +46,14 @@ export class FileUploader extends Component {
             }
             this.state.isUploading = true;
             const data = await getDataURLFromFile(file);
+            const datas = data.split(",")[1];
+            if (!datas) {
+                this.notification.add(_t("%s file is 0 bytes, so it will not be attached.", file.name), {
+                    type: "danger",
+                });
+                this.state.isUploading = false;
+                continue;
+            }
             if (!file.size) {
                 console.warn(`Error while uploading file : ${file.name}`);
                 this.notification.add(_t("There was a problem while uploading your file."), {
@@ -57,7 +65,7 @@ export class FileUploader extends Component {
                     name: file.name,
                     size: file.size,
                     type: file.type,
-                    data: data.split(",")[1],
+                    data: datas,
                     objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
                 });
             } finally {
