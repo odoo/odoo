@@ -101,10 +101,7 @@ class ResPartnerBank(models.Model):
     note = fields.Text('Notes')
     color = fields.Integer(compute='_compute_color')
 
-    _unique_number = models.Constraint(
-        'unique(sanitized_acc_number, partner_id)',
-        "The combination Account Number/Partner must be unique.",
-    )
+    _unique_number = models.UniqueIndex("(sanitized_acc_number, partner_id) WHERE active IS TRUE")
 
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
