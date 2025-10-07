@@ -98,6 +98,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             currency = order.session_id.currency_id
 
             for line in order.lines:
+                if order.config_id.module_pos_discount and line.product_id.id == order.config_id.discount_product_id.id:
+                    continue
                 if not line.order_id.is_refund:
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
                 else:
@@ -288,6 +290,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'position': True if user_currency.position == 'after' else False,
             'total_paid': user_currency.round(total),
             'precision': user_currency.decimal_places,
+            'user_currency': user_currency,
         }
 
         session_name = False
