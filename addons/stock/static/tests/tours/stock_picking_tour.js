@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
         run: "edit 5 && click body",
     },
     {
-        trigger: ".modal .btn-primary:contains('Generate')",
+        trigger: ".modal .btn-primary:contains('Validate')",
         run: "click",
     },
     {
@@ -146,7 +146,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
         run: "edit 50",
     },
     {
-        trigger: ".modal .modal-footer button.btn-primary:contains(Generate)",
+        trigger: ".modal .modal-footer button.btn-primary:contains(Validate)",
         run: "click",
     },
     {
@@ -183,7 +183,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
         run: "check",
     },
     {
-        trigger: ".modal .modal-footer button.btn-primary:contains(Generate)",
+        trigger: ".modal .modal-footer button.btn-primary:contains(Validate)",
         run: "click",
     },
     {

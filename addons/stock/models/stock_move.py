@@ -40,6 +40,7 @@ class StockMove(models.Model):
         'product.product', 'Product',
         check_company=True,
         domain="[('type', '=', 'consu')]", index=True, required=True)
+    serial_prefix = fields.Char(related="product_id.serial_prefix_format", readonly=True)
     never_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         'template_attribute_value_stock_move_rel',

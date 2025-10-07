@@ -9,7 +9,7 @@
     <t t-name="stock.generate_serial_dialog">
         <Dialog size="size" title="title" withBodyPadding="false">
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_onGenerate">Generate</button>
+                <button class="btn btn-primary" t-on-click="_onGenerate">Validate</button>
                 <button class="btn btn-secondary" t-on-click="() => this.props.close()">
                     Discard
                 </button>
@@ -24,13 +24,22 @@
                                     <t t-else="">First Serial Number</t>
                                 </label>
                             </div>
-                            <div class="col-7">
-                                <div name="next_serial" class="o_field_widget o_field_char">
+                            <div class="col-5">
+                                <div name="next_serial" class="o_field_widget o_field_char w-100">
                                     <input placeholder="e.g. LOT-PR-00012" class="o_input" t-ref="nextSerial" id="next_serial_0" type="text"/>
                                 </div>
                             </div>
-                            <div class="col">
-                                <button class="btn btn-primary py-1" t-on-click="_onGenerateCustomSerial">New</button>
+                            <div class="col-4">
+                                <t t-if="!this.serialPrefix">
+                                    <button class="btn btn-primary py-1" t-on-click="_onGenerateCustomSerial">
+                                        <t t-if="this.props.move.data.has_tracking === 'lot'">
+                                            Generate New Lot
+                                        </t>
+                                        <t t-else="">
+                                            Generate New Serial
+                                        </t>
+                                    </button>
+                                </t>
                             </div>
                         </div>
                         <div class="row mb-2">
