@@ -893,7 +893,7 @@ class AccountAccount(models.Model):
             self.name = name
             self.code = code
 
-    @api.depends_context('company', 'formatted_display_name')
+    @api.depends_context('company', 'formatted_display_name', 'from_bill')
     @api.depends('code')
     def _compute_display_name(self):
         formatted_display_name = self.env.context.get('formatted_display_name')
@@ -907,9 +907,11 @@ class AccountAccount(models.Model):
             preferred_account_ids = self._order_accounts_by_frequency_for_partner(self.env.company.id, partner, move_type)
         for account in self:
             if formatted_display_name and account.code:
+                display_asset_tag = account.asset_model_ids and self.env.context.get('from_bill')
                 account.display_name = (
                     f"""{account.code if self.env.user.has_group('account.group_account_readonly') else ''} {account.name}"""
                     f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
+                    f"""{f' `{_("Asset")}`' if display_asset_tag else ''}"""
                     f"""{f'{new_line}--{account.description}--' if account.description else ''}"""
                 )
             else:
