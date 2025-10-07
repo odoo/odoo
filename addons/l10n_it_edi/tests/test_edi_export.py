@@ -470,8 +470,7 @@ class TestItEdiExport(TestItEdi):
 
     @freeze_time("2025-02-03")
     def test_export_invoice_with_two_downpayments(self):
-        if self.env['ir.module.module']._get('sale').state != 'installed':
-            self.skipTest("sale module is not installed")
+        self.ensure_installed('sale')
 
         sale_order = self.env['sale.order'].with_company(self.company).sudo().create({
             'partner_id': self.italian_partner_a.id,

@@ -28,7 +28,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva10b').ids)]},
@@ -101,7 +101,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_b.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva10b').ids)]},
@@ -153,7 +153,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {
@@ -240,7 +240,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='out_refund',
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
@@ -316,7 +316,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
@@ -374,7 +374,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='out_refund',
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
@@ -434,7 +434,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva_e').ids)]},
@@ -492,7 +492,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='out_refund',
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
@@ -552,7 +552,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='out_refund',
                 partner_id=self.partner_a.id,
                 currency_id=self.other_currency.id,
@@ -615,7 +615,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -668,7 +668,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_refund',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -712,7 +712,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -777,7 +777,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -822,7 +822,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -869,7 +869,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 partner_id=self.partner_b.id,
                 invoice_line_ids=[
                     {
@@ -924,7 +924,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -976,7 +976,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_refund',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -1029,7 +1029,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_refund',
                 ref='sup0001',
                 partner_id=self.partner_b.id,
@@ -1084,7 +1084,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                 new=mocked_l10n_es_edi_call_web_service_sign
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='fakedua',
                 partner_id=self.partner_b.id,
@@ -1131,7 +1131,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_a.id,
@@ -1184,7 +1184,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_refund',
                 ref='sup0001',
                 partner_id=self.partner_a.id,
@@ -1238,7 +1238,7 @@ class TestEdiXmls(TestEsEdiCommon):
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
                    new=mocked_l10n_es_edi_call_web_service_sign):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_es(
                 move_type='in_invoice',
                 ref='sup0001',
                 partner_id=self.partner_a.id,

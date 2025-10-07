@@ -115,8 +115,7 @@ class TestOSSSpain(AccountTestInvoicingCommon):
         """
         Test that the foreign oss taxes generate with l10n_es_type as no_sujeto_loc
         """
-        if self.env['ir.module.module']._get('l10n_es').state != 'installed':
-            self.skipTest(reason="L10n_es is required for this test.")
+        self.ensure_installed('l10n_es')
 
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.company_data['company'].country_id)[0].code
         tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
@@ -142,8 +141,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
     def test_oss_tax_on_eu_branch(self):
         """Ensure a company outside EU can have an EU branch with an EU VAT and that the OSS feature could be used on those"""
         # This test can only be run if l10n_be is installed
-        if not self.env['ir.module.module'].search_count([('name', '=', 'l10n_be'), ('state', '=', 'installed')], limit=1):
-            self.skipTest(reason="The belgian CoA is required for this test to be performed but the corresponding localization module isn't installed")
+        self.ensure_installed('l10n_be')
 
         self.root_company = self.company_data['company']
         self.root_company.child_ids = [Command.create({'name': 'Branch A'})]

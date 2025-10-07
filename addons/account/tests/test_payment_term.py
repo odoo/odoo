@@ -62,7 +62,13 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             ],
         })
 
-        cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
+        cls.invoice = cls._create_invoice(
+            move_type='out_refund',
+            invoice_line_ids=[
+                cls._prepare_invoice_line(product_id=cls.product_a),
+                cls._prepare_invoice_line(product_id=cls.product_b),
+            ],
+        )
 
         cls.pay_term_a = cls.env['account.payment.term'].create({
             'name': "turlututu",
@@ -568,7 +574,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             ],
         })
         # create an invoice with immediate payment term
-        invoice = self.init_invoice('out_invoice', products=self.product_a)
+        invoice = self._create_invoice_one_line(product_id=self.product_a)
         invoice.invoice_payment_term_id = immediate_term
         # check the payment term labels
         invoice_terms = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')

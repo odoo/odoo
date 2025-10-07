@@ -15,7 +15,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
 
         cls.other_currency = cls.setup_other_currency('HRK')
 
-        cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
+        cls.invoice = cls.init_invoice('out_refund', products=cls.product_a + cls.product_b)
 
         cls.product_line_vals_1 = {
             'name': 'product_a',
@@ -28,7 +28,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             'price_unit': 1000.0,
             'price_subtotal': 1000.0,
             'price_total': 1150.0,
-            'tax_ids': cls.product_a.taxes_id.ids,
+            'tax_ids': cls.product_a.taxes_id.filtered(lambda t: t.company_id == cls.invoice.company_id).ids,
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
             'amount_currency': 1000.0,
@@ -47,7 +47,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             'price_unit': 200.0,
             'price_subtotal': 200.0,
             'price_total': 260.0,
-            'tax_ids': cls.product_b.taxes_id.ids,
+            'tax_ids': cls.product_b.taxes_id.filtered(lambda t: t.company_id == cls.invoice.company_id).ids,
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
             'amount_currency': 200.0,

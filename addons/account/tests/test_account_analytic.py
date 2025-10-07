@@ -28,17 +28,6 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             ('move_line_id', 'in', invoice.line_ids.ids),
         ]).sorted('amount')
 
-    def create_invoice(self, partner, product):
-        return self.env['account.move'].create([{
-            'move_type': 'out_invoice',
-            'partner_id': partner.id,
-            'date': '2017-01-01',
-            'invoice_date': '2017-01-01',
-            'invoice_line_ids': [Command.create({
-                'product_id': product.id,
-            })]
-        }])
-
     def test_changing_analytic_company(self):
         """ Ensure you can't change the company of an account.analytic.account if there are analytic lines linked to
             the account
@@ -206,19 +195,19 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         }])
 
         # Partner and product match, score 2
-        invoice = self.create_invoice(self.partner_a, self.product_a)
+        invoice = self._create_invoice_one_line(partner_id=self.partner_a, product_id=self.product_a)
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_4.id): 100})
 
         # Match the partner but not the product, score 0
-        invoice = self.create_invoice(self.partner_a, self.product_b)
+        invoice = self._create_invoice_one_line(partner_id=self.partner_a, product_id=self.product_b)
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, False)
 
         # Product match, score 1
-        invoice = self.create_invoice(self.partner_b, self.product_a)
+        invoice = self._create_invoice_one_line(partner_id=self.partner_b, product_id=self.product_a)
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_3.id): 100})
 
         # No rule match with the product, score 0
-        invoice = self.create_invoice(self.partner_b, self.product_b)
+        invoice = self._create_invoice_one_line(partner_id=self.partner_b, product_id=self.product_b)
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, False)
 
     def test_model_application(self):
@@ -233,7 +222,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             'company_id': False,
         }])
 
-        invoice = self.create_invoice(self.env['res.partner'], self.product_a)
+        invoice = self._create_invoice_one_line(partner_id=self.env['res.partner'], product_id=self.product_a)
         # No model is found, don't put anything
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, False)
 
@@ -262,7 +251,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_4.id): 100})
 
     def test_mandatory_plan_validation(self):
-        invoice = self.create_invoice(self.partner_b, self.product_a)
+        invoice = self._create_invoice_one_line(partner_id=self.partner_b, product_id=self.product_a)
         self.analytic_plan_2.write({
             'applicability_ids': [Command.create({
                 'business_domain': 'invoice',
@@ -298,8 +287,8 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         In case of mass posting, we should still check for mandatory analytic plans. This may raise a RedirectWarning,
         if more than one entry was selected for posting, or a ValidationError if only one entry was selected.
         """
-        invoice1 = self.create_invoice(self.partner_a, self.product_a)
-        invoice2 = self.create_invoice(self.partner_b, self.product_a)
+        invoice1 = self._create_invoice_one_line(partner_id=self.partner_a, product_id=self.product_a)
+        invoice2 = self._create_invoice_one_line(partner_id=self.partner_b, product_id=self.product_a)
         self.analytic_plan_2.write({
             'applicability_ids': [Command.create({
                 'business_domain': 'invoice',
@@ -442,7 +431,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             'company_id': False,
         }])
         accounts_by_code = self.env['account.account'].search([('code', 'ilike', '6%')]).grouped('code')
-        invoice = self.create_invoice(self.env['res.partner'], self.product_a)
+        invoice = self._create_invoice_one_line(partner_id=self.env['res.partner'], product_id=self.product_a)
         # No model is found, don't put anything
         self.assertEqual(invoice.invoice_line_ids.analytic_distribution, False)
         invoice.invoice_line_ids.account_id = accounts_by_code.get('611000')
@@ -750,7 +739,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
     def test_zero_balance_invoice_with_analytic_line(self):
         """ Test that creating an analytic line on a 0-amount invoice does not crash and updates analytic_distribution safely. """
         self.product_a.list_price = 0.0
-        invoice = self.create_invoice(self.partner_a, self.product_a)
+        invoice = self._create_invoice_one_line(partner_id=self.partner_a, product_id=self.product_a)
         invoice.action_post()
         self.env['account.analytic.line'].create({
             'name': 'Zero Balance Test',

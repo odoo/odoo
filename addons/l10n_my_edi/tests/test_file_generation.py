@@ -333,8 +333,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Ensure that an invoice linked to an SO will not contain this information in the xml.
         """
-        if self.env.ref('base.module_sale').state != 'installed':
-            self.skipTest("This test requires the sale module to be installed.")
+        self.ensure_installed('sale')
 
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,

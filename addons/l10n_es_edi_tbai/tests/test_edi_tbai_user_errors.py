@@ -119,7 +119,7 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
 
     def test_post_tbai_credit_note_before_reversed_invoice(self):
         # We send a first invoice, so the first invoice sent won't be an invoice imported from a previous system
-        invoice_already_sent = self.create_invoice(invoice_line_ids=[{
+        invoice_already_sent = self._create_invoice_es(invoice_line_ids=[{
             'quantity': 5,
             'discount': 20.0,
             'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],

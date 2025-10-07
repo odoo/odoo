@@ -88,7 +88,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {
@@ -181,7 +181,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {
@@ -276,7 +276,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 move_type='out_refund',
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
@@ -378,7 +378,7 @@ class TestEdiJson(TestEGEdiCommon):
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
             ref_eg_standard_sale_14 = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {
@@ -510,7 +510,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 partner_id=self.partner_b.id,
                 invoice_line_ids=[
                     {
@@ -609,7 +609,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 currency_id=self.currency_aed_id.id,
                 partner_id=self.partner_b.id,
                 invoice_line_ids=[
@@ -718,7 +718,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 move_type='out_invoice',
                 currency_id=self.currency_aed_id.id,
                 partner_id=self.partner_b.id,
@@ -828,7 +828,7 @@ class TestEdiJson(TestEGEdiCommon):
             'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 move_type='out_invoice',
                 currency_id=self.currency_aed_id.id,
                 partner_id=self.partner_c.id,
@@ -869,7 +869,7 @@ class TestEdiJson(TestEGEdiCommon):
             new=mocked_l10n_eg_edi_post_invoice_web_service,
         ):
             taxes = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids + self.env.ref(f'account.{self.env.company.id}_eg_withholding_3_sale').ids
-            invoice = self.create_invoice(
+            invoice = self._create_invoice_eg(
                 move_type='out_invoice',
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[

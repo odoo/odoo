@@ -72,7 +72,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         return cls.env.ref(f'account.{cls.env.company.id}_account_tax_template_{trailing_xml_id}')
 
     @classmethod
-    def create_invoice(cls, **kwargs):
+    def _create_invoice_es(cls, **kwargs):
         return cls.env['account.move'].with_context(edi_test_mode=True).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
