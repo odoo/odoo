@@ -239,6 +239,10 @@ STATE_CODES = {
     'GR': '52',
 }
 
+_eu_country_vat = {
+    'GR': 'EL'
+}
+
 
 class Picking(models.Model):
     _inherit = 'stock.picking'
@@ -837,7 +841,7 @@ class Picking(models.Model):
                     for move in data['stock_move_ids'] for product in move.product_id
                 ],
                 'partenerComercial': {
-                    'codTara': commercial_partner.country_code,
+                    'codTara': _eu_country_vat.get(commercial_partner.country_code, commercial_partner.country_code),
                     'denumire': commercial_partner.name,
                     'cod': commercial_partner_code,
                 },
@@ -845,7 +849,7 @@ class Picking(models.Model):
                     'nrVehicul': data['l10n_ro_edi_stock_vehicle_number'].upper(),
                     'nrRemorca1': data['l10n_ro_edi_stock_trailer_1_number'].upper() if data['l10n_ro_edi_stock_trailer_1_number'] else None,
                     'nrRemorca2': data['l10n_ro_edi_stock_trailer_2_number'].upper() if data['l10n_ro_edi_stock_trailer_2_number'] else None,
-                    'codTaraOrgTransport': transport_partner.country_code,
+                    'codTaraOrgTransport': _eu_country_vat.get(transport_partner.country_code, transport_partner.country_code),
                     'codOrgTransport': self._l10n_ro_edi_stock_get_cod(transport_partner),
                     'denumireOrgTransport': transport_partner.name,
                     'dataTransport': scheduled_date,

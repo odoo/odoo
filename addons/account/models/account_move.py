@@ -4592,7 +4592,7 @@ class AccountMove(models.Model):
             biggest_base_line['balance'] += delta_balance
 
         else:
-            grouping_dict = {'account_id': cash_discount_account.id}
+            grouping_dict = {'account_id': cash_discount_account.id, 'partner_id': payment_term_line.partner_id.id}
 
             res['term_lines'][payment_term_line][frozendict(grouping_dict)] = {
                 'name': _("Early Payment Discount"),

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_loyalty
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-10-03 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_loyalty
@@ -152,12 +152,6 @@ msgid "Expired Date:"
 msgstr "有効期限："
 
 #. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Free Product - %(product)s"
-msgstr "無料プロダクト-%(product)s"
-
-#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift #"
 msgstr "ギフト数"
@@ -276,9 +270,11 @@ msgstr "複数プロダクト"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
-msgstr "このロイヤリティプログラム用のカードが見つかりません。このオーダではポイントは付与されません。"
+"No card found for this loyalty program and no points will be given with this "
+"order."
+msgstr ""
+"このロイヤリティプログラム用のカードが見つかりません。このオーダではポイント"
+"は付与されません。"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -368,7 +364,9 @@ msgstr "販売ロイヤリティ - リワード選択ウィザード"
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
 msgid ""
 "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
-msgstr "販売オーダのクーポンポイント - 販売オーダがクーポンにどのように影響するかを追跡します。"
+msgstr ""
+"販売オーダのクーポンポイント - 販売オーダがクーポンにどのように影響するかを追"
+"跡します。"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -406,7 +404,9 @@ msgstr "一時的な値引明細"
 msgid ""
 "Technical field used to link multiple reward lines from the same reward "
 "together."
-msgstr "同じ特典の複数の特典明細を一緒にリンクするために使用される技術的なフィールド。"
+msgstr ""
+"同じ特典の複数の特典明細を一緒にリンクするために使用される技術的なフィール"
+"ド。"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -477,7 +477,9 @@ msgstr "このクーポンは有効期限が切れています。"
 msgid ""
 "This discount (%(discount)s) is not compatible with \"%(other_discount)s\". "
 "Please remove it in order to apply this one."
-msgstr "値引 (%(discount)s) は \"%(other_discount)s\"と互換性がありません。これを適用するためには削除して下さい。"
+msgstr ""
+"値引 (%(discount)s) は \"%(other_discount)s\"と互換性がありません。これを適用"
+"するためには削除して下さい。"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -512,7 +514,8 @@ msgstr "このプロモコードはすでに適用されています。"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
-msgstr "現在のプロモーション明細を更新し、該当する場合は新しい特典を選択します。"
+msgstr ""
+"現在のプロモーション明細を更新し、該当する場合は新しい特典を選択します。"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
@@ -536,4 +539,9 @@ msgstr "販売オーダに必要なプロダクトの数量がありません。
 msgid ""
 "You will find below your gift cards code. An email has been sent with it. "
 "You can use it starting right now."
-msgstr "お客様のギフトカードコードは以下になります。コードを掲載したEメールが送信されました。今すぐご利用いただけます。"
+msgstr ""
+"お客様のギフトカードコードは以下になります。コードを掲載したEメールが送信され"
+"ました。今すぐご利用いただけます。"
+
+#~ msgid "Free Product - %(product)s"
+#~ msgstr "無料プロダクト-%(product)s"
