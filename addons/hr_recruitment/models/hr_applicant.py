@@ -643,6 +643,10 @@ class HrApplicant(models.Model):
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
 
+        for applicant in applicants:
+            if applicant.talent_pool_ids and not applicant.pool_applicant_id:
+                applicant.pool_applicant_id = applicant
+
         if (applicants.interviewer_ids.partner_id - self.env.user.partner_id):
             for applicant in applicants:
                 interviewers_to_notify = applicant.interviewer_ids.partner_id - self.env.user.partner_id
