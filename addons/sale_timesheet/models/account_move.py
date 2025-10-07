@@ -85,6 +85,19 @@ class AccountMove(models.Model):
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
                 timesheets.write({'timesheet_invoice_id': line.move_id.id})
 
+    def action_post(self):
+        result = super().action_post()
+        for move in self:
+            if move.move_type == 'out_refund' and move.reversed_entry_id:
+                timesheet_lines = self.env['account.analytic.line'].search([
+                    ('timesheet_invoice_id', '=', move.reversed_entry_id.id)
+                ])
+                refunded_tasks = move.invoice_line_ids.sale_line_ids.task_id.ids
+                to_clear = timesheet_lines.filtered(lambda l: l.task_id.id in refunded_tasks)
+                if to_clear:
+                    to_clear.write({'timesheet_invoice_id': False})
+        return result
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
