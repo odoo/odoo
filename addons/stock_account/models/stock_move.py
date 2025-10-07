@@ -191,11 +191,12 @@ class StockMove(models.Model):
 
     def _get_price_unit(self):
         """ Returns the unit price to value this stock move """
-        if len(self.product_id) > 1:
+        if len(self.product_id) != 1:
             return 0
         total_value = sum(self.mapped('value'))
         total_qty = sum(m._get_valued_qty() for m in self)
-        return total_value / total_qty if total_qty else self.product_id.standard_price
+        price_unit = total_value / total_qty if total_qty else self.product_id.standard_price
+        return self.product_id.uom_id._compute_price(price_unit, self.product_uom)
 
     @api.model
     def _get_valued_types(self):
