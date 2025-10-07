@@ -74,7 +74,11 @@
                                 </span>
                             </span>
                             <field name="job_ids" widget="many2many_tags"/>
-                            <field name="rotting_threshold_days" invisible="hired_stage"/>
+                            <label for="rotting_threshold_days" string="Rotting in" invisible="hired_stage"/>
+                            <div invisible="hired_stage">
+                                <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
+                                <span>days</span>
+                            </div>
                         </group>
                     </group>
                     <group name="tooltips" string="Tooltips">
