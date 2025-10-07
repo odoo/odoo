@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
         },
         {
             trigger: ".modal .modal-body .o_field_widget[name=quantity] input",
-            run: 'edit 27',
+            run: 'edit 25',
         },
         {
             content: "Click Save",
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".o_data_row > td:contains('43')",
+            trigger: ".o_data_row:has([name=product_uom_qty]:contains(5.00)) > td:contains(25)",
             run: "click",
         },
         {
