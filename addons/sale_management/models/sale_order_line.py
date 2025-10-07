@@ -38,15 +38,6 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return True
 
-    # === CRUD === #
-    @api.model_create_multi
-    def create(self, vals_list):
-        lines = super().create(vals_list)
-        for line in lines:
-            if line._is_line_optional():
-                line.product_uom_qty = 0
-        return lines
-
     # === TOOLING ===#
 
     def _is_line_optional(self):

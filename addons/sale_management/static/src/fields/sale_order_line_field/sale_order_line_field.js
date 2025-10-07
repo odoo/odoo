@@ -1,7 +1,8 @@
-import { patch } from '@web/core/utils/patch';
-import { SaleOrderLineListRenderer } from '@sale/js/sale_order_line_field/sale_order_line_field';
-import { x2ManyCommands } from '@web/core/orm_service';
 import { getSectionRecords, getParentSectionRecord } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
+import { SaleOrderLineListRenderer } from '@sale/js/sale_order_line_field/sale_order_line_field';
+import { makeContext } from '@web/core/context';
+import { x2ManyCommands } from '@web/core/orm_service';
+import { patch } from '@web/core/utils/patch';
 
 patch(SaleOrderLineListRenderer.prototype, {
 
@@ -40,6 +41,48 @@ patch(SaleOrderLineListRenderer.prototype, {
             || this.shouldCollapse(this.record, 'collapse_prices', true)
             || this.shouldCollapse(this.record, 'collapse_composition', true)
         );
+    },
+
+    get isCurrentSectionOptional() {
+        if (this.props.list.records.length === 0) return false;
+
+        return this.shouldCollapse(
+            this.props.list.records[this.props.list.records.length - 1],
+            'is_optional',
+            true
+        );
+    },
+
+    /**
+     * Override to set the default `product_uom_qty` to 0 for new lines created under an optional
+     * section.
+     */
+    add(params){
+        params.context = this.getCreateContext(params);
+        super.add(params);
+    },
+
+    getCreateContext(params) {
+        const evaluatedContext = makeContext([params.context]);
+        // A falsy context indicates a product line (no `display_type` specified)
+        if(!evaluatedContext[`default_display_type`] && this.isCurrentSectionOptional) {
+            return { ...evaluatedContext, default_product_uom_qty: 0 };
+        }
+        return params.context;
+    },
+
+    /**
+     * Override to set the default `product_uom_qty` to 0 for new lines inserted by optional
+     * sections from dropdown.
+     */
+    getInsertLineContext(record, addSubSection) {
+        if (this.shouldCollapse(record, 'is_optional', true) && !addSubSection) {
+            return {
+                ...super.getInsertLineContext(record, addSubSection),
+                default_product_uom_qty: 0
+            };
+        }
+        return super.getInsertLineContext(record, addSubSection);
     },
 
     getRowClass(record) {

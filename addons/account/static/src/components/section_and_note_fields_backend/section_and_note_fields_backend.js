@@ -179,11 +179,18 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             this.props.list.records.indexOf(record) +
             getSectionRecords(this.props.list, record, !addSubSection).length -
             1;
-        const context = {};
+        const context = this.getInsertLineContext(record, addSubSection);
         if (addSubSection) {
             context["default_display_type"] = DISPLAY_TYPES.SUBSECTION;
         }
         await this.props.list.addNewRecordAtIndex(index, { context });
+    }
+
+    /**
+     * Hook for other modules to conditionally specify defaults for new lines
+     */
+    getInsertLineContext(_record, _addSubSection) {
+        return {};
     }
 
     canUseFormatter(column, record) {

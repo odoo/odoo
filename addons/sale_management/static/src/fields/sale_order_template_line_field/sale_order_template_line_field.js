@@ -5,6 +5,7 @@ import {
     getSectionRecords,
     getParentSectionRecord,
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
+import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_service';
 import { registry } from '@web/core/registry';
 
@@ -18,6 +19,46 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
 
     get disableOptionalButton() {
         return this.shouldCollapse(this.record, 'is_optional');
+    }
+
+    get isCurrentSectionOptional() {
+        return this.shouldCollapse(
+            this.props.list.records[this.props.list.records.length - 1],
+            'is_optional',
+            true
+        );
+    }
+
+    /**
+     * Override to set the default `product_uom_qty` to 0 for new lines created under an optional
+     * section.
+     */
+    add(params){
+        params.context = this.getCreateContext(params);
+        super.add(params);
+    }
+
+    getCreateContext(params) {
+        const evaluatedContext = makeContext([params.context]);
+        // A falsy context indicates a product line (no `display_type` specified)
+        if(!evaluatedContext[`default_display_type`] && this.isCurrentSectionOptional) {
+            return { ...evaluatedContext, default_product_uom_qty: 0 };
+        }
+        return params.context;
+    }
+
+    /**
+     * Override to set the default `product_uom_qty` to 0 for new lines inserted by optional
+     * sections from dropdown.
+     */
+    getInsertLineContext(record, addSubSection) {
+        if (this.shouldCollapse(record, 'is_optional', true) && !addSubSection) {
+            return {
+                ...super.getInsertLineContext(record, addSubSection),
+                default_product_uom_qty: 0
+            };
+        }
+        return super.getInsertLineContext(record, addSubSection);
     }
 
     getRowClass(record) {
@@ -62,7 +103,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
      * - If a product line is dragged out of an optional section and had `0` quantity,
      *   its quantity is reset to `1`.
      * - Non-product lines (`display_type` set) are ignored.
-     * 
+     *
      */
     async sortDrop(dataRowId, dataGroupId, options) {
         const record = this.props.list.records.find(r => r.id === dataRowId);
