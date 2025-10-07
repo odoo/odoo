@@ -916,9 +916,11 @@ class AccountAccount(models.Model):
             preferred_account_ids = self._order_accounts_by_frequency_for_partner(self.env.company.id, partner, move_type)
         for account in self:
             if formatted_display_name and account.code:
+                display_asset_tag = account.asset_model_ids and self.env.context.get('entry_type_source') == 'in_invoice'
                 account.display_name = (
                     f"""{account.code} {account.name}"""
                     f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
+                    f"""{f' `{_("Asset")}#7`' if display_asset_tag else ''}"""
                     f"""{f'{new_line}--{account.description}--' if account.description else ''}"""
                 )
             else:

@@ -331,6 +331,12 @@ test("odoomark", () => {
     expect(odoomark("`test`").toString()).toBe(
         `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
     );
+    expect(odoomark("`test#80`").toString()).toBe(
+        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test#80</span>`
+    );
+    expect(odoomark("`test#7`").toString()).toBe(
+        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_7">test</span>`
+    );
     expect(odoomark("`test` something else `test`").toString()).toBe(
         `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span> something else <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
     );

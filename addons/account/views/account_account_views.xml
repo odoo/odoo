@@ -100,15 +100,16 @@
                     <field name="placeholder_code" column_invisible="1"/>
                     <field name="code" string="Code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
                     <field name="name"/>
+                    <field name="description" column_invisible="not context.get('entry_type_source')"/>
                     <field name="account_type" widget="account_type_selection"/>
-                    <field name="group_id" optional="hide"/>
+                    <field name="group_id" optional="hide" column_invisible="context.get('entry_type_source')"/>
                     <field name="internal_group" column_invisible="True"/>
-                    <field name="reconcile" widget="boolean_toggle" invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')"/>
-                    <field name="active" optional="hide" widget="boolean_toggle"/>
-                    <field name="non_trade" widget="boolean_toggle" invisible="account_type not in ('liability_payable', 'asset_receivable')" optional="hide"/>
+                    <field name="reconcile" widget="boolean_toggle" invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')" column_invisible="context.get('entry_type_source')"/>
+                    <field name="active" optional="hide" column_invisible="context.get('entry_type_source')" widget="boolean_toggle"/>
+                    <field name="non_trade" widget="boolean_toggle" invisible="account_type not in ('liability_payable', 'asset_receivable')" column_invisible="context.get('entry_type_source')" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"/>
                     <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
-                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                    <field name="currency_id" options="{'no_create': True}" column_invisible="context.get('entry_type_source')" groups="base.group_multi_currency"/>
                     <field name="company_ids" widget="many2many_tags" readonly="True" groups="base.group_multi_company"/>
                 </list>
             </field>
