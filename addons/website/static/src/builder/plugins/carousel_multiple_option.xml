@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselMultipleOption" t-inherit="website.CarouselBottomControllersOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderRow[@label.translate=&quot;Slide&quot;]" position="attributes">
+        <attribute name="applyTo">'.carousel-item.active'</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Slide&quot;]" position="after">
+        <BuilderRow label.translate="Displayed slides">
+            <BuilderSelect action="'changeSlidesToDisplay'">
+                <BuilderSelectItem actionValue="'1'" classAction="''">1</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'2'" classAction="'o_displayed_items_2'">2</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'3'" classAction="'o_displayed_items_3'">3</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'4'" classAction="'o_displayed_items_4'">4</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'5'" classAction="'o_displayed_items_5'">5</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Spacing" tooltip.translate="Spacing between slides">
+            <BuilderRange
+                styleAction="'--o-carousel-multiple-items-gap'"
+                max="64"
+                min="0"
+                step="4"
+                unit="'px'"
+            />
+        </BuilderRow>
+        <BuilderContext applyTo="'.s_carousel_multiple_card'">
+            <BuilderRow label.translate="Items Roundness" tooltip.translate="Applies to all items">
+                <BuilderRange action="'setClassRange'" actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5']" max="5"/>
+            </BuilderRow>
+        </BuilderContext>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Transition&quot;]" position="replace"/>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Autoplay&quot;]" position="attributes">
+        <attribute name="level">0</attribute>
+    </xpath>
+</t>
+
+</templates>

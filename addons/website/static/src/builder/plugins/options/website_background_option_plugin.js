@@ -9,7 +9,8 @@ import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
 
 export class WebsiteBackgroundCarouselOption extends BaseWebsiteBackgroundOption {
     static selector = "section";
-    static applyTo = ":scope > .carousel:not(.s_carousel_cards)";
+    static applyTo = ":scope > .carousel:not(.s_carousel_cards):not(.s_carousel_multiple)";
+
     static defaultProps = {
         withColors: true,
         withImages: true,

@@ -9,9 +9,9 @@ import {
 
 // TODO move them elsewhere.
 export const sizingY = {
-    selector: "section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating",
+    selector: "section, .row > div, .parallax, .s_hr, .carousel-item:not(.s_carousel_multiple_item), .s_rating",
     exclude:
-        "section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize",
+        "section:has(> .carousel:not(.s_carousel_multiple)), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize",
 };
 export const sizingX = {
     selector: ".row > div",
