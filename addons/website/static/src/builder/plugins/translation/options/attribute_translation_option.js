@@ -52,10 +52,7 @@ export class TranslateAttributeOption extends BaseOptionComponent {
                     if (attr.attribute === "value" && editingElement.tagName === "TEXTAREA") {
                         return !!elTranslationInfo.textContent;
                     }
-                    return (
-                        editingElement.hasAttribute(attr.attribute) &&
-                        !!elTranslationInfo[attr.attribute]
-                    );
+                    return !!elTranslationInfo[attr.attribute];
                 }),
             };
         });

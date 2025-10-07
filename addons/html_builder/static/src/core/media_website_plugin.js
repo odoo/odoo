@@ -7,13 +7,15 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 
 /**
  * @typedef { Object } MediaWebsiteShared
+ * @property { MediaWebsitePlugin['onDblClickEditableMedia'] } onDblClickEditableMedia
+ * @property { MediaWebsitePlugin['openImageTooltip'] } openImageTooltip
  * @property { MediaWebsitePlugin['replaceMedia'] } replaceMedia
  */
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
     static dependencies = ["media", "selection", "builderOptions", "operation"];
-    static shared = ["replaceMedia"];
+    static shared = ["onDblClickEditableMedia", "openImageTooltip", "replaceMedia"];
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -81,11 +83,16 @@ export class MediaWebsitePlugin extends Plugin {
      * Replaces the double-clicked media element.
      *
      * @param {HTMLElement} mediaEl the media element to replace
+     * @param {Function} [callback] some custom action instead of replaceMedia
      */
-    async onDblClickEditableMedia(mediaEl) {
+    async onDblClickEditableMedia(mediaEl, callback) {
         this.dependencies.operation.next(async () => {
             this.removeCurrentTooltip();
-            await this.replaceMedia(mediaEl);
+            if (callback) {
+                await callback(mediaEl);
+            } else {
+                await this.replaceMedia(mediaEl);
+            }
         });
     }
 

@@ -30,6 +30,7 @@ declare module "plugins" {
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { MediaTranslationShared } from "@website/builder/plugins/translation/options/media_translation_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
     import { mark_translatable_nodes, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
@@ -51,6 +52,7 @@ declare module "plugins" {
         imageGalleryOption: ImageGalleryOptionShared;
         imageHover: ImageHoverShared;
         instagramOption: InstagramOptionShared;
+        mediaTranslation: MediaTranslationShared;
         megaMenuOptionPlugin: MegaMenuOptionShared;
         menuDataPlugin: MenuDataShared;
         navTabsOptionStyle: NavTabsStyleOptionShared;
