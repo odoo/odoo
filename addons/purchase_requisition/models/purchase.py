@@ -249,6 +249,12 @@ class PurchaseOrderLine(models.Model):
     price_total_cc = fields.Monetary(compute='_compute_price_total_cc', string="Company Subtotal", currency_field="company_currency_id", store=True)
     company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
 
+    @api.model
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
+        if self.env.context.get('purchase_order_id'):
+            aggregates = [agg for agg in aggregates if agg == '__count']
+        return super().formatted_read_group(domain, groupby, aggregates, having, offset, limit, order)
+
     @api.depends('price_subtotal', 'order_id.currency_rate')
     def _compute_price_total_cc(self):
         for line in self:
