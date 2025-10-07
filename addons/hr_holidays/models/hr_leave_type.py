@@ -80,6 +80,9 @@ class HrLeaveType(models.Model):
                              ('share', '=', False),
                              ('company_ids', 'in', self.env.company.id)],
         help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified")
+    notify_time_off_officers = fields.Boolean(
+        string="Notify Time Off Officer(s)?",
+        help="If checked, every time this time off type is taken, the time off officers of the same company will be notified")
     leave_validation_type = fields.Selection([
         ('no_validation', 'None needed'),
         ('hr', 'By Time Off Officer'),
