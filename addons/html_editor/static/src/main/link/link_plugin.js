@@ -944,6 +944,7 @@ export class LinkPlugin extends Plugin {
         }
         const startBlock = closestBlock(startLink);
         const endBlock = closestBlock(endLink);
+        const multipleLinks = startLink !== endLink;
         if (
             startLink &&
             startLink.isConnected &&
@@ -962,7 +963,8 @@ export class LinkPlugin extends Plugin {
             endLink &&
             endLink.isConnected &&
             endLink.parentElement.isContentEditable &&
-            !this.isUnremovable(endLink)
+            !this.isUnremovable(endLink) &&
+            multipleLinks
         ) {
             focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
