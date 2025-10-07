@@ -79,3 +79,28 @@ export function verifyHttpsUrl(link) {
     }
     return url;
 }
+
+/**
+ * Calculates the carousel slide index needed to center the target item.
+ *
+ * @param {HTMLElement} targetItemEl - The carousel item to center
+ * @returns {number|null} Index to scroll to, or null if centering unnecessary
+ */
+export function getCarouselCenteringIndex(targetItemEl) {
+    const carouselEl = targetItemEl.closest(".carousel");
+    const itemEls = carouselEl.querySelectorAll(".carousel-item");
+    const nbDisplayedSlides = Number(
+        getComputedStyle(carouselEl).getPropertyValue("--carousel-multiple-items-per-slide")
+    );
+
+    // No centering needed if all slides visible
+    if (nbDisplayedSlides >= itemEls.length) {
+        return null;
+    }
+
+    const targetIndex = Array.from(itemEls).indexOf(targetItemEl);
+    const maxScrollIndex = itemEls.length - nbDisplayedSlides;
+    const centerOffset = Math.floor(nbDisplayedSlides / 2);
+
+    return Math.min(Math.max(targetIndex - centerOffset, 0), maxScrollIndex);
+}
