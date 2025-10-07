@@ -1,19 +1,4 @@
-import { patch } from '@web/core/utils/patch';
+import { registerPayLaterLabel } from '@payment/interactions/payment_form';
+import { _t } from '@web/core/l10n/translation';
 
-import { PaymentForm } from '@payment/interactions/payment_form';
-
-patch(PaymentForm.prototype, {
-
-    /**
-     * Configure 'cash_on_delivery' as a pay later method.
-     *
-     * @override
-     */
-    _isPayLaterPaymentMethod(paymentMethodCode) {
-        return (
-            paymentMethodCode === 'cash_on_delivery'
-            || super._isPayLaterPaymentMethod(...arguments)
-        );
-    }
-
-});
+registerPayLaterLabel('cash_on_delivery', _t('Confirm'));
