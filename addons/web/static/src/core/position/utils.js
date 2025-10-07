@@ -155,13 +155,27 @@ function computePosition(popper, target, { container, flip, margin, position }) 
         he: iframeBox.top + targetBox.bottom - popMargins.bottom - popBox.height,
     };
 
+<<<<<<< df433fc1c14f0ff645efb72ee39f56d29b8852c4
     function getPositioningData(d, v) {
         const [direction, variant] = reverseForRTL(DIRECTIONS[d], VARIANTS[v]);
         const result = { direction, variant };
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+    function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
+=======
+    function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
+        const result = { direction: DIRECTIONS[d], variant: VARIANTS[v] };
+>>>>>>> 1e8d3e717a477d5946e152108d2157cf3fb26e3a
         const vertical = ["t", "b"].includes(d);
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
+<<<<<<< df433fc1c14f0ff645efb72ee39f56d29b8852c4
         let variantValue = variantsData[variantPrefix + v];
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+        const variantValue = variantsData[variantPrefix + v];
+=======
+        let variantValue = variantsData[variantPrefix + v];
+        let malus = null;
+>>>>>>> 1e8d3e717a477d5946e152108d2157cf3fb26e3a
 
         const [directionSize, variantSize] = vertical
             ? [popBox.height, popBox.width]
@@ -173,6 +187,7 @@ function computePosition(popper, target, { container, flip, margin, position }) 
             ? [contBox.left, contBox.right]
             : [contBox.top, contBox.bottom];
 
+<<<<<<< df433fc1c14f0ff645efb72ee39f56d29b8852c4
         if (containerIsHTMLNode) {
             if (vertical) {
                 directionMin += container.scrollTop;
@@ -180,7 +195,60 @@ function computePosition(popper, target, { container, flip, margin, position }) 
             } else {
                 variantMin += container.scrollTop;
                 variantMax += container.scrollTop;
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+            if (containerIsHTMLNode) {
+                if (vertical) {
+                    directionMin += container.scrollTop;
+                    directionMax += container.scrollTop;
+                } else {
+                    variantMin += container.scrollTop;
+                    variantMax += container.scrollTop;
+                }
             }
+
+            // Abort if outside container boundaries
+            const directionOverflow =
+                Math.ceil(directionValue) < Math.floor(directionMin) ||
+                Math.floor(directionValue + directionSize) > Math.ceil(directionMax);
+            const variantOverflow =
+                Math.ceil(variantValue) < Math.floor(variantMin) ||
+                Math.floor(variantValue + variantSize) > Math.ceil(variantMax);
+            if (directionOverflow || variantOverflow) {
+                return null;
+=======
+            if (containerIsHTMLNode) {
+                if (vertical) {
+                    directionMin += container.scrollTop;
+                    directionMax += container.scrollTop;
+                } else {
+                    variantMin += container.scrollTop;
+                    variantMax += container.scrollTop;
+                }
+            }
+
+            // Compute overflows
+            let directionOverflow = 0;
+            if (Math.floor(directionValue) < Math.ceil(directionMin)) {
+                directionOverflow = Math.floor(directionValue) - Math.ceil(directionMin);
+            } else if (Math.ceil(directionValue + directionSize) > Math.floor(directionMax)) {
+                directionOverflow =
+                    Math.ceil(directionValue + directionSize) - Math.floor(directionMax);
+>>>>>>> 1e8d3e717a477d5946e152108d2157cf3fb26e3a
+            }
+            let variantOverflow = 0;
+            if (Math.floor(variantValue) < Math.ceil(variantMin)) {
+                variantOverflow = Math.floor(variantValue) - Math.ceil(variantMin);
+            } else if (Math.ceil(variantValue + variantSize) > Math.floor(variantMax)) {
+                variantOverflow = Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
+            }
+
+            // All non zero values of variantOverflow lead to the
+            // same malus value since it can be corrected by shifting
+            malus = Math.abs(directionOverflow) + (variantOverflow && 1);
+
+            // Apply variant offset
+            variantValue -= variantOverflow;
+            result.variantOffset = -variantOverflow;
         }
 
         // Compute overflows
@@ -222,20 +290,47 @@ function computePosition(popper, target, { container, flip, margin, position }) 
     const matches = [];
     for (const d of directions) {
         for (const v of variants) {
+<<<<<<< df433fc1c14f0ff645efb72ee39f56d29b8852c4
             const match = getPositioningData(d, v);
             if (!match.malus) {
                 // A perfect position match has been found.
                 return match.result;
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+            const match = getPositioningData(d, v, true);
+            if (match) {
+                // Position match have been found.
+                return match;
+=======
+            const match = getPositioningData(d, v, true);
+            if (!match.malus) {
+                // A perfect position match has been found.
+                return match.result;
+>>>>>>> 1e8d3e717a477d5946e152108d2157cf3fb26e3a
             }
+<<<<<<< df433fc1c14f0ff645efb72ee39f56d29b8852c4
             matches.push(match);
         }
         if (!flip) {
             // Stop when no flip is allowed
             break;
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+=======
+            matches.push(match);
+>>>>>>> 1e8d3e717a477d5946e152108d2157cf3fb26e3a
         }
     }
+<<<<<<< df433fc1c14f0ff645efb72ee39f56d29b8852c4
     // Settle for the first match with the least malus
     return matches.sort((a, b) => a.malus - b.malus)[0].result;
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+
+    // Fallback to default position if no best solution found
+    return getPositioningData();
+=======
+
+    // Settle for the first match with the least malus
+    return matches.sort((a, b) => a.malus - b.malus)[0].result;
+>>>>>>> 1e8d3e717a477d5946e152108d2157cf3fb26e3a
 }
 
 /**
