@@ -2,6 +2,27 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { deepCopy } from "../utils/objects";
 
+/**
+ * @typedef {{
+ * callback?: function;
+ * type?: "ram" | "disk";
+ * update?: "once" | "always";
+ * }} RPCCacheSettings
+ */
+
+function jsonEqual(v1, v2) {
+    return JSON.stringify(v1) === JSON.stringify(v2);
+}
+
+function validateSettings({ type, update }) {
+    if (!["ram", "disk"].includes(type)) {
+        throw new Error(`Invalid "type" settings provided to RPCCache: ${type}`);
+    }
+    if (!["always", "once"].includes(update)) {
+        throw new Error(`Invalid "update" settings provided to RPCCache: ${update}`);
+    }
+}
+
 const CRYPTO_ALGO = "AES-GCM";
 
 class Crypto {
@@ -94,84 +115,99 @@ export class RPCCache {
     }
 
     /**
-     * @typedef {{
-     * callback?: function;
-     * type?: "ram" | "disk";
-     * update?: "once" | "always";
-     * }} RPCCacheSettings
      * @param {string} table
      * @param {string} key
      * @param {function} fallback
      * @param {RPCCacheSettings} settings
      */
     read(table, key, fallback, { callback = () => {}, type = "ram", update = "once" } = {}) {
-        const ramValue = this.ramCache.read(table, key);
-        const requestKey = `${table}/${key}`;
-        const hadPendingRequest = requestKey in this.pendingRequests;
-        this.pendingRequests[requestKey] = this.pendingRequests[requestKey] || [];
-        this.pendingRequests[requestKey].push(callback);
+        validateSettings({ type, update });
 
-        if (ramValue && (update !== "always" || hadPendingRequest)) {
+        let ramValue = this.ramCache.read(table, key);
+
+        const requestKey = `${table}/${key}`;
+        const hasPendingRequest = requestKey in this.pendingRequests;
+        if (hasPendingRequest) {
+            // never do the same call multiple times in parallel => return the same value for all
+            // those calls, but store their callback to call them when/if the real value is obtained
+            this.pendingRequests[requestKey].push(callback);
             return ramValue.then((result) => deepCopy(result));
         }
 
-        return new Promise((resolve, reject) => {
-            const fromCache = new Deferred();
-            let fromCacheValue;
-            const onFullfilled = (result) => {
-                resolve(deepCopy(result));
-                this.ramCache.write(table, key, Promise.resolve(result));
-                const hasChanged =
-                    (fromCacheValue && fromCacheValue !== JSON.stringify(result)) || false;
-                this.pendingRequests[requestKey]?.forEach((cb) => cb(deepCopy(result), hasChanged));
-                delete this.pendingRequests[requestKey];
-                if (type === "disk") {
-                    this.crypto.encrypt(result).then((encryptedResult) => {
-                        this.indexedDB.write(table, key, encryptedResult);
-                    });
-                }
-                return result;
-            };
-            const onRejected = async (error) => {
-                delete this.pendingRequests[requestKey];
-                await fromCache;
-                if (fromCacheValue) {
-                    // promise has already been fullfilled with the cached value
-                    throw error;
-                }
-                this.ramCache.delete(table, key); // remove rejected prom from ram cache
-                reject(error);
-            };
-            const prom = fallback().then(onFullfilled, onRejected);
-            if (ramValue) {
-                ramValue.then((value) => {
-                    resolve(deepCopy(value));
-                    fromCacheValue = JSON.stringify(value);
-                    fromCache.resolve();
-                });
-            } else {
-                this.ramCache.write(table, key, prom);
-                if (type === "disk") {
-                    this.indexedDB.read(table, key).then(async (result) => {
-                        if (result) {
-                            let decrypted;
-                            try {
-                                decrypted = await this.crypto.decrypt(result);
-                            } catch {
-                                fromCache.resolve();
-                                // Do nothing ! The cryptoKey is probably different.
-                                // The data will be updated with the new cryptoKey.
-                                return;
-                            }
-                            resolve(deepCopy(decrypted));
-                            this.ramCache.write(table, key, Promise.resolve(decrypted));
-                            fromCacheValue = JSON.stringify(decrypted);
-                        }
+        if (!ramValue || update === "always") {
+            this.pendingRequests[requestKey] = [callback];
+
+            // execute the fallback and write the result in the caches
+            const prom = new Promise((resolve, reject) => {
+                const fromCache = new Deferred();
+                let fromCacheValue;
+                const onFullfilled = (result) => {
+                    resolve(result);
+                    // call the pending request callbacks with the result
+                    const hasChanged = !!fromCacheValue && !jsonEqual(fromCacheValue, result);
+                    this.pendingRequests[requestKey]?.forEach((cb) =>
+                        cb(deepCopy(result), hasChanged)
+                    );
+                    delete this.pendingRequests[requestKey];
+                    // update the ram and optionally the disk caches with the latest data
+                    this.ramCache.write(table, key, Promise.resolve(result));
+                    if (type === "disk") {
+                        this.crypto.encrypt(result).then((encryptedResult) => {
+                            this.indexedDB.write(table, key, encryptedResult);
+                        });
+                    }
+                    return result;
+                };
+                const onRejected = async (error) => {
+                    await fromCache;
+                    delete this.pendingRequests[requestKey];
+                    if (fromCacheValue) {
+                        // promise has already been fullfilled with the cached value
+                        throw error;
+                    }
+                    this.ramCache.delete(table, key); // remove rejected prom from ram cache
+                    reject(error);
+                };
+                fallback().then(onFullfilled, onRejected);
+
+                // speed up the request by using the caches
+                if (ramValue) {
+                    // ramValue is always already resolved here, as it can't be pending (otherwise
+                    // we would have early returned because of `pendingRequests`) and it would have
+                    // been removed from the ram cache if it had been rejected
+                    // => no need to define a `catch` callback.
+                    ramValue.then((value) => {
+                        resolve(value);
+                        fromCacheValue = value;
                         fromCache.resolve();
                     });
+                } else if (type === "disk") {
+                    this.indexedDB
+                        .read(table, key)
+                        .then(async (result) => {
+                            if (result) {
+                                let decrypted;
+                                try {
+                                    decrypted = await this.crypto.decrypt(result);
+                                } catch {
+                                    // Do nothing ! The cryptoKey is probably different.
+                                    // The data will be updated with the new cryptoKey.
+                                    return;
+                                }
+                                resolve(decrypted);
+                                fromCacheValue = decrypted;
+                            }
+                        })
+                        .finally(() => fromCache.resolve());
+                } else {
+                    fromCache.resolve(); // fromCacheValue will remain undefined
                 }
-            }
-        });
+            });
+            this.ramCache.write(table, key, prom);
+            ramValue = prom;
+        }
+
+        return ramValue.then((result) => deepCopy(result));
     }
 
     invalidate(tables) {
