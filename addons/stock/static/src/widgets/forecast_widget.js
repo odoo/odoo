@@ -28,7 +28,11 @@ export class ForecastWidgetField extends FloatField {
         const options = { digits, thousandsSep: "", decimalPoint: "." };
         const forecast_availability = parseFloat(formatFloat(data.forecast_availability, options));
         const product_qty = parseFloat(formatFloat(data.product_qty, options));
-        this.willBeFulfilled = forecast_availability >= product_qty;
+        if (data.state === 'draft'  ) {
+            this.willBeFulfilled = forecast_availability >= 0;
+        } else {
+            this.willBeFulfilled = forecast_availability >= product_qty;
+        }
         this.state = data.state;
     }
 
