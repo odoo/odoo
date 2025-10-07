@@ -13,7 +13,7 @@ from odoo.addons.iot_drivers.browser import Browser, BrowserState
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, route
-from odoo.addons.iot_drivers.tools.helpers import Orientation
+from odoo.addons.iot_drivers.tools.helpers import Orientation, IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ class DisplayDriver(Driver):
         :return: URL to display or None.
         """
         try:
-            response = requests.get(f"{server_url}/iot/box/{helpers.get_identifier()}/display_url", timeout=5)
+            response = requests.get(f"{server_url}/iot/box/{IDENTIFIER}/display_url", timeout=5)
             response.raise_for_status()
             data = json.loads(response.content.decode())
             return data.get(self.device_identifier)

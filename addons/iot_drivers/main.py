@@ -10,6 +10,7 @@ from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
 from odoo.addons.iot_drivers.tools.system import IS_RPI
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
+
 if IS_RPI:
     from dbus.mainloop.glib import DBusGMainLoop
     DBusGMainLoop(set_as_default=True)  # Must be started from main thread
@@ -28,7 +29,7 @@ class Manager(Thread):
 
     def __init__(self):
         super().__init__()
-        self.identifier = helpers.get_identifier()
+        self.identifier = helpers.IOT_IDENTIFIER
         self.domain = self._get_domain()
         self.version = helpers.get_version(detailed_version=True)
         self.previous_iot_devices = {}

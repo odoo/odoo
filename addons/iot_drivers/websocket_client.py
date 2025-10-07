@@ -11,6 +11,7 @@ from threading import Thread
 
 from odoo.addons.iot_drivers import main
 from odoo.addons.iot_drivers.tools import helpers
+from odoo.addons.iot_drivers.tools.helpers import IOT_IDENTIFIER
 from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
 from odoo.addons.iot_drivers.webrtc_client import webrtc_client
 
@@ -51,7 +52,7 @@ class WebsocketClient(Thread):
             'data': {
                 'channels': [self.channel],
                 'last': self.last_message_id,
-                'identifier': helpers.get_identifier(),
+                'identifier': IOT_IDENTIFIER,
             }
         }))
 
@@ -62,7 +63,7 @@ class WebsocketClient(Thread):
             self.last_message_id = message['id']
             payload = message['message']['payload']
 
-            if not helpers.get_identifier() in payload.get('iot_identifiers', []):
+            if not IOT_IDENTIFIER in payload.get('iot_identifiers', []):
                 continue
 
             match message['message']['type']:
@@ -75,7 +76,7 @@ class WebsocketClient(Thread):
                             # Notify the controller that the device is not connected
                             send_to_controller({
                                 'session_id': payload.get('session_id', '0'),
-                                'iot_box_identifier': helpers.get_identifier(),
+                                'iot_box_identifier': IOT_IDENTIFIER,
                                 'device_identifier': device_identifier,
                                 'status': 'disconnected',
                             })
@@ -93,7 +94,7 @@ class WebsocketClient(Thread):
                 case 'webrtc_offer':
                     answer = webrtc_client.offer(payload['offer'])
                     send_to_controller({
-                        'iot_box_identifier': helpers.get_identifier(),
+                        'iot_box_identifier': IOT_IDENTIFIER,
                         'answer': answer,
                     }, method="webrtc_answer")
                 case 'remote_debug':
@@ -104,7 +105,7 @@ class WebsocketClient(Thread):
                         time.sleep(1)
                     send_to_controller({
                         'session_id': 0,
-                        'iot_box_identifier': helpers.get_identifier(),
+                        'iot_box_identifier': IOT_IDENTIFIER,
                         'device_identifier': None,
                         'status': 'success',
                         'result': {'enabled': helpers.is_ngrok_enabled()}

@@ -200,28 +200,6 @@ def get_ip():
         s.close()
 
 
-@cache
-def get_identifier():
-    if IS_RPI:
-        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
-    elif IS_TEST:
-        return 'test_identifier'
-
-    # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
-    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
-    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    identifier = get_conf('generated_identifier')  # Fallback identifier if windows does not return mb UUID
-    if p.returncode == 0 and p.stdout.decode().strip():
-        return p.stdout.decode().strip()
-
-    _logger.error("Failed to get Windows IoT serial number, defaulting to a random identifier")
-    if not identifier:
-        identifier = secrets.token_hex()
-        update_conf({'generated_identifier': identifier})
-
-    return identifier
-
-
 def get_mac_address():
     interfaces = netifaces.interfaces()
     for interface in interfaces:
@@ -309,7 +287,7 @@ def download_iot_handlers(auto=True, server_url=None):
     try:
         response = requests.post(
             server_url + '/iot/get_handlers',
-            data={'identifier': get_identifier(), 'auto': auto},
+            data={'identifier': IDENTIFIER, 'auto': auto},
             timeout=8,
             headers={'If-None-Match': etag} if etag else None,
         )
@@ -601,11 +579,6 @@ def _get_raspberry_pi_model():
         return int(match[1]) if match else 0
 
 
-raspberry_pi_model = _get_raspberry_pi_model()
-odoo_start_time = time.monotonic()
-system_start_time = odoo_start_time - _get_system_uptime()
-
-
 def is_ngrok_enabled():
     """Check if a ngrok tunnel is active on the IoT Box"""
     try:
@@ -640,3 +613,33 @@ def toggle_remote_connection(token=""):
         )
         return True
     return False
+
+
+
+def get_identifier():
+    if IS_RPI:
+        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+    elif IS_TEST:
+        return 'test_identifier'
+
+    # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
+    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
+    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
+    identifier = get_conf('generated_identifier')  # Fallback identifier if windows does not return mb UUID
+    if p.returncode == 0 and p.stdout.decode().strip():
+        return p.stdout.decode().strip()
+
+    _logger.error("Failed to get Windows IoT serial number, defaulting to a random identifier")
+    if not identifier:
+        identifier = secrets.token_hex()
+        update_conf({'generated_identifier': identifier})
+
+    return identifier
+
+
+raspberry_pi_model = _get_raspberry_pi_model()
+odoo_start_time = time.monotonic()
+system_start_time = odoo_start_time - _get_system_uptime()
+
+IOT_IDENTIFIER = get_identifier()
+"""Unique identifier of the IoT system, used to identify it to Odoo."""

@@ -13,7 +13,7 @@ import time
 from pathlib import Path
 from functools import cache
 
-from .helpers import get_ip, get_identifier, get_conf
+from .helpers import get_ip, get_conf, IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -221,7 +221,7 @@ def get_access_point_ssid():
     :return: Generated SSID
     :rtype: str
     """
-    return "IoTBox-" + get_identifier() or secrets.token_hex(8)
+    return "IoTBox-" + IOT_IDENTIFIER or secrets.token_hex(8)
 
 
 def _configure_access_point(on=True):

@@ -7,12 +7,12 @@ from pathlib import Path
 
 from odoo.addons.iot_drivers.tools.helpers import (
     get_conf,
-    get_identifier,
     get_path_nginx,
     odoo_restart,
     require_db,
     start_nginx_server,
     update_conf,
+    IOT_IDENTIFIER,
 )
 from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST, IS_WINDOWS
 
@@ -135,7 +135,7 @@ def inform_database(ssl_certificate_end_date, server_url=None):
     try:
         response = requests.post(
             server_url + "/iot/box/update_certificate_status",
-            json={'params': {'identifier': get_identifier(), 'ssl_certificate_end_date': ssl_certificate_end_date}},
+            json={'params': {'identifier': IOT_IDENTIFIER, 'ssl_certificate_end_date': ssl_certificate_end_date}},
             timeout=5,
         )
         response.raise_for_status()

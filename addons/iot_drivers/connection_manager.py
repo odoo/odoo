@@ -7,6 +7,7 @@ import time
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
 from odoo.addons.iot_drivers.tools import helpers, upgrade, wifi
+from odoo.addons.iot_drivers.tools.helpers import IOT_IDENTIFIER
 from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST
 
 _logger = logging.getLogger(__name__)
@@ -68,7 +69,7 @@ class ConnectionManager(Thread):
             'params': {
                 'pairing_code': self.pairing_code,
                 'pairing_uuid': self.pairing_uuid,
-                'serial_number': helpers.get_identifier(),
+                'serial_number': IOT_IDENTIFIER,
             }
         }
 

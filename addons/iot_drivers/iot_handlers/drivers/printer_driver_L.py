@@ -109,7 +109,7 @@ class PrinterDriver(PrinterDriverBase):
 
     @classmethod
     def _get_iot_status(cls):
-        identifier = helpers.get_identifier()
+        identifier = helpers.IOT_IDENTIFIER
         mac_address = helpers.get_mac_address()
         pairing_code = connection_manager.pairing_code
         ssid = wifi.get_access_point_ssid() if wifi.is_access_point() else wifi.get_current()
