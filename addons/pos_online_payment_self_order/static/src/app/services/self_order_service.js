@@ -60,4 +60,16 @@ patch(SelfOrder.prototype, {
         const exit = encodeURIComponent(exitRouteUrl);
         return `${baseUrl}/pos/pay/${order_id}?access_token=${order_access_token}&exit_route=${exit}`;
     },
+    shouldUpdateLastOrderChange() {
+        if (
+            this.config.self_ordering_mode === "mobile" &&
+            this.config.self_order_online_payment_method_id &&
+            this.config.self_ordering_pay_after !== "meal"
+        ) {
+            // The last order change should not be updated in this case,
+            // because the POS will print the prep order when the payment succeeds (see pos_store.js).
+            return false;
+        }
+        return super.shouldUpdateLastOrderChange(...arguments);
+    },
 });

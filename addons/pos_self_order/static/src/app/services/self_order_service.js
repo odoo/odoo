@@ -524,6 +524,7 @@ export class SelfOrder extends Reactive {
             : this.currentOrder;
 
         const orderData = order.getOrderData();
+        order.last_order_preparation_change = { lines: {} };
         const changes = changesToOrder(order, this.config.preparationCategories);
         for (const printer of this.kitchenPrinters) {
             const orderlines = filterChangeByCategories(
@@ -558,6 +559,7 @@ export class SelfOrder extends Reactive {
                 await printer.printReceipt(receipt);
             }
         }
+        order.updateLastOrderChange();
     }
     async initKioskData() {
         if (this.session && this.access_token) {
@@ -662,6 +664,10 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    shouldUpdateLastOrderChange() {
+        return true;
+    }
+
     async sendDraftOrderToServer() {
         if (
             Object.keys(this.currentOrder.changes).length === 0 ||
@@ -674,6 +680,9 @@ export class SelfOrder extends Reactive {
             this.currentOrder.setOrderPrices();
             const tableIdentifier = this.router.getTableIdentifier();
             let uuid = this.selectedOrderUuid;
+            if (this.shouldUpdateLastOrderChange()) {
+                this.currentOrder.updateLastOrderChange();
+            }
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
