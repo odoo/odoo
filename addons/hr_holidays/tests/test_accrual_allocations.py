@@ -472,25 +472,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             attendances = []
             for index in range(5):
                 attendances.append((0, 0, {
-                    'name': '%s_%d' % ('40 Hours', index),
                     'hour_from': 8,
-                    'hour_to': 12,
-                    'dayofweek': str(index),
-                    'day_period': 'morning'
-                }))
-                attendances.append((0, 0, {
-                    'name': '%s_%d' % ('40 Hours', index),
-                    'hour_from': 12,
-                    'hour_to': 13,
-                    'dayofweek': str(index),
-                    'day_period': 'lunch'
-                }))
-                attendances.append((0, 0, {
-                    'name': '%s_%d' % ('40 Hours', index),
-                    'hour_from': 13,
                     'hour_to': 17,
                     'dayofweek': str(index),
-                    'day_period': 'afternoon'
+                    'break_hours': 1
                 }))
             calendar_emp = self.env['resource.calendar'].create({
                 'name': '40 Hours',
@@ -2633,26 +2618,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             for index in range(3):
                 attendances.extend([
                     (0, 0, {
-                        'name': '%s_%d' % ('20 Hours', index),
                         'hour_from': 8,
-                        'hour_to': 10,
-                        'dayofweek': str(index),
-                        'day_period': 'morning'
-                    }),
-                    (0, 0, {
-                        'name': '%s_%d' % ('20 Hours', index),
-                        'hour_from': 10,
-                        'hour_to': 11,
-                        'dayofweek': str(index),
-                        'day_period': 'lunch'
-                    }),
-                    (0, 0, {
-                        'name': '%s_%d' % ('20 Hours', index),
-                        'hour_from': 11,
                         'hour_to': 13,
                         'dayofweek': str(index),
-                        'day_period': 'afternoon'
-                    })
+                        'break_hours': 1
+                    }),
                 ])
             calendar_emp = self.env['resource.calendar'].create({
                 'name': '20 Hours',

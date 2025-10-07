@@ -534,7 +534,10 @@ class TestHrAttendanceOvertime(TransactionCase):
             'auto_check_out_tolerance': 1
         })
         self.jpn_employee.resource_calendar_id.tz = 'Asia/Tokyo'  # UTC+9
-        self.jpn_employee.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == "4" and a.day_period in ["lunch", "afternoon"]).unlink()
+        self.jpn_employee.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == "4").unlink()
+        self.jpn_employee.resource_calendar_id.attendance_ids = [
+            (0, 0, {'dayofweek': 4, 'hour_from': 8, 'hour_to': 12})
+        ]
 
         attendances_jpn = self.env['hr.attendance'].create([
             {
@@ -576,35 +579,6 @@ class TestHrAttendanceOvertime(TransactionCase):
             Attendance._cron_auto_check_out()
             self.assertEqual(morning.worked_hours + afternoon.worked_hours, 9)  # 8 hours from calendar's attendances + 1 hour of tolerance
             self.assertEqual(afternoon.check_out, datetime(2024, 1, 1, 18, 0))
-
-    def test_auto_check_out_two_weeks_calendar(self):
-        """Test case: two weeks calendar with different attendances depending on the week. No morning attendance on
-        wednesday of the first week."""
-        Attendance = self.env['hr.attendance']
-        self.company.write({
-            'auto_check_out': True,
-            'auto_check_out_tolerance': 0
-        })
-        self.employee.resource_calendar_id.switch_calendar_type()
-        self.employee.resource_calendar_id.attendance_ids.search([("dayofweek", "=", "2"), ("week_type", '=', '0'), ("day_period", "in", ["morning", "lunch"])]).unlink()
-
-        with freeze_time("2025-03-05 22:00:00"):
-            att = Attendance.create({
-                'employee_id': self.employee.id,
-                'check_in': datetime(2025, 3, 5, 8, 0)
-            })
-            Attendance._cron_auto_check_out()
-            self.assertEqual(att.worked_hours, 4)
-            self.assertEqual(att.check_out, datetime(2025, 3, 5, 12, 0))
-
-        with freeze_time("2025-03-12 22:00:00"):
-            att = Attendance.create({
-                'employee_id': self.employee.id,
-                'check_in': datetime(2025, 3, 12, 8, 0),
-            })
-            Attendance._cron_auto_check_out()
-            self.assertEqual(att.worked_hours, 8)
-            self.assertEqual(att.check_out, datetime(2025, 3, 12, 17, 0))
 
     # @freeze_time("2024-02-01 14:00:00")
     # def test_absence_management(self):

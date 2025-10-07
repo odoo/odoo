@@ -14,4 +14,4 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'hour_from', 'hour_to', 'dayofweek', 'day_period']
+        return ['id', 'hour_from', 'hour_to', 'dayofweek']

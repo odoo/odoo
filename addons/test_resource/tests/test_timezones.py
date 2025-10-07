@@ -83,32 +83,6 @@ class TestTimezones(TestResourceCommon):
         )[self.jean.id]
         self.assertEqual(data, {'days': 5, 'hours': 40})
 
-        # Jules with 2 weeks calendar
-        # 02-04-2018 00:00:00 - 6-04-2018 23:59:59
-        data = self.jules._get_work_days_data_batch(
-            self.datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
-        )[self.jules.id]
-        self.assertEqual(data, {'days': 4, 'hours': 30})
-
-        # Jules with 2 weeks calendar
-        # 02-04-2018 00:00:00 - 14-04-2018 23:59:59
-        data = self.jules._get_work_days_data_batch(
-            self.datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2018, 4, 14, 23, 59, 59, tzinfo=self.jules.tz),
-        )[self.jules.id]
-        self.assertEqual(data, {'days': 6, 'hours': 46})
-
-        # Jules with 2 weeks calendar
-        # 12-29-2014 00:00:00 - 27-12-2019 23:59:59 => 261 weeks
-        # 130 weeks type 1: 131*4 = 524 days and 131*30 = 3930 hours
-        # 131 weeks type 2: 130*2 = 260 days and 130*16 = 2080 hours
-        data = self.jules._get_work_days_data_batch(
-            self.datetime_tz(2014, 12, 29, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2019, 12, 27, 23, 59, 59, tzinfo=self.jules.tz),
-        )[self.jules.id]
-        self.assertEqual(data, {'days': 784, 'hours': 6010})
-
     def test_leave_data(self):
         self.env['resource.calendar.leaves'].create({
             'name': '',

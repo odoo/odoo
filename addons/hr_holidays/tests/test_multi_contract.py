@@ -166,15 +166,11 @@ class TestHolidaysMultiContract(TestHolidayContract):
             {
                 'name': 'Partial time (4/5)',
                 'attendance_ids': [
-                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Monday Evening', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
                     # Does not work on Wednesdays
-                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                    (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
                 ]
             },
         ])
@@ -257,14 +253,10 @@ class TestHolidaysMultiContract(TestHolidayContract):
             {
                 'name': 'Partial time (4/5)',
                 'attendance_ids': [
-                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Monday Evening', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Wednesday Evening', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
                 ]
             },
         ])
@@ -329,31 +321,21 @@ class TestHolidaysMultiContract(TestHolidayContract):
             {
                 'name': 'Full time (5/5, 8h/day)',
                 'attendance_ids': [
-                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
                 ]
             },
             {
                 'name': 'Partial time (5/5, 6h/day)',
                 'attendance_ids': [
-                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
-                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '1', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '2', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '3', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
+                    (0, 0, {'dayofweek': '4', 'hour_from': 9, 'hour_to': 16, 'break_hours': 1}),
                 ]
             },
         ])

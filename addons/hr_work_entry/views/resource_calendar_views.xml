@@ -11,25 +11,15 @@
             </filter>
         </field>
     </record>
-    <record id="resource_calendar_attendance_view_tree" model="ir.ui.view">
-        <field name="name">resource.calendar.attendance.list.inherit.hr.work.entry</field>
-        <field name="model">resource.calendar.attendance</field>
-        <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
-        <field name="arch" type="xml">
-            <field name="week_type" position="after">
-                <field name="work_entry_type_id"/>
-            </field>
-        </field>
-    </record>
 
     <record id="resource_calendar_attendance_view_form" model="ir.ui.view">
         <field name="name">resource.calendar.attendance.form.inherit.hr.work.entry</field>
         <field name="model">resource.calendar.attendance</field>
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_form"/>
         <field name="arch" type="xml">
-            <field name="day_period" position="after">
+            <xpath expr="//div[@id='hours']" position="after">
                 <field name="work_entry_type_id"/>
-            </field>
+            </xpath>
         </field>
     </record>
 

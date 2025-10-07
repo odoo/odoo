@@ -883,15 +883,9 @@ class TestTimesheet(TestCommonTimesheet):
             'name': "part time",
             'hours_per_day': 8.0,
             'attendance_ids': [
-                (0, 0, {'name': "Monday Morning", 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': "Monday Lunch", 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': "Monday Evening", 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': "Thursday Morning", 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': "Thursday Lunch", 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': "Thursday Evening", 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
-                (0, 0, {'name': "Friday Morning", 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-                (0, 0, {'name': "Friday Lunch", 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
-                (0, 0, {'name': "Friday Evening", 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '3', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
+                (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 17, 'break_hours': 1}),
             ],
         })
 
