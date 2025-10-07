@@ -27,7 +27,7 @@ class PropertiesBaseDefinitionMixin(models.AbstractModel):
         self.properties_base_definition_id = self.env["properties.base.definition"] \
             ._get_definition_for_property_field(self._name, "properties")
 
-    def _compute_sql_properties_base_definition_id(self, alias, query):
+    def _compute_sql_properties_base_definition_id(self, table):
         # Allow the export to work
         parent = self.env["properties.base.definition"] \
             ._get_definition_id_for_property_field(self._name, "properties")

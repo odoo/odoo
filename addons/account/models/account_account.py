@@ -8,7 +8,7 @@ import json
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
-from odoo.models import Query
+from odoo.models import Query, TableSQL
 from odoo.tools import SQL
 
 
@@ -325,8 +325,9 @@ class AccountAccount(models.Model):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
             record.code = record_root.code_store
 
-    def _compute_sql_code(self, alias, query):
-        return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query)
+    def _compute_sql_code(self, table):
+        table = table._with_model(self.with_company(self.env.company.root_id).sudo())
+        return table.code_store
 
     def _inverse_code(self):
         for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
@@ -351,7 +352,8 @@ class AccountAccount(models.Model):
                 if code := record.with_company(company).code:
                     record.placeholder_code = f'{code} ({company.name})'
 
-    def _compute_sql_placeholder_code(self, alias, query):
+    def _compute_sql_placeholder_code(self, table):
+        query = table._query
         if 'account_first_company' not in query._joins:
             # When multiple accounts are selected, ``placeholder_code`` is used for all of them
             # as it is in the default ``_order`` (e.g., for ``account_asset_id`` and
@@ -379,8 +381,9 @@ class AccountAccount(models.Model):
                     authorized_company_ids=self.env.user._get_company_ids(),
                     to_flush=self._fields['company_ids'],
                 ),
-                SQL('account_first_company.account_id = %(account_id)s', account_id=SQL.identifier(alias, 'id')),
+                SQL('account_first_company.account_id = %(account_id)s', account_id=table.id),
             )
+        account_first_company = TableSQL('account_first_company', None, query)
 
         return SQL(
             """
@@ -389,11 +392,10 @@ class AccountAccount(models.Model):
                     %(code_store)s->>%(account_first_company_root_id)s || ' (' || %(account_first_company_name)s || ')'
                 )
             """,
-            code_store=SQL.identifier(alias, 'code_store'),
+            code_store=SQL.identifier(table._alias, 'code_store', self._fields['code_store']),  # get raw field (because it is company dependent)
             active_company_root_id=str(self.env.company.root_id.id),
-            account_first_company_name=SQL.identifier('account_first_company', 'company_name'),
-            account_first_company_root_id=SQL.identifier('account_first_company', 'root_company_id'),
-            to_flush=self._fields['code_store'],
+            account_first_company_name=account_first_company.company_name,
+            account_first_company_root_id=account_first_company.root_company_id,
         )
 
     def _search_placeholder_code(self, operator, value):
@@ -413,10 +415,10 @@ class AccountAccount(models.Model):
         for record in self:
             record.root_id = self.env['account.root']._from_account_code(record.placeholder_code)
 
-    def _compute_sql_account_root(self, alias, query):
+    def _compute_sql_account_root(self, table):
         return SQL(
             "SUBSTRING(%(placeholder_code)s, 1, 2)",
-            placeholder_code=self._field_to_sql(alias, 'placeholder_code', query),
+            placeholder_code=table.placeholder_code,
         )
 
     def _search_account_root(self, operator, value):
@@ -697,8 +699,8 @@ class AccountAccount(models.Model):
             for v in value
         )
 
-    def _compute_sql_internal_group(self, alias, query):
-        return SQL("split_part(%s, '_', 1)", self._field_to_sql(alias, 'account_type', query))
+    def _compute_sql_internal_group(self, table):
+        return SQL("split_part(%s, '_', 1)", table.account_type)
 
     @api.depends('account_type')
     def _compute_reconcile(self):

@@ -658,10 +658,10 @@ class HrEmployee(models.Model):
         domain = Domain('id', operator, value)
         return Domain('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))
 
-    def _compute_sql_version_id(self, alias, query):
+    def _compute_sql_version_id(self, table):
         # HACK required to make inherits work on a computed field
         # (could be a CASE WHEN with the version_id from the content for the current user)
-        return self._field_to_sql(alias, 'current_version_id', query)
+        return table.current_version_id
 
     def _get_version(self, date=fields.Date.today()):
         """

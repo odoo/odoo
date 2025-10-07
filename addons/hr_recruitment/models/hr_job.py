@@ -153,10 +153,10 @@ class HrJob(models.Model):
         favorited_jobs.write({'favorite_user_ids': [(4, self.env.uid)]})
         unfavorited_jobs.write({'favorite_user_ids': [(3, self.env.uid)]})
 
-    def _compute_sql_is_favorite(self, alias, query):
+    def _compute_sql_is_favorite(self, table):
         return SQL(
             "%s IN (SELECT job_id FROM job_favorite_user_rel WHERE user_id = %s)",
-            SQL.identifier(alias, 'id'), self.env.uid,
+            table.id, self.env.uid,
         )
 
     def _compute_document_ids(self):
