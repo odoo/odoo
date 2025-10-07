@@ -94,7 +94,7 @@ class AccountFiscalPosition(models.Model):
         for position in self:
             tax_map = defaultdict(list)
             for tl in position.tax_ids:
-                if tl.tax_dest_id:
+                if tl.tax_dest_active:
                     tax_map[tl.tax_src_id.id].append(tl.tax_dest_id.id)
                 else:
                     tax_map[tl.tax_src_id.id]  # map to an empty list
