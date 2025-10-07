@@ -225,8 +225,12 @@ export class DiscussSidebarCategory extends Component {
         return [];
     }
 
+    get hasVisibleThreads() {
+        return this.env.filteredThreads(this.category.threads).length > 0;
+    }
+
     toggle() {
-        if (this.store.channels.status === "fetching") {
+        if (this.store.channels.status === "fetching" || !this.hasVisibleThreads) {
             return;
         }
         this.category.open = !this.category.open;

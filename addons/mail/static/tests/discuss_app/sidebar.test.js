@@ -85,6 +85,8 @@ test("toggling category button does not hide active sub thread", async () => {
 });
 
 test("Closing a category sends the updated user setting to the server.", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "Main Channel" });
     onRpc("res.users.settings", "set_res_users_settings", ({ kwargs }) => {
         asyncStep("/web/dataset/call_kw/res.users.settings/set_res_users_settings");
         expect(kwargs.new_settings.is_discuss_sidebar_category_channel_open).toBe(false);
@@ -100,6 +102,7 @@ test("Closing a category sends the updated user setting to the server.", async (
 
 test("Opening a category sends the updated user setting to the server.", async () => {
     const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "Main Channel" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
@@ -865,7 +868,7 @@ test("chat - states: open manually by clicking the title", async () => {
 
 test("chat - states: close should call update server data", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test", channel_type: "chat" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
@@ -894,7 +897,7 @@ test("chat - states: close should call update server data", async () => {
 
 test("chat - states: open should call update server data", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test", channel_type: "chat" });
     pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
@@ -1363,4 +1366,18 @@ test("Sidebar channels show correct notification counter based on settings", asy
     rpc("/discuss/settings/custom_notifications", { custom_notifications: "no_notif" });
     await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { count: 0 });
+});
+
+test("sidebar category fold toggle is hidden when no visible threads", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-down");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
+    await click("button:contains(Leave Conversation)");
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-down.invisible"
+    );
 });
