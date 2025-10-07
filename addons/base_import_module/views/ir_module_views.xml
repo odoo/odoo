@@ -16,6 +16,9 @@
                 <xpath expr="//button[@name='button_immediate_install']" position="attributes">
                     <attribute name="invisible">state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
                 </xpath>
+                <xpath expr="//a[@name='button_immediate_upgrade']" position="attributes">
+                    <attribute name="invisible">state == 'uninstalled' or imported</attribute>
+                </xpath>
                 <xpath expr="//t[@t-name='menu']/a[@type='open']" position="attributes">
                     <attribute name="context">{'module_type': module_type, 'module_name':name}</attribute>
                     <attribute name="type">object</attribute>
@@ -58,7 +61,7 @@
                     <attribute name="invisible">to_buy or state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
                 </xpath>
                 <xpath expr="//button[@name='button_immediate_upgrade']" position="attributes">
-                    <attribute name="invisible">state == 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                    <attribute name="invisible">state == 'uninstalled' or imported</attribute>
                 </xpath>
             </field>
         </record>
