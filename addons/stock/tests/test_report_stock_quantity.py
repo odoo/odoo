@@ -238,3 +238,33 @@ class TestReportStockQuantity(tests.TransactionCase):
             1.0, 2.0,   # in two days
         ]):
             self.assertEqual(qty_rd, qty, f"Incorrect qty for Date '{date_day}' Warehouse '{warehouse.display_name}'")
+
+    def test_get_location_quantity_in_past(self):
+        location = self.env['stock.location'].create({
+            'location_id': self.wh.lot_stock_id.id,
+            'name': 'Test location'
+        })
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+        })
+        today = datetime.now()
+        two_days_ago = today - timedelta(days=2)
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.wh.lot_stock_id.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+            'date': today
+        })
+        move._action_confirm()
+        move.move_line_ids.write({
+            'location_dest_id': location.id,
+            'quantity': 1
+        })
+        move.picked = True
+        move._action_done()
+        self.assertEqual(product.with_context(location=location.ids).qty_available, 1.0)
+        self.assertEqual(product.with_context(to_date=two_days_ago, location=location.ids).qty_available, 0.0)
