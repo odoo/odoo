@@ -92,37 +92,43 @@ test("popover is rendered nearby target (top)", async () => {
 
 test("popover is rendered nearby target (left)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("left");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            close: () => {},
+            target: queryOne("#target"),
             position: "left",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("left");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
 test("popover is rendered nearby target (right)", async () => {
     expect.assertions(2);
-    class TestPopover extends Popover {
-        onPositioned(el, { direction, variant }) {
-            expect(direction).toBe("right");
-            expect(variant).toBe("middle");
-        }
-    }
+    await mountWithCleanup(
+        `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
+    );
 
-    await mountWithCleanup(TestPopover, {
+    await mountWithCleanup(Popover, {
         props: {
-            target: getFixture(),
+            close: () => {},
+            target: queryOne("#target"),
             position: "right",
             component: Content,
+            onPositioned: (_, { direction, variant }) => {
+                expect(direction).toBe("right");
+                expect(variant).toBe("middle");
+            },
         },
+        noMainContainer: true,
     });
 });
 
