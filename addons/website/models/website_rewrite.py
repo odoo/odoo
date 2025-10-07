@@ -53,10 +53,10 @@ class WebsiteRewrite(models.Model):
     _name = 'website.rewrite'
     _description = "Website rewrite"
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name')
     website_id = fields.Many2one('website', string="Website", ondelete='cascade', index=True)
     active = fields.Boolean(default=True)
-    url_from = fields.Char('URL from', index=True)
+    url_from = fields.Char('URL from', index=True, required=True)
     route_id = fields.Many2one('website.route')
     url_to = fields.Char("URL to")
     redirect_type = fields.Selection([
@@ -64,7 +64,7 @@ class WebsiteRewrite(models.Model):
         ('301', '301 Moved permanently'),
         ('302', '302 Moved temporarily'),
         ('308', '308 Redirect / Rewrite'),
-    ], string='Action', default="302",
+    ], string='Action', default="301", required=True,
         help='''Type of redirect/Rewrite:\n
         301 Moved permanently: The browser will keep in cache the new url.
         302 Moved temporarily: The browser will not keep in cache the new url and ask again the next time the new url.
@@ -101,9 +101,7 @@ class WebsiteRewrite(models.Model):
         for rewrite in self:
             if rewrite.redirect_type in ['301', '302', '308']:
                 if not rewrite.url_to:
-                    raise ValidationError(_('"URL to" can not be empty.'))
-                if not rewrite.url_from:
-                    raise ValidationError(_('"URL from" can not be empty.'))
+                    raise ValidationError(_('"URL to" cannot be empty.'))
                 if rewrite.url_to.startswith('#') or rewrite.url_from.startswith('#'):
                     raise ValidationError(_("URL must not start with '#'."))
                 if rewrite.url_to.split('#')[0] == rewrite.url_from.split('#')[0]:
@@ -143,8 +141,23 @@ class WebsiteRewrite(models.Model):
         for rewrite in self:
             rewrite.display_name = f"{rewrite.redirect_type} - {rewrite.name}"
 
+    @staticmethod
+    def _generate_name(url_from, url_to, redirect_type):
+        if redirect_type == '404':
+            return _('%(url)s not found', url=url_from)
+        return _('%(url_from)s to %(url_to)s', url_from=url_from, url_to=url_to)
+
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('redirect_type'):
+                if not vals.get('url_to'):
+                    vals['redirect_type'] = '404'
+                else:
+                    vals['redirect_type'] = '301'
+
+            if not vals.get('name'):
+                vals['name'] = self._generate_name(vals.get('url_from'), vals.get('url_to'), vals.get('redirect_type'))
         rewrites = super().create(vals_list)
         if set(rewrites.mapped('redirect_type')) & {'308', '404'}:
             self._invalidate_routing()
