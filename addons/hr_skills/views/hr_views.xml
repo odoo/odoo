@@ -415,7 +415,7 @@
                             context="{'default_skill_type_id': skill_type_id}"/>
                         <label for="valid_from" string="Validity" class="me-1" invisible="not is_certification"/>
                         <div class="d-flex flex-row" invisible="not is_certification">
-                            <field name="valid_from" nolabel="1" class="w-25" required="is_certification"/>
+                            <field name="valid_from" nolabel="1" class="w-25" required="is_certification" default_focus="1"/>
                             <label for="valid_to" string="To" class="mx-1"/>
                             <field name="valid_to" placeholder="indefinite" nolabel="1" class="w-25"/>
                         </div>
@@ -560,6 +560,7 @@
                 <field name="skill_id" string="Certification"/>
                 <field name="skill_level_id" optional="hide"/>
                 <field name="skill_type_id" optional="hide"/>
+                <field name="company_id" optional="hide"/>
                 <field name="valid_from" string="From" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
                 <field name="valid_to" string="To" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
                 <field name="certificate_filename" column_invisible="1"/>
@@ -592,7 +593,7 @@
         <field name="name">Certifications</field>
         <field name="res_model">hr.employee.skill</field>
         <field name="path">certifications</field>
-        <field name="domain">[('is_certification', '=', True)]</field>
+        <field name="domain">[('is_certification', '=', True), ('company_id', 'in', allowed_company_ids)]</field>
         <field name="context">{'show_employee': True}</field>
         <field name="view_mode">list,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
