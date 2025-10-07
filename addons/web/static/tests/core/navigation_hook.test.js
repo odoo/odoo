@@ -1,5 +1,5 @@
 import { Component, onMounted, useState, xml } from "@odoo/owl";
-import { Navigator, useNavigation } from "@web/core/navigation/navigation";
+import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { describe, destroy, expect, test } from "@odoo/hoot";
 import {
@@ -311,4 +311,69 @@ test("non-navigable dom update does NOT cause re-focus", async () => {
     await animationFrame();
     expect(".test-non-navigable").toHaveCount(1);
     expect(".one").not.toBeFocused();
+});
+
+test("mousehover only set active if navigation is availible", async () => {
+    class Parent extends Component {
+        static props = [];
+        static template = xml`
+            <div class="container" t-ref="containerRef">
+                <button class="o-navigable one">target one</button>
+                <button class="o-navigable two">target two</button>
+            </div>
+        `;
+
+        setup() {
+            this.navigation = useNavigation("containerRef");
+        }
+    }
+
+    const component = await mountWithCleanup(Parent);
+    expect(".one").not.toBeFocused();
+    expect(".two").not.toBeFocused();
+    expect(component.navigation.activeItem).toBe(null);
+
+    await hover(".one");
+    expect(component.navigation.activeItem).toBe(null);
+
+    await hover(".two");
+    expect(component.navigation.activeItem).toBe(null);
+
+    await click(".one");
+    expect(".one").toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(".two").not.toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(component.navigation.activeItem.target).toBe(queryOne(".one"));
+
+    await hover(".two");
+    expect(".one").not.toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(".two").toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(component.navigation.activeItem.target).toBe(queryOne(".two"));
+});
+
+test("active item is unset when focusing out", async () => {
+    class Parent extends Component {
+        static props = [];
+        static template = xml`
+            <button class="outside">outside</button>
+            <div class="container" t-ref="containerRef">
+                <button class="o-navigable one">target one</button>
+                <button class="o-navigable two">target two</button>
+            </div>
+        `;
+
+        setup() {
+            this.navigation = useNavigation("containerRef");
+        }
+    }
+
+    const component = await mountWithCleanup(Parent);
+    await click(".one");
+    expect(".one").toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(".two").not.toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(component.navigation.activeItem.target).toEqual(queryOne(".one"));
+
+    await click(".outside");
+    expect(".one").not.toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(".two").not.toHaveClass(ACTIVE_ELEMENT_CLASS);
+    expect(component.navigation.activeItem).toBe(null);
 });
