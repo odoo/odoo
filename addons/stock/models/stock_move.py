@@ -897,6 +897,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'res_id': self.id,
             'context': dict(
                 self.env.context,
+                show_expiration_date=self.picking_type_id.use_create_lots
             ),
         }
 

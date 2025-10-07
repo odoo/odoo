@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="stock.CharFieldWithDate" t-inherit="web.CharField">
+        <xpath expr=".//span" position="after">
+            <t t-if="this.props.record.data[this.props.name] and removalDate">
+                <span class="text-muted"> - <t t-esc="removalDate" /></span>
+            </t>
+        </xpath>
+    </t>
+</templates>

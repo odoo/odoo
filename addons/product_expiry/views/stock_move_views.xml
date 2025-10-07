@@ -22,12 +22,16 @@
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="after" >
                 <field name="picking_type_use_existing_lots" column_invisible="True"/>
-                <field name="expiration_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
+                <field name="expiration_date" force_save="1" column_invisible="not context.get('show_expiration_date') or not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
                  decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
-                <field name="removal_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
+                <field name="removal_date" force_save="1" column_invisible="1" readonly="picking_type_use_existing_lots"
                  decoration-danger="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
                  decoration-bf="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            </xpath>
+            <xpath expr="//field[@name='lot_name']" position="attributes">
+                <attribute name="widget">char_field_with_date</attribute>
+                <attribute name="options">{'date_field': 'removal_date'}</attribute>
             </xpath>
         </field>
     </record>
@@ -42,12 +46,16 @@
                 <field name="tracking" column_invisible="True"/>
                 <field name="expiration_date" decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
-                 force_save="1" readonly="picking_type_use_existing_lots" invisible="tracking == 'none'"/>
-                <field name="removal_date" force_save="1" readonly="1" invisible="tracking == 'none'"
+                 force_save="1" readonly="picking_type_use_existing_lots" column_invisible="not context.get('show_expiration_date')"/>
+                <field name="removal_date" force_save="1" readonly="1" column_invisible="1" invisible="tracking == 'none'"
                  decoration-danger="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')" decoration-bf="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="is_expired" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='lot_name']" position="attributes">
+                <attribute name="widget">char_field_with_date</attribute>
+                <attribute name="options">{'date_field': 'removal_date'}</attribute>
             </xpath>
         </field>
     </record>
