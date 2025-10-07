@@ -886,3 +886,22 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 {'tax_ids': [],                     'tax_line_id': False,                 'tax_tag_ids': [],               'credit': 0,    'debit': 1555},
             ],
         )
+
+    def test_fiscal_position_tax_mapping_with_inactive_tax(self):
+        """ Test that inactive taxes are not mapped by fiscal positions """
+        fp = self.env['account.fiscal.position'].create({'name': 'FP'})
+        src_tax = self.company_data['default_tax_sale']
+        active_tax = self.percent_tax_1.copy({
+            'fiscal_position_ids': [Command.set(fp.ids)],
+            'original_tax_ids': [Command.set(src_tax.ids)],
+        })
+        self.percent_tax_2.copy({
+            'active': False,
+            'fiscal_position_ids': [Command.set(fp.ids)],
+            'original_tax_ids': [Command.set(src_tax.ids)],
+        })
+        self.partner_a.property_account_position_id = fp
+
+        move = self.init_invoice('out_invoice', self.partner_a, post=True, products=[self.product])
+        line = move.invoice_line_ids
+        self.assertEqual(line.tax_ids, active_tax, f"The tax should be {active_tax.name}, but is is currently {line.tax_ids.name}")
