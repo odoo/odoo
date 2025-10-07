@@ -14,15 +14,14 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         super().setUpClass()
         cls.env.user.group_ids |= cls.env.ref('sales_team.group_sale_salesman')
 
-    def create_invoice(self, declaration, invoice_line_vals):
-        return self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'company_id': self.company.id,
-            'partner_id': declaration.partner_id.id,
-            'invoice_date': declaration.start_date,
-            'l10n_it_edi_doi_id': declaration.id,
-            'invoice_line_ids': invoice_line_vals,
-        })
+    def _create_invoice_doi(self, declaration, invoice_line_vals):
+        return super()._create_invoice(
+            company_id=self.company.id,
+            partner_id=declaration.partner_id.id,
+            invoice_date=declaration.start_date,
+            l10n_it_edi_doi_id=declaration.id,
+            invoice_line_ids=invoice_line_vals,
+        )
 
     def get_sale_order_vals(self, declaration, order_line_vals):
         return {
@@ -34,9 +33,9 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'order_line': order_line_vals,
         }
 
-    def create_sale_order(self, declaration, order_line_vals):
+    def _create_sale_order_doi(self, declaration, order_line_vals):
         sale_order_vals = self.get_sale_order_vals(declaration, order_line_vals)
-        return self.env['sale.order'].create(sale_order_vals)
+        return super()._create_sale_order(confirm=False, **sale_order_vals)
 
     def test_invoice_line_edit(self):
         """
@@ -51,7 +50,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': 1000.0,
         }])
 
-        invoice = self.create_invoice(declaration, [
+        invoice = self._create_invoice_doi(declaration, [
             Command.create({
                 'name': 'declaration line',
                 'quantity': 2,
@@ -91,7 +90,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': 1000.0,
         }])
 
-        order = self.create_sale_order(declaration, [
+        order = self._create_sale_order_doi(declaration, [
             Command.create({
                 'name': 'declaration line',
                 'product_id': self.product_1.id,
@@ -160,7 +159,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': 1000.0,
         }])
 
-        invoice = self.create_invoice(declaration, [
+        invoice = self._create_invoice_doi(declaration, [
                 Command.create({
                     'name': 'declaration line',
                     'quantity': 1,
@@ -216,7 +215,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         declaration = self.declaration_1000
         declaration_tax = declaration.company_id.l10n_it_edi_doi_tax_id
 
-        order = self.create_sale_order(declaration, [
+        order = self._create_sale_order_doi(declaration, [
             Command.create({
                 'name': 'declaration line',
                 'product_id': self.product_1.id,
@@ -258,7 +257,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': -1000.0,
         }])
 
-        invoice = self.create_invoice(declaration, [
+        invoice = self._create_invoice_doi(declaration, [
             Command.create({
                 'name': 'declaration line',
                 'quantity': 1,
@@ -312,7 +311,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
 
         # Add an order that is not used in the rest of this test.
         # This way we can always show the warning and that this amount will not be removed from Not Yet Invoiced.
-        independent_order = self.create_sale_order(declaration, [
+        independent_order = self._create_sale_order_doi(declaration, [
             Command.create({
                 'name': 'declaration line',
                 'product_id': self.product_1.id,
@@ -333,7 +332,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': -1000.0,
         }])
 
-        order = self.create_sale_order(declaration, [
+        order = self._create_sale_order_doi(declaration, [
             Command.create({
                 'name': 'declaration line',
                 'product_id': self.product_1.id,

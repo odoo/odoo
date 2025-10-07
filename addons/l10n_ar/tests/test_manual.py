@@ -23,7 +23,7 @@ class TestManual(common.TestAr):
         * Properly set the tax amount of the product / partner
         * Proper fiscal position (this case not fiscal position is selected)
         """
-        invoice = self._create_invoice()
+        invoice = self._create_invoice_ar()
         self.assertEqual(invoice.company_id, self.company_ri, 'created with wrong company')
         self.assertEqual(invoice.amount_tax, 21, 'invoice taxes are not properly set')
         self.assertEqual(invoice.amount_total, 121.0, 'invoice taxes has not been applied to the total')
@@ -36,19 +36,19 @@ class TestManual(common.TestAr):
 
     def test_02_fiscal_position(self):
         # ADHOC SA > IVA Responsable Inscripto > Without Fiscal Positon
-        invoice = self._create_invoice({'partner': self.partner})
+        invoice = self._create_invoice_ar({'partner': self.partner})
         self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
 
         # Consumidor Final > IVA Responsable Inscripto > Without Fiscal Positon
-        invoice = self._create_invoice({'partner': self.partner_cf})
+        invoice = self._create_invoice_ar({'partner': self.partner_cf})
         self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
 
         # Montana Sur > IVA Liberado - Ley Nº 19.640 > Compras / Ventas Zona Franca > IVA Exento
-        invoice = self._create_invoice({'partner': self.res_partner_montana_sur})
+        invoice = self._create_invoice_ar({'partner': self.res_partner_montana_sur})
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales Free Trade Zone'))
 
         # Barcelona food > Cliente / Proveedor del Exterior >  > IVA Exento
-        invoice = self._create_invoice({'partner': self.res_partner_barcelona_food})
+        invoice = self._create_invoice_ar({'partner': self.res_partner_barcelona_food})
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales abroad'))
 
     def test_03_corner_cases(self):
@@ -110,7 +110,7 @@ class TestManual(common.TestAr):
         self.assertTrue(self.journal.l10n_ar_is_pos)
 
         # If we create an invoice it will not use manual numbering
-        invoice = self._create_invoice({'partner': self.partner})
+        invoice = self._create_invoice_ar({'partner': self.partner})
         self.assertFalse(invoice.l10n_latam_manual_document_number)
 
         # Create a new sale journal that is not ARCA POS

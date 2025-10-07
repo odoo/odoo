@@ -4,7 +4,7 @@ from unittest import mock
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tools import misc
+from odoo.tools.misc import file_open
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -15,16 +15,6 @@ class TestUblBis3(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.env.company.tax_calculation_rounding_method = 'round_globally'
         cls.partner_a.invoice_edi_format = 'ubl_bis3'
-
-        cls.pay_term_epd_mixed = cls.env['account.payment.term'].create({
-            'name': "2/7 Net 30",
-            'note': "Payment terms: 30 Days, 2% Early Payment Discount under 7 days",
-            'early_discount': True,
-            'discount_percentage': 2,
-            'discount_days': 7,
-            'early_pay_discount_computation': 'mixed',
-            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
-        })
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -77,10 +67,15 @@ class TestUblBis3(AccountTestInvoicingCommon):
         with mock.patch.object(self.env['account.move.send'].__class__, '_get_move_constraints', patched_get_move_constraints):
             yield
 
+    def hook_flow_get_xml_element(self, invoice):
+        # OVERRIDES 'account'
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        return self.get_xml_tree_from_string(invoice.ubl_cii_xml_id.raw)
+
     def _assert_invoice_ubl_file(self, invoice, filename):
         file_path = f'addons/{self.test_module}/tests/test_files/{filename}.xml'
 
-        with misc.file_open(file_path, 'rb') as file:
+        with file_open(file_path, 'rb') as file:
             expected_content = file.read()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self.assertXmlTreeEqual(
@@ -134,7 +129,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         actual_content, _dummy = self.env['account.edi.xml.ubl_bis3'].with_context(lang='en_US')._export_invoice(invoice)
-        with misc.file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
+        with file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
             expected_content = file.read()
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_content),
