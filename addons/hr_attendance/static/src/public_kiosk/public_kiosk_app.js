@@ -27,7 +27,6 @@ class kioskAttendanceApp extends Component{
         kioskMode: { type: String },
         barcodeSource: { type: String },
         fromTrialMode: { type: Boolean },
-        activeDisplay: { type: String },
         deviceTrackingEnabled: { type: Boolean },
     };
     static components = {
