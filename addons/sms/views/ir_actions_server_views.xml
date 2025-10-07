@@ -10,28 +10,11 @@
                 <group invisible="state != 'sms'">
                     <group>
                         <field name="sms_template_id"
+                            string="Template"
                             placeholder="Choose a template..."
                             context="{'default_model': model_name}"
                             required="state == 'sms'"/>
-                        <label for="sms_method"/>
-                        <div class="d-flex flex-column">
-                            <field name="sms_method" required="state == 'sms'"/>
-                            <div class="text-muted">
-                                <span invisible="sms_method != 'sms'">
-                                    The message will be sent as an SMS to the recipients of the template
-                                    and will not appear in the messaging history.
-                                </span>
-                                <span invisible="sms_method != 'note'">
-                                    The SMS will not be sent, it will only be posted as an
-                                    internal note in the messaging history.
-                                </span>
-                                <span invisible="sms_method != 'comment'">
-                                    The SMS will be sent as an SMS to the recipients of the
-                                    template and it will also be posted as an internal note
-                                    in the messaging history.
-                                </span>
-                            </div>
-                        </div>
+                        <field name="sms_post_in_chatter" string="Post in Chatter"/>
                     </group>
                 </group>
             </xpath>

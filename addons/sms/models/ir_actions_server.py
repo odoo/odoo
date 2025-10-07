@@ -9,7 +9,7 @@ class IrActionsServer(models.Model):
     _inherit = 'ir.actions.server'
 
     state = fields.Selection(selection_add=[
-        ('sms', 'Send SMS'), ('followers',),
+        ('sms', 'Send SMS'), ('log_note',),
     ], ondelete={'sms': 'cascade'})
     # SMS
     sms_template_id = fields.Many2one(
@@ -18,11 +18,9 @@ class IrActionsServer(models.Model):
         ondelete='set null', readonly=False, store=True,
         domain="[('model_id', '=', model_id)]",
     )
-    sms_method = fields.Selection(
-        selection=[('sms', 'SMS (without note)'), ('comment', 'SMS (with note)'), ('note', 'Note only')],
-        string='Send SMS As',
-        compute='_compute_sms_method',
-        readonly=False, store=True)
+    sms_post_in_chatter = fields.Boolean(
+        'SMS Post in Chatter', compute='_compute_sms_post_in_chatter', readonly=False, store=True,
+        help='The SMS will be posted as a log note in the chatter of the record')
 
     def _name_depends(self):
         return [*super()._name_depends(), "sms_template_id"]
@@ -52,13 +50,10 @@ class IrActionsServer(models.Model):
             to_reset.sms_template_id = False
 
     @api.depends('state')
-    def _compute_sms_method(self):
+    def _compute_sms_post_in_chatter(self):
         to_reset = self.filtered(lambda act: act.state != 'sms')
-        if to_reset:
-            to_reset.sms_method = False
-        other = self - to_reset
-        if other:
-            other.sms_method = 'sms'
+        to_reset.sms_post_in_chatter = False
+        (self - to_reset).sms_post_in_chatter = True
 
     @api.model
     def _warning_depends(self):
@@ -86,7 +81,6 @@ class IrActionsServer(models.Model):
         return warnings
 
     def _run_action_sms_multi(self, eval_context=None):
-        # TDE CLEANME: when going to new api with server action, remove action
         if not self.sms_template_id or self._is_recompute():
             return False
 
@@ -97,9 +91,9 @@ class IrActionsServer(models.Model):
         composer = self.env['sms.composer'].with_context(
             default_res_model=records._name,
             default_res_ids=records.ids,
-            default_composition_mode='comment' if self.sms_method == 'comment' else 'mass',
+            default_composition_mode='comment' if self.sms_post_in_chatter else 'mass',
             default_template_id=self.sms_template_id.id,
-            default_mass_keep_log=self.sms_method == 'note',
+            default_mass_keep_log=False,
         ).create({})
         composer.action_send_sms()
         return False
