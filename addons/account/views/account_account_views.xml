@@ -114,6 +114,22 @@
             </field>
         </record>
 
+        <record id="view_account_list_from_entry" model="ir.ui.view">
+            <!-- View displayed when you click on "Search more..." from a journal entry -->
+            <field name="name">account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="code" string="Code"/>
+                    <field name="name"/>
+                    <field name="description" width="240px"/>
+                    <field name="account_type" widget="account_type_selection"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tax_tags"/>
+                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
         <record id="view_account_account_kanban" model="ir.ui.view">
             <field name="name">account.account.kanban</field>
             <field name="model">account.account</field>

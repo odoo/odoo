@@ -1196,6 +1196,8 @@
                                                     'search_default_type_expense': 'in_' in parent.move_type,
                                                     'search_default_account_type': 'out_' in parent.move_type and 'income',
                                                     'preferred_account_type': 'out_' in parent.move_type and 'income' or 'in_' in parent.move_type and 'expense',
+                                                    'list_view_ref': 'account.view_account_list_from_entry',
+                                                    'from_bill': move_type == 'in_invoice',
                                                }"
                                                groups="account.group_account_readonly"
                                                options="{'no_quick_create': True}"
