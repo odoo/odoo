@@ -23,6 +23,35 @@ registerWebsitePreviewTour(
             trigger: ".o_select_media_dialog .modal-footer .btn-primary",
             run: "click",
         },
+        {
+            content: "Show the powerbox",
+            trigger: ":iframe .s_picture p",
+            async run(actions) {
+                await actions.editor(`/`);
+                const wrapwrap = this.anchor.closest("#wrapwrap");
+                wrapwrap.dispatchEvent(
+                    new InputEvent("input", {
+                        inputType: "insertText",
+                        data: "/",
+                    })
+                );
+            },
+        },
+        {
+            content: "Click on the media item from powerbox",
+            trigger: "div.o-we-command-name:contains('Media')",
+            run: "click",
+        },
+        {
+            content: "Click on the 'Documents' tab",
+            trigger: ".o_select_media_dialog button.nav-link:contains('Documents')",
+            run: "click",
+        },
+        {
+            content: "Select a file",
+            trigger: ".o_select_media_dialog .o_button_area[aria-label='file.txt']",
+            run: "click",
+        },
         ...clickOnSave(),
         {
             content: "Change the language to French",
@@ -97,6 +126,27 @@ registerWebsitePreviewTour(
             trigger: ".o_select_media_dialog .modal-footer .btn-primary",
             run: "click",
         },
+        // Document translation
+        {
+            content: "Click on file",
+            trigger: ":iframe .o_file_box",
+            run: "click",
+        },
+        {
+            content: "Open the media dialog",
+            trigger:
+                ".options-container [data-action-id='translateMediaSrc'][data-action-param='documents']",
+            run: "click",
+        },
+        {
+            content: "Select another file",
+            trigger: ".o_select_media_dialog .o_button_area[aria-label='file_translated.txt']",
+            run: "click",
+        },
+        {
+            content: "Check: the file box DOM is marked as dirty",
+            trigger: ":iframe span.o_savable.o_dirty .o_file_box",
+        },
         ...clickOnSave(),
         // Translations checks
         {
@@ -107,6 +157,10 @@ registerWebsitePreviewTour(
         {
             content: "Check: video has been replaced",
             trigger: ":iframe .media_iframe_video[data-oe-expression*='qxb74CMR748']",
+        },
+        {
+            content: "Check: document has been replaced",
+            trigger: ":iframe .o_file_box .o_file_image[title='file_translated.txt']",
         },
         {
             content: "open language selector",
@@ -126,6 +180,10 @@ registerWebsitePreviewTour(
         {
             content: "Check: original video is still there",
             trigger: ":iframe .media_iframe_video[data-oe-expression*='G8b4UZIcTfg']",
+        },
+        {
+            content: "Check: original document is still there",
+            trigger: ":iframe .o_file_box .o_file_image[title='file.txt']",
         },
     ]
 );

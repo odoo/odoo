@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 
 from werkzeug.urls import url_encode
@@ -348,6 +349,16 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'datas': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
                      'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
                      'AElFTkSuQmCC',
+            'public': True,
+        })
+        self.env['ir.attachment'].create({
+            'name': 'file.txt',
+            'datas': base64.b64encode(b'My attachment'),
+            'public': True,
+        })
+        self.env['ir.attachment'].create({
+            'name': 'file_translated.txt',
+            'datas': base64.b64encode(b'tnemh cat taym'),
             'public': True,
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_website_media', login='admin')

@@ -2,6 +2,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import {
+    TranslateDocumentOption,
     TranslateImageOption,
     TranslateVideoOption,
 } from "@website/builder/plugins/translation/options/media_translation_option";
@@ -11,7 +12,7 @@ export class MediaTranslationPlugin extends Plugin {
     static dependencies = ["translation"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [TranslateImageOption, TranslateVideoOption],
+        builder_options: [TranslateImageOption, TranslateVideoOption, TranslateDocumentOption],
         builder_actions: {
             TranslateMediaSrcAction,
         },
@@ -34,6 +35,7 @@ export class TranslateMediaSrcAction extends BuilderAction {
         this.savingMap = {
             images: this.saveImage.bind(this),
             videos: this.saveVideo.bind(this),
+            documents: this.saveDocument.bind(this),
         };
     }
 
@@ -122,5 +124,11 @@ export class TranslateMediaSrcAction extends BuilderAction {
         editingElement.classList.add("oe_translated");
 
         this.handleTranslationMapHistory(editingElement, newSrc, originalSrc, "data-oe-expression");
+    }
+
+    saveDocument(editingElement, newFileEl) {
+        editingElement.replaceChildren(...newFileEl.children);
+        editingElement.dataset.attachmentId = newFileEl.dataset.attachmentId;
+        editingElement.querySelector("a.o_link_readonly").classList.add("o_translate_inline");
     }
 }

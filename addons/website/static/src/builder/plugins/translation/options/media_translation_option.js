@@ -11,3 +11,9 @@ export class TranslateVideoOption extends BaseOptionComponent {
     static selector = ".media_iframe_video.o_savable_attribute";
     static editableOnly = false;
 }
+
+export class TranslateDocumentOption extends BaseOptionComponent {
+    static template = "website.DocumentTranslationOption";
+    static selector = ".o_file_box";
+    static editableOnly = false;
+}
