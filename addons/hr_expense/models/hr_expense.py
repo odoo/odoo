@@ -1777,6 +1777,9 @@ class HrExpense(models.Model):
         account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
         chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']
         outstanding_account = chart_template.ref(account_ref, raise_if_not_found=False)
+        if not self.company_id.chart_template:
+            action = self.env.ref('account.action_account_config')
+            raise RedirectWarning(_('You should install a Fiscal Localization first.'), action.id, _('Accounting Settings'))
         if not outstanding_account:
             bank_prefix = self.company_id.bank_account_code_prefix
             template_data = chart_template._get_chart_template_data(self.company_id.chart_template).get('template_data')
