@@ -289,7 +289,10 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_reference_ids=self.stock_reference_ids[:-1].id)
+        action['context'] = dict(
+            default_partner_id=self.partner_id.id,
+            default_picking_type_id=picking_id.picking_type_id.id,
+        )
         return action
 
     def _prepare_invoice(self):
