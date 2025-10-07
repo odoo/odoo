@@ -114,6 +114,7 @@ test("SelectionField, edition and on many2one field", async () => {
 
 test.tags("desktop");
 test("[Offline] SelectionField on many2one field", async () => {
+    expect.errors(3);
     onRpc("/web/dataset/call_kw/product/name_search", () => new Response("", { status: 502 }), {
         pure: true,
     });
@@ -133,6 +134,11 @@ test("[Offline] SelectionField on many2one field", async () => {
     await contains(".o_field_widget[name='product_id'] input").click();
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone"]);
     expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,
+    ]);
 });
 
 test("unset selection field with 0 as key", async () => {

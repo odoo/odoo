@@ -1170,6 +1170,7 @@ test("INSERT_ODOO_LIST_WITH_TABLE adds a table that maches the list dimension", 
 });
 
 test("An error is displayed if the list has invalid model", async function () {
+    expect.errors(1);
     const { model } = await createSpreadsheetWithList({
         mockRPC: async function (route, { model, method, kwargs }) {
             if (model === "unknown" && method === "fields_get") {
@@ -1193,6 +1194,7 @@ test("An error is displayed if the list has invalid model", async function () {
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
 });
 
 test("Support field chaining in list", async function () {

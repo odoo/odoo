@@ -76,6 +76,7 @@ test("Many2ManyCheckBoxesField", async () => {
 });
 
 test("[Offline] Many2ManyCheckBoxesField", async () => {
+    expect.errors(3);
     onRpc(
         "/web/dataset/call_kw/partner.type/name_search",
         () => new Response("", { status: 502 }),
@@ -102,6 +103,11 @@ test("[Offline] Many2ManyCheckBoxesField", async () => {
     expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
 
     expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/partner.type/name_search" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner.type/name_search" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner.type/name_search" couldn't be established or was interrupted`,
+    ]);
 });
 test("Many2ManyCheckBoxesField (readonly)", async () => {
     Partner._records[0].timmy = [12];

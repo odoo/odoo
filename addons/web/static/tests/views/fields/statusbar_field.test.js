@@ -129,6 +129,7 @@ test("static statusbar widget on many2one field", async () => {
 
 test.tags("desktop");
 test("[Offline] static statusbar widget on many2one field", async () => {
+    expect.errors(3);
     Partner._fields.trululu = fields.Many2one({
         relation: "partner",
         domain: "[('bar', '=', True)]",
@@ -154,6 +155,11 @@ test("[Offline] static statusbar widget on many2one field", async () => {
     expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(1);
     expect(".o_statusbar_status button:disabled:not(.d-none)").toHaveCount(1);
     expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/partner/search_read" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner/search_read" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner/search_read" couldn't be established or was interrupted`,
+    ]);
 });
 
 test("folded statusbar widget on selection field has selected value in the toggler", async () => {

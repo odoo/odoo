@@ -2471,7 +2471,7 @@ test("doAction supports being passed globalState prop", async () => {
 });
 
 test("window action in target new fails (onchange)", async () => {
-    expect.errors(1);
+    expect.errors(2);
 
     onRpc("partner", "onchange", () => {
         throw makeServerError({ type: "ValidationError" });
@@ -2491,11 +2491,11 @@ test("window action in target new fails (onchange)", async () => {
     await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
         "Validation Error"
     );
-    expect.verifyErrors(["RPC_ERROR"]);
+    expect.verifyErrors(["RPC_ERROR", "RPC_ERROR"]);
 });
 
 test("Uncaught error in target new is catch only once", async () => {
-    expect.errors(1);
+    expect.errors(2);
 
     defineActions([
         {
@@ -2525,7 +2525,7 @@ test("Uncaught error in target new is catch only once", async () => {
     await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
         "Validation Error"
     );
-    expect.verifyErrors(["RPC_ERROR"]);
+    expect.verifyErrors(["RPC_ERROR", "RPC_ERROR"]);
 });
 
 test("action and get_views rpcs are cached", async () => {

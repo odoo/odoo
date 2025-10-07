@@ -56,6 +56,7 @@ test("Many2ManyAttendee: basic rendering", async () => {
 });
 
 test("[Offline] Many2ManyAttendee: basic rendering", async () => {
+    expect.errors(1);
     onRpc(
         "/web/dataset/call_kw/res.partner/get_attendee_detail",
         () => new Response("", { status: 502 }),
@@ -86,6 +87,9 @@ test("[Offline] Many2ManyAttendee: basic rendering", async () => {
         "data-src",
         `${getOrigin()}/web/image/res.partner/${serverData.partnerIds[0]}/avatar_128`
     );
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/res.partner/get_attendee_detail" couldn't be established or was interrupted`,
+    ]);
 });
 
 test("Many2ManyAttendee: remove own attendee", async () => {

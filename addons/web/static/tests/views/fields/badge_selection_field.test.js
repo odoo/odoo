@@ -75,6 +75,7 @@ test("BadgeSelectionField widget on a many2one in a new record", async () => {
 });
 
 test("[Offline] BadgeSelectionField widget on a many2one", async () => {
+    expect.errors(3);
     onRpc("/web/dataset/call_kw/product/name_search", () => new Response("", { status: 502 }), {
         pure: true,
     });
@@ -91,6 +92,12 @@ test("[Offline] BadgeSelectionField widget on a many2one", async () => {
     expect(`span.o_selection_badge`).toHaveCount(1);
     expect(queryAllTexts(`span.o_selection_badge`)).toEqual(["xphone"]);
     expect(`span.active`).toHaveCount(1);
+
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/product/name_search" couldn't be established or was interrupted`,
+    ]);
 });
 
 test("BadgeSelectionField widget on a selection in a new record", async () => {

@@ -227,6 +227,8 @@ describe(`new urls`, () => {
     });
 
     test(`action loading, when action not found, load previous`, async () => {
+        expect.errors(1);
+
         redirect("/odoo/action-1001/action-666");
         logHistoryInteractions();
 
@@ -238,6 +240,7 @@ describe(`new urls`, () => {
             message: "url changed",
         });
         expect.verifySteps(["pushState http://example.com/odoo/action-1001"]);
+        expect.verifyErrors(["RPC_ERROR: The action 666 does not exist"]);
     });
 
     test(`menu loading`, async () => {
@@ -872,7 +875,7 @@ describe(`new urls`, () => {
     });
 
     test(`lazy loaded multi record view with failing mono record one`, async () => {
-        expect.errors(1);
+        expect.errors(2);
 
         redirect("/odoo/action-3/2");
         logHistoryInteractions();
@@ -895,7 +898,7 @@ describe(`new urls`, () => {
             "Update the state without updating URL, nextState: actionStack,action,globalState",
             "pushState http://example.com/odoo/action-3/action-1",
         ]);
-        expect.verifyErrors([/RPC_ERROR/]);
+        expect.verifyErrors([/RPC_ERROR/, /RPC_ERROR/]);
     });
 
     test(`should push the correct state at the right time`, async () => {
@@ -1360,7 +1363,7 @@ describe(`new urls`, () => {
         // because, there is not id, or an action on the session storage.
         // So it will try to perform the previous action : action-3 with id 1.
         // This one will give an error, and it should directly try the previous one : action-3
-        expect.errors(1);
+        expect.errors(2);
         redirect("/odoo/action-3/1/m-partner");
         logHistoryInteractions();
         stepAllNetworkCalls();
@@ -1368,7 +1371,7 @@ describe(`new urls`, () => {
 
         await mountWebClient();
         expect(`.o_list_view`).toHaveCount(1);
-        expect.verifyErrors([/RPC_ERROR/]);
+        expect.verifyErrors([/RPC_ERROR/, /RPC_ERROR/]);
         expect.verifySteps([
             "/web/webclient/translations",
             "/web/webclient/load_menus",
@@ -2133,14 +2136,14 @@ describe(`legacy urls`, () => {
     });
 
     test(`lazy loaded multi record view with failing mono record one`, async () => {
-        expect.errors(1);
+        expect.errors(2);
 
         redirect("/web#action=3&id=2&view_type=form");
         onRpc("web_read", () => Promise.reject());
 
         await mountWebClient();
 
-        expect.verifyErrors([Error]);
+        expect.verifyErrors([Error, Error]);
         expect(`.o_form_view`).toHaveCount(0);
         expect(`.o_list_view`).toHaveCount(1); // Show the lazy loaded list view
 

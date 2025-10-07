@@ -126,7 +126,7 @@ test("error in a client action (after the first rendering)", async () => {
 });
 
 test("connection lost when opening form view from kanban", async () => {
-    expect.errors(2);
+    expect.errors(3);
 
     stepAllNetworkCalls();
 
@@ -164,7 +164,11 @@ test("connection lost when opening form view from kanban", async () => {
     await runAllTimers();
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info"]);
-    expect.verifyErrors([Error, Error]);
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established or was interrupted`,
+    ]);
 });
 
 test.tags("desktop");
@@ -221,7 +225,9 @@ test("connection lost when coming back to kanban from form", async () => {
     await runAllTimers();
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info"]);
-    expect.verifyErrors([Error]);
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established or was interrupted`,
+    ]);
 
     offline = false;
     await contains(".o_searchview .o_searchview_icon").click();

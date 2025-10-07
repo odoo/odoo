@@ -13,6 +13,7 @@ import {
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { tick } from "@odoo/hoot-dom";
 
 /**
  * @param {string} resModel
@@ -96,6 +97,7 @@ class Species extends models.Model {
 defineModels([Tortoise, Location, Species]);
 
 test("loadPath", async () => {
+    expect.errors(1);
     await makeMockEnv();
 
     const toTest = [
@@ -217,9 +219,15 @@ test("loadPath", async () => {
         }
     }
     expect.verifySteps(errorToTest.map(() => "error"));
+    await tick();
+    await tick();
+    expect.verifyErrors([
+        `RPC_ERROR: cannot find a definition for model "notAModel": could not get model from server environment (did you forget to use \`defineModels()?\`)`,
+    ]);
 });
 
 test("loadPath follow relational properties", async () => {
+    expect.errors(1);
     await makeMockEnv();
 
     const toTest = [
@@ -344,6 +352,11 @@ test("loadPath follow relational properties", async () => {
         }
     }
     expect.verifySteps(errorToTest.map(() => "error"));
+    await tick();
+    await tick();
+    expect.verifyErrors([
+        `RPC_ERROR: cannot find a definition for model "notAModel": could not get model from server environment (did you forget to use \`defineModels()?\`)`,
+    ]);
 });
 
 test("store loadFields calls in cache in success", async () => {
@@ -360,6 +373,7 @@ test("store loadFields calls in cache in success", async () => {
 });
 
 test("does not store loadFields calls in cache when failed", async () => {
+    expect.errors(2);
     onRpc("fields_get", () => {
         expect.step("fields_get");
         throw "my little error";
@@ -370,6 +384,9 @@ test("does not store loadFields calls in cache when failed", async () => {
     await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
 
     expect.verifySteps(["fields_get", "fields_get"]);
+    await tick();
+    await tick();
+    expect.verifyErrors(["RPC_ERROR: my little error", "RPC_ERROR: my little error"]);
 });
 
 test("async method loadFields is protected", async () => {

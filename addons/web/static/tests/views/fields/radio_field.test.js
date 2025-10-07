@@ -70,6 +70,7 @@ test("radio field on a many2one in a new record", async () => {
 });
 
 test("[Offline] radio field on a many2one", async () => {
+    expect.errors(3);
     Partner._records[0].product_id = 37;
     onRpc("/web/dataset/call_kw/product/web_search_read", () => new Response("", { status: 502 }), {
         pure: true,
@@ -85,6 +86,11 @@ test("[Offline] radio field on a many2one", async () => {
     expect("input.o_radio_input").toHaveCount(1);
     expect(".o_field_radio:first").toHaveText("xphone");
     expect("input.o_radio_input:checked").toHaveCount(1);
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/product/web_search_read" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/product/web_search_read" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/product/web_search_read" couldn't be established or was interrupted`,
+    ]);
 });
 
 test("required radio field on a many2one", async () => {
