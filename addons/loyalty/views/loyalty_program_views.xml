@@ -201,7 +201,7 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('program_type', 'not in', ('gift_card', 'ewallet'))]</field>
         <field name="help" type="html">
-            <div class="o_loyalty_not_found container mt64">
+            <div class="o_loyalty_not_found">
                 <h1>No program found.</h1>
                 <p class="lead">Create one from scratch, or use a templates below:</p>
             </div>
@@ -246,7 +246,7 @@
         <field name="context">{'menu_type': 'gift_ewallet', 'default_program_type': 'gift_card'}</field>
         <field name="domain">[('program_type', 'in', ('gift_card', 'ewallet'))]</field>
         <field name="help" type="html">
-            <div class="o_loyalty_not_found container mt64">
+            <div class="o_loyalty_not_found">
                 <h1>No loyalty program found.</h1>
                 <p class="lead">Create a new one from scratch, or use one of the templates below.</p>
             </div>
