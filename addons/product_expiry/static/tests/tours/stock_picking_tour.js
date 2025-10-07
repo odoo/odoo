@@ -11,11 +11,7 @@ registry.category("web_tour.tours").add('test_generate_serial_with_expiration', 
             run: "click",
         },
         {
-            trigger: ".modal .btn-primary:contains('New')",
-            run: "click",
-        },
-        {
-            trigger: ".modal .btn-primary:contains('Generate')",
+            trigger: ".modal .btn-primary:contains('Validate')",
             run: "click",
         },
         // Check that the expiration date is now set after generating Serials/Lots.

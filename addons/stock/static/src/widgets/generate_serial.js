@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { Dialog } from '@web/core/dialog/dialog';
-import { useService } from "@web/core/utils/hooks";
+import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { parseInteger  } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
@@ -19,45 +19,60 @@ export class GenerateDialog extends Component {
     };
     setup() {
         this.size = 'md';
-        if (this.props.mode === 'generate') {
-            this.title = this.props.move.data.has_tracking === 'lot'
-            ? _t("Generate Lot numbers")
-            : _t("Generate Serial numbers");
-        } else {
-            this.title = this.props.move.data.has_tracking === 'lot' ? _t("Import Lots") : _t("Import Serials");
-        }
-
         this.nextSerial = useRef('nextSerial');
         this.nextSerialCount = useRef('nextSerialCount');
         this.totalReceived = useRef('totalReceived');
         this.keepLines = useRef('keepLines');
         this.lots = useRef('lots');
         this.orm = useService("orm");
+        if (this.props.mode === 'generate') {
+            if (this.isLotTracking) {
+                this.title = _t("Generate Lot numbers");
+                useAutofocus({ refName: 'totalReceived' });
+            } else {
+                this.title = _t("Generate Serial numbers");
+                useAutofocus({ refName: 'nextSerialCount' });
+            }
+        } else {
+            this.title = this.isLotTracking ? _t("Import Lots") : _t("Import Serials");
+        }
         onWillStart(async () => {
             this.displayUOM = await user.hasGroup("uom.group_uom");
+            // Automatically generate lot/serial number.
+            if (this.props.mode === 'generate') {
+                await this._onGenerateCustomSerial();
+            }
         });
         onMounted(() => {
             if (this.props.mode === 'generate') {
                 this.nextSerialCount.el.value = this.props.move.data.product_uom_qty || 2;
-                if (this.props.move.data.has_tracking === 'lot') {
+                if (this.nextCustomSerialNumber) {
+                    this.nextSerial.el.value = this.nextCustomSerialNumber;
+                }
+                if (this.isLotTracking) {
                     this.totalReceived.el.value = this.props.move.data.quantity;
                 }
             }
         });
     }
+
+    get isLotTracking() {
+        return this.props.move.data.has_tracking === 'lot';
+    }
+
     async _onGenerateCustomSerial() {
         const product = (await this.orm.searchRead("product.product", [["id", "=", this.props.move.data.product_id.id]], ["lot_sequence_id"]))[0];
         this.sequence = product.lot_sequence_id;
         if (product.lot_sequence_id) {
-            this.sequence = (await this.orm.searchRead("ir.sequence", [["id", "=", this.sequence[0]]], ["number_next_actual"]))[0];
-            this.nextCustomSerialNumber = await this.orm.call("ir.sequence", "next_by_id", [this.sequence.id]);
-            this.nextSerial.el.value = this.nextCustomSerialNumber;
+            this.sequence = (await this.orm.searchRead("ir.sequence", [["id", "=", this.sequence[0]]], ["number_next", "number_next_actual"]))[0];
+            this.nextCustomSerialNumber = await this.orm.call("ir.sequence", "get_next_char", [this.sequence.id, this.sequence.number_next]);
         }
     }
+
     async _onGenerate() {
         let count;
         let qtyToProcess;
-        if (this.props.move.data.has_tracking === 'lot'){
+        if (this.isLotTracking) {
             count = parseFloat(this.nextSerialCount.el?.value || '0');
             qtyToProcess = parseFloat(this.totalReceived.el?.value || this.props.move.data.product_qty);
         } else {
