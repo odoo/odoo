@@ -38,7 +38,7 @@ patch(Thread.prototype, {
     computeCorrespondent() {
         const correspondent = super.computeCorrespondent();
         if (this.channel?.channel_type === "livechat" && !correspondent) {
-            return this.livechatVisitorMember;
+            return this.livechat_customer_member_id;
         }
         return correspondent;
     },

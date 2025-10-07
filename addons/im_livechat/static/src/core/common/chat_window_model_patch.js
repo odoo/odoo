@@ -22,7 +22,7 @@ const chatWindowPatch = {
             this.livechatStep = CW_LIVECHAT_STEP.NONE;
             return super.close(...arguments);
         }
-        const isSelfVisitor = this.thread.livechatVisitorMember?.persona?.eq(this.store.self);
+        const isSelfVisitor = this.thread.livechat_customer_member_id?.persona?.eq(this.store.self);
         switch (this.livechatStep) {
             case CW_LIVECHAT_STEP.NONE: {
                 if (this.thread.isTransient) {

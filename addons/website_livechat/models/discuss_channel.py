@@ -97,7 +97,7 @@ class DiscussChannel(models.Model):
         message = super().message_post(**kwargs)
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
-        if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:
+        if len(self) == 1 and visitor and message_author_id != self.livechat_main_agent_partner_id:
             # sudo: website.visitor: updating data of a specific visitor
             visitor.sudo()._update_visitor_last_visit()
         return message

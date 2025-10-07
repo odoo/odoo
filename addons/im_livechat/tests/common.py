@@ -60,13 +60,12 @@ class TestGetOperatorCommon(HttpCase):
         self.operator_id = 0
 
     def _create_conversation(self, livechat, operator, in_call=False):
-        channel = self.env["discuss.channel"].create(
+        channel = self.env["discuss.channel"].with_user(operator).create(
             {
                 "name": "Visitor 1",
                 "channel_type": "livechat",
                 "livechat_channel_id": livechat.id,
-                "livechat_operator_id": operator.partner_id.id,
-                "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
+                "channel_member_ids": [Command.create({"livechat_member_type": "agent", "partner_id": operator.partner_id.id})],
                 "last_interest_dt": fields.Datetime.now(),
             }
         )

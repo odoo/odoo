@@ -588,7 +588,7 @@ class DiscussChannel(models.Model):
             self,
             [
                 Store.Many("channel_member_ids", [], mode="DELETE", value=member),
-                "member_count",
+                *self._store_member_change_fields(),
             ],
         ).bus_send()
 
@@ -663,7 +663,7 @@ class DiscussChannel(models.Model):
                         subtype_xmlid="mail.mt_comment",
                     )
             if new_members:
-                Store(bus_channel=channel).add(channel, "member_count").add(new_members).bus_send()
+                Store(bus_channel=channel).add(channel, self._store_member_change_fields()).add(new_members).bus_send()
             if existing_members and (bus_channel := current_partner.main_user_id or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
@@ -1407,6 +1407,12 @@ class DiscussChannel(models.Model):
     def _lazy_load_members_channel_types(self):
         """ Return the channel types that load members lazily. """
         return ["channel", "group"]
+
+    def _store_member_change_fields(self):
+        """ Return the fields that should be sent on the store when a user
+        joins or leave the channel.
+        """
+        return ["member_count"]
 
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members

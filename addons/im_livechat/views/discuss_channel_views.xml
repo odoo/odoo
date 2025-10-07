@@ -12,7 +12,7 @@
                     <field name="livechat_agent_providing_help_history"/>
                     <field name="country_id" string="Country"/>
                     <field name="livechat_customer_partner_ids" string="Customer"/>
-                    <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_ids', '=', uid)]" string="My Sessions"/>
+                    <filter name="filter_my_sessions" domain="[('livechat_main_agent_partner_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="ongoing" string="Ongoing" domain="[('livechat_end_dt', '=', False)]"/>
                     <separator/>
@@ -139,7 +139,7 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <pivot string="Sessions" display_quantity="1" sample="1">
-                    <field name="livechat_operator_id" type="row"/>
+                    <field name="livechat_main_agent_partner_id" type="row"/>
                     <field name="create_date" interval="day" type="col"/>
                     <field name="rating_last_value" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
                 </pivot>
@@ -272,7 +272,7 @@
                     <field name="livechat_conversation_tag_ids" string="Tags"/>
                     <field name="livechat_bot_partner_ids" string="Chatbot"/>
                     <field name="livechat_customer_partner_ids" string="Customer"/>
-                    <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_ids', '=', uid)]" string="My Sessions"/>
+                    <filter name="filter_my_sessions" domain="[('livechat_main_agent_partner_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <filter name="filter_my_languages" string="My Languages" domain="[('livechat_matches_self_lang', '=', True)]"/>
                     <filter name="filter_my_expertise" string="My Expertise" domain="[('livechat_matches_self_expertise', '=', True)]"/>
                     <separator />
