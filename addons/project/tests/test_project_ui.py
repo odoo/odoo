@@ -13,3 +13,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_project_tour(self):
         self.start_tour("/web", 'project_tour', login="admin")
+
+    def test_limited_user_log_note_permission(self):
+        self.start_tour('/', 'project_chatter_log_disabled', login='demo')
+        self.start_tour('/', 'project_chatter_log_enabled', login='admin')
