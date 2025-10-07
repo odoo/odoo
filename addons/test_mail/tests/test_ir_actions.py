@@ -28,7 +28,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
         # update action: send an email
         self.action.write({
-            'mail_post_method': 'email',
+            'mail_post_in_chatter': False,
             'state': 'mail_post',
             'template_id': self.template.id,
         })
@@ -81,7 +81,6 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         # test without autofollow and comment
         self.action.write({
             'mail_post_autofollow': False,
-            'mail_post_method': 'comment',
             'state': 'mail_post',
             'template_id': self.template.id
         })
@@ -104,7 +103,8 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         # test with autofollow and note
         self.action.write({
             'mail_post_autofollow': True,
-            'mail_post_method': 'note'
+            'state': 'log_note',
+            'log_note_note': 'Hello %s' % self.test_partner.name
         })
         with self.assertSinglePostNotifications(
                 [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
@@ -197,7 +197,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
         # update action: send an email
         self.action.write({
-            'mail_post_method': 'email',
+            'mail_post_in_chatter': False,
             'state': 'mail_post',
             'model_id': self.env['ir.model'].search([('model', '=', 'mail.test.nothread')], limit=1).id,
             'model_name': 'mail.test.nothread',
