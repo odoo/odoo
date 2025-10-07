@@ -18,14 +18,6 @@ class HrEmployee(models.Model):
     manually_set_present = fields.Boolean(default=False)
     manually_set_presence = fields.Boolean(default=False)
 
-    # Stored field used in the presence kanban reporting view
-    # to allow group by state.
-    hr_presence_state_display = fields.Selection([
-        ('out_of_working_hour', 'Off-Hours'),
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ], default='out_of_working_hour')
-
     @api.model
     def _check_presence(self):
         company = self.env.company
@@ -37,9 +29,6 @@ class HrEmployee(models.Model):
             'manually_set_present': False,
             'manually_set_presence': False,
         })
-
-        all_employees = employees
-
 
         # Check on IP
         if company.hr_presence_control_ip:
@@ -73,9 +62,6 @@ class HrEmployee(models.Model):
 
         company.sudo().hr_presence_last_compute_date = Datetime.now()
 
-        for employee in all_employees:
-            employee.hr_presence_state_display = employee.hr_presence_state
-
     def get_presence_server_action_data(self):
         server_action_xmlids = [
             'action_hr_employee_presence_present',
@@ -95,7 +81,6 @@ class HrEmployee(models.Model):
         self.write({
             'manually_set_present': state,
             'manually_set_presence': True,
-            "hr_presence_state_display": 'present' if state else 'absent',
         })
 
     def action_set_present(self):
@@ -103,11 +88,6 @@ class HrEmployee(models.Model):
 
     def action_set_absent(self):
         self._action_set_manual_presence(False)
-
-    def write(self, vals):
-        if vals.get('hr_presence_state_display') == 'present':
-            vals['manually_set_present'] = True
-        return super().write(vals)
 
     def action_open_leave_request(self):
         if len(self) == 1:
@@ -167,16 +147,16 @@ Thank you for your prompt attention to this matter.""")
             employee.message_post(body=_(
                 "%(name)s has been noted as %(state)s today",
                 name=employee.name,
-                state=employee.hr_presence_state_display))
+                state=employee.hr_presence_state))
 
-    @api.depends("user_id.im_status", "hr_presence_state_display")
+    @api.depends("user_id.im_status", "manually_set_present")
     def _compute_presence_state(self):
         super()._compute_presence_state()
         company = self.env.company
         working_now_list = self._get_employee_working_now()
         for employee in self:
             if employee.manually_set_presence:
-                employee.hr_presence_state = employee.hr_presence_state_display
+                employee.hr_presence_state = 'present' if employee.manually_set_present else 'absent'
                 continue
 
             if not employee.company_id.hr_presence_control_email and not employee.company_id.hr_presence_control_ip:
