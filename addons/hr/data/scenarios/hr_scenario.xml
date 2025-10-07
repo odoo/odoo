@@ -133,7 +133,7 @@
             <field name="private_country_id" ref="base.us"/>
             <field name="private_phone">+1 555-555-5757</field>
             <field name="work_email">williams@mycompany.example.com</field>
-            <field name="department_id" ref="hr.dep_administration"/>
+            <field name="department_id" eval="ref('hr.dep_administration', raise_if_not_found=False)"/>
             <field name="job_id" ref="job_ceo"/>
             <field name="job_title">Chief Executive Officer</field>
             <field name="company_id" ref="base.main_company"/>
