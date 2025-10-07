@@ -159,6 +159,7 @@ class TestConfigManager(TransactionCase):
 
             # multiprocessing
             'workers': 0,
+            'gevent_workers': 0,
             'limit_memory_soft': 2048 * 1024 * 1024,
             'limit_memory_soft_gevent': None,
             'limit_memory_hard': 2560 * 1024 * 1024,
@@ -276,6 +277,7 @@ class TestConfigManager(TransactionCase):
 
             # multiprocessing
             'workers': 92,
+            'gevent_workers': 3,
             'limit_memory_soft': 1048576,
             'limit_memory_soft_gevent': 1048577,
             'limit_memory_hard': 1048578,
@@ -396,6 +398,7 @@ class TestConfigManager(TransactionCase):
 
             # multiprocessing
             'workers': 0,
+            'gevent_workers': 0,
             'limit_memory_soft': 2048 * 1024 * 1024,
             'limit_memory_soft_gevent': None,
             'limit_memory_hard': 2560 * 1024 * 1024,
@@ -570,6 +573,7 @@ class TestConfigManager(TransactionCase):
             'geoip_country_db': '/tmp/country.db',
 
             'workers': 92,
+            'gevent_workers': 3,
             'limit_memory_soft': 1048576,
             'limit_memory_soft_gevent': 1048577,
             'limit_memory_hard': 1048578,

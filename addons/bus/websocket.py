@@ -27,6 +27,7 @@ from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
 from odoo import api, modules
+import odoo.sql_db
 from .models.bus import dispatch
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
@@ -1120,9 +1121,35 @@ class WebsocketConnectionHandler:
 
 def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
+    _logger.info('disconnecting all websockets (%s)...', len(_websocket_instances))
+    count = 0
+    wait_threshold = max(odoo.sql_db._Pool._maxconn // 8, 8) if odoo.sql_db._Pool else 32
     for websocket in _websocket_instances:
         if websocket.state is ConnectionState.OPEN:
-            websocket.close(code)
+            try:
+                websocket._disconnect(code)
+            except Exception:
+                # race condition: it's possible the socket was already closed
+                continue
+            if (count + 1) % wait_threshold == 0:
+                time.sleep(0.5)
+            count += 1
+
+    # enforce the 15s timeout
+    while _websocket_instances:
+        time.sleep(0.5)
+        for websocket in _websocket_instances:
+            if websocket._timeout_manager.has_timed_out() and websocket.state is not ConnectionState.CLOSED:
+                try:
+                    websocket._terminate()
+                except Exception:
+                    # race condition: it's possible the socket was already closed
+                    continue
+
+        if all(ws.state == ConnectionState.CLOSED for ws in _websocket_instances):
+            break
+
+    _logger.info('all websockets disconnected')
 
 
 CommonServer.on_stop(_kick_all)
