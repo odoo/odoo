@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import fields, models, _, Command
 
 class MailingContactToList(models.TransientModel):
     _name = "mailing.contact.to.list"
@@ -30,13 +30,15 @@ class MailingContactToList(models.TransientModel):
     def _add_contacts_to_mailing_list(self, action):
         self.ensure_one()
 
-        previous_count = len(self.mailing_list_id.contact_ids)
+        contacts_to_add = self.contact_ids.filtered(lambda c: c.id not in self.mailing_list_id.contact_ids.ids)
         self.mailing_list_id.write({
-            'contact_ids': [
-                (4, contact.id)
-                for contact in self.contact_ids
-                if contact not in self.mailing_list_id.contact_ids]
-            })
+            'subscription_ids': [
+                Command.create({
+                    'contact_id': contact.id,
+                    'list_id': self.mailing_list_id.id,
+                }) for contact in contacts_to_add
+            ]
+        })
 
         return {
             'type': 'ir.actions.client',
@@ -44,7 +46,7 @@ class MailingContactToList(models.TransientModel):
             'params': {
                 'type': 'info',
                 'message': _("%s Mailing Contacts have been added. ",
-                             len(self.mailing_list_id.contact_ids) - previous_count
+                             len(contacts_to_add)
                             ),
                 'sticky': False,
                 'next': action,
