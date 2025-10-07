@@ -23,10 +23,7 @@ export class StockOrderpointSearchModel extends SearchModel {
         };
         this._context = false; // Force rebuild of this.context to take into account the updated this.globalContext
         await this.orm.call("stock.warehouse.orderpoint", "action_open_orderpoints", [], {
-            context: {
-                ...this.context,
-                force_orderpoint_recompute: true,
-            }
+            context: this.context,
         });
         await this._fetchSections(this.categories, this.filters);
         this._notify();
