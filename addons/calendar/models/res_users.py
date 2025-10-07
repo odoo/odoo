@@ -17,15 +17,8 @@ class ResUsers(models.Model):
          ('confidential', 'Internal users only')],
         compute="_compute_calendar_default_privacy",
         inverse="_inverse_calendar_res_users_settings",
+        user_writeable=True,
     )
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['calendar_default_privacy']
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['calendar_default_privacy']
 
     def get_selected_calendars_partner_ids(self, include_user=True):
         """
