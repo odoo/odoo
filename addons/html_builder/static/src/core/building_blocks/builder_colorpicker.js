@@ -116,6 +116,7 @@ export class BuilderColorPicker extends Component {
         grayscales: { type: Object, optional: true },
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
         selectedTab: { type: String, optional: true },
         defaultColor: { type: String, optional: true },
