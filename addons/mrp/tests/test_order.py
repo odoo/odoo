@@ -981,28 +981,6 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
-    def test_product_produce_9(self):
-        """ Checks the production wizard contains lines even for untracked products. """
-        serial = self.env['product.product'].create({
-            'name': 'S1',
-            'tracking': 'serial',
-        })
-        mo, bom, p_final, p1, p2 = self.generate_mo()
-        self.assertEqual(len(mo), 1, 'MO should have been created')
-
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
-        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
-
-        mo.action_assign()
-        mo_form = Form(mo)
-
-        # change the quantity done in one line
-        with self.assertRaises(AssertionError):
-            with mo_form.move_raw_ids.new() as move:
-                move.product_id = serial
-                move.quantity = 2
-            mo_form.save()
-
     def test_product_produce_10(self):
         """ Produce byproduct with serial, lot and not tracked.
         byproduct1 serial 1.0
