@@ -47,6 +47,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
             DynamicRecordAction,
             CustomizeTemplateAction,
             NumberOfRecordsAction,
+            SectionTitleAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         is_unremovable_selector: ".s_dynamic_snippet_title",
@@ -418,6 +419,52 @@ export class NumberOfRecordsAction extends BuilderAction {
 export function setDatasetIfUndefined(snippetEl, optionName, value) {
     if (snippetEl.dataset[optionName] === undefined) {
         snippetEl.dataset[optionName] = value;
+    }
+}
+export class SectionTitleAction extends BuilderAction {
+    static id = "sectionTitle";
+    static dependencies = ["dynamicSnippetOption"];
+
+    _getTitleEl(el) {
+        return el.querySelector(".s_dynamic_snippet_title");
+    }
+
+    // Helper function to get current position of the title
+    _getCurrentPosition(titleEl) {
+        return titleEl.classList.contains("s_dynamic_snippet_title_aside")
+            ? "left"
+            : titleEl.classList.contains("justify-content-between")
+            ? "top"
+            : "none";
+    }
+
+    // Helper function to handle addition or removal of classes
+    _addOrRemoveClasses(titleEl, utils, position, action) {
+        const classes = utils.getSnippetTitleClasses(position).split(" ");
+        titleEl.classList[action](...classes);
+    }
+
+    isApplied({ editingElement: el, params: { mainParam: position } }) {
+        const titleEl = this._getTitleEl(el);
+        return this._getCurrentPosition(titleEl) === position;
+    }
+
+    apply({ editingElement: el, params: { mainParam: position } }) {
+        const titleEl = this._getTitleEl(el);
+        const utils = this.dependencies.dynamicSnippetOption;
+        const currentPos = this._getCurrentPosition(titleEl);
+        this._addOrRemoveClasses(titleEl, utils, currentPos, "remove");
+        this._addOrRemoveClasses(titleEl, utils, position, "add");
+        // Adjust dataset if title is aside
+        el.dataset.numberOfElements = titleEl.classList.contains("s_dynamic_snippet_title_aside")
+            ? 2
+            : 4;
+    }
+
+    clean({ editingElement: el, params: { mainParam: position } }) {
+        const titleEl = this._getTitleEl(el);
+        const utils = this.dependencies.dynamicSnippetOption;
+        this._addOrRemoveClasses(titleEl, utils, position, "remove");
     }
 }
 
