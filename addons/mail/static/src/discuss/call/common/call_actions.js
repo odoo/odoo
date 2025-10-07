@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { QuickVoiceSettings } from "./quick_voice_settings";
 import { QuickVideoSettings } from "./quick_video_settings";
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { CALL_PROMOTE_FULLSCREEN } from "./thread_model_patch";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
 
@@ -180,6 +181,12 @@ export const blurBackgroundAction = {
     sequenceGroup: 200,
 };
 registerCallAction("fullscreen", {
+    btnClass: ({ owner, thread }) =>
+        attClassObjectToString({
+            "o-discuss-CallActionList-pulse": Boolean(
+                !owner.env.pipWindow && thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+            ),
+        }),
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.state.isFullscreen,
