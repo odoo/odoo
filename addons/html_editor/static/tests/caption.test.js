@@ -271,6 +271,7 @@ test("leaving the caption persists its value", async () => {
             const heading = queryOne("h1");
             await click(heading);
             expect(editor.document.activeElement).not.toBe(input);
+            editor.shared.selection.setCursorStart(heading);
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfterEdit: unformat(
@@ -310,6 +311,7 @@ test("can't use the powerbox in a caption", async () => {
             await expectElementCount(".o-we-powerbox", 0);
             const heading = queryOne("h1");
             await click(heading);
+            editor.shared.selection.setCursorStart(heading);
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfter: unformat(
