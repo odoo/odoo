@@ -20,20 +20,20 @@ class TestResequenceSII(TestEsEdiCommon):
             mocked_l10n_es_edi_call_web_service_sign,
         )
         # Create 2 customer and 2 vendor invoices, in wrong date order
-        cls.customer_invoice_2 = cls.create_invoice(
+        cls.customer_invoice_2 = cls._create_invoice_es(
             invoice_date="2019-05-15", date="2019-05-15", invoice_line_ids=[{}]
         )
-        cls.customer_invoice_1 = cls.create_invoice(
+        cls.customer_invoice_1 = cls._create_invoice_es(
             invoice_date="2019-05-01", date="2019-05-01", invoice_line_ids=[{}]
         )
-        cls.vendor_invoice_2 = cls.create_invoice(
+        cls.vendor_invoice_2 = cls._create_invoice_es(
             invoice_date="2019-04-15",
             date="2019-04-15",
             move_type="in_invoice",
             ref="vendor/1",
             invoice_line_ids=[{}],
         )
-        cls.vendor_invoice_1 = cls.create_invoice(
+        cls.vendor_invoice_1 = cls._create_invoice_es(
             invoice_date="2019-04-01",
             date="2019-04-01",
             move_type="in_invoice",

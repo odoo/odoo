@@ -1,5 +1,3 @@
-import time
-
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, freeze_time
@@ -37,44 +35,16 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             'reconcile': True,
         })
 
-    def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False, taxes=None, state=None):
-        if move_type == 'entry':
-            raise AssertionError("Unexpected move_type : 'entry'.")
-
-        if not taxes:
-            taxes = self.env['account.tax']
-
-        date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
-
-        invoice_vals = {
-            'move_type': move_type,
-            'partner_id': partner_id or self.partner_agrolait.id,
-            'invoice_date': date_invoice,
-            'date': date_invoice,
-            'invoice_line_ids': [Command.create({
-                'name': 'product that cost %s' % invoice_amount,
-                'quantity': 1,
-                'price_unit': invoice_amount,
-                'tax_ids': [Command.set(taxes.ids)],
-            })]
-        }
-
-        if payment_term_id:
-            invoice_vals['invoice_payment_term_id'] = payment_term_id
-
-        if currency_id:
-            invoice_vals['currency_id'] = currency_id
-
-        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
-
+    def _create_invoice_upd_tags(self, state=None, **invoice_args):
+        invoice_args.setdefault('partner_id', self.partner_agrolait.id)
+        invoice = super()._create_invoice_one_line(
+            price_unit=50,
+            post=state == 'posted',
+            **invoice_args,
+        )
         if state == 'cancel':
-            invoice.write({'state': 'cancel'})
-        elif auto_validate or state == 'posted':
-            invoice.action_post()
+            invoice.state = 'cancel'
         return invoice
-
-    def create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None):
-        return self._create_invoice(move_type=move_type, invoice_amount=invoice_amount, currency_id=currency_id, auto_validate=True)
 
     @classmethod
     def _create_or_get_tax_tag(cls, name, country_id=None):
@@ -152,7 +122,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         """ When we change the tags on the taxes and use the wizard to update history,
         tags should be updated on amls within the wizard date range.
         """
-        moves = self._create_invoice(taxes=self.tax_1) + self._create_invoice(taxes=self.tax_1)
+        moves = self._create_invoice_upd_tags(tax_ids=self.tax_1) + self._create_invoice_upd_tags(tax_ids=self.tax_1)
         self._change_tax_tag(self.tax_1, 'invoice_tax_tag_changed', invoice=True, base=False)
         self.wizard.update_amls_tax_tags()
 
@@ -163,8 +133,10 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
 
     def test_update_date_from(self):
         """ Only the amls that are concerned by the date_from constraint should be updated. """
-        move_included = self._create_invoice(date_invoice='2023-02-23', taxes=self.tax_1)
-        move_not_included = self._create_invoice(date_invoice='2023-01-23', taxes=self.tax_1)
+        with freeze_time('2023-02-23'):
+            move_included = self._create_invoice_upd_tags(tax_ids=self.tax_1)
+        with freeze_time('2023-01-23'):
+            move_not_included = self._create_invoice_upd_tags(tax_ids=self.tax_1)
         self._change_tax_tag(self.tax_1, 'invoice_tax_tag_changed', invoice=True, base=False)
         self.wizard.update_amls_tax_tags()
 
@@ -181,7 +153,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             'refund_base': 'refund_base_tag_2',
             'refund_tax': 'refund_tax_tag_2',
         })
-        move = self._create_invoice(taxes=self.tax_1 + tax_2)
+        move = self._create_invoice_upd_tags(tax_ids=self.tax_1 + tax_2)
         self._change_tax_tag(self.tax_1, 'invoice_tax_tag_changed', invoice=True, base=False)
         self._change_tax_tag(tax_2, 'invoice_tax_tag_changed_2', invoice=True, base=False)
         self.wizard.update_amls_tax_tags()
@@ -201,7 +173,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
 
     def test_update_multi_company(self):
         """ Tests that only the company that is selected when opening the wizard will have its amls updated. """
-        move_1 = self._create_invoice(taxes=self.tax_1)
+        move_1 = self._create_invoice_upd_tags(tax_ids=self.tax_1)
         self._change_tax_tag(self.tax_1, 'invoice_tax_tag_changed_for_company_1', invoice=True, base=False)
         be_country_id = self.env.ref('base.be').id
 
@@ -213,7 +185,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             15,
             tag_names={'invoice_tax': 'update_test_invoice_tax_tag_company_2'}
         )
-        move_2 = self._create_invoice(taxes=tax_2)
+        move_2 = self._create_invoice_upd_tags(tax_ids=tax_2)
         self._change_tax_tag(tax_2, 'invoice_tax_tag_changed_for_company_2', invoice=True, base=False)
         self.wizard.update_amls_tax_tags()
 
@@ -244,7 +216,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
                         'refund_base': 'test_tag_refund_base',
                         'refund_tax': 'test_tag_refund_tax',
                     })
-                    move = self._create_invoice(move_type=move_type, taxes=tax_2)
+                    move = self._create_invoice_upd_tags(move_type=move_type, tax_ids=tax_2)
                     super_type = move_type.split('_')[1]
                     if super_type == 'receipt':
                         super_type = 'invoice'  # receipt type acts just like invoice one
@@ -300,7 +272,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
     def test_update_amls_all_states(self):
         """ Tests that moves are correctly updated, regardless of their state. """
         move_states = ('posted', 'cancel', 'draft')
-        moves = [self._create_invoice(partner_id=self.partner_a.id, taxes=self.tax_1, state=state) for state in move_states]
+        moves = [self._create_invoice_upd_tags(partner_id=self.partner_a.id, tax_ids=self.tax_1, state=state) for state in move_states]
         self._change_tax_tag(self.tax_1, 'invoice_base_tag_changed', invoice=True, base=True)
         self._change_tax_tag(self.tax_1, 'invoice_tax_tag_changed', invoice=True, base=False)
         self.wizard.update_amls_tax_tags()
@@ -314,14 +286,14 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
     def test_update_no_tag_before(self):
         """ Tests that update happens on aml that had no tag previously. """
         tax = self._create_tax('test_tax_no_tag', 15)
-        move = self._create_invoice(taxes=tax)
+        move = self._create_invoice_upd_tags(tax_ids=tax)
         self._change_tax_tag(tax, 'new_tag_name', invoice=True, base=True)
         self.wizard.update_amls_tax_tags()
 
         self.assertEqual(move.invoice_line_ids.tax_tag_ids.name, 'new_tag_name')
 
     def test_update_no_tag_after(self):
-        move = self._create_invoice(taxes=self.tax_1)
+        move = self._create_invoice_upd_tags(tax_ids=self.tax_1)
         self.tax_1.invoice_repartition_line_ids.write({'tag_ids': [Command.clear()]})  # Command.CLEAR both base and tax lines
         self.wizard.update_amls_tax_tags()
 
@@ -345,7 +317,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             'refund_tax': 'refund_tax_tag_child_2',
         })
         tax_parent = self._create_tax('tax_parent', 15, amount_type='group', type_tax_use='purchase', children_taxes=(tax_child_1 + tax_child_2))
-        move = self._create_invoice(taxes=tax_parent)
+        move = self._create_invoice_upd_tags(tax_ids=tax_parent)
 
         # Check that lines are set as expected before update.
         invoice_line, tax_lines, counterpart_line = self._get_amls_by_type(move)
@@ -374,7 +346,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             tax_exigibility='on_payment',
             cash_basis_transition_account_id=self.cash_basis_transfer_account.id,
         )
-        invoice = self._create_invoice(taxes=tax, state='posted')
+        invoice = self._create_invoice_upd_tags(tax_ids=tax, state='posted')
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
@@ -407,7 +379,14 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             tax_exigibility='on_payment',
             cash_basis_transition_account_id=self.cash_basis_transfer_account.id,
             )
-        invoice = self.init_invoice('out_invoice', invoice_date='2023-02-23', amounts=[-50, 100], taxes=tax, post=True)
+        with freeze_time('2023-02-23'):
+            invoice = self._create_invoice(
+                invoice_line_ids=[
+                    self._prepare_invoice_line(price_unit=-50, tax_ids=tax),
+                    self._prepare_invoice_line(price_unit=100, tax_ids=tax),
+                ],
+                post=True,
+            )
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
@@ -435,6 +414,6 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         tax_child = self._create_tax('tax_child_1', 15)
         tax_parent_1 = self._create_tax('tax_parent', 15, amount_type='group', children_taxes=tax_child)
         self._create_tax('tax_parent_2', 15, amount_type='group', children_taxes=tax_child)
-        self._create_invoice(taxes=tax_parent_1)
+        self._create_invoice_upd_tags(tax_ids=tax_parent_1)
         with self.assertRaisesRegex(UserError, 'Update with children taxes that are child of multiple parents is not supported.'):
             self.wizard.update_amls_tax_tags()

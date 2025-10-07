@@ -4,7 +4,7 @@ from unittest import mock
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tools import misc
+from odoo.tools.misc import file_open
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -80,7 +80,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
     def _assert_invoice_ubl_file(self, invoice, filename):
         file_path = f'addons/{self.test_module}/tests/test_files/{filename}.xml'
 
-        with misc.file_open(file_path, 'rb') as file:
+        with file_open(file_path, 'rb') as file:
             expected_content = file.read()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self.assertXmlTreeEqual(
@@ -134,7 +134,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         actual_content, _dummy = self.env['account.edi.xml.ubl_bis3'].with_context(lang='en_US')._export_invoice(invoice)
-        with misc.file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
+        with file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
             expected_content = file.read()
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_content),

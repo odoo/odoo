@@ -18,7 +18,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         cls.other_currency = cls.setup_other_currency('EUR')
 
-        cls.invoice = cls.init_invoice('in_invoice', products=cls.product_a+cls.product_b)
+        cls.invoice = cls.init_invoice('in_invoice', products=cls.product_a + cls.product_b)
 
         cls.product_line_vals_1 = {
             'name': 'product_a',
@@ -31,7 +31,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'price_unit': 800.0,
             'price_subtotal': 800.0,
             'price_total': 920.0,
-            'tax_ids': cls.product_a.supplier_taxes_id.ids,
+            'tax_ids': cls.product_a.supplier_taxes_id.filtered(lambda t: t.company_id == cls.invoice.company_id).ids,
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
             'amount_currency': 800.0,
@@ -50,7 +50,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'price_unit': 160.0,
             'price_subtotal': 160.0,
             'price_total': 208.0,
-            'tax_ids': cls.product_b.supplier_taxes_id.ids,
+            'tax_ids': cls.product_b.supplier_taxes_id.filtered(lambda t: t.company_id == cls.invoice.company_id).ids,
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
             'amount_currency': 160.0,

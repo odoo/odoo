@@ -387,8 +387,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
         self.assertEqual(end_date.text, '20241231')
 
     def test_export_import_billing_dates(self):
-        if self.env.ref('base.module_accountant').state != 'installed':
-            self.skipTest("payment_custom module is not installed")
+        self.ensure_installed('accountant')
 
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,

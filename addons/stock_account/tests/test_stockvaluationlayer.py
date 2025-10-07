@@ -971,7 +971,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationBas
         })
         cls.stock_valuation_account.account_stock_variation_id = cls.stock_valuation_account
 
-    def _create_invoice(self, move_type, product, quantity=1.0, price_unit=1.0):
+    def _create_invoice_stock(self, move_type, product, quantity=1.0, price_unit=1.0):
         rslt = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
             'move_type': move_type,
@@ -1051,7 +1051,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationBas
         out_move = self._make_out_move(self.product1, 10, create_picking=True)
         return_move = self._make_return(out_move, 10)
 
-        out_invoice = self._create_invoice('out_invoice', self.product1, 10, 10)
+        out_invoice = self._create_invoice_stock('out_invoice', self.product1, 10, 10)
         return_credit_note = self._create_credit_note(out_invoice, self.product1, 10, 10)
 
         out_move_line_ids = out_invoice.line_ids
@@ -1077,8 +1077,8 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationBas
         move1 = self._make_dropship_move(self.product1, 2, unit_cost=10)
         move2 = self._make_return(move1, 2)
 
-        in_invoice = self._create_invoice('in_invoice', self.product1, 2, 10)
-        out_invoice = self._create_invoice('out_invoice', self.product1, 2, 10)
+        in_invoice = self._create_invoice_stock('in_invoice', self.product1, 2, 10)
+        out_invoice = self._create_invoice_stock('out_invoice', self.product1, 2, 10)
         return_in_credit_note = self._create_credit_note(in_invoice, self.product1, 2, 10)
         return_out_credit_note = self._create_credit_note(out_invoice, self.product1, 2, 10)
 
@@ -1127,8 +1127,8 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationBas
         return_pick.move_ids[0].picked = True
         return_pick._action_done()
 
-        in_invoice = self._create_invoice('in_invoice', self.product1, 2, 10)
-        out_invoice = self._create_invoice('out_invoice', self.product1, 2, 10)
+        in_invoice = self._create_invoice_stock('in_invoice', self.product1, 2, 10)
+        out_invoice = self._create_invoice_stock('out_invoice', self.product1, 2, 10)
         return_in_credit_note = self._create_credit_note(in_invoice, self.product1, 2, 10)
         return_out_credit_note = self._create_credit_note(out_invoice, self.product1, 2, 10)
 
