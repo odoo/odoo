@@ -238,8 +238,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         if not request.website.has_ecommerce_access():
+<<<<<<< 6a075fa3c090920499ccbd5fe673819da7e3f95e
             return request.redirect('/web/login')
 
+||||||| f173c738b1adcf85a80eb641ad307b7cccf17294
+            return request.redirect('/web/login')
+=======
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
+>>>>>>> 3d52badc5eef4c0e110f6dd541331d85641d8c84
         try:
             min_price = float(min_price)
         except ValueError:
@@ -465,7 +471,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
     def product(self, product, category='', search='', **kwargs):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
@@ -809,9 +815,31 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _apply_pricelist(self, pricelist):
         pricelist.ensure_one()
 
+<<<<<<< 6a075fa3c090920499ccbd5fe673819da7e3f95e
         if pricelist.id == request.pricelist.id:
             # Nothing to do
             return
+||||||| f173c738b1adcf85a80eb641ad307b7cccf17294
+    @route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
+    def cart(self, access_token=None, revive='', **post):
+        """
+        Main cart management + abandoned cart revival
+        access_token: Abandoned cart SO access token
+        revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
+        """
+        if not request.website.has_ecommerce_access():
+            return request.redirect('/web/login')
+=======
+    @route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
+    def cart(self, access_token=None, revive='', **post):
+        """
+        Main cart management + abandoned cart revival
+        access_token: Abandoned cart SO access token
+        revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
+        """
+        if not request.website.has_ecommerce_access():
+            return request.redirect('/web/login?redirect=/shop/cart')
+>>>>>>> 3d52badc5eef4c0e110f6dd541331d85641d8c84
 
         request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist.id
         request.session[PRICELIST_SELECTED_SESSION_CACHE_KEY] = pricelist.id
