@@ -129,8 +129,8 @@
 
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                 <field name="date_order" optional="show" readonly="state in ['cancel', 'sale']"/>
-                <field name="commitment_date" optional="hide"/>
-                <field name="expected_date" optional="hide"/>
+                <field name="commitment_date" optional="hide" widget="datetime_placeholder_field" options="{'placeholder_field': 'expected_date'}"/>
+                <field name="expected_date" column_invisible="True"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
