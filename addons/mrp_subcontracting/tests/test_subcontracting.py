@@ -28,7 +28,9 @@ class TestSubcontractingBasic(TransactionCase):
         Not reusing the existing routes and operation types"""
         wh_original = self.env['stock.warehouse'].search([], limit=1)
         wh_copy = wh_original.copy(default={'name': 'Dummy Warehouse (copy)', 'code': 'Dummy'})
-        wh_original.buy_to_resupply = False
+        if 'buy_to_resupply' in wh_original._fields:
+            # If purchase is installed, the buy route would be reused instead of duplicated.
+            wh_original.buy_to_resupply = False
         wh_original.manufacture_to_resupply = False
         # Check if warehouse routes got RECREATED (instead of reused)
         route_types = [
