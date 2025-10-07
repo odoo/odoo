@@ -21,7 +21,7 @@ export class BoardArchParser {
                     archInfo.title = node.getAttribute("string");
                     break;
                 case "board":
-                    archInfo.layout = node.getAttribute("style");
+                    archInfo.layout = node.getAttribute("layout") || "1";
                     archInfo.colNumber = archInfo.layout.split("-").length;
                     break;
                 case "column":
