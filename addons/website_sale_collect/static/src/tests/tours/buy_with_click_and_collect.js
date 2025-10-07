@@ -1,5 +1,5 @@
-import {registry} from '@web/core/registry';
-import {clickOnElement} from '@website/js/tours/tour_utils';
+import { registry } from '@web/core/registry';
+import { clickOnElement } from '@website/js/tours/tour_utils';
 import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category('web_tour.tours').add('website_sale_collect_widget', {
@@ -15,6 +15,14 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
         {
             content: "Check pickup location is set",
             trigger: '[name="click_and_collect_availability"] h6:contains("Shop 1")',
+        },
+        clickOnElement('Add to cart', '#add_to_cart'),
+        tourUtils.goToCart({ quantity: 1 }),
+        tourUtils.goToCheckout(),
+        ...tourUtils.fillAdressForm(undefined, true),
+        {
+            content: "Check standard deliveries are marked as unavailable for the order.",
+            trigger: 'input[name="o_delivery_radio"][data-delivery-type="fixed"] ~ label:contains("Not available")',
         },
     ],
 });
