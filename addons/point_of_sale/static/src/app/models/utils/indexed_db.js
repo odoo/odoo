@@ -40,12 +40,7 @@ export default class IndexedDB {
         };
         dbInstance.onsuccess = (event) => {
             this.db = event.target.result;
-            logPosMessage(
-                "IndexedDB",
-                "databaseEventListener",
-                `IndexedDB ${this.dbVersion} Ready`,
-                CONSOLE_COLOR
-            );
+            console.info(`IndexedDB ${this.dbVersion} Ready`);
             whenReady();
         };
         dbInstance.onupgradeneeded = (event) => {

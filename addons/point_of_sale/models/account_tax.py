@@ -53,7 +53,7 @@ class AccountTax(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return self.env['account.tax']._check_company_domain(data['pos.config'][0]['company_id'])
+        return [('id', 'in', [p['taxes_id'][0] for p in data['product.template'] if p['taxes_id']])]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

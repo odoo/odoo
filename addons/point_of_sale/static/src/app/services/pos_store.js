@@ -353,9 +353,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         await this.deviceSync.readDataFromServer();
 
-        // Check cashier
-        this.checkPreviousLoggedCashier();
-
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
             const PaymentInterface = this.electronic_payment_interfaces[pm.use_payment_terminal];
@@ -387,8 +384,11 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processProductAttributes();
         await this.config.cacheReceiptLogo();
     }
+    async openCashbox(action) {
+        this.hardwareProxy.openCashbox(action);
+    }
     cashMove() {
-        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async closeSession() {
@@ -613,6 +613,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async afterProcessServerData() {
+        // Check cashier
+        this.checkPreviousLoggedCashier();
+
         // Adding the not synced paid orders to the pending orders
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
@@ -1370,8 +1373,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     // There for override
-    async preSyncAllOrders(orders) {}
-    postSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {
+        return orders;
+    }
+    async postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
         let orders = options.orders || [...orderToCreate, ...orderToUpdate];
@@ -1382,6 +1387,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
 
         try {
+            const context = this.getSyncAllOrdersContext(orders, options);
+            orders = await this.preSyncAllOrders(orders);
+
             if (this.data.network.offline) {
                 throw new ConnectionLostError();
             }
@@ -1389,9 +1397,6 @@ export class PosStore extends WithLazyGetterTrap {
             if (orderIdsToDelete.length > 0) {
                 await this.deleteOrders([], orderIdsToDelete);
             }
-
-            const context = this.getSyncAllOrdersContext(orders, options);
-            await this.preSyncAllOrders(orders);
 
             if (orders.length === 0) {
                 return;
@@ -1431,7 +1436,7 @@ export class PosStore extends WithLazyGetterTrap {
                 }
             }
 
-            this.postSyncAllOrders(newData["pos.order"]);
+            await this.postSyncAllOrders(newData["pos.order"]);
 
             if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have

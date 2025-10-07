@@ -63,16 +63,14 @@ export default class DevicesSynchronisation {
      */
     async collect(data) {
         const { static_records, session_id, login_number } = data;
-        const isSameDevice = odoo.login_number == login_number || odoo.pos_session_id != session_id;
 
-        logPosMessage(
-            "Synchronisation",
-            "collect",
-            `Incoming synchronization from ${isSameDevice ? "this" : "another"} device`,
-            CONSOLE_COLOR
-        );
+        if (odoo.debug === "assets") {
+            console.info("Incoming synchronisation", data);
+            console.info("Login number", odoo.login_number, login_number);
+            console.info("Session Ids", odoo.pos_session_id, session_id);
+        }
 
-        if (isSameDevice) {
+        if (login_number == odoo.login_number || session_id != odoo.pos_session_id) {
             return;
         }
 
