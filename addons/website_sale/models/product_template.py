@@ -42,6 +42,14 @@ class ProductTemplate(models.Model):
     _mail_post_access = 'read'
     _check_company_auto = True
 
+    rating_ids = fields.One2many(
+        comodel_name='rating.rating',
+        inverse_name='res_id',
+        domain=lambda self: [('res_model', '=', 'product.template')],
+        string='Ratings',
+        groups="base.group_user,base.group_portal,base.group_public",  # ← Make it readable by portal/public
+    )
+
     #=== DEFAULT METHODS ===#
 
     @api.model
@@ -875,13 +883,17 @@ class ProductTemplate(models.Model):
             domains.append([('list_price', '<=', max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = ['name', 'default_code', 'variants_default_code']
-        fetch_fields = ['id', 'name', 'website_url']
+        search_fields = ['name', 'default_code', 'variants_default_code', 'product_variant_ids.default_code', 'product_variant_ids.barcode', 'attribute_line_ids.attribute_id.name', 'attribute_line_ids.value_ids.name']
+        fetch_fields = ['id', 'name', 'website_url', 'product_variant_id', 'rating_ids', 'attribute_line_ids']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'rating': {'name': 'rating', 'match': False, 'skip_markup': True},
+            'barcode': {'name': 'barcode', 'type': 'text', 'match': True, 'truncate': False},
+            'attributes': {'name': 'attributes', 'type': 'text', 'match': True},
+            'colors': {'name': 'colors', 'type': 'text', 'match': False, 'skip_markup': True, 'truncate': False},
         }
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
@@ -893,10 +905,12 @@ class ProductTemplate(models.Model):
             fetch_fields.append('description_sale')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
         if with_price:
-            mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
-            mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
+            search_fields.append('list_price')
+            mapping['detail'] = {'name': 'price', 'type': 'text', 'match': True, 'display_currency': options['display_currency']}
+            mapping['detail_strike'] = {'name': 'list_price', 'type': 'text', 'match': False, 'display_currency': options['display_currency']}
         if with_category:
-            mapping['extra_link'] = {'name': 'category', 'type': 'html'}
+            mapping['extra_link'] = {'name': 'category', 'type': 'text', 'match': True}
+
         return {
             'model': 'product.template',
             'base_domain': domains,
@@ -907,51 +921,165 @@ class ProductTemplate(models.Model):
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        """
+        Constructs and returns enriched search result entries for product templates,
+        based on search term relevance and configuration.
+
+        This method processes product templates and enriches each search result with
+        structured data such as title, price, image, rating, barcode, attributes,
+        color swatches, and public categories, depending on the context and the fields requested.
+
+        The method also identifies which part of the product data best matches the user's
+        search term and sets that field's content, while defaulting others to empty to
+        reduce clutter and noise in the result set. Rating is always computed and included.
+
+        :param fetch_fields: list of fields fetched for each product
+        :param mapping: dictionary specifying which additional fields to render (image, detail, etc.)
+        :param icon: icon to associate with results (unused in this method, passed through)
+        :param limit: maximum number of search results to return
+
+        :return: a list of dictionaries, each representing a product template with
+                relevant metadata and the best-matching content populated
+        """
+        term = (request.params.get('term') or "").strip().lower()
+
         with_image = 'image_url' in mapping
         with_category = 'extra_link' in mapping
         with_price = 'detail' in mapping
+        with_rating = 'rating_ids' in fetch_fields
+        with_attributes = 'attribute_line_ids' in fetch_fields
+        with_barcode = 'product_variant_ids.barcode' in fetch_fields or 'barcode' in mapping
+
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         current_website = self.env['website'].get_current_website()
+
         for product, data in zip(self, results_data):
-            categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
+            data['title'] = product.name or ''
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
-                data['price'], list_price = self._search_render_results_prices(
-                    mapping, combination_info
-                )
-                if list_price:
-                    data['list_price'] = list_price
+                data['price'], list_price = self._search_render_results_prices(mapping, combination_info)
+                data['list_price'] = list_price or ''
 
             if with_image:
-                data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
-            if with_category and categ_ids:
-                data['category'] = self.env['ir.ui.view'].sudo()._render_template(
-                    "website_sale.product_category_extra_link",
-                    {
-                        'categories': categ_ids,
-                        'slug': self.env['ir.http']._slug,
-                        'shop_path': SHOP_PATH,
-                    }
-                )
+                data['image_url'] = f'/web/image/product.template/{product.id}/image_128'
+
+            # Always compute and pass rating
+            data['rating'] = ''
+            if with_rating and product.rating_ids:
+                data['rating'] = sum(product.rating_ids.mapped('rating')) / len(product.rating_ids)
+
+            # Default all optional fields to ''
+            data.update({
+                'description_sale': '',
+                'barcode': '',
+                'attributes': '',
+                'colors': '',
+                'category': ''
+            })
+
+            matched_group = None
+
+            for group in ["title", "description", "rating", "barcode", "attributes", "category"]:
+                match group:
+                    case "title":
+                        if term in (product.name or "").lower():
+                            matched_group = "title"
+                    case "description":
+                        desc = product.description_sale or ""
+                        if term in desc.lower():
+                            data["description_sale"] = desc
+                            matched_group = "description_sale"
+                    case "rating":
+                        if data["rating"] and term in str(data["rating"]):
+                            matched_group = "rating"
+                    case "barcode":
+                        if with_barcode:
+                            barcode = product.barcode or product.product_variant_id.barcode or ""
+                            if term in barcode.lower():
+                                data["barcode"] = barcode
+                                matched_group = "barcode"
+                    case "attributes":
+                        if with_attributes and product.attribute_line_ids:
+                            attr_blocks, color_blocks = [], []
+                            matched_attr, matched_color = False, False
+
+                            for line in product.attribute_line_ids:
+                                attr_name = line.attribute_id.name
+                                is_color = "color" in attr_name.lower()
+                                values = []
+
+                                for val in line.value_ids:
+                                    val_name = val.name.lower()
+
+                                    if not matched_attr and (term in attr_name.lower() or term in val_name):
+                                        if not is_color:
+                                            matched_attr = True
+
+                                    if not is_color:
+                                        values.append(val.name)
+
+                                    if is_color and term in val_name:
+                                        matched_color = True
+
+                                    if is_color:
+                                        if val.html_color:
+                                            color_blocks.append({"type": "color", "value": val.html_color})
+                                        elif val.image:
+                                            color_blocks.append({"type": "image", "value": f"/web/image/product.attribute.value/{val.id}/image"})
+
+                                if matched_attr and values:
+                                    attr_blocks.append(f"{attr_name}: {', '.join(values)}")
+
+                            if matched_attr:
+                                data["attributes"] = " | ".join(attr_blocks)
+                                matched_group = "attribute"
+                            elif matched_color:
+                                data["colors"] = color_blocks
+                                matched_group = "color"
+                    case "category":
+                        if with_category:
+                            categs = product.public_categ_ids.filtered(
+                                lambda c: not c.website_id or c.website_id == current_website
+                            )
+                            if any(term in cat.name.lower() for cat in categs):
+                                data["category"] = ", ".join(categs.mapped("name"))
+                                matched_group = "category"
+
+                if matched_group:
+                    break
+
+            # Clear description if not matched
+            if matched_group != 'description_sale':
+                data['description_sale'] = ''
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
+        """
+        This method avoids displaying prices when zero-price sales are disabled and ensures
+        proper formatting based on the display currency. It also handles regular prices,
+        discounted prices, and comparative list prices (e.g., crossed-out prices in case of promotions).
+
+        :param mapping: dictionary containing display settings, including display_currency
+        :param combination_info: dictionary with computed pricing data from `_get_combination_info`
+
+        :return: tuple of (formatted price, formatted list_price) or (None, None) if display is not allowed
+        """
+
         if combination_info.get('prevent_zero_price_sale'):
             return None, None
 
-        monetary_options = {'display_currency': mapping['detail']['display_currency']}
-        price = self.env['ir.qweb.field.monetary'].value_to_html(
-            combination_info['price'], monetary_options
-        )
+        currency = mapping['detail']['display_currency']
+
+        def _format_price(amount):
+            return f"{currency.symbol} {amount}"
+
+        price = _format_price(combination_info['price'])
         list_price = None
-        if combination_info['has_discounted_price']:
-            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['list_price'], monetary_options
-            )
+
         if combination_info.get('compare_list_price'):
-            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['compare_list_price'], monetary_options
-            )
+            list_price = _format_price(combination_info['compare_list_price'])
+        elif combination_info.get('has_discounted_price'):
+            list_price = _format_price(combination_info['list_price'])
 
         return price, list_price
 

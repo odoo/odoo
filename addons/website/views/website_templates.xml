@@ -3013,8 +3013,9 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 <template id="website_search_box" name="Website Searchbox">
     <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
-        <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s %s' % (_input_classes or '', '' if default_style else 'border-0 bg-light')" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
+        <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s %s' % (_input_classes or '', '' if default_style else 'border-0 bg-light')" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search" t-att-data-placeholder="placeholder" t-att-data-template-id="'website.s_searchbar.autocomplete'"/>
         <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or ('btn-primary' if default_style else 'btn-light'))" aria-label="Search" title="Search">
+            <span class="o_total_search_count"></span>
             <i class="oi oi-search"/>
             <span t-if="search" class="oe_search_found">
                 <small>(<t t-out="search_count or 0"/> found)</small>

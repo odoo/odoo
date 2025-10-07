@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-inherit="website.s_searchbar.autocomplete" t-name="website_searchbar_autocomplete_extension" t-inherit-mode="extension">
+        <xpath expr="//t[@id='extra_items_hook']" position="replace">
+            <t t-if="result['rating']">
+                <t t-call="portal_rating.rating_stars_static">
+                    <t t-set="val" t-value="result['rating']"/>
+                    <t t-set="inline_mode" t-value="True"/>
+                </t>
+            </t>
+            <div class="d-flex align-items-center flex-wrap mt-1" t-if="result['colors']">
+                <t t-foreach="result['colors']" t-as="color" t-key="color['value']">
+                    <t t-if="color['type'] == 'color'">
+                        <span class="color_preview border" t-attf-style="display:inline-block; width:12px; height:12px; border-radius:50%; background-color:{{color['value']}}; margin-right:4px;"></span>
+                    </t>
+                    <t t-if="color['type'] == 'image'">
+                        <img t-att-src="color['value']" style="width:12px; height:12px; border-radius:50%; margin-right:4px; object-fit:cover;"/>
+                    </t>
+                </t>
+            </div>
+            <div t-if="result['barcode']" class="mb-0">
+                Barcode: <t t-out="result['barcode']"/>
+            </div>
+            <div t-if="result['category']" class="mb-0">
+                Category: <t t-out="result['category']"/>
+            </div>
+            <div t-if="result['attributes']" class="mb-0">
+                <t t-out="result['attributes']"/>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="website.s_searchbar.autocomplete_second" t-name="website_searchbar_autocomplete_extension" t-inherit-mode="extension">
+        <xpath expr="//t[@id='extra_items_hook']" position="replace">
+            <t t-if="result['rating']">
+                        <t t-call="portal_rating.rating_stars_static">
+                            <t t-set="val" t-value="result['rating']"/>
+                            <t t-set="inline_mode" t-value="True"/>
+                        </t>
+                    </t>
+                <t t-if="result['colors']">
+                    <t t-foreach="result['colors']" t-as="color" t-key="color['value']">
+                        <t t-if="color['type'] == 'color'">
+                            <span class="color_preview border" t-attf-style="display:inline-block; width:12px; height:12px; border-radius:50%; background-color:{{color['value']}}; margin-right:4px;"></span>
+                        </t>
+                        <t t-if="color['type'] == 'image'">
+                            <img t-att-src="color['value']" style="width:12px; height:12px; border-radius:50%; margin-right:4px; object-fit:cover;"/>
+                        </t>
+                    </t>
+                </t>
+                <div t-if="result['barcode']" class="mb-0">
+                    <strong>Barcode:</strong> <t t-out="result['barcode']"/>
+                </div>
+                <div t-if="result['category']" class="mb-0">
+                    <strong>Category:</strong> <t t-out="result['category']"/>
+                </div>
+                <div t-if="result['attributes']" class="mb-0">
+                    <t t-out="result['attributes']"/>
+                </div>
+        </xpath>
+    </t>
+</templates>

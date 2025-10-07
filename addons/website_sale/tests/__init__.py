@@ -40,3 +40,4 @@ from . import test_website_sale_visitor
 from . import test_website_sale_technical_page
 from . import test_website_sequence
 from . import test_website_sale_product_ribbon
+from . import test_website_sale_searchbar

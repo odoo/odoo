@@ -11,6 +11,7 @@ import { HeaderFontOption } from "./header_font_option";
 import { HeaderTemplateOption } from "./header_template_option";
 import { HeaderIconBackgroundOption } from "./header_icon_background_option";
 import { HeaderTopOptions } from "./header_top_options";
+// import { SearchbarOption } from "../searchbar_option";
 
 const [
     HEADER_TEMPLATE,
@@ -40,11 +41,11 @@ export const basicHeaderOptionSettings = {
     editableOnly: false,
     selector: "#wrapwrap > header",
     groups: ["website.group_website_designer"],
-}
+};
 
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
-    static dependencies = ["customizeWebsite", "menuDataPlugin"];
+    static dependencies = ["customizeWebsite", "menuDataPlugin", "searchbarOption"]; // remove searchbarOption from dependencies
 
     resources = {
         builder_header_middle_buttons: [
@@ -74,8 +75,21 @@ class HeaderOptionPlugin extends Plugin {
                 ...basicHeaderOptionSettings,
                 OptionComponent: HeaderIconBackgroundOption,
             }),
+            // {
+            //     editableOnly: false,
+            //     // selector: "#wrapwrap > header",
+            //     groups: ["website.group_website_designer"],
+            //     OptionComponent: SearchbarOption,
+            //     selector: "#wrapwrap > header .s_searchbar_input", // <-- make sure `.qwerty` matches your <li>
+            //     applyTo: ".search-query",
+            //     props: {
+            //         getOrderByItems: () => this.getResource("searchbar_option_order_by_items"),
+            //         getDisplayItems: () => this.getResource("searchbar_option_display_items"),
+            //         getTemplates: () => this.getResource("searchbar_option_templates"),
+            //     },
+            // },
         ],
     };
-};
+}
 
 registry.category("website-plugins").add(HeaderOptionPlugin.id, HeaderOptionPlugin);
