@@ -569,6 +569,39 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(new_calendar_event.start_date, calendar_event.start_date, "Start date should match the original.")
         self.assertEqual(new_calendar_event.stop_date, calendar_event.stop_date, "Stop date should match the original.")
 
+    @freezegun.freeze_time('2025-04-16 10:00:00')
+    def test_event_creation_organizer_receives_ics(self):
+        """ Ensure that when the organizer is the only attendee, an .ics file is still sent via email """
+        internal_user = new_test_user(
+            self.env,
+            login='internal_organizer',
+            groups='base.group_user',
+            email='organizer@example.com'
+        )
+        organizer_partner = internal_user.partner_id
+
+        # Create the event as the internal user and make them the solo attendee
+        event = self.CalendarEvent.with_user(internal_user).create({
+            'name': 'Solo Organizer Event',
+            'start': '2025-04-20 10:00:00',
+            'stop': '2025-04-20 11:00:00',
+            'partner_ids': [(6, 0, [organizer_partner.id])],
+        })
+
+        # Find sent mail for the organizer-attendee
+        mail = self.env['mail.message'].sudo().search([
+            ('notified_partner_ids', 'in', organizer_partner.id),
+            ('model', '=', 'calendar.event'),
+            ('res_id', '=', event.id),
+        ], limit=1)
+
+        self.assertTrue(mail, "Expected a mail message to be sent to the organizer-attendee.")
+        self.assertEqual(mail.res_id, event.id, "The mail should be linked to the correct calendar event.")
+
+        ics_attachment = mail.attachment_ids.filtered(lambda a: a.name == 'invitation.ics')
+        self.assertTrue(ics_attachment, "Expected the email to include the 'invitation.ics' attachment.")
+
+
 @tagged('post_install', '-at_install')
 class TestCalendarTours(HttpCaseWithUserDemo):
     def test_calendar_month_view_start_hour_displayed(self):
