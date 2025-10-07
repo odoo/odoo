@@ -3,8 +3,9 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
 import { MediaDialog } from "./media_dialog/media_dialog";
-import { isZWS } from "@html_editor/utils/dom_info";
+import { isZWS, ICON_SELECTOR } from "@html_editor/utils/dom_info";
 import { nodeSize } from "@html_editor/utils/position";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -131,6 +132,9 @@ export class IconPlugin extends Plugin {
         ],
         /** Handlers */
         selectionchange_handlers: this.normalizeIconSelection.bind(this),
+
+        require_editable_selection_predicate: (targetNode) =>
+            closestElement(targetNode, ICON_SELECTOR),
     };
 
     /**

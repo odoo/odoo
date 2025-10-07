@@ -86,6 +86,12 @@ export class SplitPlugin extends Plugin {
             // this.shared.collapseIfZWS();
             this.dependencies.delete.deleteSelection();
             selection = this.dependencies.selection.getEditableSelection();
+        } else if (
+            this.getResource("require_editable_selection_predicate").some((fn) =>
+                fn(selection.anchorNode)
+            )
+        ) {
+            selection = this.dependencies.selection.getEditableSelection();
         }
 
         return this.splitBlockNode({
