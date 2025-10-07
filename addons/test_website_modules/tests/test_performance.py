@@ -3,13 +3,16 @@
 import base64
 import io
 import re
-from PIL import Image
 from unittest.mock import patch
+
+from PIL import Image
+
 import odoo
 from odoo.tests import tagged
+
 from odoo.addons.website.tests.test_performance import TestWebsitePerformanceCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
-from odoo.addons.website_sale.tests.test_website_sale_pricelist import TestWebsitePriceList
+from odoo.addons.website_sale.tests.test_pricelist import TestWebsitePriceList
 
 
 class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceList, WebsiteSaleCommon):

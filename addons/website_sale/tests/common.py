@@ -1,21 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from contextlib import contextmanager
 import io
+from contextlib import contextmanager
+
 from PIL import Image
 
 from odoo.fields import Command
 from odoo.tools import lazy
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
-from odoo.addons.product.tests.common import ProductCommon
 from odoo.addons.http_routing.tests.common import MockRequest as websiteMockRequest
+from odoo.addons.product.tests.common import ProductCommon
 from odoo.addons.website_sale.models.website import (
     CART_SESSION_CACHE_KEY,
     FISCAL_POSITION_SESSION_CACHE_KEY,
-    PRICELIST_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
 )
 
 
@@ -117,12 +118,12 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
 
     @classmethod
     def _prepare_carrier(cls, product, website_published=True, **values):
-        """ Override of `delivery` to auto-publish test delivery methods. """
+        """Override of `delivery` to auto-publish test delivery methods."""
         return super()._prepare_carrier(product, website_published=website_published, **values)
 
     @classmethod
     def _create_product(cls, **kwargs):
-        """ Override of `product` to auto-publish test products by default. """
+        """Override of `product` to auto-publish test products by default."""
         if 'website_published' not in kwargs:
             kwargs['website_published'] = True
         return super()._create_product(**kwargs)

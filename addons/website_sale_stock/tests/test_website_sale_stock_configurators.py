@@ -47,7 +47,7 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
                 'quantity': 10,
             },
         ])
-        self.start_tour('/', 'website_sale_stock_product_configurator')
+        self.start_tour(main_product.website_url, 'website_sale_stock.product_configurator')
 
     def test_website_sale_stock_combo_configurator(self):
         product = self._create_product(name="Test product")
@@ -65,9 +65,9 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
                 ).id}),
             ],
         })
-        self._create_product(
+        product = self._create_product(
             name="Combo product",
             type='combo',
             combo_ids=[Command.link(combo.id)]
         )
-        self.start_tour('/', 'website_sale_stock_combo_configurator')
+        self.start_tour(product.website_url, 'website_sale_stock.combo_configurator')

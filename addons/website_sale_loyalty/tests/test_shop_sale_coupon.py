@@ -137,7 +137,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         })
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
-        self.start_tour("/", 'shop_sale_loyalty', login="admin")
+        self.start_tour(large_cabinet.website_url, 'website_sale_loyalty.promotions', login="admin")
 
     def test_02_admin_shop_gift_card_tour(self):
         gift_card = self.env['product.product'].create({
@@ -206,7 +206,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         })
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
-        self.start_tour('/', 'shop_sale_gift_card', login='admin')
+        self.start_tour('/', 'website_sale_loyalty.gift_card', login='admin')
 
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
@@ -240,7 +240,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'program_id': program_id,
             'points': 1000,
         } for program_id in ewallet_programs.ids])
-        self.start_tour('/', 'shop_sale_ewallet', login='admin')
+        self.start_tour('/', 'website_sale_loyalty.ewallet', login='admin')
 
 
 @tagged('post_install', '-at_install')
@@ -359,7 +359,11 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
                 }),
             ],
         })
-        self.start_tour('/', 'apply_discount_code_program_multi_rewards', login='admin')
+        self.start_tour(
+            chair.website_url,
+            'website_sale_loyalty.apply_discount_code_multi_rewards',
+            login='admin',
+        )
 
     def test_03_remove_coupon(self):
         # 1. Simulate a frontend order (website, product)

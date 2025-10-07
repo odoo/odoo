@@ -137,7 +137,11 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         # Get admin user and set his preferred shipping method to normal delivery
         # This test also tests that we can indeed pay delivery fees with gift cards/ewallet
         self.partner_admin.property_delivery_carrier_id = self.normal_delivery
-        self.start_tour("/", 'shop_sale_loyalty_delivery', login='admin')
+        self.start_tour(
+            self.product_plumbus.website_url,
+            'website_sale_loyalty.delivery_with_gift_card',
+            login='admin',
+        )
 
     def test_shipping_discount(self):
         """
@@ -157,7 +161,11 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
                 'discount_max_amount': 6.0,
             })],
         })
-        self.start_tour("/", 'check_shipping_discount', login="admin")
+        self.start_tour(
+            self.product_plumbus.website_url,
+            'website_sale_loyalty.check_shipping_discount',
+            login='admin',
+        )
 
     def test_update_shipping_after_discount(self):
         """
@@ -165,7 +173,11 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         """
         self.free_delivery.action_archive()
         self.normal_delivery.write({'free_over': True, 'amount': 75.0})
-        self.start_tour("/shop", 'update_shipping_after_discount', login=self.user_admin.login)
+        self.start_tour(
+            self.product_plumbus.website_url,
+            'website_sale_loyalty.update_shipping_after_discount',
+            login=self.user_admin.login,
+        )
 
     def test_express_checkout_shipping_discount(self):
         """

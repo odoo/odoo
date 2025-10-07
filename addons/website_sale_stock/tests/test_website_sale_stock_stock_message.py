@@ -29,8 +29,8 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
             'quantity': 30.0,
         })
         self.start_tour(
-            "/",
-            'website_sale_stock_message_after_close_onfigurator_modal_with_optional_products',
+            product_product_with_options.website_url,
+            'website_sale_stock.message_after_close_onfigurator_modal_with_optional_products',
         )
 
     def test_02_stock_message_update_after_close_without_optional_products(self):
@@ -51,6 +51,6 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
             'quantity': 30.0,
         })
         self.start_tour(
-            "/",
-            'website_sale_stock_message_after_close_onfigurator_modal_without_optional_products',
+            product_product_without_options.website_url,
+            'website_sale_stock.message_after_close_onfigurator_modal_without_optional_products',
         )

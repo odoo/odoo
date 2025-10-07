@@ -4,8 +4,8 @@ import time
 
 from odoo.fields import Command
 
-from odoo.addons.website_sale.controllers.product_feed import ProductFeed
 from odoo.addons.product.tests.common import ProductVariantsCommon
+from odoo.addons.website_sale.controllers.product_feed import ProductFeed
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 

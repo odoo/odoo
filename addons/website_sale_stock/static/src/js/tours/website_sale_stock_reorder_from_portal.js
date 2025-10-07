@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_sale_stock_reorder_from_portal', {
-        url: '/my/orders',
+    url: '/my/orders',
     steps: () => [
         {
             content: 'Select first order',

@@ -5,10 +5,9 @@ import stockConfiguratorTourUtils from '@website_sale_stock/js/tours/combo_confi
 
 registry
     .category('web_tour.tours')
-    .add('website_sale_stock_combo_configurator', {
-        url: '/shop?search=Combo product',
+    .add('website_sale_stock.combo_configurator', {
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Combo product", search: false, expectUnloadPage: true }),
+            ...wsTourUtils.addToCartFromProductPage(),
             configuratorTourUtils.assertQuantity(1),
             // Assert that it's impossible to add less than 1 product.
             configuratorTourUtils.setQuantity(0),
@@ -38,4 +37,4 @@ registry
                 `,
             },
         ],
-   });
+    });

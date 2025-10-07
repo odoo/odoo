@@ -2,14 +2,13 @@
 
 import logging
 
-from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-
 
 _logger = logging.getLogger(__name__)
 
@@ -56,7 +55,7 @@ class TestProductPictureController(HttpCase):
 
     def _get_product_image_data(self):
         return [
-            hasattr(image, 'video_url') and image.video_url or image.image_1920
+            (hasattr(image, 'video_url') and image.video_url) or image.image_1920
             for image in self.product._get_images()
         ]
 
@@ -173,7 +172,7 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i5, i6, i3])
 
     def test_resequence_image_first_to_last(self):
-        """ Moving an image from first to last position is an edge case in the code. """
+        """Moving an image from first to last position is an edge case in the code."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
@@ -198,7 +197,7 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
 
     def test_resequence_video_first(self):
-        """ A video can't be resequenced to first position. """
+        """A video can't be resequenced to first position."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
@@ -212,7 +211,7 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
 
     def test_resequence_video_replace_first(self):
-        """ A video can't replace an image that was resequenced away from first position. """
+        """A video can't replace an image that was resequenced away from first position."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
@@ -253,8 +252,16 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             'name': 'Test Product Outside Category',
             'website_published': True,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'category_page_and_products_snippet_edition', login="admin")
-        self.start_tour('/shop', 'category_page_and_products_snippet_use', login=None)
+        self.start_tour(
+            self.env['website'].get_client_action_url('/shop'),
+            'website_sale.category_page_and_products_snippet_edition',
+            login='admin',
+        )
+        self.start_tour(
+            '/shop',
+            'website_sale.category_page_and_products_snippet_use',
+            login=None,
+        )
 
     def test_website_sale_restricted_editor_ui(self):
         self.env['product.template'].create({
@@ -262,7 +269,12 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             'website_sequence': 0,
             'website_published': True,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'website_sale_restricted_editor_ui', login="website_user")
+        self.start_tour(
+            self.env['website'].get_client_action_url('/shop'),
+            'website_sale.restricted_editor_ui',
+            login='website_user',
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestProductVideoUpload(HttpCase):

@@ -1,10 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { clickOnElement } from '@website/js/tours/tour_utils';
 
-export function addToCart({
+export function goToProductPage({
     productName,
     search = true,
-    productHasVariants = false,
     expectUnloadPage = false,
 } = {}) {
     const steps = [];
@@ -17,22 +16,42 @@ export function addToCart({
         run: "click",
         expectUnloadPage,
     });
-    steps.push({
-        content: "Add to cart",
-        trigger: "#add_to_cart",
-        run: "click",
-    });
-    steps.push({
-        content: "Check if the button is disabled",
-        trigger: "#add_to_cart.pe-none",
-    });
+
+    return steps;
+}
+
+export function addToCartFromProductPage({ productHasVariants = false } = {}) {
+    const steps = [
+        {
+            content: "Add to cart",
+            trigger: "#product_detail form #add_to_cart",
+            run: "click",
+        },
+        {
+            content: "Check if the button is disabled",
+            trigger: "#add_to_cart.pe-none",
+        },
+    ];
     if (productHasVariants) {
         steps.push(clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'));
     }
     return steps;
 }
 
-export function assertCartAmounts({taxes = false, untaxed = false, total = false, delivery = false}) {
+export function addToCart({
+    productName,
+    search = true,
+    productHasVariants = false,
+    expectUnloadPage = false,
+} = {}) {
+    return [
+        ...goToProductPage({ productName, search, expectUnloadPage }),
+        ...addToCartFromProductPage({ productHasVariants }),
+    ];
+}
+
+
+export function assertCartAmounts({ taxes = false, untaxed = false, total = false, delivery = false }) {
     let steps = [];
     if (taxes) {
         steps.push({
@@ -61,7 +80,7 @@ export function assertCartAmounts({taxes = false, untaxed = false, total = false
     return steps
 }
 
-export function assertCartContains({productName, backend, notContains = false, combinationName = false} = {}) {
+export function assertCartContains({ productName, backend, notContains = false, combinationName = false } = {}) {
     let trigger = `h6:contains(${productName})`;
 
     if (notContains) {
@@ -149,6 +168,14 @@ export function goToCheckout() {
     };
 }
 
+export function selectDeliveryCarrier(provider) {
+    return {
+        content: `select ${provider} shipping`,
+        trigger: `li[name=o_delivery_method]:contains(${provider}) input`,
+        run: "click",
+    };
+}
+
 export function confirmOrder() {
     return {
         content: 'Confirm',
@@ -183,7 +210,7 @@ export function payWithDemo() {
         trigger: 'input[name="customer_input"]',
         run: "edit 4242424242424242",
     },
-    ...pay({expectUnloadPage: true}),
+    ...pay({ expectUnloadPage: true }),
     {
         content: 'eCommerce: check that the payment is successful',
         trigger: '[name="order_confirmation"]:contains("Your payment has been processed.")',
