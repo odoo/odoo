@@ -604,9 +604,9 @@ class HTML_Editor(http.Controller):
                 action_type = action.type
                 if action_type != 'ir.actions.act_window':
                     return {'other_error_msg': _("Action %s is not a window action, link preview is not available", action_name)}
-                action = request.env[action_type].browse(action.id)
+                action_sudo = request.env[action_type].sudo().browse(action.id)
 
-                model = request.env[action.res_model].with_context(context)
+                model = request.env[action_sudo.res_model].with_context(context)
 
             record = model.browse(record_id)
 

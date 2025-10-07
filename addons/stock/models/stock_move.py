@@ -263,7 +263,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'done' or any(ml.picked for ml in move.move_line_ids):
                 move.picked = True
-            elif move.move_line_ids:
+            else:
                 move.picked = False
 
     def _inverse_picked(self):
@@ -1404,14 +1404,11 @@ Please change the quantity done or the rounding precision of your unit of measur
         if any(picking.partner_id != m.partner_id for m in self):
             vals['partner_id'] = False
         if any(picking.origin != m.origin for m in self):
-            current_origins = set(picking.origin.split(',') + [False]) if picking.origin else {False}
-            vals['origin'] = picking.origin
-            for move in self:
-                if move.origin not in current_origins:
-                    if not vals['origin']:
-                        vals['origin'] = move.origin
-                    else:
-                        vals['origin'] += f',{move.origin}'
+            current_origins = picking.origin.split(',') if picking.origin else []
+            new_moves_origins = [move.origin for move in self if move.origin]
+            new_origin = ','.join(OrderedSet(current_origins + new_moves_origins))
+            if picking.origin != new_origin:
+                vals['origin'] = new_origin
         return vals
 
     def _assign_picking_post_process(self, new=False):
@@ -1689,6 +1686,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'location_dest_id': self.location_dest_id.id,
             'picking_id': self.picking_id.id,
             'company_id': self.company_id.id,
+            'picked': self.picked,
         }
         if quantity:
             # TODO could be also move in create/write

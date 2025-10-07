@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import fields, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.exceptions import AccessError
 from odoo.tests import Form, tagged, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
@@ -682,6 +683,21 @@ class TestCalendar(SavepointCaseWithUserDemo):
         total_visible_events = sum(group['create_date_count'] for group in result)
         self.assertEqual(total_visible_events, 2,
                         "Should see 2 events (public and no-privacy), private event filtered out")
+
+    def test_unauthorized_user_cannot_add_attendee(self):
+        """ Check that a user that doesn't have access to a private event cannot add attendees to it """
+        attendee_model = self.env['calendar.attendee'].with_user(self.user_demo.id)
+        # event_id in values
+        with self.assertRaises(AccessError):
+            attendee_model.create([{
+                'event_id': self.event_tech_presentation.id,
+                'partner_id': self.partner_demo.id,
+            }])
+        # event_id via context (default_event_id)
+        with self.assertRaises(AccessError):
+            attendee_model.with_context(default_event_id=self.event_tech_presentation.id).create([{
+                'partner_id': self.partner_demo.id,
+            }])
 
 @tagged('post_install', '-at_install')
 class TestCalendarTours(HttpCaseWithUserDemo):
