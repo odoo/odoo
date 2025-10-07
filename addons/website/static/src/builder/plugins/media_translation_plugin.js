@@ -1,26 +1,32 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
+const translatableImgSelector = "img[data-oe-translatable-link]";
+const translatableVideoSelector = ".media_iframe_video:has(iframe[data-oe-translatable-link])";
+const translatableFileSelector = ".o_file_box:has(a[data-oe-translatable-link])";
+
 export class MediaTranslationPlugin extends Plugin {
     static id = "mediaTranslation";
-    static dependencies = ["translation"];
+    static dependencies = ["history", "imagePostProcess", "media", "translation"];
+    static shared = ["translateMedia"];
 
     resources = {
         builder_options: [
             {
                 template: "website.ImgTranslationOption",
-                selector: "img[data-oe-translatable-link]",
+                selector: translatableImgSelector,
                 isTranslationOption: true,
             },
             {
                 template: "website.VideoTranslationOption",
-                selector: ".media_iframe_video:has(iframe[data-oe-translatable-link])",
+                selector: translatableVideoSelector,
                 isTranslationOption: true,
             },
             {
                 template: "website.DocumentTranslationOption",
-                selector: ".o_file_box:has(a[data-oe-translatable-link])",
+                selector: translatableFileSelector,
                 isTranslationOption: true,
             },
         ],
@@ -38,13 +44,6 @@ export class MediaTranslationPlugin extends Plugin {
             }
         },
     };
-}
-
-registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTranslationPlugin);
-
-export class TranslateMediaSrcAction extends BuilderAction {
-    static id = "translateMediaSrc";
-    static dependencies = ["history", "imagePostProcess", "media", "translation"];
 
     setup() {
         this.savingMap = {
@@ -52,18 +51,46 @@ export class TranslateMediaSrcAction extends BuilderAction {
             videos: this.saveVideo.bind(this),
             documents: this.saveDocument.bind(this),
         };
+        const translatableMediaSelector = [
+            translatableImgSelector,
+            translatableVideoSelector,
+            translatableFileSelector,
+        ].join(", ");
+
+        this.addDomListener(this.editable, "dblclick", async (ev) => {
+            const targetEl = ev.target.closest(translatableMediaSelector);
+            if (!targetEl) {
+                return;
+            }
+            if (shouldEditableMediaBeEditable(targetEl)) {
+                const mediaType = this.getMediaType(targetEl);
+                await this.translateMedia(targetEl, mediaType);
+            }
+        });
     }
 
-    async apply({ editingElement, params: { mainParam: mediaType } }) {
+    getMediaType(el) {
+        if (el.matches(translatableImgSelector)) {
+            return "images";
+        }
+        if (el.matches(translatableVideoSelector)) {
+            return "videos";
+        }
+        if (el.matches(translatableFileSelector)) {
+            return "documents";
+        }
+    }
+
+    async translateMedia(element, mediaType) {
         await new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
                 onlyImages: mediaType === "images",
                 noImages: mediaType !== "images",
                 visibleTabs: [mediaType.toUpperCase()],
 
-                node: editingElement,
+                node: element,
                 save: async (newMediaEl) => {
-                    await this.savingMap[mediaType](editingElement, newMediaEl);
+                    await this.savingMap[mediaType](element, newMediaEl);
                     resolve();
                 },
             });
@@ -157,5 +184,16 @@ export class TranslateMediaSrcAction extends BuilderAction {
                 },
             });
         }
+    }
+}
+
+registry.category("translation-plugins").add(MediaTranslationPlugin.id, MediaTranslationPlugin);
+
+export class TranslateMediaSrcAction extends BuilderAction {
+    static id = "translateMediaSrc";
+    static dependencies = ["mediaTranslation"];
+
+    async apply({ editingElement, params: { mainParam: mediaType } }) {
+        await this.dependencies.mediaTranslation.translateMedia(editingElement, mediaType);
     }
 }
