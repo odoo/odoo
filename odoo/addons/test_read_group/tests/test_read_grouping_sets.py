@@ -28,23 +28,23 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries(["""
             SELECT
                 GROUPING(
-                    "test_read_group_aggregate"."key",
+                    NULLIF("test_read_group_aggregate"."key", %s),
                     "test_read_group_aggregate"."partner_id"
                 ),
-                "test_read_group_aggregate"."key",
+                NULLIF("test_read_group_aggregate"."key", %s),
                 "test_read_group_aggregate"."partner_id",
                 SUM("test_read_group_aggregate"."value")
             FROM
                 "test_read_group_aggregate"
             GROUP BY
                 GROUPING SETS (
-                    ("test_read_group_aggregate"."key", "test_read_group_aggregate"."partner_id"),
-                    ("test_read_group_aggregate"."key"),
+                    (NULLIF("test_read_group_aggregate"."key", %s), "test_read_group_aggregate"."partner_id"),
+                    (NULLIF("test_read_group_aggregate"."key", %s)),
                     ("test_read_group_aggregate"."partner_id"),
                     ()
                 )
             ORDER BY
-                "test_read_group_aggregate"."key" ASC,
+                NULLIF("test_read_group_aggregate"."key", %s) ASC,
                 "test_read_group_aggregate"."partner_id" ASC
         """]):
             self.assertEqual(
@@ -63,10 +63,10 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries(["""
             SELECT
                 GROUPING(
-                    "test_read_group_aggregate"."key",
+                    NULLIF("test_read_group_aggregate"."key", %s),
                     "test_read_group_aggregate"."partner_id"
                 ),
-                "test_read_group_aggregate"."key",
+                NULLIF("test_read_group_aggregate"."key", %s),
                 "test_read_group_aggregate"."partner_id",
                 SUM("test_read_group_aggregate"."value")
             FROM
@@ -77,12 +77,12 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
             GROUP BY
                 GROUPING SETS (
                     (
-                        "test_read_group_aggregate"."key",
+                        NULLIF("test_read_group_aggregate"."key", %s),
                         "test_read_group_aggregate"."partner_id",
                         "test_read_group_aggregate__partner_id"."complete_name",
                         "test_read_group_aggregate__partner_id"."id"
                     ),
-                    ("test_read_group_aggregate"."key"),
+                    (NULLIF("test_read_group_aggregate"."key", %s)),
                     (
                         "test_read_group_aggregate"."partner_id",
                         "test_read_group_aggregate__partner_id"."complete_name",
@@ -93,7 +93,7 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
             ORDER BY
                 "test_read_group_aggregate__partner_id"."complete_name" ASC,
                 "test_read_group_aggregate__partner_id"."id" DESC,
-                "test_read_group_aggregate"."key" ASC
+                NULLIF("test_read_group_aggregate"."key", %s) ASC
         """]):
             self.assertEqual(
                 Model._read_grouping_sets([], grouping_sets, aggregates=['value:sum'], order="partner_id, key"),
@@ -138,9 +138,9 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries([
             """
             SELECT
-                GROUPING("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
+                GROUPING("test_read_group_task__user_ids"."user_id", NULLIF("test_read_group_task"."key", %s)),
                 "test_read_group_task__user_ids"."user_id",
-                "test_read_group_task"."key",
+                NULLIF("test_read_group_task"."key", %s),
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
                 COUNT(*),
                 SUM("test_read_group_task"."integer")
@@ -150,22 +150,22 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
                 )
             WHERE "test_read_group_task"."id" IN %s
             GROUP BY GROUPING SETS (
-                ("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
+                ("test_read_group_task__user_ids"."user_id", NULLIF("test_read_group_task"."key", %s)),
                 ("test_read_group_task__user_ids"."user_id"))
             ORDER BY "test_read_group_task__user_ids"."user_id" ASC,
-                "test_read_group_task"."key" ASC
+                NULLIF("test_read_group_task"."key", %s) ASC
             """,
             """
             SELECT
-                GROUPING("test_read_group_task"."key"),
-                "test_read_group_task"."key",
+                GROUPING(NULLIF("test_read_group_task"."key", %s)),
+                NULLIF("test_read_group_task"."key", %s),
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
                 COUNT(*),
                 SUM("test_read_group_task"."integer")
             FROM "test_read_group_task"
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY GROUPING SETS (("test_read_group_task"."key"), ())
-            ORDER BY "test_read_group_task"."key" ASC
+            GROUP BY GROUPING SETS ((NULLIF("test_read_group_task"."key", %s)), ())
+            ORDER BY NULLIF("test_read_group_task"."key", %s) ASC
             """,
         ]):
             self.assertEqual(
@@ -185,9 +185,9 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
         with self.assertQueries([
             """
             SELECT
-                GROUPING("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
+                GROUPING("test_read_group_task__user_ids"."user_id", NULLIF("test_read_group_task"."key", %s)),
                 "test_read_group_task__user_ids"."user_id",
-                "test_read_group_task"."key",
+                NULLIF("test_read_group_task"."key", %s),
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
                 COUNT(*),
                 SUM("test_read_group_task"."integer")
@@ -197,22 +197,22 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
                 )
             WHERE "test_read_group_task"."id" IN %s
             GROUP BY GROUPING SETS (
-                ("test_read_group_task__user_ids"."user_id", "test_read_group_task"."key"),
+                ("test_read_group_task__user_ids"."user_id", NULLIF("test_read_group_task"."key", %s)),
                 ("test_read_group_task__user_ids"."user_id"))
             ORDER BY "test_read_group_task__user_ids"."user_id" DESC,
-                "test_read_group_task"."key" ASC
+                NULLIF("test_read_group_task"."key", %s) ASC
             """,
             """
             SELECT
-                GROUPING("test_read_group_task"."key"),
-                "test_read_group_task"."key",
+                GROUPING(NULLIF("test_read_group_task"."key", %s)),
+                NULLIF("test_read_group_task"."key", %s),
                 ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id"),
                 COUNT(*),
                 SUM("test_read_group_task"."integer")
             FROM "test_read_group_task"
             WHERE "test_read_group_task"."id" IN %s
-            GROUP BY GROUPING SETS (("test_read_group_task"."key"), ())
-            ORDER BY "test_read_group_task"."key" ASC
+            GROUP BY GROUPING SETS ((NULLIF("test_read_group_task"."key", %s)), ())
+            ORDER BY NULLIF("test_read_group_task"."key", %s) ASC
             """,
         ]):
             self.assertEqual(
@@ -324,10 +324,10 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
             SELECT
                 GROUPING(
                     "test_read_group_aggregate"."partner_id",
-                    "test_read_group_aggregate"."key"
+                    NULLIF("test_read_group_aggregate"."key", %s)
                 ),
                 "test_read_group_aggregate"."partner_id",
-                "test_read_group_aggregate"."key",
+                NULLIF("test_read_group_aggregate"."key", %s),
                 SUM("test_read_group_aggregate"."value")
             FROM
                 "test_read_group_aggregate"
@@ -340,9 +340,9 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
                         "test_read_group_aggregate"."partner_id",
                         "test_read_group_aggregate__partner_id"."complete_name",
                         "test_read_group_aggregate__partner_id"."id",
-                        "test_read_group_aggregate"."key"
+                        NULLIF("test_read_group_aggregate"."key", %s)
                     ),
-                    ("test_read_group_aggregate"."key"),
+                    (NULLIF("test_read_group_aggregate"."key", %s)),
                     (
                         "test_read_group_aggregate"."partner_id",
                         "test_read_group_aggregate__partner_id"."complete_name",
@@ -353,7 +353,7 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
             ORDER BY
                 "test_read_group_aggregate__partner_id"."complete_name" ASC,
                 "test_read_group_aggregate__partner_id"."id" DESC,
-                "test_read_group_aggregate"."key" ASC
+                NULLIF("test_read_group_aggregate"."key", %s) ASC
         """]):
             self.assertEqual(
                 Model.formatted_read_grouping_sets([], grouping_sets, aggregates=['value:sum']),

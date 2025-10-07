@@ -2111,8 +2111,13 @@ class BaseModel(metaclass=MetaModel):
                 # If the granularity uses date_trunc, we need to convert the timestamp back to a date.
                 sql_expr = SQL("%s::date", sql_expr)
 
-        elif field.type == 'boolean':
-            sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
+        if field.falsy_value is not None and field not in self.env.registry.not_null_fields:
+            # Use NULLIF to avoid messing the ORDER,
+            # exepted for boolean where we want false first
+            if field.type == 'bool':
+                sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
+            else:
+                sql_expr = SQL("NULLIF(%s, %s)", sql_expr, field.falsy_value)
 
         return sql_expr
 
@@ -2241,7 +2246,11 @@ class BaseModel(metaclass=MetaModel):
                 model = self.env[field.comodel_name]
                 return model._read_group_empty_value(groupby_seq)
             return self.env[field.comodel_name] if field.relational else self.env[self._name]
-        return False
+        if func in ('avg', 'min', 'max'):
+            return None
+        if field.falsy_value is not None:
+            return field.falsy_value
+        return False  # Default value of convert_to_record
 
     def _read_group_postprocess_groupby(self, groupby_spec, raw_values):
         """ Convert the given values of ``groupby_spec``
