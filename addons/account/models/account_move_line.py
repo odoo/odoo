@@ -3172,7 +3172,7 @@ class AccountMoveLine(models.Model):
         matching_numbers = [n for n in set(self.mapped('matching_number')) if n]
         if matching_numbers:
             return {number: lines.with_env(self.env) for number, lines in self.sudo()._read_group(
-                domain=[('matching_number', 'in', matching_numbers)],
+                domain=[('matching_number', 'in', matching_numbers), ('company_id', 'in', self.company_id.ids)],
                 groupby=['matching_number'],
                 aggregates=['id:recordset'],
             )}
