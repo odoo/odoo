@@ -217,3 +217,12 @@ class StockMove(models.Model):
         if self.repair_line_type == 'recycle':
             action['context'].update({'show_quant': False, 'show_destination_location': True})
         return action
+
+    @api.depends("repair_line_type")
+    def _compute_show_info(self):
+        repair_line_moves = self.filtered(lambda mv: mv.repair_line_type)
+        super(StockMove, self - repair_line_moves)._compute_show_info()
+        for move in repair_line_moves:
+            move.show_quant = move.repair_line_type == "add" and move.product_id.is_storable
+            move.show_lots_text = False
+            move.show_lots_m2o = not move.show_quant and move.has_tracking != 'none'
