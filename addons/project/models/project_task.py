@@ -1086,6 +1086,8 @@ class ProjectTask(models.Model):
         # in the project that will be checked using record rules
         new_context["default_create_in_project_id"] = default_project_id
         is_portal = self.env.user._is_portal() and not self.env.su
+        if is_portal:
+            default_milestone_id = new_context.pop('default_milestone_id', False)
         if not self._has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
@@ -1111,6 +1113,8 @@ class ProjectTask(models.Model):
             if is_portal:
                 self._ensure_fields_write(vals, defaults=True)
                 child_ids_list.append(vals.pop('child_ids', None))
+                if default_milestone_id and 'milestone_id' not in vals:
+                    additional_vals['milestone_id'] = default_milestone_id
             else:
                 child_ids_list.append(None)
 
