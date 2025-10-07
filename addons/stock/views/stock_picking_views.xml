@@ -146,15 +146,15 @@
                             invisible="not has_scrap_move"/>
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
-                            invisible="state == 'done'" groups="stock.group_tracking_lot">
-                            <div class="o_form_field o_stat_info">
+                            invisible="state == 'done' or not packages_count" groups="stock.group_tracking_lot">
+                            <div class="o_stat_info">
                                 <span class="o_stat_text">Packages</span>
                             </div>
                         </button>
-                        <button name="action_see_package_histories" type="object"
+                        <button name="action_see_package_histories" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
-                            invisible="state != 'done'" groups="stock.group_tracking_lot">
-                            <div class="o_form_field o_stat_info">
+                            invisible="state != 'done' or not packages_count" groups="stock.group_tracking_lot">
+                            <div class="o_stat_info">
                                 <span class="o_stat_text">Packages</span>
                             </div>
                         </button>
