@@ -163,7 +163,7 @@ patch(ProductPage.prototype, {
             if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
                 this.services['public.interactions'].stopInteractions(messageEl);
                 messageEl.append(renderToElement(
-                    'website_sale_stock_wishlist.product_availability', combination
+                    'website_sale_stock.product_availability', combination
                 ) || '');
                 this.services['public.interactions'].startInteractions(messageEl);
             }

@@ -6,9 +6,7 @@ import { rpc } from '@web/core/network/rpc';
 import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import comparisonUtils from '@website_sale/js/website_sale_comparison_utils';
-import {
-    ProductComparisonBottomBar
-} from '@website_sale/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
+import { ProductComparisonBottomBar } from '@website_sale/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ProductComparison extends Interaction {
     static selector = '.js_sale:not(.o_wsale_comparison_page)';

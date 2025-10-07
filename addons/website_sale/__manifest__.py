@@ -106,6 +106,8 @@
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_wishlist.scss',
             'website_sale/static/src/scss/website_sale_wishlist.options.scss',
+            'website_sale/static/src/scss/website_sale_comparison.scss',
+            'website_sale/static/src/scss/website_sale_comparison.options.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',

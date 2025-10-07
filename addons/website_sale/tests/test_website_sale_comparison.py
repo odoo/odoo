@@ -120,7 +120,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)
-        self.env['website'].viewref('website_sale.product_attributes_body').active = False
+        self.env['website'].viewref('website_sale.product').active = False
         res = self.url_open('/shop/%d' % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
@@ -130,7 +130,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         self.assertEqual(text.replace(' ', '').replace('\n', ''), "GrapeVarieties:CabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
 
         # Case product page with "Product attributes table" enabled
-        self.env['website'].viewref('website_sale.product_attributes_body').active = True
+        self.env['website'].viewref('website_sale.product').active = True
         res = self.url_open('/shop/%d' % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
