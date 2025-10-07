@@ -64,7 +64,6 @@ declare module "models" {
         hasSomeoneFetched: boolean|undefined;
         hasSomeoneSeen: boolean|undefined;
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean;
-        mentionedChannelPromises: Promise<Thread>[];
         threadAsFirstUnread: Thread;
     }
     export interface ResPartner {

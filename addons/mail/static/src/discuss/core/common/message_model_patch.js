@@ -45,8 +45,6 @@ const messagePatch = {
                 return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
             },
         });
-        /** @type {Promise<Thread>[]} @deprecated */
-        this.mentionedChannelPromises = [];
         this.threadAsFirstUnread = fields.One("mail.thread", { inverse: "firstUnreadMessage" });
     },
     /** @returns {import("models").ChannelMember[]} */

@@ -6,7 +6,6 @@ import {
     startServer,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import {
@@ -17,9 +16,7 @@ import {
     waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -303,8 +300,7 @@ test("thread notifications are re-ordered on receiving a new message", async () 
             res_id: channelId_2,
         },
     ]);
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     await withUser(bobUserId, () =>

@@ -168,16 +168,6 @@ registerCallAction("auto-focus", {
     sequence: 50,
     sequenceGroup: 200,
 });
-/** @deprecated Blur background action is replaced by @see QuickVideoSettings menu item "Blur background" */
-export const blurBackgroundAction = {
-    condition: false,
-    name: ({ store }) => (store.settings.useBlur ? _t("Remove Blur") : _t("Blur Background")),
-    isActive: ({ store }) => store?.settings?.useBlur,
-    icon: "fa fa-photo",
-    onSelected: ({ store }) => (store.settings.useBlur = !store.settings.useBlur),
-    sequence: 60,
-    sequenceGroup: 200,
-};
 registerCallAction("fullscreen", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
