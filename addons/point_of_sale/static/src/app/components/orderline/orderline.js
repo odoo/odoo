@@ -16,6 +16,7 @@ export class Orderline extends Component {
         basic_receipt: { type: Boolean, optional: true },
         onClick: { type: Function, optional: true },
         onLongPress: { type: Function, optional: true },
+        toRefund: { type: Number, optional: true },
     };
     static defaultProps = {
         showImage: false,

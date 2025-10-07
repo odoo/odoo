@@ -14,6 +14,10 @@
                     <div class="product-name d-flex flex-grow-1 pe-2 text-truncate" t-att-class="{ 'align-items-center' : props.mode == 'receipt' }">
                         <span class="qty d-inline-block fw-bolder"
                             t-attf-class="{{ props.mode == 'receipt' ? 'pe-2' : 'px-1' }}">
+                            <t t-if="props.toRefund">
+                                <t t-esc="props.toRefund"/>
+                                /
+                            </t>
                             <t t-esc="line.getQuantityStr().unitPart"/>
                             <small t-if="line.getQuantityStr().decimalPart" class="fw-normal" style="font-size: 85%;">
                                 <t t-esc="line.getQuantityStr().decimalPoint"/>

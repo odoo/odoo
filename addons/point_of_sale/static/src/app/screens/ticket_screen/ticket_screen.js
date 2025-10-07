@@ -218,8 +218,27 @@ export class TicketScreen extends Component {
         this.setSelectedOrder(order);
     }
     onClickOrderline(orderline) {
+        const order = this.getSelectedOrder();
+        if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
+            const toRefundDetails = orderline
+                .getAllLinesInCombo()
+                .map((line) => this.getToRefundDetail(line));
+
+            for (const toRefundDetail of toRefundDetails) {
+                // When already linked to an order, do not modify the to refund quantity.
+                if (toRefundDetail.destionation_order_id) {
+                    return this.numberBuffer.reset();
+                }
+
+                const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
+                if (refundableQty <= 0 || refundableQty <= toRefundDetail.qty) {
+                    return this.numberBuffer.reset();
+                }
+
+                toRefundDetail.qty = toRefundDetail.qty + 1;
+            }
+        }
         if (this.getSelectedOrder()?.finalized) {
-            const order = this.getSelectedOrder();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
         }
@@ -541,6 +560,12 @@ export class TicketScreen extends Component {
         const order = this.getSelectedOrder();
         if (!order) {
             return false;
+        }
+        if (order.lines) {
+            const refundDetails = order.uiState?.lineToRefund;
+            if (Object.values(refundDetails).some((details) => details.destination_order_uuid)) {
+                return false;
+            }
         }
         if (this._doesOrderHaveSoleItem(order)) {
             return true;
