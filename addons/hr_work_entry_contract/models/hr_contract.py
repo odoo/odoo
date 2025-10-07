@@ -100,6 +100,8 @@ class HrContract(models.Model):
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
+            if not calendar:
+                continue
             result.update(calendar._attendance_intervals_batch(
                 start_dt,
                 end_dt,
@@ -115,6 +117,8 @@ class HrContract(models.Model):
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
         result = {}
         for calendar, employees in employees_by_calendar.items():
+            if not calendar:
+                continue
             result.update(calendar._attendance_intervals_batch(
                 start_dt,
                 end_dt,
@@ -155,7 +159,7 @@ class HrContract(models.Model):
             resource = employee.resource_id
             # if the contract is fully flexible, we refer to the employee's timezone
             tz = pytz.timezone(resource.tz) if contract._is_fully_flexible() else pytz.timezone(calendar.tz)
-            attendances = attendances_by_resource[resource.id]
+            attendances = attendances_by_resource[resource.id] if attendances_by_resource else WorkIntervals()
 
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
