@@ -423,7 +423,11 @@ class TestWebsiteSaleProductConfigurator(
 
     def test_product_configurator_strikethrough_price(self):
         """ Test that the product configurator displays the strikethrough price correctly. """
-        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
+        self.env['res.config.settings'].create({
+            'group_product_price_comparison': True,
+            # Need to enable pricelists for self.pricelist to be considered and applied
+            'group_product_pricelist': True,
+        }).execute()
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Tax", 'amount': 10})
         optional_product = self.env['product.template'].create({

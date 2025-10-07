@@ -25,6 +25,7 @@ export class Chrome extends Component {
                 ev.stopPropagation();
             }
             this.pos.showScreen(this.pos.firstScreen);
+            return false;
         });
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
@@ -74,6 +75,6 @@ export class Chrome extends Component {
 
     // GETTERS //
     get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control);
+        return Boolean(this.pos.config.cash_control && this.session._has_cash_move_perm);
     }
 }

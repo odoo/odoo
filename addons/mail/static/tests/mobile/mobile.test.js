@@ -6,16 +6,18 @@ import {
     insertText,
     listenStoreFetch,
     openDiscuss,
+    openFormView,
     patchUiSize,
     start,
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
+import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
+import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
-import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineMailModels();
@@ -102,4 +104,33 @@ test.skip("can add message reaction (mobile)", async () => {
     await click(".modal .o-EmojiPicker .o-Emoji:contains('🤣')");
     await contains(".o-mail-MessageReaction:contains('🤣')");
     await contains(".o-mail-MessageReaction:contains('😀')");
+});
+
+test("Can edit message comment in chatter (mobile)", async () => {
+    mockTouch(true);
+    mockUserAgent("android");
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message", { text: "original message" });
+    await pointerDown(".o-mail-Message", { contains: "original message" });
+    await advanceTime(LONG_PRESS_DELAY);
+    await click("button", { text: "Edit" });
+    await click("button", { text: "Discard editing" });
+    await contains(".o-mail-Message", { text: "original message" });
+    await pointerDown(".o-mail-Message", { contains: "original message" });
+    await advanceTime(LONG_PRESS_DELAY);
+    await click("button", { text: "Edit" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
+    await click("button[title='Save editing']");
+    await contains(".o-mail-Message", { text: "edited message (edited)" });
 });

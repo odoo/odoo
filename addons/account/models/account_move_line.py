@@ -1118,18 +1118,28 @@ class AccountMoveLine(models.Model):
                     list({int(account_id) for ids in related_distribution for account_id in ids.split(',')})
                 ).exists().root_plan_id
 
-                arguments = frozendict({
-                    "product_id": line.product_id.id,
-                    "product_categ_id": line.product_id.categ_id.id,
-                    "partner_id": line.partner_id.id,
-                    "partner_category_id": line.partner_id.category_id.ids,
-                    "account_prefix": line.account_id.code,
-                    "company_id": line.company_id.id,
-                    "related_root_plan_ids": root_plans,
-                })
+                arguments = frozendict(line._get_analytic_distribution_arguments(root_plans))
                 if arguments not in cache:
                     cache[arguments] = self.env['account.analytic.distribution.model']._get_distribution(arguments)
                 line.analytic_distribution = related_distribution | cache[arguments] or line.analytic_distribution
+
+    def _get_analytic_distribution_arguments(self, root_plans):
+        """
+        Get arguments to determine analytic distribution.
+        This function aims to be overridden by partner submodules
+        :param root_plans: account.analytic.plan recordset
+        :return: dict
+        """
+        arguments = {
+            "product_id": self.product_id.id,
+            "product_categ_id": self.product_id.categ_id.id,
+            "partner_id": self.partner_id.id,
+            "partner_category_id": self.partner_id.category_id.ids,
+            "account_prefix": self.account_id.code,
+            "company_id": self.company_id.id,
+            "related_root_plan_ids": root_plans,
+        }
+        return arguments
 
     @api.depends('discount_date', 'date_maturity')
     def _compute_payment_date(self):
@@ -2606,9 +2616,7 @@ class AccountMoveLine(models.Model):
         # ==== Prepare the partials ====
         partials_values_list = []
         exchange_diff_values_list = []
-        exchange_diff_partial_index = []
         all_plan_results = []
-        partial_index = 0
         for plan in plan_list:
             plan_results = self\
                 .with_context(
@@ -2620,8 +2628,6 @@ class AccountMoveLine(models.Model):
             for results in plan_results:
                 partials_values_list.append(results['partial_values'])
                 if results.get('exchange_values') and results['exchange_values']['move_values']['line_ids']:
-                    exchange_diff_partial_index.append(partial_index)
-                    partial_index += 1
                     exchange_diff_values_list.append(results['exchange_values'])
 
         # ==== Create the partials ====
@@ -2637,8 +2643,11 @@ class AccountMoveLine(models.Model):
 
         # ==== Create the partial exchange journal entries ====
         exchange_moves = self._create_exchange_difference_moves(exchange_diff_values_list)
-        for index, exchange_move in zip(exchange_diff_partial_index, exchange_moves):
-            partials[index].exchange_move_id = exchange_move
+        for partial in partials:
+            for exchange_move in exchange_moves:
+                linked_move_lines = exchange_move.line_ids.reconciled_lines_ids
+                if any(line == partial.debit_move_id or line == partial.credit_move_id for line in linked_move_lines):
+                    partial.exchange_move_id = exchange_move
 
         # ==== Create entries for cash basis taxes ====
         def is_cash_basis_needed(amls):
@@ -3036,6 +3045,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.with_context(skip_analytic_sync=True).analytic_distribution = {
                 analytic_line._get_distribution_key(): -analytic_line.amount / line.balance * 100
+                if line.balance else 100
                 for analytic_line in line.analytic_line_ids
             }
 

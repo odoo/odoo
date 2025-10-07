@@ -5240,7 +5240,7 @@ describe('List', () => {
                         });
                     });
                     describe('Checklist to unordered', () => {
-                        it('should merge an checklist list into an unordered list', async () => {
+                        it('should merge an checklist list into an unordered list (1)', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>a</li></ul><ul class="o_checklist"><li>[]b</li></ul>',
@@ -5250,6 +5250,8 @@ describe('List', () => {
                                 },
                                 contentAfter: '<ul><li>a[]b</li></ul>',
                             });
+                        });
+                        it("should merge an checklist list into an unordered list (2)", async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li>a</li></ul><ul class="o_checklist"><li><p>[]b</p></li></ul>',
@@ -5259,6 +5261,8 @@ describe('List', () => {
                                 },
                                 contentAfter: '<ul><li>a[]b</li></ul>',
                             });
+                        });
+                        it("should merge an checklist list into an unordered list (3)", async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li><p>a</p></li></ul><ul class="o_checklist"><li>[]b</li></ul>',
@@ -5268,6 +5272,8 @@ describe('List', () => {
                                 },
                                 contentAfter: '<ul><li>a[]b</li></ul>',
                             });
+                        });
+                        it("should merge an checklist list into an unordered list (4)", async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore:
                                     '<ul><li><p>a</p></li></ul><ul class="o_checklist"><li><p>[]b</p></li></ul>',

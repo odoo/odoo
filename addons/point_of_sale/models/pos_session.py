@@ -168,6 +168,7 @@ class PosSession(models.Model):
         data[0]['_base_url'] = self.get_base_url()
         data[0]['_data_server_date'] = server_date or self.env.cr.now()
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
+        data[0]['_has_cash_delete_perm'] = self.env.user.has_group('account.group_account_basic')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         return super()._post_read_pos_data(data)
@@ -1755,13 +1756,6 @@ class PosSession(models.Model):
             return
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
-
-        sequence = self.env['ir.sequence'].with_context(
-            company_id=self.config_id.company_id.id
-        ).search([('code', '=', 'pos.session'), ('company_id', 'in', [self.config_id.company_id.id, False])], order='company_id', limit=1)
-
-        self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
-
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
             self.opening_notes = notes
@@ -1772,6 +1766,12 @@ class PosSession(models.Model):
             message = _('Opening control message: ')
             message += notes
             self.message_post(body=plaintext2html(message))
+
+        sequence = self.env['ir.sequence'].with_context(
+            company_id=self.config_id.company_id.id
+        ).search([('code', '=', 'pos.session'), ('company_id', 'in', [self.config_id.company_id.id, False])], order='company_id', limit=1)
+
+        self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
 
     def _post_cash_details_message(self, state, expected, difference, notes):
         message = (state + " difference: " + self.currency_id.format(difference) + '\n' +

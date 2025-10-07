@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
+# * point_of_sale
 #
 # Translators:
 # Wil Odoo, 2025
 # Marta Wacławek, 2025
 #
+# Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-19 18:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
+"PO-Revision-Date: 2025-09-30 00:21+0000\n"
+"Last-Translator: Dawid Gacek <dawid.gacek@adapt-it.pl>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-3/"
+"point_of_sale/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -3076,6 +3079,7 @@ msgstr "Up:"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Discard"
 msgstr "Odrzuć"
@@ -3439,12 +3443,6 @@ msgstr "Dodatkowe dane podatkowe"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
 msgstr "Nieudany wybór"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Failed in printing %s changes of the order"
-msgstr "Nie udało się wydrukować %s zmian w zamówieniu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5300,6 +5298,7 @@ msgstr "Odoo"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Odoo Server Error"
 msgstr "Błąd serwera Odoo"
@@ -5883,7 +5882,7 @@ msgstr "Metoda płatności"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_tree
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Methods"
-msgstr "Metody wysyłania płatności"
+msgstr "Metody płatności"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_payment_mode
@@ -6144,6 +6143,16 @@ msgid ""
 msgstr ""
 "Przejdź do dziennika %s i zdefiniuj konto zysku. To konto będzie używane do "
 "rejestrowania różnic gotówkowych."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"Please note that some printers could not be contacted. The changes will be "
+"taken into account locally, but a preparation ticket may be missing. Here is "
+"the list of printers with errors: %s\n"
+"Do you want to retry ?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7392,6 +7401,7 @@ msgstr "Sprzedaż detaliczna"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Retry"
 msgstr "Ponów"
 
@@ -8090,6 +8100,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
 msgstr "Brakuje niektórych numerów seryjnych/numerów partii"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10122,12 +10138,6 @@ msgstr "Nie możesz edytować płatności dla opublikowanego zamówienia."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr "Nie możesz fakturować zamówień należących do różnych firm."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -10525,6 +10535,12 @@ msgstr "aby aktywować przyciski."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "używając"
+
+#~ msgid "Failed in printing %s changes of the order"
+#~ msgstr "Nie udało się wydrukować %s zmian w zamówieniu."
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr "Nie możesz fakturować zamówień należących do różnych firm."
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Zarejestruj numer bonu podarunkowego"

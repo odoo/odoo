@@ -523,6 +523,7 @@ export function classToStyle(element, cssRules) {
                 style = `${key}:${value};${style}`;
             }
         }
+        style = correctBorderAttributes(style);
         if (Object.keys(style || {}).length === 0) {
             writes.push(() => {
                 node.removeAttribute("style");
@@ -1871,7 +1872,11 @@ function _getHeight(element) {
  */
 function _hideForOutlook(node, onlyHideTag = false) {
     if (!onlyHideTag) {
-        node.setAttribute("style", `${node.getAttribute("style") || ""} mso-hide: all;`.trim());
+        let style = (node.getAttribute("style") || "").trim();
+        if (style && !style.endsWith(";")) {
+            style += ";";
+        }
+        node.setAttribute("style", `${style} mso-hide: all;`);
     }
     node[onlyHideTag === "closing" ? "append" : "before"](document.createComment("[if !mso]><!"));
     node[onlyHideTag === "opening" ? "prepend" : "after"](document.createComment("<![endif]"));
@@ -1950,4 +1955,63 @@ function removeBlacklistedStyles(rule, node) {
         styles[key] = value;
     }
     return styles;
+}
+
+/**
+ * Corrects the `border-style` attribute in the provided inline style string.
+ * This is specifically for Outlook, which displays borders even when their widths are set to 0px.
+ * If all border widths are 0, the function updates `border-style` to `none`.
+ *
+ * @param {string} style - The inline style string to correct.
+ * @returns {string} - The corrected inline style string.
+ */
+function correctBorderAttributes(style) {
+    const stylesObject = style
+        .replace(/\s+/g, " ")
+        .split(";")
+        .reduce((styles, styleString) => {
+            const [attribute, value] = styleString.split(":").map((str) => str.trim());
+            if (attribute) {
+                styles[attribute] = value;
+            }
+            return styles;
+        }, {});
+
+    const BORDER_WIDTHS_ATTRIBUTES = [
+        "border-bottom-width",
+        "border-left-width",
+        "border-right-width",
+        "border-top-width",
+    ];
+
+    const isBorderStyleApplied = BORDER_WIDTHS_ATTRIBUTES.some(
+        (attribute) => attribute in stylesObject
+    );
+
+    if (!isBorderStyleApplied) {
+        return style;
+    }
+
+    const totalBorderWidth = BORDER_WIDTHS_ATTRIBUTES.reduce((totalWidth, attribute) => {
+        const widthValue = stylesObject[attribute] || "0px";
+        const numericWidth = parseFloat(widthValue.replace("px", "")) || 0;
+        return totalWidth + numericWidth;
+    }, 0);
+
+    if (totalBorderWidth === 0) {
+        let correctedStyle = style.trim();
+        if (correctedStyle.slice(-1) != ";") {
+            correctedStyle += ";";
+        }
+        correctedStyle = correctedStyle.replace(
+            /(;|^)\s*border-style\s*:[^;]*(;|$)|$/,
+            "$1border-style:none$2"
+        );
+        return correctedStyle;
+    }
+
+    if (/border-style\s*:/i.test(style)) {
+        return style;
+    }
+    return style.trim().replace(/;?$/, "; border-style: solid;");
 }

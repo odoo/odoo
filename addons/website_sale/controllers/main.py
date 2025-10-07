@@ -344,7 +344,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
-            domain = self._get_shop_domain(search, category, attribute_value_dict)
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            domain = self._get_shop_domain(search_term, category, attribute_value_dict)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._where_calc(domain)
@@ -375,7 +376,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search(
                 expression.AND([
-                    [('product_ids.is_published', '=', True), ('visible_to_customers', '=', True)],
+                    [
+                        ('visible_to_customers', '=', True),
+                        '|',
+                        ('product_template_ids.is_published', '=', True),
+                        ('product_product_ids.is_published', '=', True),
+                    ],
                     website_domain
                 ])
             )
@@ -1824,6 +1830,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: product.public.category
         """
         ProductCategory = request.env['product.public.category']
+        if not isinstance(category, ProductCategory.__class__) and category and not str(category).isdigit():
+            raise ValidationError(_("Invalid category."))
         if (
             (category := ProductCategory.browse(category and int(category)).exists())
             and category.can_access_from_current_website()

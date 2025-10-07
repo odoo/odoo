@@ -186,14 +186,14 @@ class ResConfigSettings(models.TransientModel):
         string='Vendor Bills Discounts Account',
         readonly=False,
         related='company_id.account_discount_income_allocation_id',
-        domain="[('account_type', 'in', ('income', 'expense'))]",
+        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_discount_expense_allocation_id = fields.Many2one(
         comodel_name='account.account',
         string='Customer Invoices Discounts Account',
         readonly=False,
         related='company_id.account_discount_expense_allocation_id',
-        domain="[('account_type', 'in', ('income', 'expense'))]",
+        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
 
     # PEPPOL

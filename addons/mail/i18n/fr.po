@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 18:38+0000\n"
-"PO-Revision-Date: 2025-09-12 00:20+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
+"PO-Revision-Date: 2025-10-01 00:20+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-3/mail/"
 "fr/>\n"
@@ -250,15 +250,6 @@ msgstr ""
 "(new_line)sTapez %(bold_start)s:shortcut%(bold_end)s pour insérer une "
 "réponse standard dans votre message.%(new_line)sTapez %(bold_start)s:%"
 "(bold_end)s pour insérer un emoji dans votre message."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-"%(open_button)s%(icon)s%(open_em)sIgnorer l'édition de%(close_em)s%"
-"(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -3585,6 +3576,12 @@ msgstr "Messages directs"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Discard"
 msgstr "Ignorer"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10922,11 +10919,6 @@ msgid "The channel UUID must be unique"
 msgstr "Le canal UUID doit être unique"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Le type de canal ne peut pas être vide"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
@@ -12926,12 +12918,12 @@ msgstr "adresses liées aux partenaires enregistrés"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after previous activity completion date"
-msgstr "après la date de fin de l’activité précédente"
+msgstr "après la fin de l'activité précédente"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
 msgid "after previous activity deadline"
-msgstr "après la date de fin de l'activité précédente"
+msgstr "après la date limite de l'activité précédente"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
@@ -13534,6 +13526,16 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” dans “%(channel_name)s”"
+
+#~ msgid ""
+#~ "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%"
+#~ "(close_button)s"
+#~ msgstr ""
+#~ "%(open_button)s%(icon)s%(open_em)sIgnorer l'édition de%(close_em)s%"
+#~ "(close_button)s"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "Le type de canal ne peut pas être vide"
 
 #~ msgid "This is the start of #%(channelName)s channel"
 #~ msgstr "Ceci est le début du canal #%(channelName)s"

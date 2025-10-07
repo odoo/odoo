@@ -1,5 +1,6 @@
 import { session } from "@web/session";
 import { getDataURLFromFile } from "@web/core/utils/urls";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -179,4 +180,14 @@ export async function getImageDataUrl(imageUrl) {
     const res = await fetch(imageUrl);
     const blob = await res.blob();
     return await getDataURLFromFile(blob);
+}
+
+export function orderUsageUTCtoLocalUtil(data) {
+    const result = {};
+    for (const [datetime, usage] of Object.entries(data)) {
+        const dt = deserializeDateTime(datetime);
+        const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
+        result[formattedDt] = usage;
+    }
+    return result;
 }

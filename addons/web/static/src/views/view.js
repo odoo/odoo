@@ -106,6 +106,7 @@ export function getDefaultConfig() {
     const config = {
         actionId: false,
         actionType: false,
+        actionXmlId: false,
         embeddedActions: [],
         currentEmbeddedActionId: false,
         parentActionId: false,

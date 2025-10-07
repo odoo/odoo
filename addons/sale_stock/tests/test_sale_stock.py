@@ -1863,6 +1863,34 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # check the qty delivered in the SOL
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
+    def test_sale_order_cancel_with_cyclic_returns(self):
+        """ Test Sale Order cancellation after recursive return creation causes cyclic stock moves. """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                })],
+        })
+
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.state, 'sale')
+
+        picking = sale_order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+        self.assertTrue(picking, "Delivery picking should exist.")
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking')
+        return_wiz_1 = return_wizard.create({})
+        return_res_1 = return_wiz_1.action_create_returns_all()
+        return_picking_1 = self.env['stock.picking'].browse(return_res_1['res_id'])
+
+        return_wizard2 = self.env['stock.return.picking'].with_context(active_id=return_picking_1.id, active_model='stock.picking')
+        return_wiz_2 = return_wizard2.create({})
+        return_wiz_2.action_create_returns_all()
+
+        sale_order._action_cancel()
+        self.assertEqual(sale_order.state, 'cancel')
+
     def test_sol_reserved_qty_wizard_3_steps_delivery(self):
         """
         Check that the reserved qty wizard related to a sol is computed from
@@ -2216,3 +2244,54 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process_cancel_backorder()
         self.assertFalse(sale_order.order_line.display_qty_widget)
+
+    def test_create_route_update_so_quantity(self):
+        """
+        Check that moves created from user-created push rules does not interfere with updating the
+        quantity of pickings when the quanityt of the SO is updated
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        stock_location = warehouse.lot_stock_id
+        pack_location, out_location, _ = warehouse.delivery_route_id.rule_ids.picking_type_id.default_location_dest_id
+
+        self.product_a.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location, 5)
+        loc_perso = self.env['stock.location'].create({
+                'name': 'Locperso',
+                'location_id': stock_location.id,
+        })
+        warehouse.delivery_route_id.rule_ids = [
+            Command.create({
+                'name': 'Push stock->Locperso',
+                'action': 'push',
+                'location_src_id': loc_perso.id,
+                'location_dest_id': out_location.id,
+                'picking_type_id': warehouse.int_type_id.id,
+                'propagate_cancel': False,
+                'procure_method': 'make_to_stock',
+            }),
+        ]
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': self.product_a.list_price,
+            })],
+        })
+        so.action_confirm()
+        picking_1 = so.picking_ids
+        self.assertRecordValues(picking_1, [
+            {'location_id': stock_location.id, 'location_dest_id': pack_location.id},
+        ])
+        picking_1.location_dest_id = loc_perso
+        picking_1.button_validate()
+        so.order_line.product_uom_qty = 2
+
+        self.assertRecordValues(so.picking_ids.move_ids.sorted("id"), [
+            {'location_id': stock_location.id, 'location_dest_id': loc_perso.id, 'quantity': 1},
+            {'location_id': loc_perso.id, 'location_dest_id': out_location.id, 'quantity': 1},
+            {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'quantity': 1},
+        ])

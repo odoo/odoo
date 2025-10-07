@@ -20,4 +20,18 @@ patch(TicketScreen.prototype, {
             return _t("Ongoing");
         }
     },
+    getFilteredOrderList() {
+        const orders = super.getFilteredOrderList();
+        orders.forEach((order) => {
+            if (
+                (order.pos_reference.includes("Self-Order") ||
+                    order.pos_reference.includes("Kiosk")) &&
+                !order.online_payment_method_id &&
+                !Object.keys(order.last_order_preparation_change.lines).length
+            ) {
+                order.updateLastOrderChange();
+            }
+        });
+        return orders;
+    },
 });

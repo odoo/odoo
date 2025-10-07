@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-19 18:37+0000\n"
-"PO-Revision-Date: 2025-09-23 00:20+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
+"PO-Revision-Date: 2025-10-07 00:21+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-3/point_of_sale/es_419/>\n"
@@ -2577,8 +2577,8 @@ msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
 msgstr ""
-"Cree una factura para todas las órdenes relacionadas al mismo cliente y a la "
-"misma dirección de facturación"
+"Crea una factura para todas las órdenes relacionadas con el mismo cliente y "
+"la misma dirección de facturación"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -3083,6 +3083,7 @@ msgstr "Desc:"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Discard"
 msgstr "Descartar"
@@ -3450,12 +3451,6 @@ msgstr "Datos adicionales sobre impuestos"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__failed_pickings
 msgid "Failed Pickings"
 msgstr "Recolecciones fallidas"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Failed in printing %s changes of the order"
-msgstr "No se pudieron imprimir %s cambios en la orden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5316,6 +5311,7 @@ msgstr "Odoo"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Odoo Server Error"
 msgstr "Error de servidor de Odoo"
@@ -6168,6 +6164,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"Please note that some printers could not be contacted. The changes will be "
+"taken into account locally, but a preparation ticket may be missing. Here is "
+"the list of printers with errors: %s\n"
+"Do you want to retry ?"
+msgstr ""
+"Ten en cuenta que no pudimos comunicarnos con algunas impresoras. Los "
+"cambios se aplicarán de forma local, pero podría faltar un recibo de "
+"preparación. Esta es la lista de impresoras con errores: %s \n"
+"¿Quieres volver a intentarlo?"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 msgid "Please print the invoice from the backend"
 msgstr "Imprima su factura desde el backend."
@@ -6818,7 +6828,7 @@ msgstr "Error de impresión"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Printing failed"
-msgstr "La impresión falló"
+msgstr "Error en la impresión"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6946,7 +6956,7 @@ msgstr "Exclusión de atributos del modelo del producto"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Linea de atributo de la plantilla de producto"
+msgstr "Línea del atributo de la plantilla del producto"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_value
@@ -7413,6 +7423,7 @@ msgstr "Venta minorista"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Retry"
 msgstr "Volver a intentar"
 
@@ -8112,6 +8123,12 @@ msgid "Some Serial/Lot Numbers are missing"
 msgstr "Faltan algunos números de serie o de lote"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr "Algunas órdenes ya se están facturando. Inténtalo de nuevo más tarde."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -8139,7 +8156,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Some required information is missing."
-msgstr "Falta alguna información obligatoria."
+msgstr "Falta información obligatoria."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8473,20 +8490,21 @@ msgstr "Gracias."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr "El valor en Disponible después de debe ser entre 00:00 y 24:00"
+msgstr "El valor \"Disponible después de\" debe estar entre 00:00 y 24:00"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
-"El valor Disponible hasta debe ser mayor que el valor Disponible después de."
+"El valor \"Disponible hasta\" debe ser mayor que el valor \"Disponible "
+"después de\"."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
-msgstr "El valor Disponible hasta debe ser entre 00:00 24:00"
+msgstr "El valor \"Disponible hasta\" debe estar entre 00:00 y 24:00"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__proxy_ip
@@ -9240,7 +9258,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid ""
 "This orderline has already been sent to the kitchen and cannot be edited."
-msgstr "Esta línea de la orden ya fue enviada a la cocina y no puedes editarla."
+msgstr ""
+"Esta línea de la orden ya fue enviada a la cocina y no puedes editarla."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10163,12 +10182,6 @@ msgstr "No puede editar el pago de una orden registrada. "
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr "No puede facturar órdenes que pertenezcan a diferentes empresas."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -10572,6 +10585,12 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid "Failed in printing %s changes of the order"
+#~ msgstr "No se pudieron imprimir %s cambios en la orden"
+
+#~ msgid "You cannot invoice orders belonging to different companies."
+#~ msgstr "No puede facturar órdenes que pertenezcan a diferentes empresas."
 
 #~ msgid "Please register the voucher number"
 #~ msgstr "Registre el número de comprobante"

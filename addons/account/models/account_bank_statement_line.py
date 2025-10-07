@@ -423,6 +423,12 @@ class AccountBankStatementLine(models.Model):
         # OVERRIDE
 
         res = super(AccountBankStatementLine, self.with_context(skip_readonly_check=True)).write(vals)
+
+        for statement_line in self:
+            # In case the statement line needed to be checked but is now reconciled, we set the statement line as checked
+            if not statement_line.checked and statement_line.is_reconciled:
+                statement_line.checked = True
+
         self._synchronize_to_moves(set(vals.keys()))
         return res
 

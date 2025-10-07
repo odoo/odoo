@@ -197,7 +197,7 @@ class AccountMove(models.Model):
                 elif not move.ref and (nilvera_reference := document_uuids_references.get(document_uuid)):
                     move.ref = nilvera_reference
                     self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
-            self._cr.commit()
+                self._cr.commit()
 
     def _l10n_tr_get_nilvera_invoice_journal(self, journal_type):
         journal = self._l10n_tr_get_document_category_default_journal(journal_type)
@@ -324,6 +324,11 @@ class AccountMove(models.Model):
             and (line.quantity < 0 or line.price_unit < 0)
             for line in self.invoice_line_ids
         )
+
+    def _get_partner_l10n_tr_nilvera_customer_alias_name(self):
+        # Allows overriding the default customer alias with a custom one.
+        self.ensure_one()
+        return self.partner_id.l10n_tr_nilvera_customer_alias_id.name
 
     # -------------------------------------------------------------------------
     # CRONS

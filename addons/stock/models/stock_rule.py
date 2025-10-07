@@ -59,7 +59,7 @@ class StockRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
-        domain="[('id', '=?', route_company_id)]")
+        domain="[('id', '=?', route_company_id)]", index=True)
     location_dest_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True, index=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True, index=True)
     location_dest_from_rule = fields.Boolean(
@@ -272,7 +272,7 @@ class StockRule(models.Model):
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
-            'warehouse_id': self.warehouse_id.id,
+            'warehouse_id': self.warehouse_id.id or move_to_copy.location_dest_id.warehouse_id.id,
             'procure_method': 'make_to_order',
             'description_picking': move_to_copy.product_id.with_context(lang=move_to_copy._get_lang())._get_description(
                 self.picking_type_id) or move_to_copy.description_picking,

@@ -49,10 +49,12 @@
             'pos_self_order/static/tests/unit/**/*'
         ],
         'point_of_sale._assets_pos': [
+            'pos_self_order/static/src/backend/qr_order_button/*',
             'pos_self_order/static/src/overrides/**/*',
         ],
         'web.assets_backend': [
             "pos_self_order/static/src/upgrade_selection_field.js",
+            'pos_self_order/static/src/backend/qr_order_button/*',
         ],
         "pos_self_order.assets": [
             "pos_self_order/static/src/app/primary_variables.scss",
@@ -114,6 +116,9 @@
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
             "point_of_sale/static/tests/generic_helpers/dialog_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
+        ],
+        'web.assets_tests': [
+            'pos_self_order/static/tests/pos/**/*',
         ],
     },
     "author": "Odoo S.A.",

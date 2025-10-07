@@ -1723,7 +1723,11 @@ function _getHeight(element) {
  */
 function _hideForOutlook(node, onlyHideTag = false) {
     if (!onlyHideTag) {
-        node.setAttribute('style', `${node.getAttribute('style') || ''} mso-hide: all;`.trim());
+        let style = (node.getAttribute("style") || "").trim();
+        if (style && !style.endsWith(";")) {
+            style += ";";
+        }
+        node.setAttribute("style", `${style} mso-hide: all;`);
     }
     node[onlyHideTag === 'closing' ? 'append' : 'before'](document.createComment('[if !mso]><!'));
     node[onlyHideTag === 'opening' ? 'prepend' : 'after'](document.createComment('<![endif]'));
@@ -1842,7 +1846,10 @@ function correctBorderAttributes(style) {
         return correctedStyle;
     }
 
-    return style;
+    if (/border-style\s*:/i.test(style)) {
+        return style;
+    }
+    return style.trim().replace(/;?$/, "; border-style: solid;");
 }
 
 export default {

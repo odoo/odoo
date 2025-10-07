@@ -11,7 +11,7 @@
                 <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev)">
                     <i class="fa fa-fw fa-pencil"/>
                 </span>
-                <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev)">
+                <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Remove this follower" aria-label="Remove this follower" t-on-click.stop="(ev) => this.onClickRemove(ev)">
                     <i class="oi fa-fw oi-close"/>
                 </span>
             </div>

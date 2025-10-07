@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 18:38+0000\n"
+"POT-Creation-Date: 2025-10-03 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -244,14 +244,6 @@ msgstr ""
 "(bold_start)s::skrót%(bold_end)s, aby wkleić szybką odpowiedź w swoją "
 "wiadomość.%(new_line)sWpisz %(bold_start)s:emotikon:%(bold_end)s, aby wkleić "
 "emotikon w swoją wiadomość."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-msgstr ""
-"%(open_button)s%(icon)s%(open_em)sOdrzuć edycję%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -3544,6 +3536,12 @@ msgstr "Bezpośrednie wiadomości"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Discard"
 msgstr "Odrzuć"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Discard editing"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10841,11 +10839,6 @@ msgid "The channel UUID must be unique"
 msgstr "UUID kanału musi być unikalne."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Typ kanału nie może być pusty."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
@@ -13416,6 +13409,16 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” w “%(channel_name)s”"
+
+#~ msgid ""
+#~ "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%"
+#~ "(close_button)s"
+#~ msgstr ""
+#~ "%(open_button)s%(icon)s%(open_em)sOdrzuć edycję%(close_em)s%"
+#~ "(close_button)s"
+
+#~ msgid "The channel type cannot be empty"
+#~ msgstr "Typ kanału nie może być pusty."
 
 #~ msgid "This is the start of #%(channelName)s channel"
 #~ msgstr "To jest start kanału #%(channelName)s"

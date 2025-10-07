@@ -249,3 +249,16 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_product_availabil
         Utils.clickBtn("Close"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_parent_category", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickChildCategory("Test Child Category 1"),
+        ProductPage.clickProduct("Coca-Cola"),
+        ProductPage.clickChildCategory("Test Child Category 2"),
+        ProductPage.clickProduct("Pepsi"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
+    ],
+});

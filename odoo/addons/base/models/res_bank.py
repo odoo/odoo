@@ -138,6 +138,22 @@ class ResPartnerBank(models.Model):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
 
+    def _sanitize_vals(self, vals):
+        if 'sanitized_acc_number' in vals:  # do not allow to write on sanitized directly
+            vals['acc_number'] = vals.pop('sanitized_acc_number')
+        if 'acc_number' in vals:
+            vals['sanitized_acc_number'] = sanitize_account_number(vals['acc_number'])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._sanitize_vals(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._sanitize_vals(vals)
+        return super().write(vals)
+
     def action_archive_bank(self):
         """
             Custom archive function because the basic action_archive don't trigger a re-rendering of the page, so

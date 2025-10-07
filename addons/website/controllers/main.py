@@ -820,7 +820,9 @@ class Website(Home):
             record = request.env[model['model']].browse(model['id'])
             model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
             tree = html.fromstring(str(record[model['field']]))
-            for index, el in enumerate(tree.xpath('//img')):
+            # Only process static img elements (with src) - skip dynamic
+            # template images (t-att*)
+            for index, el in enumerate(tree.xpath('//img[@src]')):
                 role = el.get('role')
                 decorative = role == "presentation"
                 alt = el.get('alt')
