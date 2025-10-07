@@ -167,7 +167,12 @@ rm -rfv /usr/share/doc
 # Remove the default nginx website, we have our own config in /etc/nginx/conf.d/
 rm /etc/nginx/sites-enabled/default
 
-pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
+# || true and manual install of aiortc are a quick fix to allow install aiortc while building the image:
+# requirements.txt contains two path to aiortc (one for "rpi" and one for "other linux")
+# While building the image the platform is the builder's computer and not a rpi
+# as we "chroot" into the image, pip3 tries to install the "other linux" version of aiortc and fails
+pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package || true
+pip3 install /home/pi/odoo/addons/iot_box_image/configuration/aiortc-1.4.0-py3-none-any.whl --break-system-package
 
 # Create Odoo user for odoo service and disable password login
 adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
