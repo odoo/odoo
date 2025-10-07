@@ -714,3 +714,26 @@ class TestProjectSharing(TestProjectSharingCommon):
             subtask.parent_id, portal_task,
             "Subtask should be linked to the correct parent task."
         )
+
+    def test_portal_user_with_access_can_create_sub_task(self):
+        """Ensure a portal user with project sharing access can create a task, a subtask,
+        and a subtask of that subtask, when milestone is provided in context.
+        """
+        self.project_portal.write({
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id}),
+            ],
+        })
+        portal_task = self.env['project.task'].with_user(self.user_portal).with_context(
+            default_project_id=self.project_portal.id,
+            default_milestone_id=False,
+        ).create({
+            'name': 'Portal Task',
+            'child_ids': [
+                Command.create({'name': 'Subtask'}),
+            ],
+        })
+        self.assertEqual(portal_task.name, 'Portal Task')
+        self.assertEqual(portal_task.subtask_count, 1)
+        subtask = portal_task.child_ids[0]
+        self.assertEqual(subtask.name, 'Subtask')

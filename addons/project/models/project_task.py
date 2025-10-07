@@ -1089,6 +1089,9 @@ class ProjectTask(models.Model):
         if not self._has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
+        if not self._has_field_access(self._fields['milestone_id'], 'write'):
+            # remove milestone_id if we have no access to it
+            new_context.pop('default_milestone_id', False)
         self = self.with_context(new_context)
 
         self.browse().check_access('create')
