@@ -379,6 +379,19 @@ class StockPickingBatch(models.Model):
 
     def action_see_packages(self):
         self.ensure_one()
+        if self.state == 'done':
+            return {
+                'name': self.env._("Packages"),
+                'res_model': 'stock.package.history',
+                'view_mode': 'list',
+                'views': [(False, 'list')],
+                'type': 'ir.actions.act_window',
+                'domain': [('picking_ids', 'in', self.picking_ids.ids)],
+                'context': {
+                    'search_default_main_packages': True,
+                }
+            }
+
         return {
             'name': self.env._("Packages"),
             'res_model': 'stock.package',

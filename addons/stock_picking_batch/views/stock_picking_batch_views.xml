@@ -109,6 +109,13 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_see_packages" string="Packages" type="object"
+                            class="oe_stat_button" icon="fa-cubes"
+                            groups="stock.group_tracking_lot">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Packages</span>
+                            </div>
+                        </button>
                         <button name="action_batch_detailed_operations"
                                 class="oe_stat_button"
                                 icon="fa-bars"
@@ -122,13 +129,6 @@
                             class="oe_stat_button" icon="fa-list"
                             invisible="not show_allocation"
                             groups="stock.group_reception_report"/>
-                        <button name="action_see_packages" string="Packages" type="object"
-                            class="oe_stat_button" icon="fa-cubes"
-                            invisible="state == 'done'" groups="stock.group_tracking_lot">
-                            <div class="o_form_field o_stat_info">
-                                <span class="o_stat_text">Packages</span>
-                            </div>
-                        </button>
                     </div>
                     <div class="oe_title">
                         <h1><field name="name" class="oe_inline"/></h1>
