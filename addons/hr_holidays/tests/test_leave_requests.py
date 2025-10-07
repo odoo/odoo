@@ -1674,3 +1674,27 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         # Assert the manager can approve the leave request assign to portal employee
         leave.with_user(self.user_hrmanager_id).action_approve()
+
+    @freeze_time("2025-10-07")
+    def test_duration_flexible_employee_different_timezone(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8,
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+        })
+
+        self.employee_emp.tz = 'Australia/Darwin'
+        self.employee_emp.resource_calendar_id = calendar
+        self.env.user.tz = 'Europe/Brussels'
+
+        leave = self.env['hr.leave'].with_user(self.env.user).create({
+            'name': 'Test',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_unit_hours': True,
+            'request_hour_from': 8,
+            'request_hour_to': 21,
+        })
+
+        self.assertEqual(leave.number_of_hours, 13.0)
