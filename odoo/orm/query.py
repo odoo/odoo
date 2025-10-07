@@ -131,6 +131,7 @@ class Query:
         :param str link: used to generate the alias for the joined table, this string should
             represent the relationship (the link) between both tables.
         """
+        # TODO use TableSQL._join
         assert lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
@@ -144,6 +145,7 @@ class Query:
         See the documentation of :meth:`join` for a better overview of the
         arguments and what they do.
         """
+        # TODO use TableSQL._join
         assert lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))

@@ -214,18 +214,15 @@ WHERE final.user_id IN %s""",
         # then, we filter to get only the subset.
         sql = SQL("""
 SELECT sub.user_id, sub.karma_position
-FROM (
-    SELECT "res_users"."id" as user_id, row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position
-    FROM %s
-    WHERE %s
-) sub
+FROM %s AS sub
 WHERE sub.user_id IN %s""",
-            where_query.from_clause,
-            where_query.where_clause or SQL("TRUE"),
+            where_query.subselect(
+                SQL("%s as user_id", where_query.table.id),
+                SQL("row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position"),
+            ),
             tuple(self.ids),
         )
-        self.env.cr.execute(sql)
-        return self.env.cr.dictfetchall()
+        return self.env.execute_query_dict(sql)
 
     def _rank_changed(self):
         """

@@ -52,7 +52,7 @@ class AccountAccount(models.Model):
     code_store = fields.Char(company_dependent=True)
     placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code', search='_search_placeholder_code', compute_sql='_compute_sql_placeholder_code', compute_sudo=True)
     active = fields.Boolean(default=True, tracking=True)
-    used = fields.Boolean(compute='_compute_used', search='_search_used')
+    used = fields.Boolean(compute='_compute_used', compute_sql='_compute_sql_used', compute_sudo=True)
     account_type = fields.Selection(
         selection=[
             ("asset_receivable", "Receivable"),
@@ -269,25 +269,16 @@ class AccountAccount(models.Model):
         if not accounts:
             return
 
-        self.env['account.journal'].flush_model(['company_id', 'default_account_id'])
-        self.env['account.payment.method.line'].flush_model(['journal_id', 'payment_account_id'])
+        query = self.env['account.payment.method.line'].sudo()._search(
+            Domain('payment_account_id', 'in', accounts.ids))
+        apml = query.table
+        journal_t = apml._join('journal_id', kind='JOIN')
+        query.add_where(SQL("%s <> %s", apml.payment_account_id, journal_t.default_account_id))
 
-        self.env.cr.execute('''
-            SELECT journal.id
-            FROM account_journal journal
-            JOIN res_company company on journal.company_id = company.id
-            LEFT JOIN account_payment_method_line apml ON journal.id = apml.journal_id
-            WHERE (
-                apml.payment_account_id IN %(accounts)s
-                AND apml.payment_account_id != journal.default_account_id
-            )
-        ''', {
-            'accounts': tuple(accounts.ids),
-        })
+        journals = self.env['account.journal'].browse(
+            id_ for id_, in self.env.execute_query(query.select(SQL("DISTINCT %s", journal_t.id))))
 
-        rows = self.env.cr.fetchall()
-        if rows:
-            journals = self.env['account.journal'].browse([r[0] for r in rows])
+        if journals:
             raise ValidationError(_(
                 "This account is configured in %(journal_names)s journal(s) (ids %(journal_ids)s) as payment debit or credit account. This means that this account's type should be reconcilable.",
                 journal_names=journals.mapped('display_name'),
@@ -479,22 +470,16 @@ class AccountAccount(models.Model):
         for account in accounts_with_code:
             account.group_id = group_by_code[account.code]
 
-    def _get_used_account_ids(self):
-        rows = self.env.execute_query(SQL("""
-            SELECT id FROM account_account account
-            WHERE EXISTS (SELECT 1 FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
-        """))
-        return [r[0] for r in rows]
-
-    def _search_used(self, operator, value):
-        if operator not in ('in', 'not in'):
-            return NotImplemented
-        return [('id', operator, self._get_used_account_ids())]
-
     def _compute_used(self):
-        ids = set(self._get_used_account_ids())
+        domain = Domain('id', 'in', self.ids) & Domain('used', '=', True)
+        used_ids = set(self.sudo().with_context(active_test=False)._search(domain))
         for record in self:
-            record.used = record.id in ids
+            record.used = record.id in used_ids
+
+    def _compute_sql_used(self, table):
+        query = Query(table._model.sudo().env['account.move.line'])
+        query.add_where(SQL("%s = %s", query.table.account_id, table.id))
+        return SQL("EXISTS %s", query.subselect(''))
 
     @api.model
     def _search_new_account_code(self, start_code, cache=None):
@@ -779,39 +764,41 @@ class AccountAccount(models.Model):
         :param limit: the maximum number of accounts to retrieve
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
+        account_domain = Domain('active', '=', True)
+        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
+            account_domain &= Domain('internal_group', '=', 'income')
+        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
+            account_domain &= Domain('internal_group', '=', 'expense')
         domain = [
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
-            ('account_id.active', '=', True),
+            ('account_id', 'any', account_domain),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
-        if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'income'))
-        elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
-            domain.append(('account_id.internal_group', '=', 'expense'))
+        company = self.env['res.company'].browse(company_id)
 
         query = self.env['account.move.line']._search(domain, bypass_access=True)
-        if not filter_never_user_accounts:
-            _kind, rhs_table, condition = query._joins['account_move_line__account_id']
-            query._joins['account_move_line__account_id'] = (SQL("RIGHT JOIN"), rhs_table, condition)
+        query.groupby = query.table.account_id.id
+        if filter_never_user_accounts:
+            account_t = query.groupby._table
+            code_sql = account_t._with_model(self.with_company(company)).code
+            query.order = SQL("COUNT(%s) DESC, MAX(%s)", query.table.id, code_sql)
+            query.limit = limit
+            sql = query.select(query.groupby)
+        else:
+            aml_sql = query.subselect(
+                query.groupby,
+                SQL("COUNT(%s) AS num", query.table.id),
+            )
+            query = self._search(account_domain)
+            account_t = query.table
+            query.add_join('LEFT JOIN', 'counts', aml_sql, SQL("%s = counts.id", account_t.id))
+            code_sql = account_t._with_model(self.with_company(company)).code
+            query.order = SQL('counts.num DESC NULLS LAST, %s', code_sql)
+            query.limit = limit
+            sql = query.select()
 
-        company = self.env['res.company'].browse(company_id)
-        code_sql = self.with_company(company)._field_to_sql('account_move_line__account_id', 'code', query)
-
-        return [r[0] for r in self.env.execute_query(SQL(
-            """
-                SELECT account_move_line__account_id.id
-                  FROM %(from_clause)s
-                 WHERE %(where_clause)s
-              GROUP BY account_move_line__account_id.id
-              ORDER BY COUNT(account_move_line.id) DESC, MAX(%(code_sql)s)
-                %(limit_clause)s
-            """,
-            from_clause=query.from_clause,
-            where_clause=query.where_clause or SQL("TRUE"),
-            code_sql=code_sql,
-            limit_clause=SQL("LIMIT %s", limit) if limit else SQL(),
-        ))]
+        return [id_ for id_, in self.env.execute_query(sql)]
 
     @api.model
     def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):

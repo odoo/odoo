@@ -134,14 +134,13 @@ class L10n_FrFecExportWizard(models.TransientModel):
             unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
 
-        aa_name = self.env['account.account']._field_to_sql('account_move_line__account_id', 'name')
-
         query = self.env['account.move.line']._search(self._get_base_domain() + [
             ('date', '<', self.date_from),
             ('account_id.include_initial_balance', '=', True),
             ('account_id.account_type', 'not in', ['asset_receivable', 'liability_payable']),
         ])
-        aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
+        account = query.table.account_id
+        query.groupby = account.id
         sql_query = query.select(SQL(
             """
                 'OUV' AS JournalCode,
@@ -162,14 +161,15 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 %(formatted_date_from)s AS ValidDate,
                 '' AS Montantdevise,
                 '' AS Idevise,
-                MIN(account_move_line__account_id.id) AS CompteID
+                MIN(%(account_id)s) AS CompteID
             """,
             formatted_date_year=self.date_from.year,
             formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
-            aa_code=aa_code,
-            aa_name=aa_name,
+            aa_code=account.code,
+            aa_name=account.name,
+            account_id=account.id,
         ))
-        self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+        self.env.cr.execute(sql_query)
 
         currency_digits = 2
         for row in self.env.cr.fetchall():
@@ -213,8 +213,9 @@ class L10n_FrFecExportWizard(models.TransientModel):
             ('account_id.include_initial_balance', '=', True),
             ('account_id.account_type', 'in', ['asset_receivable', 'liability_payable']),
         ])
-        query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')
-        aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
+        account = query.table.account_id
+        partner = query.table.partner_id
+        query.groupby = SQL("%s, %s", partner.id, account.id)
         sql_query = query.select(SQL(
             """
                 'OUV' AS JournalCode,
@@ -223,8 +224,8 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 %(formatted_date_from)s AS EcritureDate,
                 MIN(%(aa_code)s) AS CompteNum,
                 replace(MIN(%(aa_name)s), '|', '/') AS CompteLib,
-                COALESCE(NULLIF(replace(account_move_line__partner_id.ref, '|', '/'), ''), account_move_line__partner_id.id::text) AS CompAuxNum,
-                COALESCE(replace(account_move_line__partner_id.name, '|', '/'), '') AS CompAuxLib,
+                COALESCE(NULLIF(replace(%(partner_alias)s.ref, '|', '/'), ''), %(partner_alias)s.id::text) AS CompAuxNum,
+                COALESCE(replace(%(partner_alias)s.name, '|', '/'), '') AS CompAuxLib,
                 '-' AS PieceRef,
                 %(formatted_date_from)s AS PieceDate,
                 '/' AS EcritureLib,
@@ -235,14 +236,16 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 %(formatted_date_from)s AS ValidDate,
                 '' AS Montantdevise,
                 '' AS Idevise,
-                MIN(account_move_line__account_id.id) AS CompteID
+                MIN(%(account_id)s) AS CompteID
             """,
             formatted_date_year=self.date_from.year,
             formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
-            aa_code=aa_code,
-            aa_name=aa_name,
+            aa_code=account.code,
+            aa_name=account.name,
+            account_id=account.id,
+            partner_alias=partner.id._table,
         ))
-        self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+        self.env.cr.execute(sql_query)
 
         for row in self.env.cr.fetchall():
             listrow = list(row)
@@ -259,10 +262,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
             limit=query_limit + 1,
             order='date, move_name, id',
         )
-        account_alias = query.join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')
-        aa_code = self.env['account.account']._field_to_sql(account_alias, 'code', query)
-
-        aj_name = self.env['account.journal']._field_to_sql('account_move_line__journal_id', 'name')
+        account = query.table.account_id
         columns = SQL(
             """
                 REGEXP_REPLACE(replace(%(journal_alias)s.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
@@ -271,7 +271,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 TO_CHAR(%(move_alias)s.date, 'YYYYMMDD') AS EcritureDate,
                 %(aa_code)s AS CompteNum,
                 REGEXP_REPLACE(replace(%(aa_name)s, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
-                CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
+                CASE WHEN %(aa_type)s IN ('asset_receivable', 'liability_payable')
                 THEN
                     CASE WHEN %(partner_alias)s.ref IS null OR %(partner_alias)s.ref = ''
                     THEN %(partner_alias)s.id::text
@@ -280,7 +280,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 ELSE ''
                 END
                 AS CompAuxNum,
-                CASE WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
+                CASE WHEN %(aa_type)s IN ('asset_receivable', 'liability_payable')
                      THEN COALESCE(REGEXP_REPLACE(replace(%(partner_alias)s.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
                      ELSE ''
                 END AS CompAuxLib,
@@ -303,15 +303,15 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 END AS Montantdevise,
                 CASE WHEN account_move_line.currency_id IS NULL THEN '' ELSE %(currency_alias)s.name END AS Idevise
             """,
-            currency_alias=SQL.identifier(query.left_join('account_move_line', 'currency_id', 'res_currency', 'id', 'currency_id')),
-            full_alias=SQL.identifier(query.left_join('account_move_line', 'full_reconcile_id', 'account_full_reconcile', 'id', 'full_reconcile_id')),
-            journal_alias=SQL.identifier(query.left_join('account_move_line', 'journal_id', 'account_journal', 'id', 'journal_id')),
-            move_alias=SQL.identifier(query.left_join('account_move_line', 'move_id', 'account_move', 'id', 'move_id')),
-            partner_alias=SQL.identifier(query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')),
-            account_alias=SQL.identifier(account_alias),
-            aj_name=aj_name,
-            aa_code=aa_code,
-            aa_name=aa_name,
+            currency_alias=query.table.currency_id.id._table,
+            full_alias=query.table.full_reconcile_id.id._table,
+            journal_alias=query.table.journal_id.id._table,
+            move_alias=query.table.move_id.id._table,
+            partner_alias=query.table.partner_id.id._table,
+            aa_type=account.account_type,
+            aj_name=query.table.journal_id.name,
+            aa_code=account.code,
+            aa_name=account.name,
         )
         with io.StringIO() as fecfile:
             csv_writer = csv.writer(fecfile, delimiter='|', lineterminator='\r\n')
