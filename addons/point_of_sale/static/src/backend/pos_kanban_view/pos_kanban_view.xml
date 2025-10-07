@@ -4,6 +4,10 @@
         <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
             <attribute name="initialPosState">initialPosState</attribute>
         </xpath>
+
+        <xpath expr="//t[@t-set-slot='layout-actions']/SearchBar" position="attributes">
+            <attribute name="autofocus">this.autofocus</attribute>
+        </xpath>
     </t>
 
     <t t-name="point_of_sale.PosKanbanRenderer">
