@@ -242,10 +242,10 @@ class StockPickingType(models.Model):
         to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
         (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
 
-    def _compute_sql_is_favorite(self, alias, query):
+    def _compute_sql_is_favorite(self, table):
         return SQL(
             "%s IN (SELECT picking_type_id FROM picking_type_favorite_user_rel WHERE user_id = %s)",
-            SQL.identifier(alias, 'id'), self.env.uid,
+            table.id, self.env.uid,
         )
 
     @api.depends('code')

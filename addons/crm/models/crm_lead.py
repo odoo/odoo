@@ -13,7 +13,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
+from odoo.tools import email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
@@ -282,16 +282,10 @@ class CrmLead(models.Model):
             else:
                 lead.company_currency = lead.company_id.currency_id
 
-    def _compute_sql_company_currency(self, alias, query):
-        alias_company = query.make_alias(alias, 'company_id')
-        company_field_sql = self._field_to_sql(alias, 'company_id', query)
-        query.add_join('LEFT JOIN', alias_company, 'res_company', SQL(
-            "%s = %s", company_field_sql, SQL.identifier(alias_company, 'id'),
-        ))
-        company_currency_expr = self.env['res.company']._field_to_sql(alias_company, 'currency_id', query)
+    def _compute_sql_company_currency(self, table):
         return SQL(
             '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
-            company_field_sql, company_currency_expr, self.env.company.currency_id.id
+            table.company_id, table.company_id.currency_id, self.env.company.currency_id.id
         )
 
     @api.depends('user_id', 'type')

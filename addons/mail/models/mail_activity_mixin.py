@@ -172,11 +172,11 @@ class MailActivityMixin(models.AbstractModel):
             else:
                 record.activity_state = False
 
-    def _compute_sql_activity_state(self, alias, query):
+    def _compute_sql_activity_state(self, table):
         # find activities
-        Activity = self.activity_ids
-        act_query = Activity._search(Domain('res_model', '=', self._name) & Domain('active', '=', True))
-        res_id_sql = SQL.identifier(act_query.table, 'res_id')
+        act_query = self.activity_ids._search(Domain('res_model', '=', self._name) & Domain('active', '=', True))
+        activity_t = act_query.table
+        res_id_sql = activity_t.res_id
         # group them by res_id and compute the state (as int)
         act_query.groupby = res_id_sql
         act_sql = act_query.subselect(res_id_sql, SQL(
@@ -192,19 +192,20 @@ class MailActivityMixin(models.AbstractModel):
                 )))
             )::INT AS activity_state
             """,
-            Activity._field_to_sql(act_query.table, 'date_deadline', act_query),
+            activity_t.date_deadline,
             fields.Datetime.now().astimezone(pytz.utc),
-            Activity._field_to_sql(act_query.table, 'user_tz', act_query),
+            activity_t.user_tz,
         ))
 
         # join the results and translate int into the state value
-        act_alias = query.make_alias(alias, 'activity_state')
-        query.add_join('LEFT JOIN', act_alias, act_sql, SQL("%s = %s", SQL.identifier(alias, 'id'), SQL.identifier(act_alias, 'res_id')))
+        act_alias = table._make_alias('activity_state')
+        table._query.add_join('LEFT JOIN', act_alias, act_sql, SQL("%s = %s", table.id, act_alias.res_id))
+        col = act_alias.activity_state
         return SQL("""CASE
             WHEN %(col)s < 0 THEN 'overdue'
             WHEN %(col)s = 0 THEN 'today'
             WHEN %(col)s > 0 THEN 'planned'
-            END""", col=SQL.identifier(act_alias, 'activity_state'))
+            END""", col=col)
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
