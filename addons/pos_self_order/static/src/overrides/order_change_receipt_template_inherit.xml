@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderChangeReceiptInherit" t-inherit="point_of_sale.OrderChangeReceipt" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('order-ref-prefix')]" position="attributes">
+            <attribute name="t-if">!data.pos_reference.startsWith('Self-Order')</attribute>
+        </xpath>
+    </t>
+</templates>

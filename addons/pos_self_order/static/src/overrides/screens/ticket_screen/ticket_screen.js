@@ -20,6 +20,7 @@ patch(TicketScreen.prototype, {
             return _t("Ongoing");
         }
     },
+    //  Todo: remove in master -->
     getFilteredOrderList() {
         const orders = super.getFilteredOrderList();
         orders.forEach((order) => {
