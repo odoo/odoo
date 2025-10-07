@@ -23,6 +23,7 @@ patch(TicketScreen.prototype, {
     getTableTag(order) {
         return super.getTableTag(order) || order?.self_ordering_table_id?.table_number;
     },
+    //  Todo: remove in master -->
     getFilteredOrderList() {
         const orders = super.getFilteredOrderList();
         orders.forEach((order) => {
