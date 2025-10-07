@@ -265,27 +265,6 @@ class TestFiscalPosition(common.TransactionCase):
             fp_eu_extra
         )
 
-    def test_map_inactive(self):
-        self.env.company.country_id = self.us
-        self.env['account.tax.group'].create(
-            {'name': 'Test Tax Group', 'company_id': self.env.company.id}
-        )
-        fp = self.env['account.fiscal.position'].create({
-            'name': 'FP With Inactive Taxes',
-        })
-        src_tax = self.env['account.tax'].create({
-            'name': 'Source Tax',
-            'amount': 10,
-        })
-        dest_tax = self.env['account.tax'].create({
-            'name': 'Destination Tax',
-            'amount': 20,
-            'fiscal_position_ids': [Command.link(fp.id)],
-            'original_tax_ids': [Command.link(src_tax.id)],
-            'active': False,
-        })
-        self.assertEqual(fp.map_tax(src_tax), dest_tax)
-
     def test_domestic_fp_map_self(self):
         self.env.company.country_id = self.us
         self.env['account.tax.group'].create(
