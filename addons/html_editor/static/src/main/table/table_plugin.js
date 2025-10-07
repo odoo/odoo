@@ -106,6 +106,13 @@ export class TablePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
+        toolbar_namespace_providers: [
+            withSequence(90, (targetedNodes, editableSelection) =>
+                closestElement(editableSelection.anchorNode, ".o_selected_td")
+                    ? "compact"
+                    : undefined
+            ),
+        ],
 
         /** Handlers */
         selectionchange_handlers: this.updateSelectionTable.bind(this),
@@ -126,8 +133,6 @@ export class TablePlugin extends Plugin {
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
         move_node_whitelist_selectors: "table",
-        collapsed_selection_toolbar_predicate: (selectionData) =>
-            !!closestElement(selectionData.editableSelection.anchorNode, ".o_selected_td"),
         normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
     };
 
