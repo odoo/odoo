@@ -454,7 +454,7 @@ class ResUsers(models.Model):
     @api.depends('name')
     def _compute_signature(self):
         for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
-            user.signature = Markup('<p>%s</p>') % user['name']
+            user.signature = Markup('<div>%s</div>') % user['name']
 
     @api.depends('all_group_ids')
     def _compute_share(self):
