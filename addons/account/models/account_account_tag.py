@@ -50,7 +50,7 @@ class AccountAccountTag(models.Model):
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
         if field_expr in ('report_expression_id', 'balance_negate'):
             rhs_alias = query.make_alias(alias, 'expression')
-            if rhs_alias not in query._tables:
+            if rhs_alias not in query._joins:
                 query.add_join(
                     kind='LEFT JOIN',
                     alias=rhs_alias,

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
-import itertools
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -16,11 +15,6 @@ def _sql_from_table(alias: str, table: SQL) -> SQL:
     if (alias_identifier := SQL.identifier(alias)) == table:
         return table
     return SQL("%s AS %s", table, alias_identifier)
-
-
-def _sql_from_join(kind: SQL, alias: str, table: SQL, condition: SQL) -> SQL:
-    """ Return a FROM clause element for a JOIN. """
-    return SQL("%s %s ON (%s)", kind, _sql_from_table(alias, table), condition)
 
 
 _SQL_JOINS = {
@@ -63,12 +57,16 @@ class Query:
         # database cursor
         self._model = model
 
-        self._tables: dict[str, SQL] = {
-            (alias or model._table): (table or model._table_sql),
-        }
+        if alias is None:
+            alias = model._table
+        if table is None:
+            table = model._table_sql
 
         # joins {alias: (kind(SQL), table(SQL), condition(SQL))}
-        self._joins: dict[str, tuple[SQL, SQL, SQL]] = {}
+        self._joins: dict[str, tuple[SQL, SQL, SQL]] = {
+            # first entry is the FROM table
+            alias: (SQL(), table, SQL()),
+        }
 
         # holds the list of WHERE conditions (to be joined with 'AND')
         self._where_clauses: list[SQL] = []
@@ -89,17 +87,10 @@ class Query:
         """ Return an alias based on ``alias`` and ``link``. """
         return _generate_table_alias(alias, link)
 
-    def add_table(self, alias: str, table: (SQL | None) = None):
-        """ Add a table with a given alias to the from clause. """
-        assert alias not in self._tables and alias not in self._joins, f"Alias {alias!r} already in {self}"
-        self._tables[alias] = table if table is not None else SQL.identifier(alias)
-        self._ids = self._ids and None
-
     def add_join(self, kind: str, alias: str, table: str | SQL | None, condition: SQL):
         """ Add a join clause with the given alias, table and condition. """
         sql_kind = _SQL_JOINS.get(kind.upper())
         assert sql_kind is not None, f"Invalid JOIN type {kind!r}"
-        assert alias not in self._tables, f"Alias {alias!r} already used"
         table = table or alias
         if isinstance(table, str):
             table = SQL.identifier(table)
@@ -128,7 +119,7 @@ class Query:
         :param str link: used to generate the alias for the joined table, this string should
             represent the relationship (the link) between both tables.
         """
-        assert lhs_alias in self._tables or lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
+        assert lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
         self.add_join('JOIN', rhs_alias, rhs_table, condition)
@@ -141,7 +132,7 @@ class Query:
         See the documentation of :meth:`join` for a better overview of the
         arguments and what they do.
         """
-        assert lhs_alias in self._tables or lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
+        assert lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
         rhs_alias = self.make_alias(lhs_alias, link)
         condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
         self.add_join('LEFT JOIN', rhs_alias, rhs_table, condition)
@@ -158,22 +149,16 @@ class Query:
     @property
     def table(self) -> str:
         """ Return the query's main table, i.e., the first one in the FROM clause. """
-        return next(iter(self._tables))
+        return next(iter(self._joins))
 
     @property
     def from_clause(self) -> SQL:
         """ Return the FROM clause of ``self``, without the FROM keyword. """
-        tables = SQL(", ").join(itertools.starmap(_sql_from_table, self._tables.items()))
-        if not self._joins:
-            return tables
-        items = (
-            tables,
-            *(
-                _sql_from_join(kind, alias, table, condition)
-                for alias, (kind, table, condition) in self._joins.items()
-            ),
+        return SQL(" ").join(
+            SQL("%s %s ON (%s)", kind, _sql_from_table(alias, table), condition)
+            if kind else _sql_from_table(alias, table)  # first table
+            for alias, (kind, table, condition) in self._joins.items()
         )
-        return SQL(" ").join(items)
 
     @property
     def where_clause(self) -> SQL:
@@ -238,7 +223,7 @@ class Query:
         ``ordered`` tells whether the query must be ordered to match exactly the
         sequence ``ids``.
         """
-        assert not (self._joins or self._where_clauses or self.limit or self.offset), \
+        assert not (len(self._joins) > 1 or self._where_clauses or self.limit or self.offset), \
             "Method set_result_ids() can only be called on a virgin Query"
         ids = tuple(ids)
         if not ids:
