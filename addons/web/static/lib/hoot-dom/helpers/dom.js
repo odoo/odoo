@@ -155,7 +155,7 @@ function applyFilters(filters, nodes) {
 }
 
 function compilePseudoClassRegex() {
-    const customKeys = [...customPseudoClasses.keys()].filter((k) => k !== "has" && k !== "not");
+    const customKeys = [...customPseudoClasses.keys()].filter((k) => k !== "not");
     return new RegExp(`:(${customKeys.join("|")})`);
 }
 
@@ -401,10 +401,15 @@ function isElement(object) {
 
 /**
  * @param {string} selector
+ * @param {number | null} expectedCount
  * @param {Node} node
  */
-function isNodeHaving(selector, node) {
-    return !!_queryAll(selector, { root: node }).length;
+function isNodeHaving(selector, expectedCount, node) {
+    const results = queryWithCustomSelector([node], selector);
+    if (expectedCount !== null) {
+        return results.length === expectedCount;
+    }
+    return !!results.length;
 }
 
 /** @type {NodeFilter} */
@@ -1093,7 +1098,19 @@ customPseudoClasses
     })
     .set("first", () => 0)
     .set("focusable", () => isNodeFocusable)
-    .set("has", (selector) => isNodeHaving.bind(null, selector))
+    .set("has", (selector) => {
+        let expectedCount = null;
+        const lastCommaIndex = selector.lastIndexOf(', ');
+        if (lastCommaIndex !== -1) {
+            const afterComma = selector.slice(lastCommaIndex + 2).trim();
+            const count = parseInt(afterComma);
+            if (!isNaN(count) && count.toString() === afterComma) {
+                selector = selector.slice(0, lastCommaIndex).trim();
+                expectedCount = count;
+            }
+        }
+        return isNodeHaving.bind(null, selector, expectedCount);
+    })
     .set("hidden", () => isNodeHidden)
     .set("iframe", () => getNodeIframe)
     .set("interactive", () => isNodeInteractive)
