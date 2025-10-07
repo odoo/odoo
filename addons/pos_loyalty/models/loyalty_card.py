@@ -15,7 +15,7 @@ class LoyaltyCard(models.Model):
         related="source_pos_order_id.partner_id")
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return False
 
     @api.model

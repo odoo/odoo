@@ -12,15 +12,13 @@ class HrEmployee(models.Model):
     _inherit = ['hr.employee', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return config._employee_domain(config.current_user_id.id)
+    def _load_pos_data_domain(self, data):
+        config_id = data['pos.config']
+        return config_id._employee_domain(config_id.current_user_id.id)
 
     @api.model
     def _load_pos_data_fields(self, config):
         return ['name', 'user_id', 'work_contact_id']
-
-    def _server_date_to_domain(self, domain):
-        return domain
 
     @api.model
     def _load_pos_data_read(self, records, config):

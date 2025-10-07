@@ -6,10 +6,9 @@ class AccountFiscalPosition(models.Model):
     _inherit = ['account.fiscal.position', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        fp_ids = [preset['fiscal_position_id'] for preset in data['pos.preset']]
-        partner_fp_ids = list({partner['fiscal_position_id'] for partner in data['res.partner'] if partner['fiscal_position_id']}) if 'res.partner' in data.keys() else []
-        return [('id', 'in', config.fiscal_position_ids.ids + fp_ids + partner_fp_ids)]
+    def _load_pos_data_domain(self, data):
+        partner_fp_ids = data['res.partner'].fiscal_position_id.ids if data['res.partner'] else []
+        return [('id', 'in', data['pos.config'].fiscal_position_ids.ids + data['pos.preset'].fiscal_position_id.ids + partner_fp_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):

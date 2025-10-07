@@ -63,7 +63,7 @@ export class DataServiceOptions {
         return ["read", "search_read", "create"];
     }
 
-    get pohibitedAutoLoadedModels() {
+    get prohibitedAutoLoadedModels() {
         return [
             "pos.order", // Cannot be auto-loaded can cause infinite loop
             "pos.order.line", // Cannot be auto-loaded can cause infinite loop
@@ -85,10 +85,6 @@ export class DataServiceOptions {
 
     get uniqueModels() {
         return ["pos.session", "res.users", "res.company"];
-    }
-
-    get cleanupModels() {
-        return ["product.template"];
     }
 
     get prohibitedAutoLoadedFields() {

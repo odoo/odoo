@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
     )
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return [['pos_order_line_ids.order_id.state', '=', 'draft']]
 
     @api.model
@@ -118,8 +118,12 @@ class SaleOrderLine(models.Model):
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_line_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('order_id', 'in', [order['id'] for order in data['sale.order']])]
+    def _load_pos_data_domain(self, data):
+        return [('order_id', 'in', data['sale.order'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['sale.order']
 
     @api.model
     def _load_pos_data_fields(self, config):

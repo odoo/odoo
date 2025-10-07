@@ -931,11 +931,13 @@ export class PosOrder extends Base {
     }
 
     getLinesToCompute() {
-        return this.lines.filter(
-            (line) =>
-                line.price_type === "original" &&
-                !(line.combo_line_ids?.length || line.combo_parent_id)
-        );
+        return this.lines
+            ? this.lines.filter(
+                  (line) =>
+                      line.price_type === "original" &&
+                      !(line.combo_line_ids?.length || line.combo_parent_id)
+              )
+            : [];
     }
 }
 

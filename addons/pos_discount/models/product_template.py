@@ -1,19 +1,15 @@
-from odoo import models, api
+from odoo import models
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    @api.model
-    def _load_pos_data_read(self, records, config):
-        read_data = super()._load_pos_data_read(records, config)
-        discount_product_id = config.discount_product_id.id
-        product_ids_set = {product['id'] for product in read_data}
+    def _load_pos_metadata(self, data, search_params={}):
+        super()._load_pos_metadata(data, search_params)
+        config_id = data['pos.config']['records'][0]
+        discount_product_id = config_id.discount_product_id.product_tmpl_id
 
-        if config.module_pos_discount and discount_product_id not in product_ids_set:
-            productModel = self.env['product.template'].with_context({**self.env.context, 'display_default_code': False})
-            fields = self.env['product.template']._load_pos_data_fields(config)
-            product = productModel.search_read([('id', '=', discount_product_id)], fields=fields, load=False)
-            read_data.extend(product)
+        if config_id.module_pos_discount:
+            data['product.template']['records'] |= discount_product_id
 
-        return read_data
+        return data

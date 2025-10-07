@@ -16,6 +16,10 @@ export class ResCurrency extends webModels.ResCurrency {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -26,6 +30,7 @@ export class ResCurrency extends webModels.ResCurrency {
             rate: 1.0,
             decimal_places: 2,
             iso_numeric: 840,
+            write_date: "2025-01-01 10:00:00",
         },
         ...webModels.ResCurrency._records.filter((record) => record.id !== 1),
     ];

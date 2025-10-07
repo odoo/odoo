@@ -7,6 +7,10 @@ export class ResUsers extends MailResUsers {
         return ["id", "name", "partner_id", "all_group_ids"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         ...MailResUsers.prototype.constructor._records,
         {
@@ -14,12 +18,14 @@ export class ResUsers extends MailResUsers {
             name: "Administrator",
             partner_id: 3,
             role: "manager",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
             name: "User1",
             partner_id: 4,
             role: "cashier",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

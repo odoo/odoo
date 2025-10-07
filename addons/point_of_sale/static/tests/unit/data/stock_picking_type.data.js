@@ -7,11 +7,16 @@ export class StockPickingType extends models.ServerModel {
         return ["id", "use_create_lots", "use_existing_lots"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 9,
             use_create_lots: true,
             use_existing_lots: true,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

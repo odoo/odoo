@@ -6,4 +6,8 @@ export class ProductTag extends models.ServerModel {
     _load_pos_data_fields() {
         return ["name", "pos_description", "color", "has_image", "write_date"];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }
