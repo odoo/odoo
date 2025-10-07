@@ -436,8 +436,12 @@ export class Message extends Record {
         );
     }
 
+    get hasAttachments() {
+        return this.attachment_ids?.length > 0;
+    }
+
     get hasOnlyAttachments() {
-        return this.isBodyEmpty && this.attachment_ids.length > 0;
+        return this.isBodyEmpty && this.hasAttachments;
     }
 
     previewText = fields.Html("", {
@@ -470,7 +474,7 @@ export class Message extends Record {
 
     get previewIcon() {
         const { attachment_ids: attachments } = this;
-        if (!attachments || attachments.length === 0) {
+        if (!this.hasAttachments) {
             return "";
         }
         const firstAttachment = attachments[0];
