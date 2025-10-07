@@ -3,8 +3,11 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as combo from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { registry } from "@web/core/registry";
+import { today, formatDate } from "@web/core/l10n/dates";
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     test: true,
@@ -236,7 +239,15 @@ registry.category("web_tour.tours").add("PosLoyaltyNextOrderCouponExpirationDate
 
             ProductScreen.addOrderline("Desk Organizer", "3"),
 
-            PosLoyalty.finalizeOrder("Cash", "15.3"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.pressNumpad("1 5 . 3"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            {
+                content: "Check if the coupon shows the correct expiration date.",
+                trigger: `.pos-receipt-container .pos-coupon-rewards .coupon-container:contains(${formatDate(today().plus({days: 2}))})`
+            },
         ].flat(),
 });
 

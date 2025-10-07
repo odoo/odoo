@@ -6,6 +6,7 @@ import odoo
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests.common import Form
 from odoo import fields, Command
+from datetime import timedelta
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSale(TestPointOfSaleHttpCommon):
@@ -1258,6 +1259,28 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order_id = self.env['pos.order'].create_from_ui([pos_order])[0]['id']
         pos_order = self.env['pos.order'].browse(pos_order_id)
         self.assertFalse(pos_order.account_move.invoice_payment_term_id)
+
+    def test_pos_sale_order_search_by_date(self):
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%a, %Y.eko %bren %da'})
+
+        for i in range(5):
+            days_offset = 2 if i < 3 else 3
+            self.env['sale.order'].create({
+                'date_order': fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=days_offset)),
+                'partner_id': self.env['res.partner'].create({'name': f'Test Partner Z{i}'}).id,
+                'order_line': [(0, 0, {
+                    'product_id':  self.letter_tray.id,
+                    'name': self.letter_tray.name,
+                    'product_uom_qty': 3.5,
+                    'product_uom': self.letter_tray.uom_id.id,
+                    'price_unit': 8 * i,
+                    'discount': 10,
+                })],
+            })
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour('/pos/ui?config_id=%d' % self.main_pos_config.id, 'PosSaleOrderSearchByDate', login='pos_admin')
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': 'MM/dd/yyyy'})
 
     def test_multiple_lots_sale_order(self):
         self.product = self.env['product.product'].create({

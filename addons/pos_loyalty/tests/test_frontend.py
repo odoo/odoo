@@ -2386,6 +2386,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_next_order_coupon_program_expiration_date(self):
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m.%d.%Y'})
         self.env['loyalty.program'].search([]).write({'active': False})
 
         loyalty_program = self.env['loyalty.program'].create({
@@ -2417,6 +2418,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         coupon = loyalty_program.coupon_ids
         self.assertEqual(len(coupon), 1, "Coupon not generated")
         self.assertEqual(coupon.expiration_date, date.today() + timedelta(days=2), "Coupon not generated with correct expiration date")
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m/%d/%Y'})
 
     def test_cheapest_product_tax_included(self):
         tax_01 = self.env['account.tax'].create({
