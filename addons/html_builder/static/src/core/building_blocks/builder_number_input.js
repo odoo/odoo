@@ -14,19 +14,23 @@ import {
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 
+export const BuilderNumberInputProps = {
+    ...basicContainerBuilderComponentProps,
+    ...textInputBasePassthroughProps,
+    default: { type: [Number, { value: null }], optional: true },
+    unit: { type: String, optional: true },
+    saveUnit: { type: String, optional: true },
+    step: { type: Number, optional: true },
+    min: { type: Number, optional: true },
+    max: { type: Number, optional: true },
+    composable: { type: Boolean, optional: true },
+    applyWithUnit: { type: Boolean, optional: true },
+};
+
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
     static props = {
-        ...basicContainerBuilderComponentProps,
-        ...textInputBasePassthroughProps,
-        default: { type: [Number, { value: null }], optional: true },
-        unit: { type: String, optional: true },
-        saveUnit: { type: String, optional: true },
-        step: { type: Number, optional: true },
-        min: { type: Number, optional: true },
-        max: { type: Number, optional: true },
-        composable: { type: Boolean, optional: true },
-        applyWithUnit: { type: Boolean, optional: true },
+        ...BuilderNumberInputProps,
     };
     static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
