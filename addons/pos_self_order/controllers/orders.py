@@ -28,9 +28,9 @@ class PosSelfOrderController(http.Controller):
             order['floating_order_name'] = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
 
         if not order.get('floating_order_name') and table:
-            floating_order_name = f"Self-order T {table.table_number}"
+            floating_order_name = f"Self-Order T {table.table_number}"
         elif not order.get('floating_order_name'):
-            floating_order_name = f"Self-order {tracking_number}"
+            floating_order_name = f"Self-Order {tracking_number}"
 
         # The goal of this is to reduce collisions with other pos.order tracking numbers
         # when several kiosks are used with different pos.configurations.
