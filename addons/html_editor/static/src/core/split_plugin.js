@@ -168,9 +168,8 @@ export class SplitPlugin extends Plugin {
     }
 
     /**
-     * Split the given element at the given offset. The element will be removed in
-     * the process so caution is advised in dealing with its reference. Returns a
-     * tuple containing the new elements on both sides of the split.
+     * Split the given element at the given offset. Returns a tuple containing
+     * the new elements on both sides of the split.
      *
      * @param {HTMLElement} element
      * @param {number} offset
@@ -178,17 +177,12 @@ export class SplitPlugin extends Plugin {
      */
     splitElement(element, offset) {
         /** @type {HTMLElement} **/
-        const firstPart = element.cloneNode();
-        /** @type {HTMLElement} **/
         const secondPart = element.cloneNode();
-        element.before(firstPart);
-        element.after(secondPart);
         const children = childNodes(element);
-        firstPart.append(...children.slice(0, offset));
         secondPart.append(...children.slice(offset));
-        element.remove();
-        this.dispatchTo("after_split_element_handlers", { firstPart, secondPart });
-        return [firstPart, secondPart];
+        element.after(secondPart);
+        this.dispatchTo("after_split_element_handlers", { element, secondPart });
+        return [element, secondPart];
     }
 
     /**
