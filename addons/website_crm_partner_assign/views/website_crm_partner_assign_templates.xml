@@ -12,27 +12,6 @@
     <xpath expr="//h1[@id='page_title']" position="inside">
         <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
     </xpath>
-    <xpath expr="//t[@t-foreach='grades']/a" position="attributes">
-        <attribute name="t-attf-href">/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }</attribute>
-    </xpath>
-    <xpath expr="//div[@id='dropdown_grades_selection']" position="after">
-        <div class="dropdown d-none d-lg-block">
-            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
-                <t t-foreach="countries" t-as="country">
-                    <span t-if="country['active']" t-out="country['country_id'][1]"/>
-                </t>
-            </button>
-            <div class="dropdown-menu">
-                <t t-foreach="countries" t-as="country" t-if="country['country_id']">
-                    <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
-                    <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
-                        <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
-                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
-                    </a>
-                </t>
-            </div>
-        </div>
-    </xpath>
     <xpath expr="//a[@id='filter_category_link']" position="attributes">
         <attribute name="t-attf-href">/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }</attribute>
     </xpath>
@@ -76,6 +55,33 @@
     </xpath>
     <xpath expr="//h5[hasclass('card-title')]" position="attributes">
         <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}</attribute>
+    </xpath>
+</template>
+
+<template id="countries_setting" inherit_id="website_crm_partner_assign.index" name="Countries">
+    <xpath expr="//div[@id='top_section_button_middle_pos']" position="after">
+        <div class="dropdown d-none d-lg-block">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
+                <t t-foreach="countries" t-as="country">
+                    <span t-if="country['active']" t-out="country['country_id'][1]"/>
+                </t>
+            </button>
+            <div class="dropdown-menu">
+                <t t-foreach="countries" t-as="country" t-if="country['country_id']">
+                    <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
+                    <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
+                        <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
+                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="categories_setting" inherit_id="website_partnership.categories_setting">
+    <xpath expr="//t[@t-foreach='grades']/a" position="attributes">
+        <attribute name="t-attf-href">/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }</attribute>
     </xpath>
 </template>
 
@@ -157,24 +163,6 @@
                 </button>
             </div>
         </t>
-    </xpath>
-</template>
-
-<template id="o_wcrm_partner_address" inherit_id="index" name="Address">
-    <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
-        <div t-field="partner.self"
-            t-options="{
-                'widget': 'contact',
-                'fields': ['country_id']
-            }"
-            class="py-2"
-        />
-    </xpath>
-</template>
-
-<template id="contact_details" inherit_id="website_partnership.partner_page" name="Contact Details">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="inside">
-        <t t-set="contact_details" t-value="True"/>
     </xpath>
 </template>
 

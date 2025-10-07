@@ -22,22 +22,7 @@
         <section id="page_top_section" class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
             <h1 id="page_title" class="me-auto mb-0 h4">Find a partner</h1>
             <t t-set='all_categories_label'>All Categories</t>        
-            <div id="dropdown_grades_selection" class="dropdown d-none d-lg-block">
-                <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
-                    <t t-foreach="grades" t-as="grade">
-                        <span t-if="grade['active']" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
-                    </t>
-                </button>
-                <div class="dropdown-menu">
-                    <t t-foreach="grades" t-as="grade">
-                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }?#{ keep_query('search') }"
-                        class="dropdown-item d-flex justify-content-between">
-                            <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
-                            <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="grade['grade_id_count']"/>
-                        </a>
-                    </t>
-                </div>
-            </div>
+            <div id="top_section_button_middle_pos"/>
         </section>
     </div>
     <!-- Off canvas filters on mobile-->
@@ -146,6 +131,7 @@
 
 <template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
     <xpath expr="//div" position="before">
+        <t t-set="contact_details" t-value="False"/>
         <div t-if="not edit_page" class="mt-4 mb-3">
             <a id="link_back_to_partners" t-attf-href="/partners#{current_grade and 'grade_id=%s&amp;' % current_grade.id}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back</a>
         </div>
@@ -175,6 +161,45 @@
                 <i class="fa fa-sliders"/>
             </button>
         </div>
+    </xpath>
+</template>
+
+<template id="categories_setting" inherit_id="website_partnership.index" name="Categories">
+    <xpath expr="//div[@id='top_section_button_middle_pos']" position="before">
+        <div id="dropdown_grades_selection" class="dropdown d-none d-lg-block">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
+                <t t-foreach="grades" t-as="grade">
+                    <span t-if="grade['active']" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
+                </t>
+            </button>
+            <div class="dropdown-menu">
+                <t t-foreach="grades" t-as="grade">
+                    <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }?#{ keep_query('search') }"
+                    class="dropdown-item d-flex justify-content-between">
+                        <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
+                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="grade['grade_id_count']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="o_wcrm_partner_address" inherit_id="index" name="Address">
+    <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
+        <div t-field="partner.self"
+            t-options="{
+                'widget': 'contact',
+                'fields': ['country_id']
+            }"
+            class="py-2"
+        />
+    </xpath>
+</template>
+
+<template id="contact_details" inherit_id="website_partnership.partner_detail" name="Contact Details">
+    <xpath expr="//t[@t-set='contact_details']" position="replace">
+        <t t-set="contact_details" t-value="True"/>
     </xpath>
 </template>
 
