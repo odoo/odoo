@@ -298,13 +298,12 @@
             </div>
         </xpath>
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
-            <a t-if="invoice._has_to_be_paid()"
-                href="#"
+            <button t-if="invoice._has_to_be_paid()"
                 class="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#pay_with">
                 <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
-            </a>
+            </button>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
             <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
@@ -346,7 +345,7 @@
 
     <template id="portal_invoice_success" name="Invoice success display: payment success"
             inherit_id="account.portal_invoice_success">
-        <xpath expr="//a[hasclass('close')]" position="after">
+        <xpath expr="//button[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
                 <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
                 <span t-if="tx_sudo.provider_id.sudo().done_msg" t-out="tx_sudo.provider_id.sudo().done_msg"/>
