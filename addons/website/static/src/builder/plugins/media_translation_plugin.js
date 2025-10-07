@@ -18,6 +18,11 @@ export class MediaTranslationPlugin extends Plugin {
                 selector: ".media_iframe_video:has(iframe[data-oe-translatable-link])",
                 isTranslationOption: true,
             },
+            {
+                template: "website.DocumentTranslationOption",
+                selector: ".o_file_box:has(a[data-oe-translatable-link])",
+                isTranslationOption: true,
+            },
         ],
         builder_actions: {
             TranslateMediaSrcAction,
@@ -45,6 +50,7 @@ export class TranslateMediaSrcAction extends BuilderAction {
         this.savingMap = {
             images: this.saveImage.bind(this),
             videos: this.saveVideo.bind(this),
+            documents: this.saveDocument.bind(this),
         };
     }
 
@@ -115,6 +121,36 @@ export class TranslateMediaSrcAction extends BuilderAction {
                 revert: () => {
                     this.dependencies.translation.updateTranslationMap(
                         iframeEl,
+                        originalLink,
+                        "data-oe-translatable-link"
+                    );
+                },
+            });
+        }
+    }
+
+    async saveDocument(editingElement, newFileEl) {
+        if (newFileEl) {
+            const fileLinkEl = editingElement.querySelector("a.o_translatable_attribute");
+            const newFileLinkEl = newFileEl.querySelector("a");
+            const originalLink = fileLinkEl.dataset.oeTranslatableLink;
+            const newLink = newFileLinkEl.getAttribute("href");
+            fileLinkEl.href = newLink;
+            fileLinkEl.dataset.oeTranslatableLink = newLink;
+            editingElement.querySelector(".o_file_image").title =
+                newFileEl.querySelector(".o_file_image").title;
+            fileLinkEl.classList.add("oe_translated");
+            this.dependencies.history.applyCustomMutation({
+                apply: () => {
+                    this.dependencies.translation.updateTranslationMap(
+                        fileLinkEl,
+                        newLink,
+                        "data-oe-translatable-link"
+                    );
+                },
+                revert: () => {
+                    this.dependencies.translation.updateTranslationMap(
+                        fileLinkEl,
                         originalLink,
                         "data-oe-translatable-link"
                     );

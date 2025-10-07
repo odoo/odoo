@@ -13,6 +13,7 @@ const TRANSLATED_ATTRS = [
     "title",
     "alt",
     "value",
+    "href",
     "data-oe-translatable-link",
     "data-oe-expression",
 ];
@@ -178,7 +179,7 @@ export class TranslationPlugin extends Plugin {
         const translationRegex =
             /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
-        const matchTag = (el) => el.matches("input, select, textarea, img, div");
+        const matchTag = (el) => el.matches("input, select, textarea, img, div, a");
         for (const translatedAttr of TRANSLATED_ATTRS) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>

@@ -206,7 +206,7 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms,
-            ['<span class="oe_menu_text">Blah</span>'])
+            ['<span class="oe_menu_text">Blah</span>', '/odoo/action-54?menu_id=42'])
 
     def test_translate_xml_with_namespace(self):
         """ Test xml_translate() on elements with namespaces. """
@@ -1298,7 +1298,7 @@ class TestXMLTranslation(TransactionCase):
 
         self.assertEqual(view.arch_db, archf % terms_en)
         self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
-        
+
         # change the order of the text term and the xml term and redo the previous test
         archf = '<form>%s<div>%s</div></form>'
         terms_en = ('<span invisible="1">Draft</span>', 'Draft')

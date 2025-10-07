@@ -80,7 +80,7 @@ TRANSLATED_ATTRS = {
 
 # These attributes must not be exported to .po(t) files and `t-attf-` attributes
 # should not be translated.
-NO_EXPORT_TRANSLATED_ATTRS = {'src', 'data-oe-expression'}
+NO_EXPORT_TRANSLATED_ATTRS = {'src', 'data-oe-expression', 'href'}
 
 TRANSLATED_ATTRS.update(
     {f't-attf-{attr}' for attr in TRANSLATED_ATTRS},
@@ -1252,7 +1252,7 @@ class TranslationReader:
                     re_attr_no_export = r'(%s)=[\'"]' % '|'.join(NO_EXPORT_TRANSLATED_ATTRS) + re.escape(term_en_unescaped) + r'[\'"]'
                     if re.search(re_attr_no_export, value_en_unescaped):
                         # That's not perfect, we could check that the term
-                        # is ONLY in src attributes, but that's not perfect
+                        # is ONLY in src/href attributes, but that's not perfect
                         # either, because we could have this HTML:
                         # <img src="X"/> <div style="background-image: url(X)"/>
                         continue
