@@ -13,7 +13,7 @@
                     <span t-if="data.employee_name">By: <t t-esc="data.employee_name"/></span>
                 </div>
                 <span class="my-4" style="font-size: 150%;">
-                    <span>Order <strong><t t-esc="data.pos_reference"/></strong></span>
+                    <span class='order-ref-prefix'>Order </span><strong><t t-esc="data.pos_reference"/></strong>
                     <strong t-if="data.tracking_number" class="fw-light my-3">
                         # <t t-esc="data.tracking_number"/>
                     </strong>
