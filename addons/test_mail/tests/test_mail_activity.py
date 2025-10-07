@@ -91,8 +91,10 @@ class TestActivityRights(TestActivityCommon):
         ]:
             with self.subTest(user=activity.user_id.name, creator=activity.create_uid.name):
                 # no document access -> based on create_uid / user_id
-                with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
+                with patch.object(MailTestActivity, '_filtered_access', autospec=True, side_effect=_employee_crash):
                     activity = activity.with_user(self.user_employee)
+                    record = self.test_record.with_user(self.user_employee)
+                    can_write = record in record._filtered_access('write')
                     self.assertEqual(activity.can_write, can_write)
                     if can_write:
                         activity.write({'summary': 'Caramba'})
