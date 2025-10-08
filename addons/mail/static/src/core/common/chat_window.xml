@@ -86,13 +86,13 @@
         'ps-2': !hasActionsMenu,
     }" name="threadAvatar">
         <img t-if="thread" class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-        <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.correspondent" size="'sm'"/>
+        <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.channel?.correspondent" size="'sm'"/>
     </div>
     <t t-if="thread?.parent_channel_id">
         <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
         <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
-    <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
+    <CountryFlag t-if="thread?.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
     <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
 </t>
 

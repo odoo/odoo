@@ -75,20 +75,6 @@ const threadPatch = {
             onDelete: (r) => r.delete(),
             sort: (m1, m2) => m1.id - m2.id,
         });
-        /** @type {string} */
-        this.channel_type = undefined;
-        this.correspondent = fields.One("discuss.channel.member", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.computeCorrespondent();
-            },
-        });
-        this.correspondentCountry = fields.One("res.country", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.correspondent?.persona?.country_id ?? this.country_id;
-            },
-        });
         /** @type {"video_full_screen"|undefined} */
         this.default_display_mode = undefined;
         /** @type {Deferred<Thread|undefined>} */
@@ -237,22 +223,16 @@ const threadPatch = {
             (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
         );
     },
-    get areAllMembersLoaded() {
-        return this.member_count === this.channel?.channel_member_ids.length;
-    },
     get avatarUrl() {
         if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
                 unique: this.avatar_cache_key,
             });
         }
-        if (this.correspondent) {
-            return this.correspondent.avatarUrl;
+        if (this.channel?.correspondent) {
+            return this.channel.correspondent.avatarUrl;
         }
         return super.avatarUrl;
-    },
-    get showCorrespondentCountry() {
-        return false;
     },
     /** @override */
     async checkReadAccess() {
@@ -263,37 +243,12 @@ const threadPatch = {
         }
         return res;
     },
-    /** @returns {import("models").ChannelMember} */
-    computeCorrespondent() {
-        if (this.channel?.channel_type === "channel") {
-            return undefined;
-        }
-        const correspondents = this.correspondents;
-        if (correspondents.length === 1) {
-            // 2 members chat.
-            return correspondents[0];
-        }
-        if (correspondents.length === 0 && this.channel?.channel_member_ids.length === 1) {
-            // Self-chat.
-            return this.channel?.channel_member_ids[0] ?? [];
-        }
-        return undefined;
-    },
-    /** @returns {import("models").ChannelMember[]} */
-    get correspondents() {
-        if (!this.channel) {
-            return [];
-        }
-        return this.channel.channel_member_ids.filter(({ persona }) =>
-            persona?.notEq(this.store.self)
-        );
-    },
     get displayName() {
         if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
             return this.self_member_id.custom_channel_name;
         }
-        if (this.channel?.channel_type === "chat" && this.correspondent) {
-            return this.correspondent.name;
+        if (this.channel?.channel_type === "chat" && this.channel?.correspondent) {
+            return this.channel.correspondent.name;
         }
         if (this.channel_name_member_ids.length && !this.name) {
             const nameParts = this.channel_name_member_ids
@@ -518,7 +473,7 @@ const threadPatch = {
         return (
             !this.isTransient &&
             this.typesAllowingCalls.includes(this.channel?.channel_type) &&
-            !this.correspondent?.persona.eq(this.store.odoobot)
+            !this.channel?.correspondent?.persona.eq(this.store.odoobot)
         );
     },
     get isChatChannel() {
