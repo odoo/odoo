@@ -14,9 +14,7 @@ const threadPatch = {
         this.recipients = fields.Many("mail.followers");
         this.activities = fields.Many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
-            onDelete(r) {
-                r.remove();
-            },
+            onDelete: (r) => r?.remove(),
         });
         /** @type {boolean} */
         this.isDisplayedInDiscussAppDesktop = fields.Attr(undefined, {

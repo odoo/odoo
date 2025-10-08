@@ -1340,3 +1340,32 @@ test("Delete record with side-effect compute to insert it should have resulting 
     expect(discussApp.state.status).toEqual("init");
     expect(discussApp.state.thread).toBe(undefined);
 });
+
+test("Can delete record with chained onDelete: () => record.delete()", async () => {
+    (class Channel extends Record {
+        static id = "name";
+        name;
+        thread = fields.One("Thread", { onDelete: (thread) => thread?.delete() }); // intentional onDelete to thread.delete() potentially twice during update cycle
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id;
+        channel = fields.One("Channel", { inverse: "thread" });
+        correspondent = fields.One("User", {
+            compute() {
+                return this.members[0];
+            },
+        });
+        members = fields.Many("User", { onDelete: (user) => user?.delete(), inverse: "threads" }); // intentional onDelete so that re-computed correspondent on delete
+    }).register(localRegistry);
+    (class User extends Record {
+        static id = "name";
+        name;
+        threads = fields.Many("Thread");
+    }).register(localRegistry);
+    const store = await start();
+    const john = store.User.insert("john");
+    const thread = store.Thread.insert({ channel: "general", members: [john] });
+    expectRecord(thread.correspondent).toEqual(john); // intentional observing correspondent field for compute on thread deletion
+    thread.delete();
+    expect(thread.exists()).toBe(false);
+});

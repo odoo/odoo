@@ -110,7 +110,10 @@ export class Store extends Record {
                         const onDelete = record.Model._.fieldsOnDelete.get(fieldName);
                         for (const removedRec of fieldMap.keys()) {
                             try {
-                                onDelete?.call(record._proxy, removedRec._proxy);
+                                onDelete?.call(
+                                    record._proxy,
+                                    removedRec.exists() ? removedRec._proxy : undefined
+                                );
                             } catch (err) {
                                 this.handleError(err);
                             }

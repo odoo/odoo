@@ -68,11 +68,11 @@ const threadPatch = {
             compute() {
                 return this.model === "discuss.channel" ? this.id : undefined;
             },
-            onDelete: (r) => r.delete(),
+            onDelete: (r) => r?.delete(),
         });
         this.channel_member_ids = fields.Many("discuss.channel.member", {
             inverse: "channel_id",
-            onDelete: (r) => r.delete(),
+            onDelete: (r) => r?.delete(),
             sort: (m1, m2) => m1.id - m2.id,
         });
         /** @type {string} */

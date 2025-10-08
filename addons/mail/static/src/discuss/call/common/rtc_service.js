@@ -2159,22 +2159,6 @@ export class Rtc extends Record {
         await this.refreshMicAudioStatus();
     }
 
-    /**
-     * @param {import("models").RtcSession} session
-     */
-    deleteSession(session) {
-        if (session) {
-            if (this.localSession && session.eq(this.localSession)) {
-                this.log(this.localSession, "self session deleted, ending call", {
-                    important: true,
-                });
-                this.endCall();
-            }
-            this.disconnect(session);
-            session.delete();
-        }
-    }
-
     formatInfo() {
         this.localSession.is_camera_on = Boolean(this.state.cameraTrack);
         this.localSession.is_screen_sharing_on = Boolean(this.state.screenTrack);

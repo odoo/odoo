@@ -314,6 +314,9 @@ export class Record {
 
     delete() {
         const record = toRaw(this)._raw;
+        if (!record.exists()) {
+            return;
+        }
         const store = record._rawStore;
         return store.MAKE_UPDATE(function recordDelete() {
             store._.ADD_QUEUE("delete", record);
