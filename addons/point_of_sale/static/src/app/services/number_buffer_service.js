@@ -162,7 +162,11 @@ class NumberBuffer extends EventBus {
             : 0;
     }
     _onKeyboardInput(event) {
-        if (Object.keys(this.overlay.overlays).length) {
+        const overlays = Object.values(this.overlay.overlays);
+        if (
+            overlays.length &&
+            !overlays.some((overlay) => overlay.props.subComponent?.name === "NumberPopup")
+        ) {
             return;
         }
         return (
