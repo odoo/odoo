@@ -23,14 +23,12 @@ from __future__ import annotations
 
 import collections
 import contextlib
-import datetime
 import functools
 import inspect
 import itertools
 import io
 import json
 import logging
-import pytz
 import re
 import typing
 import uuid
@@ -40,18 +38,15 @@ from collections.abc import Callable, Mapping
 from inspect import getmembers
 from operator import attrgetter, itemgetter
 
-import babel
-import babel.dates
 import psycopg2.errors
 import psycopg2.extensions
 from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
-    clean_context, date_utils,
-    DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
+    clean_context, format_list,
     frozendict, get_lang, OrderedSet,
-    ormcache, partition, Query, split_every, unique,
+    ormcache, partition, split_every, unique,
     SQL, sql, groupby,
 )
 from odoo.tools.constants import PREFETCH_MAX
@@ -68,6 +63,7 @@ from .fields_temporal import Date, Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
+from .query import Query
 from .utils import (
     OriginIds, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,

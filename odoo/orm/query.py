@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
-    from odoo.orm.models import BaseModel
+    from .models import BaseModel
 
-from .sql import SQL, make_identifier
+from odoo.tools.sql import SQL, make_identifier
 
 
 def _sql_from_table(alias: str, table: SQL) -> SQL:
@@ -103,7 +103,7 @@ class Query:
 
     def add_where(self, where_clause: str | SQL, where_params=()):
         """ Add a condition to the where clause. """
-        self._where_clauses.append(SQL(where_clause, *where_params)) # pylint: disable = sql-injection
+        self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable = sql-injection
         self._ids = self._ids and None
 
     def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str) -> str:
@@ -144,7 +144,7 @@ class Query:
 
     @order.setter
     def order(self, value: SQL | str | None):
-        self._order = SQL(value) if value is not None else None # pylint: disable = sql-injection
+        self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
 
     @property
     def table(self) -> str:

@@ -6,7 +6,8 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import Query, SQL
+from odoo.models import Query
+from odoo.tools import SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 

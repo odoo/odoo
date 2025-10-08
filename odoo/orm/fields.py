@@ -17,11 +17,12 @@ from operator import attrgetter
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tools import Query, SQL, sql
+from odoo.tools import SQL, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, ReadonlyDict, Sentinel, unique
 
 from .domains import Domain
+from .query import Query
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
 
 if typing.TYPE_CHECKING:
