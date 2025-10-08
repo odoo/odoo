@@ -65,8 +65,8 @@ test("Do not set contenteditable attribute on data-oe-readonly", async () => {
     class TestPlugin extends Plugin {
         static id = "testPlugin";
         resources = {
-            force_editable_selector: ".target",
-            force_not_editable_selector: ".non-editable",
+            content_editable_selectors: ".target",
+            content_not_editable_selectors: ".non-editable",
         };
     }
     addPlugin(TestPlugin);
@@ -123,4 +123,13 @@ test("feff on links are cleaned up", async () => {
     expect(link.innerText).toMatch(/\u{FEFF}/u);
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect.verifySteps(["save"]);
+});
+
+test("Set contenteditable to true on social media title", async () => {
+    await setupWebsiteBuilder(`
+        <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media">
+            <h4 class="s_social_media_title">Social Media</h4>
+        </div>
+    `);
+    expect(":iframe .s_social_media_title").toHaveAttribute("contenteditable", "true");
 });
