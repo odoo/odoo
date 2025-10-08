@@ -59,7 +59,7 @@ export class Message extends Record {
             return decorateEmojis(this.translationValue) ?? "";
         },
     });
-    composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r?.delete() });
     date = fields.Datetime();
     /** @type {string} */
     default_subject;

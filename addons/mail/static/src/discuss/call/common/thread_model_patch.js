@@ -31,10 +31,7 @@ const ThreadPatch = {
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout;
         this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
-            /** @this {import("models").Thread} */
-            onDelete(r) {
-                this.store.env.services["discuss.rtc"].deleteSession(r);
-            },
+            onDelete: (r) => r?.delete(),
             /** @this {import("models").Thread} */
             async onUpdate() {
                 const hadSelfSession = this.hadSelfSession;

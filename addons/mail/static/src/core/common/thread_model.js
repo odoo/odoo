@@ -85,7 +85,7 @@ export class Thread extends Record {
     composer = fields.One("Composer", {
         compute: () => ({}),
         inverse: "thread",
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     counter = 0;
     counter_bus_id = 0;
@@ -111,14 +111,14 @@ export class Thread extends Record {
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     selfFollower = fields.One("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     /** @type {integer|undefined} */
     followersCount;

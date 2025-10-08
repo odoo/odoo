@@ -23,7 +23,7 @@ export class DiscussChannel extends Record {
     });
     thread = fields.One("mail.thread", {
         inverse: "channel",
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
 }
 

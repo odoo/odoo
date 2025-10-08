@@ -54,6 +54,15 @@ export class RtcSession extends Record {
         return record;
     }
 
+    delete() {
+        if (this.eq(this.store.rtc.localSession)) {
+            this.store.rtc.log(this, "self session deleted, ending call", { important: true });
+            this.store.rtc.endCall();
+        }
+        this.store.rtc.disconnect(this);
+        super.delete(...arguments);
+    }
+
     // Server data
     channel_member_id = fields.One("discuss.channel.member", { inverse: "rtcSession" });
     partner_id = fields.One("res.partner", {
