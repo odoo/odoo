@@ -1054,12 +1054,11 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        if (this.editable.contains(this.document.activeElement)) {
+        const { editableSelection, currentSelectionIsInEditable } = this.getSelectionData();
+        if (this.editable.contains(this.document.activeElement) && currentSelectionIsInEditable) {
             // Editor has focus — nothing to do.
             return;
         }
-
-        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
 
         const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
         // If selection includes a non-editable element, focusing editor will move cursor to different position.
@@ -1071,7 +1070,7 @@ export class SelectionPlugin extends Plugin {
             this.editable.focus({ preventScroll: true });
         }
 
-        if (!documentSelectionIsInEditable) {
+        if (!currentSelectionIsInEditable) {
             // Selection is outside the editor — restore it.
             const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
             const selection = this.document.getSelection();
