@@ -4,6 +4,7 @@
 import logging
 
 from odoo.tests import HttpCase, tagged
+from odoo.addons.hr.tests.test_utils import get_admin_employee
 
 _logger = logging.getLogger(__name__)
 
@@ -28,9 +29,8 @@ class TestSaleTimesheetUi(HttpCase):
 
         # Enable the "Milestones" feature to be able to create milestones on this tour.
         cls.env.ref('base.group_user').sudo().implied_ids |= cls.env.ref('project.group_project_milestone')
-
-        admin = cls.env.ref('base.user_admin')
-        admin.employee_id.hourly_cost = 75
+        cls.admin_employee = get_admin_employee(cls.env)
+        cls.admin_employee.hourly_cost = 75
 
     def test_ui(self):
         self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()

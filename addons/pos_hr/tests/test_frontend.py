@@ -11,16 +11,23 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         super().setUpClass()
 
         cls.env.user.group_ids += cls.env.ref('hr.group_hr_user')
+        cls.env.user.group_ids |= cls.env.ref('hr.group_hr_manager')
+        payroll_user_group = cls.env.ref("hr_payroll.group_hr_payroll_user", raise_if_not_found=False)
+        if payroll_user_group:
+            cls.env.user.group_ids |= payroll_user_group
 
         cls.main_pos_config.write({"module_pos_hr": True})
 
         # Admin employee
-        cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
+        cls.admin = cls.env['hr.employee'].create({
             "date_version": '2000-01-01',
             "company_id": cls.env.company.id,
             "user_id": cls.pos_admin.id,
             "name": "Mitchell Admin",
             "pin": False,
+            'department_id': cls.env.ref('hr.dep_administration').id,
+            'address_id': cls.env.ref('base.main_partner').id,
+            'structure_type_id': cls.env.ref('hr.structure_type_employee').id,
         })
 
         # Managers
