@@ -294,13 +294,16 @@ export class Dropdown extends Component {
         this.defaultDirection = this.position.split("-")[0];
         this.setTargetDirectionClass(this.defaultDirection);
 
+        const clickHandler = (ev) => this.handleClick(ev);
+        const mouseEnterHandler = (ev) => this.handleMouseEnter(ev);
+
         if (!this.props.manual) {
-            target.addEventListener("click", this.handleClick.bind(this));
-            target.addEventListener("mouseenter", this.handleMouseEnter.bind(this));
+            target.addEventListener("click", clickHandler);
+            target.addEventListener("mouseenter", mouseEnterHandler);
 
             return () => {
-                target.removeEventListener("click", this.handleClick.bind(this));
-                target.removeEventListener("mouseenter", this.handleMouseEnter.bind(this));
+                target.removeEventListener("click", clickHandler);
+                target.removeEventListener("mouseenter", mouseEnterHandler);
             };
         }
     }
