@@ -363,6 +363,17 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            if any(
+                (l.name and len(l.name) > 100)
+                or (l.product_id and len(l.product_id.name) > 100)
+                for l in invoices.invoice_line_ids
+            ):
+                invoices.message_post(
+                    body=_(
+                        "Some product name(s)/description(s) exceeded the 100-character limit "
+                        "required for the e-waybill and were automatically trimmed."
+                    )
+                )
             body = Markup("""
                 <b>{}</b><br/>
                 <ul>
@@ -523,9 +534,9 @@ class AccountEdiFormat(models.Model):
         extract_digits = self._l10n_in_edi_extract_digits
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         line_details = {
-            "productName": line.product_id.name,
+            "productName": line.product_id.name[:100] if line.product_id else "",
             "hsnCode": extract_digits(line.product_id.l10n_in_hsn_code),
-            "productDesc": line.name,
+            "productDesc": line.name[:100] if line.name else "",
             "quantity": line.quantity,
             "qtyUnit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),
