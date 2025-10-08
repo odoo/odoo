@@ -74,7 +74,15 @@ class TestUBLTR(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
         })
 
+<<<<<<< cd5775258d75296aed1b09fbd305a49a03a536ad:addons/l10n_tr_nilvera_einvoice/tests/test_xml_ubl_tr.py
     def _generate_invoice_xml(self, partner_id, **kwargs):
+||||||| b1a007e4db9f6f844c6d6cee6963d6bc3ba024b8:addons/l10n_tr_nilvera_einvoice/tests/test_xml_ubl_tr_common.py
+    def _generate_invoice_xml(self, partner_id, tax=None, **kwargs):
+        invoice_tax = (tax and tax.ids) or self.tax_20.ids
+=======
+    def _generate_invoice_xml(self, partner_id, tax=None, include_invoice=False, **kwargs):
+        invoice_tax = (tax and tax.ids) or self.tax_20.ids
+>>>>>>> 100b496bafb50e2e9064475dd5fbed10c3cb8fd9:addons/l10n_tr_nilvera_einvoice/tests/test_xml_ubl_tr_common.py
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'company_id': self.company_data['company'].id,
@@ -94,6 +102,7 @@ class TestUBLTR(AccountTestInvoicingCommon):
             **kwargs,
         })
         invoice.action_post()
+<<<<<<< cd5775258d75296aed1b09fbd305a49a03a536ad:addons/l10n_tr_nilvera_einvoice/tests/test_xml_ubl_tr.py
         generated_xml = self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]
         return generated_xml
 
@@ -144,3 +153,10 @@ class TestUBLTR(AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(generated_xml),
             self.get_xml_tree_from_string(expected_xml),
         )
+||||||| b1a007e4db9f6f844c6d6cee6963d6bc3ba024b8:addons/l10n_tr_nilvera_einvoice/tests/test_xml_ubl_tr_common.py
+        return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]
+=======
+        if include_invoice:
+            return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0], invoice
+        return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]
+>>>>>>> 100b496bafb50e2e9064475dd5fbed10c3cb8fd9:addons/l10n_tr_nilvera_einvoice/tests/test_xml_ubl_tr_common.py
