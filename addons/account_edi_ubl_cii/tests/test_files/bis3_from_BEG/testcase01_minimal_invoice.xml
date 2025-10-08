@@ -4,7 +4,7 @@
  xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
     <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
     <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
-    <cbc:ID>2019000001</cbc:ID>
+    <cbc:ID>INV/2018/00001</cbc:ID>
     <cbc:IssueDate>2018-04-09</cbc:IssueDate>
     <cbc:DueDate>2018-05-09</cbc:DueDate>
     <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
@@ -13,11 +13,12 @@
     <cac:OrderReference>
         <cbc:ID>YR127129</cbc:ID>
     </cac:OrderReference>
+    <cac:AdditionalDocumentReference>___ignore___</cac:AdditionalDocumentReference>
     <cac:AccountingSupplierParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="9956">0123456749</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0208">0123456749</cbc:EndpointID>
             <cac:PartyName>
-                <cbc:Name>Demo Shop NV - Commercial name</cbc:Name>
+                <cbc:Name>Demo Shop NV</cbc:Name>
             </cac:PartyName>
             <cac:PostalAddress>
                 <cbc:StreetName>Main street 123</cbc:StreetName>
@@ -35,20 +36,19 @@
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName>Demo Shop NV</cbc:RegistrationName>
-                <cbc:CompanyID>0123456749</cbc:CompanyID>
-                <cbc:CompanyLegalForm>RPR BRUSSEL</cbc:CompanyLegalForm>
+                <cbc:CompanyID>BE0123456749</cbc:CompanyID>
             </cac:PartyLegalEntity>
             <cac:Contact>
-                <cbc:Name>www.demoshop.be</cbc:Name>
+                <cbc:Name>Demo Shop NV</cbc:Name>
                 <cbc:ElectronicMail>myname@demoshop.be</cbc:ElectronicMail>
             </cac:Contact>
         </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="9956">0214168947</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0208">0214168947</cbc:EndpointID>
             <cac:PartyName>
-                <cbc:Name>Hotel Local SPRL - Nom commercial</cbc:Name>
+                <cbc:Name>Hotel Local SPRL, Hotel Local SPRL - Nom commercial</cbc:Name>
             </cac:PartyName>
             <cac:PostalAddress>
                 <cbc:StreetName>Rue de la Mairie 456</cbc:StreetName>
@@ -66,15 +66,34 @@
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName>Hotel Local SPRL</cbc:RegistrationName>
-                <cbc:CompanyID>0214168947</cbc:CompanyID>
+                <cbc:CompanyID>BE0214168947</cbc:CompanyID>
             </cac:PartyLegalEntity>
+            <cac:Contact>
+              <cbc:Name>Hotel Local SPRL - Nom commercial</cbc:Name>
+            </cac:Contact>
         </cac:Party>
     </cac:AccountingCustomerParty>
     <cac:Delivery>
         <cbc:ActualDeliveryDate>2018-04-01</cbc:ActualDeliveryDate>
+        <cac:DeliveryLocation>
+          <cac:Address>
+            <cbc:StreetName>Rue de la Mairie 456</cbc:StreetName>
+            <cbc:CityName>LIEGE</cbc:CityName>
+            <cbc:PostalZone>4000</cbc:PostalZone>
+            <cac:Country>
+              <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+            </cac:Country>
+          </cac:Address>
+        </cac:DeliveryLocation>
+        <cac:DeliveryParty>
+          <cac:PartyName>
+            <cbc:Name>Hotel Local SPRL - Nom commercial</cbc:Name>
+          </cac:PartyName>
+        </cac:DeliveryParty>
     </cac:Delivery>
     <cac:PaymentMeans>
-        <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>
+        <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+        <cbc:PaymentID>INV/2018/00001</cbc:PaymentID>
         <cac:PayeeFinancialAccount>
             <cbc:ID>BE54000000000097</cbc:ID>
             <cac:FinancialInstitutionBranch>
@@ -114,6 +133,7 @@
         <cbc:LineExtensionAmount currencyID="EUR">2600.00</cbc:LineExtensionAmount>
         <cbc:TaxExclusiveAmount currencyID="EUR">2600.00</cbc:TaxExclusiveAmount>
         <cbc:TaxInclusiveAmount currencyID="EUR">3116.00</cbc:TaxInclusiveAmount>
+        <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
         <cbc:PayableAmount currencyID="EUR">3116.00</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
     <cac:InvoiceLine>
@@ -121,6 +141,7 @@
         <cbc:InvoicedQuantity unitCode="C62">40.0</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">2400.00</cbc:LineExtensionAmount>
         <cac:Item>
+            <cbc:Description>Good Y</cbc:Description>
             <cbc:Name>Good Y</cbc:Name>
             <cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
@@ -139,6 +160,7 @@
         <cbc:InvoicedQuantity unitCode="C62">10.0</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
         <cac:Item>
+            <cbc:Description>Good X</cbc:Description>
             <cbc:Name>Good X</cbc:Name>
             <cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>

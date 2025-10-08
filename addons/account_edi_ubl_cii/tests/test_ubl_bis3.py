@@ -664,31 +664,8 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self.assertTrue(invoice.ubl_cii_xml_id)
 
-        # TODO: would maybe be better to patch the generating function (but issue: old generating function)
-        adjusted_output_tree = self.with_applied_xpath(
-            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
-            '''
-            <xpath expr="//*[local-name()='ID']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:ID>2019000001</cbc:ID>
-            </xpath>
-            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0123456749']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:CompanyID>0123456749</cbc:CompanyID>
-            </xpath>
-            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']" position="replace"/>
-            <xpath expr="//*[local-name()='Delivery']/*[local-name()='DeliveryLocation']" position="replace"/>
-            <xpath expr="//*[local-name()='Delivery']/*[local-name()='DeliveryParty']" position="replace"/>
-            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace"/>
-            <xpath expr="//*[local-name()='LegalMonetaryTotal']/*[local-name()='PrepaidAmount']" position="replace"/>
-            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Good Y']" position="replace"/>
-            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Good X']" position="replace"/>
-            '''
-        )
         self.assertXmlTreeEqual(
-            adjusted_output_tree,
+            etree.fromstring(invoice.ubl_cii_xml_id.raw),
             self._get_xml_tree_from_file('bis3_from_BEG/testcase01_minimal_invoice'),
         )
 
