@@ -71,7 +71,7 @@ function createOdooChartRuntime(chart, getters) {
         trendDataSetsValues,
         topPadding: getTopPaddingForDashboard(definition, getters),
     };
-
+    // config.options.plugins.customHtmlLegend = false;
     const config = {
         type: "bar",
         data: {
