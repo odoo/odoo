@@ -9,8 +9,11 @@
 </template>
 
 <template id="index" inherit_id="website_partnership.index">
-    <xpath expr="//h1[@id='page_title']" position="inside">
-        <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+    <xpath expr="//h1[@id='page_title']" position="replace">
+        <h1 id="page_title" class="me-auto mb-0 h4">
+            <span>Find a partner</span>
+            <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']"> in <t t-out="country['country_id'][1]"/></span></t>
+        </h1>
     </xpath>
     <xpath expr="//a[@id='filter_category_link']" position="attributes">
         <attribute name="t-attf-href">/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }</attribute>
