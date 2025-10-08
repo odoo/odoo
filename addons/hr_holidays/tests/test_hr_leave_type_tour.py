@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
+from datetime import date
 
 from odoo import Command
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
-
-from datetime import date
+from odoo.addons.hr.tests.test_utils import get_admin_employee
 
 
 @tagged('post_install', '-at_install')
@@ -35,7 +35,7 @@ class TestHrLeaveTypeTour(HttpCase):
         admin_user.write({
             'email': 'mitchell.admin@example.com',
         })
-        admin_employee = admin_user.employee_id
+        admin_employee = get_admin_employee(self.env)
         HRLeave = self.env['hr.leave']
         date_from = date(2022, 1, 17)
         date_to = date(2022, 1, 18)
