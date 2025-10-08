@@ -128,14 +128,10 @@ export class MassMailingHtmlField extends HtmlField {
         this.iframeLoaded = new Deferred();
     }
 
-    /**
-     * @returns {Boolean} whether the current iframe finished loading and is
-     *          still currently in use.
-     */
     async ensureIframeLoaded() {
         const iframeLoaded = this.iframeLoaded;
-        await iframeLoaded;
-        return iframeLoaded === this.iframeLoaded;
+        const iframeInfo = await iframeLoaded;
+        return iframeLoaded === this.iframeLoaded ? iframeInfo : undefined;
     }
 
     onIframeLoad(iframeLoaded) {
@@ -304,9 +300,11 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async updateValue(value) {
-        if (!(await this.ensureIframeLoaded())) {
+        const iframeInfo = await this.ensureIframeLoaded();
+        if (!iframeInfo) {
             return;
         }
+        const { bundleControls } = iframeInfo;
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
         const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
@@ -318,11 +316,13 @@ export class MassMailingHtmlField extends HtmlField {
         const processingContainer = this.iframeRef.el.contentDocument.querySelector(
             ".o_mass_mailing_processing_container"
         );
+        bundleControls["mass_mailing.assets_inside_builder_iframe"]?.toggle(false);
         processingContainer.append(processingEl);
         const cssRules = getCSSRules(this.iframeRef.el.contentDocument);
         await toInline(processingEl, cssRules);
         const inlineValue = processingEl.innerHTML;
         processingEl.remove();
+        bundleControls["mass_mailing.assets_inside_builder_iframe"]?.toggle(true);
         this.iframeRef.el.style.width = "";
         if (shouldRestoreDisplayNone) {
             this.iframeRef.el.classList.add("d-none");
