@@ -5,8 +5,8 @@
         <xpath expr="//t[@t-if='not disable_database_manager']" position="replace">
             <!-- Remove the manage databases link -->
         </xpath>
-        <xpath expr="//a[contains(@href, 'odoo.com')]/span" position="replace">
-            <span>Blue</span>
+        <xpath expr="//a[@href='https://www.odoo.com?utm_source=db&amp;utm_medium=auth']/span" position="replace">
+            <span style="font-weight: bold; color: #007bff;">Blue</span>
         </xpath>
     </template>
 </odoo>

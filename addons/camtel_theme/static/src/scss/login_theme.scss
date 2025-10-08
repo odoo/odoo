@@ -1,5 +1,26 @@
 // CAMTEL Theme - Login Page Customization
-// Blue buttons with white text
+// Background image + Blue buttons with white text
+
+// Login page background image
+html, body, .o_web_client {
+  background-image: url('/camtel_theme/static/src/img/warehouse.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  min-height: 100vh !important;
+}
+
+// Ensure login form stands out over background
+.o_login .card,
+.oe_login .card,
+.web_login .card,
+.o_database_list {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(5px) !important;
+}
 
 // Blue login button with white text
 .oe_login_buttons button[type="submit"].btn-primary,
@@ -58,4 +79,3 @@ button[type="submit"].btn-primary,
     color: #ffffff !important;
   }
 }
-

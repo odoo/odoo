@@ -370,9 +370,10 @@ code {
 <p>A custom Odoo theme module for CAMTEL that provides login page customizations.</p>
 <h2 id="features">Features</h2>
 <ul>
+<li><strong>Warehouse Background Image</strong>: Full-screen warehouse.jpg background image on login page</li>
 <li><strong>Blue Buttons</strong>: All login buttons are styled with blue background and white text</li>
 <li><strong>Remove Manage Databases</strong>: The &quot;Manage Databases&quot; link is hidden from the login page</li>
-<li><strong>Custom Footer</strong>: Changes &quot;Powered by Odoo&quot; to &quot;Powered by Blue&quot;</li>
+<li><strong>Custom Footer</strong>: Changes &quot;Powered by Odoo&quot; to &quot;Powered by Blue&quot; (bold and blue text)</li>
 </ul>
 <h2 id="installation">Installation</h2>
 <ol>
@@ -381,24 +382,28 @@ code {
 <li>Install the &quot;CAMTEL Theme&quot; module</li>
 </ol>
 <h2 id="technical-details">Technical Details</h2>
+<h2 id="technical-details">Technical Details</h2>
 <ul>
-<li>Inherits from <code>web.login_layout</code> template</li>
-<li>Uses XPath expressions to modify the login page structure</li>
-<li>Applies SCSS styling to buttons via asset bundles</li>
+<li>Inherits from <code>web.login_layout</code> template using XPath expressions</li>
+<li>Applies SCSS styling to buttons and background via asset bundles</li>
+<li>Uses inline styles for footer text customization</li>
 <li>Compatible with Odoo 19.0</li>
 </ul>
 <h2 id="files">Files</h2>
 <ul>
 <li><code>__manifest__.py</code>: Module definition and metadata</li>
 <li><code>__init__.py</code>: Python initialization (empty for theme modules)</li>
+<li><code>README.md</code>: Documentation</li>
 <li><code>views/webclient_templates.xml</code>: Template modifications for login page</li>
-<li><code>static/src/scss/login_theme.scss</code>: SCSS styling for blue buttons</li>
+<li><code>static/src/scss/login_theme.scss</code>: SCSS styling for background and buttons</li>
+<li><code>static/src/img/warehouse.jpg</code>: Background image for login page</li>
 </ul>
 <h2 id="customization">Customization</h2>
 <p>The module can be further customized by modifying:</p>
 <ul>
-<li><code>login_theme.scss</code>: Change button colors and styling</li>
+<li><code>login_theme.scss</code>: Change button colors, background image, or styling</li>
 <li><code>webclient_templates.xml</code>: Modify which elements are shown/hidden</li>
+<li><code>warehouse.jpg</code>: Replace with a different background image</li>
 </ul>
 
 </body>
