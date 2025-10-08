@@ -169,7 +169,7 @@
                                             t-att-value="product.type"
                                         />
                                         <div
-                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or product._has_multiple_uoms()) and 'd-none' or ''}}"
+                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or product_variant._has_multiple_uoms()) and 'd-none' or ''}}"
                                         >
                                             <t t-call="website_sale.variants">
                                                 <t t-set="ul_class" t-valuef="flex-column" />
@@ -493,14 +493,14 @@
             </t>
         </ul>
         <ul
-            t-if="product._has_multiple_uoms()"
+            t-if="product_variant._has_multiple_uoms()"
             t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
         >
             <li>
                 <!-- Separate template to reduce views duplication -->
                 <t t-call="website_sale.packaging_title"/>
                 <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
-                    <t t-set="product_uoms" t-value="product._get_available_uoms()"/>
+                    <t t-set="product_uoms" t-value="product_variant._get_available_uoms()"/>
                     <t t-foreach="product_uoms" t-as="uom">
                         <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
                         <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">

@@ -147,7 +147,8 @@
                                         options="{'no_quick_create': True, 'edit_tags': True}"
                                         groups="uom.group_uom"
                                         force_save="1"
-                                        context="{'product_id': product_variant_id if product_variant_count == 1 else False, 'product_ids': product_variant_ids, 'show_variant_name': product_variant_count > 1}"/>
+                                        invisible="product_variant_count &gt; 1"
+                                        context="{'product_id': product_variant_id}"/>
                                 </group>
                                 <group name="extra_info" string="Extra Info">
                                     <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
@@ -522,6 +523,7 @@
                     <field name="additional_product_tag_ids" widget="many2many_tags"/>
                 </field>
                 <field name="uom_ids" position="attributes">
+                    <attribute name="invisible">0</attribute>
                     <attribute name="context">{'product_id': id}</attribute>
                 </field>
             </field>

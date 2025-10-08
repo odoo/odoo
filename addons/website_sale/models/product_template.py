@@ -671,6 +671,9 @@ class ProductTemplate(models.Model):
             # price information regarding the product
             combination_info['compare_list_price'] = 0
 
+        if product_or_template.is_product_variant and product_or_template._has_multiple_uoms():
+            combination_info['available_uoms'] = product_or_template._get_available_uoms()
+
         return combination_info
 
     @api.model
