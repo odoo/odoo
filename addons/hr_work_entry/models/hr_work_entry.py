@@ -216,7 +216,7 @@ class HrWorkEntry(models.Model):
     def create(self, vals_list):
         vals_list = [self._set_current_contract(vals) for vals in vals_list]
         company_by_employee_id = {}
-        for vals in vals_list:
+        for vals in vals_list[:]:
             if (
                 not 'amount_rate' in vals
                 and (work_entry_type_id := vals.get('work_entry_type_id'))
@@ -229,6 +229,15 @@ class HrWorkEntry(models.Model):
                 employee = self.env['hr.employee'].browse(vals['employee_id'])
                 company_by_employee_id[employee.id] = employee.company_id.id
             vals['company_id'] = company_by_employee_id[vals['employee_id']]
+            existing_entry = self.env['hr.work.entry'].search([
+                ('employee_id', '=', vals['employee_id']),
+                ('date', '=', vals['date']),
+                ('work_entry_type_id', '=', vals.get('work_entry_type_id')),
+                ('state', '!=', 'validated'),
+            ], limit=1)
+            if existing_entry:
+                existing_entry.write({'duration': existing_entry.duration + vals['duration']})
+                vals_list.remove(vals)
         work_entries = super().create(vals_list)
         work_entries._check_if_error()
         return work_entries
