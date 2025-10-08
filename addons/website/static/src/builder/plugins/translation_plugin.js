@@ -49,6 +49,7 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
+    static shared = ["getElToTranslationInfoMap"];
 
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -321,6 +322,10 @@ export class TranslationPlugin extends Plugin {
                 }
             });
         }
+    }
+
+    getElToTranslationInfoMap() {
+        return this.elToTranslationInfoMap;
     }
 
     updateTranslationMap(translateEl, translation, attrName) {
