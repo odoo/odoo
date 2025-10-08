@@ -37,13 +37,13 @@
 
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+        <a t-attf-href="/calendar/meeting/accept?token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}"
             t-attf-style="display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Accept</a>
-        <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+        <a t-attf-href="/calendar/meeting/decline?token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}"
             t-attf-style="display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Decline</a>
-        <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}"
+        <a t-attf-href="/calendar/meeting/view?token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}"
             t-attf-style="display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;">
             View</a>
     </div>
@@ -167,13 +167,13 @@
         </t>
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        <a t-attf-href="/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
+        <a t-attf-href="/calendar/meeting/accept?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}"
             t-attf-style="display: inline-block; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Accept</a>
-        <a t-attf-href="/calendar/meeting/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
+        <a t-attf-href="/calendar/meeting/decline?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}"
             t-attf-style="display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Decline</a>
-        <a t-attf-href="/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
+        <a t-attf-href="/calendar/meeting/view?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}"
             t-attf-style="display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;">
             View</a>
     </div>
@@ -274,13 +274,13 @@
         <span style="display: block; margin-top: 8px;">This is a reminder for the event below.</span>
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
-        <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
+        <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}"
             t-attf-style="display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Accept</a>
-        <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
+        <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}"
             t-attf-style="display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Decline</a>
-        <a t-attf-href="/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}" 
+        <a t-attf-href="/calendar/meeting/view?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}"
             t-attf-style="display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;">
             View</a>
     </div>
