@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { closestElement, firstLeaf } from "../utils/dom_traversal";
+import { closestElement, firstLeaf, selectElements } from "../utils/dom_traversal";
 import {
     isEmptyBlock,
     isListItemElement,
@@ -30,7 +30,7 @@ export class SeparatorPlugin extends Plugin {
             categoryId: "structure",
             commandId: "insertSeparator",
         }),
-        force_not_editable_selector: "hr",
+        content_not_editable_providers: (rootEl) => [...selectElements(rootEl, "hr")],
         contenteditable_to_remove_selector: "hr[contenteditable]",
         shorthands: [
             {
