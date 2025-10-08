@@ -165,10 +165,21 @@ function getGenericSerializer(value) {
 }
 
 function makeObjectCache() {
-    const cache = new Set();
+    const cache = new WeakSet();
     return {
-        add: (...values) => values.forEach((value) => cache.add(value)),
-        has: (...values) => values.every((value) => cache.has(value)),
+        add: (...values) => {
+            for (const value of values) {
+                cache.add(value);
+            }
+        },
+        has: (...values) => {
+            for (const value of values) {
+                if (!cache.has(value)) {
+                    return false;
+                }
+            }
+            return true;
+        },
     };
 }
 
@@ -203,6 +214,51 @@ function stringSort(a, b) {
 function truncate(value, length = MAX_HUMAN_READABLE_SIZE) {
     const strValue = String(value);
     return strValue.length <= length ? strValue : strValue.slice(0, length) + ELLIPSIS;
+}
+
+/**
+ * @template T
+ * @param {T} value
+ * @param {ReturnType<makeObjectCache>} cache
+ * @returns {T}
+ */
+function _deepCopy(value, cache) {
+    if (!value) {
+        return value;
+    }
+    if (typeof value === "function") {
+        if (value.name) {
+            return `<function ${value.name}>`;
+        } else {
+            return "<anonymous function>";
+        }
+    }
+    if (typeof value === "object" && !Markup.isMarkup(value)) {
+        if (isInstanceOf(value, String, Number, Boolean)) {
+            return value;
+        }
+        if (isNode(value)) {
+            // Nodes
+            return value.cloneNode(true);
+        } else if (isInstanceOf(value, Date, RegExp)) {
+            // Dates & regular expressions
+            return new (getConstructor(value))(value);
+        } else if (isIterable(value)) {
+            const isArray = $isArray(value);
+            const valueArray = isArray ? value : [...value];
+            // Iterables
+            const values = valueArray.map((item) => _deepCopy(item, cache));
+            return $isArray(value) ? values : new (getConstructor(value))(values);
+        } else {
+            // Other objects
+            if (cache.has(value)) {
+                return S_CIRCULAR;
+            }
+            cache.add(value);
+            return $fromEntries($ownKeys(value).map((key) => [key, _deepCopy(value[key], cache)]));
+        }
+    }
+    return value;
 }
 
 /**
@@ -521,6 +577,8 @@ class QueryPartialString extends QueryString {
     compareFn = getFuzzyScore;
 }
 
+const EMPTY_CONSTRUCTOR = { name: null };
+
 /** @type {Map<Function, (value: unknown) => string>} */
 const GENERIC_SERIALIZERS = new Map([
     [BigInt, (v) => v.valueOf()],
@@ -715,45 +773,6 @@ export function createMock(target, descriptors) {
 }
 
 /**
- * @template T
- * @param {T} value
- * @returns {T}
- */
-export function deepCopy(value) {
-    if (!value) {
-        return value;
-    }
-    if (typeof value === "function") {
-        if (value.name) {
-            return `<function ${value.name}>`;
-        } else {
-            return "<anonymous function>";
-        }
-    }
-
-    if (typeof value === "object" && !Markup.isMarkup(value)) {
-        if (isInstanceOf(value, String, Number, Boolean)) {
-            return value;
-        }
-        if (isNode(value)) {
-            // Nodes
-            return value.cloneNode(true);
-        } else if (isInstanceOf(value, Date, RegExp)) {
-            // Dates & regular expressions
-            return new (getConstructor(value))(value);
-        } else if (isIterable(value)) {
-            // Iterables
-            const values = [...value].map(deepCopy);
-            return $isArray(value) ? values : new (getConstructor(value))(values);
-        } else {
-            // Other objects
-            return $fromEntries($ownKeys(value).map((key) => [key, deepCopy(value[key])]));
-        }
-    }
-    return value;
-}
-
-/**
  * @template {(...args: any[]) => any} T
  * @param {T} fn
  */
@@ -799,6 +818,15 @@ export function debounce(fn, delay) {
             }, delay);
         },
     }[name];
+}
+
+/**
+ * @template T
+ * @param {T} value
+ * @returns {T}
+ */
+export function deepCopy(value) {
+    return _deepCopy(value, makeObjectCache());
 }
 
 /**
@@ -955,7 +983,7 @@ export function generateHash(...strings) {
 export function getConstructor(value) {
     const { constructor } = value;
     if (constructor !== Object) {
-        return constructor || { name: null };
+        return constructor || EMPTY_CONSTRUCTOR;
     }
     const str = value.toString();
     const match = str.match(R_OBJECT);
@@ -2006,6 +2034,7 @@ export const STORAGE = {
 };
 
 export const S_ANY = Symbol("any value");
+export const S_CIRCULAR = Symbol("circular object");
 export const S_NONE = Symbol("no value");
 
 export const R_QUERY_EXACT = new RegExp(
