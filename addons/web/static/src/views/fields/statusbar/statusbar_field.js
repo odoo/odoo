@@ -81,8 +81,8 @@ export class StatusBarField extends Component {
         );
 
         onWillRender(() => {
+            Object.assign(this.items, this.getSortedItems());
             if (status !== "adjusting") {
-                Object.assign(this.items, this.getSortedItems());
                 status = "shouldAdjust";
             }
         });
@@ -149,7 +149,7 @@ export class StatusBarField extends Component {
                         }
                         const items = this.getAllItems();
                         return items.length && !items.at(-1).isSelected;
-                    }
+                    },
                 }
             );
         }
