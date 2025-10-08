@@ -54,21 +54,14 @@ class MailActivity(models.Model):
         return action
 
     def _action_done(self, feedback=False, attachment_ids=False):
-        events = self.calendar_event_id
-        # To avoid the feedback to be included in the activity note (due to the synchronization in event.write
-        # that updates the related activity note each time the event description is updated),
-        # when the activity is written as a note in the chatter in _action_done (leading to duplicate feedback),
-        # we call super before updating the description. As self is deleted in super, we load the related events before.
-        messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
+        # Add feedback to the internal event 'notes', which is not synchronized with the activity's 'note'
         if feedback:
-            for event in events:
-                description = event.description
-                description = '%s<br />%s' % (
-                    description if not tools.is_html_empty(description) else '',
-                    _('Feedback: %(feedback)s', feedback=tools.plaintext2html(feedback)) if feedback else '',
-                )
-                event.write({'description': description})
-        return messages, activities
+            for event in self.calendar_event_id:
+                notes = event.notes if not tools.is_html_empty(event.notes) else ''
+                notes_feedback = _('Feedback: %s', tools.plaintext2html(feedback))
+                notes = f'{notes}<br />{notes_feedback}'
+                event.write({'notes': notes})
+        return super()._action_done(feedback=feedback, attachment_ids=attachment_ids)
 
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')
