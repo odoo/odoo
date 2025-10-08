@@ -356,3 +356,109 @@ describe('rgbToHex', () => {
         parent.remove();
     });
 });
+
+describe("color normalization", () => {
+    it("should unwrap nested identical <font> tags with gradient (class and style same)", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    parent
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">parentchild</font></p>
+            `),
+        });
+    });
+
+    it("should unwrap nested identical <font> tag when parent already has the same class", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="bg-color-1 text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    parent
+                    <font class="bg-color-1">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1 text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">parentchild</font></p>
+            `),
+        });
+    });
+
+    it("should unwrap nested identical <font> tags with color (class and style same)", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font class="bg-color-1" style="color:red">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    it("should unwrap nested <font> with same style but no class", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font style="color:red">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    it("should unwrap nested <font> with same class only", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font class="bg-color-1">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    it("should unwrap nested <font> with no class or style", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                    parent
+                    <font>child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">parentchild</font></p>
+            `),
+        });
+    });
+
+    it("should unwrap nested <font> with same style and class as closest <font>", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                        parent
+                        <strong>
+                            text1
+                            <font class="bg-color-1" style="color:red">child</font>
+                            text2
+                        </strong>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1" style="color:red">
+                        parent<strong>text1childtext2</strong>
+                </font></p>
+            `),
+        });
+    });
+});
