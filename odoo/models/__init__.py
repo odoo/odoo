@@ -22,6 +22,7 @@ from odoo.orm.models import (
 )
 from odoo.orm.model_classes import is_model_class, is_model_definition
 from odoo.orm.models_transient import TransientModel
+from odoo.orm.query import Query
 from odoo.orm.table_objects import Constraint, Index, UniqueIndex
 from odoo.orm.utils import (
     READ_GROUP_TIME_GRANULARITY,

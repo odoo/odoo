@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api
+from odoo.models import Query
 from odoo.tools import SQL
-from odoo.tools.query import Query
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
-
-from functools import lru_cache
 
 
 class AccountInvoiceReport(models.Model):

@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import SQL, Query
+from odoo.tools import SQL
 from odoo.exceptions import UserError
 
 
@@ -47,7 +47,7 @@ class AccountAccountTag(models.Model):
         for tag in self:
             tag.report_expression_id, tag.balance_negate = id2expression.get(tag._origin.id, (False, False))
 
-    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
+    def _field_to_sql(self, alias: str, field_expr: str, query=None) -> SQL:
         if field_expr in ('report_expression_id', 'balance_negate'):
             rhs_alias = query.make_alias(alias, 'expression')
             if rhs_alias not in query._joins:

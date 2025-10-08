@@ -4,7 +4,8 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, Query, unique
+from odoo.models import Query
+from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_compare, float_round
 
 
