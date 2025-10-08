@@ -216,6 +216,7 @@ class HrWorkEntry(models.Model):
     def create(self, vals_list):
         vals_list = [self._set_current_contract(vals) for vals in vals_list]
         company_by_employee_id = {}
+        domain = []
         for vals in vals_list:
             if (
                 not 'amount_rate' in vals
@@ -223,12 +224,16 @@ class HrWorkEntry(models.Model):
             ):
                 work_entry_type = self.env['hr.work.entry.type'].browse(work_entry_type_id)
                 vals['amount_rate'] = work_entry_type.amount_rate
+            domain.append(Domain('date', '=', vals.get('date')) & Domain('employee_id', '=', vals.get('employee_id')) & Domain('work_entry_type_id', '=', vals.get('work_entry_type_id')))
             if vals.get('company_id'):
                 continue
             if vals['employee_id'] not in company_by_employee_id:
                 employee = self.env['hr.employee'].browse(vals['employee_id'])
                 company_by_employee_id[employee.id] = employee.company_id.id
             vals['company_id'] = company_by_employee_id[vals['employee_id']]
+
+        if domain:
+            self.env["hr.work.entry"].search(domain).write({'active': False, 'attendance_id': False})
         work_entries = super().create(vals_list)
         work_entries._check_if_error()
         return work_entries
