@@ -1,5 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { buildM2OFieldDescription, extractM2OFieldProps, m2oSupportedOptions } from "@web/views/fields/many2one/many2one_field";
+import { useInputField } from "@web/views/fields/input_field_hook";
+import { useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { ProductNameAndDescriptionField } from "@product/product_name_and_description/product_name_and_description";
 
@@ -13,6 +15,13 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
     setup() {
         super.setup();
         this.descriptionColumn = "name";
+        if (this.isNote(this.props.record) || this.isSection(this.props.record)) {
+            useInputField({
+                ref: useRef("labelNodeRef"),
+                fieldName: this.descriptionColumn,
+                getValue: () => this.label,
+            });
+        }
     }
 
     get sectionAndNoteClasses() {
