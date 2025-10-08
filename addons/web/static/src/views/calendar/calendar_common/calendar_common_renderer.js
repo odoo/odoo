@@ -68,7 +68,7 @@ export class CalendarCommonRenderer extends Component {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.clickTimeoutId = null;
         this.popover = useCalendarPopover(this.constructor.components.Popover);
-
+        this.timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
@@ -173,13 +173,11 @@ export class CalendarCommonRenderer extends Component {
     }
 
     getStartTime(record) {
-        const timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
-        return record.start.toFormat(timeFormat);
+        return record.start.toFormat(this.timeFormat);
     }
 
     getEndTime(record) {
-        const timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
-        return record.end.toFormat(timeFormat);
+        return record.end.toFormat(this.timeFormat);
     }
 
     computeEventSelector(event) {
@@ -251,7 +249,13 @@ export class CalendarCommonRenderer extends Component {
             }, 250);
         }
     }
-    onEventContent({ event }) {
+    onEventContent(arg) {
+        const { event } = arg;
+        if (event.start && event.end) {
+            const dateFmt = (date) =>
+                luxon.DateTime.fromJSDate(date).toFormat(this.timeFormat);
+            arg.timeText = `${dateFmt(event.start)} - ${dateFmt(event.end)}`;
+        }
         const record = this.props.model.records[event.id];
         if (record) {
             // This is needed in order to give the possibility to change the event template.
