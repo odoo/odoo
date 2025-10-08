@@ -111,12 +111,30 @@ const readonlyMailViewArch = `
 </form>
 `;
 
+/**
+ * @type {MassMailingHtmlField}
+ */
+let htmlField;
 describe.current.tags("desktop");
+beforeEach(() => {
+    patchWithCleanup(MassMailingHtmlField.prototype, {
+        setup() {
+            super.setup();
+            htmlField = this;
+        },
+    });
+});
 describe("field HTML", () => {
     beforeEach(() => {
         patchWithCleanup(MassMailingIframe.prototype, {
             // Css assets are not needed for these tests.
-            loadIframeAssets() {},
+            loadIframeAssets() {
+                return {
+                    "mass_mailing.assets_inside_builder_iframe": {
+                        toggle: () => {},
+                    },
+                };
+            },
         });
     });
     test("save arch and html", async () => {
@@ -196,5 +214,38 @@ describe("field HTML", () => {
         await waitFor(overlayOptionsSelect + ":has(button[title='Move up'])");
         await contains(".o_dialog :iframe img").click();
         await waitFor(overlayOptionsSelect + ":not(:has(button[title='Move up']))");
+    });
+});
+describe("field HTML: with loaded assets", () => {
+    test("Ensure style bundles loaded in the `MassMailingIframe` can be toggled On or Off", async () => {
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 1,
+            arch: mailViewArch,
+        });
+        await click(waitFor(".o_mailing_template_preview_wrapper a[data-name='default']"));
+        await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
+        const { bundleControls } = await htmlField.ensureIframeLoaded();
+
+        expect(
+            htmlField.iframeRef.el.contentDocument.head.querySelectorAll(
+                '[href*="mass_mailing.assets_inside_builder_iframe"]'
+            )
+        ).toHaveLength(1);
+
+        bundleControls["mass_mailing.assets_inside_builder_iframe"].toggle(false);
+        expect(
+            htmlField.iframeRef.el.contentDocument.head.querySelectorAll(
+                '[href*="mass_mailing.assets_inside_builder_iframe"]'
+            )
+        ).toHaveLength(0);
+
+        bundleControls["mass_mailing.assets_inside_builder_iframe"].toggle(true);
+        expect(
+            htmlField.iframeRef.el.contentDocument.head.querySelectorAll(
+                '[href*="mass_mailing.assets_inside_builder_iframe"]'
+            )
+        ).toHaveLength(1);
     });
 });
