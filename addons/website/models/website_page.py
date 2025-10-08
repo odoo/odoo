@@ -49,6 +49,7 @@ class WebsitePage(models.Model):
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
+    parent_id = fields.Many2one('website.page', string="Parent Page")
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
