@@ -1,8 +1,8 @@
-import { Component } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
+import { Component } from '@odoo/owl';
+import { formatCurrency } from '@web/core/currency';
 
-export class AddToCartNotification extends Component {
-    static template = "website_sale.addToCartNotification";
+export class ItemAddedNotification extends Component {
+    static template = 'website_sale.ItemAddedNotification';
     static props = {
         lines: {
             type: Array,
@@ -27,7 +27,7 @@ export class AddToCartNotification extends Component {
     /**
      * Return the lines which aren't linked to other lines.
      *
-     * @return {Object[]} The lines which aren't linked to other lines.
+     * @return {Object[]} - The lines which aren't linked to other lines.
      */
     get mainLines() {
         return this.props.lines.filter(line => !line.linked_line_id);
@@ -36,8 +36,8 @@ export class AddToCartNotification extends Component {
     /**
      * Return the lines linked to the provided line id.
      *
-     * @param {Number} lineId The id of the line whose linked lines to return.
-     * @return {Object[]} The lines which aren't linked to other lines.
+     * @param {Number} - lineId The id of the line whose linked lines to return.
+     * @return {Object[]} - The lines which aren't linked to other lines.
      */
     getLinkedLines(lineId) {
         return this.props.lines.filter(line => line.linked_line_id === lineId);
@@ -56,5 +56,4 @@ export class AddToCartNotification extends Component {
             : line.price_total;
         return formatCurrency(price, this.props.currency_id);
     }
-
 }

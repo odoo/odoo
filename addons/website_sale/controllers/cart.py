@@ -176,7 +176,7 @@ class Cart(PaymentPortal):
                     return {
                         'cart_quantity': order_sudo.cart_quantity,
                         'notification_info': {
-                            'warning': product_values.get('warning', ''),
+                            'warning_message': product_values.get('warning', ''),
                         },
                         'quantity': 0,
                         'tracking_info': [],
@@ -212,7 +212,7 @@ class Cart(PaymentPortal):
                 **self._get_cart_notification_information(
                     order_sudo, added_qty_per_line
                 ),
-                'warning': warning,
+                'warning_message': warning,
             },
             'quantity': values.pop('quantity', 0),
             'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
@@ -427,11 +427,12 @@ class Cart(PaymentPortal):
                 'currency_id': int
                 'lines': [{
                     'id': int
-                    'image_url': int
+                    'image_url': str
                     'quantity': float
                     'name': str
+                    'combination_name': str
                     'description': str
-                    'added_qty_price_total': float
+                    'price_total': float
                 }],
             }
         """
@@ -442,7 +443,7 @@ class Cart(PaymentPortal):
         return {
             'currency_id': order.currency_id.id,
             'lines': [
-                { # For the cart_notification
+                {
                     'id': line.id,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
                     'quantity': added_qty_per_line[line.id],

@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="website_sale.addToCartNotification">
-        <div
-            class="d-flex flex-column gap-2 mb-2 mt-1"
-            t-foreach="mainLines"
-            t-as="line"
-            t-key="line.id"
-        >
-            <t t-call="website_sale.cartLine"/>
+    <t t-name="website_sale.ItemAddedNotification">
+        <div class="o_cc1 toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body">
+                <div
+                    class="d-flex flex-column gap-2 mb-2 mt-1"
+                    t-foreach="mainLines"
+                    t-as="line"
+                    t-key="line.id"
+                >
+                    <t t-call="website_sale.CartNotificationLine"/>
+                </div>
+                <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
+                    View cart
+                </a>
+            </div>
         </div>
-        <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
-            View cart
-        </a>
     </t>
 
-    <t t-name="website_sale.cartLine">
+    <t t-name="website_sale.CartNotificationLine">
         <div class="d-flex gap-3">
             <div class="position-relative">
                 <div class="o_cart_product_image">
@@ -52,7 +56,7 @@
             t-as="linkedLine"
             t-key="linkedLine.id"
         >
-            <t t-call="website_sale.cartLine">
+            <t t-call="website_sale.CartNotificationLine">
                 <t t-set="line" t-value="linkedLine"/>
             </t>
         </div>
