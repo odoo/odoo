@@ -26,7 +26,6 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
-import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
@@ -714,7 +713,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     }
 
     async getMoreThemes() {
-        const removeLoadingEffect = addButtonLoadingEffect(this.extraThemesButtonRef.el);
+        this.uiService.block();
         const themes = await getRecommendedThemes(
             this.orm,
             this.state,
@@ -725,7 +724,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         const mainThemeNames = this.state.themes.map((theme) => theme.name);
         this.state.extraThemes = themes.filter((extraTheme) => !mainThemeNames.includes(extraTheme.name));
         this.state.extraThemesLoaded = true;
-        removeLoadingEffect();
+        this.uiService.unblock();
     }
 
     getExtraThemeName(idx) {
