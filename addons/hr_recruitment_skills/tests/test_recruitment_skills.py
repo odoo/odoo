@@ -549,3 +549,28 @@ class TestRecruitmentSkills(TransactionCase):
         applicant_skills_name_list = applicant.applicant_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         employee_skills_name_list = applicant.employee_id.employee_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         self.assertCountEqual(applicant_skills_name_list, employee_skills_name_list)
+
+    def test_applicant_from_talent_preserve_skills(self):
+
+        talent = (
+            self.env["talent.pool.add.applicants"]
+            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
+            ._add_applicants_to_pool()
+        )
+        talent_form = Form(talent)
+        with talent_form.current_applicant_skill_ids.new() as skill:
+            skill.skill_type_id = self.t_skill_type
+            skill.skill_id = self.t_skill_1
+            skill.skill_level_id = self.t_skill_level_1
+        talent_form.save()
+
+        test_job = self.env["hr.job"].create({"name": "Test Job"})
+        applicant = (
+            self.env["job.add.applicants"]
+            .create({"applicant_ids": talent.ids, "job_ids": test_job})
+            ._add_applicants_to_job()
+        )
+
+        self.assertEqual(talent.applicant_skill_ids.skill_type_id, applicant.applicant_skill_ids.skill_type_id)
+        self.assertEqual(talent.applicant_skill_ids.skill_level_id, applicant.applicant_skill_ids.skill_level_id)
+        self.assertEqual(talent.applicant_skill_ids.skill_id, applicant.applicant_skill_ids.skill_id)
