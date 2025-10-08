@@ -11,6 +11,7 @@ import {
 } from "../utils";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { getAllUsedColors } from "@html_builder/utils/utils_css";
+import { useService } from "@web/core/utils/hooks";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU
 export function useColorPickerBuilderComponent() {
@@ -108,6 +109,7 @@ export class BuilderColorPicker extends Component {
         grayscales: { type: Object, optional: true },
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
         selectedTab: { type: String, optional: true },
         defaultColor: { type: String, optional: true },
@@ -128,6 +130,9 @@ export class BuilderColorPicker extends Component {
         this.colorButton = useRef("colorButton");
         this.state = state;
         this.state.defaultTab = this.props.selectedTab || "solid"; // TODO: select the correct tab based on the color
+        this.tooltip = useService("tooltip");
+        this.hasTooltip = this.props.tooltip ? true : undefined;
+        this.removeTooltip = null;
         useColorPicker(
             "colorButton",
             {
@@ -151,6 +156,19 @@ export class BuilderColorPicker extends Component {
                 popoverClass: "o-hb-colorpicker-popover",
             }
         );
+    }
+
+    openTooltip() {
+        if (this.hasTooltip) {
+            const tooltip = this.props.tooltip || this.props.title;
+            this.removeTooltip = this.tooltip.add(this.colorButton.el, { tooltip });
+        }
+    }
+
+    closeTooltip() {
+        if (this.removeTooltip) {
+            this.removeTooltip();
+        }
     }
 
     getSelectedColorStyle() {
