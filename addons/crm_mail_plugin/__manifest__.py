@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -12,10 +11,6 @@
     'depends': [
         'crm',
         'mail_plugin',
-    ],
-    'data': [
-        'views/crm_mail_plugin_lead.xml',
-        'views/crm_lead_views.xml'
     ],
     'installable': True,
     'auto_install': True,
