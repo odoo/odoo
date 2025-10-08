@@ -29,7 +29,14 @@ export class PartnerList extends Component {
         this.modalRef = useChildRef();
         this.modalContent = null;
         this.state = useState({
-            initialPartners: this.pos.models["res.partner"].getAll(),
+            initialPartners: this.pos.models["res.partner"].filter((p) => {
+                const accRef = p.property_account_receivable_id;
+                if (!accRef) {
+                    return true;
+                }
+                const acc = this.pos.models["account.account"]?.get(accRef.id);
+                return !acc || acc.non_trade !== true;
+            }),
             loadedPartners: [],
             query: "",
             loading: false,
