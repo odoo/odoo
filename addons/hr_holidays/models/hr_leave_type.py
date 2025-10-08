@@ -207,11 +207,7 @@ class HrLeaveType(models.Model):
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
                         time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
-    @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
-    def _compute_valid(self):
-        date_from = self.env.context.get('default_date_from', fields.Datetime.today())
-        date_to = self.env.context.get('default_date_to', fields.Datetime.today())
-        employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id', self.env.user.employee_id.id))
+    def get_leave_types_with_valid_allocaions(self, date_from, date_to, employee_id):
         allocation_by_leave_type = dict(self.env['hr.leave.allocation']._read_group(
             domain=Domain([
                 ('holiday_status_id', 'in', self.filtered(lambda leave_type: leave_type.requires_allocation).ids),
@@ -224,6 +220,7 @@ class HrLeaveType(models.Model):
             groupby=['holiday_status_id'],
             aggregates=['id:recordset'],
         ))
+        valid_types = self.env['hr.leave.type']
         for leave_type in self:
             if leave_type.requires_allocation:
                 allocations = allocation_by_leave_type.get(leave_type, self.env['hr.leave.allocation'])
@@ -232,9 +229,20 @@ class HrLeaveType(models.Model):
                     alloc.allocation_type == 'accrual'
                     or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
-                leave_type.has_valid_allocation = bool(allocations)
+                if allocations:
+                    valid_types += leave_type
             else:
-                leave_type.has_valid_allocation = True
+                valid_types += leave_type
+        return valid_types
+
+    @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
+    def _compute_valid(self):
+        date_from = self.env.context.get('default_date_from', self.env.context.get('date_from', fields.Datetime.today()))
+        date_to = self.env.context.get('default_date_to', self.env.context.get('date_to', fields.Datetime.today()))
+        employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id', self.env.user.employee_id.id))
+        valid_types = self.get_leave_types_with_valid_allocaions(date_from, date_to, employee_id)
+        (self - valid_types).write({'has_valid_allocation': False})
+        valid_types.write({'has_valid_allocation': True})
 
     def _load_records_write(self, values):
         if 'requires_allocation' in values and self.requires_allocation == values['requires_allocation']:
