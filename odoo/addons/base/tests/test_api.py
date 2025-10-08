@@ -591,16 +591,16 @@ class TestAPI(SavepointCaseWithUserDemo):
     def test_80_filter(self):
         """ Check filter on recordsets. """
         ps = self.partners
-        customers = ps.browse([p.id for p in ps if p.employee])
+        customers = ps.browse([p.id for p in ps if p.is_company])
 
         # filter on a single field
-        self.assertEqual(ps.filtered(lambda p: p.employee), customers)
-        self.assertEqual(ps.filtered('employee'), customers)
+        self.assertEqual(ps.filtered(lambda p: p.is_company), customers)
+        self.assertEqual(ps.filtered('is_company'), customers)
 
         # filter on a sequence of fields
         self.assertEqual(
-            ps.filtered(lambda p: p.parent_id.employee),
-            ps.filtered('parent_id.employee')
+            ps.filtered(lambda p: p.parent_id.is_company),
+            ps.filtered('parent_id.is_company')
         )
 
     @mute_logger('odoo.models')
