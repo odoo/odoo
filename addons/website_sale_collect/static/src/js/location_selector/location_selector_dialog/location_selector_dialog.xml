@@ -32,21 +32,22 @@
                 required="true"
                 onSelect.bind="setSelectedCountry"
                 class="'rounded-end-0 border-0'"
-                togglerClass="'rounded-end-0 pe-2'"
+                togglerClass="'h-100 border-0 rounded-end-0 ps-2 pe-0'"
                 menuClass="'o_location_selector_country_selector'"
             >
                 <img
                     t-att-src="state.selectedCountry.image_url"
-                    class="pe-2"
-                    style="height: auto; width: 30px;"
+                    class="me-2"
+                    style="height: auto; width: 24px;"
                     t-att-alt="state.selectedCountry.name"
                 />
+                <span class="visually-hidden">Selected country: <span aria-live="polite" t-out="state.selectedCountry.name"/></span>
                 <t t-set-slot="choice" t-slot-scope="choice">
-                    <span class="text-truncate">
+                    <span class="d-flex align-items-center text-truncate">
                         <img
                             t-att-src="choice.data.value.image_url"
-                            class="pe-2"
-                            style="height: auto; width: 30px;"
+                            class="me-2"
+                            style="height: auto; width: 24px;"
                             t-att-alt="choice.data.label"
                         />
                         <t t-out="choice.data.label"/>

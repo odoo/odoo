@@ -12,8 +12,14 @@
     }
 
     .o_location_selector_number {
-        width: 3ch;
+        right: .75rem;
+        bottom: .75rem;
+        width: 1.75rem;
         font-variant-numeric: tabular-nums;
+
+        svg {
+            width: 100%;
+        }
     }
 
     .o_location_selector_details {
@@ -41,6 +47,34 @@
 
     .o_location_selector_schedule_hours {
         gap: 0 map-get($spacers, 3);
+    }
+
+    .o_select_menu_toggler {
+        &::before {
+            margin: auto;
+            padding-left: #{map-get($spacers, 2)};
+            border-right: 1px solid $o-gray-300;
+            height: 70%;
+            content: "";
+            order: 1;
+
+        }
+
+        .o_select_menu_caret {
+            position: relative;
+            top: -1px;
+            right: 0;
+            visibility: visible;
+        }
+    }
+
+    .o_select_menu_toggler_slot {
+        display: flex;
+        align-items: center;
+    }
+
+    .list-group-item {
+        padding-bottom: .75rem;
     }
 }
 
