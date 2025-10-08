@@ -217,7 +217,6 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             mobileBreakpoint: "md",
-            defaultImageMimetype: "image/jpeg",
             onEditorReady: () => this.commitChanges(),
         };
     }
@@ -266,6 +265,18 @@ export class MassMailingHtmlField extends HtmlField {
     onTextareaInput(ev) {
         this.onChange();
         ev.target.style.height = ev.target.scrollHeight + "px";
+    }
+
+    /**
+     * Ensure that every SVG and WEBP images are converted to JPEG, and create
+     * an attachment for every b64 encoded image, to ensure every image src
+     * is not a data url.
+     * @override
+     */
+    async getEditorContent() {
+        await this.editor.shared["mail.ImageFormatPlugin"].sanitizeImages();
+        this.editor.shared.history.addStep();
+        return this.editor.getElContent();
     }
 
     /**
