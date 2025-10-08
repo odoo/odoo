@@ -239,6 +239,88 @@ export function customerIsSelected(name) {
         },
     ];
 }
+<<<<<<< fe4c097c342b84b2fd1ba7e93094b4f2427d4e3b:addons/point_of_sale/static/tests/pos/tours/utils/product_screen_util.js
+||||||| f8affed758fcdef86ee93b7be86a091bb16235b6:addons/point_of_sale/static/tests/tours/utils/product_screen_util.js
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            isActive: ["mobile"],
+            content: "click more button",
+            trigger: ".modal-header .fa-search",
+            run: "click",
+        },
+        {
+            trigger: ".modal-header .input-group input",
+            run: "edit " + value,
+        },
+        {
+            /**
+             * Manually trigger keyup event to show the search field list
+             * because the previous step do not trigger keyup event.
+             */
+            trigger: ".modal-header .input-group input",
+            run: function () {
+                document
+                    .querySelector(".modal-header .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+    ];
+}
+=======
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            isActive: ["mobile"],
+            content: "click more button",
+            trigger: ".modal-header .fa-search",
+            run: "click",
+        },
+        {
+            trigger: ".modal-header .input-group input",
+            run: "edit " + value,
+        },
+        {
+            /**
+             * Manually trigger keyup event to show the search field list
+             * because the previous step do not trigger keyup event.
+             */
+            trigger: ".modal-header .input-group input",
+            run: function () {
+                document
+                    .querySelector(".modal-header .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+    ];
+}
+export function clickCreateCustomerButton() {
+    const steps = [
+        {
+            isActive: ["desktop"],
+            content: "click Create button to add a customer",
+            trigger: 'button.btn.btn-primary.btn-lg:contains("Create")',
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            content: "click Create button to add a customer",
+            trigger: 'button.btn.btn-primary.btn-lg:contains("New")',
+            run: "click",
+        },
+    ];
+    return steps;
+}
+export function clickPartnerTab(name) {
+    return [
+        {
+            content: `click '${name}' tab`,
+            trigger: `.nav-tabs .nav-link:contains("${name}")`,
+            run: "click",
+        },
+    ];
+}
+>>>>>>> fbde02409c3566bc5aafe011c42f5fd2ec9dc7fa:addons/point_of_sale/static/tests/tours/utils/product_screen_util.js
 export function clickRefund() {
     return [clickReview(), ...clickControlButton("Refund")];
 }
