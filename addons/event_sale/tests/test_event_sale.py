@@ -234,6 +234,42 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(editor_action['res_model'], 'registration.editor')
 
     @users('user_sales_salesman')
+    def test_registration_state_on_so_confirmation(self):
+        """Test that registration stays in draft after SO confirmation
+        and only moves to open after registration editor confirmation.
+        """
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket = self.event_0.event_ticket_ids[0]
+
+        # Create SO in draft with a ticket
+        customer_so.write({
+            'order_line': [(0, 0, {
+                'event_id': self.event_0.id,
+                'event_ticket_id': ticket.id,
+                'product_id': ticket.product_id.id,
+                'product_uom_qty': 1,
+                'price_unit': 10,
+            })]
+        })
+        customer_so.action_confirm()
+
+        registrations = self.env['event.registration'].search([
+            ('sale_order_id', '=', customer_so.id)
+        ])
+        self.assertEqual(registrations.state, 'draft')
+
+        editor = self.env['registration.editor'].with_context({
+            'default_sale_order_id': customer_so.id
+        }).create({})
+        editor.action_make_registration()
+
+        registrations = self.env['event.registration'].search([
+            ('sale_order_id', '=', customer_so.id)
+        ])
+        self.assertEqual(len(registrations), 1)
+        self.assertEqual(registrations.state, 'open')
+
+    @users('user_sales_salesman')
     def test_event_sale_free_confirm(self):
         """Check that free registrations are immediately
         confirmed if the seats are available.
