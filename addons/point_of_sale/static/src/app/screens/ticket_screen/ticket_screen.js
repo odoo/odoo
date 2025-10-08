@@ -395,9 +395,8 @@ export class TicketScreen extends Component {
         );
     }
     activeOrderFilter(o) {
-        const screen = ["ReceiptScreen", "TipScreen"];
         const oScreen = o.getScreenData();
-        return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
+        return (!o.finalized || oScreen.name == "TipScreen") && o.uiState.displayed;
     }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
@@ -732,7 +731,6 @@ export class TicketScreen extends Component {
         return {
             ProductScreen: "ONGOING",
             PaymentScreen: "PAYMENT",
-            ReceiptScreen: "RECEIPT",
         };
     }
     _getOrderStates() {

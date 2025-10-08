@@ -3,7 +3,7 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/produc
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as TipScreen from "@pos_restaurant/../tests/tours/utils/tip_screen_util";
@@ -143,11 +143,11 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.emptyPaymentlines("5.0"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
 
             // order 5
             // Click directly on "settle" without selecting a Tip
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "3", "2"),
             ProductScreen.totalAmountIs("6.0"),
@@ -157,8 +157,8 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
             TipScreen.clickSettle(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             FloorScreen.isShown(),
         ].flat(),
 });

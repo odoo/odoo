@@ -1,11 +1,11 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import { registry } from "@web/core/registry";
-import { checkSimplifiedInvoiceNumber, checkCompanyState, pay } from "./utils/receipt_util";
+import { checkSimplifiedInvoiceNumber, pay } from "./utils/receipt_util";
 
 const SIMPLIFIED_INVOICE_LIMIT = 1000;
 
@@ -17,13 +17,15 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 
             ProductScreen.addOrderline("Desk Pad", "1"),
             pay(),
+            FeedbackScreen.isShown(),
             checkSimplifiedInvoiceNumber("0001"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
 
             ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT - 1),
             pay(),
+            FeedbackScreen.isShown(),
             checkSimplifiedInvoiceNumber("0002"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
 
             ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT + 1),
             pay(),
@@ -37,19 +39,37 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
 
             PaymentScreen.isInvoiceOptionSelected(),
             PaymentScreen.clickValidate(),
-            {
-                content:
-                    "verify that the simplified invoice number does not appear on the receipt, because this order is invoiced, so it does not have a simplified invoice number",
-                trigger: ".receipt-screen:not(:has(.simplified-invoice-number))",
-            },
-            checkCompanyState("Badajoz"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                cssRules: [
+                    {
+                        css: ".simplified-invoice-number",
+                        negation: true,
+                    },
+                    {
+                        css: "pos-receipt-container div",
+                        text: "Badajoz",
+                    },
+                ],
+            }),
+            FeedbackScreen.clickNextOrder(),
 
             ProductScreen.addOrderline("Desk Pad", "1"),
             pay(),
-            checkSimplifiedInvoiceNumber("0003"),
-            checkCompanyState("Badajoz"),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                cssRules: [
+                    {
+                        css: ".simplified-invoice-number",
+                        text: "0003",
+                    },
+                    {
+                        css: "pos-receipt-container div",
+                        text: "Badajoz",
+                    },
+                ],
+            }),
+            FeedbackScreen.clickNextOrder(),
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Customer Account"),
@@ -69,9 +89,13 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             Chrome.confirmPopup(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.paymentLineContains("Bank", "10.00"),
-            ReceiptScreen.paymentLineContains("Customer Account", "-10.00"),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                payment_lines: [
+                    { name: "Bank", amount: "10.0" },
+                    { name: "Customer Account", amount: "-10.0" },
+                ],
+            }),
             Chrome.endTour(),
         ].flat(),
 });
@@ -87,6 +111,6 @@ registry.category("web_tour.tours").add("test_simplified_invoice_not_override_se
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
         ].flat(),
 });

@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("PoSFakeTourRestaurant", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 

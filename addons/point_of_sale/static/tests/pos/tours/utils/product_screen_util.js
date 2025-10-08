@@ -7,6 +7,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -778,22 +779,9 @@ export function finishOrder() {
     return [
         ...PaymentScreen.clickValidate(),
         Chrome.isSyncStatusConnected(),
-        {
-            isActive: ["desktop"],
-            content: "click Next Order",
-            trigger: ".receipt-screen .button.next.highlight:visible",
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: "Click Next Order",
-            trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
-            run: "click",
-        },
-        {
-            content: "check if we left the receipt screen",
-            trigger: ".pos-content div:not(:has(.receipt-screen))",
-        },
+        ...FeedbackScreen.isShown(),
+        ...FeedbackScreen.clickNextOrder(),
+        ...isShown(),
     ];
 }
 

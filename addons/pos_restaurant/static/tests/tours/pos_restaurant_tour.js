@@ -1,6 +1,6 @@
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
@@ -22,7 +22,6 @@ import {
     negateStep,
     assertCurrentOrderDirty,
 } from "@point_of_sale/../tests/generic_helpers/utils";
-import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
@@ -73,7 +72,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
 
             // order on another table with a product variant
             FloorScreen.orderCountSyncedInTableIs("5", "0"),
@@ -96,7 +95,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
 
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
@@ -179,7 +178,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 
             FloorScreen.clickTable("2"),
@@ -291,7 +290,7 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
         ].flat(),
 });
 registry.category("web_tour.tours").add("CategLabelCheck", {
@@ -319,8 +318,10 @@ registry.category("web_tour.tours").add("OrderChange", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("+10"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            TicketScreen.receiptChangeIs("10"),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                change_amount: "10",
+            }),
         ].flat(),
 });
 
@@ -561,7 +562,7 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickPlanButton(),
@@ -586,7 +587,7 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -713,7 +714,7 @@ registry
                     Dialog.discard(),
                     FeedbackScreen.isShown(),
                     Dialog.confirm(),
-                    FeedbackScreen.clickScreen(),
+                    FeedbackScreen.clickNextOrder(),
                     FloorScreen.isShown(),
                     FloorScreen.clickTable("2"),
                     ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -736,7 +737,7 @@ registry
                     PaymentScreen.clickValidate(),
                     FeedbackScreen.isShown(),
                     Dialog.confirm(),
-                    FeedbackScreen.clickScreen(),
+                    FeedbackScreen.clickNextOrder(),
                     FloorScreen.isShown(),
                 ].flat(),
         }
@@ -768,8 +769,8 @@ registry
                     },
                     ProductScreen.clickFastPaymentButton("Bank"),
                     Dialog.discard(),
-                    ReceiptScreen.isShown(),
-                    ReceiptScreen.clickNextOrder(),
+                    FeedbackScreen.isShown(),
+                    FeedbackScreen.clickNextOrder(),
                     FloorScreen.isShown(),
                     FloorScreen.clickTable("2"),
                     ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -790,8 +791,8 @@ registry
                     ProductScreen.discardOrderWarningDialog(),
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickValidate(),
-                    ReceiptScreen.isShown(),
-                    ReceiptScreen.clickNextOrder(),
+                    FeedbackScreen.isShown(),
+                    FeedbackScreen.clickNextOrder(),
                     FloorScreen.isShown(),
                 ].flat(),
         }
@@ -914,6 +915,8 @@ registry.category("web_tour.tours").add("test_direct_sales", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.syncCurrentOrder(),
             PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
 
             Chrome.clickPlanButton(),
             FloorScreen.clickNewOrder(),

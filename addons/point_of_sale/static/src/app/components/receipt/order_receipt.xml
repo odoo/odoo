@@ -17,7 +17,7 @@
             <t t-if="!props.basic_receipt">
                 <t t-set="taxTotals" t-value="order.prices.taxDetails"/>
                 <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes pt-3">
-                    <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
+                    <div t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name" class="taxes">
                         <div class="d-flex">
                             <span class="text-nowrap mw-100">Subtotal</span>
                             <span t-out="formatCurrency(order.priceExcl)" class="ms-auto font-monospace"/>
@@ -36,7 +36,7 @@
                             </span>
                             <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto font-monospace"/>
                         </div>
-                    </t>
+                    </div>
                 </div>
 
                 <!-- Total -->
@@ -69,7 +69,7 @@
                 <!-- Extra Payment Info -->
                 <t t-set="totalDiscount" t-value="order.getTotalDiscount()" />
                 <t t-if="totalDiscount">
-                    <div class="text-start">
+                    <div class="text-start receipt-discount">
                         <span class="label-discount">Discounts</span>
                         <span t-out="formatCurrency(totalDiscount)" class="pos-receipt-right-align font-monospace"/>
                     </div>
@@ -111,7 +111,7 @@
             </div>
 
             <t t-if="order.shipping_date">
-                <div class="pos-receipt-order-data d-flex gap-2 pt-3">
+                <div class="pos-receipt-order-data d-flex gap-2 pt-3 receipt-shipping-date">
                     Expected delivery:
                     <div><t t-esc="order.formatDateOrTime('shipping_date', 'date')" /></div>
                 </div>

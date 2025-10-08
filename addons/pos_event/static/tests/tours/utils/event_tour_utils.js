@@ -49,16 +49,6 @@ export function pickTicket(name) {
     ];
 }
 
-export function printTicket(mode) {
-    return [
-        {
-            content: `print ticket with mode: ${mode}`,
-            trigger: `.o-event-button .o-event-${mode}`,
-            run: "click",
-        },
-    ];
-}
-
 export function eventRemainingSeat(name, seats) {
     return [
         {

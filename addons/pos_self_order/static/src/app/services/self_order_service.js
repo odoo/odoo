@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";

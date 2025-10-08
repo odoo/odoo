@@ -632,13 +632,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FeedbackScreenTour', login="pos_user")
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
 
-        # check if email from ReceiptScreenTour is properly sent
-        email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@receiptscreen.com')])
+        # check if email from FeedbackScreenTour is properly sent
+        email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@feedbackscreen.com')])
         self.assertEqual(email_count, 1)
 
     @skip('Temporary to fast merge new valuation')
@@ -1055,7 +1055,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user")
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FeedbackScreenDiscountWithPricelistTour', login="pos_user")
 
     def test_07_product_combo(self):
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 4

@@ -1,6 +1,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
-import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
@@ -54,7 +54,8 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickScreen(),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(3, "Receipt"),
             TicketScreen.selectFilter("Receipt"),
@@ -71,10 +72,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.nthRowContains(1, "Partner Test 1", false),
             TicketScreen.search("Customer", "Partner Test 2"),
             TicketScreen.nthRowContains(1, "Partner Test 2", false),
-            // Close the TicketScreen to see the current order which is in ReceiptScreen.
+            // Close the TicketScreen to see the current order which is in FeedbackScreen.
             // This is just to remove the search string in the search bar.
             Chrome.clickRegister(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
             // Open again the TicketScreen to check the Paid filter.
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
@@ -86,8 +87,8 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.loadSelectedOrder(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             ProductScreen.isShown(),
             // Check that the Paid filter will show the 2 synced orders.
             Chrome.clickOrders(),
@@ -153,8 +154,8 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             // Check refunded quantity.
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("003"),
@@ -174,8 +175,8 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
@@ -188,7 +189,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
         ].flat(),
 });
 
@@ -214,8 +215,8 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
@@ -244,8 +245,8 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("0", "."),
@@ -310,8 +311,8 @@ registry.category("web_tour.tours").add("LotTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("002"),
             inLeftSide(
@@ -321,8 +322,8 @@ registry.category("web_tour.tours").add("LotTour", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickNextOrder(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -380,8 +381,8 @@ registry
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
-                ReceiptScreen.isShown(),
-                ReceiptScreen.clickNextOrder(),
+                FeedbackScreen.isShown(),
+                FeedbackScreen.clickNextOrder(),
                 ...ProductScreen.clickRefund(),
                 TicketScreen.selectOrder("001"),
                 inLeftSide(Order.hasLine({ productName: "Desk Pad", withClass: ".selected" })),
@@ -390,7 +391,7 @@ registry
                 TicketScreen.confirmRefund(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
-                ReceiptScreen.isShown(),
+                FeedbackScreen.isShown(),
             ].flat(),
     });
 
@@ -421,7 +422,7 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.isShown(),
+            FeedbackScreen.isShown(),
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.search("Invoice Number", "00001"),
