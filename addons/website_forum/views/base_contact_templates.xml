@@ -6,7 +6,7 @@
         <div>
              <div t-if="'karma' in fields" class='css_editable_mode_hidden'>
                 <div t-if="options.get('UserBio')" class="mb-2">
-                    <span t-field="object.company_name" class="o_forum_tooltip_line"/><br/>
+                    <span t-field="object.parent_name" class="o_forum_tooltip_line"/><br/>
                         <a t-att-href="object.website" t-if="object.website">
                             <span t-field="object.website" class="o_forum_tooltip_line"/>
                         </a>

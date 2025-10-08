@@ -1367,15 +1367,12 @@ class TestCompute(common.TransactionCase):
         """
         company1 = self.env['res.partner'].create({
             'name': "Gorofy",
-            'is_company': True,
         })
         company2 = self.env['res.partner'].create({
             'name': "Awiclo",
-            'is_company': True
         })
         r = self.env['res.partner'].create({
             'name': 'Bob',
-            'is_company': False,
             'parent_id': company1.id
         })
         self.assertEqual(r.display_name, 'Gorofy, Bob')

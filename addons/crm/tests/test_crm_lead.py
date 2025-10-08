@@ -79,37 +79,6 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(lead.lang_id, self.lang_en)
 
     @users('user_sales_leads')
-    def test_crm_lead_compute_commercial_partner(self):
-        company_partner, child_partner, orphan_partner = self.env['res.partner'].create([
-            {
-                'name': 'test_crm_lead_compute_commercial_partner',
-                'is_company': True,
-                'email': 'test_crm_lead_compute_commercial_partner@test.lan',
-            },
-            {'name': 'Test Child'},
-            {'name': 'Test Orphan'},
-        ])
-        child_partner.parent_id = company_partner
-        lead = self.env['crm.lead'].create({
-            'name': 'Test Lead',
-            'partner_name': 'test_crm_lead_compute_commercial_partner',
-        })
-        self.assertEqual(lead.commercial_partner_id, company_partner)
-        lead.partner_id = orphan_partner
-        self.assertFalse(lead.commercial_partner_id)
-        lead.partner_id = child_partner
-        self.assertEqual(lead.commercial_partner_id, company_partner)
-        lead.write({
-            'partner_id': False,
-            'partner_name': False,
-        })
-        self.assertFalse(lead.commercial_partner_id)
-        lead.partner_id = company_partner
-        # this is mostly because we use it to set "parent_id" in most flows
-        # and it doesn't really make sense to have it be its own parent
-        self.assertFalse(lead.commercial_partner_id, "If a partner is its own commercial_partner_id, the lead is considered to have none.")
-
-    @users('user_sales_leads')
     def test_crm_lead_creation_no_partner(self):
         lead_data = {
             'name': 'Test',
@@ -200,30 +169,29 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.partner_name, self.contact_company.name,
                          "Lead company name should be set to partner name if partner is a company")
         # Test that partner_name (company name) is the partner company name if partner is an individual
-        self.contact_company.write({'is_company': False})
         lead = self.env['crm.lead'].create({
             'name': 'TestLead',
             'partner_id': self.contact_company.id,
         })
-        self.assertEqual(lead.contact_name, self.contact_company.name,
-                         "Lead contact name should be set to partner name if partner is not a company")
-        self.assertEqual(lead.partner_name, self.contact_company.company_name,
-                         "Lead company name should be set to company name if partner is not a company")
+        self.assertEqual(lead.contact_name, False,
+                         "Lead contact name should be set to False if parent is not set")
+        self.assertEqual(lead.partner_name, self.contact_company.name,
+                         "Lead company name should be set to company name if parent is not set")
 
     @users('user_sales_manager')
     def test_crm_lead_creation_partner_no_address(self):
         """ Test that an empty address on partner does not void its lead values """
         empty_partner = self.env['res.partner'].create({
             'name': 'Empty partner',
-            'is_company': True,
+            'vat': 'IN123456789',
             'lang': 'en_US',
             'phone': '0485112233',
             'function': 'My function',
         })
         lead_data = {
             'name': 'Test',
-            'contact_name': 'Test',
             'street': 'My street',
+            'contact_name': 'Test',
             'country_id': self.country_ref.id,
             'email_from': self.test_email,
             'phone': self.test_phone,

@@ -1052,7 +1052,7 @@ class MailMessage(models.Model):
             Store.One(
                 "author_id",
                 [
-                    "is_company",
+                    "parent_id",
                     Store.One("main_user_id", "share"),
                     *self.env["res.partner"]._get_store_avatar_fields(),
                 ],

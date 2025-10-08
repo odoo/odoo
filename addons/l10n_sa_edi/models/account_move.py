@@ -38,11 +38,10 @@ class AccountMove(models.Model):
 
     def _l10n_sa_is_simplified(self):
         """
-            Returns True if the customer is an individual, i.e: The invoice is B2C
-        :return:
+            Returns True if the customer is an individual aka has no VAT, i.e: The invoice is B2C
         """
         self.ensure_one()
-        return self.partner_id.company_type == 'person'
+        return not self.partner_id.vat
 
     @api.ondelete(at_uninstall=False)
     def _prevent_zatca_rejected_invoice_deletion(self):

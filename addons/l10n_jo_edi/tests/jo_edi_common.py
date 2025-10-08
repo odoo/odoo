@@ -49,7 +49,6 @@ class JoEdiCommon(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.jo').id,
             'state_id': cls.env.ref('base.state_jo_az').id,
             'phone': '+962 795-5585-949',
-            'company_type': 'company',
         })
 
         # The rate of 1 USD = 2 JOD is meant to simplify tests

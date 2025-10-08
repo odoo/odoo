@@ -24,7 +24,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>ES59962470K</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESF70432075</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>company_1_data</CorporateName>
@@ -40,20 +40,20 @@
     </SellerParty>
     <BuyerParty>
       <TaxIdentification>
-        <PersonTypeCode>F</PersonTypeCode>
+        <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>U</ResidenceTypeCode>
         <TaxIdentificationNumber>BE0477472701</TaxIdentificationNumber>
       </TaxIdentification>
-      <Individual>
-        <Name>UNKNOWN</Name>
-        <FirstSurname>UNKNOWN</FirstSurname>
+      <LegalEntity xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+        <CorporateName>partner_a</CorporateName>
+        <TradeName>partner_a</TradeName>
         <OverseasAddress>
           <Address>Rue de Bruxelles, 15000</Address>
           <PostCodeAndTown>5000 Namur</PostCodeAndTown>
           <Province>Belgium</Province>
           <CountryCode>BEL</CountryCode>
         </OverseasAddress>
-      </Individual>
+      </LegalEntity>
     </BuyerParty>
   </Parties>
   <Invoices>
@@ -273,7 +273,7 @@
         <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
       </ds:Transforms>
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>+v+AUxz9tkW0fW3AllOweXyOER14IgfGTNUFE0dCilM=</ds:DigestValue>
+      <ds:DigestValue>TEX2jLsvgCq0rZr+SG3s55In+VVuzH/WWWWoUnJD2Rc=</ds:DigestValue>
     </ds:Reference>
     <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
@@ -284,11 +284,11 @@
       <ds:DigestValue>ARCif8tQIKagVfeHX4Fit5ZfK3mXQCPclQISywh7h44=</ds:DigestValue>
     </ds:Reference>
   </ds:SignedInfo>
-  <ds:SignatureValue>jEfah4l5JQHNK39X9Vytkn2mGLNWLpEnGHeh5mSZL0dqSBcWcL93SOkiMbNeSMl1r1hKrNlsTirj
-X2WdTNRY19u3YhOc/ZEa1hmi5vKdq5QvsQvGNhu72GIybnh4LpYwfK/MwOBr9gAMGnJYAiOjG7YZ
-bHzi8Nn3ViUApPmaYPAtkhWYHmTQBLChCMkGTHRy+i99NDSlL7SYcgztA6OQHlwNv4WyT4fXtZoa
-gmmRAFR4B3ccUYv28XtHMmz50HE1RxOn+AH4Z8AAdgQmCnbY0tyGOJPNTsShV4nisALqcmx8Tdqb
-4MhISi8x4ehjACvNSGNo9gMgsRdVZVQc7U7Qaw==
+  <ds:SignatureValue>a+Tk8Tn0KfDMOEBE7Hqwteoc1vgO/LbRAZz/NKGTCTKmGAZZSx2bIk0GS5yBilkgGlXZkALCGoIA
+E2VG1pRiwc/yJsog2V0ryKy3RQ3xcq95XUqvaSzbSVhb1TG1Fz/Q1GL31eaFwqOcpUJtUZYj8Su7
+zdjDC4FtZnrgAsZAZtqvZUZx67W9h1LCmBs49ZUSCdhFNVKiTCQkmRN2IHC08QSoJDLMdq8keeM2
+l+pzdd7n5LYB4DthFrVV8AJ/gcG04SkIlXeofGDihCGxsoV/0jCEAm9GiX7vcoh4nZR941OP56nX
+9D6sOPBpyZopveh96nDVul9Tcpb1rlNwiA94hg==
 </ds:SignatureValue>
   <ds:KeyInfo Id="KeyInfo-Document-da39a3ee5e6b4b0d3255bfef95601890afd80709">
     <ds:X509Data>

@@ -283,9 +283,9 @@ class ResPartner(models.Model):
             "active",
             *self._get_store_avatar_fields(),
             *self._get_store_im_status_fields(),
-            "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
+            "parent_id",
         ]
         if target.is_internal(self.env):
             res.append("email")

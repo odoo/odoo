@@ -23,7 +23,6 @@ export class ResPartner extends MailResPartner {
             "parent_name",
             "pos_contact_address",
             "invoice_emails",
-            "company_type",
             "fiscal_position_id",
         ];
     }
@@ -49,7 +48,6 @@ export class ResPartner extends MailResPartner {
             parent_name: false,
             pos_contact_address: "\n\n  \n",
             invoice_emails: "",
-            company_type: "person",
             fiscal_position_id: false,
             credit_limit: 0.0,
             use_partner_credit_limit: false,
@@ -73,7 +71,6 @@ export class ResPartner extends MailResPartner {
             parent_name: false,
             pos_contact_address: "\n\n  \n",
             invoice_emails: "",
-            company_type: "person",
             fiscal_position_id: false,
             credit_limit: 0.0,
             use_partner_credit_limit: false,

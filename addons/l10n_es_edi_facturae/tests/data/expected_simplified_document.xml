@@ -24,7 +24,7 @@
       <TaxIdentification>
         <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>ES59962470K</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ESF70432075</TaxIdentificationNumber>
       </TaxIdentification>
       <LegalEntity>
         <CorporateName>company_1_data</CorporateName>
@@ -40,20 +40,19 @@
     </SellerParty>
     <BuyerParty>
       <TaxIdentification>
-        <PersonTypeCode>F</PersonTypeCode>
+        <PersonTypeCode>J</PersonTypeCode>
         <ResidenceTypeCode>R</ResidenceTypeCode>
-        <TaxIdentificationNumber>ESA12345674</TaxIdentificationNumber>
+        <TaxIdentificationNumber>ES05601522X</TaxIdentificationNumber>
       </TaxIdentification>
-      <Individual>
-        <Name>Simplified Invoice</Name>
-        <FirstSurname>Partner</FirstSurname>
-        <SecondSurname>(ES)</SecondSurname>
+      <LegalEntity xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+        <CorporateName>Simplified Invoice Partner (ES)</CorporateName>
+        <TradeName>Simplified Invoice Partner (ES)</TradeName>
         <AddressInSpain>
           <PostCode>False</PostCode>
           <Province>Spain</Province>
           <CountryCode>ESP</CountryCode>
         </AddressInSpain>
-      </Individual>
+      </LegalEntity>
     </BuyerParty>
   </Parties>
   <Invoices>
@@ -126,33 +125,33 @@
       </PaymentDetails>
     </Invoice>
   </Invoices>
-<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
   <ds:SignedInfo>
     <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
     <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-    <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#Object" URI="" Id="Reference-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+    <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#Object" URI="" Id="Reference-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
       <ds:Transforms>
         <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
       </ds:Transforms>
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>2JTZ5hH6cu2LWsdL7PBAmSEGDEtTfnSEGtoOa3tnj6o=</ds:DigestValue>
+      <ds:DigestValue>7WDeCXPWfW1NolBXEQB/JOog9Ji7mhBP7Pl9g5Og3yI=</ds:DigestValue>
     </ds:Reference>
-    <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+    <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureProperties-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>eazxxVbxtBOO3kXeqSJc3MJNY5se6lPtcbeksevz6lU=</ds:DigestValue>
+      <ds:DigestValue>IfOSlF20D9gACm2D386YRpCn1bbk7Pq67Cd1UzEBq88=</ds:DigestValue>
     </ds:Reference>
-    <ds:Reference URI="#KeyInfo-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+    <ds:Reference URI="#KeyInfo-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
       <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-      <ds:DigestValue>+8P6L2nyCl6ViPlDPBo6pw7UVuidB4IYGzJiqgsf+Qo=</ds:DigestValue>
+      <ds:DigestValue>UYi8orTr+2SGgOmCed8iV6FIwWgXZBlk87+8kp/UTQw=</ds:DigestValue>
     </ds:Reference>
   </ds:SignedInfo>
-  <ds:SignatureValue>sW/TcdWJ9uuvLmWkt0m4fl+tF/I+m8X17xQuZy/Lvxdd23V1weXV1Qpro2OkWzMtU5KnxaPqQLlM
-oRqEADnxeuxFYC74h/tjXpan5SRGBklsE7wmIgO1x2RO7zGjUa2C3m2yhHRDlJkaCBdLpvkNN6uo
-zpURL7Ko7LF8w1BYGYkbJe53ZMx7KlHDkzpB2NDaR20ncoPl+KvxKE3FP2PKRyuILcgQfRnyraGG
-i2WftOGCW2QJp4F8kr4IFPqCAfD57A+f1fmU5H/wovlD3ltcPYFSmcE2rNYrLVWTh2cCKUk+OQIR
-PSU6STtsbtrheI1f+On/2hZo4pcIVnKqVMaEqw==
+  <ds:SignatureValue>mpEuGCf15VjLsbAU6bd9Lbsi0AWmApzbuuF2ctp1yndISztvKknJ6hUfFCv9D4cqwFVJ46SnNTlc
+Eobd/k5If5uWOqQohM0tv0ll4Yko+zmeg/sM2ZQUI4xLWu9vnoZtIPknN2KVYzxMWDJWjv1YrI2a
+JUu/L1BGzuv52G42qPT9F5kBCTJldYcDttOlHwxkLlVqkTCUGhytc2yXDsTCmw5/7ugNfAIfFl9m
+N15sc33r+ssoCigjX5nwsMqkmuahlwGO3LZ0SLhgrtQ1/4wxaEioroWGzMrHNv1tvk25tZPRU9mI
+Oe7ffm8dm7gPRWYrHII/YD1R5HND/TmRPx9+pw==
 </ds:SignatureValue>
-  <ds:KeyInfo Id="KeyInfo-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+  <ds:KeyInfo Id="KeyInfo-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
     <ds:X509Data>
       <ds:X509Certificate>MIID8jCCAtqgAwIBAgIUYBl+61DsTkNyyUFGveskbaGP/SkwDQYJKoZIhvcNAQELBQAwgYoxCzAJ
 BgNVBAYTAkJFMRIwEAYDVQQIDAlXYWxsb25uaWExEjAQBgNVBAcMCVJhbWlsbGllczENMAsGA1UE
@@ -188,8 +187,8 @@ aWAYAMCL4KhvISclysD+5juDLpGCLHPtKxBXTQ==
     </ds:KeyValue>
   </ds:KeyInfo>
   <ds:Object>
-    <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
-      <xades:SignedProperties Id="SignatureProperties-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+    <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
+      <xades:SignedProperties Id="SignatureProperties-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
         <xades:SignedSignatureProperties>
           <xades:SigningTime>2023-01-01T00:00:00</xades:SigningTime>
           <xades:SigningCertificate>
@@ -223,7 +222,7 @@ aWAYAMCL4KhvISclysD+5juDLpGCLHPtKxBXTQ==
           </xades:SignaturePolicyIdentifier>
         </xades:SignedSignatureProperties>
         <xades:SignedDataObjectProperties>
-          <xades:DataObjectFormat ObjectReference="#Reference-Document-028f5c6abda3c765f2562e5848fbb071a1eb0409">
+          <xades:DataObjectFormat ObjectReference="#Reference-Document-d8b6af6e61f7eb1fcffc0396a3011b088ffdf5f6">
             <xades:Description/>
             <xades:ObjectIdentifier>
               <xades:Identifier Qualifier="OIDAsURN">urn:oid:1.2.840.10003.5.109.10</xades:Identifier>

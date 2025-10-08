@@ -17,7 +17,7 @@
                         <group>
                             <field name="name"/>
                             <field name="partner_id"
-                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                domain="[('parent_id', '=', False)]"
                                 readonly="1"/>
                         </group>
                         <notebook colspan="4">
@@ -985,7 +985,7 @@
                                     <field name="partner_id" widget="res_partner_many2one" nolabel="1"
                                            context="{
                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
-                                            'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                                            'show_address': 1, 'show_vat': True}"
                                            domain="[('company_id', 'in', (False, company_id))]"
                                            options='{"no_quick_create": True}'
                                            default_focus="1"
@@ -1351,7 +1351,7 @@
                                                domain="[('company_ids', 'parent_of', company_id)]" />
                                         <field name="partner_id"
                                                optional="show"
-                                               domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                               domain="[('parent_id', '=', False)]"
                                                column_invisible="parent.move_type != 'entry'"/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
@@ -1432,7 +1432,7 @@
                                     <form>
                                       <group>
                                         <field name="account_id" domain="[('company_ids', 'parent_of', company_id)]"/>
-                                        <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
+                                        <field name="partner_id" domain="[('parent_id', '=', False)]"/>
                                         <field name="name"/>
                                         <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                         <field name="amount_currency" groups="base.group_multi_currency"/>

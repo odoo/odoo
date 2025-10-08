@@ -235,7 +235,6 @@ class ResPartner(models.Model):
         partner_data.update({
             'country_id': partner_data.get('country_id', {}).get('id'),
             'state_id': partner_data.get('state_id', {}).get('id'),
-            'company_type': 'company',
             'l10n_in_gst_treatment': 'regular',
         })
         return partner_data

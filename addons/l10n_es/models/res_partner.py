@@ -35,3 +35,16 @@ class ResPartner(models.Model):
             if self.country_id:
                 partner_info['IDOtro']['CodigoPais'] = self.country_id.code
         return partner_info
+
+    def _compute_is_company(self):
+        """
+        Determines if the Spanish VAT corresponds to a legal entity (CIF format):
+        CIF = 1 letter + 7 digits + checksum (digit or letter) (e.g., A1234567Y)
+        """
+        super()._compute_is_company()
+        for partner in self:
+            country_code, vat_number = self._split_vat(partner.vat or '')
+            if country_code in ('ES', '') and len(vat_number) == 9\
+                and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
+                and vat_number[1:-1].isdigit():
+                partner.is_company = True

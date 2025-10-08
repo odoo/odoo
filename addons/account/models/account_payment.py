@@ -116,7 +116,7 @@ class AccountPayment(models.Model):
         comodel_name='res.partner',
         string="Customer/Vendor",
         ondelete='restrict',
-        domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
+        domain="['|', ('parent_id','=', False), ('vat','!=', False)]",
         tracking=True,
         check_company=True)
     outstanding_account_id = fields.Many2one(

@@ -44,7 +44,6 @@
         <record id="res_partner_1" model="res.partner">
             <field name="name">Wood Corner</field>
             <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
-            <field name="is_company">1</field>
             <field name="street">1839 Arbor Way</field>
             <field name="city">Turlock</field>
             <field name="state_id" ref='state_us_5'/>
@@ -59,7 +58,6 @@
         <record id="res_partner_2" model="res.partner">
             <field name="name">Deco Addict</field>
             <field eval="[Command.set([ref('base.res_partner_category_14')])]" name="category_id"/>
-            <field name="is_company">1</field>
             <field name="street">77 Santa Barbara Rd</field>
             <field name="city">Pleasant Hill</field>
             <field name="state_id" ref='state_us_5'/>
@@ -74,7 +72,6 @@
         <record id="res_partner_3" model="res.partner">
             <field name="name">Gemini Furniture</field>
             <field eval="[Command.set([ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
-            <field name="is_company" eval="True"/>
             <field name="street">Via Industria 21</field>
             <field name="city">Serravalle</field>
             <field name="zip">47899</field>
@@ -89,7 +86,6 @@
         <record id="res_partner_4" model="res.partner">
             <field name="name">Ready Mat</field>
             <field eval="[Command.set([ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
-            <field name="is_company">1</field>
             <field name="street">7500 W Linne Road</field>
             <field name="city">Tracy</field>
             <field name="state_id" ref='state_us_5'/>
@@ -107,7 +103,6 @@
             <field name="country_id" ref="base.li"/>
             <field name="email">wow@example.com</field>
             <field name="image_1920" file="base/static/img/partner_open_wood.png" type="base64"/>
-            <field name="is_company" eval="True"/>
             <field name="name">OpenWood</field>
             <field name="phone">+352 123 456 789</field>
             <field name="street">B</field>
@@ -120,7 +115,6 @@
             <field name="country_id" ref="base.me"/>
             <field name="email">lightsup@example.com</field>
             <field name="image_1920" file="base/static/img/partner_lightsup.png" type="base64"/>
-            <field name="is_company" eval="True"/>
             <field name="name">LightsUp</field>
             <field name="phone">+372 123 1234</field>
             <field name="street">Eignaa tee 12</field>
@@ -130,7 +124,6 @@
 
         <record id="res_partner_10" model="res.partner">
             <field name="name">The Jackson Group</field>
-            <field name="is_company">1</field>
             <field name="street">1611 Peony Dr</field>
             <field name="city">Tracy</field>
             <field name="state_id" ref='state_us_5'/>
@@ -145,7 +138,6 @@
         <record id="res_partner_12" model="res.partner">
             <field name="name">Azure Interior</field>
             <field eval="[Command.set([ref('res_partner_category_11')])]" name="category_id"/>
-            <field name="is_company">1</field>
             <field name="street">4557 De Silva St</field>
             <field name="city">Fremont</field>
             <field name="state_id" ref='state_us_5'/>
@@ -160,7 +152,6 @@
 
         <record id="res_partner_18" model="res.partner">
             <field name="name">Lumber Inc</field>
-            <field name="is_company">1</field>
             <field name="street">1337 N San Joaquin St</field>
             <field name="city">Stockton</field>
             <field name="state_id" ref='state_us_5'/>
