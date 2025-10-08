@@ -179,6 +179,9 @@ class SaleProductConfiguratorController(Controller):
         )
         # Shouldn't be sent client-side
         values.pop("pricelist_rule_id", None)
+        if product and not product._has_multiple_uoms():
+            # Enforce the default UoM if there is no other choice for this variant.
+            values["uom"] = product.uom_id.read(["id", "display_name"])[0]
         return values
 
     @route(
@@ -288,7 +291,6 @@ class SaleProductConfiguratorController(Controller):
                 }],
                 'exclusions': dict,
                 'archived_combination': dict,
-                'available_uoms': dict (optional),
             }
         """
         uom = (
@@ -319,6 +321,7 @@ class SaleProductConfiguratorController(Controller):
                 uom=uom,
                 currency=currency,
                 date=so_date,
+                show_packaging=show_packaging,
                 **kwargs,
             ),
             quantity=quantity,
@@ -347,11 +350,6 @@ class SaleProductConfiguratorController(Controller):
             exclusions=attribute_exclusions["exclusions"],
             archived_combinations=attribute_exclusions["archived_combinations"],
         )
-        if show_packaging and product_template._has_multiple_uoms():
-            values["available_uoms"] = product_template._get_available_uoms().read([
-                "id",
-                "display_name",
-            ])
         # Shouldn't be sent client-side
         values.pop("pricelist_rule_id", None)
         return values
@@ -371,6 +369,7 @@ class SaleProductConfiguratorController(Controller):
                 'description_sale': str|False,
                 'display_name': str,
                 'price': float,
+                'available_uoms': dict (optional),
             }
         """
         basic_information = dict(
@@ -393,6 +392,11 @@ class SaleProductConfiguratorController(Controller):
             pricelist=pricelist,
             **kwargs,
         )
+        if kwargs.get('show_packaging', True) and product_or_template._has_multiple_uoms():
+            basic_information["available_uoms"] = product_or_template._get_available_uoms().read([
+                "id",
+                "display_name",
+            ])
         return dict(
             **basic_information,
             price=price,

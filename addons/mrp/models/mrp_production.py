@@ -420,10 +420,10 @@ class MrpProduction(models.Model):
             ):
                 production.product_id = bom.product_id or bom.product_tmpl_id.product_variant_id
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.bom_ids', 'product_id.bom_ids.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.bom_ids', 'product_id.bom_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for production in self:
-            production.allowed_uom_ids = production.product_id.uom_id | production.product_id.uom_ids | production.product_id.bom_ids.uom_id
+            production.allowed_uom_ids = production.product_id._get_available_uoms() | production.product_id.bom_ids.uom_id
 
     @api.depends('product_id', 'never_product_template_attribute_value_ids')
     def _compute_bom_id(self):

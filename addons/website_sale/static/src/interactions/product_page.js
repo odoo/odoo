@@ -9,7 +9,7 @@ import { memoize, uniqueId } from '@web/core/utils/functions';
 import { KeepLast } from '@web/core/utils/concurrency';
 import { insertThousandsSep } from '@web/core/utils/numbers';
 import { throttleForAnimation } from '@web/core/utils/timing';
-import { markup } from '@odoo/owl';
+import { htmlEscape, markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import { ProductImageViewer } from '@website_sale/js/components/website_sale_image_viewer';
 
@@ -336,6 +336,10 @@ export class ProductPage extends Interaction {
             'product_template_id': productTemplateId,
             'combination': combination,
         }));
+        if (combinationInfo.product_tags) {
+            combinationInfo.product_tags = markup(combinationInfo.product_tags);
+        }
+        combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
         this._onChangeCombination(ev, parent, combinationInfo, attributeValueImages);
         this._checkExclusions(parent, combination);
@@ -626,12 +630,34 @@ export class ProductPage extends Interaction {
 
         this._toggleDisable(parent, isCombinationPossible);
 
-        // Only update the images and tags if the product has changed.
+        // Only update the images, tags and packaging selector if the product has changed.
         if (!combination.no_product_change) {
             this._updateProductImages(parent.closest('#product_detail_main'), combination.carousel);
             const productTags = parent.querySelector('.o_product_tags');
-            productTags?.insertAdjacentHTML('beforebegin', markup(combination.product_tags));
+            productTags?.insertAdjacentHTML('beforebegin', htmlEscape(combination.product_tags));
             productTags?.remove();
+
+            const packagingSelector = parent.querySelector('[name="packaging_selector"]');
+            if (packagingSelector) {
+                packagingSelector.insertAdjacentHTML(
+                    'beforebegin', htmlEscape(combination.packaging_selector)
+                );
+                packagingSelector.remove();
+            }
+            // Toggle variant section visibility when UOM availability changes (edge case:
+            // template has no attributes, only some variants have UOMs).
+            const variantSection = parent.querySelector(
+                '.o_wsale_product_details_content_section_attributes'
+            );
+            if (variantSection) {
+                const hasAttributes = parent.querySelector(
+                    '.o_wsale_product_page_variants li.variant_attribute'
+                );
+                const hasPackaging = parent.querySelector(
+                    '[name="packaging_selector"] .o_wsale_product_page_variants'
+                );
+                variantSection.classList.toggle('d-none', !hasAttributes && !hasPackaging);
+            }
         }
 
         const productIdElements = parent.querySelectorAll('[data-product-id]');

@@ -222,10 +222,10 @@ class RepairOrder(models.Model):
             else:
                 repair.product_qty = 1.0
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for repair in self:
-            repair.allowed_uom_ids = repair.product_id.uom_id | repair.product_id.uom_ids | repair.product_id.seller_ids.uom_id
+            repair.allowed_uom_ids = repair.product_id._get_available_uoms() | repair.product_id.seller_ids.uom_id
 
     @api.depends('picking_id')
     def _compute_partner_id(self):

@@ -68,6 +68,12 @@ class WebsiteSaleVariantController(Controller):
                 "website_sale.product_tags",
                 values={"all_product_tags": all_tags.filtered("visible_to_customers")},
             )
+
+        combination_info["packaging_selector"] = request.env["ir.ui.view"]._render_template(
+            "website_sale.product_packaging_selector",
+            values={"product": product_template, "product_variant": product},
+        )
+
         return combination_info
 
     @route(

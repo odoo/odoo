@@ -315,6 +315,11 @@ export class ProductConfiguratorDialog extends Component {
         if (this._isPossibleCombination(product)) {
             const updatedValues = await this._updateCombination(product, product.quantity, product.uom.id);
             Object.assign(product, updatedValues);
+            if (product.available_uoms?.length) {
+                if (!product.available_uoms.find(uom => uom.id === product.uom.id)) {
+                    product.uom = product.available_uoms[0];
+                }
+            }
             // When a combination should exist but was deleted from the database, it should not be
             // selectable and considered as an exclusion.
             if (!product.id && product.attribute_lines.every(ptal => ptal.create_variant === "always")) {

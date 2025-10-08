@@ -97,10 +97,10 @@ class StockMoveLine(models.Model):
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids | line.sudo().product_id.seller_ids.uom_id
+            line.allowed_uom_ids = line.product_id._get_available_uoms() | line.sudo().product_id.seller_ids.uom_id
 
     @api.depends('move_id.uom_id', 'product_id.uom_id')
     def _compute_uom_id(self):

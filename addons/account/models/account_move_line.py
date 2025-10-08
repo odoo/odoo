@@ -1063,10 +1063,10 @@ class AccountMoveLine(models.Model):
                 and foreign_curr.is_zero(line.amount_residual_currency)
             )
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
+            line.allowed_uom_ids = line.product_id._get_available_uoms()
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):

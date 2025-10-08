@@ -212,10 +212,10 @@ class StockWarehouseOrderpoint(models.Model):
             if orderpoint.product_max_qty < orderpoint.product_min_qty or not orderpoint.product_max_qty:
                 orderpoint.product_max_qty = orderpoint.product_min_qty
 
-    @api.depends('route_id', 'product_id', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('route_id', 'product_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_replenishment_uom_ids(self):
         for orderpoint in self:
-            orderpoint.allowed_replenishment_uom_ids = orderpoint.product_id.uom_ids
+            orderpoint.allowed_replenishment_uom_ids = orderpoint.product_id.uom_ids | orderpoint.product_id.extra_uom_ids
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.seller_ids.uom_id
 

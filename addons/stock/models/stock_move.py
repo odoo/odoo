@@ -200,10 +200,10 @@ class StockMove(models.Model):
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.extra_uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for move in self:
-            move.allowed_uom_ids = move.product_id.uom_id | move.product_id.uom_ids | move.sudo().product_id.seller_ids.uom_id
+            move.allowed_uom_ids = move.product_id._get_available_uoms() | move.sudo().product_id.seller_ids.uom_id
 
     @api.depends('product_id')
     def _compute_uom_id(self):

@@ -969,6 +969,8 @@ class ProductTemplate(models.Model):
         variants_to_create = []
         variants_to_activate = Product
         variants_to_unlink = Product
+        # {tmpl_id: [(ptav_ids_frozenset, extra_uom_ids), ...]} to propagate to new variants
+        templates_extra_uom_ids = {}
 
         for tmpl_id in self:
             lines_without_no_variants = tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes()
@@ -1035,13 +1037,31 @@ class ProductTemplate(models.Model):
                 )
                 variants_to_activate += current_variants_to_activate
 
-            variants_to_unlink += all_variants - current_variants_to_activate
+            variants_being_replaced = all_variants - current_variants_to_activate
+            if current_variants_to_create and variants_being_replaced:
+                extra_uom_mapping = []
+                for variant in variants_being_replaced:
+                    if variant.extra_uom_ids:
+                        ptav_ids = frozenset(variant.product_template_attribute_value_ids.ids)
+                        extra_uom_mapping.append((ptav_ids, variant.extra_uom_ids))
+                if extra_uom_mapping:
+                    templates_extra_uom_ids[tmpl_id.id] = extra_uom_mapping
+            variants_to_unlink += variants_being_replaced
 
         if variants_to_activate:
             # Only activate variants whose template is active
             variants_to_activate.filtered(lambda v: v.product_tmpl_id.active).write({'active': True})
         if variants_to_create:
-            Product.create(variants_to_create)
+            new_variants = Product.create(variants_to_create)
+            extra_uom_mapping = templates_extra_uom_ids.get(new_variants[0].product_tmpl_id.id, [])
+            for new_variant in new_variants:
+                new_ptav_ids = frozenset(new_variant.product_template_attribute_value_ids.ids)
+                inherited_uom_ids = self.env['uom.uom']
+                for old_ptav_ids, old_extra_uom_ids in extra_uom_mapping:
+                    if old_ptav_ids <= new_ptav_ids:  # old is a subset of new
+                        inherited_uom_ids |= old_extra_uom_ids
+                if inherited_uom_ids:
+                    new_variant.extra_uom_ids = inherited_uom_ids
         if variants_to_unlink:
             variants_to_unlink._unlink_or_archive()
             # prevent change if exclusion deleted template by deleting last variant

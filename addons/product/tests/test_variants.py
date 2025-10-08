@@ -443,6 +443,96 @@ class TestVariants(ProductVariantsCommon):
             'THIS IS A BARCODE',
         )
 
+    def test_extra_uom_ids_propagation_on_variant_recreation(self):
+        """When adding a new attribute to a template, existing extra_uom_ids
+        should propagate to new variants based on PTAV subset matching."""
+        template = self.env['product.template'].create({
+            'name': 'Test Extra UoM Propagation',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([
+                        self.size_attribute_s.id,
+                        self.size_attribute_m.id,
+                        self.size_attribute_l.id,
+                    ])],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 3)
+
+        # Assign extra_uom_ids per variant
+        variants = template.product_variant_ids.sorted('id')
+        variant_s, variant_m, variant_l = variants
+        variant_s.extra_uom_ids = self.uom_gram
+        variant_m.extra_uom_ids = self.uom_kgm
+        variant_l.extra_uom_ids = self.uom_ton
+
+        # Add Color attribute → triggers variant recreation → 6 variants
+        template.write({
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set([
+                        self.color_attribute_red.id,
+                        self.color_attribute_blue.id,
+                    ])],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 6)
+
+        # Check propagation by PTAV subset matching
+        for variant in template.product_variant_ids:
+            ptav_names = variant.product_template_attribute_value_ids.mapped(
+                'product_attribute_value_id.name'
+            )
+            if 'S' in ptav_names:
+                self.assertEqual(variant.extra_uom_ids, self.uom_gram,
+                    f"Variant {ptav_names} should inherit gram from S")
+            elif 'M' in ptav_names:
+                self.assertEqual(variant.extra_uom_ids, self.uom_kgm,
+                    f"Variant {ptav_names} should inherit kgm from M")
+            elif 'L' in ptav_names:
+                self.assertEqual(variant.extra_uom_ids, self.uom_ton,
+                    f"Variant {ptav_names} should inherit ton from L")
+
+    def test_extra_uom_ids_not_propagated_without_match(self):
+        """When old variants have no PTAV overlap with new ones,
+        extra_uom_ids should not propagate."""
+        template = self.env['product.template'].create({
+            'name': 'Test No Propagation',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([
+                        self.size_attribute_s.id,
+                        self.size_attribute_m.id,
+                    ])],
+                }),
+            ],
+        })
+        variants = template.product_variant_ids.sorted('id')
+        variants[0].extra_uom_ids = self.uom_gram  # S only
+
+        # Remove Size, add Color → completely new variants with no PTAV overlap
+        template.write({
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set([
+                        self.color_attribute_red.id,
+                        self.color_attribute_blue.id,
+                    ])],
+                }),
+                Command.unlink(template.attribute_line_ids[0].id),
+            ],
+        })
+
+        self.assertFalse(template.product_variant_ids.extra_uom_ids,
+            "New variants with no PTAV overlap should have empty extra_uom_ids")
+
+
 @tagged('post_install', '-at_install')
 class TestVariantsNoCreate(ProductVariantsCommon):
 
