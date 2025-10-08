@@ -14,6 +14,13 @@ export class WorkEntryCalendarModel extends CalendarModel {
     /**
      * @override
      */
+    async createRecord(record) {
+        return this.orm.create(this.meta.resModel, [record]);
+    }
+
+    /**
+     * @override
+     */
     async updateData(data) {
         const { start, end } = this.computeRange();
         await this.orm.call("hr.employee", "generate_work_entries", [
@@ -31,13 +38,13 @@ export class WorkEntryCalendarModel extends CalendarModel {
         const userFavoritesWorkEntriesIds = await this.orm.formattedReadGroup(
             "hr.work.entry",
             [
-                ["create_uid", "=", user.userId],
+                ["company_id", "=", user.activeCompany.id],
                 ["create_date", ">", serializeDate(DateTime.local().minus({ months: 3 }))],
             ],
-            ["work_entry_type_id", "create_date:day"],
-            [],
+            ["work_entry_type_id"],
+            ["__count"],
             {
-                order: "create_date:day desc",
+                order: "__count desc",
                 limit: 6,
             }
         );
@@ -45,7 +52,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
             this.userFavoritesWorkEntries = await this.orm.read(
                 "hr.work.entry.type",
                 userFavoritesWorkEntriesIds.map((r) => r.work_entry_type_id?.[0]).filter(Boolean),
-                ["display_name", "display_code", "color"]
+                ["display_name", "display_code", "color", "shortcut_behavior"]
             );
             this.userFavoritesWorkEntries = this.userFavoritesWorkEntries.sort((a, b) =>
                 a.display_code
@@ -72,14 +79,19 @@ export class WorkEntryCalendarModel extends CalendarModel {
                 if (existing_duration > 0)
                     values.duration = existing_duration;
                 else {
-                    const generated_work_entry = await this.orm.call(
+                    const theoretical_intervals = await this.orm.call(
                         "hr.employee",
-                        "generate_work_entries",
-                        [values.employee_id, date, date, true]
+                        "formatted_employee_attendance_intervals",
+                        [values.employee_id, serializeDate(date), serializeDate(date)]
                     );
-                    if (generated_work_entry.length > 0)
-                        newly_generated_entries.push(generated_work_entry[0]);
-                    continue
+                    if (theoretical_intervals.length) {
+                        values.duration = theoretical_intervals.reduce(
+                            (acc, i) => acc + i.attendance[0].duration_hours,
+                            0
+                        );
+                    } else {
+                        continue;
+                    }
                 }
             }
             new_records.push({

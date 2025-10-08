@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_work_entry.WorkEntryMultiCreatePopover" t-inherit="web.MultiCreatePopover" t-inherit-mode="primary">
-        <button t-on-click="() => this.onAdd()" position="after">
-            <button class="btn btn-sm btn-secondary" t-on-click="() => this.onReplace()">Replace</button>
-        </button>
+        <FormRenderer position="attributes">
+            <attribute name="class" separator=" " remove="pt-3'" add="'"/>
+        </FormRenderer>
+        <Record position="inside">
+            <xpath expr="//div[hasclass('popover-footer')]" position="move"/>
+        </Record>
+        <xpath expr="//div[hasclass('popover-footer')]" position="replace">
+            <div class="popover-footer pt-0 d-flex gap-1">
+                <button class="btn btn-sm"
+                        t-if="!this.multiCreateRecordProps.context.quick_add"
+                        t-att-class="data.record.data?.shortcut_behavior === 'replace' ? 'btn-primary' : 'btn-secondary'"
+                        t-on-click="() => this.onReplace()">Replace</button>
+                <button class="btn btn-sm"
+                        t-att-class="data.record.data?.shortcut_behavior === 'add' ? 'btn-primary' : 'btn-secondary'"
+                        t-on-click="() => this.onAdd()">Add</button>
+                <button class="btn btn-sm btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+            </div>
+        </xpath>
     </t>
 </templates>

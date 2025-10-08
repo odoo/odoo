@@ -7,7 +7,7 @@ from itertools import chain
 
 from psycopg2 import OperationalError
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.intervals import Intervals
@@ -25,7 +25,7 @@ class HrWorkEntry(models.Model):
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     resource_calendar_id = fields.Many2one(related='version_id.resource_calendar_id')
     date = fields.Date(required=True)
-    duration = fields.Float(string="Duration", default=8)
+    duration = fields.Float(string="Duration", default=lambda self: self.env.company.resource_calendar_id.hours_per_day)
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         index=True,
@@ -33,6 +33,7 @@ class HrWorkEntry(models.Model):
         domain=lambda self: self._get_work_entry_type_domain())
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
+    shortcut_behavior = fields.Selection(related='work_entry_type_id.shortcut_behavior')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     category = fields.Selection(related='work_entry_type_id.category')
@@ -85,7 +86,7 @@ class HrWorkEntry(models.Model):
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             contracts = employee._get_versions_with_contract_overlap_with_period(contract_start, contract_end)
             if not contracts:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "%(employee)s does not have a contract on %(date)s.",
                     employee=employee.name,
                     date=contract_start,
@@ -266,7 +267,7 @@ class HrWorkEntry(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_validated_work_entries(self):
         if any(w.state == 'validated' for w in self):
-            raise UserError(_("This work entry is validated. You can't delete it."))
+            raise UserError(self.env._("This work entry is validated. You can't delete it."))
 
     def unlink(self):
         employee_ids = self.employee_id.ids

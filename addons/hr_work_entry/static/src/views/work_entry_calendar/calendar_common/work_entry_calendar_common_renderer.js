@@ -1,17 +1,30 @@
 import { convertRecordToEvent } from "@web/views/calendar/utils";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
-import { WorkEntryCalendarCommonPopover } from "@hr_work_entry/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover";
+import { WorkEntryPopover } from "@hr_work_entry/components/work_entry_popover/work_entry_popover";
+import { useService } from "@web/core/utils/hooks";
+import { formatFloatTime } from "@web/views/fields/formatters";
 
 export class WorkEntryCalendarCommonRenderer extends CalendarCommonRenderer {
     static eventTemplate = "hr_work_entry.WorkEntryCalendarCommonRenderer.event";
     static components = {
         ...CalendarCommonRenderer,
-        Popover: WorkEntryCalendarCommonPopover,
+        Popover: WorkEntryPopover,
     };
-    static props = {
-        ...CalendarCommonRenderer.props,
-        splitRecord: Function,
-    };
+
+    setup() {
+        super.setup();
+        this.workEntryPopoverModel = useService("workEntryPopoverService");
+        this.workEntryPopoverModel.setup(this.props.model.meta, this.additionalFieldsToFetch);
+    }
+
+    get additionalFieldsToFetch() {
+        return [
+            { name: "employee_id", type: "many2one", readonly: false },
+            { name: "version_id", type: "many2one", readonly: false },
+            { name: "date", type: "date", readonly: false },
+            { name: "is_manual", type: "boolean", readonly: false },
+        ];
+    }
 
     /**
      * @override
@@ -25,10 +38,23 @@ export class WorkEntryCalendarCommonRenderer extends CalendarCommonRenderer {
         };
     }
 
+    /**
+     * @override
+     */
     getPopoverProps(record) {
+        record = record.rawRecord;
         return {
-            ...super.getPopoverProps(record),
-            splitRecord: this.props.splitRecord,
+            readonly: !this.props.editRecord || record.state === "validated",
+            onReload: async () => await this.props.model.load(),
+            originalRecord: record,
+            editArchInfo: this.editArchInfo,
+            getDurationStr: (duration) =>
+                formatFloatTime(duration, {
+                    noLeadingZeroHour: true,
+                }).replace(/(:00|:)/g, "h"),
+            recordProps: this.workEntryPopoverModel.recordProps,
+            archInfo: this.workEntryPopoverModel.archInfo,
+            getSource: this.workEntryPopoverModel.getSource,
         };
     }
 }

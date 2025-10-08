@@ -37,6 +37,12 @@ class HrWorkEntryType(models.Model):
         string="Added to Monthly Pay",
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
     description = fields.Text(translate=True)
+    shortcut_behavior = fields.Selection(
+        [('add', 'Add'), ('replace', 'Replace')],
+        string="Shortcut Behavior", default='replace', required=True,
+        help="This field decides the behavior of the shortcut in the gantt view of the work entries. Add will always "
+             "prompt a duration and will be added to the existing work entries while replace will simply replace all "
+             "work entries of that day")
 
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):

@@ -1875,6 +1875,14 @@ class HrEmployee(models.Model):
                 duration_data = duration_data | lunch_intervals
             return duration_data
 
+    def formatted_employee_attendance_intervals(self, start, stop, lunch=False):
+        self.ensure_one()
+        employee_tz = ZoneInfo(self.tz) if self.tz else UTC
+        date_start = datetime.combine(fields.Datetime.to_datetime(start), time.min, employee_tz)
+        date_stop = datetime.combine(fields.Datetime.to_datetime(stop), time.max, employee_tz)
+        employee_attendance_intervals = self._employee_attendance_intervals(date_start, date_stop, lunch)
+        return [{'start': i[0], 'stop': i[1], 'attendance': i[2].read()} for i in employee_attendance_intervals]
+
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())

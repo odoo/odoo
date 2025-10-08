@@ -25,6 +25,4 @@ export class HrWorkEntry extends models.ServerModel {
             </calendar>
         `,
     };
-
-    action_split(workEntryIds, vals) {}
 }
