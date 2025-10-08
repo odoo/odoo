@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 import subprocess as sp
@@ -181,8 +182,16 @@ class TestCommandUsingDb(TestCommand, TransactionCase):
             output_buffer = BytesIO()
             output_wrapper = TextIOWrapper(output_buffer, encoding="utf-8")
             with redirect_stdout(output_wrapper):
-                args = f"export -d {self.env.cr.dbname} -o - base".split()
-                I18n().run(args)
+                # Do not call ``config.parse_args(...)`` in tests.
+                # It would modify the global ``config`` object and disable
+                # the ``--test-enable`` flag, breaking the ``at-install``
+                # CI test build.
+                I18n()._export(argparse.Namespace(
+                    db_name=self.env.cr.dbname,
+                    output='-',
+                    modules=['base'],
+                    languages=['pot'],
+                ))
                 output_wrapper.flush()
 
             actual_text = [
