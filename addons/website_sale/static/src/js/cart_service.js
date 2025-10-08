@@ -236,6 +236,7 @@ export class CartService {
     /**
      * Opens the combo configurator dialog.
      *
+     * @async
      * @private
      * @param {Number} productTemplateId - The product template id, as a `product.template` id.
      * @param {Number} productId - The product's id, as a `product.product` id.
@@ -294,6 +295,7 @@ export class CartService {
     /**
      * Opens the product configurator dialog.
      *
+     * @async
      * @private
      * @param {Number} productTemplateId - The product template id, as a `product.template` id.
      * @param {Number} quantity - The quantity to add to the cart.
@@ -518,13 +520,13 @@ export class CartService {
         if (props.lines) {
             this.cartNotificationService.add('', {
                 lines: props.lines,
-                currency_id: props.currency_id,
+                currencyId: props.currencyId,
                 ...options,
             });
         }
-        if (props.warning) {
+        if (props.warningMessage) {
             this.cartNotificationService.add('', {
-                warning: props.warning,
+                warningMessage: props.warningMessage,
                 ...options,
             });
         }

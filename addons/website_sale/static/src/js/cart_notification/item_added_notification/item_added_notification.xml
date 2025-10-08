@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="website_sale.addToCartNotification">
-        <div
-            class="d-flex flex-column gap-2 mb-2 mt-1"
-            t-foreach="mainLines"
-            t-as="line"
-            t-key="line.id"
-        >
-            <t t-call="website_sale.cartLine"/>
+    <t t-name="website_sale.itemAddedNotification">
+        <div class="toast show">
+            <div class="toast-body">
+                <div
+                    class="d-flex flex-column gap-2 mb-2 mt-1"
+                    t-foreach="mainLines"
+                    t-as="line"
+                    t-key="line.id"
+                >
+                    <t t-call="website_sale.cartNotificationLine"/>
+                </div>
+                <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
+                    View cart
+                </a>
+            </div>
         </div>
-        <a role="button" class="w-100 btn btn-primary" href="/shop/cart">
-            View cart
-        </a>
     </t>
 
-    <t t-name="website_sale.cartLine">
+    <t t-name="website_sale.cartNotificationLine">
         <div class="d-flex gap-3">
             <div class="position-relative">
                 <div class="o_cart_product_image">
                     <img
                         class="img o_image_64_max rounded mb-2 img-fluid"
-                        t-att-src="line.image_url"
+                        t-att-src="line.imageSrc"
                         t-att-alt="line.name"
                     />
                 </div>
@@ -33,16 +37,16 @@
             <div class="d-flex flex-column align-items-start flex-grow-1">
                 <span t-out="line.name"/>
                 <span
-                    t-if="line.combination_name"
+                    t-if="line.combinationName"
                     class="text-muted small"
-                    t-out="line.combination_name"
+                    t-out="line.combinationName"
                 />
                 <span t-if="line.description" class="text-muted small" t-out="line.description"/>
-                <span t-out="line.uom_name" class="badge mt-1 bg-light"/>
+                <span t-out="line.uomName" class="badge mt-1 bg-light"/>
             </div>
             <div
                 class="col-3 d-flex flex-column align-items-end gap-1"
-                t-if="!line.linked_line_id"
+                t-if="!line.linkedLineId"
                 t-out="getFormattedPrice(line)"
             />
         </div>
@@ -52,7 +56,7 @@
             t-as="linkedLine"
             t-key="linkedLine.id"
         >
-            <t t-call="website_sale.cartLine">
+            <t t-call="website_sale.cartNotificationLine">
                 <t t-set="line" t-value="linkedLine"/>
             </t>
         </div>
