@@ -114,7 +114,8 @@ export class ResPartner extends Record {
     searchChat() {
         return Object.values(this.store["mail.thread"].records).find(
             (thread) =>
-                thread.channel?.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+                thread.channel?.channel_type === "chat" &&
+                thread.channel.correspondent?.persona.eq(this)
         );
     }
 
