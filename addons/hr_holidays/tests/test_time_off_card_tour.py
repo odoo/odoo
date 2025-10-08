@@ -1,4 +1,5 @@
 from odoo.tests import HttpCase, tagged, users
+from odoo.addons.hr.tests.test_utils import get_admin_employee
 
 @tagged('post_install', '-at_install')
 class TestTimeOffCardTour(HttpCase):
@@ -11,8 +12,9 @@ class TestTimeOffCardTour(HttpCase):
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })
+        admin_employee = get_admin_employee(self.env)
         self.env['hr.leave.allocation'].create({
-            'employee_id': self.env.user.employee_id.id,
+            'employee_id': admin_employee.id,
             'holiday_status_id': leave_type.id,
             'allocation_type': 'regular',
             'type_request_unit': 'half_day',

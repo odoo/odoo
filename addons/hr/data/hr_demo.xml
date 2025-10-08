@@ -12,6 +12,15 @@
                 (4, ref('hr.group_hr_manager'))]"/>
         </record>
 
+        <record id="employee_admin" model="hr.employee">
+            <field name="name" eval="obj(ref('base.partner_admin')).name" model="res.partner"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="department_id" ref="dep_administration"/>
+            <field name="address_id" ref="base.main_partner"/>
+            <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
+            <field name="structure_type_id" ref="hr.structure_type_employee"/>
+        </record>
+
         <!-- Resource Calendar -->
         <record id="resource_calendar_std_20h" model="resource.calendar">
             <field name="name">Standard 20 hours/week</field>

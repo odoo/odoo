@@ -85,7 +85,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             Allocations = self.env['hr.leave.allocation']
             HolidaysStatus = self.env['hr.leave.type']
 
-            self.env.ref('hr.employee_admin').tz = "Europe/Brussels"
+            self.admin_employee.tz = "Europe/Brussels"
 
             holiday_status_paid_time_off = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
@@ -108,7 +108,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     'name': 'Paid Time off for Admin',
                     'holiday_status_id': holiday_status_paid_time_off.id,
                     'number_of_days': 20,
-                    'employee_id': self.ref('hr.employee_admin'),
+                    'employee_id': self.admin_employee.id,
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }
@@ -194,8 +194,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             self.assertEqual(hol2.state, 'refuse',
                             'hr_holidays: hr_user should not be able to reset a refused leave request')
 
-            employee_id = self.ref('hr.employee_admin')
-            # cl can be of maximum 20 days for employee_admin
+            employee_id = self.admin_employee.id
+            # cl can be of maximum 20 days for admin_emp
             hol3_status = holiday_status_paid_time_off.with_context(employee_id=employee_id)
             # I assign the dates in the holiday request for 1 day
             hol3 = Requests.create({
@@ -219,11 +219,11 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         # Print the HR Holidays(Summary Employee) Report through the wizard
         ctx = {
             'model': 'hr.employee',
-            'active_ids': [self.ref('hr.employee_admin')]
+            'active_ids': [self.admin_employee.id]
         }
         data_dict = {
             'date_from': datetime.today().strftime('%Y-%m-01'),
-            'emp': [(6, 0, [self.ref('hr.employee_admin')])],
+            'emp': [(6, 0, [self.admin_employee.id])],
             'holiday_type': 'Approved'
         }
         self.env.company.external_report_layout_id = self.env.ref('web.external_layout_standard').id
@@ -247,7 +247,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'name': 'Paid Time off for David',
             'holiday_status_id': holiday_status_paid_time_off.id,
             'number_of_days': 20,
-            'employee_id': self.ref('hr.employee_admin'),
+            'employee_id': self.admin_employee.id,
             'state': 'confirm',
             'date_from': time.strftime('%Y-%m-01'),
             'date_to': time.strftime('%Y-12-31'),
@@ -258,7 +258,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'holiday_status_id': holiday_status_paid_time_off.id,
             'request_date_from': date.today() + relativedelta(day=11),
             'request_date_to': date.today() + relativedelta(day=10),
-            'employee_id': self.ref('hr.employee_admin'),
+            'employee_id': self.admin_employee.id,
         }
         with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
             self.env['hr.leave'].create(leave_vals)
@@ -268,7 +268,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'holiday_status_id': holiday_status_paid_time_off.id,
             'request_date_from': date.today() + relativedelta(day=10),
             'request_date_to': date.today() + relativedelta(day=11),
-            'employee_id': self.ref('hr.employee_admin'),
+            'employee_id': self.admin_employee.id,
         }
         leave = self.env['hr.leave'].create(leave_vals)
 

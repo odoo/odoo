@@ -4,6 +4,7 @@ from freezegun import freeze_time
 
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
+from odoo.addons.hr.tests.test_utils import get_admin_employee
 
 from datetime import date
 
@@ -16,7 +17,7 @@ class TestHrHolidaysTour(HttpCase):
         admin_user.write({
             'email': 'mitchell.admin@example.com',
         })
-        admin_employee = admin_user.employee_id
+        admin_employee = get_admin_employee(self.env)
         HRLeave = self.env['hr.leave']
         date_from = date(2022, 1, 17)
         date_to = date(2022, 1, 18)

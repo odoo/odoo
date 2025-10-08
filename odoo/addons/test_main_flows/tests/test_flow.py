@@ -2,6 +2,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestMockOnlineSyncCommon
 from odoo.tools import mute_logger
+from odoo.addons.hr.tests.test_utils import get_admin_employee
 
 import logging
 import odoo.tests
@@ -16,6 +17,8 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
         self.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
+        self.admin_employee = get_admin_employee(self.env)
+
         # Enable Buy and Manufacture routes to be selectable on the product form.
         self.env.ref('purchase_stock.route_warehouse0_buy').write({
             'product_selectable': True,

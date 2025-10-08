@@ -7,6 +7,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 from odoo.tests.common import TransactionCase
 from odoo.fields import Datetime
+from odoo.addons.hr.tests.test_utils import get_admin_employee
 
 
 class TestHrHolidaysCommon(common.TransactionCase):
@@ -36,6 +37,8 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'request_unit': 'day',
             'company_id': cls.company.id,
         })
+
+        cls.admin_employee = get_admin_employee(cls.env)
 
         # Test users to use through the various tests
         cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
