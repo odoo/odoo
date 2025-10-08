@@ -37,5 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_nl_rounding_difference_profit_account_id': '4950',
                 'account_sale_tax_id': 'btw_21',
                 'account_purchase_tax_id': 'btw_21_buy',
+                'deferred_expense_account_id': '1205',
+                'deferred_revenue_account_id': '1405',
             },
         }
