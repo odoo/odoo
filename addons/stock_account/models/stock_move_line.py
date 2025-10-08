@@ -21,6 +21,104 @@ class StockMoveLine(models.Model):
             self._update_stock_move_value(qty_by_ml)
         return res
 
+<<<<<<< 6be947718c69b15f20c6680dd35e2fed5d636d28
+||||||| dae9b0a906e86a9e26cd1b37bd9b9385804c8e55
+    def unlink(self):
+        analytic_move_to_recompute = self.move_id
+        res = super().unlink()
+        analytic_move_to_recompute._account_analytic_entry_move()
+        return res
+
+    def _update_svl_quantity(self, added_qty):
+        self.ensure_one()
+        if self.state != 'done':
+            return
+        if self.product_id.lot_valuated and not self.lot_id:
+            raise UserError(_('This product is valuated by lot: an explicit Lot/Serial number is required when adding quantity'))
+        product_uom = self.product_id.uom_id
+        added_uom_qty = self.product_uom_id._compute_quantity(added_qty, product_uom, rounding_method='HALF-UP')
+        if product_uom.is_zero(added_uom_qty):
+            return
+        self._create_correction_svl(self.move_id, added_uom_qty)
+
+    def _action_done(self):
+        for line in self:
+            if not line.lot_id and not line.lot_name and line.product_id.lot_valuated:
+                raise UserError(_("Lot/Serial number is mandatory for product valuated by lot"))
+        return super()._action_done()
+
+    # -------------------------------------------------------------------------
+    # SVL creation helpers
+    # -------------------------------------------------------------------------
+    def _create_correction_svl(self, move, diff):
+        lot = self.lot_id if self.product_id.lot_valuated else self.env['stock.lot']
+        qty = (lot, abs(diff))
+        stock_valuation_layers = self.env['stock.valuation.layer']
+        if (move._is_in() and diff > 0) or (move._is_out() and diff < 0):
+            move.product_price_update_before_done(forced_qty=(lot, diff))
+            stock_valuation_layers |= move._create_in_svl(forced_quantity=qty)
+            if move.product_id.cost_method in ('average', 'fifo'):
+                move.product_id._run_fifo_vacuum(move.company_id)
+        elif (move._is_in() and diff < 0) or (move._is_out() and diff > 0):
+            stock_valuation_layers |= move._create_out_svl(forced_quantity=qty)
+            if move.product_id.lot_valuated:
+                move._product_price_update_after_done()
+        elif (move._is_dropshipped() and diff > 0) or (move._is_dropshipped_returned() and diff < 0):
+            stock_valuation_layers |= move._create_dropshipped_svl(forced_quantity=qty)
+        elif (move._is_dropshipped() and diff < 0) or (move._is_dropshipped_returned() and diff > 0):
+            stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=qty)
+
+        stock_valuation_layers._validate_accounting_entries()
+
+=======
+    def unlink(self):
+        analytic_move_to_recompute = self.move_id
+        res = super().unlink()
+        analytic_move_to_recompute._account_analytic_entry_move()
+        return res
+
+    def _update_svl_quantity(self, added_qty):
+        self.ensure_one()
+        if self.state != 'done':
+            return
+        if self.product_id.lot_valuated and not self.lot_id:
+            raise UserError(_('This product is valuated by lot: an explicit Lot/Serial number is required when adding quantity'))
+        product_uom = self.product_id.uom_id
+        added_uom_qty = self.product_uom_id._compute_quantity(added_qty, product_uom, rounding_method='HALF-UP')
+        if product_uom.is_zero(added_uom_qty):
+            return
+        self._create_correction_svl(self.move_id, added_uom_qty)
+
+    def _action_done(self):
+        for line in self:
+            if not line.lot_id and not line.lot_name and line.product_id.lot_valuated and line.quantity:
+                raise UserError(_("Lot/Serial number is mandatory for product valuated by lot"))
+        return super()._action_done()
+
+    # -------------------------------------------------------------------------
+    # SVL creation helpers
+    # -------------------------------------------------------------------------
+    def _create_correction_svl(self, move, diff):
+        lot = self.lot_id if self.product_id.lot_valuated else self.env['stock.lot']
+        qty = (lot, abs(diff))
+        stock_valuation_layers = self.env['stock.valuation.layer']
+        if (move._is_in() and diff > 0) or (move._is_out() and diff < 0):
+            move.product_price_update_before_done(forced_qty=(lot, diff))
+            stock_valuation_layers |= move._create_in_svl(forced_quantity=qty)
+            if move.product_id.cost_method in ('average', 'fifo'):
+                move.product_id._run_fifo_vacuum(move.company_id)
+        elif (move._is_in() and diff < 0) or (move._is_out() and diff > 0):
+            stock_valuation_layers |= move._create_out_svl(forced_quantity=qty)
+            if move.product_id.lot_valuated:
+                move._product_price_update_after_done()
+        elif (move._is_dropshipped() and diff > 0) or (move._is_dropshipped_returned() and diff < 0):
+            stock_valuation_layers |= move._create_dropshipped_svl(forced_quantity=qty)
+        elif (move._is_dropshipped() and diff < 0) or (move._is_dropshipped_returned() and diff > 0):
+            stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=qty)
+
+        stock_valuation_layers._validate_accounting_entries()
+
+>>>>>>> cc15a5e4ea7b29998a27bbed2d441d2eb298d50c
     @api.model
     def _should_exclude_for_valuation(self):
         """
