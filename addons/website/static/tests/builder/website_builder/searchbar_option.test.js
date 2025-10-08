@@ -89,3 +89,32 @@ test("Switching search type keeps 'order by' option if it exists on both types",
     expect("[data-label='Search within'] button.o-dropdown").toHaveText("Everything");
     expect("[data-label='Order by'] button.o-dropdown").toHaveText("something");
 });
+
+test("Search query's parent is not contenteditable", async () => {
+    await setupWebsiteBuilder(searchbarHTML("name asc"));
+
+    expect(":iframe .s_searchbar_input .search-query").toHaveAttribute("contenteditable", "false");
+    expect(":iframe .s_searchbar_input :has(:scope > .search-query)").toHaveAttribute(
+        "contenteditable",
+        "false"
+    );
+
+    expect(
+        ":iframe .s_searchbar_input :has(:scope > .search-query) > *:not(.search-query)"
+    ).toHaveAttribute("contenteditable", "true");
+});
+
+test("Multiple searchbars parents are disabled", async () => {
+    await setupWebsiteBuilder(`
+        ${searchbarHTML("name asc")}
+        ${searchbarHTML("date desc")}
+    `);
+
+    expect(":iframe .s_searchbar_input .search-query").toHaveCount(2);
+    expect(":iframe .s_searchbar_input .search-query").toHaveAttribute("contenteditable", "false");
+
+    expect(":iframe .s_searchbar_input :has(:scope > .search-query)").toHaveAttribute(
+        "contenteditable",
+        "false"
+    );
+});
