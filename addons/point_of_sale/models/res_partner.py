@@ -12,6 +12,20 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
+    pos_property_product_pricelist_id = fields.Integer(
+        compute="_compute_pos_property_product_pricelist_id",
+        string="Pricelist ID"
+    )
+
+    @api.depends_context(
+        "company"
+    )
+    @api.depends(
+        "property_product_pricelist"
+    )
+    def _compute_pos_property_product_pricelist_id(self):
+        for rec in self:
+            rec.pos_property_product_pricelist_id = rec.property_product_pricelist.id
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -32,7 +46,7 @@ class ResPartner(models.Model):
         return [
             'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
             'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'contact_address',
-            'company_type',
+            'company_type', 'pos_property_product_pricelist_id'
         ]
 
     def _compute_pos_order(self):

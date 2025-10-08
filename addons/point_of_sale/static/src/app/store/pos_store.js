@@ -12,6 +12,7 @@ import {
     random5Chars,
     uuidv4,
     computeProductPricelistCache,
+    computeProductPricelistCacheOfProductAndPricelist, loadPricelistItems
 } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
@@ -673,6 +674,10 @@ export class PosStore extends Reactive {
             vals.product_id = this.data.models["product.product"].get(vals.product_id);
         }
         const product = vals.product_id;
+        const partner = order.partner_id;
+        if (partner && partner.pos_property_product_pricelist_id) {
+             await computeProductPricelistCacheOfProductAndPricelist(this, [], product, partner.pos_property_product_pricelist_id);
+        }
 
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
@@ -1964,6 +1969,25 @@ export class PosStore extends Reactive {
             partner: currentPartner,
             getPayload: (newPartner) => currentOrder.set_partner(newPartner),
         });
+        let pricelistId = payload.pos_property_product_pricelist_id;
+
+        if (payload && Boolean(pricelistId)) {
+
+            let pricelist = this.models["product.pricelist"].find((item) => item.id === pricelistId);
+            if (!Boolean(pricelist)) {
+                await loadPricelistItems(this, pricelistId);
+                pricelist = this.models["product.pricelist"].find((item) => item.id === pricelistId);
+            }
+            if (Boolean(pricelist)) {
+                payload.property_product_pricelist = pricelist;
+                const orderLines = currentOrder.get_orderlines();
+                for (const lineIndex in orderLines) {
+                    let line = orderLines[lineIndex];
+                    await computeProductPricelistCacheOfProductAndPricelist(this, [], line.product_id, pricelistId);
+                }
+            }
+
+        }
 
         if (payload) {
             currentOrder.set_partner(payload);

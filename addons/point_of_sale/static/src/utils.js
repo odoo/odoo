@@ -255,3 +255,83 @@ export function computeProductPricelistCache(service, data = []) {
         service._loadMissingPricelistItems(products);
     }
 }
+
+export async function loadPricelistItems(service, pricelist_id) {
+    await service.data.callRelated("pos.session", "get_pos_uis_product_pricelist_item_by_pricelist", [
+        odoo.pos_session_id,
+        service.config.id,
+        [pricelist_id]
+    ]);
+}
+
+export function computeProductPricelistCacheOfProductAndPricelist(service, data = [], product, pricelistId) {
+    if (product.cachedPricelistRules[pricelistId]) {
+        return;
+    }
+
+    const date = luxon.DateTime.now();
+    let pricelistItems = service.models["product.pricelist.item"].filter((item) => item.pricelist_id.id === pricelistId);
+
+    const pushItem = (targetArray, key, item) => {
+        if (!targetArray[key]) {
+            targetArray[key] = [];
+        }
+        targetArray[key].push(item);
+    };
+
+    const pricelistRules = {};
+
+    for (const item of pricelistItems) {
+        if (
+            (item.date_start && deserializeDateTime(item.date_start) > date) ||
+            (item.date_end && deserializeDateTime(item.date_end) < date)
+        ) {
+            continue;
+        }
+        const pricelistId = item.pricelist_id.id;
+
+        if (!pricelistRules[pricelistId]) {
+            pricelistRules[pricelistId] = {
+                productItems: {},
+                productTmlpItems: {},
+                categoryItems: {},
+                globalItems: [],
+            };
+        }
+
+        const productId = item.raw.product_id;
+        if (productId) {
+            pushItem(pricelistRules[pricelistId].productItems, productId, item);
+            continue;
+        }
+        const productTmplId = item.raw.product_tmpl_id;
+        if (productTmplId) {
+            pushItem(pricelistRules[pricelistId].productTmlpItems, productTmplId, item);
+            continue;
+        }
+        const categId = item.raw.categ_id;
+        if (categId) {
+            pushItem(pricelistRules[pricelistId].categoryItems, categId, item);
+        } else {
+            pricelistRules[pricelistId].globalItems.push(item);
+        }
+    }
+
+    const applicableRules = product.getApplicablePricelistRules(pricelistRules);
+    for (const pricelistId in applicableRules) {
+        if (product.cachedPricelistRules[pricelistId]) {
+            const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
+                (rule) => rule.id
+            );
+            const newRules = applicableRules[pricelistId].filter(
+                (rule) => !existingRuleIds.includes(rule.id)
+            );
+            product.cachedPricelistRules[pricelistId] = [
+                ...newRules,
+                ...product.cachedPricelistRules[pricelistId],
+            ];
+        } else {
+            product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
+        }
+    }
+}
