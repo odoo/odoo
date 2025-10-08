@@ -1,5 +1,4 @@
 import { Component, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -73,7 +72,6 @@ export class StatusBarField extends Component {
             status = "adjusting";
             this.adjustVisibleItems();
             this.render();
-            browser.requestAnimationFrame(() => (status = "idle"));
         };
 
         useEffect(
@@ -81,18 +79,22 @@ export class StatusBarField extends Component {
             () => [status]
         );
 
+        let forceRecomputeItems = false;
         onWillRender(() => {
-            if (status !== "adjusting") {
+            if (status !== "adjusting" || forceRecomputeItems) {
                 Object.assign(this.items, this.getSortedItems());
                 status = "shouldAdjust";
+            } else {
+                status = "idle";
             }
+            forceRecomputeItems = false;
         });
 
         useExternalListener(window, "resize", throttleForAnimation(adjust));
 
         // Special data
         if (this.field.type === "many2one") {
-            this.specialData = useSpecialData((orm, props) => {
+            this.specialData = useSpecialData(async (orm, props) => {
                 const { foldField, name: fieldName, record } = props;
                 const { relation } = record.fields[fieldName];
                 const fieldNames = ["display_name"];
@@ -101,7 +103,7 @@ export class StatusBarField extends Component {
                 }
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(), domain]).toList();
-                return orm.searchRead(relation, domain, fieldNames).catch((error) => {
+                const res = await orm.searchRead(relation, domain, fieldNames).catch((error) => {
                     if (error instanceof ConnectionLostError) {
                         if (this.props.record.data[this.props.name]) {
                             return [this.props.record.data[this.props.name]];
@@ -110,6 +112,8 @@ export class StatusBarField extends Component {
                     }
                     throw error;
                 });
+                forceRecomputeItems = true;
+                return res;
             });
         }
 
