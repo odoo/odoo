@@ -20,15 +20,13 @@ patch(PaymentAdyen.prototype, {
         var order = this.pos.getOrder();
         var line = order.getPaymentlineByUuid(uuid);
         var data = {
-            originalReference: line.transaction_id,
-            modificationAmount: {
+            paymentPspReference: line.transaction_id,
+            amount: {
                 value: parseInt(line.amount * Math.pow(10, this.pos.currency.decimal_places)),
                 currency: this.pos.currency.name,
             },
             merchantAccount: this.payment_method_id.adyen_merchant_account,
-            additionalData: {
-                industryUsage: "DelayedCharge",
-            },
+            industryUsage: "delayedCharge",
         };
 
         return this._callAdyen(data, "adjust");
