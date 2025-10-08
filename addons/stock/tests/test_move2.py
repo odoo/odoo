@@ -3420,9 +3420,20 @@ class TestPickShipBackorder(TestStockCommon):
 
     def test_pick_assign_and_backorder(self):
         cust = self.env.ref("stock.stock_location_customers")
+<<<<<<< 96264f88e6ea2dc61ba6c546f9f1a03d49df55ea
         ref = self.env["stock.reference"].create({"name": "sale order"})
         self.warehouse.delivery_steps = "pick_ship"
         self.env["stock.rule"].run(
+||||||| b9c4da024bbe493dd6868bd02769aed63efb437b
+        pg = self.env["procurement.group"].create({"name": "sale order"})
+        warehouse = self.env["stock.warehouse"].search([], limit=1)
+        warehouse.delivery_steps = "pick_ship"
+        self.env["procurement.group"].run(
+=======
+        pg = self.env["procurement.group"].create({"name": "sale order"})
+        self.warehouse.delivery_steps = "pick_ship"
+        self.env["procurement.group"].run(
+>>>>>>> d315517b33e555c027073390af6a50dd85328f88
             [
                 self.env["stock.rule"].Procurement(
                     self.product_lot,
@@ -3430,9 +3441,19 @@ class TestPickShipBackorder(TestStockCommon):
                     self.product_lot.uom_id,
                     cust,
                     "sale_order",
+<<<<<<< 96264f88e6ea2dc61ba6c546f9f1a03d49df55ea
                     ref.name,
                     self.warehouse.company_id,
                     {"warehouse_id": self.warehouse, "reference_ids": ref},
+||||||| b9c4da024bbe493dd6868bd02769aed63efb437b
+                    "sale_order",
+                    warehouse.company_id,
+                    {"warehouse_id": warehouse, "group_id": pg},
+=======
+                    "sale_order",
+                    self.warehouse.company_id,
+                    {"warehouse_id": self.warehouse, "group_id": pg},
+>>>>>>> d315517b33e555c027073390af6a50dd85328f88
                 )
             ]
         )
