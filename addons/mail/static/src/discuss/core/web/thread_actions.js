@@ -7,7 +7,7 @@ export const joinChannelAction = {
     condition: ({ thread }) =>
         thread &&
         !thread.self_member_id &&
-        !["chat", "group"].includes(thread.channel_type) &&
+        !["chat", "group"].includes(thread.channel?.channel_type) &&
         thread.model !== "mail.box",
     open: ({ store, thread }) =>
         store.env.services.orm.call("discuss.channel", "add_members", [[thread.id]], {
