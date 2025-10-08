@@ -19,6 +19,7 @@ discount to a customer.
         'data/pos_discount_data.xml',
         'views/res_config_settings_views.xml',
         'views/pos_config_views.xml',
+        'views/global_discount_sales_report.xml',
         ],
     'installable': True,
     'assets': {

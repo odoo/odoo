@@ -98,6 +98,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             currency = order.session_id.currency_id
 
             for line in order.lines:
+                if order.config_id.module_pos_discount and line.product_id == order.config_id.discount_product_id:
+                    continue
                 if line.price_subtotal_incl >= 0:
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
                 else:

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_discount.global_discount_sales_report" inherit_id="point_of_sale.pos_session_sales_details">
+        <xpath expr="//div[@id='discounts']" position="inside">
+            <div class="row">
+                <div class="col-12">
+                    <strong>Number of global discounts</strong>: <span t-out="global_discount_number">5</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <strong>Amount of global discounts</strong>: 
+                    <span t-if="currency['position']">
+                        <span t-out="global_discount_amount" t-options="{'widget': 'float', 'precision': currency['precision']}">50.00</span>
+                        <span t-out="currency['symbol']">$</span>
+                    </span>
+                    <span t-else="">
+                        <span t-out="currency['symbol']">$</span>
+                        <span t-out="global_discount_amount" t-options="{'widget': 'float', 'precision': currency['precision']}">50.00</span>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
