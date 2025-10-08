@@ -5,7 +5,7 @@ export class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine {
     static props = {
         ...ProductCatalogOrderLine.props,
         deliveredQty: Number,
-    }
+    };
 
     get disableRemove() {
         return this.props.quantity === this.props.deliveredQty;

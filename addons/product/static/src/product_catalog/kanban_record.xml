@@ -10,7 +10,7 @@
             <div class="d-flex flex-column h-100">
                 <t t-call="{{ templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}"
                    t-call-context="this.renderingContext"/>
-                <t t-component="orderLineComponent" productId="props.record.resId" t-props="productCatalogData"/>
+                <t t-component="orderLineComponent" productId="props.record.resId" t-props="orderLineProps"/>
             </div>
             <t t-call="{{ this.constructor.menuTemplate }}"/>
         </article>
