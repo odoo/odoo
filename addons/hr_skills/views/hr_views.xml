@@ -420,6 +420,12 @@
                             <field name="valid_to" placeholder="indefinite" nolabel="1" class="w-25"/>
                         </div>
                     </group>
+                    <group>
+                        <group>
+                            <field name="certificate_filename" invisible="1"/>
+                            <field name="certificate_file" string="Certificate" filename="certificate_filename" invisible="not is_certification"/>
+                        </group>
+                    </group>
                     <div class="alert alert-warning ps-3" role="alert" invisible="not display_warning_message">
                         The end date must be after the start date.
                     </div>
@@ -556,6 +562,8 @@
                 <field name="skill_type_id" optional="hide"/>
                 <field name="valid_from" string="From" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
                 <field name="valid_to" string="To" widget="formatted_date" options="{'month_format': 'short'}" width="300"/>
+                <field name="certificate_filename" column_invisible="1"/>
+                <field name="certificate_file" filename="certificate_filename" widget="binary" optional="hidden"/>
             </list>
         </field>
     </record>
