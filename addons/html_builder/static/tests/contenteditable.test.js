@@ -3,6 +3,7 @@ import {
     addBuilderPlugin,
     setupHTMLBuilder,
     dummyBase64Img,
+    addBuilderAction,
 } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test, describe } from "@odoo/hoot";
@@ -10,12 +11,13 @@ import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 test("Do not set contenteditable to true on elements inside o_not_editable", async () => {
     class TestPlugin extends Plugin {
         static id = "testPlugin";
         resources = {
-            force_editable_selector: ".target",
+            content_editable_selectors: ".target",
         };
     }
     addBuilderPlugin(TestPlugin);
@@ -77,4 +79,65 @@ test("clone of editable media inside not editable area should be editable", asyn
     await contains(".oe_snippet_clone").click();
     await contains(":iframe section:last-of-type img").click();
     expect(".options-container[data-container-title='Image']").toBeDisplayed();
+});
+
+const setupEditable = async (contentEl) => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            content_editable_selectors: ".target-extra",
+        };
+    }
+    addBuilderPlugin(TestPlugin);
+    addBuilderOption({
+        selector: ".parent",
+        template: xml`<BuilderButton action="'customAction'">Custom Action</BuilderButton>`,
+    });
+    addBuilderOption({
+        selector: ".parent",
+        template: xml`<BuilderButton classAction="'dummy'">Dummy action</BuilderButton>`,
+    });
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
+                editingElement.querySelector(".target").classList.add("target-extra");
+            }
+        },
+    });
+    await setupHTMLBuilder(contentEl);
+    await contains(":iframe .parent").click();
+    // Dummy action to mark the editable as "dirty"
+    await contains("[data-class-action='dummy']").click();
+    await contains("[data-action-id='customAction']").click();
+};
+
+test("Set contenteditable attribute to true on element that is descendant of '.o_not_editable' that is itself descendant of a snippet", async () => {
+    await setupEditable(`
+        <div class="parent" data-snippet="test">
+            <div class="o_not_editable">
+                Not editable
+                <div class="target">
+                    Target
+                </div>
+            </div>
+        </div>
+    `);
+    expect(":iframe .target-extra").toHaveAttribute("contenteditable", "true");
+});
+
+test("Don't set contenteditable attribute to true on element that is inside '.o_not_editable' that is not a descendant of a snippet", async () => {
+    await setupEditable(`
+        <div class="parent">
+            <div class="o_not_editable">
+                <div class="o_not_editable" data-snippet="test">
+                    Not editable
+                    <div class="target">
+                        Target
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+    expect(":iframe .target-extra").not.toHaveAttribute("contenteditable", "true");
 });

@@ -54,7 +54,7 @@ class TableOfContentOptionPlugin extends Plugin {
             return true;
         },
         is_unremovable_selector: ".s_table_of_content_navbar_wrap, .s_table_of_content_main",
-        force_not_editable_selector: ".s_table_of_content_navbar",
+        content_not_editable_selectors: ".s_table_of_content_navbar",
     };
 
     normalize(root) {
