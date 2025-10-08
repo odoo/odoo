@@ -549,7 +549,7 @@ class StockWarehouse(models.Model):
                     'warehouse_selectable': True,
                     'product_selectable': False,
                     'company_id': self.company_id.id,
-                    'sequence': 50,
+                    'sequence': 9,
                 },
                 'rules_values': {
                     'active': True,
@@ -568,7 +568,7 @@ class StockWarehouse(models.Model):
                     'warehouse_selectable': True,
                     'product_selectable': False,
                     'company_id': self.company_id.id,
-                    'sequence': 60,
+                    'sequence': 10,
                 },
                 'rules_values': {
                     'active': True,

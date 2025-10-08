@@ -135,6 +135,7 @@ class TestCarrierPropagation(TransactionCase):
             'name': 'Route1',
             'sale_selectable' : True,
             'shipping_selectable': True,
+            'warehouse_ids': [Command.link(self.env.ref("stock.warehouse0").id)],
             'rule_ids': [Command.create({
                 'name': 'rule1',
                 'location_src_id': self.warehouse.lot_stock_id.id,
@@ -153,7 +154,8 @@ class TestCarrierPropagation(TransactionCase):
         route2 = self.env['stock.route'].create({
             'name': 'Route2',
             'sale_selectable' : True,
-            'shipping_selectable':True,
+            'shipping_selectable': True,
+            'warehouse_ids': [Command.link(self.env.ref("stock.warehouse0").id)],
             'rule_ids': [Command.create({
                 'name': 'rule2',
                 'location_src_id': shelf1_location.id,
