@@ -719,42 +719,8 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self.assertTrue(invoice.ubl_cii_xml_id)
 
-        # NOTE: / TODO: PartyLegalEntity/CompanyID is same as EndpointID in example (but we use VAT in our output)
-        adjusted_output_tree = self.with_applied_xpath(
-            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
-            '''
-            <xpath expr="//*[local-name()='ID']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:ID>2019000010</cbc:ID>
-            </xpath>
-            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0000000196']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:CompanyID>0123456749</cbc:CompanyID>
-            </xpath>
-            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']/*[local-name()='Name' and text()='Hotel Local SPRL - Nom commercial']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:Name>Jean Dupont</cbc:Name>
-            </xpath>
-            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID' and text()='INV/2018/00001']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:PaymentID>Invoice 2019000010</cbc:PaymentID>
-            </xpath>
-            <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='InvoicedQuantity' and text()='1.0' and @unitCode='C62']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:InvoicedQuantity unitCode="ZZ">1.0</cbc:InvoicedQuantity>
-            </xpath>
-            <xpath expr="//*[local-name()='LegalMonetaryTotal']/*[local-name()='PrepaidAmount']" position="replace"/>
-            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Something']" position="replace"/>
-            '''
-        )
-
         self.assertXmlTreeEqual(
-            adjusted_output_tree,
+            etree.fromstring(invoice.ubl_cii_xml_id.raw),
             self._get_xml_tree_from_file('bis3_from_BEG/testcase10_invoice_in_usd_and_eur_vat_21'),
         )
 
@@ -816,48 +782,8 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self.assertTrue(invoice.ubl_cii_xml_id)
 
-        # NOTE: / TODO: PartyLegalEntity/CompanyID is same as EndpointID in example (but we use VAT in our output)
-        adjusted_output_tree = self.with_applied_xpath(
-            self._with_applied_common_beg_xpath(etree.fromstring(invoice.ubl_cii_xml_id.raw)),
-            '''
-            <xpath expr="//*[local-name()='ID']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:ID>2019000011</cbc:ID>
-            </xpath>
-            <xpath expr="//*[local-name()='AccountingSupplierParty']/*[local-name()='Party']/*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID' and text()='BE0000000196']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:CompanyID>0123456749</cbc:CompanyID>
-            </xpath>
-            <xpath expr="//*[local-name()='AccountingCustomerParty']/*[local-name()='Party']/*[local-name()='Contact']/*[local-name()='Name' and text()='Hotel Local SPRL - Nom commercial']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:Name>Jean Dupont</cbc:Name>
-            </xpath>
-            <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='PaymentID' and text()='INV/2018/00001']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:PaymentID>Invoice 2019000011</cbc:PaymentID>
-            </xpath>
-            <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='InvoicedQuantity' and text()='1.0' and @unitCode='C62']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:InvoicedQuantity unitCode="ZZ">1.0</cbc:InvoicedQuantity>
-            </xpath>
-            <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='InvoicedQuantity' and text()='1.0' and @unitCode='DZN']" position="replace"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:InvoicedQuantity unitCode="ZZ">1.0</cbc:InvoicedQuantity>
-            </xpath>
-            <xpath expr="//*[local-name()='LegalMonetaryTotal']/*[local-name()='PrepaidAmount']" position="replace"/>
-            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Something']" position="replace"/>
-            <xpath expr="//*[local-name()='Item']/*[local-name()='Description' and text()='Something else']" position="replace"/>
-            '''
-        )
-
         self.assertXmlTreeEqual(
-            adjusted_output_tree,
+            etree.fromstring(invoice.ubl_cii_xml_id.raw),
             self._get_xml_tree_from_file('bis3_from_BEG/testcase11_invoice_in_usd_and_eur_vat_6_and_vat_21'),
         )
 
