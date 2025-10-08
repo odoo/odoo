@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-09-30 23:41+0000\n"
+"PO-Revision-Date: 2025-10-08 23:40+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4/payment/es_419/>\n"
@@ -592,7 +592,7 @@ msgstr "Cuenta bancaria"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_installments_eg
 msgid "Bank Installments"
-msgstr "Plazos bancarios"
+msgstr "Cuotas bancarias"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
@@ -768,7 +768,7 @@ msgstr "Tarjeta"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dpo
 msgid "Card / Mobile"
-msgstr "Tarjeta / Móvil"
+msgstr "Tarjeta / Celular"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_carnet
@@ -1007,7 +1007,7 @@ msgstr "Cliente"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_dpo
 msgid "DPO Pay"
-msgstr "Pago con DPO"
+msgstr "DPO Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dana
@@ -2103,7 +2103,7 @@ msgstr "Proveedores de pago"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Payment Status"
-msgstr "Estado de pago"
+msgstr "Estado del pago"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -2767,8 +2767,8 @@ msgid ""
 "The following payment methods cannot be enabled because their payment "
 "provider has manual capture activated: %s"
 msgstr ""
-"Los métodos de pago a continuación no se pudieron activar ya que su "
-"proveedor de pago tiene la captura manual activada: %s"
+"No es posible habilitar los siguientes métodos de pago porque su proveedor "
+"tiene activada la captura manual: %s"
 
 #. module: payment
 #. odoo-python
@@ -2777,8 +2777,8 @@ msgid ""
 "The following payment methods must be disabled in order to enable manual "
 "capture: %s"
 msgstr ""
-"Los métodos de pago a continuación se deben desactivar para poder usar la "
-"captura manual: %s"
+"Debes desactivar los siguientes métodos de pago para habilitar la captura "
+"manual: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -3377,7 +3377,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "You cannot delete the default payment method."
-msgstr "No puede eliminar el método de pago predeterminado."
+msgstr "No puedes eliminar el método de pago predeterminado."
 
 #. module: payment
 #. odoo-python
@@ -3481,7 +3481,7 @@ msgstr "Se canceló su pago."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed but is waiting for approval."
-msgstr "Se procesó su pago pero se está esperando la aprobación."
+msgstr "Tu pago ha sido procesado, pero está a la espera de su aprobación."
 
 #. module: payment
 #. odoo-python
@@ -3506,7 +3506,7 @@ msgstr "Se procesó su pago pero se está esperando la aprobación."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed."
-msgstr "Su pago fue procesado."
+msgstr "Tu pago ha sido procesado."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
