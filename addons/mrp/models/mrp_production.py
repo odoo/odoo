@@ -558,7 +558,7 @@ class MrpProduction(models.Model):
         produce and all work orders has been finished.
         """
         for production in self:
-            if not production.state or not production.product_uom_id or not (production.id or production._origin.id):
+            if not production.state or (production.state == 'draft' and not self.env.context.get('skip_compute_move_raw_ids')) or not production.product_uom_id or not (production.id or production._origin.id):
                 production.state = 'draft'
             elif production.state == 'cancel' or (production.move_finished_ids and all(move.state == 'cancel' for move in production.move_finished_ids)):
                 production.state = 'cancel'
@@ -619,7 +619,7 @@ class MrpProduction(models.Model):
                             'workcenter_id': operation.workcenter_id.id,
                             'product_uom_id': production.product_uom_id.id,
                             'operation_id': operation.id,
-                            'state': 'ready',
+                            'state': 'blocked',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
                     lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
@@ -762,7 +762,7 @@ class MrpProduction(models.Model):
     @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'never_product_template_attribute_value_ids')
     def _compute_move_raw_ids(self):
         for production in self:
-            if production.state != 'draft' or self.env.context.get('skip_compute_move_raw_ids'):
+            if self.env.context.get('skip_compute_move_raw_ids') or production.state != 'draft':
                 continue
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
@@ -792,7 +792,7 @@ class MrpProduction(models.Model):
         for production in self:
             if production.id in ignored_mo_ids:
                 continue
-            if production.state != 'draft':
+            if production.state != 'draft' or production.move_finished_ids or production.move_byproduct_ids:
                 updated_values = {}
                 if production.date_finished:
                     updated_values['date'] = production.date_finished
@@ -980,7 +980,7 @@ class MrpProduction(models.Model):
                 production.with_context(no_procurement=True)._autoconfirm_production()
                 if production in production_to_replan:
                     production._plan_workorders()
-            if production.state == 'done' and 'qty_producing' in vals:
+            if 'qty_producing' in vals and production.state == 'done':
                 finished_move = production.move_finished_ids.filtered(
                     lambda move: move.product_id == production.product_id and move.state == 'done')
                 finished_move.quantity = vals.get('qty_producing')
@@ -1569,7 +1569,6 @@ class MrpProduction(models.Model):
         if not self.workorder_ids:
             return
         workorder_per_operation = {workorder.operation_id: workorder for workorder in self.workorder_ids}
-        workorder_boms = self.workorder_ids.operation_id.bom_id
         last_workorder_per_bom = defaultdict(lambda: self.env['mrp.workorder'])
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
 
@@ -2081,7 +2080,10 @@ class MrpProduction(models.Model):
 
             # Adapt duration
             for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+                workorder.duration_expected = workorder._get_duration_expected(ratio=(workorder.qty_production / initial_qty))
+            # for workorder in production.workorder_ids:
+                # ratio = workorder.qty_production / workorder.qty_producing if workorder.qty_producing != 0 else 1
+                # workorder.duration_expected = workorder._get_duration_expected(ratio=ratio)
 
             # Adapt quantities produced
             for workorder in production.workorder_ids.sorted('id'):
@@ -2116,7 +2118,7 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
         productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
-        self.workorder_ids.button_finish()
+        self.workorder_ids.with_context(bypass_qty_producing_update=True).button_finish()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder

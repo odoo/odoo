@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_mrp_workorder_incomplete_qty_form" model="ir.ui.view">
+            <field name="name">mrp.workorder.incomplete.qty.form</field>
+            <field name="model">mrp.workorder.incomplete.qty</field>
+            <field name="arch" type="xml">
+                <form string="Incomplete Workorders">
+                <p>You have not produced the entire demand for the following work orders, are you sure you want to close these work orders ?</p>
+                        <field name="filtered_workorder_ids" readonly="1">
+                            <list string="Incomplete Workorders">
+                                <field name="name"/>
+                                <field name="product_id"/>
+                                <field name="qty_remaining"/>
+                                <field name="product_uom_id"/>
+                            </list>
+                        </field>
+                    <footer>
+                        <button name="action_validate" type="object" string="Confirm" class="btn-primary" data-hotkey="q"/>
+                        <button name="action_complete" type="object" string="Process Remaining Quantity" class="btn-secondary" data-hotkey="w"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mrp_workorder_incomplete_qty" model="ir.actions.act_window">
+            <field name="name">There's still incomplete Workorders remaining</field>
+            <field name="res_model">mrp.workorder.incomplete.qty</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>
