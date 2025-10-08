@@ -50,8 +50,14 @@ import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
 
 // Import all helpers for debug mode
-import * as hootDom from "@odoo/hoot-dom";
-import * as hootMock from "@odoo/hoot-mock";
+import * as _hootDom from "@odoo/hoot-dom";
+import * as _animation from "../mock/animation";
+import * as _date from "../mock/date";
+import * as _math from "../mock/math";
+import * as _navigator from "../mock/navigator";
+import * as _network from "../mock/network";
+import * as _notification from "../mock/notification";
+import * as _window from "../mock/window";
 
 /**
  * @typedef {{
@@ -115,7 +121,7 @@ const {
     Number: { parseFloat: $parseFloat },
     Object: {
         assign: $assign,
-        defineProperties: $defineProperties,
+        defineProperty: $defineProperty,
         entries: $entries,
         freeze: $freeze,
         fromEntries: $fromEntries,
@@ -1317,17 +1323,16 @@ export class Runner {
         /** @type {Configurators} */
         const configurators = { ...configuratorGetters, ...configuratorMethods };
 
-        const properties = {};
         for (const [key, getter] of $entries(configuratorGetters)) {
-            properties[key] = { get: getter };
+            $defineProperty(configurableFn, key, { get: getter });
         }
         for (const [key, getter] of $entries(configuratorMethods)) {
-            properties[key] = { value: getter };
+            $defineProperty(configurableFn, key, { value: getter });
         }
 
         /** @type {{ tags: Tag[], [key: string]: any }} */
         let currentConfig = { tags: [] };
-        return $defineProperties(configurableFn, properties);
+        return configurableFn;
     }
 
     /**
@@ -1903,10 +1908,21 @@ export class Runner {
                 this.config.debugTest = false;
                 this.debug = false;
             } else {
-                const nameSpace = exposeHelpers(hootDom, hootMock, {
-                    destroy,
-                    getFixture: this.fixture.get,
-                });
+                const nameSpace = exposeHelpers(
+                    _hootDom,
+                    _animation,
+                    _date,
+                    _math,
+                    _navigator,
+                    _network,
+                    _notification,
+                    _window,
+                    {
+                        __debug__: this,
+                        destroy,
+                        getFixture: this.fixture.get,
+                    }
+                );
                 logger.setLogLevel("debug");
                 logger.logDebug(
                     `Debug mode is active: Hoot helpers available from \`window.${nameSpace}\``
