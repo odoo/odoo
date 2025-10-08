@@ -150,3 +150,53 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
         # Try to put a percentage higher than 100%.
         with self.assertRaises(ValidationError):
             wizard.discount_percentage = 110.0
+
+    def test_cumulative_global_discounts(self):
+        product = self.company_data['product_order_cost']
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': 'line_1',
+                'product_id': product.id,
+                'price_unit': 2000.0,
+            })],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 2000.0,
+            'amount_tax': 0.0,
+            'amount_total': 2000.0,
+        }])
+
+        # Put a discount of 25%.
+        wizard = self.env['sale.order.discount'].create({
+            'sale_order_id': so.id,
+            'discount_type': 'so_discount',
+            'discount_percentage': 0.25,
+        })
+        wizard.action_apply_discount()
+
+        self.assertRecordValues(so.order_line, [
+            {'price_unit': 2000.0},
+            {'price_unit': -500.0},
+        ])
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 1500.0,
+            'amount_tax': 0.0,
+            'amount_total': 1500.0,
+        }])
+
+        # Put another discount of 10%.
+        wizard.discount_percentage = 0.10
+        wizard.action_apply_discount()
+
+        self.assertRecordValues(so.order_line, [
+            {'price_unit': 2000.0},
+            {'price_unit': -500.0},
+            {'price_unit': -150.0},
+        ])
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 1350.0,
+            'amount_tax': 0.0,
+            'amount_total': 1350.0,
+        }])
