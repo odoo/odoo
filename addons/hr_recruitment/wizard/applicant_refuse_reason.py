@@ -153,7 +153,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def _prepare_send_refusal_mails(self):
         mail_values = []
         for applicant in self.applicant_ids:
-            mail_values.append(self._prepare_mail_values(applicant))
+            mail_value = self._prepare_mail_values(applicant)
+            applicant.message_post(body=mail_value.get('body_html'))
+            mail_values.append(mail_value)
         self.env['mail.mail'].sudo().create(mail_values)
 
     def _prepare_mail_values(self, applicant):
