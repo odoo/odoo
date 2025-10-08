@@ -69,16 +69,19 @@ class SaleOrderTemplateLine(models.Model):
         string="Optional Line",
         copy=True,
         default=False,
+        help="On the portal, the customer will be able to choose the quantity to buy.",
     )
     collapse_composition = fields.Boolean(
         string="Collapse Composition",
         copy=True,
         default=False,
+        help="In the SO, the customer see the section like a SO line, all its content is hidden.",
     )
     collapse_prices = fields.Boolean(
         string="Collapse Prices",
         copy=True,
         default=False,
+        help="The customer see the products, the quantities but only a globalized amount for the section on the invoice.",
     )
 
     #=== COMPUTE METHODS ===#

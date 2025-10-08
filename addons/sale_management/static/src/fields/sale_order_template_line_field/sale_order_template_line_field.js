@@ -16,6 +16,10 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         this.copyFields.push('is_optional', 'collapse_composition', 'collapse_prices');
     }
 
+    get sectionColumns() {
+        return [ ...super.sectionColumns, 'sale_management_section_state' ];
+    }
+
     get showOptionalButton() {
         if (this.isSubSection(this.record)) {
             const parentRecord = getParentSectionRecord(this.props.list, this.record);
@@ -26,7 +30,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
 
     getRowClass(record) {
         let rowClasses = super.getRowClass(record);
-        if (record.data.is_optional || this.shouldCollapse(record, 'is_optional')) {
+        if (this.shouldCollapse(record, 'is_optional')) {
             rowClasses += ' text-primary';
         }
         return rowClasses;

@@ -314,11 +314,13 @@ class SaleOrderLine(models.Model):
         string="Collapse Prices",
         copy=True,
         default=False,
+        help="The customer see the products, the quantities but only a globalized amount for the section on the invoice.",
     )  # Whether this section's lines' prices will be hidden in reports and in the portal.
     collapse_composition = fields.Boolean(
         string="Collapse Composition",
         copy=True,
         default=False,
+        help="In the SO, the customer see the section like a SO line, all its content is hidden.",
     )  # Whether this section's lines will be hidden in reports and in the portal.
 
     #=== COMPUTE METHODS ===#

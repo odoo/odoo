@@ -23,7 +23,7 @@ export class AccountMergeWizardLinesRenderer extends SectionAndNoteListRenderer 
     }
 
     /** @override **/
-    getSectionColumns(columns) {
+    getSectionAndNoteColumns(columns) {
         const sectionCols = columns.filter(
             (col) =>
                 col.type === "field" && (col.name === this.titleField || col.name === "is_selected")
