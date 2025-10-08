@@ -80,7 +80,8 @@ export class CartService {
 
         // Only expose `add` in the service registry.
         return {
-            add: (...args) => this.add(...args)
+            add: (...args) => this.add(...args),
+            showWarning: (...args) => this.showWarning(...args),
         };
     }
 
@@ -239,6 +240,20 @@ export class CartService {
             noVariantAttributeValues,
             shouldRedirectToCart: isBuyNow && redirectToCart,
             ...rest
+        });
+    }
+
+    /**
+     * Show a warning notification.
+     *
+     * @param {String} warningMessage
+     *
+     * @returns {void}
+     */
+    showWarning(warningMessage) {
+        this._showCartNotification({
+            type: 'warning',
+            data: { 'warning_message': warningMessage },
         });
     }
 
