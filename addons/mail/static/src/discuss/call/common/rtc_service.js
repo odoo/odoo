@@ -1446,7 +1446,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} channel
+     * @param {import("models").Channel} channel
      * @param {object} [initialState]
      * @param {boolean} [initialState.audio] whether to request and use the user audio input (microphone) at start
      * @param {boolean} [initialState.camera] whether to request and use the user video input (camera) at start
@@ -1519,7 +1519,7 @@ export class Rtc extends Record {
                 event.preventDefault();
             })
         );
-        this.channel?.focusAvailableVideo();
+        this.channel?.thread.focusAvailableVideo();
     }
 
     newLogs() {

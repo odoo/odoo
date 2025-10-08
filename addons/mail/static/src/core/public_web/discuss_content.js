@@ -57,7 +57,7 @@ export class DiscussContent extends Component {
     }
 
     get thread() {
-        return this.props.thread || this.store.discuss.thread;
+        return this.props.thread || this.store.discuss.channel?.thread;
     }
 
     get showImStatus() {

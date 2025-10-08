@@ -25,8 +25,8 @@
         <button
             class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-baseline px-0 o-mx-2_5 border-0 rounded fw-normal text-reset"
             t-att-class="{
-                'bg-inherit': mailbox.notEq(store.discuss.thread),
-                'o-active': mailbox.eq(store.discuss.thread),
+                'bg-inherit': mailbox.notEq(store.discuss.channel?.thread),
+                'o-active': mailbox.eq(store.discuss.channel?.thread),
                 'justify-content-center position-relative o-compact py-2': store.discuss.isSidebarCompact,
                 'o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': mailbox.counter,

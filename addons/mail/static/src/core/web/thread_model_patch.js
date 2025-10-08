@@ -23,7 +23,7 @@ const threadPatch = {
             /** @this {import("models").Thread} */
             compute() {
                 if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-                    return this.eq(this.store.discuss.thread);
+                    return this.eq(this.store.discuss.channel?.thread);
                 }
                 return false;
             },

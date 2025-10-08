@@ -13,8 +13,8 @@
         <t t-if="category.open">
             <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
         </t>
-        <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
-        <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.thread.parent_channel_id" />
+        <DiscussSidebarChannel t-elif="store.discuss.channel?.thread?.in(category.threads)" thread="store.discuss.channel.thread"/>
+        <DiscussSidebarChannel t-elif="store.discuss.channel?.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.channel.thread.parent_channel_id" />
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
@@ -126,7 +126,7 @@
                 </svg>
             </t>
             <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName" t-on-click="(ev) => this.openThread(ev, thread)" t-att-class="{
-                'o-active': thread.eq(this.store.discuss.thread),
+                'o-active': thread.eq(this.store.discuss.channel?.thread),
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': store.discuss.isSidebarCompact,
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt,

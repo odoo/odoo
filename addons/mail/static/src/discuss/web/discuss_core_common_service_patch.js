@@ -26,8 +26,8 @@ patch(DiscussCoreCommon.prototype, {
         this.store.history.messages = this.store.history.messages.filter(
             (msg) => !msg.thread?.eq(thread)
         );
-        if (thread.eq(this.store.discuss.thread)) {
-            this.store.discuss.thread = undefined;
+        if (thread.eq(this.store.discuss.channel?.thread)) {
+            this.store.discuss.channel = undefined;
         }
         super._handleNotificationChannelDelete(thread, metadata);
     },

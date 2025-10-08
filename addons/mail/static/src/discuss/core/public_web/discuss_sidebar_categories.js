@@ -100,8 +100,8 @@ export class DiscussSidebarChannel extends Component {
 
     get attClass() {
         return {
-            "bg-inherit": this.thread.notEq(this.store.discuss.thread),
-            "o-active": this.thread.eq(this.store.discuss.thread),
+            "bg-inherit": this.thread.notEq(this.store.discuss.channel?.thread),
+            "o-active": this.thread.eq(this.store.discuss.channel?.thread),
             "o-unread":
                 this.thread.self_member_id?.message_unread_counter > 0 &&
                 !this.thread.self_member_id?.mute_until_dt,
@@ -156,7 +156,7 @@ export class DiscussSidebarChannel extends Component {
     }
 
     showThread(sub) {
-        if (sub.eq(this.store.discuss.thread)) {
+        if (sub.eq(this.store.discuss.channel?.thread)) {
             return true;
         }
         if (!this.thread.discussAppCategory.open) {
@@ -176,8 +176,8 @@ export class DiscussSidebarChannel extends Component {
 
     get isSelfOrThreadActive() {
         return (
-            this.thread.eq(this.store.discuss.thread) ||
-            this.store.discuss.thread?.in(this.subChannels)
+            this.thread.eq(this.store.discuss.channel?.thread) ||
+            this.store.discuss.channel?.thread?.in(this.subChannels)
         );
     }
 

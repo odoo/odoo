@@ -55,10 +55,12 @@ export class DiscussApp extends Record {
             }
         },
     });
-    thread = fields.One("mail.thread", {
+    channel = fields.One("discuss.channel", {
         /** @this {import("models").DiscussApp} */
         onUpdate() {
-            this.lastActiveId = this.store["mail.thread"].localIdToActiveId(this.thread?.localId);
+            this.lastActiveId = this.store["mail.thread"].localIdToActiveId(
+                this.channel?.thread.localId
+            );
         },
     });
     hasRestoredThread = false;

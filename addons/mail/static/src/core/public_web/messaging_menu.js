@@ -163,7 +163,8 @@ export class MessagingMenu extends Component {
         this.store.discuss.activeTab = tabId;
         if (
             this.store.discuss.activeTab === "inbox" &&
-            (!this.store.discuss.thread || this.store.discuss.thread.model !== "mail.box")
+            (!this.store.discuss.channel?.thread ||
+                this.store.discuss.channel?.thread.model !== "mail.box")
         ) {
             this.store.inbox.setAsDiscussThread();
         }
@@ -171,7 +172,7 @@ export class MessagingMenu extends Component {
             this.store.starred.setAsDiscussThread();
         }
         if (!["inbox", "starred"].includes(this.store.discuss.activeTab)) {
-            this.store.discuss.thread = undefined;
+            this.store.discuss.channel = undefined;
         }
     }
 }

@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.WelcomePage">
-    <t t-set="showCallPreview" t-value="store.discuss.thread.default_display_mode === 'video_full_screen'"/>
+    <t t-set="showCallPreview" t-value="store.discuss.channel.default_display_mode === 'video_full_screen'"/>
     <div class="o-mail-WelcomePage w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3" style="min-height: 100dvh;">
         <h1 class="fw-light text-center">
-            <span t-if="this.store.discuss.thread.default_display_mode === 'video_full_screen'">You've been invited to a meeting!</span>
+            <span t-if="this.store.discuss.channel.default_display_mode === 'video_full_screen'">You've been invited to a meeting!</span>
             <span t-else="">You've been invited to a chat!</span>
         </h1>
         <h2 class="m-3 m-md-5" t-esc="store.companyName"/>

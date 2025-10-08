@@ -48,7 +48,7 @@ export class WelcomePage extends Component {
     }
 
     get noActiveParticipants() {
-        return !this.store.discuss.thread.rtc_session_ids.length;
+        return !this.store.discuss.channel.rtc_session_ids.length;
     }
 
     /** @param {{ microphone?: boolean, camera?: boolean }} settings */

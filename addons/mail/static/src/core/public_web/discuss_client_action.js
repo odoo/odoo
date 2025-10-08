@@ -39,7 +39,9 @@ export class DiscussClientAction extends Component {
         return (
             props.action.context.active_id ??
             props.action.params?.active_id ??
-            this.store["mail.thread"].localIdToActiveId(this.store.discuss.thread?.localId) ??
+            this.store["mail.thread"].localIdToActiveId(
+                this.store.discuss.channel?.thread?.localId
+            ) ??
             (this.env.services.ui.isSmall ? undefined : this.store.discuss.lastActiveId)
         );
     }
@@ -66,7 +68,7 @@ export class DiscussClientAction extends Component {
         const rawActiveId = this.getActiveId(props);
         const parsedActiveId = this.parseActiveId(rawActiveId);
         if (!parsedActiveId) {
-            this.store.discuss.thread = undefined;
+            this.store.discuss.channel = undefined;
             this.store.discuss.hasRestoredThread = true;
             const odoobotChat = this.store.odoobot?.searchChat();
             const selfMember = odoobotChat?.self_member_id;
@@ -77,7 +79,7 @@ export class DiscussClientAction extends Component {
         }
         const [model, id] = parsedActiveId;
         const activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
-        if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
+        if (activeThread && activeThread.notEq(this.store.discuss.channel?.thread)) {
             const highlight_message_id =
                 props.action?.params?.highlight_message_id || router.current.highlight_message_id;
             if (highlight_message_id) {

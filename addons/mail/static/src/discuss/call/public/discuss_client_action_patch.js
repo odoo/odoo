@@ -11,12 +11,12 @@ patch(DiscussClientAction.prototype, {
     },
     async restoreDiscussThread() {
         await super.restoreDiscussThread(...arguments);
-        if (!this.store.discuss.thread) {
+        if (!this.store.discuss.channel) {
             return;
         }
         if (
             this.store.is_welcome_page_displayed ||
-            this.store.discuss.thread.default_display_mode !== "video_full_screen"
+            this.store.discuss.channel.default_display_mode !== "video_full_screen"
         ) {
             return;
         }
@@ -24,7 +24,7 @@ patch(DiscussClientAction.prototype, {
     },
     closeWelcomePage() {
         super.closeWelcomePage(...arguments);
-        if (this.store.discuss.thread.default_display_mode === "video_full_screen") {
+        if (this.store.discuss.channel.default_display_mode === "video_full_screen") {
             this.joinCallWithDefaultSettings();
         }
     },
