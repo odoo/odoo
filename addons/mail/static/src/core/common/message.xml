@@ -66,9 +66,10 @@
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
+                                    <t t-set="showTextVisually" t-value="!message.linkPreviewSquash and (message.hasTextContent or showSubtypeDescription)"/>
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited)">
-                                        <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
+                                    <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited or message.parentMessage)">
+                                        <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash and !message.parentMessage" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block text-body" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
@@ -76,12 +77,12 @@
                                                     'o-green': message.bubbleColor === 'green',
                                                     'o-orange': message.bubbleColor === 'orange',
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
-                                                <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
+                                                <MessageInReply t-if="message.parentMessage" class="'mx-2 p-1 pb-0 ' + (showTextVisually ? 'mt-1' : 'my-1')" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
                                                             'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
                                                             'mb-0': !message.is_note,
-                                                            'py-2': !message.is_note and !state.isEditing,
+                                                            'py-2': !message.is_note and !state.isEditing and showTextVisually,
                                                             'pt-2 pb-1': !message.is_note and state.isEditing,
                                                             'o-note': message.is_note,
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note,
@@ -92,7 +93,7 @@
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="message.showTranslation" t-out="message.translationValue"/>
-                                                        <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
+                                                        <t t-elif="message.body and !message.linkPreviewSquash" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
                                                         <p class="fst-italic text-muted small" t-if="message.showTranslation">
                                                             <t t-if="message.translationSource" t-esc="translatedFromText"/>
                                                         </p>
@@ -121,6 +122,7 @@
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
                                     imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
+                                <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash and message.parentMessage" linkPreviews="message.linkPreviews" deletable="false"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="message.isSelfAuthored or store.self.isAdmin"/>
                             </div>
                             <t t-if="!message.is_note and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
