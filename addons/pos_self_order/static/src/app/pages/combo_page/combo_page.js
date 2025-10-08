@@ -91,6 +91,17 @@ export class ComboPage extends Component {
         return (this.state.choices[this.state.selectedChoiceIndex] ??= {});
     }
 
+    shouldShowMissingDetails() {
+        const el = this.scrollContainerRef?.el;
+        if (!el) {
+            return false;
+        }
+        return (
+            el.scrollHeight > el.clientHeight &&
+            this.currentChoiceState.displayAttributesOfItem.product_id.attribute_line_ids.length > 1
+        );
+    }
+
     selectItem(item) {
         const product = item.product_id;
         if (!product.self_order_available) {

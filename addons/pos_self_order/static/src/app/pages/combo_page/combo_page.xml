@@ -111,7 +111,7 @@
                         <div class="">
                             <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" />
                         </div>
-                        <t t-if="hasMissingAttributeValues(currentChoiceState.displayAttributesOfItem)" t-call="pos_self_order.MissingRequiredDetails" />
+                        <t t-if="hasMissingAttributeValues(currentChoiceState.displayAttributesOfItem) and shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
                     </div>
 
                     <!-- Confirmation -->
