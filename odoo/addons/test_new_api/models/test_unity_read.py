@@ -14,9 +14,17 @@ class Course(models.Model):
     reference = fields.Reference(string='reference to lesson', selection='_selection_reference_model')
     m2o_reference_id = fields.Many2oneReference(string='reference to lesson too', model_field='m2o_reference_model')
     m2o_reference_model = fields.Char(string='reference to the model for m2o_reference')
+    m2o_reference_name = fields.Char('Ref Name', compute='_compute_m2o_reference_name')
 
     def _selection_reference_model(self):
         return [('test_new_api.lesson', None)]
+
+    def _compute_m2o_reference_name(self):
+        for record in self:
+            if record.m2o_reference_id and record.m2o_reference_model:
+                record.m2o_reference_name = self.env[record.m2o_reference_model].browse(record.m2o_reference_id).name
+            else:
+                record.m2o_reference_name = False
 
 
 class Lesson(models.Model):
