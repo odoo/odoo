@@ -1817,7 +1817,7 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    reduce_base_lines_with_grouping_function(base_lines, { grouping_function = null } = {}) {
+    reduce_base_lines_with_grouping_function(base_lines, { grouping_function = null, computation_key = null } = {}) {
         const base_line_map = {};
         for (const base_line of base_lines) {
             const price_unit_after_discount =
@@ -1864,6 +1864,7 @@ export const accountTaxHelpers = {
                     new_base_line,
                     {
                         ...grouping_key,
+                        computation_key: computation_key,
                         tax_details: {
                             ...base_line.tax_details,
                             taxes_data: base_line.tax_details.taxes_data.map((tax_data) =>
@@ -2111,6 +2112,7 @@ export const accountTaxHelpers = {
         // Reduce the base lines to minimize the number of lines.
         const reduced_base_lines = this.reduce_base_lines_with_grouping_function(base_lines, {
             grouping_function: grouping_function,
+            computation_key: computation_key,
         });
 
         // Reduce the unit price to approach the target amount.
