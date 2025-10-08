@@ -105,7 +105,7 @@ class AccruedExpenseRevenue(models.TransientModel):
             return accounts['income']
 
     def _compute_move_vals(self):
-        def _get_aml_vals(order, balance, amount_currency, account_id, label="", analytic_distribution=None):
+        def _get_aml_vals(order, balance, amount_currency, account_id, label="", analytic_distribution=None, order_line_id=None):
             if not is_purchase:
                 balance *= -1
                 amount_currency *= -1
@@ -118,6 +118,10 @@ class AccruedExpenseRevenue(models.TransientModel):
             if analytic_distribution:
                 values.update({
                     'analytic_distribution': analytic_distribution,
+                })
+            if order_line_id is not None:
+                values.update({
+                    'order_line_id': order_line_id,
                 })
             if len(order) == 1 and self.company_id.currency_id != order.currency_id:
                 values.update({
@@ -212,7 +216,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                             unit_price=formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id),
                         )
                     distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
-                    values = _get_aml_vals(order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
+                    values = _get_aml_vals(order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution, order_line_id=order_line.id)
                     move_lines.append(Command.create(values))
                     total_balance += amount
                 # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this

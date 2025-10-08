@@ -337,7 +337,8 @@ class HrExpenseSheet(models.Model):
     def _compute_can_reset(self):
         is_expense_user = self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
-            sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
+            employee = sheet._get_sheet_employee()
+            sheet.can_reset = is_expense_user if is_expense_user else employee.user_id == self.env.user
 
     @api.depends_context('uid')
     @api.depends('employee_id')
@@ -352,7 +353,7 @@ class HrExpenseSheet(models.Model):
                 reason = _("%s: Your are not a Manager or HR Officer", sheet.name)
 
             elif not is_hr_admin:
-                sheet_employee = sheet.employee_id
+                sheet_employee = sheet._get_sheet_employee()
                 current_managers = sheet_employee.expense_manager_id \
                                    | sheet_employee.parent_id.user_id \
                                    | sheet_employee.department_id.manager_id.user_id \
@@ -380,8 +381,9 @@ class HrExpenseSheet(models.Model):
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for sheet in self:
-            sheet.department_id = sheet.employee_id.department_id
-            sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
+            employee = sheet._get_sheet_employee()
+            sheet.department_id = employee.department_id
+            sheet.user_id = employee.expense_manager_id or employee.parent_id.user_id
 
     @api.depends_context('uid')
     @api.depends('employee_id', 'user_id', 'state')
@@ -402,7 +404,7 @@ class HrExpenseSheet(models.Model):
                 sheet.is_editable = True
                 continue
 
-            employee = sheet.employee_id
+            employee = sheet._get_sheet_employee()
 
             is_own_sheet = employee.user_id == self.env.user
             if is_own_sheet and sheet.state == 'draft':
@@ -907,3 +909,7 @@ class HrExpenseSheet(models.Model):
             partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
         return account_dest.id
+
+    def _get_sheet_employee(self):
+        self.ensure_one()
+        return self.employee_id
