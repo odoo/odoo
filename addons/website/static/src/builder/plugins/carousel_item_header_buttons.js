@@ -7,6 +7,7 @@ export class CarouselItemHeaderMiddleButtons extends Component {
         applyAction: Function,
         addSlide: Function,
         removeSlide: Function,
+        isRemoveAllowed: Function,
     };
 
     setup() {

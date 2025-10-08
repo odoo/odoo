@@ -56,6 +56,7 @@ export class CarouselOptionPlugin extends Plugin {
                     }
                 },
                 applyAction: this.dependencies.builderActions.applyAction,
+                isRemoveAllowed: this.isRemoveAllowed.bind(this),
             },
         },
         container_title: {
@@ -160,6 +161,18 @@ export class CarouselOptionPlugin extends Plugin {
                 controlEl.classList.toggle("d-none", newLength === 1)
             );
         }
+    }
+
+    /**
+     * Tells whether removing a slide is allowed (there must be at least one
+     * slide remaining).
+     *
+     * @param {HTMLElement} editingElement the carousel element.
+     * @returns {Boolean}
+     */
+    isRemoveAllowed(editingElement) {
+        const carouselEl = editingElement.closest(".carousel");
+        return carouselEl?.querySelectorAll(".carousel-item").length > 1;
     }
 
     /**

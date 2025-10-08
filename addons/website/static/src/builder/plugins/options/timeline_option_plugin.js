@@ -13,11 +13,19 @@ export const DOT_COLOR = after(DOT_LINES_COLOR);
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
 }
+function isTimelineRow(el) {
+    return el.matches(".s_timeline_row");
+}
 
 class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
     static dependencies = ["history"];
     resources = {
+        remove_disabled_reason_providers: ({ el, reasons }) => {
+            if (this.isLastTimelineItem(el)) {
+                reasons.push(_t("You cannot remove the last item."));
+            }
+        },
         builder_options: [
             withSequence(TIMELINE, {
                 template: "website.TimelineOption",
@@ -75,6 +83,23 @@ class TimelineOptionPlugin extends Plugin {
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         timelineRowEl.append(firstContentEl);
         timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
+    }
+
+    isLastTimelineItem(el) {
+        const timeline = el.closest(".s_timeline");
+        if (!timeline) return false;
+
+        const timelineRows = timeline.querySelectorAll(".s_timeline_row");
+        if (timelineRows.length !== 1) return false;
+
+        if (isTimelineRow(el)) {
+            return true;
+        }
+        if (isTimelineCard(el)) {
+            const cards = timelineRows[0].querySelectorAll(".s_timeline_card");
+            return cards.length === 1;
+        }
+        return false;
     }
 }
 
