@@ -368,7 +368,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], sitemap=sitemap_partners)
+    ], type='http', sitemap=sitemap_partners)
     def partners(self, country=None, grade=None, page=0, **post):
         values = self._get_partners_values(
             country=country,
