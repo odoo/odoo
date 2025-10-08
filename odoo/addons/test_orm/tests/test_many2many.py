@@ -1,4 +1,7 @@
-from odoo.tests.common import TransactionCase
+from unittest.mock import patch
+
+from odoo.fields import Command, Domain
+from odoo.tests.common import TransactionCase, new_test_user
 
 
 class Many2manyCase(TransactionCase):
@@ -28,3 +31,41 @@ class Many2manyCase(TransactionCase):
         pirates = self.env['test_orm.pirate'].search([('ship_ids', 'not in', ship_ids)])
         self.assertEqual(len(pirates), 1)
         self.assertEqual(pirates, self.redbeard)
+
+    def test_bypass_search_access(self):
+        user = new_test_user(self.env, 'foo', groups='base.group_system')
+
+        attachment = self.env['test_orm.attachment'].create({
+            'res_model': self.ship._name,
+            'res_id': self.ship.id,
+        }).with_user(user)
+        record = self.env['test_orm.attachment.host'].create({
+            'm2m_attachment_ids': [Command.link(attachment.id)],
+        }).with_user(user)
+
+        self.assertFalse(record.env.su)
+
+        field = record._fields['m2m_attachment_ids']
+        self.assertTrue(field.bypass_search_access)
+
+        # check that attachments are searched with bypass_access, and filtered with _check_access()
+        Attachment = type(attachment)
+        with (
+            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as _search,
+            patch.object(Attachment, '_check_access', autospec=True, return_value=None) as _check_access,
+        ):
+            record.invalidate_model()
+            record.m2m_attachment_ids
+            _search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=True)
+            _check_access.assert_called_once_with(attachment, 'read')
+
+        # check that otherwise, attachments are searched without bypass_access
+        self.patch(field, 'bypass_search_access', False)
+        with (
+            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as _search,
+            patch.object(Attachment, '_check_access', autospec=True, return_value=None) as _check_access,
+        ):
+            record.invalidate_model()
+            record.m2m_attachment_ids
+            _search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=False)
+            _check_access.assert_called_once_with(attachment.browse(), 'read')
