@@ -198,6 +198,7 @@
         'views/snippets/s_banner_connected.xml',
         'views/snippets/s_ecomm_categories_showcase.xml',
         'views/snippets/s_banner_categories.xml',
+        'views/snippets/s_age_verification_popup.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
@@ -280,6 +281,7 @@
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
             'website/static/src/js/content/generate_video_iframe.js',
+            'website/static/src/js/content/age_verification_content_blur.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal

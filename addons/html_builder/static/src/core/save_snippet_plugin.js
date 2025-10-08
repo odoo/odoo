@@ -8,7 +8,7 @@ import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
 const savableSelector = `[data-snippet], a.btn, ${BLOCKQUOTE_PARENT_HANDLERS}`;
 // TODO `so_submit_button_selector` ?
 const savableExclude =
-    ".o_no_save, .s_donation_donate_btn, .s_website_form_send, .js_subscribe_btn";
+    ".o_no_save, .s_donation_donate_btn, .s_website_form_send, .js_subscribe_btn, .o_age_verification_btn";
 
 // Checks if the element can be saved as a custom snippet.
 function isSavable(el) {
