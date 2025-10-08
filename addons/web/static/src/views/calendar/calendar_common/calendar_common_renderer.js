@@ -253,7 +253,14 @@ export class CalendarCommonRenderer extends Component {
             }, 250);
         }
     }
-    onEventContent({ event }) {
+    onEventContent(arg) {
+        const { event } = arg;
+        if (event.start && event.end) {
+            const timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
+            const dateFmt = (date) =>
+                luxon.DateTime.fromISO(date.toISOString()).toLocal().toFormat(timeFormat);
+            arg.timeText = `${dateFmt(event.start)} - ${dateFmt(event.end)}`;
+        }
         const record = this.props.model.records[event.id];
         if (record) {
             // This is needed in order to give the possibility to change the event template.
