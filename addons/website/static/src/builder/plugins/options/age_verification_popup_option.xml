@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AgeVerificationOption" t-inherit="website.PopupOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderRow[@label.translate=&quot;Display&quot;]" position="replace"/>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Delay&quot;]" position="replace"/>
+    <xpath expr="//*[@t-name='website.PopupOption']" position="inside">
+        <BuilderRow label.translate="Confirmation">
+            <BuilderSelect action="'setAgeConfirmationTemplate'">
+                <BuilderSelectItem actionParam="'yes_or_no'" title.translate="Quick age check with simple yes/no buttons">Yes or No</BuilderSelectItem>
+                <BuilderSelectItem id="'birth_year_verification'" actionParam="'birth_year'" title.translate="User selects their birth year to confirm age">Birth Year</BuilderSelectItem>
+                <BuilderSelectItem id="'birth_date_verification'" actionParam="'birth_date'" title.translate="User selects full birth date for precise verification">Birth Date</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderButton id="'error_message_opt'"
+                title.translate="Show Rejection Message"
+                className="'fa ' + (isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
+                classAction="'d-none'" inverseAction="true" applyTo="'#verification_error'"
+                preview="false"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Minimum Age" t-if="isActiveItem('birth_year_verification') || isActiveItem('birth_date_verification')" level="1">
+            <BuilderNumberInput dataAttributeAction="'minAge'" default="18" unit.translate="years" saveUnit="''" min="1"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Placeholder" t-if="isActiveItem('birth_year_verification') || isActiveItem('birth_date_verification')" level="1">
+            <BuilderTextInput attributeAction="'placeholder'" applyTo="'.o_age_verification_birth_year, .o_age_verification_birth_date'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Background blur">
+            <BuilderCheckbox dataAttributeAction="'blurBackground'" dataAttributeActionValue="'true'"/>
+        </BuilderRow>
+    </xpath>
+</t>
+
+<t t-name="website.age_confirmation.yes_or_no">
+    <!-- When updating this template, make sure to also update the backend
+        `website.s_age_verification_popup` template -->
+    <div class="d-flex justify-content-center gap-2 col-lg-12 pt16 pb16 oe_unremovable oe_unmovable">
+        <a href="#" class="o_age_verification_yes_btn btn btn-primary flex-fill oe_unremovable">Yes</a>
+        <a href="#" class="o_age_verification_no_btn btn btn-secondary flex-fill oe_unremovable">No</a>
+    </div>
+</t>
+
+<t t-name="website.age_confirmation.birth_year">
+    <div class="d-flex justify-content-center gap-2 col-lg-12 pt16 pb16 oe_unremovable oe_unmovable">
+        <input
+            type="number"
+            class="form-control o_age_verification_birth_year"
+            name="birth_year"
+            step="1"
+            min="1900"
+            placeholder="Enter your birth year"
+        />
+        <a href="#" class="o_age_verify_year_btn btn btn-primary oe_unremovable">Verify</a>
+    </div>
+</t>
+
+<t t-name="website.age_confirmation.birth_date">
+    <div class="text-center col-lg-12 pt16 pb16 oe_unremovable oe_unmovable">
+        <div class="input-group">
+            <input
+                type="text"
+                class="form-control o_age_verification_birth_date"
+                name="birth_date"
+                placeholder="Enter your birth date"
+            />
+            <div class="input-group-text o_input_group_date_icon"><i class="fa fa-calendar"></i></div>
+        </div>
+        <p><a href="#" class="o_age_verify_date_btn btn btn-primary oe_unremovable mt-2">Verify</a></p>
+    </div>
+</t>
+
+</templates>

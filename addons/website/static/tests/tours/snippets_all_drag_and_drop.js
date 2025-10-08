@@ -46,6 +46,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                 "s_popup",
                 "s_newsletter_subscribe_popup",
                 "s_newsletter_benefits_popup",
+                "s_age_verification_popup",
             ].includes(snippet.name);
             const isDropInOnlySnippet = Object.keys(DROP_IN_ONLY_SNIPPETS).includes(snippet.name);
             const snippetKey = SUB_SNIPPET_TEMPLATES[snippet.name] || snippet.name;
