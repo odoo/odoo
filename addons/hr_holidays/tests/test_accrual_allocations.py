@@ -1600,8 +1600,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         def get_remaining_leaves(*args):
-            return leave_type.get_allocation_data(self.employee_emp, datetime.date(*args))[self.employee_emp][0][1][
-                'remaining_leaves']
+            data = leave_type.get_allocation_data(self.employee_emp, datetime.date(*args))[self.employee_emp][0][1]
+            return {'remaining_leaves': data['virtual_remaining_leaves'], 'max_leaves': data['max_leaves']}
 
         with freeze_time('2024-01-01'):
             allocation = self.env['hr.leave.allocation'].create({
@@ -1657,10 +1657,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()  # Accrued 4 in total, with 1 available
             # Check June's available leaves -> 2 out of 2 remaining.
             remaining_leaves = get_remaining_leaves(2024, 6, 1)
-            self.assertEqual(remaining_leaves, 2, "We should have accrued 1 more day in June.")
+            self.assertEqual(remaining_leaves['remaining_leaves'], 2, "We should have accrued 1 more day in June.")
+            self.assertEqual(remaining_leaves['max_leaves'], 2, "Max leaves should always be 2")
+
             # Check July's available leaves -> 2 (capped) out of 2 remaining.
             remaining_leaves = get_remaining_leaves(2024, 7, 1)
-            self.assertEqual(remaining_leaves, 2, "We should be capped at 2 days in July, even though we would accrue 1 more day.")
+            self.assertEqual(remaining_leaves['remaining_leaves'], 2, "We should be capped at 2 days in July, even though we would accrue 1 more day.")
+            self.assertEqual(remaining_leaves['max_leaves'], 2, "Max leaves should always be 2")
 
             # Now try to use a available leave in June, and then check how
             # many days are available in July. It should still be 2.
@@ -1672,7 +1675,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'request_date_to': '2024-06-10',
             }).action_validate()
             remaining_leaves = get_remaining_leaves(2024, 7, 1)
-            self.assertEqual(remaining_leaves, 2, "After using a day in June, we should still be able to accrue 1 more day in July, without being capped.")
+            self.assertEqual(remaining_leaves['remaining_leaves'], 2, "After using a day in June, we should still be able to accrue 1 more day in July, without being capped.")
+            self.assertEqual(remaining_leaves['max_leaves'], 2, "Max leaves should always be 2")
 
     def test_added_type_during_onchange(self):
         """

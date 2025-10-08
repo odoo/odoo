@@ -580,13 +580,26 @@ class HolidaysAllocation(models.Model):
                 and (not self.date_to or self.date_to > accrual_date)
                 and (not self.nextcall or self.nextcall <= accrual_date)):
             return 0
-
-        fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self, values={'leaves_taken': self.leaves_taken})
+        
+        fake_accrual_plan = self.env['hr.leave.accrual.plan'].new(origin=self.accrual_plan_id)
+        fake_accrual_plan.level_ids.write({"cap_accrued_time": False})
+        fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self, values={'accrual_plan_id': fake_accrual_plan})
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.holiday_status_id.request_unit in ['hour']:
+
+        time_unit = self.holiday_status_id.request_unit
+        if time_unit in ['hour']:
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+
+        future_level_id = self._get_current_accrual_plan_level_id(accrual_date)[0]
+        if future_level_id.cap_accrued_time:
+            future_maximum_leave = future_level_id.maximum_leave
+            if future_level_id.added_value_type != time_unit:
+                conversion_factor = (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                future_maximum_leave *= conversion_factor if time_unit in ['hour'] else 1.0 / conversion_factor
+            res = min(res, future_maximum_leave)
+        
         fake_allocation.invalidate_recordset()
         return res
 
