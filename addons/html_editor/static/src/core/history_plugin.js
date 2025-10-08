@@ -142,6 +142,7 @@ export class HistoryPlugin extends Plugin {
         "canRedo",
         "canUndo",
         "ignoreDOMMutations",
+        "ignoreDOMMutationsAsync",
         "getHistorySteps",
         "getNodeById",
         "makePreviewableOperation",
@@ -360,6 +361,23 @@ export class HistoryPlugin extends Plugin {
         const enableObserver = this.disableObserver();
         try {
             return callback();
+        } finally {
+            enableObserver();
+        }
+    }
+
+    /**
+     * Execute an async {@link callback} while the MutationObserver is disabled.
+     *
+     * /!\ This method should be used with extreme caution. Not observing some
+     * mutations could lead to mutations that are impossible to undo/redo.
+     *
+     * @param {Function} callback
+     */
+    async ignoreDOMMutationsAsync(callback) {
+        const enableObserver = this.disableObserver();
+        try {
+            return await callback(); // Asynchronous callback
         } finally {
             enableObserver();
         }

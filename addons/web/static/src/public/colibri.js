@@ -160,11 +160,13 @@ export class Colibri {
     }
 
     mountComponent(nodes, C, props) {
+        const promises = [];
         for (const node of nodes) {
             const root = this.core.prepareRoot(node, C, props);
-            root.mount();
+            promises.push(root.mount());
             this.cleanups.push(() => root.destroy());
         }
+        return promises;
     }
 
     applyTOut(el, value, initialValue) {
@@ -201,7 +203,7 @@ export class Colibri {
             }
             for (const cl in value) {
                 let toApply = value[cl];
-                for (let c of cl.trim().split(" ")) {
+                for (const c of cl.trim().split(" ")) {
                     if (toApply === INITIAL_VALUE) {
                         toApply = initialValue[cl];
                     }
@@ -368,7 +370,9 @@ export class Colibri {
                     if (!owl) {
                         owl = odoo.loader.modules.get("@odoo/owl");
                     }
-                    const value = node.children.length ? owl.markup(node.innerHTML) : node.textContent;
+                    const value = node.children.length
+                        ? owl.markup(node.innerHTML)
+                        : node.textContent;
                     valuePerNode.set(node, value);
                 }
                 this.applyTOut(node, definition.call(interaction, node), tOut[2].get(node));

@@ -166,8 +166,10 @@ registry.category("services").add("website_edit", {
                     applyTOut(...args) {
                         historyCallbacks.ignoreDOMMutations(() => super.applyTOut(...args));
                     },
-                    startInteraction(...args) {
-                        historyCallbacks.ignoreDOMMutations(() => super.startInteraction(...args));
+                    async start(...args) {
+                        await historyCallbacks.ignoreDOMMutationsAsync(
+                            async () => await super.start(...args)
+                        );
                     },
                 }),
                 patch(Interaction.prototype, {
@@ -238,7 +240,9 @@ registry.category("services").add("website_edit", {
                 patch(publicInteractions.constructor.prototype, {
                     shouldStop(el, interaction) {
                         if (this.isRefreshing) {
-                            const mustBeRefreshed = super.shouldStop(el, interaction) || interaction.interaction.isImpactedBy(el);
+                            const mustBeRefreshed =
+                                super.shouldStop(el, interaction) ||
+                                interaction.interaction.isImpactedBy(el);
                             return mustBeRefreshed && interaction.interaction.shouldStop();
                         }
                         return super.shouldStop(el, interaction);
