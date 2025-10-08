@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 patch(ProductCatalogKanbanRecord.prototype, {
     updateQuantity(quantity, debounce) {
         if (
-            this.env.orderResModel !== "sale.order" ||
+            this.orderLineProps.orderResModel !== "sale.order" ||
             this.productCatalogData.productType == "service"
         ) {
             super.updateQuantity(quantity, debounce);
@@ -19,13 +19,23 @@ patch(ProductCatalogKanbanRecord.prototype, {
             this.props.record.load();
             this.props.record.model.notify();
         } else {
-            quantity = Math.max(quantity, this.productCatalogData.deliveredQty);
+            quantity = Math.max(quantity, this.productCatalogData.deliveredQty ?? 0);
             super.updateQuantity(quantity, debounce);
         }
     },
 
+    get orderLineProps() {
+        if (super.orderLineProps.orderResModel === "sale.order") {
+            return {
+                ...super.orderLineProps,
+                deliveredQty: this.productCatalogData.deliveredQty,
+            };
+        }
+        return { ...super.orderLineProps };
+    },
+
     get orderLineComponent() {
-        if (this.env.orderResModel === "sale.order") {
+        if (this.orderLineProps.orderResModel === "sale.order") {
             return ProductCatalogSaleOrderLine;
         }
         return super.orderLineComponent;

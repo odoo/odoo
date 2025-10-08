@@ -4,20 +4,32 @@ import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 export class ProductCatalogOrderLine extends Component {
     static template = "product.ProductCatalogOrderLine";
     static props = {
-        isSample: { type: Boolean, optional: true},
-        productId: Number,
-        quantity: Number,
+        childField: String,
+        code: { type: String, optional: true },
+        currencyId: { type: Number, optional: true },
+        digits: { type: Array, optional: true },
+        displayUoM: Boolean,
+        isSample: { type: Boolean, optional: true },
+        orderId: { type: Number | Boolean, optional: true },
+        orderResModel: String,
         price: Number,
+        precision: { type: Number, optional: true },
+        productId: Number,
         productType: String,
-        uomDisplayName: String,
-        code: { type: String, optional: true},
+        quantity: Number,
         readOnly: { type: Boolean, optional: true },
-        warning: { type: String, optional: true},
+        uomDisplayName: String,
+        warning: { type: String, optional: true },
+        addProduct: Function,
+        decreaseQuantity: Function,
+        increaseQuantity: Function,
+        removeProduct: Function,
+        setQuantity: Function,
     };
 
     /**
      * Focus input text when clicked
-     * @param {Event} ev 
+     * @param {Event} ev
      */
     _onFocus(ev) {
         ev.target.select();
@@ -40,13 +52,12 @@ export class ProductCatalogOrderLine extends Component {
     }
 
     get price() {
-        const { currencyId, digits } = this.env;
-        return formatMonetary(this.props.price, { currencyId, digits });
+        const params = { currencyId: this.props.currencyId, digits: this.props.digits };
+        return formatMonetary(this.props.price, params);
     }
 
     get quantity() {
-        const digits = [false, this.env.precision];
-        const options = { digits, decimalPoint: ".", thousandsSep: "" };
+        const options = { digits: this.props.digits, decimalPoint: ".", thousandsSep: "" };
         return parseFloat(formatFloat(this.props.quantity, options));
     }
 

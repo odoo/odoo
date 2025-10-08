@@ -13,6 +13,13 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         return classes;
     }
 
+    get orderLineProps() {
+        return {
+            ...super.orderLineProps,
+            suggested_qty: this.productCatalogData.suggested_qty,
+        };
+    }
+
     get orderLineComponent() {
         return ProductCatalogPurchaseSuggestOrderLine;
     }
