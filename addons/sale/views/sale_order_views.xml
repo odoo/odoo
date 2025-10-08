@@ -941,6 +941,7 @@
                 <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
+                <field name="currency_id"/>
                 <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
                     will not be searched as often, and if they need to be searched it's usually in the context of products
                     and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
@@ -961,6 +962,7 @@
                     <filter name="customer" string="Customer" context="{'group_by': 'partner_id'}"/>
                     <filter name="order_month" string="Order Date" context="{'group_by': 'date_order'}"/>
                     <filter name="preferred_payment_method_line_groupby" string="Payment Method" context="{'group_by': 'preferred_payment_method_line_id'}"/>
+                    <filter name="currency" string="Currency" context="{'group_by': 'currency_id'}"/>
                 </group>
             </search>
         </field>
