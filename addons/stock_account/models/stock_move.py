@@ -194,7 +194,9 @@ class StockMove(models.Model):
             return 0
         total_value = sum(self.mapped('value'))
         total_qty = sum(m._get_valued_qty() for m in self)
-        return total_value / total_qty if total_qty else self.product_id.standard_price
+        price_unit = total_value / total_qty if total_qty else self.product_id.standard_price
+        price_unit_uom = self.product_id.uom_id._compute_price(price_unit, self.product_uom)
+        return price_unit_uom
 
     @api.model
     def _get_valued_types(self):
