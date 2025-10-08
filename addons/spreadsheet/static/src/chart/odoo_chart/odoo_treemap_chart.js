@@ -10,6 +10,7 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getChartTitle,
+    getEvaluatedChartTitle,
     getTreeMapChartTooltip,
 } = chartHelpers;
 
@@ -54,10 +55,12 @@ function createOdooChartRuntime(chart, getters) {
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
         locale,
     };
 
@@ -71,7 +74,7 @@ function createOdooChartRuntime(chart, getters) {
             ...CHART_COMMON_OPTIONS,
             layout: getChartLayout(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: { display: false },
                 tooltip: getTreeMapChartTooltip(definition, chartData),
             },

@@ -10,6 +10,7 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getChartTitle,
+    getEvaluatedChartTitle,
     getSunburstShowValues,
     getSunburstChartLegend,
     getSunburstChartTooltip,
@@ -54,10 +55,12 @@ function createOdooChartRuntime(chart, getters) {
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
         locale,
     };
 
@@ -72,7 +75,7 @@ function createOdooChartRuntime(chart, getters) {
             cutout: chart.pieHolePercentage === undefined ? "25%" : `${chart.pieHolePercentage}%`,
             layout: getChartLayout(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: getSunburstChartLegend(definition, chartData),
                 tooltip: getSunburstChartTooltip(definition, chartData),
                 sunburstLabelsPlugin: getSunburstShowValues(definition, chartData),

@@ -10,6 +10,7 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getChartTitle,
+    getEvaluatedChartTitle,
     getGeoChartScales,
     getGeoChartTooltip,
 } = chartHelpers;
@@ -49,11 +50,13 @@ function createOdooChartRuntime(chart, getters) {
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale,
+        evaluatedChartTitle,
         availableRegions: getters.getGeoChartAvailableRegions(),
         geoFeatureNameToId: getters.geoFeatureNameToId,
         getGeoJsonFeatures: getters.getGeoJsonFeatures,
@@ -69,7 +72,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getGeoChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 tooltip: getGeoChartTooltip(definition, chartData),
                 legend: { display: false },
             },

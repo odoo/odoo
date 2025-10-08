@@ -10,6 +10,8 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getChartTitle,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
     getChartShowValues,
     getFunnelChartScales,
     getFunnelChartTooltip,
@@ -53,10 +55,14 @@ function createOdooChartRuntime(chart, getters) {
     }
 
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
         locale,
     };
 
@@ -72,7 +78,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getFunnelChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: { display: false },
                 tooltip: getFunnelChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
