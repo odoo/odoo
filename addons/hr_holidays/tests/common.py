@@ -47,7 +47,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
 
         cls.user_responsible = mail_new_test_user(cls.env, login='Titus', groups='base.group_user,hr_holidays.group_hr_holidays_responsible')
         cls.user_responsible_id = cls.user_responsible.id
-        cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='base.group_user')
+        cls.user_employee = mail_new_test_user(cls.env, login='enguerran', groups='base.group_user', password='enguerran')  # ,hr_holidays.group_hr_holidays_manager
         cls.user_employee_id = cls.user_employee.id
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
         cls.external_user_employee_id = cls.external_user_employee.id
@@ -181,3 +181,14 @@ class TestHolidayContract(TransactionCase):
             'request_date_to': date_to or Datetime.today(),
             'request_date_from': date_from or Datetime.today(),
         })
+
+
+def assert_virtual_leaves_equal(test, date, allocation, leave_type, value, employee, digits=False):
+    allocation._update_accrual()
+    allocation_data = leave_type.get_allocation_data(employee)
+    if digits:
+        test.assertAlmostEqual(allocation_data[employee][0][1]['virtual_remaining_leaves'], value,
+            digits, f"Virtual leaves for date '{date}' are incorrect.")
+    else:
+        test.assertEqual(allocation_data[employee][0][1]['virtual_remaining_leaves'], value,
+            f"Virtual leaves for date '{date}' are incorrect.")

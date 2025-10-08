@@ -32,8 +32,8 @@ class HrLeaveType(models.Model):
             }
         super(HrLeaveType, self - overtime_leaves)._compute_display_name()
 
-    def get_allocation_data(self, employees, target_date=None):
-        res = super().get_allocation_data(employees, target_date)
+    def get_allocation_data(self, employees, target_date=None, update_accrual=False):
+        res = super().get_allocation_data(employees, target_date, update_accrual)
         deductible_time_off_types = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
             ('requires_allocation', '=', False)])
