@@ -38,15 +38,6 @@ export class Store extends BaseStore {
     get self() {
         return this.self_partner || this.self_guest;
     }
-    allChannels = fields.Many("mail.thread", {
-        inverse: "storeAsAllChannels",
-        onUpdate() {
-            const busService = this.store.env.services.bus_service;
-            if (!busService.isActive && this.allChannels.some((t) => !t.isTransient)) {
-                busService.start();
-            }
-        },
-    });
     /**
      * Indicates whether the current user is using the application through the
      * public page.

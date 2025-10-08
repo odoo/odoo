@@ -13,7 +13,14 @@ export class DiscussChannel extends Record {
     }
 
     /** @type {number} */
-    id;
+    id = fields.Attr(undefined, {
+        onUpdate() {
+            const busService = this.store.env.services.bus_service;
+            if (!busService.isActive && !this.thread.isTransient) {
+                busService.start();
+            }
+        },
+    });
     thread = fields.One("mail.thread", {
         inverse: "channel",
         onDelete: (r) => r.delete(),
