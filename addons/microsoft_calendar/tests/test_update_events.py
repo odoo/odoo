@@ -69,7 +69,10 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.simple_event.ms_organizer_event_id,
-            {"subject": "my new simple event"},
+            {
+                "transactionId": self.simple_event._get_microsoft_transaction_id(),
+                "subject": "my new simple event"
+            },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )
@@ -93,7 +96,10 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(res)
         mock_patch.assert_called_once_with(
             self.simple_event.ms_organizer_event_id,
-            {"subject": "my new simple event"},
+            {
+                "transactionId": self.simple_event._get_microsoft_transaction_id(),
+                "subject": "my new simple event"
+            },
             token=mock_get_token(self.organizer_user),
             timeout=ANY,
         )

@@ -138,22 +138,38 @@ class MicrosoftEvent(abc.Set):
                 ms_event._events[ms_event.id]['_odoo_id'] = odoo_id
                 mapped_events.append(ms_event.id)
 
+        def link_odoo_event(odoo_event, ms_event):
+            ms_event._events[ms_event.id]['_odoo_id'] = odoo_event.id
+            mapped_events.append(ms_event.id)
+            odoo_event.write({
+                'microsoft_id': combine_ids(ms_event.id, ms_event.iCalUId),
+                'need_sync_m': False,
+            })
+
         # 2. try to match unmapped events with Odoo events using their id
         unmapped_events = self.filter(lambda e: e.id not in mapped_events)
         mapping = {e.ms_organizer_event_id: e for e in odoo_events}
-
         for ms_event in unmapped_events:
-            odoo_event = mapping.get(ms_event.id)
-            if odoo_event:
-                ms_event._events[ms_event.id]['_odoo_id'] = odoo_event.id
-                mapped_events.append(ms_event.id)
+            if odoo_event := mapping.get(ms_event.id):
+                link_odoo_event(odoo_event, ms_event)
 
-                # don't forget to also set the global event ID on the Odoo event to ease
-                # and improve reliability of future mappings
-                odoo_event.write({
-                    'microsoft_id': combine_ids(ms_event.id, ms_event.iCalUId),
-                    'need_sync_m': False,
-                })
+        # 3. Try to match using transactionId, only for calendar.event model
+        if model_env._name != 'calendar.event':
+            return self.filter(lambda e: e.id in mapped_events)
+
+        unmapped_events_map = {}
+        for ms_event in self.filter(lambda e: e.id not in mapped_events and e.transactionId):
+            vals = ms_event.transactionId.split("-")
+            if len(vals) == 3 and vals[0].isdigit():
+                unmapped_events_map[int(vals[0])] = ms_event
+
+        for odoo_event in model_env.with_context(active_test=False).browse(unmapped_events_map).exists():
+            ms_event = unmapped_events_map[odoo_event.id]
+
+            # Using transactionId with timestamp and write_uid, we ensure that we do not link
+            # an Odoo event with another Microsoft event in case of retry or concurrency.
+            if odoo_event._get_microsoft_transaction_id() == ms_event.transactionId:
+                link_odoo_event(odoo_event, ms_event)
 
         return self.filter(lambda e: e.id in mapped_events)
 
