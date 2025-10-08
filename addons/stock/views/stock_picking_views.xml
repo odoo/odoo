@@ -511,6 +511,18 @@
             <field name="binding_view_types">list,kanban</field>
         </record>
 
+        <record id="action_merge_pickings" model="ir.actions.server">
+            <field name="name">Merge Transfers</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="code">
+                if records:
+                    action = records.action_merge_pickings()
+            </field>
+        </record>
+
         <record id="click_dashboard_graph" model="ir.actions.server">
             <field name="name">stock.click_dashboard_graph</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
