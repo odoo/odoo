@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageInReply">
-        <div class="o-mail-MessageInReply mx-2 mt-1 p-1 pb-0">
+        <div class="o-mail-MessageInReply" t-attf-class="{{ props.class }}">
             <small class="o-mail-MessageInReply-core o-mail-Message-bubble o-muted border position-relative d-flex px-2 py-1 rounded-start-0 o-rounded-end-bubble d-inline-flex" t-att-class="{
                 'o-blue': props.message.parentMessage.bubbleColor === 'blue',
                 'o-green': props.message.parentMessage.bubbleColor === 'green',
