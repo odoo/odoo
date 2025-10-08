@@ -10,6 +10,7 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getPieChartTooltip,
+    getEvaluatedChartTitle,
     getChartTitle,
     getPieChartLegend,
     getChartShowValues,
@@ -47,9 +48,12 @@ function createOdooChartRuntime(chart, getters) {
     const definition = chart.getDefinition();
     definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
 
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
         locale: getters.getLocale(),
         topPadding: getTopPaddingForDashboard(definition, getters),
     };
@@ -64,7 +68,7 @@ function createOdooChartRuntime(chart, getters) {
             ...CHART_COMMON_OPTIONS,
             layout: getChartLayout(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: getPieChartLegend(definition, chartData),
                 tooltip: getPieChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),

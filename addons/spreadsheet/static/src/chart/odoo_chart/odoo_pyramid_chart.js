@@ -12,6 +12,8 @@ const {
     getChartTitle,
     getPyramidChartShowValues,
     getPyramidChartScales,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
     getBarChartLegend,
     getPyramidChartTooltip,
 } = chartHelpers;
@@ -61,10 +63,14 @@ function createOdooChartRuntime(chart, getters) {
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
 
     const chartData = {
         labels,
         dataSetsValues: pyramidDatasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
         locale,
     };
 
@@ -80,7 +86,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getPyramidChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: getBarChartLegend(definition, chartData),
                 tooltip: getPyramidChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getPyramidChartShowValues(definition, chartData),

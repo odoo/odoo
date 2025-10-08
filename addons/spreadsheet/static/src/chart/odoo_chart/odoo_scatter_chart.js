@@ -12,6 +12,8 @@ const {
     getScatterChartScales,
     getLineChartTooltip,
     getChartTitle,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
     getScatterChartLegend,
     getChartShowValues,
     getTrendDatasetForLineChart,
@@ -54,6 +56,8 @@ function createOdooChartRuntime(chart, getters) {
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
 
     const trendDataSetsValues = datasets.map((dataset, index) => {
         const trend = definition.dataSets[index]?.trend;
@@ -65,6 +69,8 @@ function createOdooChartRuntime(chart, getters) {
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
         locale,
         trendDataSetsValues,
         axisType: definition.axisType || "category",
@@ -81,7 +87,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getScatterChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: getScatterChartLegend(definition, chartData),
                 tooltip: getLineChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),

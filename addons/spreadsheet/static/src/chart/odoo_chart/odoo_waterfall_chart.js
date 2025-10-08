@@ -9,6 +9,8 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getChartTitle,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
     getWaterfallChartShowValues,
     getWaterfallChartScales,
     getWaterfallChartLegend,
@@ -65,10 +67,14 @@ function createOdooChartRuntime(chart, getters) {
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
 
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
         locale,
     };
 
@@ -82,7 +88,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getWaterfallChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition, getters),
+                title: getChartTitle(definition, chartData, getters),
                 legend: getWaterfallChartLegend(definition, chartData),
                 tooltip: getWaterfallChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getWaterfallChartShowValues(definition, chartData),
