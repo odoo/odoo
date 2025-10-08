@@ -5,14 +5,9 @@
         height: fit-content;
     }
 
-    .o_searchview {
-        overflow-y: auto;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-
     @media (min-width: 768px){
-        .o_searchview {
+        .o_searchview .o_searchview_input_container {
+            overflow-y: auto;
             max-height: 200px;
         }
     }

@@ -2,7 +2,7 @@
 <templates>
     <t t-name="spreadsheet_dashboard.DashboardSearchBar">
         <div class="o_sp_dashboard_search d-flex flex-wrap flex-lg-nowrap gap-1 gap-lg-2 w-100 w-lg-auto">
-            <div class="d-flex flex-grow-1 w-100 w-lg-auto" t-if="visibilityState.showSearchBar" >
+            <div class="d-flex flex-grow-1 input-group w-auto" t-if="visibilityState.showSearchBar" >
                 <Dropdown
                     state="inputDropdownState"
                     manual="true"
