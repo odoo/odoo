@@ -12,7 +12,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 export const CAROUSEL_CARDS_SEQUENCE = between(WEBSITE_BACKGROUND_OPTIONS, BOX_BORDER_SHADOW);
 
 const carouselWrapperSelector =
-    ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper";
+    ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper";
 const carouselControlsSelector =
     ".carousel-control-prev, .carousel-control-next, .carousel-indicators";
 
