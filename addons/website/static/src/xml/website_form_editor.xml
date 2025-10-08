@@ -248,6 +248,15 @@
                 <t t-foreach="field.records" t-as="record" t-key="record_index">
                     <t t-call="website.form_radio"/>
                 </t>
+                <input
+                    t-att-type="field.inputType || 'text'"
+                    class="form-control s_website_form_input d-none o_other_input mt-3"
+                    t-att-name="field.name"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-attf-value="#{field.value}"
+                    t-att-data-fill-with="field.fillWith"
+                    t-att-placeholder="field.placeholder"
+                />
             </div>
         </t>
     </t>
@@ -287,6 +296,15 @@
                         <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
                     </t>
                 </select>
+                    <input
+                    t-att-type="field.inputType || 'text'"
+                    class="form-control s_website_form_input d-none o_other_input mt-3"
+                    t-att-name="field.name"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-attf-value="#{field.value}"
+                    t-att-data-fill-with="field.fillWith"
+                    t-att-placeholder="field.placeholder"
+                />
             </t>
         </t>
     </t>

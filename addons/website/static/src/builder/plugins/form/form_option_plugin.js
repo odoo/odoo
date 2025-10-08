@@ -162,6 +162,7 @@ export class FormOptionPlugin extends Plugin {
             ToggleRequiredAction,
             SetVisibilityAction,
             SetVisibilityDependencyAction,
+            AddOtherOptionAction,
             SetFormCustomFieldValueListAction,
             PropertyAction,
             SetCustomErrorMessageAction,
@@ -1391,6 +1392,39 @@ export class SetVisibilityDependencyAction extends BuilderAction {
         return currentValue === value;
     }
 }
+export class AddOtherOptionAction extends BuilderAction {
+    static id = "addOtherOption";
+    static dependencies = ["websiteFormOption"];
+
+    apply({ editingElement: fieldEl, isPreviewing }) {
+        if (!isPreviewing) {
+            const fields = [];
+            const field = getActiveField(fieldEl, { fields });
+
+            const hasOther = field.records.some((rec) => rec.id === "__other__");
+
+            if (hasOther) {
+                // ❌ remove "Other"
+                field.records = field.records.filter((rec) => rec.id !== "__other__");
+            } else {
+                // ✅ add "Other"
+                field.records.push({
+                    id: "__other__",
+                    display_name: _t("Other"),
+                    selected: false,
+                });
+            }
+            this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        }
+    }
+
+    isApplied({ editingElement: fieldEl }) {
+        const fields = [];
+        const field = getActiveField(fieldEl, { fields });
+        return field.records.some((rec) => rec.id === "__other__");
+    }
+}
+
 export class SetFormCustomFieldValueListAction extends BuilderAction {
     static id = "setFormCustomFieldValueList";
     static dependencies = ["websiteFormOption"];
@@ -1398,7 +1432,60 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
-        let valueList = JSON.parse(value);
+        const field = getActiveField(fieldEl, { fields });
+        const prevRecords = Array.isArray(field.records) ? field.records.slice() : [];
+        const existingOther = prevRecords.find((r) => r?.id === "__other__");
+
+        // parse incoming list defensively
+        let valueList;
+        try {
+            valueList = JSON.parse(value) || [];
+        } catch {
+            valueList = [];
+        }
+        if (!Array.isArray(valueList)) {
+            valueList = [];
+        }
+
+        if (existingOther) {
+            let matchIndex = valueList.findIndex((v) => v?.id === "__other__");
+
+            if (matchIndex === -1) {
+                matchIndex = valueList.findIndex(
+                    (v) => v?.display_name === existingOther.display_name
+                );
+            }
+
+            if (matchIndex === -1) {
+                const prevIndex = prevRecords.indexOf(existingOther);
+                if (prevIndex >= 0 && prevIndex < valueList.length) {
+                    matchIndex = prevIndex;
+                }
+            }
+
+            if (matchIndex === -1) {
+                matchIndex = valueList.findIndex((v) => v?.display_name === _t("Other"));
+            }
+
+            if (matchIndex !== -1) {
+                valueList[matchIndex].id = "__other__"; // enforce special id
+            } else {
+                valueList.push({ ...existingOther }); // preserve it
+            }
+
+            // ensure only one "__other__"
+            let seenOther = false;
+            valueList = valueList.filter((v) => {
+                if (v?.id === "__other__") {
+                    if (seenOther) {
+                        return false;
+                    }
+                    seenOther = true;
+                }
+                return !!v;
+            });
+        }
+
         if (getSelect(fieldEl)) {
             valueList = valueList.filter((value) => value.id !== "" || value.display_name !== "");
             const hasDefault = valueList.some((value) => value.selected);
@@ -1410,7 +1497,7 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
                 });
             }
         }
-        const field = getActiveField(fieldEl, { fields });
+
         field.records = valueList;
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
