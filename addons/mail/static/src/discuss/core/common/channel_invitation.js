@@ -189,8 +189,18 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickCopy(ev) {
-        await navigator.clipboard.writeText(this.props.thread.invitationLink);
-        this.notification.add(_t("Link copied!"), { type: "success" });
+        let notification = _t("Invitation link copied!");
+        let type = "success";
+        const clipboard = this.env.inDiscussCallView?.isPip
+            ? this.rtc.pipService.pipWindow?.navigator.clipboard
+            : navigator.clipboard;
+        try {
+            await clipboard.writeText(this.props.thread.invitationLink);
+        } catch {
+            notification = _t("Invitation link copy failed (Permission denied?)!");
+            type = "danger";
+        }
+        this.notification.add(notification, { type });
     }
 
     async onClickInvite() {
