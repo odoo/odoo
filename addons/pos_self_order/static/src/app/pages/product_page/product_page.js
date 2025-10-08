@@ -63,6 +63,16 @@ export class ProductPage extends Component {
         return this.props.productTemplate;
     }
 
+    shouldShowMissingDetails() {
+        const el = this.scrollContainerRef?.el;
+        if (!el) {
+            return false;
+        }
+        return (
+            el.scrollHeight > el.clientHeight && this.productTemplate.attribute_line_ids.length > 1
+        );
+    }
+
     changeQuantity(increase) {
         const currentQty = this.state.qty;
 
