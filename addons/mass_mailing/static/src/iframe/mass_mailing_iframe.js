@@ -22,6 +22,10 @@ import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
+const MASS_MAILING_IFRAME_ASSETS = [
+    "mass_mailing.assets_iframe_style",
+    "mass_mailing.assets_inside_builder_iframe",
+];
 
 export class MassMailingIframe extends Component {
     static template = "mass_mailing.MassMailingIframe";
@@ -193,7 +197,7 @@ export class MassMailingIframe extends Component {
     }
 
     async setupIframe() {
-        await this.loadIframeAssets();
+        this.bundles = await this.loadIframeAssets();
         if (status(this) === "destroyed") {
             return;
         }
@@ -219,7 +223,7 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
-        this.iframeLoaded.resolve(this.iframeRef.el);
+        this.iframeLoaded.resolve({ iframe: this.iframeRef.el, bundles: this.bundles });
         this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
     }
@@ -234,14 +238,46 @@ export class MassMailingIframe extends Component {
         );
     }
 
+    /**
+     * @returns {Object} bundles { bundleName: activatorObject }
+     */
     async loadIframeAssets() {
-        await Promise.all([
-            loadBundle("mass_mailing.assets_iframe_style", {
-                targetDoc: this.iframeRef.el.contentDocument,
-                css: true,
-                js: false,
-            }),
-        ]);
+        const bundleEntryPromises = MASS_MAILING_IFRAME_ASSETS.map(async (bundle) => {
+            const targets = (
+                await loadBundle(bundle, {
+                    targetDoc: this.iframeRef.el.contentDocument,
+                    css: true,
+                    js: false,
+                })
+            ).map((bundleEvent) => bundleEvent.target);
+            const iframe = this.iframeRef.el;
+            return [
+                bundle,
+                {
+                    enable() {
+                        if (!iframe?.isConnected) {
+                            return;
+                        }
+                        for (const target of targets) {
+                            if (!iframe.contentDocument.head.contains(target)) {
+                                iframe.contentDocument.head.appendChild(target);
+                            }
+                        }
+                    },
+                    disable() {
+                        if (!iframe?.isConnected) {
+                            return;
+                        }
+                        for (const target of targets) {
+                            if (iframe.contentDocument.head.contains(target)) {
+                                target.remove();
+                            }
+                        }
+                    },
+                },
+            ];
+        });
+        return Object.fromEntries(await Promise.all(bundleEntryPromises));
     }
 
     onBlur(ev) {
@@ -261,7 +297,7 @@ export class MassMailingIframe extends Component {
     getBuilderProps() {
         return {
             overlayRef: this.overlayRef,
-            iframeLoaded: this.iframeLoaded,
+            iframeLoaded: this.iframeLoaded.then((iframeInfo) => iframeInfo.iframe),
             snippetsName: "mass_mailing.email_designer_snippets",
             config: this.props.config,
             isMobile: this.state.isMobile,
