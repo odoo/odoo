@@ -14,7 +14,7 @@ import {
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted, status } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-const NO_OP = () => {};
+const NO_OP = () => { };
 
 export class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
@@ -317,6 +317,13 @@ class AddPageTemplates extends Component {
     static template = "website.AddPageTemplates";
     static props = {
         onTemplatePageChanged: Function,
+        showBlankPage: {
+            type: Boolean,
+            optional: true,
+        },
+    };
+    static defaultProps = {
+        showBlankPage: true,
     };
     static components = {
         AddPageTemplatePreviews,
@@ -339,7 +346,14 @@ class AddPageTemplates extends Component {
                         id: "basic",
                         title: _t("Basic"),
                         // Blank and 5 preloading boxes.
-                        templates: [{ isBlank: true }, {}, {}, {}, {}, {}],
+                        templates: [
+                            this.props.showBlankPage ? { isBlank: true } : {},
+                            {},
+                            {},
+                            {},
+                            {},
+                            {}
+                        ],
                     },
                 },
             ],
@@ -375,9 +389,11 @@ class AddPageTemplates extends Component {
         }
 
         const newPageTemplates = await loadTemplates;
-        newPageTemplates[0].templates.unshift({
-            isBlank: true,
-        });
+        if (this.props.showBlankPage) {
+            newPageTemplates[0].templates.unshift({
+                isBlank: true,
+            });
+        }
         const pages = [];
         for (const template of newPageTemplates) {
             pages.push({
