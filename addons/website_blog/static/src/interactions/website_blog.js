@@ -20,7 +20,22 @@ export class WebsiteBlog extends Interaction {
         ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete": {
             "t-on-click.prevent.withTarget": this.onShareArticleClick,
         },
+        ".o_sticky_reactive": {
+            "t-att-style": () => ({
+                "top": `${this.position || this.defaultPosition}px`,
+            }),
+        }
     };
+
+    setup() {
+        this.defaultPosition = this._isCompactListView() ? 0 : 16;
+        this.position = this.defaultPosition;
+    }
+
+    start() {
+        this._adaptToHeaderChange();
+        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+    }
 
     /**
      * @param {MouseEvent} ev
@@ -92,8 +107,56 @@ export class WebsiteBlog extends Interaction {
         await this.waitFor(scrollTo(el, { duration }));
         callback();
     }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptToHeaderChange() {
+        let position = this.defaultPosition;
+
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            position += el.offsetHeight;
+        }
+
+        if (this.position !== position) {
+            this.position = position;
+            this.updateContent();
+        }
+    }
+
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _isCompactListView() {
+        // Check if the layout is compact list view by looking for specific elements
+        // that are only present in compact list view
+        return this.el.querySelector(".o_wblog_compact_list_month_header") !== null;
+    }
+}
+
+export class WebsiteBlogSearchModal extends Interaction {
+    static selector = '#o_wblog_search_modal';
+    disabledInEditableMode = true;
+
+    //--------------------------------------------------------------------------
+    // Overrides
+    //--------------------------------------------------------------------------
+    start() {
+        this.el.addEventListener("shown.bs.modal", (ev) => {
+            ev.target.querySelector('.oe_search_box').focus();
+        });
+    }
 }
 
 registry
     .category("public.interactions")
     .add("website_blog.website_blog", WebsiteBlog);
+
+registry
+    .category("public.interactions")
+    .add("website_blog.website_blog_search_modal", WebsiteBlogSearchModal);
