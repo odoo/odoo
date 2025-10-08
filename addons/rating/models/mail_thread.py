@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import markupsafe
+
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, tools
+from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.tools import html_keep_url
 
 
 class MailThread(models.AbstractModel):
@@ -141,17 +144,15 @@ class MailThread(models.AbstractModel):
                 subtype_id = self._rating_apply_get_default_subtype_id()
             else:
                 subtype_id = False
-            feedback = tools.plaintext2html(feedback or '')
+            feedback = Markup(nl2br(html_keep_url(feedback))) if feedback else ''
 
             scheduled_datetime = (
                 fields.Datetime.now() + datetime.timedelta(hours=2)
                 if notify_delay_send else None
             )
-            rating_body = (
-                    markupsafe.Markup(
-                        "<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
-                    ) % (rating.rating_image_url, rate, feedback)
-            )
+            rating_body = Markup(
+                "<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+            ) % (rating.rating_image_url, rate, feedback)
 
             if rating.message_id:
                 self._message_update_content(
