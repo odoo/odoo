@@ -6,6 +6,7 @@ import {
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    testSwitchWebsite,
 } from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_utils";
 
@@ -103,20 +104,7 @@ registerWebsitePreviewTour(
                 ":iframe .s_cover .btn-outline-secondary:contains('Contact us in Parseltongue')",
         },
         ...clickOnSave(),
-        {
-            content: "Open website switcher dropdown",
-            trigger: ".o_website_switcher_container button",
-            run: "click",
-        },
-        {
-            content: "Switch to website fu_GB",
-            trigger: ".o-dropdown--menu .o-dropdown-item:contains('website fu_GB')",
-            run: "click",
-        },
-        {
-            content: "Wait for website fu_GB",
-            trigger: ":iframe .o_homepage_editor_welcome_message",
-        },
+        ...testSwitchWebsite("website fu_GB"),
         ...clickOnEditAndWaitEditMode(),
         ...insertSnippet({ id: "s_cover", name: "Cover", groupName: "Intro" }),
         {
