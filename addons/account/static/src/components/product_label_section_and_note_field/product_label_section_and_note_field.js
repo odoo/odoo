@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { useInputField } from "@web/views/fields/input_field_hook";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
@@ -154,6 +155,14 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
         this.productNode = useRef("productNodeRef");
         useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
+
+        if (this.isSectionOrNote) {
+            useInputField({
+                ref: this.labelNode,
+                fieldName: "name",
+                getValue: () => this.label,
+            });
+        }
 
         useEffect(
             () => {
