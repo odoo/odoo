@@ -66,7 +66,8 @@ class RegistrationEditor(models.TransientModel):
                 registrations_to_create.append(registration_line._prepare_registration_data(include_event_values=True))
 
         self.env['event.registration'].create(registrations_to_create)
-
+        # Force compute after wizard so seat validation/emails happen now.
+        self.event_registration_ids.registration_id._compute_registration_status()
         return {'type': 'ir.actions.act_window_close'}
 
 
