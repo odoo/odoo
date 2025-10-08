@@ -157,6 +157,14 @@ export class MassMailingIframe extends Component {
             if (status(this) === "destroyed") {
                 return;
             }
+            if (
+                this.iframeRef.el.contentDocument?.querySelector(
+                    ".o_mass_mailing_processing_container"
+                )?.firstElementChild
+            ) {
+                // Never resize during the convert_inline process.
+                return;
+            }
             iframeResize();
             sidebarResize();
         });

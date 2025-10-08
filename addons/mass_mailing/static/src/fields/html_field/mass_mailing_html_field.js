@@ -5,13 +5,13 @@ import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelector } from "@mass_mailing/themes/theme_selector/theme_selector";
-import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { MailHtmlConverter } from "@mail/convert_inline/email_html_converter";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -234,7 +234,11 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
-            Plugins: [...MAIN_EDITOR_PLUGINS, DynamicPlaceholderPlugin],
+            Plugins: [
+                ...MAIN_EDITOR_PLUGINS,
+                DynamicPlaceholderPlugin,
+                ...registry.category("mail-core-plugins").getAll(),
+            ],
         };
     }
 
@@ -293,24 +297,21 @@ export class MassMailingHtmlField extends HtmlField {
         await this.lastIframeLoaded;
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
-        const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
-        // d-none must be removed for style computation.
-        this.iframeRef.el.classList.remove("d-none");
-        this.iframeRef.el.style.width = "1320px";
         const processingEl = this.iframeRef.el.contentDocument.createElement("DIV");
         processingEl.append(parseHTML(this.iframeRef.el.contentDocument, value));
         const processingContainer = this.iframeRef.el.contentDocument.querySelector(
             ".o_mass_mailing_processing_container"
         );
-        processingContainer.append(processingEl);
-        const cssRules = getCSSRules(this.iframeRef.el.contentDocument);
-        await toInline(processingEl, cssRules);
+
+        // TODO EGGMAIL: adapt usage, converter should be persistent
+        const converter = new MailHtmlConverter(this.env.services);
+        await converter.convertToEmailHtml({
+            reference: processingEl,
+            container: processingContainer,
+            Plugins: registry.category("mail-html-conversion-plugins").getAll(),
+        });
         const inlineValue = processingEl.innerHTML;
-        processingEl.remove();
-        this.iframeRef.el.style.width = "";
-        if (shouldRestoreDisplayNone) {
-            this.iframeRef.el.classList.add("d-none");
-        }
+
         await this.props.record
             .update({
                 [this.props.name]: value,
