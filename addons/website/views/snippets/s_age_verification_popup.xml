@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_age_verification_popup" name="Age Verification Popup">
+    <div class="s_popup o_snippet_invisible" data-vcss="001">
+        <div class="modal fade s_popup_middle s_popup_restrict_close" style="background-color: var(--black-50) !important; backdrop-filter: blur(10px);" data-show-after="0" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog" aria-label="Popup">
+            <div class="modal-dialog d-flex">
+                <div class="modal-content oe_structure">
+                    <section class="s_text_block px-4 py-5" data-snippet="s_text_block" data-name="Text">
+                        <div class="container text-center">
+                            <span class="fa fa-check-circle-o fa-8x mb-2" style="color:rgb(113, 75, 103);"></span>
+                            <h2>Are you 18 years or older?</h2>
+                            <p>Our services are available only to adults of legal age.</p>
+                            <div class="o_not_editable d-flex justify-content-center gap-2">
+                                <a class="btn btn-primary o_translate_inline flex-fill">Yes</a>
+                                <a class="btn btn-secondary o_translate_inline flex-fill">No</a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+</odoo>
