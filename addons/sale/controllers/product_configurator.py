@@ -281,7 +281,6 @@ class SaleProductConfiguratorController(Controller):
                 }],
                 'exclusions': dict,
                 'archived_combination': dict,
-                'available_uoms': dict (optional),
             }
         """
         uom = (
@@ -311,6 +310,7 @@ class SaleProductConfiguratorController(Controller):
                 uom=uom,
                 currency=currency,
                 date=so_date,
+                show_packaging=show_packaging,
                 **kwargs,
             ),
             quantity=quantity,
@@ -335,10 +335,6 @@ class SaleProductConfiguratorController(Controller):
             exclusions=attribute_exclusions['exclusions'],
             archived_combinations=attribute_exclusions['archived_combinations'],
         )
-        if show_packaging and product_template._has_multiple_uoms():
-            values['available_uoms'] = product_template._get_available_uoms().read(
-                ['id', 'display_name']
-            )
         # Shouldn't be sent client-side
         values.pop('pricelist_rule_id', None)
         return values
@@ -358,6 +354,7 @@ class SaleProductConfiguratorController(Controller):
                 'description_sale': str|False,
                 'display_name': str,
                 'price': float,
+                'available_uoms': dict (optional),
             }
         """
         basic_information = dict(
@@ -380,6 +377,12 @@ class SaleProductConfiguratorController(Controller):
             pricelist=pricelist,
             **kwargs,
         )
+        if product_or_template.is_product_variant and product_or_template._has_multiple_uoms():
+            basic_information['available_uoms'] = product_or_template._get_available_uoms().read(
+                ['id', 'display_name']
+            )
+        else:
+            basic_information['available_uoms'] = []
         return dict(
             **basic_information,
             price=price,

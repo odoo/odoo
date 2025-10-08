@@ -141,7 +141,6 @@ class ProductTemplate(models.Model):
         'uom.uom', 'Unit', tracking=True,
         default=_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
-    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales", domain="[('id', '!=', uom_id)]")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
@@ -177,6 +176,7 @@ class ProductTemplate(models.Model):
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
+    uom_ids = fields.Many2many('uom.uom', string='Packagings', compute='_compute_uom_ids', inverse='_set_uom_ids', search='_search_uom_ids')
 
     pricelist_rule_ids = fields.One2many(
         string="Pricelist Rules",
@@ -427,6 +427,18 @@ class ProductTemplate(models.Model):
         pricelist_active = self.env.user._has_group('product.group_product_pricelist')
         for template in self:
             template.show_sales_price_page = pricelist_active and template.sale_ok
+
+    def _compute_uom_ids(self):
+        self._compute_template_field_from_variant_field('uom_ids')
+
+    def _set_uom_ids(self):
+        self._set_product_variant_field('uom_ids')
+
+    def _search_uom_ids(self, operator, value):
+        subquery = self.with_context(active_test=False)._search([
+            ('product_variant_ids.uom_ids', operator, value),
+        ])
+        return [('id', 'in', subquery)]
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
@@ -1605,19 +1617,6 @@ class ProductTemplate(models.Model):
         This method returns a domain targeting all those specific products (events, courses, ...).
         """
         return []
-
-    def _has_multiple_uoms(self) -> bool:
-        if self.type == 'combo':
-            return False
-        return self.env['res.groups']._is_feature_enabled('uom.group_uom') and len(
-            self._get_available_uoms()
-        ) > 1
-
-    def _get_available_uoms(self):
-        if not self:
-            return self.env['uom.uom']
-        self.ensure_one()
-        return self.uom_id | self.uom_ids
 
     ###################
     # DEMO DATA SETUP #

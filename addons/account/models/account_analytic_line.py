@@ -77,7 +77,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('product_id')
     def _compute_allowed_uom_ids(self):
         for line in self:
-            line.allowed_uom_ids = line.product_id.product_tmpl_id._get_available_uoms()
+            line.allowed_uom_ids = line.product_id._get_available_uoms()
 
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):

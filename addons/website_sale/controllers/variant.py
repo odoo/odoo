@@ -35,9 +35,11 @@ class WebsiteSaleVariantController(Controller):
             # Only provided to ease server-side computations.
             'product_taxes', 'taxes', 'currency', 'date', 'combination',
             # Only used in Google Merchant Center logic, not client-side.
-            'discount_start_date', 'discount_end_date'
+            'discount_start_date', 'discount_end_date',
         ):
             combination_info.pop(key)
+        # `available_uoms` is a recordset, not JSON-serializable; we use rendered HTML instead.
+        combination_info.pop('available_uoms', None)
 
         product = request.env['product.product'].browse(combination_info['product_id'])
         if product and product.id == product_id:
@@ -63,6 +65,15 @@ class WebsiteSaleVariantController(Controller):
                     'all_product_tags': all_tags.filtered('visible_to_customers'),
                 }
             )
+
+        combination_info['packaging_selector'] = request.env['ir.ui.view']._render_template(
+            'website_sale.product_packaging_selector',
+            values={
+                'product': product_template,
+                'product_variant': product,
+            },
+        )
+
         return combination_info
 
     @route('/sale/create_product_variant', type='jsonrpc', auth='public', methods=['POST'])

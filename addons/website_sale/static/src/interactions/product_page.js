@@ -626,12 +626,34 @@ export class ProductPage extends Interaction {
 
         this._toggleDisable(parent, isCombinationPossible);
 
-        // Only update the images and tags if the product has changed.
+        // Only update the images, tags and packaging selector if the product has changed.
         if (!combination.no_product_change) {
             this._updateProductImages(parent.closest('#product_detail_main'), combination.carousel);
             const productTags = parent.querySelector('.o_product_tags');
             productTags?.insertAdjacentHTML('beforebegin', markup(combination.product_tags));
             productTags?.remove();
+
+            const packagingSelector = parent.querySelector('.o_wsale_packaging_selector');
+            if (packagingSelector) {
+                packagingSelector.insertAdjacentHTML(
+                    'beforebegin', markup(combination.packaging_selector)
+                );
+                packagingSelector.remove();
+            }
+            // Toggle variant section visibility when UOM availability changes (edge case:
+            // template has no attributes, only some variants have UOMs).
+            const variantSection = parent.querySelector(
+                '.o_wsale_product_details_content_section_attributes'
+            );
+            if (variantSection) {
+                const hasAttributes = parent.querySelector(
+                    '.o_wsale_product_page_variants li.variant_attribute'
+                );
+                const hasPackaging = parent.querySelector(
+                    '.o_wsale_packaging_selector .o_wsale_product_page_variants'
+                );
+                variantSection.classList.toggle('d-none', !hasAttributes && !hasPackaging);
+            }
         }
 
         const productIdElements = parent.querySelectorAll('[data-product-id]');

@@ -319,10 +319,10 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
 
         self.product_product_custo_desk.uom_id = self.uom_unit
         self.assertEqual(self.product_product_custo_desk.uom_id, self.uom_unit)
-        self.product_product_custo_desk.uom_ids += self.uom_dozen
-        self.product_product_conf_chair.uom_ids = self.uom_dozen
+        self.product_product_custo_desk.product_variant_ids.uom_ids += self.uom_dozen
+        self.product_product_conf_chair.product_variant_ids.uom_ids = self.uom_dozen
 
-        self.assertIn(self.uom_dozen, self.product_product_custo_desk.uom_ids)
+        self.assertIn(self.uom_dozen, self.product_product_custo_desk.product_variant_ids.uom_ids)
 
         # Add a 15% tax on desk
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
