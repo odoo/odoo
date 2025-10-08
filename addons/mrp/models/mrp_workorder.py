@@ -691,7 +691,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.state in ('done', 'cancel'):
                 continue
-            moves = (self.move_raw_ids + self.production_id.move_byproduct_ids.filtered(lambda m: m.operation_id == self.operation_id))
+            moves = self.production_id.move_byproduct_ids.filtered(lambda m: m.operation_id == self.operation_id)
             for move in moves:
                 if not move.picked:
                     if workorder.production_id.product_uom_id.is_zero(workorder.production_id.qty_producing):
@@ -700,6 +700,7 @@ class MrpWorkorder(models.Model):
                         qty_available = workorder.production_id.qty_producing
                     new_qty = move.product_uom.round(qty_available * move.unit_factor)
                     move._set_quantity_done(new_qty)
+            moves += self.move_raw_ids
             moves.picked = True
             workorder.end_all()
             vals = {
