@@ -56,6 +56,9 @@ export const callPipService = {
             get isNativePipAvailable() {
                 return Boolean(window.documentPictureInPicture);
             },
+            get pipWindow() {
+                return pipWindow;
+            },
             state,
             closePip,
             openPip,
