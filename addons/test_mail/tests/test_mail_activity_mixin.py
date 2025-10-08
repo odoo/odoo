@@ -126,6 +126,23 @@ class TestActivityMixin(TestActivityCommon):
             self.assertFalse(self.test_record.activity_state)
             self.assertFalse(act2.exists())
 
+    @users('employee')
+    def test_activity_attachments_ids(self):
+        activity = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            fields.Date.today(),
+            user_id=self.user_admin.id)
+        # Make sure we do not try to filter all attachments in memory.
+        # `bypass_access` should be set so that the generated query is simple
+        # before joining with model ids and filtering later.
+        query = activity.env['ir.attachment']._as_query()
+        with patch.object(activity.env.registry['ir.attachment'], '_search', autospec=True, return_value=query) as search:
+            # read the field after invalidating
+            activity.invalidate_model()
+            activity.attachment_ids
+            search.assert_called()
+            self.assertTrue(search.call_args.kwargs.get('bypass_access'))
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_not_only_automated(self):
 
