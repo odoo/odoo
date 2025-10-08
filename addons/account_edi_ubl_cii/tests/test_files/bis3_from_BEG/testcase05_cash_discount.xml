@@ -4,7 +4,7 @@
  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
     <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
     <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
-    <cbc:ID>2019000005</cbc:ID>
+    <cbc:ID>INV/2018/00001</cbc:ID>
     <cbc:IssueDate>2018-07-25</cbc:IssueDate>
     <cbc:DueDate>2018-08-25</cbc:DueDate>
     <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
@@ -13,11 +13,12 @@
     <cac:OrderReference>
         <cbc:ID>123456789</cbc:ID>
     </cac:OrderReference>
+    <cac:AdditionalDocumentReference>___ignore___</cac:AdditionalDocumentReference>
     <cac:AccountingSupplierParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="9956">0123456749</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0208">0123456749</cbc:EndpointID>
             <cac:PartyName>
-                <cbc:Name>Demo Shop NV - Commercial name</cbc:Name>
+                <cbc:Name>Demo Shop NV</cbc:Name>
             </cac:PartyName>
             <cac:PostalAddress>
                 <cbc:StreetName>Main street 123</cbc:StreetName>
@@ -35,20 +36,19 @@
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName>Demo Shop NV</cbc:RegistrationName>
-                <cbc:CompanyID>0123456749</cbc:CompanyID>
-                <cbc:CompanyLegalForm>RPR BRUSSEL</cbc:CompanyLegalForm>
+                <cbc:CompanyID>BE0123456749</cbc:CompanyID>
             </cac:PartyLegalEntity>
             <cac:Contact>
-                <cbc:Name>www.demoshop.be</cbc:Name>
+                <cbc:Name>Demo Shop NV</cbc:Name>
                 <cbc:ElectronicMail>myname@demoshop.be</cbc:ElectronicMail>
             </cac:Contact>
         </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
         <cac:Party>
-            <cbc:EndpointID schemeID="9956">0214168947</cbc:EndpointID>
+            <cbc:EndpointID schemeID="0208">0214168947</cbc:EndpointID>
             <cac:PartyName>
-                <cbc:Name>Hotel Local SPRL - Nom commercial</cbc:Name>
+                <cbc:Name>Hotel Local SPRL, Hotel Local SPRL - Nom commercial</cbc:Name>
             </cac:PartyName>
             <cac:PostalAddress>
                 <cbc:StreetName>Rue de la Mairie 456</cbc:StreetName>
@@ -66,16 +66,35 @@
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName>Hotel Local SPRL</cbc:RegistrationName>
-                <cbc:CompanyID>0214168947</cbc:CompanyID>
+                <cbc:CompanyID>BE0214168947</cbc:CompanyID>
             </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Name>Hotel Local SPRL - Nom commercial</cbc:Name>
+                <cbc:ElectronicMail>dupont@hotel-local.be</cbc:ElectronicMail>
+            </cac:Contact>
         </cac:Party>
     </cac:AccountingCustomerParty>
     <cac:Delivery>
         <cbc:ActualDeliveryDate>2018-07-01</cbc:ActualDeliveryDate>
+        <cac:DeliveryLocation>
+            <cac:Address>
+                <cbc:StreetName>Rue de la Mairie 456</cbc:StreetName>
+                <cbc:CityName>LIEGE</cbc:CityName>
+                <cbc:PostalZone>4000</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:Address>
+        </cac:DeliveryLocation>
+        <cac:DeliveryParty>
+            <cac:PartyName>
+                <cbc:Name>Hotel Local SPRL - Nom commercial</cbc:Name>
+            </cac:PartyName>
+        </cac:DeliveryParty>
     </cac:Delivery>
     <cac:PaymentMeans>
-        <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>
-        <cbc:PaymentID>Invoice 2019000005</cbc:PaymentID>
+        <cbc:PaymentMeansCode name='credit transfer'>30</cbc:PaymentMeansCode>
+        <cbc:PaymentID>INV/2018/00001</cbc:PaymentID>
         <cac:PayeeFinancialAccount>
             <cbc:ID>BE54000000000097</cbc:ID>
             <cac:FinancialInstitutionBranch>
@@ -84,16 +103,12 @@
         </cac:PayeeFinancialAccount>
     </cac:PaymentMeans>
     <cac:PaymentTerms>
-        <cbc:Note>  In geval van betaling binnen 14 dagen is 2% (52.00€) betalingskorting van
-                    toepassing      en het te betalen bedrag = 3053.68€
-                    En cas de paiement dans les 14 jours, l'escompte conditionnel de 2% (52.00€) est appliqué et le montant payable = 3053.68€
-                    In case of payment within 14 days, 2% (52.00€) conditional cash/payment discount applies and the payable amount = 3053.68€
-        </cbc:Note>
+        <cbc:Note>Payment terms: 31 Days, 2% Early Payment Discount under 14 days</cbc:Note>
     </cac:PaymentTerms>
   <cac:AllowanceCharge>
     <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
     <cbc:AllowanceChargeReasonCode>64</cbc:AllowanceChargeReasonCode>
-    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+    <cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
     <cbc:Amount currencyID="EUR">4.00</cbc:Amount>
     <cac:TaxCategory>
       <cbc:ID>S</cbc:ID>
@@ -106,7 +121,7 @@
   <cac:AllowanceCharge>
     <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
     <cbc:AllowanceChargeReasonCode>64</cbc:AllowanceChargeReasonCode>
-    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel 2%</cbc:AllowanceChargeReason>
+    <cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
     <cbc:Amount currencyID="EUR">48.00</cbc:Amount>
     <cac:TaxCategory>
       <cbc:ID>S</cbc:ID>
@@ -119,11 +134,12 @@
   <cac:AllowanceCharge>
     <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
     <cbc:AllowanceChargeReasonCode>ZZZ</cbc:AllowanceChargeReasonCode>
-    <cbc:AllowanceChargeReason>Conditional cash/payment discount | Korting contant | Escompte Conditionnel</cbc:AllowanceChargeReason>
+    <cbc:AllowanceChargeReason>Conditional cash/payment discount</cbc:AllowanceChargeReason>
     <cbc:Amount currencyID="EUR">52.00</cbc:Amount>
     <cac:TaxCategory>
       <cbc:ID>E</cbc:ID>
       <cbc:Percent>0.0</cbc:Percent>
+      <cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
       <cac:TaxScheme>
         <cbc:ID>VAT</cbc:ID>
       </cac:TaxScheme>
@@ -172,6 +188,7 @@
     <cbc:TaxInclusiveAmount currencyID="EUR">3105.68</cbc:TaxInclusiveAmount>
     <cbc:AllowanceTotalAmount currencyID="EUR">52.00</cbc:AllowanceTotalAmount>
     <cbc:ChargeTotalAmount currencyID="EUR">52.00</cbc:ChargeTotalAmount>
+    <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
     <cbc:PayableAmount currencyID="EUR">3105.68</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
     <cac:InvoiceLine>
@@ -179,6 +196,7 @@
         <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
         <cac:Item>
+            <cbc:Description>good X</cbc:Description>
             <cbc:Name>good X</cbc:Name>
             <cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
@@ -197,6 +215,7 @@
         <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">2400.00</cbc:LineExtensionAmount>
         <cac:Item>
+            <cbc:Description>good Y</cbc:Description>
             <cbc:Name>good Y</cbc:Name>
             <cac:ClassifiedTaxCategory>
                 <cbc:ID>S</cbc:ID>
