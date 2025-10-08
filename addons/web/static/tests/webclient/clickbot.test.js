@@ -459,7 +459,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     });
     const expectedModalHtml = /* xml */ `
         <header class="modal-header">
-            <h4 class="modal-title text-break flex-grow-1 fs-5">Oops!</h4>
+            <h4 class="modal-title text-break flex-grow-1">Oops!</h4>
             <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Close" tabindex="-1"></button>
         </header>
         <main class="modal-body">

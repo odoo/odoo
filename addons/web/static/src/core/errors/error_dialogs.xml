@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.WarningDialog">
-        <Dialog title="title" size="'sm'" contentClass="'o_error_dialog'">
+        <Dialog title="title" size="'md'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p t-esc="message" class="text-prewrap"/>
             </div>
@@ -51,7 +51,7 @@
     </t>
 
     <t t-name="web.ErrorDialog">
-        <Dialog title.translate="Oops!" size="state.showTraceback ? 'xl' : 'sm'" contentClass="'o_error_dialog'">
+        <Dialog title.translate="Oops!" size="state.showTraceback ? 'xl' : 'md'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p>
                     Something went wrong... If you really are stuck, share the report with your friendly support service
