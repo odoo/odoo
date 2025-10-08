@@ -15,7 +15,7 @@ export const fileUploadService = {
         return new window.XMLHttpRequest();
     },
 
-    start(env, { notificationService }) {
+    start(env, { notification: notificationService }) {
         const uploads = reactive({});
         let nextId = 1;
         const bus = new EventBus();
@@ -93,6 +93,14 @@ export const fileUploadService = {
                 upload.state = "abort";
                 bus.trigger("FILE_UPLOAD_ERROR", { upload });
             });
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 400) {
+                    notificationService.add(_t("An error occured while uploading."), {
+                        title: _t("Error"),
+                        sticky: true,
+                    });
+                }
+            }.bind(this);
             xhr.send(formData);
             bus.trigger("FILE_UPLOAD_ADDED", { upload });
             return upload;
