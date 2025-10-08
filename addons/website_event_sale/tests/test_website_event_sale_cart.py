@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from odoo import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.addons.website_sale.tests.test_abandoned_cart import TestWebsiteSaleCartAbandonedCommon
@@ -50,9 +50,11 @@ class TestWebsiteEventSaleCart(TestWebsiteEventSaleCommon, TestWebsiteSaleCartAb
         )
 
         # Create registrations & confirm first order
-        editor = self.env['registration.editor'].new()
-        editor.with_context(default_sale_order_id=cart1.id).action_make_registration()
+        editor = Form(self.env['registration.editor'].with_context(default_sale_order_id=cart1.id))
+        editor.save().action_make_registration()
         cart1.action_confirm()
+        # command-created records won't trigger a recompute until flush
+        self.env.flush_all()
         self.assertEqual(self.ticket.seats_available, 0)
         self.assertFalse(
             self.send_mail_patched(cart2.id),
