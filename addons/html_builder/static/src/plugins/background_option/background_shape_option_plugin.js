@@ -27,7 +27,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         background_shape_target_providers: withSequence(5, (editingElement) =>
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
-        force_not_editable_selector: ".o_we_shape",
+        content_not_editable_selectors: ".o_we_shape",
     };
     static shared = [
         "getShapeStyleUrl",
