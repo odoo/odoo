@@ -1234,7 +1234,7 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                             extra_context={'_extra_grouping_key_': 'epd'},
                         ))
-                move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
+                move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs, move=move)
                 if move.invoice_cash_rounding_id:
                     rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
                     totals = move.tax_totals
