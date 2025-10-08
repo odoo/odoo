@@ -17,7 +17,7 @@ import { rpc } from "@web/core/network/rpc";
 
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
-    static shared = ["savePendingImages"];
+    static shared = ["createAttachment", "savePendingImages"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
