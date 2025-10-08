@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(PosStore.prototype, {
@@ -531,6 +531,31 @@ patch(PosStore.prototype, {
         this.addPendingOrder([order.id]);
         this.showDefault();
     },
+    async askForPreparation() {
+        const order = this.getOrder();
+        if (this.config.module_pos_restaurant && order.hasChange && !order.isRefund) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Warning !"),
+                body: _t(
+                    "It seems that the order has not been sent. Would you like to send it to preparation?"
+                ),
+                confirmLabel: _t("Order"),
+                cancelLabel: _t("Discard"),
+            });
+            if (confirmed) {
+                try {
+                    this.env.services.ui.block();
+                    await this.sendOrderInPreparationUpdateLastChange(order);
+                } finally {
+                    this.env.services.ui.unblock();
+                }
+            }
+        }
+    },
+    async pay() {
+        await this.askForPreparation();
+        return super.pay(...arguments);
+    },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
@@ -577,7 +602,7 @@ patch(PosStore.prototype, {
     async editFloatingOrderName(order) {
         const payload = await makeAwaitable(this.dialog, EditOrderNamePopup, {
             title: _t("Edit Order Name"),
-            placeholder: _t("18:45 John 4P"),
+            placeholder: _t("e.g. John"),
             startingValue: order.floating_order_name || "",
         });
         if (payload) {
@@ -995,6 +1020,7 @@ patch(PosStore.prototype, {
         if (!currentOrder) {
             return false;
         }
+        await this.askForPreparation();
         await super.validateOrderFast(...arguments);
     },
     setPartnerToCurrentOrder(partner) {

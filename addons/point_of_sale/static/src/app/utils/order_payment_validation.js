@@ -109,7 +109,9 @@ export default class OrderPaymentValidation {
         if ((await this.askBeforeValidation()) === false) {
             return false;
         }
-        await this._askForCustomerIfRequired();
+        if (!(await this._askForCustomerIfRequired())) {
+            return false;
+        }
         this.pos.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
@@ -399,7 +401,8 @@ export default class OrderPaymentValidation {
             if (confirmed) {
                 await this.pos.selectPartner();
             }
-            return false;
+            return this.order.getPartner();
         }
+        return true;
     }
 }

@@ -128,6 +128,15 @@ export class PaymentScreen extends Component {
     get selectedPaymentLine() {
         return this.currentOrder.getSelectedPaymentline();
     }
+    get highlightPartnerBtn() {
+        return Boolean(this.currentOrder.getPartner());
+    }
+    get partnerBtnClass() {
+        return {
+            "highlight text-action": this.highlightPartnerBtn,
+            "text-danger": this.currentOrder.requiresCustomer,
+        };
+    }
     makeAnimation() {
         this.pos.addAnimation = true;
         setTimeout(() => (this.pos.addAnimation = false), 1000);
