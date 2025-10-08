@@ -7,10 +7,20 @@
             name="o_cart_notification_container"
         >
             <div class="d-flex flex-column container align-items-end">
-                <t t-foreach="notifications" t-as="notification" t-key="notification">
-                    <Transition leaveDuration="0" name="'o_notification_fade'" t-slot-scope="transition">
-                        <Notification t-props="notification_value.props" className="(notification_value.props.className || '') + ' ' + transition.className"/>
-                    </Transition>
+                <t t-foreach="state.notifications" t-as="notification" t-key="notification_index">
+                    <div
+                        class="position-relative mt-2"
+                        t-attf-style="top: {{state.topOffset}}px;"
+                    >
+                        <WarningNotification
+                            t-if="notification.type === 'warning'"
+                            t-props="notification.data"
+                        />
+                        <ItemAddedNotification
+                            t-else="notification.type === 'item_added'"
+                            t-props="notification.data"
+                        />
+                    </div>
                 </t>
             </div>
         </div>
