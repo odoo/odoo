@@ -2,7 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="ProductCatalogKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o-kanban-button-new')]" position="replace">
-            <button t-out="this.back_button_label" type="button" class="btn btn-primary o-kanban-button-back" t-on-click="this.backToQuotationDebounced"/>
+            <button
+                class="btn btn-primary o-kanban-button-back"
+                t-out="this.props.context.back_button_label"
+                type="button"
+                t-on-click="this.backToQuotation"
+                t-att-disabled="this.state.navigating"
+            />
         </xpath>
     </t>
 </templates>

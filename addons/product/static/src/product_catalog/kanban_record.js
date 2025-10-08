@@ -64,7 +64,10 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     }
 
     _updateQuantityAndGetPrice() {
-        return rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPriceParams());
+        return rpc(
+            "/product/catalog/update_order_line_info",
+            this._getUpdateQuantityAndGetPriceParams()
+        );
     }
 
     _getUpdateQuantityAndGetPriceParams() {
@@ -74,40 +77,44 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
-        }
+        };
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    updateQuantity(quantity) {
+    updateQuantity(quantity, debounce = true) {
         if (this.productCatalogData.readOnly) {
             return;
         }
         this.productCatalogData.quantity = quantity || 0;
-        this.debouncedUpdateQuantity();
+        if (debounce) {
+            this.debouncedUpdateQuantity();
+        } else {
+            this._updateQuantity();
+        }
     }
 
     /**
-     * Add the product to the order
+     * Add the product to the order without waiting for the debounce
      */
-    addProduct(qty=1) {
-        this.updateQuantity(qty);
+    addProduct(quantity = 1) {
+        this.updateQuantity(quantity, false);
     }
 
     /**
      * Remove the product to the order
      */
     removeProduct() {
-        this.updateQuantity(0);
+        this.updateQuantity(0, false);
     }
 
     /**
      * Increase the quantity of the product on the order line.
      */
-    increaseQuantity(qty=1) {
-        this.updateQuantity(this.productCatalogData.quantity + qty);
+    increaseQuantity(quantity = 1) {
+        this.updateQuantity(this.productCatalogData.quantity + quantity);
     }
 
     /**
@@ -116,7 +123,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      * @param {Event} event
      */
     setQuantity(event) {
-        this.updateQuantity(parseFloat(event.target.value));
+        this.updateQuantity(parseFloat(event.target.value), false);
     }
 
     /**
