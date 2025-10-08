@@ -203,6 +203,13 @@ class LinkTracker(models.Model):
         return links
 
     @api.model
+    def search_or_create_and_read(self, vals_list):
+        """Get existing or newly created records data matching vals_list items in preserved order supporting duplicates."""
+        records = self.search_or_create(vals_list)
+        datas = records.read()
+        return datas
+
+    @api.model
     def search_or_create(self, vals_list):
         """Get existing or newly created records matching vals_list items in preserved order supporting duplicates."""
         if not isinstance(vals_list, list):
