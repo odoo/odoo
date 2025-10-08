@@ -87,3 +87,8 @@ class TestUi(AccountTestInvoicingHttpCommon):
         product.supplier_taxes_id = new_tax
 
         self.start_tour("/odoo", 'account_tax_group', login="admin")
+
+    def test_section_saved_on_tab_keydown_tour(self):
+        self.start_tour('/odoo/customer-invoices', 'section_saved_on_tab_keydown_tour', login='accountman')
+        invoice = self.env['account.move'].search([('move_type', '=', 'out_invoice')])
+        self.assertEqual(invoice.invoice_line_ids[0].name, 'Section content')
