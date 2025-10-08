@@ -640,11 +640,16 @@ font[class*='bg-'] {
     padding: MAX($-base-padding, 1px) 0 MAX(($-bottom-factor * $-base-padding), ($-bottom-factor * 1px));
 }
 
+// Images as Icons
+.social_media_img {
+    object-fit: cover;
+}
 // Icons
 .fa {
-    $-size: map-get($spacers, 5);
-
     font-family: "FontAwesome" !important;
+}
+.fa, .social_media_img {
+    $-size: map-get($spacers, 5);
 
     &.rounded-circle,
     &.rounded,
@@ -656,13 +661,13 @@ font[class*='bg-'] {
         vertical-align: middle;
         text-align: center;
         // fa-1x is not ouput
-        width: $-size;
-        height: $-size;
+        width: $-size !important;
+        height: $-size !important;
         line-height: $-size;
         @for $i from 2 through 5 {
             &.fa-#{$i}x {
-                width: $-size + $i;
-                height: $-size + $i;
+                width: $-size + $i !important;
+                height: $-size + $i !important;
                 line-height: $-size + $i;
             }
         }

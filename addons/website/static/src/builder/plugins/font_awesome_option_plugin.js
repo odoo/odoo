@@ -10,7 +10,7 @@ class FontAwesomeOptionPlugin extends Plugin {
         builder_options: [
             withSequence(FONT_AWESOME, {
                 template: "website.FontAwesomeOption",
-                selector: "span.fa, i.fa",
+                selector: "span.fa, i.fa, img.social_media_img",
                 exclude: "[data-oe-xpath]",
             }),
         ],

@@ -41,7 +41,7 @@ class ImageToolOptionPlugin extends Plugin {
             }),
             withSequence(IMAGE_TOOL, {
                 OptionComponent: ImageToolOption,
-                selector: "img",
+                selector: "img:not(.social_media_img)",
                 exclude: "[data-oe-type='image'] > img",
                 name: "imageToolOption",
             }),
