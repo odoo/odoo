@@ -1047,12 +1047,11 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        if (this.editable.contains(this.document.activeElement)) {
+        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
+        if (this.editable.contains(this.document.activeElement) && documentSelectionIsInEditable) {
             // Editor has focus — nothing to do.
             return;
         }
-
-        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
 
         // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
         this.editable.focus({ preventScroll: true });
