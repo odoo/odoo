@@ -5781,6 +5781,16 @@ class BaseModel(metaclass=MetaModel):
                 for invf in self.pool.field_inverses[field]:
                     invf._update_inverse(inv_recs, self)
 
+                    # If multiple X2many target the same field many2one, we need to patch
+                    # the values of the sibling ones
+                    if invf.type != 'many2one':
+                        continue
+                    for invf_invf in self.pool.field_inverses[invf]:
+                        if invf_invf == field:
+                            continue
+                        for inv_rec in inv_recs:
+                            invf_invf._update_inverse(self, inv_rec)
+
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
         record format.
