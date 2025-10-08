@@ -69,6 +69,21 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def button_validate(self):
+        res = super().button_validate()
+        if res is not True:
+            return res
+        for picking in self:
+            # `_get_new_picking_values` is used to propagate the carrier before a picking is created (i.e. carrier is set on an SO).
+            # Whereas this case handles the propagation of carrier after the picking validation as the carrier maybe set
+            # at later stages as well, specifically at the picking level rather than on the Sales Order.
+            # This ensures the behavior is consistent across all scenarios (push + pull, all pull, and all push rules).
+            if picking.carrier_id:
+                picking._get_next_transfers().filtered(
+                    lambda p: not p.carrier_id and any(rule.propagate_carrier for rule in p.move_ids.rule_id)
+                ).write({'carrier_id': picking.carrier_id.id, 'carrier_tracking_ref': picking.carrier_tracking_ref})
+        return res
+
     def _carrier_exception_note(self, exception):
         self.ensure_one()
         line_1 = _("Exception occurred with respect to carrier on the transfer")
