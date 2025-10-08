@@ -5801,6 +5801,13 @@ class AccountMove(models.Model):
             return autopost_bills_wizard
         return False
 
+    def _get_moves_requiring_confirmation(self):
+        """Return the subset of moves that require confirmation before validation."""
+        return self.filtered(
+            lambda move: (move.date or move.invoice_date) > fields.Date.context_today(self)
+            or move.restrict_mode_hash_table,
+        )
+
     def action_validate_moves_with_confirmation(self):
         """
         If 'restrict_mode_hash_table' is enabled or future-dated moves, open a confirmation wizard;
@@ -5810,10 +5817,8 @@ class AccountMove(models.Model):
         if not draft_moves:
             raise UserError(_('There are no journal items in the draft state to post.'))
 
-        need_confirmation_moves = draft_moves.filtered(lambda move:
-            (move.date or move.invoice_date) > fields.Date.context_today(self)
-            or move.restrict_mode_hash_table
-        )
+        need_confirmation_moves = draft_moves._get_moves_requiring_confirmation()
+
         direct_validate_moves = draft_moves - need_confirmation_moves
         if direct_validate_moves:
             direct_validate_moves._post(soft=False)
