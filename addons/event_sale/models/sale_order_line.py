@@ -55,6 +55,10 @@ class SaleOrderLine(models.Model):
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id,
                 }
+                # When confirming in backend a single order, keep paid registrations in draft
+                # so attendee details can be filled before confirmation; free ones stay open for seat checks.
+                if len(self.order_id) == 1 and not so_line.currency_id.is_zero(so_line.price_total):
+                    values['state'] = 'draft'
                 registrations_vals.append(values)
 
         if registrations_vals:
