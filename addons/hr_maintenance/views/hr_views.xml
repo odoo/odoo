@@ -19,7 +19,8 @@
             <group name="departure_planned_actions_right" position="inside">
                 <label for="departure_do_unassign_equipment" string="Equipment"/>
                 <div class="o_row">
-                    <field name="departure_do_unassign_equipment" nolabel="1"/>
+                    <field name="departure_do_unassign_equipment" nolabel="1"
+                        readonly="departure_state == 'done'"/>
                     <span>Unassign Equipment</span>
                 </div>
             </group>
