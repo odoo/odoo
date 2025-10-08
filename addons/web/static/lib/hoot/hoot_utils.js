@@ -656,6 +656,22 @@ export function callHootKey(ev) {
 }
 
 /**
+ * @template T
+ * @param {T} object
+ * @returns {T}
+ */
+export function copyAndBind(object) {
+    const copy = {};
+    for (const [key, desc] of $entries($getOwnPropertyDescriptors(object))) {
+        if (key !== "constructor" && typeof desc.value === "function") {
+            desc.value = desc.value.bind(object);
+        }
+        $defineProperty(copy, key, desc);
+    }
+    return copy;
+}
+
+/**
  * @template {(previous: any, ...args: any[]) => any} T
  * @param {T} instanceGetter
  * @param {() => any} [afterCallback]

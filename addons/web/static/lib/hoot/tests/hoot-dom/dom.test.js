@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
+    describe,
+    expect,
     formatXml,
     getActiveElement,
+    getFixture,
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
@@ -14,16 +16,17 @@ import {
     isFocusable,
     isInDOM,
     isVisible,
+    mockTouch,
     queryAll,
     queryAllRects,
     queryAllTexts,
     queryFirst,
     queryOne,
     queryRect,
+    test,
     waitFor,
     waitForNone,
-} from "@odoo/hoot-dom";
-import { mockTouch } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
 import { mountForTest, parseUrl } from "../local_helpers";
 
