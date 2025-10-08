@@ -342,7 +342,7 @@
                     <header>
                         <field name="stage_id" widget="rotting_statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
-                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="project_id" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
+                        <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="project_id or is_template" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
                     <!-- Used in inherited views to display the eventual warnings -->
                     <t name="warning_section"/>
@@ -419,7 +419,6 @@
                         <group>
                             <field name="project_id"
                                 domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
-                                required="parent_id or child_ids"
                                 widget="project"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
@@ -463,7 +462,7 @@
                         <page name="description_page" string="Description">
                             <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add details about this task..."/>
                         </page>
-                        <page name="sub_tasks_page" string="Sub-tasks" invisible="not project_id">
+                        <page name="sub_tasks_page" string="Sub-tasks" invisible="not project_id and not is_template">
                             <field name="child_ids"
                                    mode="list,kanban"
                                    context="{
@@ -490,7 +489,7 @@
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="subtask_count" column_invisible="True"/>
                                     <field name="closed_subtask_count" column_invisible="True"/>
-                                    <field name="project_id" string="Project" optional="hide" required="1" options="{'no_open': 1}" widget="project"/>
+                                    <field name="project_id" string="Project" optional="hide" required="not parent.is_template" options="{'no_open': 1}" widget="project"/>
                                     <field name="milestone_id"
                                         optional="hide"
                                         context="{'default_project_id': project_id}"

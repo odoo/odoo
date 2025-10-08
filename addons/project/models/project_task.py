@@ -276,7 +276,7 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     # Task Dependencies fields
-    allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies', export_string_translation=False)
+    allow_task_dependencies = fields.Boolean(compute='_compute_allow_task_dependencies', export_string_translation=False)
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
@@ -333,7 +333,7 @@ class ProjectTask(models.Model):
         'You cannot convert this task into a sub-task because it is recurrent.',
     )
     _private_task_has_no_parent = models.Constraint(
-        'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))',
+        'CHECK (NOT is_template AND NOT (project_id IS NULL AND parent_id IS NOT NULL))',
         'A private task cannot have a parent.',
     )
 
@@ -350,7 +350,7 @@ class ProjectTask(models.Model):
     def _ensure_super_task_is_not_private(self):
         """ Ensures that the company of the task is valid for the partner. """
         for task in self:
-            if not task.project_id and task.subtask_count:
+            if not task.project_id and task.subtask_count and not task.is_template:
                 raise ValidationError(_('This task has sub-tasks, so it can\'t be private.'))
 
     @property
@@ -508,6 +508,14 @@ class ProjectTask(models.Model):
             'repeat_type',
             'repeat_until',
         ]
+
+    @api.depends('project_id.allow_task_dependencies', 'is_template')
+    def _compute_allow_task_dependencies(self):
+        for task in self:
+            if task.project_id:
+                task.allow_task_dependencies = task.project_id.allow_task_dependencies
+            else:
+                task.allow_task_dependencies = task.is_template
 
     @api.depends('recurring_task')
     def _compute_repeat(self):
@@ -812,6 +820,7 @@ class ProjectTask(models.Model):
         for task in self:
             task.has_template_ancestor = task.is_template or (task.parent_id and task.parent_id.sudo().has_template_ancestor)
 
+    @api.depends('project_id.allow_recurring_tasks', 'is_template')
     def _compute_allow_recurring_tasks(self):
         for task in self:
             if task.project_id:
@@ -936,7 +945,11 @@ class ProjectTask(models.Model):
             mail_create_nolog=True,
         )).copy(default=default)
 
-        self._resolve_copied_dependencies(copied_tasks)
+        if (
+            not self.env.context.get('copy_from_template')
+            or self.env['project.project'].browse(default.get('project_id')).allow_task_dependencies
+        ):
+            self._resolve_copied_dependencies(copied_tasks)
         log_message = _("Task Created")
         copied_tasks._message_log_batch(bodies={task.id: log_message for task in copied_tasks})
 
