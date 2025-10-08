@@ -245,3 +245,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 for line in
                 invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
             ]
+
+    def _add_invoice_delivery_nodes(self, document_node, vals):
+        super()._add_invoice_delivery_nodes(document_node, vals)
+        document_node['cac:Delivery']['cac:DeliveryParty'] = None

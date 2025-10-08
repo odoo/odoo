@@ -157,6 +157,15 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.partner_id
+        shipping_partner = invoice.partner_shipping_id
+
+        # In BIS 3.0 the DeliveryParty has only one child `PartyName` (which is mandatory)
+        # https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryParty/
+        delivery_party_vals = {
+            'party_vals': {
+                'party_name_vals': [{'name': shipping_partner.name or customer.name}],
+            }
+        }
 
         economic_area = self.env.ref('base.europe').country_ids.mapped('code') + ['NO']
         intracom_delivery = (customer.country_id.code in economic_area
@@ -178,10 +187,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'delivery_location_vals': {
                     'delivery_address_vals': self._get_partner_address_vals(partner_shipping),
                 },
-                'delivery_party_vals': self._get_partner_party_vals(invoice.partner_shipping_id, 'delivery') if invoice.partner_shipping_id else {},
+                'delivery_party_vals': delivery_party_vals,
             }]
 
-        return super()._get_delivery_vals_list(invoice)
+        delivery_vals_list = super()._get_delivery_vals_list(invoice)
+        for delivery_vals in delivery_vals_list:
+            delivery_vals['delivery_party_vals'] = delivery_party_vals
+
+        return delivery_vals_list
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account.edi.xml.ubl_21

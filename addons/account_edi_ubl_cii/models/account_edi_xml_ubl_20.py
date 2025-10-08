@@ -1130,6 +1130,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cac:DeliveryLocation': {
                 'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
             },
+            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+                                 if vals['partner_shipping'] else None,
         }
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
