@@ -16,7 +16,6 @@ export class PurchaseStockProductCatalogKanbanController extends ProductCatalogK
         });
 
         useSubEnv({
-            suggest: this.state,
             addAllProducts: () => this.onAddAll(),
             toggleSuggest: () => this.toggleSuggest(),
             reloadKanban: () => this._kanbanReload(),
@@ -26,7 +25,7 @@ export class PurchaseStockProductCatalogKanbanController extends ProductCatalogK
         });
     }
 
-    // Reloads catalog with suggestions
+    /** Reloads catalog with suggestion using searchModel (SM) */
     async _kanbanReload() {
         this.env.searchModel.searchPanelInfo.shouldReload = true; // Changing suggestion might change categories available
         this.env.searchModel._notify(); // Reload through searchModel with ctx (without double reload)
@@ -40,11 +39,11 @@ export class PurchaseStockProductCatalogKanbanController extends ProductCatalogK
         const lineCountChange = await this.model.orm.call(
             "purchase.order",
             "action_purchase_order_suggest",
-            [this._baseContext["product_catalog_order_id"], sm.domain, sectionId],
-            { context: this._editSuggestContext() }
+            [this.props.context.product_catalog_order_id, sm.domain, sectionId],
+            { context: sm.globalContext }
         );
-        this._toggleSuggestFilters(true);
-        this.env.searchModel.trigger("section-line-count-change", {
+        sm.toggleFilters(["suggested", "products_in_purchase_order"], true);
+        sm.trigger("section-line-count-change", {
             sectionId: sectionId,
             lineCountChange: lineCountChange,
         });
