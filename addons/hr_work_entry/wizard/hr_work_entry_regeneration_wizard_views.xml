@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Regenerate Employee Work Entries">
                 <group>
-                    <field name="employee_ids" widget="many2many_avatar_employee_class"
+                    <field name="employee_ids" widget="work_entry_many2many_avatar_employee"
                            in_error="validated_work_entry_employee_ids"
                            domain="[('company_id', 'in', allowed_company_ids), ('version_ids.id','!=', False)]"/>
                     <field name="date_to" invisible="1"/>

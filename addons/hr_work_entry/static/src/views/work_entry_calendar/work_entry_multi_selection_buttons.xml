@@ -8,21 +8,33 @@
         </button>
 
         <button t-ref="addButton" position="replace">
-            <button class="btn btn-secondary" data-tooltip="Add" t-on-click="() => this.onAdd()" t-ref="addButton">
+            <button class="btn btn-secondary" data-tooltip="Add" t-on-click="(ev) => this.onAdd(ev.currentTarget)" t-ref="addButton">
                 Set
             </button>
         </button>
 
-        <button t-ref="addButton" position="after">
-            <t t-foreach="favoritesWorkEntries" t-as="workEntry" t-key="workEntry.id">
-                <button class="small btn btn-secondary rounded-1"
-                        t-attf-class="o_gantt_color_#{workEntry.color}"
-                        t-attf-data-tooltip="Replace by #{workEntry.display_name}"
-                        t-on-click="() => this.onQuickReplace(workEntry.id)">
-                    <t t-if="workEntry.display_code" t-out="workEntry.display_code"/>
-                    <t t-else="" t-out="workEntry.display_name"/>
-                </button>
-            </t>
-        </button>
+        <div t-ref="root" position="inside">
+            <div class="ms-3 d-flex flex-row gap-1">
+                <t t-foreach="favoritesWorkEntries" t-as="workEntryType" t-key="workEntryType.id">
+                    <button t-if="workEntryType.shortcut_behavior === 'replace'"
+                            class="small btn btn-secondary rounded-1"
+                            t-attf-class="o_gantt_color_#{workEntryType.color}"
+                            t-attf-data-tooltip="Replace by #{workEntryType.display_name}"
+                            t-on-click="() => this.onQuickReplace(workEntryType)">
+                        <span t-if="workEntryType.display_code" t-out="workEntryType.display_code"/>
+                        <span t-else="" t-out="workEntryType.display_name"/>
+                    </button>
+                    <button t-else=""
+                            class="small btn btn-secondary rounded-1 d-flex flex-row align-items-baseline"
+                            t-attf-class="o_gantt_color_#{workEntryType.color}"
+                            t-attf-data-tooltip="Add #{workEntryType.display_name}"
+                            t-on-click="(ev) => this.onQuickAdd(ev.currentTarget, workEntryType)">
+                        <span t-if="workEntryType.display_code" t-out="workEntryType.display_code"/>
+                        <span t-else="" t-out="workEntryType.display_name"/>
+                        <span class="o-xsmaller">...</span>
+                    </button>
+                </t>
+            </div>
+        </div>
     </t>
 </templates>

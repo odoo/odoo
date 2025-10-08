@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_work_entry.WorkEntryPopover">
+        <div class="o_work_entry_popover" t-ref="root">
+            <Record t-props="currentRecordProps" t-slot-scope="currentRecord">
+                <div class="popover-header d-flex justify-content-between py-0 pe-2"
+                     t-attf-class="o_gantt_color_#{currentRecord.record.data.color}">
+                    <h4 class="py-1 m-0">
+                        <t t-esc="getDurationStr(currentRecord.record.data.duration)"/>
+                        -
+                        <t t-esc="currentRecord.record.data.work_entry_type_id.display_name"/>
+                        <button class="btn btn-sm btn-link py-0 my-0 border-0"
+                                tabindex="-1"
+                                t-att-data-tooltip="getSource(currentRecord.record)?.data.display_name"
+                                t-if="getSource(currentRecord.record)?.onOpen"
+                                t-on-click.prevent.stop="onOpenSource.bind(this,currentRecord.record)">
+                            <i class="fa fa-link"/>
+                        </button>
+                        <sup t-else=""
+                             tabindex="-1"
+                             class="text-info p-1 cursor-default"
+                             t-att-data-tooltip="getSource(currentRecord.record)?.data.display_name">?</sup>
+                    </h4>
+                    <span class="ms-4 mt-1 me-2 cursor-pointer" t-on-click.stop="props.close">
+                        <i class="fa fa-close" />
+                    </span>
+                </div>
+                <div class="popover-body o_form_view o_form_nosheet py-0">
+                    <FormRenderer record="currentRecord.record" archInfo="archInfo" class="'p-0 pt-3'"/>
+                </div>
+                <Record t-props="newRecordProps(currentRecord.record)" t-slot-scope="newRecord">
+                    <div t-if="state.isSplit">
+                        <div class="popover-header d-flex justify-content-between py-0 pe-2 rounded-0"
+                             t-attf-class="o_gantt_color_#{newRecord.record.data.color}">
+                            <h4 class="py-1 m-0" t-if="newRecord.record.data.work_entry_type_id &amp;&amp; newRecord.record.data.duration">
+                                <t t-esc="getDurationStr(newRecord.record.data.duration)"/>
+                                -
+                                <t t-esc="newRecord.record.data.work_entry_type_id.display_name"/>
+                            </h4>
+                            <h4 class="py-1 m-0" t-else="">
+                                New Work Entry
+                            </h4>
+                        </div>
+                        <div class="popover-body o_form_view o_form_nosheet py-0">
+                            <FormRenderer record="newRecord.record" archInfo="archInfo" class="'p-0 pt-3'"/>
+                        </div>
+                    </div>
+                    <div class="popover-footer d-flex justify-content-between">
+                        <div t-if="!props.readonly" class="p-3 pt-0 d-flex gap-1 w-100 o_form_nosheet">
+                            <button class="btn btn-sm btn-primary"
+                                    t-on-click="onSave.bind(this, currentRecord.record, newRecord.record)">Save</button>
+                            <button class="btn btn-sm ms-auto btn-secondary" t-on-click="onToggleSplit">
+                                <t t-if="state.isSplit">
+                                    Discard
+                                </t>
+                                <t t-else="">
+                                    Split
+                                </t>
+                            </button>
+                            <i class="fa fa-danger" t-if="currentRecord.record.isDirty"></i>
+                            <ViewButton t-if="!state.isSplit" className="'btn btn-sm ms-0 btn-danger'"
+                                        clickParams="{type: 'object', name: 'unlink'}"
+                                        icon="'fa-trash'"
+                                        record="currentRecord.record"
+                                        string.translate="Delete"/>
+                        </div>
+                        <span t-else="" class="w-100 text-center mb-2 mx-2" name="work_entry_validated_message">
+                            <i class="fa fa-lock me-1"/>
+                            <span>You cannot edit a validated work entry</span>
+                        </span>
+                    </div>
+                </Record>
+            </Record>
+        </div>
+    </t>
+</templates>

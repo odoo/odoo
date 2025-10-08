@@ -68,14 +68,18 @@ test("should use default_employee_id from context in work entry", async () => {
         view,
         (component) => component instanceof WorkEntryCalendarMultiSelectionButtons
     );
-    const workEntryTypeId = 1;
-    const values = controller.makeValues(workEntryTypeId);
+    const workEntryType = {
+        id: 1,
+        display_code: "T",
+        color: 0,
+    };
+    const values = controller.makeValues(workEntryType);
 
     expect(values).toEqual({
         employee_id: defaultEmployeeId,
         duration: -1,
         is_manual: true,
-        work_entry_type_id: workEntryTypeId,
+        work_entry_type_id: workEntryType.id,
     });
 
     await controller.loadMultiCreateView()
