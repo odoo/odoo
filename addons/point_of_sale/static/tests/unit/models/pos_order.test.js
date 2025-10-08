@@ -22,6 +22,7 @@ describe("pos.order", () => {
                 inputTipAmount: "",
             },
             requiredPartnerDetails: {},
+            tip: { type: false, value: false },
         });
     });
 
