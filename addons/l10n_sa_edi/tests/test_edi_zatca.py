@@ -291,6 +291,80 @@ class TestEdiZatca(TestSaEdiCommon):
                     move=refund_invoice,
                 )
 
+    @freeze_time('2022-09-05')
+    def test_invoice_with_downpayment_individual_negative_zero(self):
+        """
+        Test invoice generation with downpayment scenarios.
+        In this scenario, the final downpayment create a -0.00 in the PayableAmount (BT-115).
+        This test if it was handled. Otherwise it won't match the QRCode BT-115 and therefore will be refused by ZATCA.
+        """
+        if 'sale' not in self.env["ir.module.module"]._installed():
+            self.skipTest("Sale module is not installed")
+
+        def get_order_line(amount):
+            return {
+                'product_id': self.product_a.id,
+                'price_unit': amount,
+                'product_uom_qty': 1,
+                'tax_id': [Command.set(tax_15_included.ids)],
+            }
+
+        # Helper to test generated files
+        saudi_pricelist = self.env['product.pricelist'].create({
+            'name': 'SAR',
+            'currency_id': self.env.ref('base.SAR').id
+        })
+        tax_15_included = self.env['account.tax'].create({
+            'name': '15% included',
+            'amount': 15,
+            'price_include': True,
+        })
+        self.partner_sa.company_type = 'person'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_sa.id,
+            'pricelist_id': saudi_pricelist.id,
+            'order_line': [
+                Command.create(line_vals) for line_vals in [
+                    get_order_line(225.40),
+                    get_order_line(180),
+                    get_order_line(300),
+                    get_order_line(-101.43),  # This line will create a -0.00 in the final invoice
+                ]
+            ]
+        })
+        sale_order.action_confirm()
+        # Context for wizards
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'default_journal_id': self.customer_invoice_journal.id,
+        }
+
+        # Create downpayment invoice
+        downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'percentage',
+            'amount': 100,
+            'deposit_taxes_id': [Command.set(tax_15_included.ids)],
+        })
+        downpayment = downpayment_wizard._create_invoices(sale_order)
+        downpayment.invoice_date_due = '2022-09-22'
+        # Create final invoice
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        final = final_wizard._create_invoices(sale_order)
+        final.invoice_date_due = '2022-09-22'
+        # Test invoices
+        for move, test_file in [
+            (downpayment, "downpayment_invoice_minus_zero"),
+            (final, "final_invoice_minus_zero"),
+        ]:
+            with self.subTest(move=move, test_file=test_file):
+                self._test_document_generation(
+                    test_file_path=f'l10n_sa_edi/tests/test_files/{test_file}.xml',
+                    expected_xpath=self.invoice_applied_xpath,
+                    freeze_time_at='2022-09-05',
+                    move=move,
+                )
+
     def testInvoiceWithRetention(self):
         """Test standard invoice generation."""
 
