@@ -48,10 +48,11 @@
                                     <field name="color"/>
                                     <field name="trailer_hook"/>
                                 </group>
-                                <group id="vehicle_information" string="Vehicle Information" invisible="vehicle_type != 'bike'">
+                                <group id="vehicle_information" string="Model" invisible="vehicle_type != 'bike'">
+                                    <field name="model_year"/>
                                     <field name="electric_assistance"/>
                                 </group>
-                                <group string="Engine" invisible="vehicle_type != 'car'" name="group_engine">
+                                <group string="Engine" name="group_engine">
                                     <field name="default_fuel_type" required="1"/>
                                     <field name="transmission"/>
                                     <field name="drive_type"/>

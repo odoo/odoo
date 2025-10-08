@@ -148,9 +148,9 @@
                                     </div>
                                     <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
-                                <group string="Engine" invisible="vehicle_type != 'car'">
+                                <group string="Engine">
                                     <field name="fuel_type"/>
-                                    <field name="transmission" invisible="vehicle_type != 'car'"/>
+                                    <field name="transmission"/>
                                     <label for="power" invisible="power_unit != 'power'"/>
                                     <div class="o_row" invisible="power_unit != 'power'">
                                         <field name="power"/>
