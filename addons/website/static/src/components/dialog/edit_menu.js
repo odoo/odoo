@@ -164,7 +164,7 @@ export class MenuDialog extends Component {
     }
 }
 
-class MenuRow extends Component {
+export class MenuRow extends Component {
     static template = "website.MenuRow";
     static props = {
         menu: Object,
