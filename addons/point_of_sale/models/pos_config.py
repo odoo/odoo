@@ -224,8 +224,11 @@ class PosConfig(models.Model):
         static_records = {}
 
         for model, ids in records.items():
-            records = self.env[model].browse(ids).exists()
-            static_records[model] = self.env[model]._load_pos_data_read(records, self)
+            ModelObj = self.env[model]
+            if model == 'account.move':
+                ModelObj = ModelObj.sudo()
+            records = ModelObj.browse(ids).exists()
+            static_records[model] = ModelObj._load_pos_data_read(records, self)
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
