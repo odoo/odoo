@@ -3,6 +3,7 @@
 import logging
 import pytz
 import textwrap
+import urllib.parse
 from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
@@ -824,6 +825,10 @@ class EventEvent(models.Model):
             description = f'<a href="{escape(self.event_share_url)}">{escape(self.name)}</a>\n'
         description += textwrap.shorten(html_to_inner_content(self.description), 1900)
         return description
+
+    def _get_external_description_url_encoded(self):
+        """Get a url-encoded version of the description for mail templates."""
+        return urllib.parse.quote_plus(self._get_external_description())
 
     def _get_ics_file(self, slot=False):
         """ Returns iCalendar file for the event invitation.
