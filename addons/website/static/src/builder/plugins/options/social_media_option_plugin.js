@@ -159,20 +159,14 @@ class SocialMediaOptionPlugin extends Plugin {
         },
         normalize_handlers: this.normalize.bind(this),
         save_handlers: this.saveRecordedSocialMedia.bind(this),
-        extra_contenteditable_handlers: this.extraContentEditableHandlers.bind(this),
-        force_not_editable_selector: [".s_share"],
-        force_editable_selector: [".s_share a > i", ".s_share .s_share_title"],
+        content_not_editable_selectors: [".s_share"],
+        content_editable_selectors: [
+            ".s_share a > i",
+            ".s_share .s_share_title",
+            ".s_social_media a > i",
+            ".s_social_media .s_social_media_title",
+        ],
     };
-
-    extraContentEditableHandlers(filteredContentEditableEls) {
-        // To fix db in stable
-        // grep: SOCIAL_MEDIA_TITLE_CONTENTEDITABLE
-        return filteredContentEditableEls.flatMap((filteredContentEditableEl) => [
-            ...filteredContentEditableEl.querySelectorAll(
-                ".s_social_media a > i, .s_social_media .s_social_media_title"
-            ),
-        ]);
-    }
 
     /** The social media's name for which there is an entry in the orm */
     async getRecordedSocialMediaNames() {

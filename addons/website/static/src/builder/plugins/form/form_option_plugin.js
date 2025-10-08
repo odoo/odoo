@@ -169,8 +169,8 @@ export class FormOptionPlugin extends Plugin {
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
         },
-        force_not_editable_selector: ".s_website_form form",
-        force_editable_selector: [
+        content_not_editable_selectors: ".s_website_form form",
+        content_editable_selectors: [
             ".s_website_form_send",
             ".s_website_form_field_description",
             ".s_website_form_recaptcha",
