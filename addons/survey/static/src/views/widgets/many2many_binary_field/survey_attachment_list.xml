@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="survey.SurveyAttachmentList">
+        <div class="row g-0">
+            <t t-foreach="files" t-as="file" t-key="file_index">
+                <div class="col-md-6">
+                    <div t-attf-class="o_attachment o_attachment_many2many" t-att-title="file.name">
+                        <div class="o_attachment_wrap">
+                            <t t-set="ext" t-value="getExtension(file)"/>
+                            <t t-set="url" t-value="getUrl(file.id)"/>
+                            <div class="o_image_box float-start" t-att-data-tooltip="'Download ' + file.name">
+                                <a t-att-href="url" aria-label="Download" download="">
+                                    <img t-if="isImage(file)" class="o_preview_image o_hover object-fit-cover rounded align-baseline"
+                                        t-attf-src="/web/image/{{ file.id }}" onerror="this.src = '/web/static/img/mimetypes/image.svg'"/>
+                                    <span t-else="" class="o_image o_preview_image o_hover" t-att-data-mimetype="file.mimetype" t-att-data-ext="ext" role="img"/>
+                                </a>
+                            </div>
+
+                            <div class="caption">
+                                <a class="ml4" t-att-data-tooltip="'Download ' + file.name" t-att-href="url" download=""><t t-esc='file.name'/></a>
+                            </div>
+                            <div class="caption small">
+                                <a class="ml4 small text-uppercase" t-att-href="url" download=""><b><t t-esc='ext'/></b></a>
+                            </div>
+
+                            <div class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
+                            <div class="o_attachment_delete" t-on-click.stop="() => this.onFileRemove(file.id)"><span role="img" aria-label="Delete" title="Delete">×</span></div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

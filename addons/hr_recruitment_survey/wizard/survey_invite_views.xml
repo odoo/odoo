@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="survey_invite_recruitment_view_form">
+        <field name="name">survey.invite.recruitment.view.form</field>
+        <field name="model">survey.invite</field>
+        <field name="inherit_id" ref="survey.survey_invite_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='emails']" position="attributes">
+                <attribute name="invisible" separator="or" add="survey_type == 'recruitment'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
