@@ -31,9 +31,7 @@ class ProductTemplate(models.Model):
             ])
             if available_delivery_methods_sudo:
                 res['delivery_stock_data'] = utils.format_product_stock_values(
-                    product_or_template.sudo(),
-                    wh_id=website.warehouse_id.id,
-                    include_out_of_stock=True,  # Allow out-of-stock orders for delivery.
+                    product_or_template.sudo(), wh_id=website.warehouse_id.id
                 )
             else:
                 res['delivery_stock_data'] = {}
