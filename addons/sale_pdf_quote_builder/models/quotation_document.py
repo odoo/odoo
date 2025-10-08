@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import io
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tools import pdf
 
 
 class QuotationDocument(models.Model):
@@ -60,11 +58,8 @@ class QuotationDocument(models.Model):
         for doc in self:
             if doc.raw and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be used as header or footer."))
-            if doc.raw and pdf.PdfFileReader(io.BytesIO(doc.raw), strict=False).isEncrypted:
-                raise ValidationError(_(
-                    "It seems that we're not able to process this pdf inside a quotation. It is either"
-                    " encrypted, or encoded in a format we do not support."
-                ))
+            if doc.raw:
+                self.env['sale.pdf.form.field']._ensure_document_not_encrypted(doc.raw)
 
     # === COMPUTE METHODS === #
 
