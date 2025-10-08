@@ -8,6 +8,7 @@ from werkzeug.datastructures import FileStorage
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.http import Response
 from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
@@ -295,6 +296,14 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             MockRequest(self.env) as request,
             file_open(plain_pdf, 'rb') as file,
             patch.object(request.httprequest.files, 'getlist', lambda _key: [FileStorage(file)]),
+            patch.object(request, 'make_json_response',
+                lambda data, status=200, headers=None: Response(
+                    json.dumps(data),
+                    status=status,
+                    headers=headers,
+                    mimetype='application/json',
+                ),
+            ),
         ):
             res = self.QuotationDocumentController.upload_document(
                 ufile=FileStorage(file),
@@ -325,6 +334,14 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             MockRequest(self.env) as request,
             file_open(forms_pdf, 'rb') as file,
             patch.object(request.httprequest.files, 'getlist', lambda _key: [FileStorage(file)]),
+            patch.object(request, 'make_json_response',
+                lambda data, status=200, headers=None: Response(
+                    json.dumps(data),
+                    status=status,
+                    headers=headers,
+                    mimetype='application/json',
+                ),
+            ),
         ):
             res = self.QuotationDocumentController.upload_document(
                 ufile=FileStorage(file),

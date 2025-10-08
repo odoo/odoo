@@ -191,6 +191,19 @@ class SalePdfFormField(models.Model):
         self._create_or_update_form_fields_on_pdf_records(quote_documents, 'quotation_document')
 
     @api.model
+    def _ensure_document_not_encrypted(self, document):
+        document_is_invalid = False
+        try:
+            document_is_invalid = pdf.PdfFileReader(io.BytesIO(document), strict=False).isEncrypted
+        except (pdf.DependencyError, pdf.PdfReadError):
+            document_is_invalid = True
+        if document_is_invalid:
+            raise ValidationError(_(
+                "It seems that we're not able to process this pdf inside a quotation. It is either"
+                " encrypted, or encoded in a format we do not support."
+            ))
+
+    @api.model
     def _create_or_update_form_fields_on_pdf_records(self, records, doc_type):
         existing_form_fields = self.env['sale.pdf.form.field'].search(
             [('document_type', '=', doc_type)]
@@ -203,6 +216,7 @@ class SalePdfFormField(models.Model):
 
         for document in records:
             if document.raw:
+                self._ensure_document_not_encrypted(document.raw)
                 reader = pdf.PdfFileReader(io.BytesIO(document.raw), strict=False)
                 for field in unique(reader.getFormTextFields()):
                     if field not in existing_form_fields_name:
