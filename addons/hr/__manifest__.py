@@ -47,6 +47,7 @@
         'views/res_users.xml',
         'views/hr_templates.xml',
         'data/hr_data.xml',
+        'views/hr_export_mixin_views.xml',
     ],
     'demo': [
         'data/hr_demo.xml'
