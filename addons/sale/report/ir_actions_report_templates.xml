@@ -118,7 +118,7 @@
                         <t t-if="is_section">
                             <t t-set="current_section" t-value="line"/>
                             <t t-set="current_subsection" t-value="None"/>
-                            <t t-set="line_padding" t-value="0"/>
+                            <t t-set="line_padding" t-value="1"/>
                             <t t-set="collapse_prices" t-value="line.collapse_prices"/>
                         </t>
                         <t t-elif="is_subsection">
@@ -137,7 +137,7 @@
                             <t t-set="line_padding" t-value="line_padding + 1"/>
                         </t>
 
-                        <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or 'padding-left: 4px'"/>
+                        <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or ''"/>
 
                         <t t-if="not line.collapse_composition">
                             <tr
