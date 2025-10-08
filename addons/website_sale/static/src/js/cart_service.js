@@ -1,3 +1,4 @@
+import { reactive } from '@odoo/owl';
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -11,8 +12,12 @@ import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { session } from '@web/session';
+import {
+    CartNotificationContainer
+} from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
 
 const { DateTime } = luxon;
+const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
 
 /**
  * @typedef {Object} CustomAttributeValues
@@ -34,7 +39,7 @@ const { DateTime } = luxon;
  * provide relevant information when adding a product to the cart.
  */
 export class CartService {
-    static dependencies = ['cartNotificationService', 'dialog'];
+    static dependencies = ['dialog'];
 
     /**
      * Creates an instance of the service and initializes it using the {@link setup} method.
@@ -60,9 +65,18 @@ export class CartService {
      * @returns {Object} - An object exposing the public methods of the service.
      */
     setup(_env, services) {
-        this.cartNotificationService = services.cartNotificationService;
         this.dialog = services.dialog;
         this.rpc = rpc;  // To be overridable in tests.
+        this.notifications = reactive(new Map());
+        this.notificationId = 0;
+
+        // Register the notification container
+        registry.category('main_components').add('CartNotificationContainer',
+            {
+                Component: CartNotificationContainer,
+                props: { notifications: this.notifications },
+            }
+        );
 
         // Only expose `add` in the service registry.
         return {
@@ -472,7 +486,9 @@ export class CartService {
         )) {
             this._updateCartIcon(data.cart_quantity);
         };
-        this._showCartNotification(data.notification_info);
+        for (const notification of data.notifications) {
+            this._showCartNotification(notification);
+        }
         if (data.quantity) {
             this._trackProducts(data.tracking_info);
         }
@@ -511,25 +527,14 @@ export class CartService {
      * Show the notification about the cart.
      *
      * @private
-     * @param {Object} props
-     * @param {Object} options
+     * @param {import('./cart_notification/cart_notification_container/cart_notification_container').CartNotificationType} notification
      *
      * @returns {void}
      */
-    _showCartNotification(props, options = {}) {
-        if (props.lines) {
-            this.cartNotificationService.add('', {
-                lines: props.lines,
-                currencyId: props.currencyId,
-                ...options,
-            });
-        }
-        if (props.warningMessage) {
-            this.cartNotificationService.add('', {
-                warningMessage: props.warningMessage,
-                ...options,
-            });
-        }
+    _showCartNotification(notification) {
+        const id = ++this.notificationId;
+        this.notifications.set(id, notification);
+        setTimeout( () => this.notifications.delete(id), AUTOCLOSE_NOTIFICATION_DELAY );
     }
 
     /**
