@@ -501,9 +501,19 @@ export class AnalyticDistribution extends Component {
         const { record, product_field, account_field } = this.props;
         this.openTemplate({ resId: false, context: {
             'default_analytic_distribution': this.dataToJson(),
+<<<<<<< fea698f0ba92f255fb127404f04038a1ee3cf7df
             'default_partner_id': record.data['partner_id'] ? record.data['partner_id'].id : undefined,
             'default_product_id': product_field ? record.data[product_field].id : undefined,
             'default_account_prefix': account_field ? record.data[account_field].display_name.substr(0, 3) : undefined,
+||||||| f037c39ad4d33384f81a418cb63fcdd6a5085d56
+            'default_partner_id': record.data['partner_id'] ? record.data['partner_id'][0] : undefined,
+            'default_product_id': product_field ? record.data[product_field][0] : undefined,
+            'default_account_prefix': account_field ? record.data[account_field][1].substr(0, 3) : undefined,
+=======
+            'default_partner_id': record.data['partner_id'] ? record.data['partner_id'][0] : undefined,
+            'default_product_id': product_field ? record.data[product_field][0] : undefined,
+            'default_account_prefix': account_field ? record.data[account_field][1]?.substr(0, 3) : undefined,
+>>>>>>> a193cfed350782e91c91e4630f7b5e268ec6b59c
         }});
     }
 
