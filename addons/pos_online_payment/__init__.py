@@ -3,3 +3,7 @@
 
 from . import controllers
 from . import models
+
+
+def _pos_online_payment_post_init(env):
+    env['pos.config']._create_online_payment_demo()
