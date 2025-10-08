@@ -16,12 +16,13 @@ test("test parallax zoom", async () => {
     expect("[data-label='Intensity'] input").toBeVisible();
 });
 test("add parallax changes editing element", async () => {
-    await setupWebsiteAndOpenParallaxOptions();
+    await setupWebsiteAndOpenParallaxOptions({}, { loadIframeBundles: true });
     await contains("[data-action-value='fixed']").click();
     await contains("[data-label='Position'] .dropdown-toggle").click();
     await contains("[data-action-value='repeat-pattern']").click();
     expect(":iframe section").not.toHaveClass("o_bg_img_opt_repeat");
     expect(":iframe section .s_parallax_bg").toHaveClass("o_bg_img_opt_repeat");
+    expect(":iframe section .s_parallax_bg").toHaveStyle("background-repeat: repeat");
 });
 test("add parallax removes classes on the original editing element", async () => {
     await setupWebsiteAndOpenParallaxOptions({ editingElClasses: "o_modified_image_to_save" });
@@ -103,12 +104,18 @@ test("parallax scroll effect 'none' doesn't remove the color filter", async () =
     expect(":iframe section .o_we_bg_filter").toHaveCount(1);
 });
 
-async function setupWebsiteAndOpenParallaxOptions({ editingElClasses = "" } = {}) {
+async function setupWebsiteAndOpenParallaxOptions(
+    { editingElClasses = "" } = {},
+    builderOptions = {}
+) {
     const backgroundImageUrl = "url('/web/image/123/transparent.png')";
     const editingElClass = editingElClasses ? `class=${editingElClasses}` : "";
-    const websiteBuilder = await setupWebsiteBuilder(`
+    const websiteBuilder = await setupWebsiteBuilder(
+        `
         <section ${editingElClass} style="background-image: ${backgroundImageUrl}; width: 500px; height:500px">
-        </section>`);
+        </section>`,
+        builderOptions
+    );
     await contains(":iframe section").click();
     await websiteBuilder.waitSidebarUpdated();
     await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
