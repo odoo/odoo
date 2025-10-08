@@ -1224,6 +1224,7 @@
                                         <field name="price_total"
                                                column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
                                                string="Amount"/>
+                                        <widget name="section_state"/>
                                         <!-- Others fields -->
                                         <field name="partner_id" column_invisible="True"/>
                                         <field name="currency_id" column_invisible="True"/>

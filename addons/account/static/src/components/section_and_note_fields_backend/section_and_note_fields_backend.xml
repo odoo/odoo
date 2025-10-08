@@ -42,7 +42,7 @@
                                     onSelected="() => this.toggleCollapse(record, 'collapse_composition')"
                                     attrs="{ 'class': disableCompositionButton ? 'disabled' : '' }"
                                 >
-                                    <i class="me-1 fa fa-fw" t-att-class="hideComposition ? 'fa-eye' : 'fa-eye-slash'"/>
+                                    <i class="me-1 fa fa-fw" t-att-class="hideComposition ? 'fa-expand' : 'fa-compress'"/>
                                     <span t-if="hideComposition">Show Composition</span>
                                     <span t-else="">Hide Composition</span>
                                 </DropdownItem>

@@ -142,7 +142,7 @@ class SaleOrderTemplate(models.Model):
         ).product_variant_id
         demo_template.sale_order_template_line_ids = [
             Command.create({
-                'name': "Regular Section",
+                'name': self.env._("Regular Section"),
                 'display_type': 'line_section',
                 'product_uom_qty': 0,
             }),
@@ -153,7 +153,7 @@ class SaleOrderTemplate(models.Model):
                 'product_id': self.env.ref('product.monitor_stand').id,
             }),
             Command.create({
-                'name': "Hidden Composition Section",
+                'name': self.env._("Hidden Composition Section"),
                 'display_type': 'line_section',
                 'collapse_composition': True,
                 'product_uom_qty': 0,
@@ -166,7 +166,7 @@ class SaleOrderTemplate(models.Model):
                 'product_uom_qty': 8,
             }),
             Command.create({
-                'name': "Hidden Prices Section",
+                'name': self.env._("Hidden Prices Section"),
                 'display_type': 'line_section',
                 'collapse_prices': True,
                 'product_uom_qty': 0,
@@ -179,7 +179,7 @@ class SaleOrderTemplate(models.Model):
                 'product_uom_qty': 8,
             }),
             Command.create({
-                'name': "Optional Section",
+                'name': self.env._("Optional Section"),
                 'display_type': 'line_section',
                 'is_optional': True,
                 'product_uom_qty': 0,
@@ -189,7 +189,7 @@ class SaleOrderTemplate(models.Model):
                 'product_uom_qty': 0,
             }),
             Command.create({
-                'name': "Subsection",
+                'name': self.env._("Subsection"),
                 'display_type': 'line_subsection',
                 'product_uom_qty': 0,
             }),
