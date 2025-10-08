@@ -29,6 +29,22 @@ class StockPicking(models.Model):
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
 
+    def button_validate(self):
+        res = super().button_validate()
+        if res is not True:
+            return res
+        for picking in self:
+            # If all pull rules are configured for the routes, all related pickings are created at once.
+            # Users can select a specific carrier in any picking.
+            # On validating the picking, the carrier should be propagated to the next transfer
+            # only if the related rule has propagate_carrier enabled.
+            if picking.carrier_id:
+                picking._get_next_transfers().filtered(lambda p: any(rule.propagate_carrier for rule in p.move_ids.rule_id)).write({
+                    'carrier_id': picking.carrier_id.id,
+                    'carrier_tracking_ref': picking.carrier_tracking_ref
+                })
+        return res
+
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
         for picking in self:
