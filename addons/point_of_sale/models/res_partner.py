@@ -73,7 +73,7 @@ class ResPartner(models.Model):
         return [
             'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
             'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address',
-            'invoice_emails', 'fiscal_position_id', 'is_company',
+            'invoice_emails', 'fiscal_position_id', 'is_company', 'property_account_receivable_id',
         ]
 
     def _compute_pos_order(self):
