@@ -709,14 +709,13 @@
                 </t>
                 <t t-elif="company.report_tables_id == 'bold'" >
                     &amp;.o_report_layout_bold {
-                        .o_main_table {
-                            thead th {
-                                border-top: 3px solid <t t-out='secondary'/>;
-                            }
+                        th {
+                            color: <t t-out='primary'/>;
+                            border-color: <t t-out='primary'/>;
+                        }
 
-                            tbody tr:last-child td {
-                                border-bottom: 3px solid <t t-out='secondary'/>;
-                            }
+                        td, table {
+                            border-color: mix(white, <t t-out='primary'/>, 40%) !important;
                         }
                     }
                 </t>
