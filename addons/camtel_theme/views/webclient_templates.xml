@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Remove Manage Databases option and change Powered by Odoo from login layout -->
+    <template id="login_layout_camtel" inherit_id="web.login_layout">
+        <xpath expr="//t[@t-if='not disable_database_manager']" position="replace">
+            <!-- Remove the manage databases link -->
+        </xpath>
+        <xpath expr="//a[contains(@href, 'odoo.com')]/span" position="replace">
+            <span>Blue</span>
+        </xpath>
+    </template>
+</odoo>
