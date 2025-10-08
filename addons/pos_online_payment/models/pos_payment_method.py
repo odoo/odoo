@@ -27,6 +27,16 @@ class PosPaymentMethod(models.Model):
 
         super(PosPaymentMethod, self - opm)._compute_type()
 
+    @api.constrains('online_payment_provider_ids')
+    def _check_online_payment_provider_ids(self):
+        for pm in self:
+            non_compatible_providers_list = ['aps']
+            non_compatible_providers_used = list(set(non_compatible_providers_list) & set(pm.online_payment_provider_ids.mapped('code')))
+            if non_compatible_providers_used:
+                providers = pm.online_payment_provider_ids.filtered(lambda p: p.code in non_compatible_providers_used)
+                name_str = ", ".join(providers.mapped('name'))
+                raise ValidationError(_("The following providers are not compatible with the point of sale: %s", name_str))
+
     def _get_online_payment_providers(self, pos_config_id=False, error_if_invalid=True):
         self.ensure_one()
         providers_sudo = self.sudo().online_payment_provider_ids
