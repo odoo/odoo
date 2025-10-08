@@ -171,10 +171,9 @@ export class CalendarCommonRenderer extends Component {
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) && allDay ||
-                (record.isAllDay ||
-                    (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
-                )
+                (["week", "month"].includes(this.props.model.scale) && allDay) ||
+                record.isAllDay ||
+                (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
             allDay: allDay,
@@ -221,7 +220,14 @@ export class CalendarCommonRenderer extends Component {
     onEventClick(info) {
         this.click(info);
     }
-    onEventContent({ event }) {
+    onEventContent(arg) {
+        const { event } = arg;
+        if (event.start && event.end) {
+            const timeFormat = is24HourFormat() ? "H:mm" : "h:mm a";
+            const dateFmt = (date) =>
+                luxon.DateTime.fromISO(date.toISOString()).toLocal().toFormat(timeFormat);
+            arg.timeText = `${dateFmt(event.start)} - ${dateFmt(event.end)}`;
+        }
         const record = this.props.model.records[event.id];
         if (record) {
             // This is needed in order to give the possibility to change the event template.
