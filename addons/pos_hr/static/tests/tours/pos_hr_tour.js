@@ -24,7 +24,14 @@ registry.category("web_tour.tours").add("PosHrTour", {
             CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
             NumberPopup.enterValue("25"),
             NumberPopup.isShown("••"),
-            NumberPopup.enterValue("81"),
+            {
+                trigger: "body",
+                run: () => {
+                    window.dispatchEvent(new KeyboardEvent("keyup", { key: "8" }));
+                },
+            },
+            NumberPopup.isShown("•••"),
+            NumberPopup.enterValue("1"),
             NumberPopup.isShown("••••"),
             Dialog.confirm(),
             // after trying to close the number popup, the error popup should be shown
