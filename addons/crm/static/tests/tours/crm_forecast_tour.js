@@ -20,6 +20,14 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: 'Open Forecast menu',
         run: 'click',
     }, {
+        trigger: `.fa-cog`,
+        content: "Click on the Gear icon",
+        run: "click",
+    }, {
+        trigger: ".dropdown-item:contains('Export All')",
+        content: "Click on Export All",
+        run: "click",
+    }, {
         trigger: '.o_column_quick_create:contains(Add next month)',
         content: 'Wait page loading',
     }, {
