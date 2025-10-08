@@ -1,15 +1,15 @@
 import { Component, onMounted } from "@odoo/owl";
-import { AddToCartNotification } from "../add_to_cart_notification/add_to_cart_notification";
+import { ItemAddedNotification } from "@website_sale/js/cart_notification/item_added_notification/item_added_notification";
 import { WarningNotification } from "../warning_notification/warning_notification";
 
 const AUTOCLOSE_DELAY = 4000;
 
 export class CartNotification extends Component {
-    static components = { AddToCartNotification, WarningNotification };
-    static template = "website_sale.cartNotification";
+    static components = { ItemAddedNotification, WarningNotification };
+    static template = "website_sale.CartNotification";
     static props = {
         message: [String, { toString: Function }],
-        warning: {type : [String, { toString: Function }], optional: true},
+        warning_message: {type : [String, { toString: Function }], optional: true},
         lines: {
             type: Array,
             optional: true,
@@ -21,8 +21,8 @@ export class CartNotification extends Component {
                     image_url: String,
                     quantity: Number,
                     uom_name: { type: String, optional: true },
-                    name: String,
                     combination_name: { type: String, optional: true },
+                    name: String,
                     description: { type: String, optional: true },
                     price_total: Number,
                 },

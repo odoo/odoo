@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.CartNotification">
+        <div
+            t-attf-class="position-relative mt-2 {{props.className}}"
+            t-attf-style="top: {{positionOffset}};"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+        >
+            <WarningNotification t-if="this.props.warning" warning="this.props.warning"/>
+            <ItemAddedNotification
+                t-elif="this.props.lines.length"
+                lines="this.props.lines"
+                currency_id="this.props.currency_id"
+            />
+        </div>
+    </t>
+
+</templates>

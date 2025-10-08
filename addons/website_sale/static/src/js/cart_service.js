@@ -78,7 +78,6 @@ export class CartService {
     /**
      * Asynchronously adds a product to the shopping cart.
      *
-     * @async
      * @param {Object} product - The product details to add to the cart.
      * @param {Number} product.productTemplateId - The product template's id, as a
      *      `product.template` id.
@@ -237,7 +236,6 @@ export class CartService {
     /**
      * Opens the combo configurator dialog.
      *
-     * @private
      * @param {Number} productTemplateId - The product template id, as a `product.template` id.
      * @param {Number} productId - The product's id, as a `product.product` id.
      * @param {ProductCombo[]} combos - The combos of the product.
@@ -295,7 +293,6 @@ export class CartService {
     /**
      * Opens the product configurator dialog.
      *
-     * @private
      * @param {Number} productTemplateId - The product template id, as a `product.template` id.
      * @param {Number} quantity - The quantity to add to the cart.
      * @param {Number[]} combination - The combination of the product, as a list of
@@ -358,7 +355,6 @@ export class CartService {
     /**
      * Serialize a product into a format understandable by the server.
      *
-     * @private
      * @param {Object} product - The product to serialize.
      *
      * @returns {Object} - The serialized product.
@@ -399,7 +395,6 @@ export class CartService {
     /**
      * Serialize a combo item into a format understandable by the server.
      *
-     * @private
      * @param {ProductComboItem} comboItem - The combo item to serialize.
      * @param {Number} parentProductTemplateId - The parent's product template id, as a
      *      `product.template` id.
@@ -423,8 +418,6 @@ export class CartService {
     /**
      * Make a request to the server to add the product to the cart.
      *
-     * @async
-     * @private
      * @param {Object} data - Data containing product(s) to add to the cart and options for adding
      *      them.
      * @param {Number} data.productTemplateId - The product template's id, as a
@@ -481,7 +474,6 @@ export class CartService {
     /**
      * Update the quantity on the cart icon in the navbar.
      *
-     * @private
      * @param {Number} cartQuantity - The number of items currently in the cart.
      *
      * @returns {void}
@@ -509,7 +501,6 @@ export class CartService {
     /**
      * Show the notification about the cart.
      *
-     * @private
      * @param {Object} props
      * @param {Object} options
      *
@@ -523,9 +514,9 @@ export class CartService {
                 ...options,
             });
         }
-        if (props.warning) {
+        if (props.warningMessage) {
             this.cartNotificationService.add('', {
-                warning: props.warning,
+                warning_message: props.warning_message,
                 ...options,
             });
         }
@@ -534,7 +525,6 @@ export class CartService {
     /**
      * Track the products added to the cart.
      *
-     * @private
      * @param {Object[]} trackingInfo - A list of product tracking information.
      *
      * @returns {void}
