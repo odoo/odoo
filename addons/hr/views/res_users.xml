@@ -188,23 +188,23 @@
                 </xpath>
                 <!-- Must be replaced by work_email when the user has an employee_id. -->
                 <xpath expr="//h5[@name='h5_email']" position="attributes">
-                    <attribute name="invisible">employee_id or login == email</attribute>
+                    <attribute name="invisible">employee_id</attribute>
                 </xpath>
                 <!-- Must be replaced by work_phone when the user has an employee_id. -->
                 <xpath expr="//h5[@name='h5_phone']" position="attributes">
                     <attribute name="invisible">employee_id</attribute>
                 </xpath>
-                <xpath expr="//h5[@name='h5_login']/i[hasclass('fa-envelope')]" position="attributes">
-                    <attribute name="invisible">(not employee_id and login != email) or (employee_id and login != work_email)</attribute>
-                </xpath>
-                <xpath expr="//h5[@name='h5_login']/i[hasclass('fa-key')]" position="attributes">
-                    <attribute name="invisible">(not employee_id and login == email) or (employee_id and login == work_email)</attribute>
-                </xpath>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id or login == work_email">
-                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
+                    <h5 class="d-flex flex-wrap align-items-baseline mb-0" invisible="not employee_id">
+                        <div class="w-100">
+                            <i class="fa fa-fw fa-envelope me-1 text-primary" title="Login / Email" invisible="login != work_email"/>
+                            <i class="fa fa-fw fa-key me-1 text-primary" title="Login" invisible="login == work_email"/>
+                            <field name="login" placeholder="Login" class="w-75"/><br/>
+                        </div>
+                    
+                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email" invisible="login == work_email"/>
                         <field name="email_domain_placeholder" invisible="1" />
-                        <field name="work_email" widget="email" string="Work Email" class="w-75" options="{'placeholder_field': 'email_domain_placeholder'}"/>
+                        <field name="work_email" widget="email" string="Work Email" class="w-75" options="{'placeholder_field': 'email_domain_placeholder'}" invisible="login == work_email"/>
                     </h5>
                     <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id">
                         <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
