@@ -24,7 +24,6 @@ unsupported_devices = {}
 
 class Manager(Thread):
     daemon = True
-    ws_channel = ""
 
     def __init__(self):
         super().__init__()
@@ -108,8 +107,6 @@ class Manager(Thread):
                     timeout=5,
                 )
                 response.raise_for_status()
-                data = response.json()
-                self.ws_channel = data.get('result', '')
                 break  # Success, exit the retry loop
             except requests.exceptions.RequestException:
                 if attempt < max_retries:
@@ -120,9 +117,6 @@ class Manager(Thread):
                     time.sleep(delay)
                 else:
                     _logger.exception('Could not reach configured server to send all IoT devices after %d attempts.', max_retries)
-            except ValueError:
-                _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
-                break
 
     def run(self):
         """Thread that will load interfaces and drivers and contact the odoo server
@@ -158,7 +152,7 @@ class Manager(Thread):
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
 
         # Set up the websocket connection
-        ws_client = WebsocketClient(self.ws_channel)
+        ws_client = WebsocketClient()
         if ws_client:
             ws_client.start()
 

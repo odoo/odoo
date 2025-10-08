@@ -40,18 +40,16 @@ def on_error(ws, error):
 
 @helpers.require_db
 class WebsocketClient(Thread):
-    channel = ""
-
     def on_open(self, ws):
         """
-            When the client is setup, this function send a message to subscribe to the iot websocket channel
+            When the client is setup, this function send a message to subscribe
         """
         ws.send(json.dumps({
             'event_name': 'subscribe',
             'data': {
-                'channels': [self.channel],
-                'last': self.last_message_id,
-                'identifier': helpers.get_identifier(),
+                'channels': [],
+                'last': 0,
+                'iot_token': helpers.get_token(),
             }
         }))
 
@@ -59,7 +57,6 @@ class WebsocketClient(Thread):
         """Synchronously handle messages received by the websocket."""
         for message in json.loads(messages):
             _logger.debug("websocket received a message: %s", pprint.pformat(message))
-            self.last_message_id = message['id']
             payload = message['message']['payload']
 
             if not helpers.get_identifier() in payload.get('iot_identifiers', []):
@@ -88,7 +85,6 @@ class WebsocketClient(Thread):
                     })
                     helpers.get_odoo_server_url.cache_clear()
                 case 'restart_odoo':
-                    ws.close()
                     helpers.odoo_restart()
                 case 'webrtc_offer':
                     answer = webrtc_client.offer(payload['offer'])
@@ -114,16 +110,12 @@ class WebsocketClient(Thread):
 
     def on_close(self, ws, close_status_code, close_msg):
         _logger.debug("websocket closed with status: %s", close_status_code)
-        helpers.update_conf({'last_websocket_message_id': self.last_message_id})
 
-    def __init__(self, channel, server_url=None):
+    def __init__(self, server_url=None):
         """This class will not be instantiated if no db is connected.
 
-        :param str channel: the channel to subscribe to
         :param str server_url: URL of the Odoo server (provided by decorator).
         """
-        self.channel = channel
-        self.last_message_id = int(helpers.get_conf('last_websocket_message_id') or 0)
         self.server_url = server_url
         url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
