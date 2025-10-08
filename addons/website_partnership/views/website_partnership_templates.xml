@@ -177,7 +177,7 @@
                     <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }?#{ keep_query('search') }"
                     class="dropdown-item d-flex justify-content-between">
                         <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
-                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="grade['grade_id_count']"/>
+                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-out="grade['grade_id_count']"/>
                     </a>
                 </t>
             </div>
