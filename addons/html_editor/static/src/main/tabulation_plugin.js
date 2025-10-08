@@ -7,6 +7,7 @@ import {
     getAdjacentPreviousSiblings,
     closestElement,
     firstLeaf,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
@@ -55,7 +56,7 @@ export class TabulationPlugin extends Plugin {
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
-        force_not_editable_selector: ".oe-tabs",
+        content_not_editable_providers: (rootEl) => [...selectElements(rootEl, ".oe-tabs")],
         contenteditable_to_remove_selector: "span.oe-tabs",
 
         /** Handlers */
