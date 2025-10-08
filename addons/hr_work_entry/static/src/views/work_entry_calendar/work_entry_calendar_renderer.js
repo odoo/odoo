@@ -6,8 +6,4 @@ export class WorkEntryCalendarRenderer extends CalendarRenderer {
         ...CalendarRenderer.components,
         month: WorkEntryCalendarCommonRenderer,
     };
-    static props = {
-        ...CalendarRenderer.props,
-        splitRecord: Function,
-    };
 }
