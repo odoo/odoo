@@ -13,7 +13,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.http import request, content_disposition
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 from odoo.tools.misc import file_open
-from odoo.tools.pdf import PdfReadError, extract_page
+from odoo.tools.pdf import DependencyError, PdfReadError, extract_page
 
 logger = logging.getLogger(__name__)
 
@@ -154,7 +154,7 @@ class AttachmentController(ThreadController):
     def _get_pdf_first_page_response(self, attachment):
         try:
             page_stream = extract_page(attachment, 0)
-        except PdfReadError as e:
+        except (PdfReadError, DependencyError, UnicodeDecodeError) as e:
             raise UnsupportedMediaType() from e
         if not page_stream:
             raise UnsupportedMediaType()
