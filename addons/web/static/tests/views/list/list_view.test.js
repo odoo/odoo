@@ -5622,6 +5622,26 @@ test(`duplicate one record`, async () => {
     expect(`tbody tr`).toHaveCount(5, { message: "should have 5 rows" });
 });
 
+test(`duplicate is possible even with create="0"`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top" create="0"><field name="foo"/></list>`,
+        actionMenus: {},
+    });
+
+    // Initial state: there should be 4 records
+    expect(`tbody tr`).toHaveCount(4, { message: "should have 4 rows" });
+
+    // Duplicate one record
+    await clickRecordSelector();
+    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleMenuItem("Duplicate");
+
+    // Final state: there should be 5 records
+    expect(`tbody tr`).toHaveCount(5, { message: "should have 5 rows" });
+});
+
 test(`duplicate all records`, async () => {
     await mountView({
         resModel: "foo",

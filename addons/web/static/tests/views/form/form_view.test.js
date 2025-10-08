@@ -4256,6 +4256,29 @@ test(`can duplicate a record`, async () => {
     expect(`.o_form_editable`).toHaveCount(1);
 });
 
+test(`can duplicate a record even with create="0"`, async () => {
+    onRpc("copy", ({ args, model }) => {
+        if (model === "partner") {
+            expect(args).toEqual([[1]]);
+            expect.step("copy");
+        }
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form create="0"><field name="foo"/></form>`,
+        resId: 1,
+        actionMenus: {},
+    });
+    expect(`.o_breadcrumb`).toHaveText("first record");
+
+    await toggleActionMenu();
+    await toggleMenuItem("Duplicate");
+    expect.verifySteps(["copy"]);
+    expect(`.o_breadcrumb`).toHaveText("first record (copy)");
+    expect(`.o_form_editable`).toHaveCount(1);
+});
+
 test(`duplicating a record preserves the context`, async () => {
     onRpc("web_read", ({ kwargs }) => expect.step(kwargs.context.hey));
     await mountView({
