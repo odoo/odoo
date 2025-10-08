@@ -7,7 +7,8 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Command, Domain
-from odoo.tools import frozendict, float_compare, groupby, Query, SQL, OrderedSet
+from odoo.models import Query
+from odoo.tools import frozendict, float_compare, groupby, SQL, OrderedSet
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION

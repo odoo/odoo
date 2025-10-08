@@ -25,8 +25,9 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.models import Query
 from odoo.modules.module import get_manifest
-from odoo.tools import SQL, Query
+from odoo.tools import SQL
 from odoo.tools.image import image_process
 from odoo.tools.sql import escape_psql
 from odoo.tools.translate import _

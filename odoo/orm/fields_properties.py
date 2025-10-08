@@ -19,7 +19,7 @@ from .fields import Field, _logger
 from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
 if typing.TYPE_CHECKING:
-    from odoo.tools import Query
+    from .query import Query
 
 NoneType = type(None)
 

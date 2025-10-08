@@ -17,11 +17,12 @@ from weakref import WeakSet
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
-from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, Query, SQL
+from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
 
 from .registry import Registry
+from .query import Query
 from .utils import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
