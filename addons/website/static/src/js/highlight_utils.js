@@ -283,6 +283,17 @@ export function applyTextHighlight(highlightEl, highlightID) {
 }
 
 /**
+ * Deactivates a text highlight effect by removing its SVGs.
+ *
+ * @param {HTMLElement} highlightEl
+ */
+export function removeTextHighlight(highlightEl) {
+    for (const svg of highlightEl.querySelectorAll(":scope svg")) {
+        svg.remove();
+    }
+}
+
+/**
  * Returns a new highlight SVG adapted to the text container.
  *
  * @param {HTMLElement} textEl
@@ -435,3 +446,31 @@ function getTextnodeRects(el) {
 // function isRTL(el) {
 //     return window.getComputedStyle(el).direction === "rtl";
 // }
+
+/**
+ * Returns the closest ancestor element that should be observed for adapting
+ * highlight effects.
+ *
+ * @param {HTMLElement} el
+ * @param {HTMLElement} topEl The upper boundary element to observe (defaults
+ * to document body).
+ * @returns {HTMLElement}
+ */
+export function closestToObserve(el, topEl = el.ownerDocument.body) {
+    el = el.nodeType === Node.ELEMENT_NODE ? el : el.parentElement;
+    if (!el || el === topEl) {
+        return null;
+    }
+    if (window.getComputedStyle(el).display !== "inline") {
+        return el;
+    }
+    return closestToObserve(el.parentElement, topEl);
+}
+
+/**
+ * @param {HTMLElement} el
+ */
+export function getObservedEls(el) {
+    const closestToObserveEl = closestToObserve(el);
+    return closestToObserveEl ? [closestToObserveEl, el] : [el];
+}
