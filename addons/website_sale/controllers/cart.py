@@ -175,9 +175,10 @@ class Cart(PaymentPortal):
                     # Return empty notification since cart update is considered as failed
                     return {
                         'cart_quantity': order_sudo.cart_quantity,
-                        'notification_info': {
-                            'warning_message': product_values.get('warning', ''),
-                        },
+                        'notifications': [{
+                            'type': 'warning',
+                            'data': {'warning_message': product_values.get('warning', '')},
+                        }],
                         'quantity': 0,
                         'tracking_info': [],
                     }
@@ -206,14 +207,23 @@ class Cart(PaymentPortal):
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
 
+        notifications = []
+
+        if notification := self._get_cart_notification_information(order_sudo, added_qty_per_line):
+            notifications.append({
+                'type': 'item_added',
+                'data': notification,
+            })
+
+        if warning:
+            notifications.append({
+                'type': 'warning',
+                'data': {'warning_message': warning},
+            })
+
         return {
             'cart_quantity': order_sudo.cart_quantity,
-            'notification_info': {
-                **self._get_cart_notification_information(
-                    order_sudo, added_qty_per_line
-                ),
-                'warning_message': warning,
-            },
+            'notifications': notifications,
             'quantity': values.pop('quantity', 0),
             'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
         }
