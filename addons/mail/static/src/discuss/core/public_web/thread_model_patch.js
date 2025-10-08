@@ -59,10 +59,10 @@ const threadPatch = {
             return;
         }
         if (["group", "chat"].includes(this.channel?.channel_type)) {
-            return this.store.discuss.chats;
+            return this.store.discuss.chatCategory;
         }
         if (this.channel?.channel_type === "channel") {
-            return this.store.discuss.channels;
+            return this.store.discuss.channelCategory;
         }
     },
     get allowCalls() {
