@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchbarOption } from "./searchbar_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { isNull } from "@web/views/utils";
 
 class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
@@ -63,6 +64,25 @@ class SearchbarOptionPlugin extends Plugin {
             },
         ],
     };
+
+    setup() {
+        for (const searchBarInput of this.document.querySelectorAll(
+            ".s_searchbar_input .search-query"
+        )) {
+            this.setContentEditable(searchBarInput);
+        }
+    }
+
+    setContentEditable(searchBar) {
+        searchBar.setAttribute("contenteditable", false);
+        const parentEl = searchBar.parentElement;
+        parentEl.setAttribute("contenteditable", false);
+        for (const child of parentEl.children) {
+            if (child != searchBar && isNull(child.getAttribute("contenteditable"))) {
+                child.setAttribute("contenteditable", true);
+            }
+        }
+    }
 }
 
 export class BaseSearchBarAction extends BuilderAction {
