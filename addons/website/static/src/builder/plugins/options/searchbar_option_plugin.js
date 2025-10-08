@@ -52,6 +52,10 @@ class SearchbarOptionPlugin extends Plugin {
                 dependency: "search_all_opt",
             },
         ],
+        // input group should not be contenteditable, while all other children
+        // beside the input are contenteditable
+        content_not_editable_selectors: [".input-group:has( > input)"],
+        content_editable_selectors: [".input-group:has( > input) > *:not(input)"],
     };
 }
 
