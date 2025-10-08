@@ -375,7 +375,7 @@ class HrVersion(models.Model):
         # Return True if the employee is in contract on a given date
         if not self.contract_date_start:
             return False
-        return self.date_start <= date and (not self.date_end or self.date_end >= date)
+        return self.contract_date_start <= date and (not self.contract_date_end or self.contract_date_end >= date)
 
     def _is_overlapping_period(self, date_from, date_to):
         """
@@ -385,7 +385,7 @@ class HrVersion(models.Model):
         """
         if not self.contract_date_start:
             return False
-        return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
+        return self.contract_date_start <= date_to and (not self.contract_date_end or self.contract_date_end >= date_from)
 
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
