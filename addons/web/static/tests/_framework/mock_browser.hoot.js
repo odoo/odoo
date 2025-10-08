@@ -1,6 +1,6 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
-import { mockLocation } from "@odoo/hoot-mock";
+import { mockLocation } from "@odoo/hoot";
 
 //-----------------------------------------------------------------------------
 // Internal

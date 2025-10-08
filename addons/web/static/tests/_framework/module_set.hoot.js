@@ -1,8 +1,17 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
-import { describe, dryRun, globals, start, stop } from "@odoo/hoot";
-import { Deferred, delay } from "@odoo/hoot-dom";
-import { watchAddedNodes, watchKeys, watchListeners } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    delay,
+    describe,
+    dryRun,
+    globals,
+    start,
+    stop,
+    watchAddedNodes,
+    watchKeys,
+    watchListeners,
+} from "@odoo/hoot";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
