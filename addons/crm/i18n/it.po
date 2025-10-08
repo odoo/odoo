@@ -9,21 +9,22 @@
 # Luca Carlo, 2023
 # Marianna Ciofani, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-30 18:35+0000\n"
-"PO-Revision-Date: 2025-09-14 21:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/crm/it/"
-">\n"
+"PO-Revision-Date: 2025-10-07 18:28+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/crm/it/>"
+"\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: crm
@@ -83,7 +84,7 @@ msgstr "Opportunità per %s"
 #. odoo-python
 #: code:addons/crm/models/res_users.py:0
 msgid "(Team Leader)"
-msgstr ""
+msgstr "(Capo team)"
 
 #. module: crm
 #. odoo-javascript
@@ -1011,7 +1012,7 @@ msgstr "Annulla"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Capacity"
-msgstr ""
+msgstr "Capacità"
 
 #. module: crm
 #. odoo-python
@@ -1489,7 +1490,7 @@ msgstr "Data di chiusura"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Numero di giorni trascorsi dall'ultimo aggiornamento della risorsa"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1499,7 +1500,7 @@ msgstr "Giorno/i"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Giorni di inattività"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1514,7 +1515,7 @@ msgstr "Giorni per chiudere"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Giorni prima dell’inattività"
 
 #. module: crm
 #. odoo-python
@@ -1874,6 +1875,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Per un team di vendita non esiste cosa peggiore che ritrovarsi senza lead. "
+"Fortunatamente, in pochi clic, è possibile generare lead mirati in modo "
+"specifico ai propri bisogni: dimensione azienda, settore ecc... Per aiutarti "
+"a provare la funzionalità, ti offriamo gratuitamente 20 crediti."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1963,6 +1968,10 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Evidenzia le opportunità che non sono state aggiornate da tanti "
+"giorni.         Imposta su 0 per disabilitare. La modifica di questo "
+"parametro non influirà sullo stato di inattività/data delle risorse "
+"aggiornate per l'ultima volta prima di questa modifica."
 
 #. module: crm
 #. odoo-javascript
@@ -2603,7 +2612,7 @@ msgstr "Bassa"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
-msgstr ""
+msgstr "MRR"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2944,6 +2953,8 @@ msgstr "Nessun dato trovato."
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
 msgstr ""
+"Nessuna deviazione, nessun ritardo: da %(stage_name)s direttamente verso il "
+"successo! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -3045,11 +3056,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Numero di lead assegnati a questo membro nelle ultime 24 ore (lead persi "
+"esclusi)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "Numero di lead assegnati a questo membro negli ultimi 30 giorni"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3308,7 +3321,7 @@ msgstr "In sospeso"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "Uff, ci è voluto un po' di impegno, ma ce l'hai fatta. Ottimo lavoro!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3585,7 +3598,7 @@ msgstr "Telefono VOIP ringover"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "Inattività"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3734,7 +3747,7 @@ msgstr "Impostazioni"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Condiviso con tutti i team"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -4107,6 +4120,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"Questo nuovo lead creato da %(creation_source)s è stato assegnato "
+"automaticamente al team leader %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4503,19 +4518,19 @@ msgstr "Vinto/perso"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "Wow, che rapidità. Quell'accordo non aveva alcuna possibilità!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "Evvai, la tua prima vittoria da%(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "Dai! Il miglior affare degli ultimi 7 giorni per il team."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4556,7 +4571,7 @@ msgstr "Hai appena battuto il tuo record personale degli ultimi 7 giorni."
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "Hai appena ampliato la mappa! Prima vittoria in %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4576,13 +4591,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "Sei in un periodo fortunato. Tre affari in tre giorni, congratulazioni!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "Sei inarrestabile! Hai chiuso il quinto affare di oggi 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4656,7 +4671,7 @@ msgstr "ha valore"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "e-mail in arrivo"
 
 #. module: crm
 #. odoo-python
