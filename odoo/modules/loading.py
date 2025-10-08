@@ -396,7 +396,11 @@ def load_modules(
             install_demo=new_db_demo,
         )
 
-        load_lang = tools.config._cli_options.pop('load_language', None)
+        with tools.config.unlock():
+            load_lang = tools.config['load_language']
+            if load_lang:
+                tools.config['load_language'] = None
+
         if load_lang or update_module:
             # some base models are used below, so make sure they are set up
             registry._setup_models__(cr, [])  # incremental setup
