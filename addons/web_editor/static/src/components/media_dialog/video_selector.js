@@ -3,6 +3,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { throttle } from '@web/core/utils/timing';
 import { qweb } from 'web.core';
+import { getUrlParams } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
@@ -138,7 +139,7 @@ export class VideoSelector extends Component {
         }
         const url = embedMatch ? embedMatch[1] : this.state.urlInput;
 
-        const options = {};
+        let options = {};
         if (this.props.isForBgVideo) {
             Object.keys(this.OPTIONS).forEach(key => {
                 options[key] = true;
@@ -148,6 +149,11 @@ export class VideoSelector extends Component {
                 options[option.id] = option.value;
             }
         }
+
+        if (!Object.keys(options).length) {
+            options = getUrlParams(url);
+        }
+
         const { embed_url: src, platform } = await this._getVideoURLData(url, options);
 
         if (!src) {

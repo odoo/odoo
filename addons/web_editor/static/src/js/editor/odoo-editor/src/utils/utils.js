@@ -1806,6 +1806,31 @@ export function getUrlsInfosInString(string) {
     return infos;
 }
 
+/**
+ * Extracts options as a boolean object based on the presence of
+ * urlParameter in the URL.
+ */
+export function getUrlParams(url) {
+    const params = [
+        "autoplay",
+        "loop",
+        "hide_controls",
+        "hide_fullscreen",
+        "hide_dm_logo",
+        "hide_dm_share",
+    ];
+    const urlParams = new URLSearchParams(new URL(url).search);
+    return params.reduce((options, param) => {
+        const value = urlParams.get(param);
+        if (param === "hide_controls") {
+            options[param] = value === "0" || urlParams.get("controls") === "0";
+        } else {
+            options[param] = value === "1";
+        }
+        return options;
+    }, {});
+}
+
 // optimize: use the parent Oid to speed up detection
 export function getOuid(node, optimize = false) {
     while (node && !isUnbreakable(node)) {
