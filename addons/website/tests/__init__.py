@@ -26,6 +26,7 @@ from . import test_performance
 from . import test_qweb
 from . import test_redirect
 from . import test_res_users
+from . import test_robots_txt
 from . import test_sitemap
 from . import test_skip_website_configurator
 from . import test_snippets

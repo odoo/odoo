@@ -15,7 +15,6 @@
         'views/card_template_views.xml',
         'views/card_menus.xml',
         'views/mailing_mailing_views.xml',
-        'views/website_templates.xml',
     ],
     'demo': [
         'demo/card_campaign_demo.xml',
