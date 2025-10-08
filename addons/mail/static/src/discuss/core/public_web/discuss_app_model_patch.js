@@ -14,7 +14,7 @@ const discussAppPatch = {
                     ? c1.sequence - c2.sequence
                     : c1.name.localeCompare(c2.name),
         });
-        this.channels = fields.One("DiscussAppCategory", {
+        this.channelCategory = fields.One("DiscussAppCategory", {
             compute() {
                 return {
                     addTitle: _t("Add or join a channel"),
@@ -29,15 +29,15 @@ const discussAppPatch = {
             },
             eager: true,
         });
-        this.chats = fields.One("DiscussAppCategory", {
+        this.chatCategory = fields.One("DiscussAppCategory", {
             compute() {
-                return this.computeChats();
+                return this.computeChatCategory();
             },
             eager: true,
         });
         this.unreadChannels = fields.Many("mail.thread", { inverse: "appAsUnreadChannels" });
     },
-    computeChats() {
+    computeChatCategory() {
         return {
             addTitle: _t("Start a conversation"),
             canView: false,
