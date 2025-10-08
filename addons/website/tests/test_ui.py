@@ -283,7 +283,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, [self.env.ref('base.lang_en').id, parseltongue.id])],
             'default_lang_id': parseltongue.id,
         })
-        self.env['website'].create({
+        website_3 = self.env['website'].create({
             'name': 'website fu_GB',
             'language_ids': [Command.set([fake_user_lang.id])],
             'default_lang_id': fake_user_lang.id,
@@ -291,7 +291,9 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
-        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin')
+        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_switching_website', login='admin', cookies={
+            'websiteIdMapping': json.dumps({website_3.name: website_3.id})
+        })
         self.start_tour(f"/website/force/{website.id}", 'snippet_dialog_rtl', login='admin')
 
 
