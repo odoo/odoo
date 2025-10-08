@@ -23,9 +23,14 @@
                     />
                 </group>
             </xpath>
+
             <xpath expr="//list/field[@name='linked_virtual_id']" position="after">
                 <field name="is_optional" column_invisible="True"/>
             </xpath>
+
+            <widget name="section_state" position="attributes">
+                <attribute name="options">{'is_optional': 'fa fa-dot-circle-o'}</attribute>
+            </widget>
         </field>
     </record>
 
