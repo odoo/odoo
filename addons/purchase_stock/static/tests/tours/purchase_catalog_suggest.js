@@ -128,6 +128,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
         ...productCatalog.waitForQuantity("test_product", 24),
         ...productCatalog.removeProduct("test_product"),
+        { trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)" }, // Should show add button again
         {
             content: "Makes sure the update_order_line_info is processed on server before adding",
             trigger: ".btn:has(.o_catalog_card_suggest_add)",
@@ -163,13 +164,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...purchaseForm.checkLineValues(0, { product: "test_product", quantity: "25.00" }),
         ...purchaseForm.openCatalog(),
         ...productCatalog.removeProduct("test_product"),
-        {
-            content: "Wait for a bit more then the 500 ms debouce on update quantity",
-            trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add",
-            async run() {
-                await new Promise((r) => setTimeout(r, 700));
-            },
-        }, // Wait till its removed on the server as well
         // Should go back to displaying suggested qtys
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
         ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
@@ -186,11 +180,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0), // == suggest is off
 
         // ---- Check Adding non suggested product works with suggest
-        {
-            content: "Add a non suggested product to order",
-            trigger: "div.o_product_catalog_buttons i.fa-shopping-cart",
-            run: "click",
-        },
+        ...productCatalog.addProduct("Courage"),
         ...catalogSuggestion.toggleSuggest(true),
         { trigger: '.o_facet_value:contains("Suggested")' }, // Should turn on filter Suggested or in the order
         ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 52, suggest: 24 }),
