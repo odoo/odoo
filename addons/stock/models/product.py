@@ -373,7 +373,7 @@ class ProductProduct(models.Model):
         if self.env.context.get('strict'):
             loc_domain = Domain('location_id', 'in', locations.ids)
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
-            dest_loc_domain_out = Domain('location_dest_id', 'in', locations.ids)
+            dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
         elif locations:
             paths_domain = Domain.OR(Domain('parent_path', '=like', loc.parent_path + '%') for loc in locations)
             loc_domain = Domain('location_id', 'any', paths_domain)
