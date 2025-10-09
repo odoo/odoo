@@ -83,3 +83,13 @@ export function selectedOrderLinesHasLots(productName, lots) {
     const lotSteps = lots.reduce((acc, serial, i) => acc.concat(getSerialStep(i, serial)), []);
     return [...ProductScreen.selectedOrderlineHas(productName), ...lotSteps];
 }
+
+export function checkOrdersListNotEmpty() {
+    return [
+        ...ProductScreen.clickControlButton("Quotation/Order"),
+        {
+            content: "Check that the orders list is not empty",
+            trigger: ".o_data_row",
+        },
+    ];
+}
