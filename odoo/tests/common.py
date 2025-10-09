@@ -307,14 +307,14 @@ class BaseCase(case.TestCase):
     env: api.Environment = None
     cr: Cursor = None
     def __init_subclass__(cls):
-        """Assigns default test tags ``standard`` and ``at_install`` to test
+        """Assigns default test tags ``standard`` and ``post_install`` to test
         cases not having them. Also sets a completely unnecessary
         ``test_module`` attribute.
         """
         super().__init_subclass__()
         if cls.__module__.startswith('odoo.addons.'):
             if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard', 'at_install'}
+                cls.test_tags = {'standard', 'post_install'}
             cls.test_module = cls.__module__.split('.')[2]
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
@@ -2622,7 +2622,7 @@ def tagged(*tags):
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
 
     By default, all Test classes from odoo.tests.common have a test_tags
-    attribute that defaults to 'standard' and 'at_install'.
+    attribute that defaults to 'standard' and 'post_install'.
 
     When using class inheritance, the tags ARE inherited.
     """

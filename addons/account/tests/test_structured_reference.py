@@ -12,7 +12,7 @@ from odoo.addons.account.tools import (
 )
 
 
-@tagged('standard', 'at_install')
+@tagged('standard', 'at_install', '-post_install')
 class StructuredReferenceTest(TransactionCase):
 
     def test_structured_reference_iso(self):
