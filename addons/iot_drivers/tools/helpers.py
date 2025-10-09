@@ -1,46 +1,35 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import configparser
 from enum import Enum
 from functools import cache, wraps
 from importlib import util
+from ipaddress import ip_address
 import inspect
 import io
-from ipaddress import ip_address
 import logging
-import netifaces
 from pathlib import Path
-import re
 import requests
-import secrets
-import subprocess
 import socket
 from urllib.parse import parse_qs
 import urllib3.util
-import sys
-from threading import Thread, Lock
+from threading import Thread
 import time
 import zipfile
 from werkzeug.exceptions import Locked
 
-from odoo import http, release, service
+from odoo import http, service
+from odoo.addons.iot_drivers.tools import system
 from odoo.addons.iot_drivers.tools.system import (
-    IOT_CHAR,
+    IOT_IDENTIFIER,
+    IS_RPI,
+    IS_WINDOWS,
     IOT_RPI_CHAR,
     IOT_WINDOWS_CHAR,
-    IS_RPI,
-    IS_TEST,
-    IS_WINDOWS,
-    mtr,
 )
 from odoo.tools.func import reset_cached_properties
 from odoo.tools.misc import file_path
 
-lock = Lock()
 _logger = logging.getLogger(__name__)
-
-if IS_RPI:
-    import crypt
 
 
 class Orientation(Enum):
@@ -73,16 +62,16 @@ def toggleable(function):
     @wraps(function)
     def devtools_wrapper(*args, **kwargs):
         if args and args[0].__class__.__name__ == 'DriverController':
-            if get_conf('longpolling', section='devtools'):
+            if system.get_conf('longpolling', section='devtools'):
                 _logger.warning("Refusing call to %s: longpolling is disabled by devtools", fname)
                 raise Locked("Longpolling disabled by devtools")  # raise to make the http request fail
         elif function.__name__ == 'action':
             action = args[1].get('action', 'default')  # first argument is self (containing Driver instance), second is 'data'
-            disabled_actions = (get_conf('actions', section='devtools') or '').split(',')
+            disabled_actions = (system.get_conf('actions', section='devtools') or '').split(',')
             if action in disabled_actions or '*' in disabled_actions:
                 _logger.warning("Ignoring call to %s: '%s' action is disabled by devtools", fname, action)
                 return None
-        elif get_conf('general', section='devtools'):
+        elif system.get_conf('general', section='devtools'):
             _logger.warning("Ignoring call to %s: method is disabled by devtools", fname)
             return None
 
@@ -99,7 +88,7 @@ def require_db(function):
     def wrapper(*args, **kwargs):
         fname = f"<function {function.__module__}.{function.__qualname__}>"
         server_url = get_odoo_server_url()
-        iot_box_ip = get_ip()
+        iot_box_ip = system.get_ip()
         if not iot_box_ip or iot_box_ip == "10.11.12.1" or not server_url:
             _logger.info('Ignoring the function %s without a connected database', fname)
             return
@@ -113,50 +102,6 @@ def require_db(function):
     return wrapper
 
 
-if IS_WINDOWS:
-    def start_nginx_server():
-        path_nginx = get_path_nginx()
-        if path_nginx:
-            _logger.info('Start Nginx server: %s\\nginx.exe', path_nginx)
-            subprocess.Popen([str(path_nginx / 'nginx.exe')], cwd=str(path_nginx))
-elif IS_RPI:
-    def start_nginx_server():
-        subprocess.check_call(["sudo", "service", "nginx", "restart"])
-else:
-    def start_nginx_server():
-        pass
-
-
-def check_image():
-    """Check if the current image of IoT Box is up to date
-
-    :return: dict containing major and minor versions of the latest image available
-    :rtype: dict
-    """
-    try:
-        response = requests.get('https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt', timeout=5)
-        response.raise_for_status()
-        data = response.content.decode()
-    except requests.exceptions.HTTPError:
-        _logger.exception('Could not reach the server to get the latest image version')
-        return False
-
-    check_file = {}
-    value_actual = ''
-    for line in data.split('\n'):
-        if line:
-            value, name = line.split('  ')
-            check_file.update({value: name})
-            if name == 'iotbox-latest.zip':
-                value_latest = value
-            elif name == get_img_name():
-                value_actual = value
-    if value_actual == value_latest:  # pylint: disable=E0601
-        return False
-    version = check_file.get(value_latest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
-    return {'major': version[0], 'minor': version[1]}
-
-
 def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     """
     Save server configurations in odoo.conf
@@ -166,7 +111,7 @@ def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     :param enterprise_code: The enterprise code
     :param db_name: The database name
     """
-    update_conf({
+    system.update_conf({
         'remote_server': url,
         'token': token,
         'db_uuid': db_uuid,
@@ -176,74 +121,6 @@ def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     get_odoo_server_url.cache_clear()
 
 
-def generate_password():
-    """
-    Generate an unique code to secure raspberry pi
-    """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for i in range(12))
-    try:
-        shadow_password = crypt.crypt(password, crypt.mksalt())
-        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
-        return password
-    except subprocess.CalledProcessError as e:
-        _logger.exception("Failed to generate password: %s", e.output)
-        return 'Error: Check IoT log'
-
-
-def get_img_name():
-    major, minor = get_version()[1:].split('.')
-    return 'iotboxv%s_%s.zip' % (major, minor)
-
-
-def get_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('8.8.8.8', 1))  # Google DNS
-        return s.getsockname()[0]
-    except OSError as e:
-        _logger.warning("Could not get local IP address: %s", e)
-        return None
-    finally:
-        s.close()
-
-
-@cache
-def get_identifier():
-    if IS_RPI:
-        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
-    elif IS_TEST:
-        return 'test_identifier'
-
-    # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
-    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
-    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    identifier = get_conf('generated_identifier')  # Fallback identifier if windows does not return mb UUID
-    if p.returncode == 0 and p.stdout.decode().strip():
-        return p.stdout.decode().strip()
-
-    _logger.error("Failed to get Windows IoT serial number, defaulting to a random identifier")
-    if not identifier:
-        identifier = secrets.token_hex()
-        update_conf({'generated_identifier': identifier})
-
-    return identifier
-
-
-def get_mac_address():
-    interfaces = netifaces.interfaces()
-    for interface in interfaces:
-        if netifaces.ifaddresses(interface).get(netifaces.AF_INET):
-            addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
-            if addr != '00:00:00:00:00:00':
-                return addr
-
-
-def get_path_nginx():
-    return path_file('nginx')
-
-
 @cache
 def get_odoo_server_url():
     """Get the URL of the linked Odoo database.
@@ -251,40 +128,12 @@ def get_odoo_server_url():
     :return: The URL of the linked Odoo database.
     :rtype: str or None
     """
-    return get_conf('remote_server')
+    return system.get_conf('remote_server')
 
 
 def get_token():
     """:return: The token to authenticate the server"""
-    return get_conf('token')
-
-
-def get_commit_hash():
-    return subprocess.run(
-        ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git', 'rev-parse', '--short', 'HEAD'],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).stdout.decode('ascii').strip()
-
-
-@cache
-def get_version(detailed_version=False):
-    if IS_RPI:
-        image_version = read_file_first_line('/var/odoo/iotbox_version')
-    elif IS_WINDOWS:
-        # updated manually when big changes are made to the windows virtual IoT
-        image_version = '23.11'
-    elif IS_TEST:
-        image_version = 'test'
-
-    version = IOT_CHAR + image_version
-    if detailed_version:
-        # Note: on windows IoT, the `release.version` finish with the build date
-        version += f"-{release.version}"
-        if IS_RPI:
-            version += f'#{get_commit_hash()}'
-
-    return version
+    return system.get_conf('token')
 
 
 def delete_iot_handlers():
@@ -293,12 +142,9 @@ def delete_iot_handlers():
     """
     try:
         iot_handlers = Path(file_path('iot_drivers/iot_handlers'))
-        filenames = [
-            f"odoo/addons/iot_drivers/iot_handlers/{file.relative_to(iot_handlers)}"
-            for file in iot_handlers.glob('**/*')
-            if file.is_file()
-        ]
-        unlink_file(*filenames)
+        for file in iot_handlers.glob('**/*'):
+            if file.is_file():
+                file.unlink()
         _logger.info("Deleted old IoT handlers")
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
@@ -314,11 +160,11 @@ def download_iot_handlers(auto=True, server_url=None):
     :param auto: If True, the download will depend on the parameter set in the database
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
-    etag = get_conf('iot_handlers_etag')
+    etag = system.get_conf('iot_handlers_etag')
     try:
         response = requests.post(
             server_url + '/iot/get_handlers',
-            data={'identifier': get_identifier(), 'auto': auto},
+            data={'identifier': IOT_IDENTIFIER, 'auto': auto},
             timeout=8,
             headers={'If-None-Match': etag} if etag else None,
         )
@@ -333,7 +179,7 @@ def download_iot_handlers(auto=True, server_url=None):
         return
 
     try:
-        update_conf({'iot_handlers_etag': response.headers['ETag'].strip('"')})
+        system.update_conf({'iot_handlers_etag': response.headers['ETag'].strip('"')})
     except KeyError:
         _logger.exception('No ETag in the response headers')
 
@@ -344,7 +190,7 @@ def download_iot_handlers(auto=True, server_url=None):
         return
 
     delete_iot_handlers()
-    path = path_file('odoo', 'addons', 'iot_drivers', 'iot_handlers')
+    path = system.path_file('odoo', 'addons', 'iot_drivers', 'iot_handlers')
     zip_file.extractall(path)
 
 
@@ -398,111 +244,39 @@ def odoo_restart(delay=0):
     IR.start()
 
 
-def path_file(*args):
-    """Return the path to the file from IoT Box root or Windows Odoo
-    server folder
+def download_from_url(url, dest):
+    """Download a file from a URL
 
-    :return: The path to the file
-    """
-    return Path(sys.path[0]).parent.joinpath(*args)
-
-
-def read_file_first_line(filename):
-    path = path_file(filename)
-    if path.exists():
-        with path.open('r') as f:
-            return f.readline().strip('\n')
-
-
-def unlink_file(*filenames):
-    for filename in filenames:
-        path = path_file(filename)
-        if path.exists():
-            path.unlink()
-
-
-def write_file(filename, text, mode='w'):
-    """This function writes 'text' to 'filename' file
-
-    :param filename: The name of the file to write to
-    :param text: The text to write to the file
-    :param mode: The mode to open the file in (Default: 'w')
-    """
-    path = path_file(filename)
-    with open(path, mode) as f:
-        f.write(text)
-
-
-def download_from_url(download_url, path_to_filename):
-    """
-    This function downloads from its 'download_url' argument and
-    saves the result in 'path_to_filename' file
-    The 'path_to_filename' needs to be a valid path + file name
-    (Example: 'C:\\Program Files\\Odoo\\downloaded_file.zip')
+    :param str url: The URL to download the file from
+    :param PathLike dest: The path to the file where to save the downloaded file
     """
     try:
-        request_response = requests.get(download_url, timeout=60)
+        request_response = requests.get(url, timeout=60)
         request_response.raise_for_status()
-        write_file(path_to_filename, request_response.content, 'wb')
-        _logger.info('Downloaded %s from %s', path_to_filename, download_url)
+        dest.write_bytes(request_response.content)
+        _logger.info('Downloaded %s from %s', dest, url)
     except requests.exceptions.RequestException:
-        _logger.exception('Failed to download from %s', download_url)
+        _logger.exception('Failed to download from %s', url)
 
 
-def unzip_file(path_to_filename, path_to_extract):
-    """
-    This function unzips 'path_to_filename' argument to
-    the path specified by 'path_to_extract' argument
-    and deletes the originally used .zip file
-    Example: unzip_file('C:\\Program Files\\Odoo\\downloaded_file.zip', 'C:\\Program Files\\Odoo\\new_folder'))
-    Will extract all the contents of 'downloaded_file.zip' to the 'new_folder' location)
+def unzip_file(zipped, dest):
+    """Unzip a file and delete the .zip file
+
+    :param PathLike zipped: The path to the zip file
+    :param PathLike dest: The path to the directory where to extract the zip file
     """
     try:
-        path = path_file(path_to_filename)
-        with zipfile.ZipFile(path) as zip_file:
-            zip_file.extractall(path_file(path_to_extract))
-        Path(path).unlink()
-        _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
+        with zipfile.ZipFile(zipped) as zip_file:
+            zip_file.extractall(dest)
+        zipped.unlink()
+        _logger.info('Unzipped %s to %s', zipped, dest)
     except Exception:
-        _logger.exception('Failed to unzip %s', path_to_filename)
-
-
-def update_conf(values, section='iot.box'):
-    """Update odoo.conf with the given key and value.
-
-    :param dict values: key-value pairs to update the config with.
-    :param str section: The section to update the key-value pairs in (Default: iot.box).
-    """
-    _logger.debug("Updating odoo.conf with values: %s", values)
-    conf = get_conf()
-
-    if not conf.has_section(section):
-        _logger.debug("Creating new section '%s' in odoo.conf", section)
-        conf.add_section(section)
-
-    for key, value in values.items():
-        conf.set(section, key, value) if value else conf.remove_option(section, key)
-
-        with open(path_file("odoo.conf"), "w", encoding='utf-8') as f:
-            conf.write(f)
-
-
-def get_conf(key=None, section='iot.box'):
-    """Get the value of the given key from odoo.conf, or the full config if no key is provided.
-
-    :param key: The key to get the value of.
-    :param section: The section to get the key from (Default: iot.box).
-    :return: The value of the key provided or None if it doesn't exist, or full conf object if no key is provided.
-    """
-    conf = configparser.RawConfigParser()
-    conf.read(path_file("odoo.conf"))
-
-    return conf.get(section, key, fallback=None) if key else conf  # Return the key's value or the configparser object
+        _logger.exception('Failed to unzip %s', zipped)
 
 
 def disconnect_from_server():
     """Disconnect the IoT Box from the server"""
-    update_conf({
+    system.update_conf({
         'remote_server': '',
         'token': '',
         'db_uuid': '',
@@ -526,7 +300,7 @@ def save_browser_state(url=None, orientation=None):
         "screen_orientation": orientation.name.lower() if orientation else None,
     }
     # Only update the values that are not None
-    update_conf({k: v for k, v in to_update.items() if v is not None})
+    system.update_conf({k: v for k, v in to_update.items() if v is not None})
 
 
 def load_browser_state():
@@ -534,8 +308,8 @@ def load_browser_state():
 
     :return: The URL the browser is on and the orientation of the screen (default to NORMAL)
     """
-    url = get_conf('browser_url')
-    orientation = get_conf('screen_orientation') or Orientation.NORMAL.name
+    url = system.get_conf('browser_url')
+    orientation = system.get_conf('screen_orientation') or Orientation.NORMAL.name
     return url, Orientation[orientation.upper()]
 
 
@@ -579,84 +353,23 @@ def reset_log_level():
     """Reset the log level to the default one if the reset timestamp is reached
     This timestamp is set by the log controller in `iot_drivers/homepage.py` when the log level is changed
     """
-    log_level_reset_timestamp = get_conf('log_level_reset_timestamp')
+    log_level_reset_timestamp = system.get_conf('log_level_reset_timestamp')
     if log_level_reset_timestamp and float(log_level_reset_timestamp) <= time.time():
         _logger.info("Resetting log level to default.")
-        update_conf({
+        system.update_conf({
             'log_level_reset_timestamp': '',
             'log_handler': ':INFO,werkzeug:WARNING',
             'log_level': 'info',
         })
 
 
-def _get_system_uptime():
-    if not IS_RPI:
-        return 0
-    uptime_string = read_file_first_line("/proc/uptime")
-    return float(uptime_string.split(" ")[0])
-
-
-def _get_raspberry_pi_model():
-    """Returns the Raspberry Pi model number (e.g. 4) as an integer
-    Returns 0 if the model can't be determined, or -1 if called on Windows
-
-    :rtype: int
-    """
-    if not IS_RPI:
-        return -1
-    with open('/proc/device-tree/model', encoding='utf-8') as model_file:
-        match = re.search(r'Pi (\d)', model_file.read())
-        return int(match[1]) if match else 0
-
-
-raspberry_pi_model = _get_raspberry_pi_model()
-odoo_start_time = time.monotonic()
-system_start_time = odoo_start_time - _get_system_uptime()
-
-
-def is_ngrok_enabled():
-    """Check if a ngrok tunnel is active on the IoT Box"""
-    try:
-        response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
-        response.raise_for_status()
-        response.json()
-        return True
-    except (requests.exceptions.RequestException, ValueError):
-        # if the request fails or the response is not valid JSON,
-        # it means ngrok is not enabled or not running
-        _logger.debug("Ngrok isn't running.", exc_info=True)
-        return False
-
-
-def toggle_remote_connection(token=""):
-    """Enable/disable remote connection to the IoT Box using ngrok.
-    If the token is provided, it will set up ngrok with the
-    given authtoken, else it will disable the ngrok service.
-
-    :param str token: The ngrok authtoken to use for the connection"""
-    _logger.info("Toggling remote connection with token: %s...", token[:5] if token else "<No Token>")
-    p = subprocess.run(
-        ['sudo', 'ngrok', 'config', 'add-authtoken', token, '--config', '/home/pi/ngrok.yml'],
-        check=False,
-    )
-    if p.returncode == 0:
-        subprocess.run(
-            ['sudo', 'systemctl', 'restart' if token else "stop", 'odoo-ngrok.service'],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
-        )
-        return True
-    return False
-
-
 def check_network(host=None):
-    host = host or get_gateway()
+    host = host or system.get_gateway()
     if not host:
         return None
 
     host = socket.gethostbyname(host)
-    packet_loss, avg_latency = mtr(host)
+    packet_loss, avg_latency = system.mtr(host)
     thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
 
     if packet_loss is None or packet_loss >= 50 or avg_latency is None:
@@ -666,16 +379,3 @@ def check_network(host=None):
     if avg_latency < thresholds["normal"] and packet_loss < 5:
         return "normal"
     return "slow"
-
-
-def get_gateway():
-    """Get the router IP address (default gateway)
-
-    :return: The IP address of the default gateway or None if it can't be determined
-    """
-    gws = netifaces.gateways()
-    default = gws.get("default", {})
-    gw = default.get(netifaces.AF_INET)
-    if gw:
-        return gw[0]
-    return None

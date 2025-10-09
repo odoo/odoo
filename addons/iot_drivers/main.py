@@ -6,11 +6,10 @@ import subprocess
 from threading import Thread
 import time
 
-from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools import certificate, helpers, system, upgrade, wifi
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
-if IS_RPI:
+if system.IS_RPI:
     from dbus.mainloop.glib import DBusGMainLoop
     DBusGMainLoop(set_as_default=True)  # Must be started from main thread
 
@@ -27,9 +26,9 @@ class Manager(Thread):
 
     def __init__(self):
         super().__init__()
-        self.identifier = helpers.get_identifier()
+        self.identifier = system.IOT_IDENTIFIER
         self.domain = self._get_domain()
-        self.version = helpers.get_version(detailed_version=True)
+        self.version = system.get_version(detailed_version=True)
         self.previous_iot_devices = {}
         self.previous_unsupported_devices = {}
 
@@ -37,8 +36,8 @@ class Manager(Thread):
         """
         Get the iot box domain based on the IP address and subject.
         """
-        subject = helpers.get_conf('subject')
-        ip_addr = helpers.get_ip()
+        subject = system.get_conf('subject')
+        ip_addr = system.get_ip()
         if subject and ip_addr:
             return ip_addr.replace('.', '-') + subject.strip('*')
         return ip_addr or '127.0.0.1'
@@ -63,7 +62,7 @@ class Manager(Thread):
             self.domain = new_domain
             changed = True
         # Version change
-        new_version = helpers.get_version(detailed_version=True)
+        new_version = system.get_version(detailed_version=True)
         if self.version != new_version:
             self.version = new_version
             changed = True
@@ -122,19 +121,19 @@ class Manager(Thread):
         """Thread that will load interfaces and drivers and contact the odoo server
         with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
-        if IS_RPI:
+        if system.IS_RPI:
             # ensure that the root filesystem is writable retro compatibility (TODO: remove this in 19.0)
             subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
             subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
 
-            wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
+            wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
 
-        helpers.start_nginx_server()
-        _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
+        system.start_nginx_server()
+        _logger.info("IoT Box Image version: %s", system.get_version(detailed_version=True))
         upgrade.check_git_branch()
 
-        if IS_RPI and helpers.get_odoo_server_url():
-            helpers.generate_password()
+        if system.IS_RPI and helpers.get_odoo_server_url():
+            system.generate_password()
 
         certificate.ensure_validity()
 
@@ -162,8 +161,8 @@ class Manager(Thread):
             try:
                 if self._get_changes_to_send():
                     self._send_all_devices()
-                if IS_RPI and helpers.get_ip() != '10.11.12.1':
-                    wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
+                if system.IS_RPI and system.get_ip() != '10.11.12.1':
+                    wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
                 time.sleep(3)
                 schedule.run_pending()
             except Exception:

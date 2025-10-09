@@ -10,7 +10,8 @@ import websocket
 from threading import Thread
 
 from odoo.addons.iot_drivers import main
-from odoo.addons.iot_drivers.tools import helpers
+from odoo.addons.iot_drivers.tools import helpers, system
+from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
 from odoo.addons.iot_drivers.webrtc_client import webrtc_client
 
@@ -59,7 +60,7 @@ class WebsocketClient(Thread):
             _logger.debug("websocket received a message: %s", pprint.pformat(message))
             payload = message['message']['payload']
 
-            if not helpers.get_identifier() in payload.get('iot_identifiers', []):
+            if not IOT_IDENTIFIER in payload.get('iot_identifiers', []):
                 continue
 
             match message['message']['type']:
@@ -72,7 +73,7 @@ class WebsocketClient(Thread):
                             # Notify the controller that the device is not connected
                             send_to_controller({
                                 'session_id': payload.get('session_id', '0'),
-                                'iot_box_identifier': helpers.get_identifier(),
+                                'iot_box_identifier': IOT_IDENTIFIER,
                                 'device_identifier': device_identifier,
                                 'status': 'disconnected',
                             })
@@ -80,7 +81,7 @@ class WebsocketClient(Thread):
                     helpers.disconnect_from_server()
                     close_server_log_sender_handler()
                 case 'server_update':
-                    helpers.update_conf({
+                    system.update_conf({
                         'remote_server': payload['server_url']
                     })
                     helpers.get_odoo_server_url.cache_clear()
@@ -89,27 +90,27 @@ class WebsocketClient(Thread):
                 case 'webrtc_offer':
                     answer = webrtc_client.offer(payload['offer'])
                     send_to_controller({
-                        'iot_box_identifier': helpers.get_identifier(),
+                        'iot_box_identifier': IOT_IDENTIFIER,
                         'answer': answer,
                     }, method="webrtc_answer")
                 case 'remote_debug':
                     if platform.system() == 'Windows':
                         continue
                     if not payload.get("status"):
-                        helpers.toggle_remote_connection(payload.get("token", ""))
+                        system.toggle_remote_connection(payload.get("token", ""))
                         time.sleep(1)
                     send_to_controller({
                         'session_id': 0,
-                        'iot_box_identifier': helpers.get_identifier(),
+                        'iot_box_identifier': IOT_IDENTIFIER,
                         'device_identifier': None,
                         'status': 'success',
-                        'result': {'enabled': helpers.is_ngrok_enabled()}
+                        'result': {'enabled': system.is_ngrok_enabled()}
                     })
                 case "test_connection":
                     send_to_controller({
                         'session_id': payload['session_id'],
-                        'iot_box_identifier': helpers.get_identifier(),
-                        'device_identifier': helpers.get_identifier(),
+                        'iot_box_identifier': IOT_IDENTIFIER,
+                        'device_identifier': IOT_IDENTIFIER,
                         'status': 'success',
                         'result': {
                             'lan_quality': helpers.check_network(),
@@ -131,7 +132,7 @@ class WebsocketClient(Thread):
         url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
         self.websocket_url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
-        self.db_name = helpers.get_conf('db_name') or ''
+        self.db_name = system.get_conf('db_name') or ''
         self.session_id = ''
         super().__init__()
 

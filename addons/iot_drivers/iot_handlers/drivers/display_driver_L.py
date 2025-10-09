@@ -12,8 +12,9 @@ from odoo import http
 from odoo.addons.iot_drivers.browser import Browser, BrowserState
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, route
+from odoo.addons.iot_drivers.tools import helpers, route, system
 from odoo.addons.iot_drivers.tools.helpers import Orientation
+from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ class DisplayDriver(Driver):
         :return: URL to display or None.
         """
         try:
-            response = requests.get(f"{server_url}/iot/box/{helpers.get_identifier()}/display_url", timeout=5)
+            response = requests.get(f"{server_url}/iot/box/{IOT_IDENTIFIER}/display_url", timeout=5)
             response.raise_for_status()
             data = json.loads(response.content.decode())
             return data.get(self.device_identifier)
@@ -112,7 +113,7 @@ class DisplayDriver(Driver):
         self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}")
 
     def _action_close_customer_display(self, data):
-        helpers.update_conf({"browser_url": "", "screen_orientation": ""})
+        system.update_conf({"browser_url": "", "screen_orientation": ""})
         self.browser.disable_kiosk_mode()
         self.update_url()
 

@@ -5,46 +5,18 @@ import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
-    path_file,
     require_db,
     toggleable,
-    unlink_file,
 )
-from odoo.addons.iot_drivers.tools.system import rpi_only, IS_RPI, IS_TEST
+from odoo.addons.iot_drivers.tools.system import (
+    rpi_only,
+    IS_TEST,
+    git,
+    pip,
+    path_file,
+)
 
 _logger = logging.getLogger(__name__)
-
-
-def git(*args):
-    """Run a git command with the given arguments, taking system
-    into account.
-
-    :param args: list of arguments to pass to git
-    """
-    git_executable = 'git' if IS_RPI else path_file('git', 'cmd', 'git.exe')
-    command = [git_executable, f'--work-tree={path_file("odoo")}', f'--git-dir={path_file("odoo", ".git")}', *args]
-
-    p = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=False)
-    if p.returncode == 0:
-        return p.stdout.strip()
-    return None
-
-
-def pip(*args):
-    """Run a pip command with the given arguments, taking system
-    into account.
-
-    :param args: list of arguments to pass to pip
-    """
-    python_executable = [] if IS_RPI else [path_file('python', 'python.exe'), '-m']
-    command = [*python_executable, 'pip', *args]
-
-    if IS_RPI and args[0] == 'install':
-        command.append('--user')
-        command.append('--break-system-package')
-
-    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    return p.returncode
 
 
 def get_db_branch(server_url):
@@ -90,7 +62,9 @@ def check_git_branch(server_url=None):
 
         if db_branch != local_branch:
             # Repository updates
-            unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
+            shallow_lock = path_file("odoo/.git/shallow.lock")
+            if shallow_lock.exists():
+                shallow_lock.unlink()  # In case of previous crash/power-off, clean old lockfile
             checkout(db_branch)
             update_requirements()
 
@@ -148,7 +122,7 @@ def update_requirements():
         return
 
     _logger.info("Updating pip requirements")
-    pip('install', '-r', requirements_file)
+    pip('-r', requirements_file)
 
 
 @rpi_only
