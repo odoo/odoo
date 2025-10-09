@@ -7,22 +7,63 @@
         <field name="arch" type="xml">
             <form string="Website Public Categories">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="is_published" widget="website_redirect_button"/>
+                    </div>
                     <field
                         name="image_1920"
                         widget="image"
                         class="oe_avatar"
                         options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
                     />
-                    <div>
-                        <group class="col-md-4 col-lg-6 pe-3">
-                            <field name="name"/>
-                            <field name="parent_id"/>
-                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                            <field name="sequence" groups="base.group_no_one"/>
-                            <field name="website_description"/>
-                            <field name="cover_image" widget="image" alt="Cover Image"/>
-                        </group>
+                    <div class="oe_title">
+                        <label for="name" string="Category"/>
+                        <h1>
+                            <field
+                                name="name"
+                                class="text-break"
+                                widget="text"
+                                options="{'line_breaks': False}"
+                            />
+                        </h1>
                     </div>
+                    <group class="col-md-4 col-lg-6">
+                        <field name="parent_id"/>
+                        <field
+                            name="website_id"
+                            options="{'no_create': True}"
+                            groups="website.group_multi_website"
+                        />
+                        <field name="not_in_shop" invisible="parent_id"/>
+                    </group>
+                    <notebook>
+                        <page name="products_page" string="Products">
+                            <field name="product_tmpl_ids">
+                                <list editable="bottom" open_form_view="True">
+                                    <field name="name" readonly="1"/>
+                                    <field name="default_code" readonly="1"/>
+                                    <field name="is_published"/>
+                                    <control>
+                                        <create string="Add a product"/>
+                                    </control>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="description_page" string="Description">
+                            <group>
+                                <group>
+                                    <field name="website_description"/>
+                                </group>
+                                <group>
+                                    <field
+                                        name="cover_image"
+                                        widget="image"
+                                        alt="Cover Image"
+                                    />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
