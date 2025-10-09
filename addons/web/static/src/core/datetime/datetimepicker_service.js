@@ -109,17 +109,19 @@ export const datetimePickerService = {
 
                 const computeBasePickerProps = () => {
                     const nextProps = markValuesRaw(hookParams.pickerProps);
-                    const nextStringProps = stringifyProps(nextProps);
+                    const oldStringProps = stringProps;
 
-                    if (shallowEqual(stringProps, nextStringProps)) {
+                    stringProps = stringifyProps(nextProps);
+                    lastAppliedStringValue = stringProps.value;
+
+                    if (shallowEqual(oldStringProps, stringProps)) {
                         return;
                     }
 
-                    stringProps = nextStringProps;
                     inputsChanged = ensureArray(nextProps.value).map(() => false);
 
                     for (const [key, value] of Object.entries(nextProps)) {
-                        if (pickerProps[key] !== value && !areDatesEqual(pickerProps[key], value)) {
+                        if (!areDatesEqual(pickerProps[key], value)) {
                             pickerProps[key] = value;
                         }
                     }
