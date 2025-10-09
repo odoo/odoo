@@ -237,6 +237,30 @@ class TestMenu(common.TransactionCase):
         submenu.url = '/sub/slug-3'
         test_full_case(submenu)
 
+        # Do the same test with a menu that is linked to a page
+        page = self.env['website.page'].create({
+            'name': 'Page with number',
+            'url': '/sub/page-3',
+            'website_id': website_1.id,
+            'type': 'qweb',
+            "arch": "<div></div>",
+        })
+
+        menu = Menu.create({
+            'name': 'Menu with page',
+            'website_id': website_1.id,
+        })
+        menu.page_id = page.id
+        self.assertEqual(menu.url, page.url, "Menu url should be the same than the page url")
+
+        test_full_case(menu.copy())
+
+        with MockRequest(self.env, website=website_1), \
+             patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
+
+            self.request_url_mock = 'http://localhost:8069/sub/slug-3'
+            self.assertFalse(menu._is_active(), "Page linked, same unslug, should not match")
+
     def test_menu_group_ids(self):
         Menu = self.env['website.menu']
         menu = Menu.create({

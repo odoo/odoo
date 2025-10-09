@@ -238,6 +238,8 @@ class WebsiteMenu(models.Model):
             menu_url = url_parse(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
+                if self.page_id and menu_url.path != request_url.path:
+                    return False
                 if not (
                     set(menu_url.decode_query().items(multi=True))
                     <= set(request_url.decode_query().items(multi=True))
