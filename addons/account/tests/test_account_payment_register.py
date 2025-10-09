@@ -2073,3 +2073,46 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             {'amount_currency': 300, 'date_maturity': fields.Date.from_string('2017-01-06')},
             {'amount_currency': 600, 'date_maturity': fields.Date.from_string('2017-01-11')},
         ])
+
+    def test_payment_register_misc_different_batches(self):
+        """ Tests that payments that should be in different batches stay in different ones """
+        move1 = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'date': '2025-01-01',
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': self.partner_a.id,
+                    'balance': 100.0,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': self.partner_b.id,
+                    'balance': 100.0,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'balance': -200.0,
+                }),
+            ],
+        })
+        move2 = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'date': '2025-01-01',
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': self.partner_a.id,
+                    'balance': 100.0,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'balance': -100.0,
+                }),
+            ],
+        })
+
+        payments = self._register_payment(move1 + move2, group_payment=False)
+        self.assertEqual(len(payments), 3, "We should get 2 payments from the first move and 1 for the second one")
