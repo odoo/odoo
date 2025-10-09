@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+import csv
+import pytz
+
+from datetime import datetime, time
+
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import babel_locale_parse
-from odoo.tools.date_utils import weeknumber
-import pytz
-from datetime import datetime, time
+from odoo.tools import babel_locale_parse, file_open, file_path
+from odoo.tools.date_utils import convert_timezone, weeknumber
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -92,22 +95,6 @@ class ResourceCalendarLeaves(models.Model):
                 leave._notify_change(message)
         leaves_to_recreate.sudo()._create_resource_leave()
 
-    def _convert_timezone(self, utc_naive_datetime, tz_from, tz_to):
-        """
-            Convert a naive date to another timezone that initial timezone
-            used to generate the date.
-            :param utc_naive_datetime: utc date without tzinfo
-            :type utc_naive_datetime: datetime
-            :param tz_from: timezone used to obtained `utc_naive_datetime`
-            :param tz_to: timezone in which we want the date
-            :return: datetime converted into tz_to without tzinfo
-            :rtype: datetime
-        """
-        naive_datetime_from = utc_naive_datetime.astimezone(tz_from).replace(tzinfo=None)
-        aware_datetime_to = tz_to.localize(naive_datetime_from)
-        utc_naive_datetime_to = aware_datetime_to.astimezone(pytz.utc).replace(tzinfo=None)
-        return utc_naive_datetime_to
-
     def _ensure_datetime(self, datetime_representation, date_format=None):
         """
             Be sure to get a datetime object if we have the necessary information.
@@ -131,12 +118,12 @@ class ResourceCalendarLeaves(models.Model):
                 continue
             user_tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
             calendar_tz = pytz.timezone(self.env['resource.calendar'].browse(vals['calendar_id']).tz)
-            if user_tz != calendar_tz:
+            if user_tz != calendar_tz and self.env.context.get('convert_datetime', True):
                 datetime_from = self._ensure_datetime(vals['date_from'], '%Y-%m-%d %H:%M:%S')
                 datetime_to = self._ensure_datetime(vals['date_to'], '%Y-%m-%d %H:%M:%S')
                 if datetime_from and datetime_to:
-                    vals['date_from'] = self._convert_timezone(datetime_from, user_tz, calendar_tz)
-                    vals['date_to'] = self._convert_timezone(datetime_to, user_tz, calendar_tz)
+                    vals['date_from'] = convert_timezone(datetime_from, user_tz, calendar_tz)
+                    vals['date_to'] = convert_timezone(datetime_to, user_tz, calendar_tz)
         return vals_list
 
     @api.model_create_multi
@@ -161,6 +148,136 @@ class ResourceCalendarLeaves(models.Model):
         self._reevaluate_leaves(time_domain_dict)
 
         return res
+
+    def _get_holidays_from_csv(self, years, csv_file_path):
+        """
+            Load holidays for given country and year(s).
+            Args:
+                years: a single year (int) or iterable of years (e.g. range(2025, 2027))
+                file_path: expects file path for  "public_holidays_in.csv" in CSV_DIR
+
+            Returns:
+                List of tuples (datetime.date, holiday_name)
+        """
+        # Normalize to set of years
+        year_set = {years} if isinstance(years, int) else set(years)
+        holidays = []
+        with file_open(csv_file_path) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if not row.get("date") or not row.get("holiday"):
+                    continue
+                dt = datetime.strptime(row["date"], "%Y-%m-%d").date()
+                if dt.year > max(year_set):
+                    break
+                if dt.year in year_set:
+                    holidays.append((dt, row["holiday"].strip()))
+
+        return holidays
+
+    def _generate_public_holidays(self, companies, year_range, convert_datetime=True):
+        response = []
+        existing_holidays_dict = dict(self.env["resource.calendar.leaves"]._read_group(
+            domain=[
+                ('company_id', 'in', companies.ids),
+                ('date_from', '>=', datetime(year_range[0] - 1, 12, 31, 0, 0, 0)),
+                ('date_to', '<=', datetime(year_range[-1] + 1, 1, 2, 0, 0, 0)),
+                ('resource_id', '=', False),
+            ],
+            groupby=['company_id'],
+            aggregates=['id:recordset'],
+        ))
+
+        for company in companies:
+            country_code = company.country_code.lower()
+            if not country_code:
+                response.append({
+                    'title': self.env._('No Country Code'),
+                    'type': 'danger',
+                    'message': self.env._('Please select a country in %(company)s to load public holidays.', company=company.name),
+                })
+                continue
+
+            try:
+                csv_file_path = file_path(f"hr_holidays/data/public_holidays/public_holidays_{country_code}.csv")
+            except FileNotFoundError:
+                response.append({
+                    'title': self.env._('No Public Holidays'),
+                    'type': 'danger',
+                    'message': self.env._('Public holidays are not available for %(country)s', country=company.country_id.name),
+                })
+                continue
+
+            public_holidays_list = self._get_holidays_from_csv(year_range, csv_file_path)
+            overlapped_holidays = False
+            company_tz = pytz.timezone(company.resource_calendar_id.tz)
+            public_holidays_values_dict = {}
+
+            for holiday_date, holiday_name in public_holidays_list:
+                holiday_start_utc = convert_timezone(datetime.combine(holiday_date, time.min), pytz.utc, company_tz)
+                holiday_end_utc = convert_timezone(datetime.combine(holiday_date, time.max), pytz.utc, company_tz)
+                overlapping = any(
+                    holiday.date_from <= holiday_end_utc and
+                    holiday.date_to >= holiday_start_utc
+                    for holiday in existing_holidays_dict.get(company, [])
+                )
+                if overlapping:
+                    overlapped_holidays = True
+                    continue
+                if holiday_date in public_holidays_values_dict:
+                    public_holidays_values_dict[holiday_date]['name'] += f" / {holiday_name}"
+                else:
+                    public_holidays_values_dict[holiday_date] = {
+                        'name': holiday_name,
+                        'date_from': holiday_start_utc,
+                        'date_to': holiday_end_utc,
+                        'company_id': company.id,
+                    }
+
+            new_public_holidays = self.env['resource.calendar.leaves'].with_context(convert_datetime=convert_datetime).create(
+                list(public_holidays_values_dict.values()),
+            )
+            notification = {
+                'title': self.env._('Public Holidays Import Notification'),
+                'type': 'success',
+                'message': self.env._('No new public time off were added as they already exist.'),
+            }
+            if not new_public_holidays:
+                response.append(notification)
+            else:
+                notification['message'] = self.env._(
+                    "Public holidays have been successfully created for %(company)s for the next %(years)s years.",
+                    company=company.name, years=len(year_range))
+                if overlapped_holidays:
+                    notification['message'] += " " + self.env._("Some were overlapping existing ones, not all records have been created.")
+                response.append(notification)
+
+        return response
+
+    def load_public_holidays(self, companies=False, convert_datetime=True):
+        notifications = []
+        if not companies:
+            companies = self.env.companies
+        current_year = datetime.now().year
+        notifications.extend(self._generate_public_holidays(
+            year_range=range(current_year, current_year + 5),
+            companies=companies or self.env.companies,
+            convert_datetime=convert_datetime,
+        ))
+        for notification in notifications:
+            self.env['bus.bus']._sendone(
+                self.env.user.partner_id,
+                'simple_notification',
+                notification,
+            )
+
+    def _cron_load_current_year_public_holidays(self):
+        current_year = datetime.now().year
+        self._generate_public_holidays(
+            year_range=[current_year, current_year + 1],
+            companies=self.env.companies,
+            convert_datetime=False,
+        )
 
 
 class ResourceCalendar(models.Model):

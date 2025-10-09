@@ -20,6 +20,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Classic 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
+            'company_id': cls.company.id,
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),

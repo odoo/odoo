@@ -18,4 +18,13 @@
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
     </record>
+
+    <record id="ir_cron_load_current_year_public_holidays" model="ir.cron">
+        <field name="name">Time off: Load Current Year Public Holidays</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_load_current_year_public_holidays()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">months</field>
+    </record>
 </odoo>

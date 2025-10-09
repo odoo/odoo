@@ -491,3 +491,18 @@ def weekend(locale: babel.Locale, date: date):
         - weekend of Sat 30 Aug -> Sat 30 Aug
     """
     return weekstart(locale, date) + relativedelta(days=6)
+
+
+def convert_timezone(utc_naive_datetime: datetime, tz_from: tzinfo, tz_to: tzinfo) -> datetime:
+    """
+    Convert a naive UTC datetime to another timezone, considering the initial timezone.
+
+    :param utc_naive_datetime: UTC datetime without tzinfo.
+    :param tz_from: Timezone used to obtain `utc_naive_datetime`.
+    :param tz_to: Target timezone for the conversion.
+    :return: Datetime converted into `tz_to` without tzinfo.
+    :rtype: datetime
+    """
+    naive_datetime_from = utc_naive_datetime.astimezone(tz_from).replace(tzinfo=None)
+    aware_datetime_to = tz_to.localize(naive_datetime_from)
+    return aware_datetime_to.astimezone(pytz.utc).replace(tzinfo=None)

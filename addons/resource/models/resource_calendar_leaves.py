@@ -34,8 +34,7 @@ class ResourceCalendarLeaves(models.Model):
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(
-        'res.company', string="Company", readonly=True, store=True,
-        default=lambda self: self.env.company, compute='_compute_company_id')
+        'res.company', string="Company", default=lambda self: self.env.company)
     calendar_id = fields.Many2one(
         'resource.calendar', "Working Hours",
         compute='_compute_calendar_id', store=True, readonly=False,
@@ -54,11 +53,6 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_calendar_id(self):
         for leave in self.filtered('resource_id'):
             leave.calendar_id = leave.resource_id.calendar_id
-
-    @api.depends('calendar_id')
-    def _compute_company_id(self):
-        for leave in self:
-            leave.company_id = leave.calendar_id.company_id or self.env.company
 
     @api.depends('date_from')
     def _compute_date_to(self):
