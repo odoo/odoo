@@ -72,6 +72,9 @@ export class TimeOffCalendarModel extends CalendarModel {
             context["default_date_from"] = serializeDateTime(
                 deserialize(context["default_date_from"]).set({ hours: 7 })
             );
+            if (!("leave_date_from" in context)) {
+                context["leave_date_from"] = context["default_date_from"];
+            }
         }
         if ("default_date_to" in context) {
             context["default_date_to"] = serializeDateTime(
