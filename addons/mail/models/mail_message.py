@@ -602,6 +602,10 @@ class Message(models.Model):
     def create(self, values_list):
         tracking_values_list = []
         for values in values_list:
+            if not (self.env.user.has_group('base.group_user') or self.env.su):
+                values.pop('author_id', None)
+                values.pop('email_from', None)
+                self = self.with_context({k: v for k, v in self.env.context.items() if k not in ['default_author_id', 'default_email_from']})  # noqa: PLW0642
             if 'email_from' not in values:  # needed to compute reply_to
                 _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None, raise_on_email=False)
                 values['email_from'] = email_from
@@ -712,6 +716,9 @@ class Message(models.Model):
         return super().fetch(field_names)
 
     def write(self, vals):
+        if not (self.env.user.has_group('base.group_user') or self.env.su):
+            vals.pop('author_id', None)
+            vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
