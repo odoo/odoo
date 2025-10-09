@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
+from odoo.tools import str2bool
 
 
 class AccountMove(models.Model):
@@ -62,6 +63,21 @@ class AccountMove(models.Model):
                 move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        moves = super().create(vals_list)
+        auto_invoice = self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
+        for move in moves:
+            if (
+                move.is_sale_document(include_receipts=True)
+                and ('website_id' in self._fields and move.website_id)
+                and str2bool(auto_invoice)
+            ):
+                move.commercial_partner_id.button_account_peppol_check_partner_endpoint(
+                    company=move.company_id,
+                )
+        return moves
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
