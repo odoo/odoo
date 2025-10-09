@@ -33,6 +33,7 @@ MODELS_TO_INCLUDE = [
 # This allows incremental conversion of JS model definitions to Python definitions,
 # so new models can be progressively exposed without fetching everything.
 MODELS_TO_EXPOSE = [
+    "mail.activity",
     "mail.message",
     "mail.message.link.preview",
 ]
