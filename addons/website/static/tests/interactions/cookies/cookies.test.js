@@ -23,7 +23,7 @@ function getCookiesBarTemplate(withToggleButton = false) {
                     ? '<a href="#" class="o_cookies_bar_toggle">Update Cookies Preferences</a>'
                     : ""
             }
-            <div id="website_cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar" data-vcss="001">
+            <div id="website_cookies_bar" class="s_popup" data-name="Cookies Bar" data-vcss="001">
                 <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete modal_shown"
                         style="display: none;"
                         data-show-after="0"
