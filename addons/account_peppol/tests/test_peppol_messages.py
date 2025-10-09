@@ -424,8 +424,44 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         # the cron is ran asynchronously and should be agnostic from the current self.env.company
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
-        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'error'])
+        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should not be sent
+        self.assertRecordValues((move_1 + move_2 + move_3), [
+            {'peppol_move_state': 'processing', 'is_move_sent': True},
+            {'peppol_move_state': 'processing', 'is_move_sent': True},
+            {'peppol_move_state': False, 'is_move_sent': True},  # only sent by email
+        ])
+
+    def test_peppol_send_multi_async_mixed(self):
+        """Try to send invoices to partners with multiple sending methods each. """
+        peppol_partner = self.env['res.partner'].create({
+            'name': 'Peppol partner',
+            'country_id': self.env.ref('base.be').id,
+            'company_registry': '0477472701',
+        })
+        self.assertRecordValues(peppol_partner, [{
+            'peppol_verification_state': 'not_verified',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
+        not_peppol_partner = self.env['res.partner'].create({
+            'name': 'Not Peppol partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        self.assertEqual(not_peppol_partner.peppol_verification_state, 'not_verified')
+        move_1 = self.create_move(peppol_partner)
+        move_2 = self.create_move(not_peppol_partner)
+        (move_1 + move_2).action_post()
+        wizard = self.create_send_and_print(move_1 + move_2)
+        self.assertEqual(peppol_partner.peppol_verification_state, 'valid')
+        self.assertEqual(not_peppol_partner.peppol_verification_state, 'not_verified')
+        wizard.action_send_and_print()
+        self.assertEqual((move_1 + move_2).mapped('is_being_sent'), [True, True])
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertRecordValues((move_1 + move_2), [
+            {'peppol_move_state': 'processing', 'is_move_sent': True},
+            {'peppol_move_state': False, 'is_move_sent': True},  # only sent by email
+        ])
 
     def test_available_peppol_sending_methods(self):
         company_us = self.setup_other_company()['company']  # not a valid Peppol country
