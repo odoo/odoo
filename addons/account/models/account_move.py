@@ -3289,6 +3289,7 @@ class AccountMove(models.Model):
             tax_rep_amounts = current_tax_amount_per_rep_line.setdefault(tax_line.tax_repartition_line_id.id, {
                 'tax_amount_currency': 0.0,
                 'tax_amount': 0.0,
+                'tax_type': tax_line.tax_line_id.amount_type,
             })
             tax_rep_amounts['tax_amount_currency'] += sign * tax_line.amount_currency
             tax_rep_amounts['tax_amount'] += sign * tax_line.balance
@@ -3314,7 +3315,7 @@ class AccountMove(models.Model):
                 diff = current_tax_rep_amounts[key] - computed_tax_rep_amounts[key]
                 abs_diff = abs(diff)
 
-                if currency.is_zero(abs_diff):
+                if currency.is_zero(abs_diff) or current_tax_rep_amounts['tax_type'] == 'fixed':
                     continue
 
                 diff_sign = -1 if diff < 0 else 1
