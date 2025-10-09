@@ -11,6 +11,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
+@common.tagged('at_install', '-post_install')
 class SurveyCase(common.TransactionCase):
 
     @classmethod

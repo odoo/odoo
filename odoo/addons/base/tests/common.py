@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
 from odoo import Command, modules
-from odoo.tests.common import new_test_user, TransactionCase, HttpCase
+from odoo.tests.common import new_test_user, TransactionCase, HttpCase, tagged
 from odoo.tools.mail import email_split_and_format
 
 DISABLED_MAIL_CONTEXT = {
@@ -16,7 +16,7 @@ DISABLED_MAIL_CONTEXT = {
     'no_reset_password': True,
 }
 
-
+@tagged('at_install', '-post_install')
 class BaseCommon(TransactionCase):
 
     @classmethod

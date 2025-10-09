@@ -5,7 +5,7 @@ from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
-
+seen = set()
 class TagsSelector(object):
     """ Test selector based on tags. """
     filter_spec_re = re.compile(r'''
@@ -65,6 +65,14 @@ class TagsSelector(object):
         if not hasattr(test, 'test_tags'): # handle the case where the Test does not inherit from BaseCase and has no test_tags
             _logger.debug("Skipping test '%s' because no test_tag found.", test)
             return False
+
+        if self.include == {('at_install', None, None, None, None)}:
+            at_install = 'at_install' in test.test_tags
+            post_install = 'post_install' in test.test_tags
+            if not (at_install ^ post_install):
+                if test.__class__ not in seen:
+                    seen.add(test.__class__)
+                    _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', test.__class__)
 
         test_module = test.test_module
         test_class = test.__class__.__name__

@@ -1,0 +1,35 @@
+2025-10-09 11:41:56,490 2785580 [1;32m[1;49mINFO[0m ? odoo: Odoo version 19.1a1 
+2025-10-09 11:41:56,490 2785580 [1;32m[1;49mINFO[0m ? odoo: Using configuration file at /home/xdo/.odoorc 
+2025-10-09 11:41:56,490 2785580 [1;32m[1;49mINFO[0m ? odoo: addons paths: _NamespacePath(['/home/xdo/src/master/odoo/odoo/addons', '/home/xdo/.local/share/Odoo/addons/19.1', '/home/xdo/src/master/odoo/addons', '/home/xdo/src/master/enterprise']) 
+2025-10-09 11:41:56,491 2785580 [1;32m[1;49mINFO[0m ? odoo: database: default@default:default 
+2025-10-09 11:41:56,745 2785580 [1;32m[1;49mINFO[0m ? odoo.service.server: HTTP service (werkzeug) running on localhost:8069 
+2025-10-09 11:41:56,774 2785580 [1;32m[1;49mINFO[0m 90739633-master-all odoo.tests.common: Importing test framework 
+2025-10-09 11:41:56,784 2785580 [1;32m[1;49mINFO[0m 90739633-master-all odoo.modules.loading: loading 1 modules... 
+2025-10-09 11:41:56,790 2785580 [1;33m[1;49mWARNING[0m 90739633-master-all odoo.modules.loading: Transient module states were reset 
+2025-10-09 11:41:56,791 2785580 [1;31m[1;49mERROR[0m 90739633-master-all odoo.registry: Failed to load registry 
+2025-10-09 11:41:56,791 2785580 [1;37m[1;41mCRITICAL[0m 90739633-master-all odoo.service.server: Failed to initialize database `90739633-master-all`. 
+Traceback (most recent call last):
+  File "/home/xdo/src/master/odoo/odoo/service/server.py", line 1509, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xdo/src/master/odoo/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xdo/src/master/odoo/odoo/orm/registry.py", line 185, in new
+    load_modules(
+  File "/home/xdo/src/master/odoo/odoo/modules/loading.py", line 390, in load_modules
+    load_module_graph(
+  File "/home/xdo/src/master/odoo/odoo/modules/loading.py", line 268, in load_module_graph
+    from odoo.tests import loader  # noqa: PLC0415
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xdo/src/master/odoo/odoo/tests/loader.py", line 10, in <module>
+    from .tag_selector import TagsSelector
+  File "/home/xdo/src/master/odoo/odoo/tests/tag_selector.py", line 9, in <module>
+    class TagsSelector(object):
+  File "/home/xdo/src/master/odoo/odoo/tests/tag_selector.py", line 60, in TagsSelector
+    print(self.include)
+          ^^^^
+NameError: name 'self' is not defined
+2025-10-09 11:41:56,793 2785580 [1;32m[1;49mINFO[0m 90739633-master-all odoo.service.server: Initiating shutdown 
+2025-10-09 11:41:56,793 2785580 [1;32m[1;49mINFO[0m 90739633-master-all odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2025-10-09 11:41:57,247 2785580 [1;32m[1;49mINFO[0m 90739633-master-all odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  

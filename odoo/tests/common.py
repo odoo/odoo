@@ -314,7 +314,7 @@ class BaseCase(case.TestCase):
         super().__init_subclass__()
         if cls.__module__.startswith('odoo.addons.'):
             if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard', 'post_install'}
+                cls.test_tags = {'standard'}
             cls.test_module = cls.__module__.split('.')[2]
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
@@ -2108,6 +2108,31 @@ class JsonRpcException(Exception):
         self.code = code
 
 
+def tagged(*tags):
+    """A decorator to tag BaseCase objects.
+
+    Tags are stored in a set that can be accessed from a 'test_tags' attribute.
+
+    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
+
+    By default, all Test classes from odoo.tests.common have a test_tags
+    attribute that defaults to 'standard' and 'post_install'.
+
+    When using class inheritance, the tags ARE inherited.
+    """
+    include = {t for t in tags if not t.startswith('-')}
+    exclude = {t[1:] for t in tags if t.startswith('-')}
+
+    def tags_decorator(obj):
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        at_install = 'at_install' in obj.test_tags
+        post_install = 'post_install' in obj.test_tags
+        if not at_install and not post_install:
+            obj.test_tags.add('post_install')
+        return obj
+    return tags_decorator
+
+@tagged('post_install', '-at_install')
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
@@ -2612,31 +2637,6 @@ def can_import(module):
         return False
     else:
         return True
-
-
-def tagged(*tags):
-    """A decorator to tag BaseCase objects.
-
-    Tags are stored in a set that can be accessed from a 'test_tags' attribute.
-
-    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
-
-    By default, all Test classes from odoo.tests.common have a test_tags
-    attribute that defaults to 'standard' and 'post_install'.
-
-    When using class inheritance, the tags ARE inherited.
-    """
-    include = {t for t in tags if not t.startswith('-')}
-    exclude = {t[1:] for t in tags if t.startswith('-')}
-
-    def tags_decorator(obj):
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
-        at_install = 'at_install' in obj.test_tags
-        post_install = 'post_install' in obj.test_tags
-        if not (at_install ^ post_install):
-            _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
-        return obj
-    return tags_decorator
 
 
 def at_install(func):

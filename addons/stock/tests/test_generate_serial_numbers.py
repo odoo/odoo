@@ -3,9 +3,10 @@
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, tagged
 
 
+@tagged('at_install', '-post_install')
 class StockGenerateCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):

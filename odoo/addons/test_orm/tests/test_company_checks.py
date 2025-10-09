@@ -1,10 +1,11 @@
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import common, patch
+from odoo.tests import patch
+from odoo.tests.common import TransactionCase
 from odoo.tools import frozendict
 
 
-class TestCompanyCheck(common.TransactionCase):
+class TestCompanyCheck(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
