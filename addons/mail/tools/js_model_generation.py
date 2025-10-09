@@ -38,4 +38,5 @@ MODELS_TO_EXPOSE = [
     "mail.followers",
     "mail.message",
     "mail.message.link.preview",
+    "res.lang",
 ]
