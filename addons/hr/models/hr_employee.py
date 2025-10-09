@@ -72,6 +72,14 @@ class HrEmployee(models.Model):
     )
     versions_count = fields.Integer(compute='_compute_versions_count', groups="hr.group_hr_user")
 
+    contract_template_id = fields.Many2one(
+        'hr.version',
+        string="Contract Template",
+        groups="hr.group_hr_user,hr_payroll.group_hr_payroll_user",
+        domain=lambda self: [('company_id', '=', self.env.company.id), ('employee_id', '=', False)],
+        help="Select a contract template to auto-fill form fields with predefined values.",
+    )
+
     @api.model
     def _lang_get(self):
         return self.env['res.lang'].get_installed()
@@ -389,7 +397,8 @@ class HrEmployee(models.Model):
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
         if self.contract_template_id:
-            whitelist = self.env['hr.version']._get_whitelist_fields_from_template()
+            template_company = self.contract_template_id.company_id
+            whitelist = self.contract_template_id.with_company(template_company)._get_whitelist_fields_from_template()
             for field in self.contract_template_id._fields:
                 if field in whitelist and not self.env['hr.version']._fields[field].related:
                     self[field] = self.contract_template_id[field]
