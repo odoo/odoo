@@ -426,11 +426,19 @@ export class PosStore extends Reactive {
             }
         }
         const orderIsDeleted = await this.deleteOrders([order]);
-        if (orderIsDeleted) {
-            order.uiState.displayed = false;
-            this.afterOrderDeletion();
+        if (!orderIsDeleted) {
+            return false;
         }
-        return orderIsDeleted;
+        order.uiState.displayed = false;
+        // Delete refund lines linked to the current order
+        const linkedRefundLines = this.linesToRefund.filter(
+            (refund) => refund.destination_order_uuid === order.uuid
+        );
+        for (const refudnLine of linkedRefundLines) {
+            delete refudnLine.line?.order_id?.uiState?.lineToRefund[refudnLine.line_uuid];
+        }
+        this.afterOrderDeletion();
+        return true;
     }
     afterOrderDeletion() {
         this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
