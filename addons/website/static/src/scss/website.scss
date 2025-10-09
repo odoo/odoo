@@ -1764,7 +1764,17 @@ header {
             }
         }
         border-radius: o-website-value('menu-border-radius') !important;
-        box-shadow: o-website-value('menu-box-shadow') !important;
+        
+        @if o-website-value('menu-shadow-class') == 'shadow' {
+            box-shadow: var(--box-shadow) !important;
+        } @else if o-website-value('menu-shadow-class') == 'shadow-sm' {
+            box-shadow: var(--box-shadow-sm) !important;
+        } @else if o-website-value('menu-shadow-class') == 'shadow-lg' {
+            box-shadow: var(--box-shadow-lg) !important;
+        } @else if o-website-value('menu-shadow-class') == 'o-shadow-custom' {
+            box-shadow: o-website-value('menu-box-shadow-style') !important;
+        }
+        
 
         &.o_header_force_no_radius {
             border-radius: 0 !important;

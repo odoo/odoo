@@ -3,30 +3,40 @@
 
 <t t-name="html_builder.ShadowOption">
     <BuilderRow label.translate="Shadow">
-       <BuilderButtonGroup action="props.setShadowModeAction">
-         <BuilderButton actionValue="'none'" id="'no_shadow'" className="'lh-1'">None</BuilderButton>
-         <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
-         <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
-       </BuilderButtonGroup>
+        <BuilderSelect action="props.setShadowClassAction">
+            <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow'">Normal</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow-sm'">Small</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow-lg'">Large</BuilderSelectItem>
+            <BuilderSelectItem id="'custom_shadow'" actionParam="'o-shadow-custom'">Custom</BuilderSelectItem>
+        </BuilderSelect>
     </BuilderRow>
-    <BuilderContext t-if="!this.isActiveItem('no_shadow')" action="props.setShadowAction">
-        <BuilderRow label.translate="Color" level="1">
-            <BuilderColorPicker actionParam="'color'"  enabledTabs="['solid', 'custom']"/>
+    <t t-if="this.isActiveItem('custom_shadow')">
+        <BuilderRow label.translate="Outset/Inset" level="1">
+            <BuilderButtonGroup action="props.setShadowModeAction">
+                <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
+                <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
+            </BuilderButtonGroup>
         </BuilderRow>
+        <BuilderContext action="props.setShadowStyleAction">
+            <BuilderRow label.translate="Color" level="1">
+                <BuilderColorPicker actionParam="'color'" enabledTabs="['solid', 'custom']"/>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
-            <BuilderNumberInput actionParam="'offsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
-            <BuilderNumberInput actionParam="'offsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
-        </BuilderRow>
+            <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
+                <BuilderNumberInput actionParam="'offsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
+                <BuilderNumberInput actionParam="'offsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Blur" level="1">
-            <BuilderNumberInput actionParam="'blur'" unit="'px'"/>
-        </BuilderRow>
+            <BuilderRow label.translate="Blur" level="1">
+                <BuilderNumberInput actionParam="'blur'" unit="'px'"/>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Spread" level="1">
-            <BuilderNumberInput actionParam="'spread'" unit="'px'"/>
-        </BuilderRow>
-    </BuilderContext>
+            <BuilderRow label.translate="Spread" level="1">
+                <BuilderNumberInput actionParam="'spread'" unit="'px'"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
 </t>
 
 </templates>

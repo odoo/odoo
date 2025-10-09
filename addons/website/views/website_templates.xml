@@ -458,7 +458,7 @@
     <t t-set="is_mobile" t-value="True"/>
 
     <t t-call="website.navbar"
-        _navbar_classes.f="o_header_mobile d-block d-lg-none shadow-sm"
+        _navbar_classes.f="o_header_mobile d-block d-lg-none"
         _navbar_expand_class.f=""
         _navbar_name.f="Mobile">
 
@@ -596,7 +596,7 @@
 <!-- "Default" template -->
 <template id="template_header_default" inherit_id="website.layout" name="Template Header Default" active="True">
     <xpath expr="//header//nav" position="replace">
-        <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
+        <t t-set="_navbar_classes" t-valuef="d-none d-lg-block"/>
         <t t-call="website.navbar" _navbar_classes="_navbar_classes">
 
             <div id="o_main_nav" t-attf-class="o_main_nav #{header_content_width}">
@@ -663,7 +663,7 @@
 <template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="d-none d-lg-block shadow-sm"
+            _navbar_classes.f="d-none d-lg-block"
             _navbar_expand_class.f="">
 
             <div id="o_main_nav" t-attf-class="o_main_nav d-grid py-0 o_grid_header_3_cols #{header_content_width}">
@@ -787,7 +787,7 @@
 <template id="template_header_stretch" inherit_id="website.layout" name="Template Header Stretch" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="d-none d-lg-block py-0 shadow-sm">
+            _navbar_classes.f="d-none d-lg-block py-0">
 
             <div id="o_main_nav" t-attf-class="o_main_nav align-items-stretch #{header_content_width}">
                 <!-- Brand -->
@@ -869,7 +869,7 @@
 <template id="template_header_vertical" inherit_id="website.layout" name="Template Header Vertical" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="d-none d-lg-block pt-3 shadow-sm">
+            _navbar_classes.f="d-none d-lg-block pt-3">
 
             <div id="o_main_nav" t-attf-class="o_main_nav flex-wrap #{header_content_width}">
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
@@ -941,7 +941,7 @@
 <template id="template_header_search" inherit_id="website.layout" name="Template Header Search" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="d-none d-lg-block p-0 shadow-sm">
+            _navbar_classes.f="d-none d-lg-block p-0">
 
             <div id="o_main_nav" class="o_main_nav flex-wrap">
                 <div aria-label="Top" class="o_header_hide_on_scroll border-bottom o_border_contrast">
@@ -1030,7 +1030,7 @@
 <template id="template_header_sales_one" inherit_id="website.layout" name="Template Header Sale 1" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm">
+            _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0">
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
                     <!-- Brand -->
@@ -1111,7 +1111,7 @@
 <template id="template_header_sales_two" inherit_id="website.layout" name="Template Header Sale 2" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm">
+            _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0">
             <div id="o_main_nav" class="o_main_nav">
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
@@ -1203,7 +1203,7 @@
 <template id="template_header_sales_three" inherit_id="website.layout" name="Template Header Sale 3" active="False">
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm rounded-0">
+            _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0 rounded-0">
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')"
                      class="o_header_sales_three_top o_header_hide_on_scroll position-relative border-bottom z-1 o_border_contrast">
@@ -1294,7 +1294,7 @@
     </xpath>
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 shadow-sm z-1">
+            _navbar_classes.f="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 z-1">
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-attf-class="#{header_content_width} d-flex">
                     <!-- Navbar -->
@@ -1387,7 +1387,7 @@
     </xpath>
     <xpath expr="//header//nav" position="replace">
         <t t-call="website.navbar"
-            _navbar_classes.f="o_border_right_only d-none d-lg-block shadow">
+            _navbar_classes.f="o_border_right_only d-none d-lg-block">
             <div id="o_main_nav" class="o_main_nav navbar-nav d-flex flex-column justify-content-between h-100 w-100">
                <div class="d-flex flex-column w-100 h-100">
                     <div class="d-flex pb-3">
@@ -1499,7 +1499,7 @@
     <xpath expr="//header//nav" position="replace">
         <div t-attf-class="#{header_content_width} py-3 px-0">
             <t t-call="website.navbar"
-                    _navbar_classes.f="o_full_border d-none d-lg-block rounded-pill px-4 shadow-sm">
+                    _navbar_classes.f="o_full_border d-none d-lg-block rounded-pill px-4">
                 <div id="o_main_nav" t-attf-class="#{header_content_width} o_main_nav">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand"
