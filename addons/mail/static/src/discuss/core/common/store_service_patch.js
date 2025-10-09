@@ -60,10 +60,10 @@ const storeServicePatch = {
      * @returns {number[]}
      */
     getRecentChatPartnerIds() {
-        return Object.values(this["mail.thread"].records)
-            .filter((thread) => thread.channel?.channel_type === "chat" && thread.correspondent)
+        return Object.values(this["discuss.channel"].records)
+            .filter((channel) => channel?.channel_type === "chat" && channel.correspondent)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
-            .map((thread) => thread.correspondent.partner_id.id);
+            .map((channel) => channel.correspondent.partner_id.id);
     },
     /**
      * @param {import("models").ChannelMember} m1
