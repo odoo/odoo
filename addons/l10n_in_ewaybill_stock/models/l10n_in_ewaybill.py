@@ -218,6 +218,14 @@ class Ewaybill(models.Model):
         for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending' and ewb.mode == "4"):
             ewaybill.vehicle_type = 'O'
 
+    @api.constrains('picking_id')
+    def _check_one_ewaybill_per_document(self):
+        if self.search_count([
+            ('picking_id', '=', self.picking_id.id),
+            ('id', '!=', self.id)
+        ], limit=1):
+            raise UserError(_("Only one e-Waybill can be generated per document."))
+
     def action_export_json(self):
         self.ensure_one()
         return {
