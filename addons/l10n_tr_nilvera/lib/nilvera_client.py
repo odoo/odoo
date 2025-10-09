@@ -73,7 +73,13 @@ class NilveraClient:
         if response.status_code in {401, 403}:
             raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
         elif 403 < response.status_code < 600:
+<<<<<<< cc13c2af51286da0c814f7360d19c77a1edddfda
             raise UserError(_("Odoo could not perform this action at the moment, try again later.\n%s - %s", response.reason, response.status_code))
+||||||| defe73f319f3250915f98f159c5a38cfe89e3369
+            raise UserError("Odoo could not perform this action at the moment, try again later.\n%s - %s" % (response.reason, response.code))
+=======
+            raise UserError("Odoo could not perform this action at the moment, try again later.\n%s - %s" % (response.reason, response.status_code))
+>>>>>>> 81368e494fd3c67846049272f3e5607eb1154f9a
 
         try:
             return response.json()
