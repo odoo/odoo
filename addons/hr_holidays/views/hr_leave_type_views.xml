@@ -63,6 +63,7 @@
                     </div>
                     <group>
                         <group>
+                                <field name="unit_of_measure" widget="radio" options="{'horizontal': True}"/>
                                 <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
                                 <field name="time_type" required="1" string="Count as"/>
                                 <field name="responsible_ids"
@@ -156,6 +157,7 @@
             <list string="Time Off Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
+                <field name="unit_of_measure" optional="hide"/>
                 <field name="request_unit" optional="hide"/>
                 <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
                 <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type != 'hr')" optional="hide"/>
