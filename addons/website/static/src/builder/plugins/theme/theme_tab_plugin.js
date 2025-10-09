@@ -33,7 +33,8 @@ export const OPTION_POSITIONS = {
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
-    ADVANCED: 80,
+    SHADOW: 80,
+    ADVANCED: 90,
 };
 
 export class ThemeTabPlugin extends Plugin {
@@ -90,6 +91,12 @@ export class ThemeTabPlugin extends Plugin {
                 OPTION_POSITIONS.INPUT,
                 this.getThemeOptionBlock("theme-input", _t("Input Fields"), {
                     template: "website.ThemeInputOption",
+                })
+            ),
+            withSequence(
+                OPTION_POSITIONS.SHADOW,
+                this.getThemeOptionBlock("theme-shadow", _t("Shadow"), {
+                    template: "website.ThemeShadowOption",
                 })
             ),
             withSequence(
