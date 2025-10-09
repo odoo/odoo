@@ -55,10 +55,10 @@
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">list</field>
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
-        <field name="domain">[('resource_id', '=', False)]</field>
+        <field name="domain">[('resource_id', '=', False), '|', ('calendar_id', '=', False), ('calendar_id', '=', active_id)]</field>
         <field name="context">{
             'default_calendar_id': active_id,
-            'search_default_calendar_id': active_id}</field>
+            'search_default_filter_date': True}</field>
         <field name="search_view_id" ref="hr_holidays.resource_calendar_leaves_view_search_inherit"/>
     </record>
 
