@@ -202,6 +202,10 @@
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/js/website_sale_comparison_utils.js',
+            'website_sale/static/src/js/website_sale_wishlist_utils.js',
+            'website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.js',
+            'website_sale/static/src/js/product_row/product_row.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',
