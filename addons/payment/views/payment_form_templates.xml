@@ -51,86 +51,88 @@
         <t t-set="submit_button_label"
            t-value="submit_button_label or (pay_label if mode == 'payment' else save_label)"
         />
-        <form t-if="payment_methods_sudo or tokens_sudo" id="o_payment_form"
-              class="o_payment_form"
-              t-att-data-mode="mode"
-              t-att-data-reference-prefix="reference_prefix"
-              t-att-data-amount="amount"
-              t-att-data-currency-id="currency and currency.id"
-              t-att-data-partner-id="partner_id"
-              t-att-data-transaction-route="transaction_route"
-              t-att-data-assign-token-route="assign_token_route"
-              t-att-data-landing-route="landing_route"
-              t-att-data-access-token="access_token"
-        >
-            <div id="o_payment_form_options" class="d-flex flex-column gap-3">
-                <!-- === Payment tokens === -->
-                <div t-if="tokens_sudo">
-                    <!-- === Header === -->
-                    <h4 id="o_payment_tokens_heading">
-                        Your payment methods
-                    </h4>
-                    <!-- === Body === -->
-                    <ul class="list-group">
-                        <t t-foreach="tokens_sudo" t-as="token_sudo">
-                            <li name="o_payment_option"
-                                t-att-class="'list-group-item d-flex flex-column gap-2 py-3'
-                                             + (' o_outline' if allow_token_selection else '')"
-                            >
-                                <t t-call="payment.token_form">
-                                    <t t-set="is_selected"
-                                       t-value="token_sudo.id == selected_token_id"
-                                    />
-                                </t>
-                            </li>
-                        </t>
-                    </ul>
+        <div class="payment_form_container">
+            <form t-if="payment_methods_sudo or tokens_sudo" id="o_payment_form"
+                class="o_payment_form"
+                t-att-data-mode="mode"
+                t-att-data-reference-prefix="reference_prefix"
+                t-att-data-amount="amount"
+                t-att-data-currency-id="currency and currency.id"
+                t-att-data-partner-id="partner_id"
+                t-att-data-transaction-route="transaction_route"
+                t-att-data-assign-token-route="assign_token_route"
+                t-att-data-landing-route="landing_route"
+                t-att-data-access-token="access_token"
+            >
+                <div id="o_payment_form_options" class="d-flex flex-column gap-3">
+                    <!-- === Payment tokens === -->
+                    <div t-if="tokens_sudo">
+                        <!-- === Header === -->
+                        <h4 id="o_payment_tokens_heading">
+                            Your payment methods
+                        </h4>
+                        <!-- === Body === -->
+                        <ul class="list-group">
+                            <t t-foreach="tokens_sudo" t-as="token_sudo">
+                                <li name="o_payment_option"
+                                    t-att-class="'list-group-item d-flex flex-column gap-2 py-3'
+                                                + (' o_outline' if allow_token_selection else '')"
+                                >
+                                    <t t-call="payment.token_form">
+                                        <t t-set="is_selected"
+                                        t-value="token_sudo.id == selected_token_id"
+                                        />
+                                    </t>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                    <!-- === Payment methods === -->
+                    <div t-if="payment_methods_sudo"
+                        id="o_payment_methods"
+                        t-att-class="'collapse' if collapse_payment_methods else ''"
+                    >
+                        <!-- === Header === -->
+                        <p t-attf-class="mb-3 {{collapse_payment_methods and 'h5' or 'h4'}}">
+                            <t t-if="not collapse_payment_methods">Payment method</t>
+                            <t t-else="">Other payment methods</t>
+                            <t t-call="payment.availability_report_button"/>
+                        </p>
+                        <!-- === Body === -->
+                        <ul class="list-group">
+                            <t t-foreach="payment_methods_sudo" t-as="pm_sudo">
+                                <li name="o_payment_option"
+                                    class="list-group-item d-flex flex-column gap-2 py-3 o_outline"
+                                >
+                                    <t t-call="payment.method_form">
+                                        <t t-set="is_selected"
+                                        t-value="pm_sudo.id == selected_method_id"
+                                        />
+                                    </t>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
                 </div>
-                <!-- === Payment methods === -->
-                <div t-if="payment_methods_sudo"
-                     id="o_payment_methods"
-                     t-att-class="'collapse' if collapse_payment_methods else ''"
-                >
-                    <!-- === Header === -->
-                    <p t-attf-class="mb-3 {{collapse_payment_methods and 'h5' or 'h4'}}">
-                        <t t-if="not collapse_payment_methods">Payment method</t>
-                        <t t-else="">Other payment methods</t>
-                        <t t-call="payment.availability_report_button"/>
-                    </p>
-                    <!-- === Body === -->
-                    <ul class="list-group">
-                        <t t-foreach="payment_methods_sudo" t-as="pm_sudo">
-                            <li name="o_payment_option"
-                                class="list-group-item d-flex flex-column gap-2 py-3 o_outline"
-                            >
-                                <t t-call="payment.method_form">
-                                    <t t-set="is_selected"
-                                       t-value="pm_sudo.id == selected_method_id"
-                                    />
-                                </t>
-                            </li>
-                        </t>
-                    </ul>
+                <div class="d-flex justify-content-end flex-column flex-md-row gap-2 my-2">
+                    <!-- === Expand payment methods button === -->
+                    <button t-if="collapse_payment_methods"
+                            name="o_payment_expand_button"
+                            type="button"
+                            href="#o_payment_methods"
+                            class="btn btn-link"
+                            data-bs-toggle="collapse"
+                    >
+                        Choose another method <i class="oi oi-arrow-down"/>
+                    </button>
+                    <!-- === Submit button === -->
+                    <t t-if="display_submit_button" t-call="payment.submit_button"/>
                 </div>
-            </div>
-            <div class="d-flex justify-content-end flex-column flex-md-row gap-2 my-2">
-                <!-- === Expand payment methods button === -->
-                <button t-if="collapse_payment_methods"
-                        name="o_payment_expand_button"
-                        type="button"
-                        href="#o_payment_methods"
-                        class="btn btn-link"
-                        data-bs-toggle="collapse"
-                >
-                    Choose another method <i class="oi oi-arrow-down"/>
-                </button>
-                <!-- === Submit button === -->
-                <t t-if="display_submit_button" t-call="payment.submit_button"/>
-            </div>
-            <!-- === Availability report === -->
-            <t t-call="payment.availability_report"/>
-        </form>
-        <t t-else="" t-call="payment.no_pms_available_warning"/>
+                <!-- === Availability report === -->
+                <t t-call="payment.availability_report"/>
+            </form>
+            <t t-else="" t-call="payment.no_pms_available_warning"/>
+        </div>
     </template>
 
     <template id="payment.token_form" name="Payment Token Form">

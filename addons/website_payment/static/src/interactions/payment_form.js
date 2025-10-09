@@ -88,14 +88,26 @@ patch(PaymentForm.prototype, {
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (document.querySelector('.o_donation_payment_form')) {
             const mandatoryFields = {
-                'name': _t('Name'),
-                'email': _t('Email'),
-                'country_id': _t('Country'),
+                partner_name: _t("Name"),
+                partner_email: _t("Email"),
+                partner_country_id: _t("Country"),
             };
+
+            // This code is added here because setting a custom field as
+            // required in the form does not work. So, we are manually checking
+            // if the field is mandatory.
+            this.el.querySelectorAll(".s_website_form_required").forEach((field) => {
+                const inputEl = field.querySelector("input, select, textarea");
+                if (inputEl && inputEl.name) {
+                    mandatoryFields[inputEl.name] = field.textContent.trim();
+                }
+            });
 
             let firstInvalidFieldEl;
             for (const id in mandatoryFields) {
-                const fieldEl = this.el.querySelector(`input[name="${id}"],select[name="${id}"]`);
+                const fieldEl = this.el.querySelector(
+                    `input[name="${id}"], select[name="${id}"], textarea[name="${id}"]`
+                );
                 const isInvalid =
                     !fieldEl.value.trim() || (id === "email" && !fieldEl.checkValidity());
                 fieldEl.classList.toggle("is-invalid", isInvalid);
@@ -128,6 +140,26 @@ patch(PaymentForm.prototype, {
      */
     _prepareTransactionRouteParams() {
         const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
+
+        const getFormData = (formSelector) => {
+            const form = this.el.querySelector(formSelector);
+            if (!form) {
+                return {};
+            }
+            const formData = new FormData(form);
+            const partnerDetails = {};
+            formData.forEach((value, key) => {
+                const field = form.querySelector(`[name="${CSS.escape(key)}"]`);
+                if (form.querySelector(".s_website_form_rows").contains(field)) {
+                    partnerDetails[key] = partnerDetails[key]
+                        ? [].concat(partnerDetails[key], value)
+                        : value;
+                }
+            });
+            return partnerDetails;
+        };
+        const partnerDetails = getFormData(".o_payment_field_form");
+
         return document.querySelector('.o_donation_payment_form')
             ? {
             ...transactionRouteParams,
@@ -135,12 +167,8 @@ patch(PaymentForm.prototype, {
             currency_id: this.paymentContext['currencyId']
                     ? parseInt(this.paymentContext['currencyId']) : null,
             reference_prefix:this.paymentContext['referencePrefix']?.toString(),
-            partner_details: {
-                name: this.el.querySelector('input[name="name"]').value,
-                email: this.el.querySelector('input[name="email"]').value,
-                country_id: this.el.querySelector('select[name="country_id"]').value,
-            },
-            donation_comment: this.el.querySelector('#donation_comment').value,
+            partner_details: partnerDetails,
+            donation_comment: this.el.querySelector("#donation_comment").value,
             donation_recipient_email: this.el.querySelector(
                 'input[name="donation_recipient_email"]'
             ).value,

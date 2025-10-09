@@ -37,8 +37,15 @@ export class FormOption extends BaseOptionComponent {
             this.modelCantChange = !!el.getAttribute("hide-change-model");
 
             // Get list of website_form compatible models.
-            const models = await this.props.fetchModels(el);
+            let models = await this.props.fetchModels(el);
             const activeForm = models.find((m) => m.model === modelName);
+
+            // Exclude forms that should only be displayed for their specific
+            // use case, not for general form selection. For example,
+            // 'signup_form' should only be used for user signup and not shown
+            // as an option for other forms.
+            const excludedModelKeys = ["donation_form"];
+            models = models.filter((model) => !excludedModelKeys.includes(model.website_form_key));
 
             // If the form has no model it means a new snippet has been dropped.
             // Apply the default model selected in willStart on it.
