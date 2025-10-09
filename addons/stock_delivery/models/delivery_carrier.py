@@ -201,12 +201,16 @@ class DeliveryCarrier(models.Model):
     def _get_commodities_from_order(self, order):
         commodities = []
 
+        english_lang = self.env['res.lang'].search([('iso_code', '=', 'en'), ('active', '=', True)], limit=1).code
+        partner_lang = order.partner_id.lang
+        lang_to_use = english_lang or partner_lang or False
+
         for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type and line.product_id.type == 'consu'):
             unit_quantity = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = line.product_id.country_of_origin.code or order.warehouse_id.partner_id.country_id.code
             commodities.append(DeliveryCommodity(
-                line.product_id,
+                line.product_id.with_context(lang=lang_to_use),
                 amount=rounded_qty,
                 monetary_value=line.price_reduce_taxinc,
                 country_of_origin=country_of_origin,
@@ -216,6 +220,8 @@ class DeliveryCarrier(models.Model):
 
     def _get_commodities_from_stock_move_lines(self, move_lines):
         commodities = []
+
+        english_lang = self.env['res.lang'].search([('iso_code', '=', 'en'), ('active', '=', True)], limit=1).code
 
         product_lines = move_lines.filtered(lambda line: line.product_id.type == 'consu')
         for product, lines in groupby(product_lines, lambda x: x.product_id):
@@ -227,7 +233,9 @@ class DeliveryCarrier(models.Model):
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
             unit_price = sum(line.sale_price for line in lines) / rounded_qty
-            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
+            partner_lang = lines[0].picking_partner_id.lang
+            lang_to_use = english_lang or partner_lang or False
+            commodities.append(DeliveryCommodity(product.with_context(lang=lang_to_use), amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
 
         return commodities
 
