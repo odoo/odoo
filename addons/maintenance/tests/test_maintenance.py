@@ -119,3 +119,36 @@ class TestEquipment(TransactionCase):
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
             {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
         ])
+
+    def test_maintenance_request_with_equipment(self):
+        """
+        Ensure Equipment can be accessed through maintenance request
+
+        Steps:
+            1. Create a new maintenance stage.
+            2. Create an equipment.
+            3. Create a maintenance request linked to that equipment.
+            4. Mark the maintenance stage as done.
+            5. Open the equipment.
+        """
+
+        new_maintenance_stage = self.env['maintenance.stage'].create({
+            'name': 'New Done',
+        })
+
+        equipment_01 = self.equipment.with_user(self.manager).create({
+            'name': 'Samsung Monitor "15',
+            'category_id': self.equipment_monitor.id,
+            'serial_no': 'MT/127/18291015',
+        })
+
+        self.maintenance_request.create({
+            'name': 'Resolution is bad',
+            'user_id': self.user.id,
+            'equipment_id': equipment_01.id,
+            'stage_id': new_maintenance_stage.id,
+        })
+
+        new_maintenance_stage.done = True
+
+        self.assertEqual(equipment_01.mttr, 0)
