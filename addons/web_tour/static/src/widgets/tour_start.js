@@ -1,6 +1,8 @@
 import { charField, CharField } from "@web/views/fields/char/char_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { Component } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 
 export class TourStartWidget extends CharField {
     static template = "web_tour.TourStartWidget";
@@ -11,13 +13,14 @@ export class TourStartWidget extends CharField {
 
     setup() {
         this.tour = useService("tour_service");
+        this.dialog = useService("dialog");
     }
 
     get tourData() {
         return this.props.record.data;
     }
 
-    _onStartTour() {
+    _launchManualTour() {
         this.tour.startTour(this.tourData.name, {
             mode: "manual",
             url: this.tourData.url,
@@ -26,13 +29,33 @@ export class TourStartWidget extends CharField {
         });
     }
 
-    _onTestTour() {
-        this.tour.startTour(this.tourData.name, {
+    _launchAutomaticTour() {
+        this.dialog.add(LaunchAutomaticTourDialog, {
+            tour: this.tourData,
+        });
+    }
+}
+
+class LaunchAutomaticTourDialog extends Component {
+    static template = "web_tour.LaunchAutomaticTourDialog";
+    static components = { Dialog };
+    static props = {
+        close: Function,
+        tour: Object,
+    };
+
+    setup() {
+        super.setup();
+        this.tour = useService("tour_service");
+    }
+
+    async onConfirm() {
+        this.tour.startTour(this.props.tour.name, {
             mode: "auto",
-            url: this.tourData.url,
-            fromDB: this.tourData.custom,
+            url: this.props.tour.url,
+            fromDB: this.props.tour.custom,
             showPointerDuration: 250,
-            rainbowManMessage: this.tourData.rainbow_man_message,
+            rainbowManMessage: this.props.tour.rainbow_man_message,
         });
     }
 }

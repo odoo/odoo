@@ -2,14 +2,26 @@
 <templates id="template" xml:space="preserve">
     <t t-name="web_tour.TourStartWidget">
         <button title="Start Tour"
-                t-on-click.prevent.stop="_onStartTour"
+                t-on-click.prevent.stop="_launchManualTour"
                 t-att-class="'o_start_tour btn ' + (this.props.link ? 'btn-link py-0' : 'btn-primary')">
             Onboarding
         </button>
         <button title="Test Tour"
-                t-on-click.prevent.stop="_onTestTour"
+                t-on-click.prevent.stop="_launchAutomaticTour"
                 t-att-class="'o_test_tour btn ' + (this.props.link ? 'btn-link py-0' : 'btn-primary ms-1')">
             Testing
         </button>
+    </t>
+    <t t-name="web_tour.LaunchAutomaticTourDialog">
+        <Dialog size="'lg'" title.translate="You will launch automatic tour">
+            <div class="justify-content-left row">
+                <div>Tour name: <t t-out="props.tour.name"/></div>
+                <div>Step delay: </div>
+            </div>
+            <t t-set-slot="footer">
+                <button t-on-click="props.close" class="btn btn-secondary" data-hotkey="x">Close</button>
+                <button t-on-click="onConfirm" class="btn btn-primary">Launch</button>
+            </t>
+        </Dialog>
     </t>
 </templates>
