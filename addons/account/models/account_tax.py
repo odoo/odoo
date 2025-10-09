@@ -846,6 +846,15 @@ class AccountTax(models.Model):
                         # Tax affecting the following taxes but in batch using 'is_base_affected'.
                         is_base_affected = tax.is_base_affected
                         same_batch = True
+                    elif (
+                        include_base_amount
+                        and tax.include_base_amount
+                        and tax.price_include
+                        and batch[0].price_include
+                        and not is_base_affected
+                        and not tax.is_base_affected
+                    ):
+                        same_batch = True
 
                 if not same_batch:
                     for batch_tax in batch:

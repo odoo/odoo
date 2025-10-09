@@ -91,6 +91,11 @@ export const accountTaxHelpers = {
                         // Tax affecting the following taxes but in batch using 'is_base_affected'.
                         is_base_affected = tax.is_base_affected;
                         same_batch = true;
+                    } else if (
+                        include_base_amount && tax.include_base_amount && !is_base_affected &&
+                        !tax.is_base_affected && tax.price_include && batch[0].price_include
+                    ) {
+                        same_batch = true;
                     }
                 }
 
