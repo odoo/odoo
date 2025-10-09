@@ -285,6 +285,29 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
             batch_dict, _info = document._send_as_batch()
         self.assertEqual(batch_dict, self._json_file_to_dict('l10n_es_edi_verifactu/tests/files/test_invoice_4.json'))
 
+    def test_invoice_export(self):
+        """
+        Test the Clave Regimen for exports
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-30',
+            'delivery_date': '2019-02-01',
+            'date': '2019-01-30',
+            'partner_id': self.partner_a.id,  # Belgian customer
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set(self.tax0_exento_export.ids)]}),
+            ],
+        })
+        invoice.action_post()
+
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        self.assertFalse(document.errors)
+        with self._mock_zeep_registration_operation_certificate_issue():
+            batch_dict, _info = document._send_as_batch()
+        self.assertEqual(batch_dict, self._json_file_to_dict('l10n_es_edi_verifactu/tests/files/test_invoice_export.json'))
+
     def test_invoice_multicurrency_1(self):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
