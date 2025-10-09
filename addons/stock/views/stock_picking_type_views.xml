@@ -48,7 +48,7 @@
                 <filter name="favorites" string="Favorites" domain="[('is_favorite', '=', True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group>
-                    <filter string="Type of Operation" name="groupby_code" domain="[]" context="{'group_by': 'code'}"/>
+                    <filter string="Operation Category" name="groupby_code" domain="[]" context="{'group_by': 'code'}"/>
                     <filter string="Warehouse" name="groupby_warehouse_id" domain="[]" context="{'group_by': 'warehouse_id'}"/>
                 </group>
             </search>
@@ -134,6 +134,12 @@
                         <page name="hardware" string="Hardware" invisible="code not in ['incoming', 'outgoing', 'internal']" >
                             <group name="auto_print">
                                 <group string="Print on Validation">
+                                    <div colspan="2" class="alert alert-info" role="alert">
+                                        Odoo opens a PDF preview by default. If you (Enterprise users only) want to print instantly,
+                                        install the IoT App on a computer that is on the same local network as the
+                                        barcode operator and configure the routing of the reports.
+                                        <widget name="documentation_link" path="/applications/productivity/iot/devices/printer.html" label=" Documentation" icon="fa-arrow-right"/>
+                                    </div>
                                     <field name="auto_print_delivery_slip" string="Delivery Slip"/>
                                     <field name="auto_print_return_slip" string="Return Slip"/>
                                     <label for="auto_print_product_labels" string="Product Labels"/>
@@ -151,15 +157,6 @@
                                     <field name="auto_print_reception_report" string="Reception Report" invisible="code == 'outgoing'" groups="stock.group_reception_report"/>
                                     <field name="auto_print_reception_report_labels" string="Reception Report Labels" invisible="code == 'outgoing'" groups="stock.group_reception_report"/>
                                     <field name="auto_print_packages" string="Package Content" groups="stock.group_tracking_lot"/>
-                                </group>
-                                <group string="">
-                                    <div colspan="2">
-                                        Odoo opens a PDF preview by default. If you (Enterprise users only) want to print instantly,
-                                        install the IoT App on a computer that is on the same local network as the
-                                        barcode operator and configure the routing of the reports.
-                                        <br/>
-                                        <widget name="documentation_link" path="/applications/productivity/iot/devices/printer.html" label=" Documentation" icon="fa-arrow-right"/>
-                                    </div>
                                 </group>
                                 <group string='Print on "Put in Pack"' groups="stock.group_tracking_lot">
                                     <label for="auto_print_package_label" string="Package Label"/>

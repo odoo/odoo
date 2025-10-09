@@ -237,7 +237,7 @@
                             <label for="scheduled_date"/>
                             <div class="o_row">
                                 <field name="scheduled_date" readonly="state in ['cancel', 'done']" required="id"
-                                    decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
+                                    decoration-warning="id and state not in ('done', 'cancel') and scheduled_date &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
                                 <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
@@ -459,18 +459,6 @@
                 res = records.button_validate()
                 if isinstance(res, dict):
                     action = res
-            </field>
-        </record>
-
-        <record id="action_unreserve_picking" model="ir.actions.server">
-            <field name="name">Unreserve</field>
-            <field name="model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">form</field>
-            <field name="state">code</field>
-            <field name="code">
-            if records:
-                records.do_unreserve()
             </field>
         </record>
 

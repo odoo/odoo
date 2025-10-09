@@ -321,15 +321,11 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(self.product1.qty_available, 0)
 
     def test_empty_stock_move_valuation(self):
-        product1 = self.env['product.product'].create({
-            'name': 'p1',
-            'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_expenses').id,
-        })
+        product1 = self.product1
         product2 = self.env['product.product'].create({
             'name': 'p2',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_expenses').id,
+            'categ_id': self.env.ref('product.product_category_goods').id,
         })
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
