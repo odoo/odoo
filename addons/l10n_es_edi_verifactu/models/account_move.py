@@ -1,5 +1,4 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import RedirectWarning
 
 
 class AccountMove(models.Model):
@@ -332,25 +331,6 @@ class AccountMove(models.Model):
             move._l10n_es_edi_verifactu_get_record_values(cancellation=cancellation)
             for move in self
         ]
-
-        for move, vals in zip(self, record_values_list):
-            # Add redirect warnings to journal entries with missing Veri*Factu documents for easier user flow.
-            if vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document']:
-                substituted_move = move.l10n_es_edi_verifactu_substituted_entry_id
-                msg = _("There is no Veri*Factu document for the substituted record.")
-                action = self._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move)
-                raise RedirectWarning(msg, action, _("Go to the journal entry"))
-            if vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document_reversal_document']:
-                substituted_move = move.l10n_es_edi_verifactu_substituted_entry_id
-                msg = _("There is no Veri*Factu document for the reversal of the substituted record.")
-                action = self._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move.reversal_move_id)
-                raise RedirectWarning(msg, action, _("Go to the journal entry"))
-            if vals['verifactu_move_type'] in ('correction_incremental', 'reversal_for_substitution') and not vals['refunded_document']:
-                reversed_move = move.reversed_entry_id
-                msg = _("There is no Veri*Factu document for the refunded record.")
-                action = self._l10n_es_edi_verifactu_action_go_to_journal_entry(reversed_move)
-                raise RedirectWarning(msg, action, _("Go to the journal entry"))
-
         return {
             record_values['record']: self.env['l10n_es_edi_verifactu.document']._create_for_record(record_values)
             for record_values in record_values_list
