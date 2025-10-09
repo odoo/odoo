@@ -334,15 +334,18 @@ patch(PosStore.prototype, {
 
         return false;
     },
+    // TODO: remove in master
     async onDeleteOrder(order) {
-        const orderIsDeleted = await super.onDeleteOrder(...arguments);
+        return await super.onDeleteOrder(...arguments);
+    },
+    async _onBeforeDeleteOrder(order) {
         if (
-            orderIsDeleted &&
             this.config.module_pos_restaurant &&
             this.mainScreen.component.name !== "TicketScreen"
         ) {
             this.showScreen("FloorScreen");
         }
+        return await super._onBeforeDeleteOrder(...arguments);
     },
     async closingSessionNotification(data) {
         await super.closingSessionNotification(...arguments);
