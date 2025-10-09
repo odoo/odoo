@@ -1,10 +1,10 @@
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
-import { FormRenderer } from "@web/views/form/form_renderer";
+import { EmployeeFormRenderer } from "@hr/views/form_renderer";
 import { EmployeeFormController } from "@hr/views/form_view";
 import { onMounted } from "@odoo/owl";
 
-class BadgeTabRenderer extends FormRenderer {
+class BadgeTabRenderer extends EmployeeFormRenderer {
     setup() {
         super.setup();
 

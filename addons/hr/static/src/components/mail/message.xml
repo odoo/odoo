@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.Message" t-inherit="mail.Message" t-inherit-mode="primary">
+        <xpath t-if="this.removeUrl" expr="//small[@t-if='isPersistentMessageFromAnotherThread']" position="attributes">
+            <attribute name="t-on-click.prevent"></attribute>
+        </xpath>
+        <xpath t-if="this.removeUrl" expr="//t[@t-if]/a[@t-if='message.thread.displayName']" position="attributes">
+            <attribute name="t-att-href"></attribute>
+        </xpath>
+        <xpath t-if="this.removeUrl" expr="//t[@t-else]/a" position="attributes">
+            <attribute name="t-att-href"></attribute>
+        </xpath>
+    </t>
+</templates>
