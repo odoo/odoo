@@ -61,12 +61,16 @@ export class VisibilityPlugin extends Plugin {
             this.refreshInvisibleElementsPanel();
         }),
 
-        // The data-invisible attribute is not needed/used anymore.
-        // It was used to try to track if an element is hidden.
-        // It persisted through saves, so we remove it from existing pages.
+        // The data-invisible attribute and the o_snippet_invisible class are
+        // not needed/used anymore.
+        // They were used to try to track if an element is or can be hidden.
+        // They persisted through saves, so we remove them from existing pages.
         clean_for_save_handlers: ({ root }) => {
             for (const el of root.querySelectorAll("[data-invisible]")) {
                 el.removeAttribute("data-invisible");
+            }
+            for (const el of root.querySelectorAll(".o_snippet_invisible")) {
+                el.classList.remove("o_snippet_invisible");
             }
         },
         hidden_element_predicates: (el) => {

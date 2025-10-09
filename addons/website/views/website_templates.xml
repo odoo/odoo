@@ -278,7 +278,7 @@
     <xpath expr="//main/*[1]" position="before">
         <t t-if="main_object.sudo()._name == 'website.page' and main_object.sudo()['parent_id']">
             <div data-name="Breadcrumb"
-                t-attf-class="o_page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class} #{'d-none o_snippet_invisible' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else ''}"
+                t-attf-class="o_page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class} #{'d-none' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else ''}"
                 t-attf-style="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"
             >
                 <nav aria-label="breadcrumb">
@@ -375,10 +375,10 @@
         <attribute name="t-attf-style" add="#{header_text_color_style and ('color: %s;' % header_text_color_style)}" separator=" "/>
     </xpath>
     <xpath expr="//header" position="attributes">
-        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.sudo().header_visible else ''}" separator=" "/>
+        <attribute name="t-attf-class" add="#{'d-none' if 'header_visible' in main_object and not main_object.sudo().header_visible else ''}" separator=" "/>
     </xpath>
     <xpath expr="//footer[@id='bottom']" position="attributes">
-        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else ''}" separator=" "/>
+        <attribute name="t-attf-class" add="#{'d-none' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else ''}" separator=" "/>
     </xpath>
     <xpath expr="//main" position="attributes">
         <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.sudo().breadcrumb_overlay else ''}" />
@@ -2562,7 +2562,7 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-name="Cookies Bar" data-vcss="001">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup d-none o_no_save" data-name="Cookies Bar" data-vcss="001">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
                  data-display="afterDelay"

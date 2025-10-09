@@ -80,7 +80,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
      */
     getVisibilityItem(type) {
         const el = this.getTarget(type);
-        const isHidden = el.classList.contains("o_snippet_invisible");
+        const isHidden = el.classList.contains("d-none");
         let isOverlay = null;
         if (type === "header") {
             isOverlay = this.document
@@ -95,9 +95,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     }
 
     getFooterVisibility() {
-        return this.document
-            .querySelector("#wrapwrap > footer")
-            .classList.contains("o_snippet_invisible");
+        return this.document.querySelector("#wrapwrap > footer").classList.contains("d-none");
     }
 
     /**
@@ -172,7 +170,6 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     setFooterVisible(show) {
         const footerEl = this.document.querySelector("#wrapwrap > footer");
         footerEl.classList.toggle("d-none", !show);
-        footerEl.classList.toggle("o_snippet_invisible", !show);
     }
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
@@ -229,7 +226,6 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
     setVisible(type, shouldHide) {
         const el = this.websitePageConfig.getTarget(type);
         el.classList.toggle("d-none", shouldHide);
-        el.classList.toggle("o_snippet_invisible", shouldHide);
     }
 
     /**

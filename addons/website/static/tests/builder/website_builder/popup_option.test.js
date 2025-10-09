@@ -109,7 +109,7 @@ describe("Popup options: popup in page before edit", () => {
             }
         );
         builder = await setupWebsiteBuilder(
-            `<div class="s_popup o_snippet_invisible o_draggable" data-snippet="s_popup" data-name="Popup" id="sPopup">
+            `<div class="s_popup o_draggable" data-snippet="s_popup" data-name="Popup" id="sPopup">
                 <div class="modal fade s_popup_middle modal_shown" style="background-color: var(--black-50)  !important; display: none;" data-show-after="5000" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-label="Popup" aria-hidden="true">
                     <div class="modal-dialog d-flex">
                         <div class="modal-content oe_structure">
