@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
+import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
 import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeHeadingsOption } from "./theme_headings_option";
@@ -47,7 +48,8 @@ export const OPTION_POSITIONS = {
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
-    ADVANCED: 80,
+    SHADOW: 80,
+    ADVANCED: 90,
 };
 
 export class ThemeTabPlugin extends Plugin {
@@ -116,6 +118,10 @@ export class ThemeTabPlugin extends Plugin {
                         static template = "website.ThemeInputOption";
                     }
                 )
+            ),
+            withSequence(
+                OPTION_POSITIONS.SHADOW,
+                this.getThemeOptionBlock("theme-shadow", _t("Shadow"), ThemeShadowOption)
             ),
             withSequence(
                 OPTION_POSITIONS.ADVANCED,

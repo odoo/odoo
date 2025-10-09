@@ -348,9 +348,27 @@ $popover-arrow-outer-color: $border-color !default;
 $badge-border-radius: $border-radius-pill !default;
 
 // Shadows
-$box-shadow: 0px 4px 16px rgba($black, 0.12) !default;
-$box-shadow-sm: 0px 1px 3px rgba($black, .1) !default;
-$box-shadow-lg: 0px 12px 32px rgba($black, .175) !default;
+$box-shadow-color: o-website-value('box-shadow-color') !default;
+$box-shadow-offset-x: o-website-value('box-shadow-offset-x') !default;
+$box-shadow-offset-y: o-website-value('box-shadow-offset-y') !default;
+$box-shadow-blur-radius: o-website-value('box-shadow-blur-radius') !default;
+$box-shadow-spread-radius: o-website-value('box-shadow-spread-radius') !default;
+
+$box-shadow-sm-color: o-website-value('box-shadow-sm-color') !default;
+$box-shadow-sm-offset-x: o-website-value('box-shadow-sm-offset-x') !default;
+$box-shadow-sm-offset-y: o-website-value('box-shadow-sm-offset-y') !default;
+$box-shadow-sm-blur-radius: o-website-value('box-shadow-sm-blur-radius') !default;
+$box-shadow-sm-spread-radius: o-website-value('box-shadow-sm-spread-radius') !default;
+
+$box-shadow-lg-color: o-website-value('box-shadow-lg-color') !default;
+$box-shadow-lg-offset-x: o-website-value('box-shadow-lg-offset-x') !default;
+$box-shadow-lg-offset-y: o-website-value('box-shadow-lg-offset-y') !default;
+$box-shadow-lg-blur-radius: o-website-value('box-shadow-lg-blur-radius') !default;
+$box-shadow-lg-spread-radius: o-website-value('box-shadow-lg-spread-radius') !default;
+
+$box-shadow: var(--box-shadow-offset-x) var(--box-shadow-offset-y) var(--box-shadow-blur-radius) var(--box-shadow-spread-radius) var(--box-shadow-color) !default;
+$box-shadow-sm: var(--box-shadow-sm-offset-x) var(--box-shadow-sm-offset-y) var(--box-shadow-sm-blur-radius) var(--box-shadow-sm-spread-radius) var(--box-shadow-sm-color) !default;
+$box-shadow-lg: var(--box-shadow-lg-offset-x) var(--box-shadow-lg-offset-y) var(--box-shadow-lg-blur-radius) var(--box-shadow-lg-spread-radius) var(--box-shadow-lg-color) !default;
 
 // Cards
 $card-border-color: $border-color !default;
