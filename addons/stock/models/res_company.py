@@ -149,7 +149,9 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_scrap_location(self):
         company_ids  = self.env['res.company'].search([])
-        companies_having_scrap_loc = self.env['stock.location'].search([('usage', '=', 'inventory')]).mapped('company_id')
+        inventory_loss_product_template_field = self.env['ir.model.fields']._get('product.template', 'property_stock_inventory')
+        inv_loss_loc_ids = self.env['ir.default'].search([('field_id', '=', inventory_loss_product_template_field.id)]).mapped('json_value')
+        companies_having_scrap_loc = self.env['stock.location'].search([('usage', '=', 'inventory'), ('id', 'not in', inv_loss_loc_ids)]).mapped('company_id')
         company_without_property = company_ids - companies_having_scrap_loc
         company_without_property._create_scrap_location()
 

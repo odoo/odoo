@@ -75,7 +75,7 @@ class StockPickingType(models.Model):
     def _check_default_location(self):
         for record in self:
             if record.code == 'mrp_operation' and record.default_location_dest_id.usage == 'inventory':
-                raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
+                raise ValidationError(self.env._("You cannot set a inventory loss location as the destination location for a manufacturing type operation."))
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')

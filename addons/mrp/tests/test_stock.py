@@ -254,14 +254,14 @@ class TestWarehouseMrp(common.TestMrpCommon):
         scrap_move = scrap_id.move_ids[0]
 
         self.assertTrue(scrap_move.raw_material_production_id)
-        self.assertEqual(scrap_move.location_dest_usage, 'inventory')
+        self.assertTrue(bool(scrap_move.scrap_id))
         self.assertEqual(scrap_move.location_dest_id, scrap_id.scrap_location_id)
         self.assertEqual(scrap_move.price_unit, scrap_move.product_id.standard_price)
 
         #Check scrap move is created for this production order.
         #TODO: should check with scrap objects link in between
 
-#        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.location_dest_usage == 'inventory')
+#        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.scrap_id)
 #        self.assertTrue(scrap_move, "There are no any scrap move created for production order.")
 
     def test_putaway_after_manufacturing_3(self):
