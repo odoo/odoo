@@ -428,6 +428,74 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
     /**
      * @override
      */
+    start() {
+        this._super(...arguments);
+
+        this.is_cookie_policy_page = window.location.pathname === "/cookie-policy";
+
+        // PopupWidget sets cookieValue to true by default, which would
+        // overwrite the user’s saved consent.
+        // Override this to retain the user’s consent choice.
+        const savedCookieValue = cookie.get(this.el.id);
+        if (savedCookieValue) {
+            this.cookieValue = savedCookieValue;
+        }
+
+        this._insertCookieBarToggleButton();
+
+        // Add a link to cookie policy page in the copyright footer.
+        // TODO: In master, add this link via XML.
+        const copyrightFooterContainerEl = document.querySelector(
+            ".o_footer_copyright_name"
+        )?.parentElement;
+        if (copyrightFooterContainerEl) {
+            const cookiePolicyLinkEl = wUtils.cloneContentEls(
+                "<div><a href='/cookie-policy'>Cookie Policy</a></div>"
+            ).firstElementChild;
+            copyrightFooterContainerEl.insertAdjacentElement("beforeend", cookiePolicyLinkEl);
+        }
+
+        // Since cookie preferences can be changed, update the gtag script that
+        // toggles the gtag consent. So, when the user modifies their cookie
+        // preference their gtag consent is also updated.
+        // TODO: In master, update the #tracking_code_config script via XML.
+        const trackingCodeConfigScriptEl = document.querySelector("#tracking_code_config");
+        if (trackingCodeConfigScriptEl) {
+            let scriptContent = trackingCodeConfigScriptEl.innerHTML;
+
+            // Remove current event listener
+            scriptContent = scriptContent.replace(
+                /document\.addEventListener\(\s*"optionalCookiesAccepted",\s*allConsentsGranted,\s*\{once:\s*true\}\s*\);/g,
+                ""
+            );
+
+            // Append the updated event listeners and function.
+            const requiredConsentsScript = `
+                function requiredConsentsGranted() {
+                    gtag("consent", "update", {
+                        "ad_storage": "denied",
+                        "ad_user_data": "denied",
+                        "ad_personalization": "denied",
+                        "analytics_storage": "denied",
+                    });
+                }
+                document.addEventListener("optionalCookiesAccepted", allConsentsGranted);
+                document.addEventListener("requiredCookiesAccepted", requiredConsentsGranted);
+            `;
+
+            // Create a new script element
+            const newScriptEl = document.createElement("script");
+            newScriptEl.id = "tracking_code_config";
+            newScriptEl.textContent = `${scriptContent.trim()}\n${requiredConsentsScript}`;
+
+            // Replace the old script with the new one
+            trackingCodeConfigScriptEl.parentNode.replaceChild(newScriptEl, trackingCodeConfigScriptEl);
+        }
+    },
+
+    /**
+     * @override
+     */
     destroy() {
         if (this.toggleEl) {
             this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
@@ -444,16 +512,22 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @override
      */
     _showPopup() {
+        if (this.is_cookie_policy_page) {
+            // Don't show the cookie bar by default if we are on the cookie
+            // policy page
+            return;
+        }
+
         this._super(...arguments);
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+    },
+    _insertCookieBarToggleButton() {
+        if (this.is_cookie_policy_page) {
             this.toggleEl = wUtils.cloneContentEls(`
             <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex gap-2 align-items-center position-fixed pe-auto">
-                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label">${_t("Show the cookies bar")}</span>
             </button>
             `).firstElementChild;
             this.el.insertAdjacentElement("beforebegin", this.toggleEl);
-            this._toggleCookiesBar();
             this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
             this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
         }
@@ -469,8 +543,23 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         // As we're using Bootstrap's events, the PopupWidget prevents the modal
         // from being shown after hiding it: override that behavior.
         this._popupAlreadyShown = false;
-        cookie.delete(this.el.id);
 
+        // PopupWidget sets the cookie value to "true" after hiding the modal
+        // to prevent it from reopening - override that behavior.
+        if (cookie.get(this.el.id) === "true") {
+            cookie.delete(this.el.id);
+        }
+
+        this._updateToggleButtonState();
+    },
+    /**
+     * Updates the toggle button state and postion based on the visibility of
+     * the cookie bar.
+     *
+     * @private
+     */
+    _updateToggleButtonState() {
+        const popupEl = this.el.querySelector(".modal");
         const hidden = !popupEl.classList.contains("show");
         this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
         this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
@@ -509,9 +598,13 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}}`;
         if (isFullConsent) {
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        } else {
+            document.dispatchEvent(new Event("requiredCookiesAccepted"));
         }
         this._onHideModal();
-        this.toggleEl && this.toggleEl.remove();
+        if (this.toggleEl) {
+            this._updateToggleButtonState();
+        }
     },
     /**
      * @override
