@@ -518,6 +518,13 @@ class BaseCase(case.TestCase):
                 raise Exception('Wrong request stack cleanup.')
 
     @contextmanager
+    def test_config(self, options=None, /, **kwargs):
+        if options is None:
+            options = {}
+        options.update(**kwargs)
+        yield from self.patch(config, 'options', config.options.new_child(options))
+
+    @contextmanager
     def _raisesContext(self, method, expected_exception, *args, **kwargs):
         """ Context manager that clears the environment upon failure. """
         with ExitStack() as init:
