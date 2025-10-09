@@ -623,18 +623,28 @@ export class SampleServer {
         } else {
             groups = this._mockFormattedReadGroup({ ...params, aggregates });
         }
-        // Don't care another params - and no subgroup:
         // order / opening_info / unfold_read_default_limit / groupby_read_specification
-        let nbOpenedGroup = 0;
-        if (params.auto_unfold && params.unfold_read_specification) {
+        if(params.unfold_read_specification){
+            const groupBy = params.groupBy[0];
+            const unFoldedGroups = params.opening_info
+                                    ? params.opening_info.filter(o => !o.folded).map(o => o.value)
+                                    : [];
+            let nbOpenedGroup = 0;
             for (const group of groups) {
-                if (nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
+                const val = Array.isArray(group[groupBy]) ? group[groupBy][0] : group[groupBy];
+                if (params.auto_unfold && nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
                     nbOpenedGroup++;
-                    group["__records"] = this._mockWebSearchReadUnity({
+                    group.__records = this._mockWebSearchReadUnity({
                         model: params.model,
                         specification: params.unfold_read_specification,
                         recordIds: group["id:array_agg"],
                     }).records;
+                }
+                else if (!group.__records && unFoldedGroups.includes(val)) {
+                    group.__records = this._mockWebSearchReadUnity({
+                        model: params.model,
+                        specification: params.unfold_read_specification,
+                    }).records.slice(0, group.__count);
                 }
                 delete group["id:array_agg"];
             }
