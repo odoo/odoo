@@ -22,7 +22,7 @@ export class Popup extends Interaction {
         "_window": {
             "t-on-hashchange": this.onHashChange,
         },
-        ".modal:not(.s_popup_no_backdrop)": {
+        ".modal:not(.s_popup_no_backdrop):not(.s_popup_restrict_close)": {
             // Here, bootstrap's data-bs-backdrop attribute is not used and
             // we use a custom click handler instead to dismiss the popup on
             // click outside as we do not use bootstrap native backdrop.
