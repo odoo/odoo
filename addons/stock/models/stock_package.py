@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from collections.abc import Iterable
 import json
 from ast import literal_eval
 
@@ -227,15 +228,20 @@ class StockPackage(models.Model):
         return [('id', 'in', all_package_ids)]
 
     def _search_move_line_ids(self, operator, value):
-        if operator not in ['in', 'not in']:
+        if operator != 'in':
             return NotImplemented
 
-        move_lines = self.env['stock.move.line'].search_fetch(
-            domain=[('state', 'not in', ['done', 'cancel']), ('id', operator, value)],
-            field_names=['result_package_id'])
+        domain = Domain('state', 'not in', ['done', 'cancel'])
+        pack_operator = 'in'
+        if isinstance(value, Iterable) and tuple(value) == (False,):
+            # Search for ('move_line_ids', '=', False), which means not assigned to any ongoing picking
+            pack_operator = 'not in'
+        else:
+            domain &= Domain('id', operator, value)
+        move_lines = self.env['stock.move.line'].search_fetch(domain=domain, field_names=['result_package_id'])
         all_package_ids = move_lines.result_package_id._get_all_package_dest_ids()
 
-        return [('id', 'in', all_package_ids)]
+        return [('id', pack_operator, all_package_ids)]
 
     def _search_outermost_package_id(self, operator, value):
         if operator not in ['in', 'not in']:
@@ -355,19 +361,26 @@ class StockPackage(models.Model):
         return package._post_put_in_pack_hook()
 
     def action_remove_package(self):
+        """ Removes all packages in self from the destination container tree.
+            For move lines directly linked to a package (through result_package_id)
+            - If the entire package is moved, remove the move lines entirely from the picking
+            - Otherwise, just unset the packages as destination package
+        """
+        all_package_dest_ids = self._get_all_package_dest_ids()
         all_move_line_ids = set(self.move_line_ids.ids)
         move_line_ids_to_unlink = set()
         related_move_ids = set()
         move_line_ids_to_update = set()
         for line in self.move_line_ids:
-            picking_id = self.env.context.get('picking_id')
-            if picking_id and line.picking_id.id != picking_id:
+            picking_ids = self.env.context.get('picking_ids')
+            if picking_ids and line.picking_id.id not in picking_ids:
                 continue
-            if line.is_entire_pack:
-                move_line_ids_to_unlink.add(line.id)
-                related_move_ids.add(line.move_id.id)
-            elif line.result_package_id.id in self.ids:
-                move_line_ids_to_update.add(line.id)
+            if line.result_package_id.id in self.ids:
+                if line.is_entire_pack:
+                    move_line_ids_to_unlink.add(line.id)
+                    related_move_ids.add(line.move_id.id)
+                else:
+                    move_line_ids_to_update.add(line.id)
 
         self.env['stock.move.line'].browse(move_line_ids_to_unlink).unlink()
         self.env['stock.move.line'].browse(move_line_ids_to_update).write({'result_package_id': False})
@@ -377,6 +390,9 @@ class StockPackage(models.Model):
         # If packages in self are dest containers of other packages, remove them as their dest as well
         self.child_package_dest_ids.package_dest_id = False
         self.package_dest_id = False
+
+        # If parent packages are now isolated from bottom-level packages, clear their destination container as well
+        self.env['stock.package'].search_fetch([('id', 'in', all_package_dest_ids), ('move_line_ids', '=', False)], field_names=['id']).write({'package_dest_id': False})
 
         # If outermost packages were changed, different putaway rules may apply.
         self.env['stock.move.line'].browse(all_move_line_ids - move_line_ids_to_unlink)._apply_putaway_strategy()

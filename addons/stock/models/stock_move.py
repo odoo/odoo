@@ -265,7 +265,7 @@ class StockMove(models.Model):
         for move in self:
             move.has_lines_without_result_package = move.move_line_ids.result_package_id and any(not line.result_package_id for line in move.move_line_ids)
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.result_package_id.outermost_package_id')
     def _compute_package_ids(self):
         for move in self:
             if move.state in ['done', 'cancel']:
