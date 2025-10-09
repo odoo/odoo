@@ -85,7 +85,7 @@ export class HighlightConfigurator extends Component {
             ColorPicker,
             {
                 state: { selectedColor: this.state.color, defaultTab: "solid" },
-                colorPrefix: "",
+                colorPrefix: "hb-cp-",
                 getUsedCustomColors: this.props.getUsedCustomColors,
                 enabledTabs: ["solid", "custom"],
                 applyColor: this.selectHighlightColor.bind(this),
@@ -96,6 +96,7 @@ export class HighlightConfigurator extends Component {
                     ),
                 applyColorResetPreview: this.props.revertHighlightStyle,
                 className: "d-contents",
+                themeColorPrefix: "hb-cp-",
             },
             "Select a color",
             true
@@ -109,10 +110,10 @@ export class HighlightConfigurator extends Component {
 
     selectHighlightColor(color) {
         this.props.componentStack.pop();
-        this.props.applyHighlightStyle(
-            "--text-highlight-color",
-            normalizeColor(color, getHtmlStyle(document))
-        );
+        const highlightColor = color.startsWith("hb-cp-")
+            ? `var(--${color.replace("hb-cp-", "")})`
+            : normalizeColor(color, getHtmlStyle(document));
+        this.props.applyHighlightStyle("--text-highlight-color", highlightColor);
     }
 
     deleteHighlight() {
