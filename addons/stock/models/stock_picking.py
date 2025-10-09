@@ -1910,7 +1910,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('picking_ids', 'in', self.ids)],
             'context': {
-                'picking_id': self.id,
+                'picking_ids': self.ids,
                 'location_id': self.location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,
