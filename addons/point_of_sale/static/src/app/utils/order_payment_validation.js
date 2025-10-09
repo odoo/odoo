@@ -294,9 +294,8 @@ export default class OrderPaymentValidation {
         ) {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Please select the Customer"),
-                body: _t(
-                    "You need to select the customer before you can invoice or ship an order."
-                ),
+                body: _t("Select a customer with a valid address."),
+                confirmLabel: _t("Customer"),
             });
             if (confirmed) {
                 this.pos.selectPartner();

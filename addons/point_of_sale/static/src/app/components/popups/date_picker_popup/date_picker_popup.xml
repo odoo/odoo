@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.DatePickerPopup">
-        <Dialog title="props.title">
-            <input class="form-control form-control-lg w-75 mx-auto" type="date" t-model="state.shippingDate" t-ref="input" t-att-min="_today()"/>
+        <Dialog title="props.title" size="'sm'">
+            <div class="mb-3 w-100 d-flex flex-column flex-sm-row align-items-center">
+                <span class="me-3 fs-5 text-center text-sm-start" style="white-space: nowrap;">
+                    Select Date:
+                </span>
+                <div class="flex-grow-1 w-100 shipping-date-selector">
+                    <DateTimeInput
+                        type="'date'"
+                        value="state.shippingDate"
+                        onChange.bind="onDateChange"
+                        minDate="'today'"
+                    />
+                </div>
+            </div>
             <t t-set-slot="footer">
-                <button class="btn btn-lg btn-primary" t-on-click="confirm" t-esc="props.confirmLabel" />
+                <button
+                    class="btn btn-lg btn-primary w-100"
+                    t-on-click="confirm"
+                    t-esc="props.confirmLabel"
+                />
             </t>
         </Dialog>
     </t>

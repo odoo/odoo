@@ -1,4 +1,9 @@
-import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDateTime,
+    serializeDateTime,
+    deserializeDate,
+    serializeDate,
+} from "@web/core/l10n/dates";
 export const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 export const DATE_TIME_TYPE = new Set(["date", "datetime"]);
 export const X2MANY_TYPES = new Set(["many2many", "one2many"]);
@@ -51,6 +56,28 @@ export function convertDateTimeToRaw(value) {
     // Verify if is already a valid date object
     if (typeof value !== "string") {
         return serializeDateTime(value);
+    }
+    return value;
+}
+
+export function convertRawToDate(model, value, prop) {
+    if (!value) {
+        return undefined;
+    }
+    const date = deserializeDate(value);
+    if (!date.isValid) {
+        throw new Error(`Invalid date: ${value} for model ${model.model} in field ${prop}`);
+    }
+    return date;
+}
+
+export function convertDateToRaw(value) {
+    if (!value) {
+        return undefined;
+    }
+    // Verify if is already a valid date object
+    if (typeof value !== "string") {
+        return serializeDate(value);
     }
     return value;
 }
