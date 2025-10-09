@@ -110,8 +110,10 @@ class StockRule(models.Model):
 
         for company_id in new_productions_values_by_company:
             productions_vals_list = new_productions_values_by_company[company_id]['values']
-            # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
+            # Create the MO using the current logged-in user if the replenishment is triggered manually.
+            # Otherwise, fallback to SUPERUSER_ID (e.g., MO generated from sales orders).
+            user_id = (self.env.context.get('manual_replenishment') and self.env.uid) or SUPERUSER_ID
+            productions = self.env['mrp.production'].with_user(user_id).sudo().with_company(company_id).create(productions_vals_list)
             for mo in productions:
                 if self._should_auto_confirm_procurement_mo(mo):
                     mo.action_confirm()
