@@ -80,7 +80,7 @@
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
         <field name="medium_id" ref="utm.utm_medium_direct"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">1</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=29)"/>
@@ -96,7 +96,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">1</field>
         <field name="stage_id" ref="stage_job1"/>
     </record>
@@ -112,7 +112,7 @@
         <field name="job_id" ref="hr.job_cto"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="medium_id" ref="utm.utm_medium_email"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job1"/>
     </record>
 
@@ -126,7 +126,7 @@
         <field name="job_id" ref="hr.job_cto"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="medium_id" ref="utm.utm_medium_email"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="refuse_reason_id" ref="refuse_reason_8"></field>
@@ -141,7 +141,7 @@
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_cto"/>
         <field name="department_id" ref="hr.dep_rd"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job4"/>
     </record>
@@ -156,7 +156,7 @@
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="medium_id" ref="utm.utm_medium_email"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job1"/>
     </record>
@@ -169,7 +169,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job2"/>
     </record>
@@ -183,7 +183,7 @@
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="medium_id" ref="utm.utm_medium_email"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job3"/>
     </record>
@@ -196,7 +196,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job1"/>
         <field name="refuse_reason_id" ref="refuse_reason_6"></field>
@@ -212,7 +212,7 @@
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_rd"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">2</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6633225</field>
@@ -229,7 +229,7 @@
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_sales"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">2</field>
         <field name="stage_id" ref="stage_job3"/>
         <field name="partner_phone">6633225</field>
@@ -247,7 +247,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job3"/>
     </record>
@@ -260,7 +260,7 @@
         <field name="categ_ids" eval="[Command.set([ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job3"/>
         <field name="refuse_reason_id" ref="refuse_reason_7"></field>
@@ -275,7 +275,7 @@
         <field name="categ_ids" eval="[Command.set([ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job3"/>
         <field name="refuse_reason_id" ref="refuse_reason_7"></field>
@@ -290,7 +290,7 @@
         <field name="categ_ids" eval="[Command.set([ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job3"/>
         <field name="refuse_reason_id" ref="refuse_reason_7"></field>
@@ -304,7 +304,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job1"/>
     </record>
 
@@ -316,7 +316,7 @@
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job3"/>
     </record>
@@ -329,7 +329,7 @@
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job0"/>
         <field name="refuse_reason_id" ref="refuse_reason_5"></field>
@@ -344,7 +344,7 @@
         <field name="categ_ids" eval="[Command.set([ref('tag_applicant_it')])]"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">1</field>
         <field name="stage_id" ref="stage_job0"/>
         <field name="refuse_reason_id" ref="refuse_reason_7"></field>
@@ -359,7 +359,7 @@
         <field eval="(datetime.now()+relativedelta(months=-2)).strftime('%Y-%m-03 01:00:00')" name="create_date"/>
         <field name="job_id" ref="hr.job_marketing"/>
         <field name="department_id" ref="hr.dep_sales"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job5"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=61)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=37)).strftime('%Y-%m-%d')"/>
@@ -373,7 +373,7 @@
         <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 01:00:00')" name="create_date"/>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
-        <field name="user_id" ref="base.user_demo"/>
+        <field name="recruiter" ref="hr.employee_qdp"/>
         <field name="stage_id" ref="stage_job5"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=34)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
@@ -388,7 +388,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_hrm"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">1</field>
         <field name="stage_id" ref="stage_job2"/>
     </record>
@@ -401,7 +401,7 @@
         <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_hrm"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">1</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=7)"/>
@@ -417,7 +417,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_hrm"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">1</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="refuse_reason_id" ref="refuse_reason_1"></field>
@@ -433,7 +433,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_hrm"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job2"/>
     </record>
@@ -447,7 +447,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_hrm"/>
         <field name="department_id" ref="hr.dep_administration"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">2</field>
         <field name="stage_id" ref="stage_job0"/>
     </record>
@@ -461,7 +461,7 @@
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="stage_id" ref="stage_job4"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=67)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
     </record>
@@ -475,7 +475,7 @@
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="stage_id" ref="stage_job0"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=67)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
     </record>
@@ -489,7 +489,7 @@
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="stage_id" ref="stage_job1"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=67)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
     </record>
@@ -503,7 +503,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="department_id" ref="hr.dep_rd"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job4"/>
         <field name="salary_expected">11000.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=13)"/>
@@ -519,7 +519,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_consultant"/>
         <field name="department_id" ref="hr.dep_ps"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job2"/>
         <field name="salary_expected">11000.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
@@ -535,7 +535,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_consultant"/>
         <field name="department_id" ref="hr.dep_ps"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job2"/>
         <field name="salary_expected">21000.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
@@ -551,7 +551,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_consultant"/>
         <field name="department_id" ref="hr.dep_ps"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job1"/>
         <field name="salary_expected">51000.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
@@ -567,7 +567,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_consultant"/>
         <field name="department_id" ref="hr.dep_ps"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job4"/>
         <field name="salary_expected">71000.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
@@ -583,7 +583,7 @@
         <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
         <field name="job_id" ref="hr.job_consultant"/>
         <field name="department_id" ref="hr.dep_ps"/>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="stage_id" ref="stage_job4"/>
         <field name="salary_expected">51123.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
@@ -883,7 +883,7 @@
         <field name="partner_name">Cameron Ellis</field>
         <field name="email_from">cameron.ellis@example.com</field>
         <field name="partner_phone">654687987</field>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">0</field>
         <field name="talent_pool_ids" eval="[Command.link(ref('talent_pool_0'))]"></field>
     </record>
@@ -905,7 +905,7 @@
         <field name="partner_name">Ethan Carter</field>
         <field name="email_from">ethan.carter@example.com</field>
         <field name="partner_phone">987891</field>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">1</field>
         <field name="talent_pool_ids" eval="[Command.link(ref('talent_pool_0'))]"></field>
     </record>
@@ -927,7 +927,7 @@
         <field name="partner_name">Noah Bennett</field>
         <field name="email_from">noah.bennett@example.com</field>
         <field name="partner_phone">8951245111</field>
-        <field name="user_id" ref="base.user_admin"/>
+        <field name="recruiter" ref="hr.employee_admin"/>
         <field name="priority">3</field>
         <field name="talent_pool_ids" eval="[Command.link(ref('talent_pool_0'))]"></field>
     </record>

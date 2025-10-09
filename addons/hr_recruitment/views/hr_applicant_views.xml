@@ -37,7 +37,7 @@
                 <field name="stage_id" widget="badge_rotting" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="recruiter" widget="many2one_avatar_employee" optional="show"/>
                 <field name="is_rotting" column_invisible="True"/>
                 <field name="rotting_days" column_invisible="True"/>
                 <field name="type_id" column_invisible="True"/>
@@ -164,7 +164,7 @@
                         <field name="priority" widget="priority"/>
                         <field name="job_id" invisible="is_pool_applicant" placeholder="Spontaneous application"/>
                         <field name="talent_pool_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not is_pool_applicant"/>
-                        <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
+                        <field name="recruiter" widget="many2one_avatar_employee" placeholder="Unassigned"/>
                         <field name="interviewer_ids" options="{'no_create': True}" widget="many2many_avatar_user" invisible="is_pool_applicant" placeholder="Who can access applicants" />
                         <field name="date_closed" invisible="not date_closed" />
                         <field name="categ_ids" placeholder="e.g. Trainee" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -263,7 +263,7 @@
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="user_id"/>
+                <field name="recruiter"/>
                 <field name="stage_id" domain="[]"/>
                 <field name="categ_ids"/>
                 <field name="refuse_reason_id"/>
@@ -272,8 +272,8 @@
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids', 'any', [('index_content', 'ilike', self), ('res_model', '=', 'hr.applicant')])]" string="Resume's content"/>
-                <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
-                <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="My Applications" name="my_applications" domain="[('recruiter', '=', uid)]"/>
+                <filter string="Unassigned" name="unassigned" domain="[('recruiter', '=', False)]"/>
                 <separator/>
                 <filter string="Applicants" name="applicants" domain="[('talent_pool_ids', '=', False)]"/>
                 <filter string="Talents" name="talents" domain="[('talent_pool_ids', '!=', False)]"/>
@@ -313,7 +313,7 @@
                 <group>
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
-                    <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'recruiter'}"/>
                     <filter string="Talent Pool" name="talent_pool" domain="[]" context="{'group_by': 'talent_pool_ids'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
@@ -335,7 +335,7 @@
                 string="Applicants"
                 mode="month"
                 date_start="activity_date_deadline"
-                color="user_id"
+                color="recruiter"
                 event_limit="5"
                 hide_time="true"
                 quick_create="0"
@@ -343,7 +343,7 @@
                 <field name="partner_name"/>
                 <field name="job_id"/>
                 <field name="priority" widget="priority"/>
-                <field name="user_id" filters="1" invisible="1"/>
+                <field name="recruiter" filters="1" invisible="1"/>
                 <field name="activity_summary"/>
             </calendar>
         </field>
@@ -389,10 +389,10 @@
                 <field name="legend_done"/>
                 <field name="date_closed"/>
                 <field name="color"/>
-                <field name="user_id"/>
+                <field name="recruiter"/>
                 <field name="active"/>
                 <field name="application_status" />
-                <field name="company_id" invisible="1"/> <!-- We need to keep this field as it is used in the domain of user_id in the model -->
+                <field name="company_id" invisible="1"/> <!-- We need to keep this field as it is used in the domain of recruiter in the model -->
                 <progressbar field="kanban_state" colors='{"done": "success", "waiting": "warning", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="menu">
@@ -423,7 +423,7 @@
                                     <field name="attachment_number"/>
                                 </a>
                                 <field name="kanban_state" class="mx-1" widget="hr_applicant_state_selection"/>
-                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="recruiter" widget="many2one_avatar_employee"/>
                             </div>
                         </footer>
                     </t>
@@ -439,7 +439,7 @@
             <activity string="Applicants">
                 <templates>
                     <div t-name="activity-box" class="o_hr_applicant_view_activity">
-                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <field name="recruiter" widget="many2one_avatar_employee"/>
                         <div class="flex-grow-1 ms-1">
                             <field name="partner_name" muted="1" display="full" class="o_text_block"/>
                         </div>
@@ -615,10 +615,10 @@
             <search string="Recruitment Analysis">
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
-                <field name="user_id"/>
+                <field name="recruiter"/>
                 <filter string="Creation Date" name="year" date="create_date" default_period="year"/>
                 <separator/>
-                <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="Unassigned" name="unassigned" domain="[('recruiter', '=', False)]"/>
                 <separator/>
                 <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>
@@ -635,7 +635,7 @@
                     <field name="date_closed"/>
                 </group>
                 <group>
-                    <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
+                    <filter string="Responsible" name='Recruiter' context="{'group_by':'recruiter'}"/>
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>
                     <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
@@ -714,7 +714,7 @@
         <field name="model_id">hr.applicant</field>
         <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
-        <field name="context">{'group_by': ['create_date:month', 'user_id']}</field>
+        <field name="context">{'group_by': ['create_date:month', 'recruiter']}</field>
     </record>
     <record id="hr_applicant_filter_job" model="ir.filters">
         <field name="name">By Job</field>

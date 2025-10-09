@@ -24,9 +24,13 @@ class TestRecruitmentInterviewer(MailCase):
             groups='base.group_user,hr_recruitment.group_hr_recruitment_manager',
             name='Recruitment Manager', email='mng@example.com')
 
+        cls.simple_employee = cls.simple_user.employee_id
+        cls.interviewer_employee = cls.interviewer_user.employee_id
+        cls.manager_employee = cls.manager_user.employee_id
+
         cls.job = cls.env['hr.job'].create({
             'name': 'super nice job',
-            'user_id': cls.manager_user.id,
+            'recruiter': cls.manager_employee.id,
         })
 
     def test_interviewer_group(self):
@@ -140,17 +144,19 @@ class TestRecruitmentInterviewer(MailCase):
         new_manager_user = new_test_user(self.env, 'thala',
             groups='base.group_user,hr_recruitment.group_hr_recruitment_manager',
             name='New Recruitment Manager', email='thala@example.com')
+        new_manager_employee = new_manager_user.employee_id
+
         ongoing_application = Application.create({
             'job_id': self.job.id,
-            'user_id': self.manager_user.id,
+            'recruiter': self.manager_employee.id,
             'application_status': 'ongoing',
         })
         hired_application = Application.create({
             'job_id': self.job.id,
-            'user_id': self.manager_user.id,
+            'recruiter': self.manager_employee.id,
             'date_closed': fields.Datetime.now(),
             'application_status': 'hired',
         })
-        self.job.write({'user_id': new_manager_user.id})
-        self.assertEqual(ongoing_application.user_id, new_manager_user)
-        self.assertEqual(hired_application.user_id, self.manager_user)
+        self.job.write({'recruiter': new_manager_employee.id})
+        self.assertEqual(ongoing_application.recruiter, new_manager_employee)
+        self.assertEqual(hired_application.recruiter, self.manager_employee)

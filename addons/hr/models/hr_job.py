@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.addons.html_editor.tools import handle_history_divergence
 
 
@@ -23,11 +23,11 @@ class HrJob(models.Model):
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements', groups="hr.group_hr_user")
-    user_id = fields.Many2one(
-        "res.users",
+    recruiter = fields.Many2one(
+        'hr.employee',
         "Recruiter",
-        domain="[('share', '=', False), ('id', 'in', allowed_user_ids)]",
-        default=lambda self: self.env.user,
+        domain="[('user_id.share', '=', False), ('user_id', 'in', allowed_user_ids)]",
+        default=lambda self: self.env.user.employee_id,
         groups="hr.group_hr_user",
         tracking=True,
         help="The Recruiter will be the default value for all Applicants in this job \
