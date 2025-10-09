@@ -436,6 +436,7 @@ class StockWarehouseOrderpoint(models.Model):
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
+        orderpoints._compute_qty_to_order_computed()
         to_refill = defaultdict(float)
         all_product_ids = self._get_orderpoint_products()
         all_replenish_location_ids = self._get_orderpoint_locations()
