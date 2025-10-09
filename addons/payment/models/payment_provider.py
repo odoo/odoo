@@ -675,19 +675,6 @@ class PaymentProvider(models.Model):
         """
         return False
 
-    def _should_build_inline_form(self, is_validation=False):
-        """ Return whether the inline payment form should be instantiated.
-
-        For a provider to handle both direct payments and payments with redirection, it must
-        override this method and return whether the inline payment form should be instantiated (i.e.
-        if the payment should be direct) based on the operation (online payment or validation).
-
-        :param bool is_validation: Whether the operation is a validation.
-        :return: Whether the inline form should be instantiated.
-        :rtype: bool
-        """
-        return True
-
     def _get_validation_amount(self):
         """ Return the amount to use for validation operations.
 
