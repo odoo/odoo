@@ -45,7 +45,7 @@ import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/use
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { wrapInPlaceholders } from "./_helpers/selection_placeholder";
+import { PLACEHOLDER, wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -2532,5 +2532,5 @@ test("should always have a block before a Table of Contents", async () => {
     await animationFrame();
     const firstChild = htmlEditor.editable.firstChild;
     expect(firstChild.getAttribute("data-embedded")).not.toBe("tableOfContent");
-    expect(firstChild).toHaveOuterHTML('<div class="o-paragraph"><br></div>');
+    expect(firstChild).toHaveOuterHTML(PLACEHOLDER({ tag: "div" }));
 });
