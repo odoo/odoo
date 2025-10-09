@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { getContent } from "./_helpers/selection";
-import { animationFrame, click, pointerUp, press, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, press as keyPress, queryOne, waitFor } from "@odoo/hoot-dom";
 import { insertText, splitBlock } from "./_helpers/user_actions";
 import {
     compareHighlightedContent,
@@ -14,6 +14,12 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { unformat } from "./_helpers/format";
+
+// Press a key combination, then wait for useEffect to kick in.
+const press = async (...args) => {
+    await keyPress(...args);
+    await animationFrame(); // wait for effect
+};
 
 const insertPre = async (editor) => {
     await insertText(editor, "/code");
@@ -33,6 +39,7 @@ const changeLanguage = async (textarea, from, to) => {
     await click(`.o_language_selector .o-dropdown-item[name='${to}']`);
     // Code Toolbar should show the new language name.
     await waitFor(`.o_code_toolbar button[name='language'][title='${to}']`);
+    await animationFrame(); // wait for effect
 };
 
 const configWithEmbeddings = {
@@ -47,7 +54,10 @@ test("starting edition with a pre activates syntax highlighting", async () => {
         compareFunction: compareHighlightedContent,
         contentBefore: "<pre>some code</pre>",
         contentBeforeEdit: highlightedPre({ value: "some code" }),
-        stepFunction: async () => press(["ctrl", "z"]),
+        stepFunction: async () => {
+            await press(["ctrl", "z"]);
+            await animationFrame();
+        },
         contentAfterEdit: highlightedPre({ value: "some code" }), // Undo did nothing.
         contentAfter: `<pre data-language-id="plaintext">some code</pre>`,
         config: configWithEmbeddings,
@@ -71,6 +81,7 @@ test("starting edition with a pre activates syntax highlighting (with dataset va
             );
             await click("textarea");
             await press("a");
+            await animationFrame(); // wait for effect
             await compareHighlightedContent(
                 getContent(editor.editable),
                 highlightedPre({
@@ -82,7 +93,7 @@ test("starting edition with a pre activates syntax highlighting (with dataset va
                 editor
             );
             await press(["ctrl", "z"]);
-            await press(["ctrl", "z"]);
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({
             value: "Hello world!",
@@ -107,6 +118,7 @@ test("inserting a code block activates syntax highlighting plugin, typing trigge
                 editor
             );
             await press("d");
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 4 }), // The change of value in the textarea is reflected in the pre.
         contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
@@ -184,6 +196,7 @@ test("should fill an empty pre", async () => {
             await click(textarea);
             textarea.select();
             await press("backspace");
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({ value: "", textareaRange: 0 }), // Note: the BR is outside the highlight.
         contentAfter: `<pre data-language-id="plaintext"><br></pre>[]`,
@@ -235,6 +248,7 @@ test("can copy content with the copy button", async () => {
             await click(".o_code_toolbar .o_clipboard_button");
             expect.verifySteps(["abcd"]);
             textarea.focus();
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 4 }),
         contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
@@ -252,6 +266,7 @@ test("tab in code block inserts 4 spaces", async () => {
             const textarea = queryOne("textarea");
             textarea.setSelectionRange(2, 2); // "co[]de"
             await press("tab");
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({
             value: "co    de",
@@ -268,11 +283,12 @@ test("tab in selection in code block indents each selected line", async () => {
         compareFunction: compareHighlightedContent,
         contentBefore: "<pre>a<br>b c<br> d</pre>",
         contentBeforeEdit: highlightedPre({ value: "a\nb c\n d" }),
-        stepFunction: async (editor) => {
+        stepFunction: async () => {
             await click("textarea");
             const textarea = queryOne("textarea");
             textarea.setSelectionRange(1, 7); // "a[\nb c\n ]d"
             await press("tab");
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({
             value: valueAfter,
@@ -297,6 +313,7 @@ test("shift+tab in code block outdents the current line", async () => {
             const textarea = queryOne("textarea");
             textarea.setSelectionRange(22, 22); // "    some\n       co    []de\n    for you"
             await press(["shift", "tab"]);
+            await animationFrame(); // wait for effect
             await compareHighlightedContent(
                 getContent(editor.editable),
                 highlightedPre({
@@ -307,6 +324,7 @@ test("shift+tab in code block outdents the current line", async () => {
                 editor
             );
             await press(["shift", "tab"]);
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({
             value: valueAfter,
@@ -330,6 +348,7 @@ test("shift+tab in selection in code block outdents each selected line", async (
             const textarea = queryOne("textarea");
             textarea.setSelectionRange(5, 19); // "a[\nb c\n ]d"
             await press(["shift", "tab"]);
+            await animationFrame(); // wait for effect
             await compareHighlightedContent(
                 getContent(editor.editable),
                 highlightedPre({
@@ -341,6 +360,7 @@ test("shift+tab in selection in code block outdents each selected line", async (
             );
             // Remove the last remaining leading space.
             await press(["shift", "tab"]);
+            await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({
             value: "a\nb c\nd",
@@ -731,7 +751,6 @@ test("multiple ctrl+z in a highlighted code block undo changes in the block and 
     // Write in the P again.
     actions.push("type: insert 'o' into the paragraph", "type: insert 'k' into the paragraph");
     editor.shared.selection.setCursorEnd(queryOne("p"));
-    await pointerUp("p");
     await insertText(editor, "ok"); // <wrapper><highlight><pre>some codeyes</pre></highlight></wrapper><p>hello!ok[]</p>
     await compareHighlightedContent(
         getContent(editor.editable),
