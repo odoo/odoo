@@ -581,32 +581,37 @@ Versions:
             (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
+        public_holidays = self._get_public_holidays()
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
                 result[leave.id] = (0, 0)
+                continue
+            if leave.holiday_status_id.count_days_as == 'calendar':
+                if not leave.holiday_status_id.include_public_holidays_in_duration:
+                    filtered_public_holidays = public_holidays.filtered(lambda h:
+                        h.date_from < leave.date_to and
+                        h.date_to > leave.date_from and
+                        (h.calendar_id == calendar or not h.calendar_id) and
+                        h.company_id == leave.company_id
+                    )
+                    days = ceil(leave._subtract_public_holidays(filtered_public_holidays) / 24)
+                else:
+                    days = (leave.date_to.date() - leave.date_from.date()).days + 1
+                result[leave.id] = (days, days * calendar.hours_per_day)
                 continue
             hours, days = (0, 0)
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
                 if leave.employee_id.sudo().is_flexible and leave.date_to.date() == leave.date_from.date():
-                    public_holidays = self.env['resource.calendar.leaves'].search([
-                        ('resource_id', '=', False),
-                        ('date_from', '<', leave.date_to),
-                        ('date_to', '>', leave.date_from),
-                        ('calendar_id', 'in', [False, calendar.id]),
-                        ('company_id', '=', leave.company_id.id)
-                    ])
-                    if public_holidays:
-                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
-                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
-                        real_leave_intervals = leave_intervals - public_holidays_intervals
-                        hours = 0
-                        for start, stop, meta in real_leave_intervals:
-                            hours += (stop - start).total_seconds() / 3600
-                    else:
-                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    filtered_public_holidays = public_holidays.filtered(lambda h:
+                        h.date_from < leave.date_to and
+                        h.date_to > leave.date_from and
+                        (h.calendar_id == calendar or not h.calendar_id) and
+                        h.company_id == leave.company_id
+                    )
+                    hours = leave._subtract_public_holidays(filtered_public_holidays)
                     if not leave.request_unit_hours and not public_holidays:
                         days = 1 if not leave.request_unit_half else 0.5
                     else:
@@ -1034,6 +1039,24 @@ Versions:
                 ),
                 partner_ids=notify_partner_ids)
 
+    def _get_public_holidays(self):
+        """Return all public holidays."""
+        domain = [
+            ('resource_id', '=', False),
+            ('company_id', '=', self.env.companies.ids)
+        ]
+
+        return self.env['resource.calendar.leaves'].search(domain)
+
+    def _subtract_public_holidays(self, public_holidays):
+        """Subtract public holiday intervals from leave and return hours."""
+        self.ensure_one()
+        public_holidays_intervals = Intervals([])
+        if public_holidays:
+            public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+        leave_intervals = Intervals([(self.date_from, self.date_to, self)])
+        real_leave_intervals = leave_intervals - public_holidays_intervals
+        return sum((stop - start).total_seconds() / 3600 for start, stop, _ in real_leave_intervals)
 
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
