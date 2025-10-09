@@ -1,9 +1,18 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, useChildSubEnv, useExternalListener, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    useChildSubEnv,
+    useExternalListener,
+    useState,
+} from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
+import { hasAnimation } from "@web/core/utils/ui";
+import { isPrefersReducedMotion } from "@web/core/browser/feature_detection";
 
 const useDialogDraggable = makeDraggableHook({
     name: "useDialogDraggable",
@@ -109,6 +118,11 @@ export class Dialog extends Component {
             const throttledResize = throttleForAnimation(this.onResize.bind(this));
             useExternalListener(window, "resize", throttledResize);
         }
+        onMounted(() => {
+            this.prefersReducedMotion =
+                isPrefersReducedMotion() ||
+                !hasAnimation(this.modalRef.el.querySelector(".modal-content"));
+        });
         onWillDestroy(() => {
             if (this.env.isSmall) {
                 this.data.scrollToOrigin();
@@ -141,6 +155,17 @@ export class Dialog extends Component {
     }
 
     async dismiss() {
+        if (this.isFullscreen) {
+            this.modalRef.el.classList.add("o_modal_is_dismissing");
+            await new Promise((resolve) => {
+                if (this.prefersReducedMotion) {
+                    resolve();
+                } else {
+                    this.modalRef.el.addEventListener("animationend", resolve, { once: true });
+                    this.modalRef.el.addEventListener("animationcancel", resolve, { once: true });
+                }
+            });
+        }
         if (this.data.dismiss) {
             await this.data.dismiss();
         }

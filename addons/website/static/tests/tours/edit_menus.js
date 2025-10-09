@@ -294,7 +294,8 @@ registerWebsitePreviewTour('edit_menus', {
     {
         content: `Drag "Contact Us" menu below "Home" menu`,
         trigger: '.oe_menu_editor li:contains("Contact us") .oi-draggable',
-        run(helpers) {
+        async run(helpers) {
+            await delay(400); // Time for the animation of the Dialog (transform: translateY(1rem))
             return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
                 position: {
                     top: 57,

@@ -1,6 +1,12 @@
 .modal.o_technical_modal {
     --o-control-panel-breadcrumbs-display: none;
 
+    @media (prefers-reduced-motion: no-preference) {
+        animation: modal-backdrop-in $o-modal-animation-duration cubic-bezier(.19, 1, .22, 1) backwards;
+        &:where(:not(.o_modal_full)) .modal-dialog {
+            transition: max-width $o-modal-animation-duration $o-easing-enter;
+        }
+    }
     backdrop-filter: blur(.5px) grayscale(50%);
 
     .modal-content {
@@ -38,6 +44,14 @@
         }
     }
 
+    &.o_modal_design_default {
+        .modal-content {
+            @media (prefers-reduced-motion: no-preference) {
+                animation: modal-in $o-modal-animation-duration ease-out backwards;
+            }
+        }
+    }
+
     &.o_modal_design_minimal {
         --modal-header-border-width: 0;
         --modal-footer-border-width: 0;
@@ -58,6 +72,14 @@
 
             .modal-content {
                 max-height: calc(100vh - #{$modal-dialog-margin * 8});
+            }
+        }
+
+        @include media-breakpoint-up(sm) {
+            .modal-content {
+                @media (prefers-reduced-motion: no-preference) {
+                    animation: modal-in $o-modal-animation-duration $o-easing-enter forwards;
+                }
             }
         }
     }
@@ -96,6 +118,15 @@
             .modal-body {
                 overflow-y: auto;
             }
+
+            @media (prefers-reduced-motion: no-preference) {
+                .modal-content {
+                    animation: modal-in-sm $o-modal-animation-duration $o-easing-enter;
+                }
+                &.o_modal_is_dismissing .modal-content {
+                    animation: modal-out-sm ($o-modal-animation-duration * 0.7) $o-easing-exit;
+                }
+            }
         }
     }
 }
@@ -123,5 +154,31 @@
     .modal-fs {
         width: calc(100% - #{2 * $modal-dialog-margin-y-sm-up});
         max-width: none;
+    }
+}
+
+
+@keyframes modal-in {
+    from {
+        transform: translateY(1rem);
+    }
+}
+
+@keyframes modal-in-sm {
+    from {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes modal-out-sm {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes modal-backdrop-in {
+    from {
+        background-color: transparent;
+        backdrop-filter: none;
     }
 }

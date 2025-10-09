@@ -77,3 +77,10 @@ export function maxTouchPoints() {
 export function isVirtualKeyboardSupported() {
     return "virtualKeyboard" in browser.navigator;
 }
+
+export function isPrefersReducedMotion() {
+    return (
+        browser.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
+        browser.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true
+    );
+}
