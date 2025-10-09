@@ -2245,6 +2245,43 @@ export class PosStore extends WithLazyGetterTrap {
 
         return payload;
     }
+    async editLotsRefund(line) {
+        const product = line.getProduct();
+        const packLotLinesToEdit = line.pack_lot_ids.map((p) => p.lot_name);
+        const alreadyRefundedLots = line.refunded_orderline_id.refund_orderline_ids
+            .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
+            .flatMap((item) => item.pack_lot_ids)
+            .map((pack_lot) => pack_lot.lot_name);
+        const options = line.refunded_orderline_id.pack_lot_ids
+            .map((p) => p.lot_name)
+            .filter((lotName) => !alreadyRefundedLots.includes(lotName));
+
+        const payload = await makeAwaitable(this.dialog, EditListPopup, {
+            title: _t("Lot/Serial number(s) required for"),
+            name: product.display_name,
+            isSingleItem: product.isAllowOnlyOneLot(),
+            array: packLotLinesToEdit,
+            options: options,
+            customInput: false,
+            uniqueValues: product.tracking === "serial",
+            isLotNameUsed: () => false,
+        });
+        if (payload) {
+            const modifiedPackLotLines = {};
+            const newPackLotLines = [];
+            for (const item of payload) {
+                if (item.id) {
+                    modifiedPackLotLines[item.id] = item.text;
+                } else {
+                    newPackLotLines.push({ lot_name: item.text });
+                }
+            }
+            return { modifiedPackLotLines, newPackLotLines };
+        } else {
+            return null;
+        }
+    }
+
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
