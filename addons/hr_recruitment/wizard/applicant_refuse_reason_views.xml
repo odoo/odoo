@@ -47,10 +47,6 @@
                         <button name="action_refuse_reason_apply" string="Refuse" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                         <div class="d-flex" invisible="not send_mail">
-                            <div invisible="not can_edit_body">
-                                <field name="template_id" widget="mail_composer_template_selector"/>
-                                <field name="body" widget="mail_composer_chatgpt"/>
-                            </div>
                             <field name="scheduled_date" widget="text_scheduled_date"/>
                         </div>
                     </footer>
