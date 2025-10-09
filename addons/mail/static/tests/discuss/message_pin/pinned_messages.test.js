@@ -1,3 +1,4 @@
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import {
     click,
     contains,
@@ -142,4 +143,25 @@ test("Jump to message from notification", async () => {
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o_mail_notification a", { text: "message" });
     await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
+});
+
+test("Guest user cannot see unpin button in pinned messages", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        body: "Test pinned message",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2023-03-30 11:27:11",
+    });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
+    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", {
+        text: "Test pinned message",
+    });
+    await expectElementCount(".o-discuss-PinnedMessagesPanel button[title='Unpin']", 0);
 });
