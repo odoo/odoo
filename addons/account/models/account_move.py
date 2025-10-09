@@ -1757,7 +1757,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda move: move.is_invoice()):
             move.access_url = '/my/invoices/%s' % (move.id)
 
-    @api.depends('move_type', 'partner_id', 'company_id')
+    @api.depends('move_type', 'partner_id', 'partner_id.lang', 'company_id')
     def _compute_narration(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         invoice_to_update_terms = self.filtered(lambda m: use_invoice_terms and m.is_sale_document(include_receipts=True))
