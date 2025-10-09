@@ -4,8 +4,8 @@ import requests
 import threading
 import time
 
-from odoo.addons.iot_drivers.tools import helpers
-from odoo.addons.iot_drivers.tools.system import IS_TEST
+from odoo.addons.iot_drivers.tools import helpers, system
+from odoo.addons.iot_drivers.tools.system import IS_TEST, IOT_IDENTIFIER
 from odoo.netsvc import ColoredFormatter
 
 _logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class AsyncHTTPHandler(logging.Handler):
         """
         super().__init__()
         self._odoo_server_url = odoo_server_url
-        self._db_name = helpers.get_conf('db_name') or ''
+        self._db_name = system.get_conf('db_name') or ''
         self._log_queue = queue.Queue(self._MAX_QUEUE_SIZE)
         self._flush_thread = None
         self._active = None
@@ -70,7 +70,7 @@ class AsyncHTTPHandler(logging.Handler):
             return convert_to_byte(f"{log_level},{line_formatted}")
 
         def empty_queue():
-            yield convert_to_byte(f"identifier {helpers.get_identifier()}")
+            yield convert_to_byte(f"identifier {IOT_IDENTIFIER}")
             for _ in range(self._MAX_BATCH_SIZE):
                 # Use a limit to avoid having too heavy requests & infinite loop of the queue receiving new entries
                 try:
@@ -129,7 +129,7 @@ def close_server_log_sender_handler():
 
 def get_odoo_config_log_to_server_option():
     # Enabled by default if not in test mode
-    return not IS_TEST and (helpers.get_conf(IOT_LOG_TO_SERVER_CONFIG_NAME, section='options') or True)
+    return not IS_TEST and (system.get_conf(IOT_LOG_TO_SERVER_CONFIG_NAME, section='options') or True)
 
 
 def check_and_update_odoo_config_log_to_server_option(new_state):
@@ -137,7 +137,7 @@ def check_and_update_odoo_config_log_to_server_option(new_state):
     :return: wherever the config file need to be updated or not
     """
     if get_odoo_config_log_to_server_option() != new_state:
-        helpers.update_conf({IOT_LOG_TO_SERVER_CONFIG_NAME, new_state}, section='options')
+        system.update_conf({IOT_LOG_TO_SERVER_CONFIG_NAME, new_state}, section='options')
         _server_log_sender_handler.toggle_active(new_state)
         return True
     return False

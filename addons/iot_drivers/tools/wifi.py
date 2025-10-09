@@ -13,7 +13,8 @@ import time
 from pathlib import Path
 from functools import cache
 
-from .helpers import get_ip, get_identifier, get_conf
+from . import system
+from .system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -122,7 +123,7 @@ def disconnect():
     _logger.info('Disconnecting from network %s', ssid)
     _nmcli(['con', 'down', ssid], sudo=True)
 
-    if not get_ip():
+    if not system.get_ip():
         toggle_access_point(START)
     return not is_current(ssid)
 
@@ -160,7 +161,7 @@ def reconnect(ssid=None, password=None, force_update=False):
     if not force_update:
         timer = time.time() + 10  # Required on boot: wait 10 sec (see: https://github.com/odoo/odoo/pull/187862)
         while time.time() < timer:
-            if get_ip():
+            if system.get_ip():
                 if is_access_point():
                     toggle_access_point(STOP)
                 return True
@@ -169,7 +170,7 @@ def reconnect(ssid=None, password=None, force_update=False):
     if not ssid:
         return toggle_access_point(START)
 
-    should_start_access_point_on_failure = is_access_point() or not get_ip()
+    should_start_access_point_on_failure = is_access_point() or not system.get_ip()
 
     # Try to re-enable an existing connection, or set up a new persistent one
     if toggle_access_point(STOP) and not _nmcli(['con', 'up', ssid], sudo=True):
@@ -221,7 +222,7 @@ def get_access_point_ssid():
     :return: Generated SSID
     :rtype: str
     """
-    return "IoTBox-" + get_identifier() or secrets.token_hex(8)
+    return "IoTBox-" + IOT_IDENTIFIER or secrets.token_hex(8)
 
 
 def _configure_access_point(on=True):
@@ -310,13 +311,13 @@ def generate_network_qr_codes():
     """
     qr_code_images = {
         'qr_wifi': None,
-        'qr_url': generate_qr_code_image(f'http://{get_ip()}'),
+        'qr_url': generate_qr_code_image(f'http://{system.get_ip()}'),
     }
 
     # Generate QR codes which can be used to connect to the IoT Box Wi-Fi network
     if not is_access_point():
-        wifi_ssid = get_conf('wifi_ssid')
-        wifi_password = get_conf('wifi_password')
+        wifi_ssid = system.get_conf('wifi_ssid')
+        wifi_password = system.get_conf('wifi_password')
         if wifi_ssid and wifi_password:
             wifi_data = f"WIFI:S:{wifi_ssid};T:WPA;P:{wifi_password};;;"
             qr_code_images['qr_wifi'] = generate_qr_code_image(wifi_data)

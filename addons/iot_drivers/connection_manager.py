@@ -6,8 +6,8 @@ from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
-from odoo.addons.iot_drivers.tools import helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST
+from odoo.addons.iot_drivers.tools import helpers, system, upgrade, wifi
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST, IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class ConnectionManager(Thread):
     def _should_poll_to_connect_database(self):
         return (
             not helpers.get_odoo_server_url() and
-            helpers.get_ip() and
+            system.get_ip() and
             not (IS_RPI and wifi.is_access_point()) and
             not self.pairing_code_expired
         )
@@ -68,7 +68,7 @@ class ConnectionManager(Thread):
             'params': {
                 'pairing_code': self.pairing_code,
                 'pairing_uuid': self.pairing_uuid,
-                'serial_number': helpers.get_identifier(),
+                'serial_number': IOT_IDENTIFIER,
             }
         }
 

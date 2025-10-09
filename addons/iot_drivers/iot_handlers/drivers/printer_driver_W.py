@@ -12,7 +12,7 @@ import ghostscript
 
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
-from odoo.addons.iot_drivers.tools import helpers
+from odoo.addons.iot_drivers.tools import system
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
 
@@ -76,8 +76,8 @@ class PrinterDriver(PrinterDriverBase):
 
     def print_report(self, data):
         with win32print_lock:
-            helpers.write_file('document.pdf', data, 'wb')
-            file_name = helpers.path_file('document.pdf')
+            file_name = system.path_file('document.pdf')
+            file_name.write_bytes(data)
             printer = self.device_name
 
             args = [

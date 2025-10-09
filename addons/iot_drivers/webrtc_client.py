@@ -7,7 +7,7 @@ import time
 from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
 
 from odoo.addons.iot_drivers import main
-from odoo.addons.iot_drivers.tools import helpers
+from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ class WebRtcClient(Thread):
                 elif message_type == "test_protocol":
                     self.send({
                         'owner': message['session_id'],
-                        'device_identifier': helpers.get_identifier(),
+                        'device_identifier': IOT_IDENTIFIER,
                         'time': time.time(),
                         'status': 'success',
                     })
