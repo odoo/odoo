@@ -1459,7 +1459,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         address.update(country_id=country.id, state_id=state_id)
 
     @route('/shop/update_address', type='jsonrpc', auth='public', website=True)
-    def shop_update_address(self, partner_id, address_type='billing', **kw):
+    def shop_update_address(self, partner_id, address_types=['billing'], **kw):
         partner_id = int(partner_id)
 
         if not (order_sudo := request.cart):
@@ -1479,16 +1479,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise Forbidden()
 
         partner_fnames = set()
-        if (
-            address_type == 'billing'
-            and partner_sudo != order_sudo.partner_invoice_id
-        ):
-            partner_fnames.add('partner_invoice_id')
-        elif (
-            address_type == 'delivery'
-            and partner_sudo != order_sudo.partner_shipping_id
-        ):
-            partner_fnames.add('partner_shipping_id')
+        for address_type in address_types:
+            if (
+                address_type == 'billing'
+                and partner_sudo != order_sudo.partner_invoice_id
+            ):
+                partner_fnames.add('partner_invoice_id')
+            elif (
+                address_type == 'delivery'
+                and partner_sudo != order_sudo.partner_shipping_id
+            ):
+                partner_fnames.add('partner_shipping_id')
 
         order_sudo._update_address(partner_id, partner_fnames)
 

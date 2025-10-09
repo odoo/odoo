@@ -161,7 +161,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             # Change a shipping address of the order in the checkout.
             shipping_partner2 = shipping_partner.copy()
             self.WebsiteSaleController.shop_update_address(
-                partner_id=shipping_partner2.id, address_type='delivery'
+                partner_id=shipping_partner2.id, address_types=['delivery']
             )
             self.assertGreaterEqual(
                 rate_shipment_mock.call_count,
@@ -498,22 +498,22 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
             # Good addresses
             self.WebsiteSaleController.shop_update_address(
-                partner_id=colleague_shipping.id, address_type='delivery')
+                partner_id=colleague_shipping.id, address_types=['delivery'])
             self.assertEqual(so.partner_shipping_id, colleague_shipping)
             self.WebsiteSaleController.shop_update_address(
-                partner_id=shipping.id, address_type='delivery',
+                partner_id=shipping.id, address_types=['delivery'],
             )
             self.assertEqual(so.partner_shipping_id, shipping)
 
             self.WebsiteSaleController.shop_update_address(
-                partner_id=invoicing.id, address_type='billing',
+                partner_id=invoicing.id, address_types=['billing'],
             )
             self.assertEqual(so.partner_shipping_id, shipping)
             self.assertEqual(so.partner_invoice_id, invoicing)
 
             # Using invalid addresses --> change and the customer is forced to update the address
             self.WebsiteSaleController.shop_update_address(
-                partner_id=bad_invoicing.id, address_type='billing')
+                partner_id=bad_invoicing.id, address_types=['billing'])
             self.assertEqual(so.partner_invoice_id, bad_invoicing)
             redirection = self.WebsiteSaleController._check_addresses(so)
             self.assertTrue(redirection is not None)
@@ -521,11 +521,11 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
             # reset to valid one
             self.WebsiteSaleController.shop_update_address(
-                partner_id=invoicing.id, address_type='billing',
+                partner_id=invoicing.id, address_types=['billing'],
             )
 
             self.WebsiteSaleController.shop_update_address(
-                partner_id=bad_shipping.id, address_type='delivery')
+                partner_id=bad_shipping.id, address_types=['delivery'])
             self.assertEqual(so.partner_shipping_id, bad_shipping)
             redirection = self.WebsiteSaleController._check_addresses(so)
             self.assertTrue(redirection is not None)
@@ -533,16 +533,16 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
             # reset to valid one
             self.WebsiteSaleController.shop_update_address(
-                partner_id=shipping.id, address_type='delivery',
+                partner_id=shipping.id, address_types=['delivery'],
             )
 
             # Using commercial partner address
             self.WebsiteSaleController.shop_update_address(
-                partner_id=partner_company.id, address_type='billing',
+                partner_id=partner_company.id, address_types=['billing'],
             )
             self.assertEqual(so.partner_invoice_id, partner_company)
             self.WebsiteSaleController.shop_update_address(
-                partner_id=partner_company.id, address_type='delivery',
+                partner_id=partner_company.id, address_types=['delivery'],
             )
             self.assertEqual(so.partner_shipping_id, partner_company)
 
