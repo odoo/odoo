@@ -4,7 +4,7 @@ from odoo.tests import common
 from odoo.tools import SetDefinitions
 
 
-@common.tagged('at_install', 'groups')
+@common.tagged('at_install', '-post_install', 'groups')
 class TestGroupsObject(common.BaseCase):
     @classmethod
     def setUpClass(cls):
@@ -476,7 +476,7 @@ class TestGroupsObject(common.BaseCase):
             self.assertEqual(groups1.key, groups.key)
 
 
-@common.tagged('at_install', 'groups')
+@common.tagged('at_install', '-post_install', 'groups')
 class TestGroupsOdoo(common.TransactionCase):
     @classmethod
     def setUpClass(cls):

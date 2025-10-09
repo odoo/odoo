@@ -35,7 +35,7 @@ class TestDefaultView(common.TransactionCase):
         )
 
 
-@common.tagged('at_install', 'groups')
+@common.tagged('at_install', '-post_install', 'groups')
 class TestViewGroups(ViewCase):
     def test_attrs_groups(self):
         """ Checks that attrs/modifiers with groups work
