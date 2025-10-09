@@ -10,7 +10,7 @@ test("click on primary button which is add to cart button doesn't close popup", 
     defineStyle(/* css */`* { transition: none !important; }`);
     const { core } = await startInteractions(`
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
-             data-name="Popup" id="sPopup" data-invisible="1">
+             data-name="Popup" id="sPopup">
             <div class="modal fade s_popup_middle modal_shown"
                  style="background-color: var(--black-50) !important; display: none;"
                  data-show-after="0"
