@@ -3,14 +3,28 @@
 
     <t t-name="point_of_sale.QrCodeCustomerDisplay">
         <Dialog title.translate="Open Customer Display" footer="false">
-            <div class="text-center">
-                <img id="CustomerDisplayqrCode" t-att-src="getQrCode()" alt="Customer QR Code"
-                    class="img-fluid mb-3" style="max-width: 200px; width: 50%;" />
+            <div class="container">
+                <div class="text-center row align-items-center">
+                    <t t-if="!this.ui.isSmall">
+                        <button t-on-click="openOnThisDevice" class="btn btn-primary mx-3 col-5 h1 row popup-text" style="height:20vh; border-radius:40px">
+                            On this device 
+                            <i class="fa fa-external-link"/>
+                        </button>
+                        <p class="m-4 col popup-text">
+                            Or
+                        </p>
+                    </t>
+                    <div class="text-center" t-att-class="{'col-5': !this.ui.isSmall}">
+                        <p class="popup-text">Scan QR</p>
+                        <img id="CustomerDisplayqrCode" t-att-src="getQrCode()" alt="Customer QR Code"
+                            class="img-fluid mb-3" style="max-width: 200px; width: 50%;" />
 
-                <div class="small mb-3">
-                    <t t-set="customerDisplayURL" t-value="props.customerDisplayURL"/>
-                    <a t-att-href="customerDisplayURL" target="_blank" t-esc="customerDisplayURL" />
-                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
+                        <div class="small mb-3" t-if="this.ui.isSmall">
+                            <t t-set="customerDisplayURL" t-value="props.customerDisplayURL"/>
+                            <a t-att-href="customerDisplayURL" target="_blank" t-esc="customerDisplayURL" />
+                            <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Dialog>
