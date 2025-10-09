@@ -4,6 +4,8 @@ from . import template_ar_ri
 from . import template_ar_base
 from . import l10n_latam_identification_type
 from . import l10n_ar_afip_responsibility_type
+from . import l10n_ar_arca_activity
+from . import account_account
 from . import account_journal
 from . import account_tax_group
 from . import account_fiscal_position
@@ -12,6 +14,7 @@ from . import res_partner
 from . import res_country
 from . import res_currency
 from . import res_company
+from . import res_config_settings
 from . import res_partner_bank
 from . import uom_uom
 from . import account_chart_template

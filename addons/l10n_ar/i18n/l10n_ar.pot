@@ -214,6 +214,12 @@ msgid "ARCA"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model,name:l10n_ar.model_l10n_ar_arca_activity
+#: model_terms:ir.ui.view,arch_db:l10n_ar.res_config_settings_view_form
+msgid "ARCA Activity"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_afip_code
 #: model:ir.model.fields,field_description:l10n_ar.field_res_currency__l10n_ar_afip_code
@@ -279,6 +285,7 @@ msgid "ARCA Service Start Date"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model,name:l10n_ar.model_account_account
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "Account"
 msgstr ""
@@ -310,8 +317,35 @@ msgid "Active"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.actions.act_window,name:l10n_ar.act_arca_activity
+#: model:ir.ui.menu,name:l10n_ar.menu_action_arca_activity
+#: model_terms:ir.ui.view,arch_db:l10n_ar.view_arca_activity_list
+msgid "Activities"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_afip_start_date
 msgid "Activities Start"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_l10n_ar_arca_activity__code
+msgid "Activity Code"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_l10n_ar_arca_activity__name
+msgid "Activity Description"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_arca_activity_code_unique
+msgid "Activity code must be unique"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_arca_activity_code_length
+msgid "Activity codes must be at most 6 characters long"
 msgstr ""
 
 #. module: l10n_ar
@@ -331,6 +365,14 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_uom_uom__l10n_ar_afip_code
 msgid "Argentina: This code will be used on electronic invoice."
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_account__l10n_ar_arca_activity_id
+msgid ""
+"Argentina: This field is to associate a specific activity to use with this "
+"account. If not set, the company's default activity will be used.The "
+"activity will be used to when generating ARCA VAT reports."
 msgstr ""
 
 #. module: l10n_ar
@@ -364,6 +406,11 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.account_reports_ar_statements_menu
 msgid "Argentinean Statements"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_account__l10n_ar_arca_activity_id
+msgid "Associated ARCA Activity"
 msgstr ""
 
 #. module: l10n_ar
@@ -401,12 +448,13 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__code
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__code
 #: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__l10n_ar_afip_code
 msgid "Code"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_code
+#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_code_uniq
 msgid "Code must be unique!"
 msgstr ""
 
@@ -437,6 +485,11 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model,name:l10n_ar.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -456,11 +509,13 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__create_uid
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__create_date
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__create_date
 msgid "Created on"
 msgstr ""
 
@@ -493,6 +548,7 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -617,6 +673,7 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__id
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__id
 msgid "ID"
 msgstr ""
 
@@ -693,11 +750,13 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__write_uid
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__write_date
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -754,11 +813,12 @@ msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__name
+#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_arca_activity__name
 msgid "Name"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_name
+#: model:ir.model.constraint,message:l10n_ar.constraint_l10n_ar_afip_responsibility_type_name_uniq
 msgid "Name must be unique!"
 msgstr ""
 
@@ -822,7 +882,6 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
 msgid "Other National Ind. Taxes %s"
 msgstr ""
 
@@ -863,6 +922,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 msgid "Pre-printed Invoice"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_arca_activity_id
+#: model:ir.model.fields,field_description:l10n_ar.field_res_config_settings__l10n_ar_arca_activity_id
+#: model_terms:ir.ui.view,arch_db:l10n_ar.res_config_settings_view_form
+msgid "Principal Activity"
+msgstr ""
+
+#. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_arca_activity_id
+#: model:ir.model.fields,help:l10n_ar.field_res_config_settings__l10n_ar_arca_activity_id
+#: model_terms:ir.ui.view,arch_db:l10n_ar.res_config_settings_view_form
+msgid ""
+"Principal registered activity of the company. This is used to generate the "
+"IVA Simple CSV Tax Reports."
 msgstr ""
 
 #. module: l10n_ar
@@ -1023,14 +1098,12 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
 msgid "VAT Content %s"
 msgstr ""
 
 #. module: l10n_ar
 #. odoo-python
-#: code:addons/l10n_ar/models/account_chart_template.py:0
-#, python-format
+#: code:addons/l10n_ar/models/template_ar_base.py:0
 msgid "Ventas Preimpreso"
 msgstr ""
 
