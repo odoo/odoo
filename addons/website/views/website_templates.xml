@@ -1919,7 +1919,7 @@
                                     <a href="#">Terms of Services</a>
                                 </li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
-                                <t t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
+                                <t t-foreach="configurator_footer_links" t-as="link">
                                     <li class="list-inline-item">•</li>
                                     <li class="list-inline-item">
                                         <a t-att-href="link['href']" t-out="link['text']"/>
@@ -2565,7 +2565,7 @@
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="True">
     <xpath expr="." position="inside">
         <li data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
-            <t id="header_language_selector_call"
+            <t name="header_language_selector_call"
                 t-call="portal.language_selector"
                 _div_classes="(_div_classes or '') + ' dropdown'"/>
         </li>
@@ -2573,49 +2573,49 @@
 </template>
 
 <template id="header_language_selector_inline" name="Header Language Selector Inline" inherit_id="website.header_language_selector" active="False">
-    <xpath expr="//t[@id='header_language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='header_language_selector_call']" position="attributes">
         <attribute name="t-call">website.language_selector_inline</attribute>
     </xpath>
 </template>
 
 <template id="header_language_selector_flag" name="Header Language Selector Flag" inherit_id="website.header_language_selector" active="False">
-    <xpath expr="//t[@id='header_language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='header_language_selector_call']" position="attributes">
         <attribute name="flags">True</attribute>
     </xpath>
 </template>
 
 <template id="header_language_selector_code" name="Header Language Selector Code" inherit_id="website.header_language_selector" active="False">
-    <xpath expr="//t[@id='header_language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='header_language_selector_call']" position="attributes">
         <attribute name="codes">True</attribute>
     </xpath>
 </template>
 
 <template id="header_language_selector_no_text" name="Header Language Selector No Text" inherit_id="website.header_language_selector" active="False">
-    <xpath expr="//t[@id='header_language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='header_language_selector_call']" position="attributes">
         <attribute name="no_text">True</attribute>
     </xpath>
 </template>
 
 <template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="True">
-    <xpath expr="//t[@id='language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='language_selector_call']" position="attributes">
         <attribute name="t-call">website.language_selector_inline</attribute>
     </xpath>
 </template>
 
 <template id="footer_language_selector_flag" name="Footer Language Selector Flag" inherit_id="portal.footer_language_selector" active="False">
-    <xpath expr="//t[@id='language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='language_selector_call']" position="attributes">
         <attribute name="flags">True</attribute>
     </xpath>
 </template>
 
 <template id="footer_language_selector_code" name="Footer Language Selector Code" inherit_id="portal.footer_language_selector" active="False">
-    <xpath expr="//t[@id='language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='language_selector_call']" position="attributes">
         <attribute name="codes">True</attribute>
     </xpath>
 </template>
 
 <template id="footer_language_selector_no_text" name="Footer Language Selector No Text" inherit_id="portal.footer_language_selector" active="False">
-    <xpath expr="//t[@id='language_selector_call']" position="attributes">
+    <xpath expr="//t[@name='language_selector_call']" position="attributes">
         <attribute name="no_text">True</attribute>
     </xpath>
 </template>

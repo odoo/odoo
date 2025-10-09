@@ -351,8 +351,8 @@
             </div>
             <div id="o_payment_status_message" class="w-100">
                 <h5 t-if="status_heading" t-out="status_heading" class="alert-heading mb-0"/>
-                <t t-if="status_message" t-out="status_message" class="mb-0"/>
-                <t t-if="tx.state_message" t-out="tx.state_message" class="mb-0"/>
+                <t t-if="status_message" t-out="status_message"/>
+                <t t-if="tx.state_message" t-out="tx.state_message"/>
             </div>
             <a t-if="is_processing"
                t-att-href="tx.landing_route"

@@ -218,12 +218,12 @@
             <span name="untaxed_amount_en" t-if="display_in_en" t-translation="off" class="text-nowrap">Invoice Taxable Amount</span>
         </span>
         <span t-out="tax_group['group_name']" position="after">
-            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']">
                 / <span t-out="tax_group_sec['group_name']"/>
             </t>
         </span>
         <xpath expr="//tr[hasclass('o_taxes')]/t[@t-else='']//span" position="after">
-            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']">
                 / <span t-out="tax_group_sec['group_name']"/>
             </t>
         </xpath>
@@ -255,12 +255,12 @@
             <span name="untaxed_amount_en" t-if="display_in_en" t-translation="off" class="text-nowrap">Invoice Taxable Amount</span>
         </span>
         <span t-out="tax_group['group_name']" position="after">
-            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']">
                 / <span t-out="tax_group_sec['group_name']"/>
             </t>
         </span>
         <xpath expr="//tr[hasclass('o_taxes')]/t[@t-else='']//span" position="after">
-            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']">
                 / <span t-out="tax_group_sec['group_name']"/>
             </t>
         </xpath>

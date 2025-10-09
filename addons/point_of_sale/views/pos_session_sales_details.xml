@@ -278,7 +278,7 @@
                 </div>
                 <div class="oe_structure"></div>
                 <div t-if="payments" id="payments" style="page-break-inside: avoid;">
-                    <t t-if="payments" id="other_payments">
+                    <t t-if="payments" name="other_payments">
                         <h6 class="bg-secondary p-1 fw-bold w-50 ms-auto">Payments</h6>
                         <table class="table table-sm table-borderless w-50 ms-auto" >
                             <tbody>
@@ -328,7 +328,7 @@
                     <h6 class="bg-secondary p-1 fw-bold">Invoices</h6>
                     <table  class="table table-sm table-borderless" >
                         <tbody>
-                        <t t-foreach="invoiceList" t-as="invoiceSession" class="border-bottom border-secondary">
+                        <t t-foreach="invoiceList" t-as="invoiceSession">
                             <t t-if="invoiceSession['invoices']">
                                 <tr t-foreach='invoiceSession["invoices"]' t-as='invoice'>
                                     <td class="ps-2 fw-bold"><span t-out="invoice['name']">Invoice Name</span></td>
@@ -360,7 +360,7 @@
                     </table>
                 </div>
                 <div class="oe_structure"></div>
-                <t id="closing_session">
+                <t name="closing_session">
                     <h6 class="bg-secondary p-1 fw-bold">Session Control</h6>
                     <div class="oe_structure"></div>
                     <div style="break-inside: avoid;">

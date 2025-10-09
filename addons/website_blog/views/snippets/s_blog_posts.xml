@@ -183,7 +183,7 @@
 <!-- Single record templates -->
 <!-- Full Layout -->
 <template id="dynamic_filter_template_blog_post_single_full" name="Solo Full">
-    <t t-if="len(records)" class="s_blog_posts_post" data-extra-snippet-classes="o_cc o_cc5" data-column-classes="col-lg-12">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -209,7 +209,7 @@
 </template>
 <!-- Aside Layout -->
 <template id="dynamic_filter_template_blog_post_single_aside" name="Solo Aside">
-    <t t-if="len(records)" class="s_blog_posts_post" data-column-classes="col-lg-12">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -241,7 +241,7 @@
 </template>
 <!-- Circle Layout -->
 <template id="dynamic_filter_template_blog_post_single_circle" name="Solo Circle">
-    <t t-if="len(records)" class="s_blog_posts_post" data-extra-snippet-classes="o_cc o_cc2" data-column-classes="col-lg-12" data-container-classes="o_container_small">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
@@ -271,7 +271,7 @@
 </template>
 <!-- CTA Badge Layout -->
 <template id="dynamic_filter_template_blog_post_single_badge" name="Solo Badge">
-    <t t-if="len(records)" class="s_blog_posts_post" data-column-classes="col-lg-12 text-center">
+    <t t-if="len(records)">
         <t t-set="data" t-value="records[0]"/>
         <t t-set="record" t-value="data['_record']"/>
         <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
