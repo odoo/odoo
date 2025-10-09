@@ -30,6 +30,8 @@
                         <div
                             class="o_wsale_image_viewer_carousel position-absolute bottom-0 d-flex"
                             t-attf-class="o_wsale_image_viewer_ratio_#{props.imageRatio} o_wsale_image_viewer_ratio_mobile_#{props.imageRatioMobile}"
+                            t-on-touchstart="_onTouchstartCarousel"
+                            t-on-touchmove="_onTouchmoveCarousel"
                             role="toolbar"
                         >
                             <ol class="d-flex justify-content-start ps-0 pt-2 pt-lg-0 mx-auto my-0 text-start">
