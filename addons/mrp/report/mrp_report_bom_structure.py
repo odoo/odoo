@@ -16,7 +16,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     @api.model
     def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
         res = self._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
-        res['has_attachments'] = self._has_attachments(res['lines'])
         return res
 
     @api.model
@@ -187,17 +186,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if bom_line:
             current_quantity = bom_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id) or 0
 
-        has_attachments = False
-        if not is_minimized:
-            if product:
-                has_attachments = self.env['product.document'].search_count(['&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', 't'), '|', '&', ('res_model', '=', 'product.product'),
-                                                                 ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'),
-                                                                 ('res_id', '=', product.product_tmpl_id.id)], limit=1) > 0
-            else:
-                # Use the product template instead of the variant
-                has_attachments = self.env['product.document'].search_count(['&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', 't'),
-                                                                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)], limit=1) > 0
-
         key = product.id
         bom_key = bom.id
         qty_product_uom = bom.product_uom_id._compute_quantity(current_quantity, product.uom_id or bom.product_tmpl_id.uom_id)
@@ -238,7 +226,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'code': bom and bom.display_name or '',
             'bom_cost': 0,
             'level': level or 0,
-            'has_attachments': has_attachments,
             'phantom_bom': bom.type == 'phantom',
             'parent_id': parent_bom and parent_bom.id or False,
         }
@@ -346,11 +333,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.product_uom_id, product_info, parent_bom, parent_product)
         availabilities = self._get_availabilities(bom_line.product_id, line_quantity, product_info, bom_key, quantities_info, level, ignore_stock, bom_line=bom_line)
 
-        has_attachments = False
-        if not self.env.context.get('minimized', False):
-            has_attachments = self.env['product.document'].search_count(['&', ('attached_on_mrp', '=', 'bom'), '|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom_line.product_id.id),
-                                                              '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom_line.product_id.product_tmpl_id.id)]) > 0
-
         return {
             'type': 'component',
             'index': index,
@@ -387,7 +369,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'availability_delay': availabilities['availability_delay'],
             'parent_id': parent_bom.id,
             'level': level or 0,
-            'has_attachments': has_attachments,
         }
 
     @api.model
@@ -743,10 +724,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if state == 'estimated':
             return _('Estimated %s', format_date(self.env, date_today + timedelta(days=delay)))
         return ''
-
-    @api.model
-    def _has_attachments(self, data):
-        return data['has_attachments'] or any(self._has_attachments(component) for component in data.get('components', []))
 
     def _merge_components(self, component_1, component_2):
         qty = component_2['quantity']

@@ -23,7 +23,6 @@
                             <th t-if="forecastMode">Route</th>
                             <th t-else=""/>
                             <th class="text-end" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">Cost</th>
-                            <th t-if="showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,7 +53,6 @@
                             <td t-if="forecastMode"/>
                             <td class="text-end"><strong>Unit Cost</strong></td>
                             <td class="text-end"><t t-esc="formatMonetary(data.bom_cost / data.quantity)"/></td>
-                            <td t-if="showAttachments"/>
                         </tr>
                         <t t-if="data.byproducts &amp;&amp; data.byproducts.length > 0" t-foreach="data.byproducts" t-as="byproduct" t-key="byproduct.id">
                             <tr>
@@ -67,7 +65,6 @@
                                 <td t-if="forecastMode"/>
                                 <td class="text-end"><strong>Unit Cost</strong></td>
                                 <td class="text-end"><t t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
-                                <td t-if="showAttachments"/>
                             </tr>
                         </t>
                     </tfoot>

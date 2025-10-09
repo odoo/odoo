@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat, formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { Component } from "@odoo/owl";
@@ -12,7 +11,6 @@ export class BomOverviewLine extends Component {
             shape: {
                 mode: String,
                 uom: Boolean,
-                attachments: Boolean,
             },
         },
         currentWarehouseId: { type: Number, optional: true },
@@ -70,25 +68,6 @@ export class BomOverviewLine extends Component {
         return this.actionService.doAction(action);
     }
 
-    async goToAttachment() {
-        return this.actionService.doAction({
-            name: _t("Attachments"),
-            type: "ir.actions.act_window",
-            res_model: "product.document",
-            domain: ['&', ["attached_on_mrp", "=", "bom"], '|',
-                '&',["res_model", "=", "product.product"],["res_id", "in", [this.data.product_id]],
-                '&',["res_model", "=", "product.template"],["res_id", "in", [this.data.product_template_id]]],
-            views: [[false, "kanban"], [false, "list"], [false, "form"]],
-            view_mode: "kanban,list,form",
-            target: "current",
-            context:{
-                'bom_id': true,
-                'default_res_id': this.data.product_id,
-                'default_res_model': "product.product"
-            }
-        });
-    }
-
     //---- Getters ----
 
     get data() {
@@ -133,10 +112,6 @@ export class BomOverviewLine extends Component {
 
     get showUom() {
         return this.props.showOptions.uom;
-    }
-
-    get showAttachments() {
-        return this.props.showOptions.attachments;
     }
 
     get availabilityColorClass() {
