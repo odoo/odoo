@@ -2,9 +2,11 @@
 
 from ast import literal_eval
 
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
+from odoo.exceptions import ValidationError
+from lxml import etree
 
 
 class website_form_config(models.Model):
@@ -146,6 +148,26 @@ class website_form_model_fields(models.Model):
         # blacklisted by default)
         self._cr.execute('ALTER TABLE ir_model_fields '
                          ' ALTER COLUMN website_form_blacklisted SET DEFAULT true')
+
+    @api.ondelete(at_uninstall=False)
+    def _check_if_used_in_website_form(self):
+        """Prevent field deletion if used in a website form."""
+        for field in self:
+            for model_name, field_name in self.env['website']._get_html_fields():
+                domain = [(field_name, 'ilike', f'data-model_name="{field.model}"')]
+                records = self.env[model_name].with_context(active_test=False).search(domain)
+                for record in records:
+                    arch_parsed = etree.fromstring(record[field_name])
+                    xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
+                    if arch_parsed.xpath(xpath_selector):
+                        raise ValidationError(_(
+                            "The field '%(field)s' cannot be deleted because it is referenced in a website view.\n"
+                            "Model: %(model)s\n"
+                            "View: %(view)s",
+                            field=field.name,
+                            model=field.model,
+                            view=record.display_name,
+                        ))
 
     @api.model
     def formbuilder_whitelist(self, model, fields):
