@@ -9,6 +9,7 @@ import { SocialMediaLinks } from "./social_media_links";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
  * @typedef { Object } SocialMediaInfo
@@ -104,9 +105,13 @@ const socialMediaInfo = new Map(
     })
 );
 
+export class SocialMediaOption extends BaseOptionComponent {
+    static template = "website.SocialMediaOption";
+}
+
 const defaultAriaLabel = _t("Other social network");
 
-class SocialMediaOptionPlugin extends Plugin {
+export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["history"];
     static shared = [
@@ -117,12 +122,14 @@ class SocialMediaOptionPlugin extends Plugin {
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
+        "updateSnippet",
     ];
     resources = {
         builder_options: [
             withSequence(TITLE_LAYOUT_SIZE, {
-                template: "website.SocialMediaOption",
+                name: "social_media_option",
                 selector: ".s_share, .s_social_media",
+                OptionComponent: SocialMediaOption,
             }),
             withSequence(SNIPPET_SPECIFIC, {
                 OptionComponent: SocialMediaLinks,
@@ -146,7 +153,14 @@ class SocialMediaOptionPlugin extends Plugin {
         extra_contenteditable_handlers: this.extraContentEditableHandlers.bind(this),
         force_not_editable_selector: [".s_share"],
         force_editable_selector: [".s_share a > i", ".s_share .s_share_title"],
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
+
+    async onSnippetDropped({ snippetEl }) {
+        const medias = await this.fetchRecordedSocialMedia();
+        this.updateBuilderOptions(medias);
+        this.updateSnippet(snippetEl, medias);
+    }
 
     extraContentEditableHandlers(filteredContentEditableEls) {
         // To fix db in stable
@@ -159,8 +173,7 @@ class SocialMediaOptionPlugin extends Plugin {
     }
 
     /** The social media's name for which there is an entry in the orm */
-    async getRecordedSocialMediaNames() {
-        await this.fetchRecordedSocialMedia();
+    getRecordedSocialMediaNames() {
         return this.recordedSocialMedia.keys();
     }
 
@@ -180,12 +193,7 @@ class SocialMediaOptionPlugin extends Plugin {
         this.recordedSocialMediaAreEdited = value;
     }
     async fetchRecordedSocialMedia() {
-        if (this.hasStartedLoadingRecordedSocialMedia) {
-            return;
-        }
-        this.hasStartedLoadingRecordedSocialMedia = true;
-
-        const res = await this.services.orm.read(
+        const records = await this.services.orm.read(
             "website",
             [this.services.website.currentWebsite.id],
             [
@@ -195,13 +203,7 @@ class SocialMediaOptionPlugin extends Plugin {
                     .map(([name, info]) => `social_${name}`),
             ]
         );
-        for (const name of socialMediaInfo.keys()) {
-            const key = `social_${name}`;
-            if (key in res[0]) {
-                this.recordedSocialMedia.set(name, res[0][key] || "");
-            }
-        }
-        this.config.onChange({ isPreviewing: false });
+        return records[0];
     }
 
     async saveRecordedSocialMedia() {
@@ -369,6 +371,19 @@ class SocialMediaOptionPlugin extends Plugin {
             return link;
         }
     }
+
+    /** @param {Object} medias */
+    updateBuilderOptions(medias) {
+        for (const name of socialMediaInfo.keys()) {
+            const key = `social_${name}`;
+            if (key in medias) {
+                this.recordedSocialMedia.set(name, medias[key] || "");
+            }
+        }
+        this.config.onChange({ isPreviewing: false });
+    }
+
+    updateSnippet(editingElement, medias) {}
 }
 
 export class DeleteSocialMediaLinkAction extends BuilderAction {
@@ -404,18 +419,26 @@ export class EditRecordedSocialMediaLinkAction extends BuilderAction {
     getValue({ params: { mainParam } }) {
         return this.dependencies.socialMediaOptionPlugin.getRecordedSocialMedia(mainParam);
     }
-    apply({ params: { mainParam }, value }) {
+    apply({ editingElement, params: { mainParam }, value }) {
         this.dependencies.socialMediaOptionPlugin.setRecordedSocialMediaAreEdited(true);
         const oldValue =
             this.dependencies.socialMediaOptionPlugin.getRecordedSocialMedia(mainParam);
         this.dependencies.history.applyCustomMutation({
-            apply: () =>
-                this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(mainParam, value),
-            revert: () =>
+            apply: () => {
+                this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(mainParam, value);
+                this.dependencies.socialMediaOptionPlugin.updateSnippet(editingElement, {
+                    [mainParam]: value,
+                });
+            },
+            revert: () => {
                 this.dependencies.socialMediaOptionPlugin.setRecordedSocialMedia(
                     mainParam,
                     oldValue
-                ),
+                );
+                this.dependencies.socialMediaOptionPlugin.updateSnippet(editingElement, {
+                    [mainParam]: oldValue,
+                });
+            },
         });
     }
 }
