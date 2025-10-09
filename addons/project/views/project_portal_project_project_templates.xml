@@ -38,28 +38,6 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_service_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_service_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/web/static/img/folder.svg'"/>
-                <t t-set="title">Projects</t>
-                <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="text">Follow the evolution of your projects</t>
-                <t t-set="placeholder_count" t-value="'project_count'"/>
-            </t>
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/project/static/src/img/tasks.svg'"/>
-                <t t-set="title">Tasks</t>
-                <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="text">Follow and comment on tasks in your projects</t>
-                <t t-set="placeholder_count" t-value="'task_count'"/>
-            </t>
-        </div>
-    </template>
-
     <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True"/>

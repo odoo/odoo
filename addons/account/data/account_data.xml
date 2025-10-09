@@ -150,5 +150,21 @@
             <field name="code">action = records.action_share()</field>
         </record>
 
+        <!-- Portal Card Records -->
+        <record id="portal_invoice_client" model="portal.entry">
+            <field name="name">Your Invoices</field>
+            <field name="description">Follow, download or pay your invoices</field>
+            <field name="url">/my/invoices?filterby=invoices</field>
+            <field name="image" type="base64" file="account/static/src/img/bill.svg"/>
+            <field name="placeholder_count">invoice_count</field>
+        </record>
+        <record id="portal_invoice_vendor" model="portal.entry">
+            <field name="name">Our Invoices</field>
+            <field name="description">Follow, download or pay our invoices</field>
+            <field name="url">/my/invoices?filterby=bills</field>
+            <field name="image" type="base64" file="account/static/src/img/bill.svg"/>
+            <field name="placeholder_count">bill_count</field>
+        </record>
+
     </data>
 </odoo>

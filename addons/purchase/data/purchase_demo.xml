@@ -2,6 +2,21 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="portal_rfq" model="portal.entry">
+            <field name="name">Requests for Quotation</field>
+            <field name="description">Follow your Requests for Quotation</field>
+            <field name="url">/my/rfq</field>
+            <field name="image" type="base64" file="web/static/img/rfq.svg"/>
+            <field name="placeholder_count">rfq_count</field>
+        </record>
+        <record id="portal_purchase_orders" model="portal.entry">
+            <field name="name">Our Orders</field>
+            <field name="description">Follow orders you have to fulfill</field>
+            <field name="url">/my/purchase</field>
+            <field name="image" type="base64" file="purchase/static/src/img/calculator.svg"/>
+            <field name="placeholder_count">purchase_count</field>
+        </record>
+
         <record id="base.user_demo" model="res.users">
             <field name="group_ids" eval="[(3, ref('purchase.group_purchase_manager'))]"/>
         </record>
@@ -301,4 +316,3 @@
 
     </data>
 </odoo>
-
