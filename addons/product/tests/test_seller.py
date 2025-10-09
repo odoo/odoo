@@ -164,3 +164,28 @@ class TestSeller(TransactionCase):
         vendors.write({'product_id': False})
         self.assertEqual(vendors, self.product_consu.seller_ids,
             "Setting the product_id to False shouldn't affect seller_ids.")
+
+    def test_51_seller_ids(self):
+        """Test vendor selection when using select_seller with Partner_id False"""
+        self.ipod_nano = self.env['product.product'].create([{
+            'name': 'The one with all the cool games',
+            'standard_price': 200.0,
+        }])
+
+        self.env['product.supplierinfo'].create([
+            {
+                'partner_id': self.asustec.id,
+                'product_tmpl_id': self.ipod_nano.product_tmpl_id.id,
+                'price': 170,
+                'sequence': 1,
+            }, {
+                'partner_id': self.camptocamp.id,
+                'product_tmpl_id': self.ipod_nano.product_tmpl_id.id,
+                'price': 10,  # Wow so cheap
+                'sequence': 2,
+            }
+        ])
+
+        product = self.ipod_nano
+        price = product._select_seller(partner_id=False, quantity=1).price
+        self.assertEqual(price, 10, "Should select cheapest vendor with partner_id false")
