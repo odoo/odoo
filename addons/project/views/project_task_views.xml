@@ -699,9 +699,12 @@
                         </t>
                         <t t-name="card">
                             <main t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
+                                <a t-if="record.parent_id.raw_value" class="o_kanban_parent mw-100 me-auto pe-3 btn-link o_small-fs text-dark text-truncate" title="See Parent Task" name="action_open_parent_task" type="object" role="button">
+                                    <i class="fa fa-level-down me-1"/>
+                                    <field name="parent_id"/>
+                                </a>
                                 <field name="name" class="fw-bold fs-5"/>
                                 <div class="text-muted d-flex flex-column">
-                                    <field t-if="record.parent_id.raw_value" invisible="context.get('default_parent_id', False)" name="parent_id"/>
                                     <field invisible="context.get('default_project_id', False)" name="project_id" options="{'no_open': True}"/>
                                     <field name="partner_id" invisible="context.get('template_project')"/>
                                     <field t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" name="milestone_id" options="{'no_open': True}"/>
@@ -724,7 +727,7 @@
                                         <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
                                             <widget name="subtask_counter" class="me-1"/>
                                         </t>
-                                        <field name="priority" class="pt-1" widget="priority"/>
+                                        <field name="priority" class="lh-1" widget="priority"/>
                                         <field name="is_rotting" invisible="1"/>
                                         <field name="rotting_days" widget="rotting" class="ms-1 d-flex"/>
                                     </div>
