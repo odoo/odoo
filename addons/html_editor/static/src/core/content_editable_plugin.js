@@ -1,5 +1,6 @@
 import { isArtificialVoidElement } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { setAttribute } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -22,7 +23,7 @@ export class ContentEditablePlugin extends Plugin {
         const toDisableSelector = this.getResource("force_not_editable_selector").join(",");
         const toDisableEls = toDisableSelector ? [...selectElements(root, toDisableSelector)] : [];
         for (const toDisable of toDisableEls) {
-            toDisable.setAttribute("contenteditable", "false");
+            setAttribute(toDisable, "contenteditable", "false");
         }
         const toEnableSelector = this.getResource("force_editable_selector").join(",");
         let filteredContentEditableEls = toEnableSelector
@@ -48,7 +49,7 @@ export class ContentEditablePlugin extends Plugin {
                     continue;
                 }
                 if (!contentEditableEl.matches(toDisableSelector)) {
-                    contentEditableEl.setAttribute("contenteditable", true);
+                    setAttribute(contentEditableEl, "contenteditable", "true");
                 }
             }
         }
