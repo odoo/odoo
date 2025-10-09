@@ -95,7 +95,8 @@ def make_suite(module_names, position='at_install'):
     :param list[str] module_names: modules to load tests from
     :param str position: "at_install" or "post_install"
     """
-    config_tags = TagsSelector(tools.config['test_tags'])
+    available_modules = module_names if position == 'post_install' else None
+    config_tags = TagsSelector(tools.config['test_tags'], available_modules)
     position_tag = TagsSelector(position)
     tests = (
         t

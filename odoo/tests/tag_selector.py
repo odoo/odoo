@@ -19,14 +19,15 @@ class TagsSelector(object):
                                 (?:\[(.*)\])?               # parameters
                                 $''', re.VERBOSE)  # [-][tag][/module][:class][.method][[params]]
 
-    def __init__(self, spec):
+    def __init__(self, spec, available_modules=None):
         """ Parse the spec to determine tags to include and exclude. """
         parts = re.split(r',(?![^\[]*\])', spec)  # split on all comma not inside [] (not followed by ])
         filter_specs = [t.strip() for t in parts if t.strip()]
         self.exclude = set()
         self.include = set()
         self.parameters = OrderedSet()
-
+        self.available_modules = available_modules and set(available_modules)
+        self.has_include = False
         for filter_spec in filter_specs:
             match = self.filter_spec_re.match(filter_spec)
             if not match:
@@ -51,11 +52,18 @@ class TagsSelector(object):
                 is_exclude = False
 
             if is_include:
+                self.has_include = True  # this is important for tags like /nonexistingmodule,-test_x
+
+            if is_include and module and self.available_modules and module not in self.available_modules:
+                _logger.info("Module '%s' in tag selector not in the list of installed modules %s", module, available_modules)
+                continue
+
+            if is_include:
                 self.include.add(test_filter)
             if is_exclude:
                 self.exclude.add(test_filter)
 
-        if (self.exclude or self.parameters) and not self.include:
+        if (self.exclude or self.parameters) and not self.has_include:
             self.include.add(('standard', None, None, None, None))
 
     def check(self, test):
@@ -76,29 +84,54 @@ class TagsSelector(object):
         test_module_path = test_module_path.replace('.', '/') + '.py'
 
         test._test_params = []
+        included_modules = set()
+        excluded_modules = set()
 
-        def _is_matching(test_filter):
+        def _is_matching(test_filter, cross_module_test=False):
             (tag, module, klass, method, file_path) = test_filter
             if tag and tag not in test_tags:
                 return False
-            elif file_path and not file_path.endswith(test_module_path):
+            if file_path and not file_path.endswith(test_module_path):
                 return False
-            elif not file_path and module and module != test_module:
+            if not file_path and module and module != test_module and not cross_module_test:
                 return False
-            elif klass and klass != test_class:
+            if klass and klass != test_class:
                 return False
-            elif method and test_method and method != test_method:
+            if method and test_method and method != test_method:  # noqa: SIM103
                 return False
             return True
 
-        if any(_is_matching(test_filter) for test_filter in self.exclude):
+        cross_module_test = hasattr(test, '_cross_module') and test._cross_module and self.available_modules
+
+        included = False
+        for test_filter in self.include:
+            if _is_matching(test_filter, cross_module_test=cross_module_test):
+                included = True
+                if cross_module_test:
+                    modules = self.available_modules if not test_filter[1] else {test_filter[1]}
+                    included_modules |= modules
+                else:
+                    break
+
+        if not included:
             return False
 
-        if not any(_is_matching(test_filter) for test_filter in self.include):
-            return False
-        
+        for test_filter in self.exclude:
+            if _is_matching(test_filter, cross_module_test=cross_module_test):
+                if cross_module_test and not _is_matching(test_filter, cross_module_test=False):
+                    modules = self.available_modules if not test_filter[1] else {test_filter[1]}
+                    excluded_modules |= modules
+                else:
+                    return False
+
         for test_filter, parameter in self.parameters:
             if _is_matching(test_filter):
                 test._test_params.append(parameter)
+
+        for test_filter in self.include:
+            if _is_matching(test_filter):
+                break
+
+        test._test_modules = sorted(included_modules - excluded_modules)
 
         return True
