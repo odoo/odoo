@@ -380,3 +380,52 @@ registry.category("web_tour.tours").add("test_order_with_existing_serial", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_lot_refund_lower_qty", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterExistingLotNumbers(["SN1", "SN2"]),
+            ProductScreen.selectedOrderlineHas("Serial Product", "2.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundTextContains("To Refund: 1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
+            {
+                trigger: ".info-list:contains('SN SN1')",
+            },
+            ProductScreen.clickLotIcon(),
+            {
+                trigger: ".o-autocomplete--dropdown-item:contains('SN2')",
+            },
+            Dialog.confirm(),
+            {
+                content: "go back to the products",
+                trigger: ".actionpad .back-button",
+                run: "click",
+                isActive: ["mobile"],
+            },
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
+            {
+                trigger: ".info-list:contains('SN SN2')",
+            },
+        ].flat(),
+});
