@@ -191,11 +191,11 @@ registerMessageAction("toggle-translation", {
     sequence: 100,
 });
 registerMessageAction("copy-message", {
-    condition: ({ message }) => isMobileOS() && !message.isBodyEmpty,
+    condition: ({ message }) => !message.isBodyEmpty,
     onSelected: ({ message }) => message.copyMessageText(),
-    name: _t("Copy to Clipboard"),
+    name: _t("Copy Text"),
     icon: "fa fa-copy",
-    sequence: 30,
+    sequence: () => (isMobileOS() ? 30 : 105),
 });
 registerMessageAction("copy-link", {
     condition: ({ message, thread }) =>

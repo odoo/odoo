@@ -40,9 +40,10 @@ test("Only two quick actions are shown", async () => {
     await contains("[title='Expand']");
     await click("[title='Expand']");
     await contains(".o-dropdown-item:contains('Reply')");
-    await contains(".o-mail-Message-actions i, .o-mail-Message-moreMenu i", { count: 8 });
+    await contains(".o-mail-Message-actions i, .o-mail-Message-moreMenu i", { count: 9 });
     await contains(".o-dropdown-item:contains('View Reactions')");
     await contains(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-dropdown-item:contains('Delete')");
+    await contains(".o-dropdown-item:contains('Copy Text')");
     await contains(".o-dropdown-item:contains('Copy Link')");
 });
