@@ -22,3 +22,7 @@ class AccountIncoterms(models.Model):
     def _compute_display_name(self):
         for incoterm in self:
             incoterm.display_name = '%s%s' % (incoterm.code and '[%s] ' % incoterm.code or '', incoterm.name)
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        return ['|', ('name', operator, value), ('code', operator, value)]
