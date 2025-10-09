@@ -2,8 +2,8 @@ import datetime
 from freezegun import freeze_time
 from unittest import mock
 
-from odoo import _
-from odoo.exceptions import UserError
+from odoo import _, Command
+from odoo.exceptions import UserError, RedirectWarning
 from odoo.tests import tagged
 from odoo.tools import zeep
 from .common import TestL10nEsEdiVerifactuCommon
@@ -59,6 +59,88 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             'l10n_es_edi_verifactu_warning_level': 'danger',
         }
         self.assertRecordValues(invoice, [expected_record_values])
+
+    def test_refund_without_refunded_error(self):
+        "Asserts no error is raised during the generation of the document."
+        invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2024-12-30')
+        credit_note = invoice._reverse_moves()
+        credit_note.action_post()
+
+        wizard = self.env['account.move.send.wizard'].with_context(
+            active_model='account.move',
+            active_ids=credit_note.ids,
+        ).create({
+            'sending_methods': ['manual'],
+        })
+        with self._mock_last_document(None), self.assertRaisesRegex(RedirectWarning, r".*There is no Veri\*Factu document for the refunded record\..*"):
+            wizard.action_send_and_print()
+
+        with self._mock_last_document(None):
+            credit_note._l10n_es_edi_verifactu_create_documents()
+
+        errors = ["There is no Veri*Factu document for the refunded record.", "The refund reason is not specified."]
+        expected_record_values = {
+            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
+            'l10n_es_edi_verifactu_warning_level': 'danger',
+        }
+        self.assertRecordValues(credit_note, [expected_record_values])
+
+    def test_substitution_without_documents_errors(self):
+        invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2019-01-30')
+
+        self.env['account.move.reversal'].with_company(self.company).create(
+            {
+                'move_ids': [Command.set((invoice.id,))],
+                'date': '2019-02-10',
+                'journal_id': invoice.journal_id.id,
+            }
+        ).reverse_moves(is_modify=True)
+        credit_note = invoice.reversal_move_ids
+
+        substitution_move = invoice.l10n_es_edi_verifactu_substitution_move_ids
+        substitution_move.invoice_date = '2019-02-11'
+        substitution_move.action_post()
+        wizard = self.env['account.move.send.wizard'].with_context(
+            active_model='account.move',
+            active_ids=substitution_move.ids,
+        ).create({
+            'sending_methods': ['manual'],
+        })
+
+        with self.assertRaisesRegex(RedirectWarning, r".*There is no Veri\*Factu document for the substituted record\..*"):
+            wizard.action_send_and_print()
+
+        substitution_move._l10n_es_edi_verifactu_create_documents()
+        errors = ["There is no Veri*Factu document for the substituted record.", "There is no Veri*Factu document for the reversal of the substituted record."]
+        expected_record_values = {
+            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
+            'l10n_es_edi_verifactu_warning_level': 'danger',
+        }
+        self.assertRecordValues(substitution_move, [expected_record_values])
+
+        with self._mock_last_document(None):
+            invoice._l10n_es_edi_verifactu_create_documents()
+
+        with self._mock_zeep_registration_operation_certificate_issue(), self.assertRaisesRegex(RedirectWarning, r".*There is no Veri\*Factu document for the reversal of the substituted record\..*"):
+            wizard.action_send_and_print()
+
+        substitution_move._l10n_es_edi_verifactu_create_documents()
+        errors = ["There is no Veri*Factu document for the reversal of the substituted record."]
+        expected_record_values = {
+            'l10n_es_edi_verifactu_state': False,
+            'l10n_es_edi_verifactu_warning': self._mock_format_document_generation_errors(errors),
+            'l10n_es_edi_verifactu_warning_level': 'danger',
+        }
+        self.assertRecordValues(substitution_move, [expected_record_values])
+
+        credit_note._l10n_es_edi_verifactu_create_documents()
+
+        with self._mock_zeep_registration_operation_certificate_issue():
+            wizard.action_send_and_print()
+
+        self.assertTrue(substitution_move.l10n_es_edi_verifactu_document_ids.json_attachment_id)
 
     def test_certificate_issue(self):
         invoice = self._create_dummy_invoice()
