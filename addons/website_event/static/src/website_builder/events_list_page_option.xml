@@ -23,9 +23,18 @@
                 label.translate="Date"
                 actionParam="{views: ['website_event.event_time']}"/>
             <BuilderButton
-                label.translate="Countries"
-                actionParam="{views: ['website_event.event_location']}"/>
+                actionParam="{views: ['website_event.event_location']}"
+                id="'events_location_country'"
+                label.translate="Countries"/>
         </BuilderRow>
+        <t t-if="this.isActiveItem('events_location_country')">
+            <BuilderRow
+                level="1"
+                label.translate="Include online?"
+                tooltip.translate="If enabled, online events will be included when user filters by country.">
+                <BuilderCheckbox actionParam="{views: ['website_event.include_online']}"/>
+             </BuilderRow>
+        </t>
 
         <BuilderRow label.translate="Sidebar">
             <BuilderCheckbox id="'events_sidebar_opt'" actionParam="{views: ['website_event.opt_index_sidebar']}"/>

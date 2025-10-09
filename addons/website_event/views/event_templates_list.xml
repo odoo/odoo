@@ -219,9 +219,14 @@
                     <t t-out="online_event_text"/>
                 </t>
                 <t t-elif="current_country" t-out="current_country.name"/>
-                <t t-else="">All countries</t>
+                <t t-else="">All Countries</t>
             </button>
             <div class="dropdown-menu">
+                <t t-set="is_active" t-value="searches.get('country') == 'all'"/>
+                <a t-att-href="keep_event_url(country='all')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" title="All Countries">
+                    All Countries
+                    <span t-out="sum(country['country_id_count'] for country in countries)" t-attf-class="badge pagination ms-3 text-bg-primary"/>
+                </a>
                 <t t-foreach="countries" t-as="country">
                     <t t-if="country['country_id']">
                         <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
@@ -284,6 +289,9 @@
         </div>
     </xpath>
 </template>
+
+<template id="include_online" active="True"/>
+<template id="option_flag" active="True"/>
 
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">

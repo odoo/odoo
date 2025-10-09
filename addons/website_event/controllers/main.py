@@ -42,6 +42,34 @@ class WebsiteEventController(http.Controller):
             'country': post.get('country'),
         }
 
+    def _get_country_filter(self, events, is_include_online):
+        """
+            Find the country from geoip/user and return it only if
+            future events exist for that country, else fallback to 'all'
+        """
+        country = False
+        if request.geoip.country_code:
+            country = request.env['res.country'].search([('code', '=', request.geoip.country_code)])
+        if not country:
+            country = request.env.user.country_id if not request.env.user._is_public() else False
+
+        if country:
+            current_country_events = events.filtered(
+                lambda event: event.country_id == country and event.date_end >= fields.Datetime.now(),
+            )
+
+            if is_include_online:
+                online_events = events.filtered(
+                    lambda event: not event.country_id and event.date_end >= fields.Datetime.now(),
+                )
+                if current_country_events or online_events:
+                    return [",".join(str(c) for c in [country.id, 'online']), country]
+
+            if current_country_events:
+                return [str(country.id), country]
+
+        return ['all', None]
+
     @http.route([
         path
         for base in ('event', 'events')
@@ -70,7 +98,6 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('date', 'scheduled')
         searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
-        searches.setdefault('country', 'all')
         # The previous name of the 'scheduled' filter is 'upcoming' and may still be present in URL's saved by users.
         if searches['date'] == 'upcoming':
             searches['date'] = 'scheduled'
@@ -91,6 +118,20 @@ class WebsiteEventController(http.Controller):
         events = event_details.get('results', Event)
         events = events[(page - 1) * step:page * step]
 
+        website = request.env['website'].get_current_website()
+        is_include_online = website.is_view_active('website_event.include_online')
+        flag = website.is_view_active('website_event.option_flag')
+
+        country, current_country = self._get_country_filter(events, is_include_online)
+
+        if not searches.get('country') and country:
+            return request.redirect(f'{request.httprequest.full_path}&country={country}')
+
+        if flag != is_include_online:
+            view = request.env['ir.ui.view'].search([('key', '=', 'website_event.option_flag')])
+            view.write({'active': is_include_online})
+            return request.redirect('/event?country=%s' % country)
+
         # count by domains without self search
         domain_search = Domain('name', 'ilike', fuzzy_search_term or searches['search']) if searches['search'] else Domain.TRUE
 
@@ -104,10 +145,7 @@ class WebsiteEventController(http.Controller):
         country_groups = Event._read_group(
             no_country_domain & domain_search,
             ["country_id"], ["__count"], order="country_id")
-        countries = [{
-            'country_id_count': sum(count for __, count in country_groups),
-            'country_id': (0, _("All Countries")),
-        }]
+        countries = []
         for g_country, count in country_groups:
             countries.append({
                 'country_id_count': count,
@@ -117,13 +155,9 @@ class WebsiteEventController(http.Controller):
         search_tags = self._extract_searched_event_tags(searches, slug_tags)
         current_date = event_details['current_date']
         current_type = None
-        current_country = None
 
         if searches["type"] != 'all':
             current_type = SudoEventType.browse(int(searches['type']))
-
-        if searches["country"] != 'all' and searches["country"] != 'online':
-            current_country = request.env['res.country'].browse(int(searches['country']))
 
         pager = website.pager(
             url=f"/event/tags/{slug_tags}" if slug_tags else "/event",

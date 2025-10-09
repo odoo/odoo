@@ -582,11 +582,12 @@ class EventEvent(models.Model):
                 domain.append([('tag_ids', 'in', tags.ids)])
 
         no_country_domain = domain.copy()
-        if country:
-            if country == 'online':
-                domain.append([("country_id", "=", False)])
-            elif country != 'all':
-                domain.append([("country_id", "=", int(country))])
+        if country and country != 'all':
+            countries = [
+                int(id) if id.isdigit() else False if id == "online" else id
+                for id in country.split(',')
+            ]
+            domain.append([("country_id", "in", countries)])
 
         no_date_domain = domain.copy()
         dates = self._search_build_dates()
