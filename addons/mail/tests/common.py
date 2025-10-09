@@ -764,7 +764,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             mails = self._mails
         else:
             all_emails = [
-                email_to.email if isinstance(email_to, self.env['res.partner'].__class__)
+                email_to.email_formatted if isinstance(email_to, self.env['res.partner'].__class__)
                 else email_to
                 for email_to in recipients
             ]
