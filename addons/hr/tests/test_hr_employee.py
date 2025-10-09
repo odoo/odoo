@@ -169,7 +169,7 @@ class TestHrEmployee(TestHrCommon):
                 'department_id': dept_parent.id,
             },
         ])
-        self.res_users_hr_officer.employee_id = emp
+        self.res_users_hr_officer.employee_ids = emp
         self.assertTrue(emp.member_of_department)
         self.assertTrue(emp_sub.member_of_department)
         self.assertTrue(emp_sub_sub.member_of_department)
