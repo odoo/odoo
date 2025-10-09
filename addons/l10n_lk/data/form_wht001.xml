@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="l10n_lk_wht001" model="account.report">
         <field name="name">WHT/AIT Return Form WHT-001</field>
@@ -9,19 +9,19 @@
         <field name="only_tax_exigible" eval="True" />
         <field name="column_ids">
             <record id="l10n_lk_wht001_balance_a" model="account.report.column">
-                <field name="name">Total Amount</field>
+                <field name="name">Total Payment Value</field>
                 <field name="expression_label">balance_a</field>
             </record>
             <record id="l10n_lk_wht001_balance_b" model="account.report.column">
-                <field name="name">Gross Amount</field>
+                <field name="name">Amount Not Liable</field>
                 <field name="expression_label">balance_b</field>
             </record>
             <record id="l10n_lk_wht001_balance_c" model="account.report.column">
-                <field name="name">Tax Amount</field>
+                <field name="name">Amount Liable</field>
                 <field name="expression_label">balance_c</field>
             </record>
             <record id="l10n_lk_wht001_balance_d" model="account.report.column">
-                <field name="name">Rate</field>
+                <field name="name">Amount Deducted</field>
                 <field name="expression_label">balance_d</field>
             </record>
         </field>
@@ -56,7 +56,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_1_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_1D</field>
+                                <field name="formula">-WHTD_1D</field>
                             </record>
                         </field>
                     </record>
@@ -84,7 +84,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_2_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_2D</field>
+                                <field name="formula">-WHTD_2D</field>
                             </record>
                         </field>
                     </record>
@@ -112,7 +112,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_3_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_3D</field>
+                                <field name="formula">-WHTD_3D</field>
                             </record>
                         </field>
                     </record>
@@ -140,7 +140,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_4_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_4D</field>
+                                <field name="formula">-WHTD_4D</field>
                             </record>
                         </field>
                     </record>
@@ -168,7 +168,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_5_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_5D</field>
+                                <field name="formula">-WHTD_5D</field>
                             </record>
                         </field>
                     </record>
@@ -196,7 +196,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_6_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_6D</field>
+                                <field name="formula">-WHTD_6D</field>
                             </record>
                         </field>
                     </record>
@@ -224,7 +224,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_7_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_7D</field>
+                                <field name="formula">-WHTD_7D</field>
                             </record>
                         </field>
                     </record>
@@ -252,7 +252,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_8_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_8D</field>
+                                <field name="formula">-WHTD_8D</field>
                             </record>
                         </field>
                     </record>
@@ -280,7 +280,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_9_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_9D</field>
+                                <field name="formula">-WHTD_9D</field>
                             </record>
                         </field>
                     </record>
@@ -308,7 +308,7 @@
                             <record id="l10n_lk_lk_wht_001e_whtd_10_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WHTD_10D</field>
+                                <field name="formula">-WHTD_10D</field>
                             </record>
                         </field>
                     </record>
@@ -372,7 +372,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_1_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_1D</field>
+                                <field name="formula">-AITD_1D</field>
                             </record>
                         </field>
                     </record>
@@ -400,7 +400,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_2_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_2D</field>
+                                <field name="formula">-AITD_2D</field>
                             </record>
                         </field>
                     </record>
@@ -428,7 +428,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_3_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_3D</field>
+                                <field name="formula">-AITD_3D</field>
                             </record>
                         </field>
                     </record>
@@ -456,7 +456,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_4_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_4D</field>
+                                <field name="formula">-AITD_4D</field>
                             </record>
                         </field>
                     </record>
@@ -484,7 +484,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_5_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_5D</field>
+                                <field name="formula">-AITD_5D</field>
                             </record>
                         </field>
                     </record>
@@ -512,7 +512,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_6_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_6D</field>
+                                <field name="formula">-AITD_6D</field>
                             </record>
                         </field>
                     </record>
@@ -540,7 +540,7 @@
                             <record id="l10n_lk_lk_wht_001e_aitd_7_balance_d" model="account.report.expression">
                                 <field name="label">balance_d</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">AITD_7D</field>
+                                <field name="formula">-AITD_7D</field>
                             </record>
                         </field>
                     </record>
