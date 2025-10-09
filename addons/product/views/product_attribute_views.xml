@@ -38,11 +38,14 @@
                         </div>
                     </button>
                 </div>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" placeholder="Attribute Name"/>
+                    </h1>
+                </div>
                 <group name="main_fields">
                     <group name="sale_main_fields">
-                        <label for="name" string="Attribute Name"/>
-                        <field name="name" nolabel="1"/>
-                        <field name="display_type" widget="radio" options="{'horizontal': True}"/>
+                        <field name="display_type"/>
                         <field name="create_variant"
                                widget="radio"
                                options="{'horizontal': True}"

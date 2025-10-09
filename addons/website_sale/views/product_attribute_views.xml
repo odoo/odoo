@@ -6,30 +6,34 @@
         <field name="model">product.attribute</field>
         <field name="inherit_id" ref="product.product_attribute_view_form"/>
         <field name="arch" type="xml">
-            <group name="main_fields" position="inside">
-                <group name="ecommerce_main_fields">
-                    <field
-                        name="visibility"
-                        string="eCommerce Filter"
-                        widget="radio"
-                        options="{'horizontal': True}"
-                    />
-                    <field
-                        name="preview_variants"
-                        widget="radio"
-                        options="{'horizontal': True}"
-                        readonly="create_variant != 'always' or display_type == 'multi'"
-                        force_save="1"
-                    />
-                    <field
-                        name="is_thumbnail_visible"
-                        widget="boolean_toggle"
-                        readonly="create_variant != 'always' or display_type == 'multi'"
-                        invisible="preview_variants == 'hidden'"
-                        force_save="1"
-                    />
-                </group>
-            </group>
+            <page name="attribute_values" position="after">
+                <page name="ecommerce_attributes" string="eCommerce">
+                    <group>
+                        <group name="ecommerce_main_fields">
+                            <field
+                                name="visibility"
+                                string="Filter"
+                                widget="radio"
+                                options="{'horizontal': True}"
+                            />
+                            <field
+                                name="preview_variants"
+                                widget="radio"
+                                options="{'horizontal': True}"
+                                readonly="create_variant != 'always' or display_type == 'multi'"
+                                force_save="1"
+                            />
+                            <field
+                                name="is_thumbnail_visible"
+                                widget="boolean_toggle"
+                                readonly="create_variant != 'always' or display_type == 'multi'"
+                                invisible="preview_variants == 'hidden'"
+                                force_save="1"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </page>
         </field>
     </record>
 
