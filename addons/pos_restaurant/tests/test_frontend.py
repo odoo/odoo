@@ -735,3 +735,16 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_combo_synchronisation')
+
+    def test_name_preset_skip_screen(self):
+        self.preset_takeaway = self.env['pos.preset'].create({
+            'name': 'Takeaway',
+            'identification': 'name',
+        })
+        self.pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_takeaway.id,
+            'available_preset_ids': [(6, 0, [self.preset_takeaway.id])],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_name_preset_skip_screen')
