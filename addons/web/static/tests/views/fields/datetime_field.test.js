@@ -673,3 +673,64 @@ test("list datetime: column widths (show_time=false)", async () => {
     expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["02/08/2017", "partner,1"]);
     expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 83, 677]);
 });
+
+test("datetimepicker service state is properly reset after switching records", async () => {
+    mockTimeZone(+2); // UTC+2
+
+    Partner._fields.datetime.default = "2017-02-08 10:00:00";
+    Partner._onChanges.datetime = (record) => {
+        if (record.datetime) {
+            record.display_name = "date: " + record.datetime.toString();
+        }
+    };
+
+    onRpc("onchange", (args) => {
+        expect.step(args.args[2]);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form>
+            <sheet>
+                <group>
+                    <field name="display_name"/>
+                    <field name="datetime"/>
+                </group>
+            </sheet>
+        </form>`,
+    });
+
+    expect.verifySteps([[]]); // initial values
+
+    const selectDate = async () => {
+        // select 22 April 2018 at 8:25
+        await click(".o_field_datetime input");
+        await animationFrame();
+        await zoomOut();
+        await zoomOut();
+        await click(getPickerCell("2018"));
+        await animationFrame();
+        await click(getPickerCell("Apr"));
+        await animationFrame();
+        await click(getPickerCell("22"));
+        await animationFrame();
+
+        await editTime("8:25");
+
+        // Close the datepicker
+        await click(document.body);
+        await animationFrame();
+    };
+
+    await selectDate();
+    expect.verifySteps([["datetime"]]);
+    expect("[name='display_name'] span").toHaveText("date: 2018-04-22 06:25:00");
+    await clickSave();
+
+    await click(".o_form_button_create");
+    expect.verifySteps([[]]); // initial values
+    await selectDate(); // select the same date
+    expect.verifySteps([["datetime"]]);
+    expect("[name='display_name'] span").toHaveText("date: 2018-04-22 06:25:00");
+});
