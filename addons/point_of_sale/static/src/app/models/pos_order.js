@@ -155,9 +155,10 @@ export class PosOrder extends Base {
             cash_rounding: cashRounding,
         });
 
+        const sumInclLines = orderLines.reduce((s, l) => s + l.get_all_prices().priceWithTax, 0);
         taxTotals.order_sign = documentSign;
         taxTotals.order_total =
-            taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
+            sumInclLines - (taxTotals.cash_rounding_base_amount_currency || 0.0);
 
         let order_rounding = 0;
         let remaining = taxTotals.order_total;
@@ -702,14 +703,17 @@ export class PosOrder extends Base {
     }
 
     get_total_with_tax() {
-        return this.taxTotals.order_sign * this.taxTotals.order_total;
+        const sumIncl = this.get_orderlines()
+            .reduce((s, l) => s + l.get_all_prices().priceWithTax, 0);
+        return roundPrecision(this.taxTotals.order_sign * sumIncl, this.currency.rounding);
+
     }
 
     get_total_without_tax() {
-        const base_amount =
-            this.taxTotals.base_amount_currency +
-            (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
-        return this.taxTotals.order_sign * base_amount;
+        return roundPrecision(
+            this.taxTotals.order_sign * this.taxTotals.base_amount_currency,
+            this.currency.rounding
+        );
     }
 
     _get_ignored_product_ids_total_discount() {
@@ -753,7 +757,8 @@ export class PosOrder extends Base {
     }
 
     get_total_tax() {
-        return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
+        const taxes = this.get_total_with_tax() - this.get_total_without_tax();
+        return roundPrecision(taxes, this.currency.rounding);
     }
 
     // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
