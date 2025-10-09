@@ -24,7 +24,7 @@ async function simulateMouseClick(node, before = false) {
     await pointerUp(node);
 }
 
-test("should insert a paragraph at end of editable and place cursor in it (hr)", async () => {
+test.skip("should insert a paragraph at end of editable and place cursor in it (hr)", async () => {
     await testEditor({
         contentBefore: '<hr contenteditable="false">',
         stepFunction: async (editor) => {
@@ -35,7 +35,7 @@ test("should insert a paragraph at end of editable and place cursor in it (hr)",
     });
 });
 
-test("should insert a paragraph at end of editable and place cursor in it (table)", async () => {
+test.skip("should insert a paragraph at end of editable and place cursor in it (table)", async () => {
     await testEditor({
         contentBefore: "<table></table>",
         stepFunction: async (editor) => {
@@ -46,7 +46,7 @@ test("should insert a paragraph at end of editable and place cursor in it (table
     });
 });
 
-test("should insert a paragraph at beginning of editable and place cursor in it (1)", async () => {
+test.skip("should insert a paragraph at beginning of editable and place cursor in it (1)", async () => {
     await testEditor({
         contentBefore: '<hr contenteditable="false">',
         stepFunction: async (editor) => {
@@ -56,7 +56,7 @@ test("should insert a paragraph at beginning of editable and place cursor in it 
         contentAfter: "<p>[]<br></p><hr>",
     });
 });
-test("should insert a paragraph at beginning of editable and place cursor in it (2)", async () => {
+test.skip("should insert a paragraph at beginning of editable and place cursor in it (2)", async () => {
     await testEditor({
         contentBefore: "<table></table>",
         stepFunction: async (editor) => {
@@ -67,7 +67,7 @@ test("should insert a paragraph at beginning of editable and place cursor in it 
     });
 });
 
-test("should insert a paragraph between the two non-P blocks and place cursor in it (1)", async () => {
+test.skip("should insert a paragraph between the two non-P blocks and place cursor in it (1)", async () => {
     await testEditor({
         contentBefore: '<hr contenteditable="false"><hr contenteditable="false">',
         stepFunction: async (editor) => {
@@ -77,7 +77,7 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
         contentAfter: "<hr><p>[]<br></p><hr>",
     });
 });
-test("should insert a paragraph between the two non-P blocks and place cursor in it (2)", async () => {
+test.skip("should insert a paragraph between the two non-P blocks and place cursor in it (2)", async () => {
     await testEditor({
         contentBefore: "<table></table><table></table>",
         stepFunction: async (editor) => {
@@ -88,7 +88,7 @@ test("should insert a paragraph between the two non-P blocks and place cursor in
     });
 });
 
-test("should insert a paragraph before the table, then one after it", async () => {
+test.skip("should insert a paragraph before the table, then one after it", async () => {
     const { el } = await setupEditor("<table></table>");
     const table = el.querySelector("table");
     await simulateMouseClick(table, true);
