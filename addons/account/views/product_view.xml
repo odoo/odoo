@@ -4,6 +4,7 @@
         <record id="product_template_list_view_sellable_inherit" model="ir.ui.view">
             <field name="name">product.template.list.sellable.inherit</field>
             <field name="model">product.template</field>
+<<<<<<< 96f90b0e96267bd17e119860357a220e00135a78
             <field name="inherit_id" ref="product.product_template_list_view_sellable"/>
                 <field name="arch" type="xml">
                     <xpath expr="//field[@name='list_price']" position="after">
@@ -21,6 +22,29 @@
                         <field name="supplier_taxes_id" widget="many2many_tax_tags"/>
                     </xpath>
                 </field>
+||||||| 85bafaab09de1213604418283885ba386b0928be
+            <field name="arch" type="xml">
+                <list string="Products" sample="1">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="list_price"/>
+                    <field name="taxes_id" widget="many2many_tags"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </list>
+            </field>
+=======
+            <field name="arch" type="xml">
+                <list string="Products" sample="1">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="list_price"/>
+                    <field name="taxes_id" widget="many2many_tags" context="{'append_fields': ['company_id']}"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'append_fields': ['company_id']}"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </list>
+            </field>
+>>>>>>> 5960e6ac351a90cd2be1e452638b6ae3926a06e0
         </record>
 
         <record id="product_product_action_sellable" model="ir.actions.act_window">
@@ -99,6 +123,7 @@
                                 'search_default_sale': 1,
                                 'search_default_service': type == 'service',
                                 'search_default_goods': type == 'consu',
+                                'append_fields': ['company_id'],
                             }"
                         />
                         <field name="tax_string" class="oe_inline"/>
@@ -113,6 +138,7 @@
                             'search_default_purchase': 1,
                             'search_default_service': type == 'service',
                             'search_default_goods': type == 'consu',
+                            'append_fields': ['company_id'],
                         }"
                     />
                 </div>
