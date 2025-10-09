@@ -176,26 +176,6 @@ class ResUsers(models.Model):
         # see `_has_field_access``
         return name == 'user_writeable' or super()._valid_field_parameter(field, name)
 
-    @property
-    def SELF_READABLE_FIELDS(self):
-        """ The list of fields a user can read on their own user record.
-        In order to add fields, please override this property on model extensions.
-        """
-        return [
-            'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
-            'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
-            'tz_offset', 'group_ids', 'partner_id', 'write_date', 'action_id',
-            'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
-            'share', 'device_ids', 'api_key_ids', 'phone', 'display_name',
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        """ The list of fields a user can write on their own user record.
-        In order to add fields, please override this property on model extensions.
-        """
-        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'api_key_ids', 'phone']
-
     def _default_groups(self):
         """Default groups for employees
 
@@ -218,8 +198,8 @@ class ResUsers(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
-    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
-    signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True)
+    api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys", user_writeable=True)
+    signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True, user_writeable=True)
     active = fields.Boolean(default=True)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
@@ -238,17 +218,22 @@ class ResUsers(models.Model):
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company.id,
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        user_writeable=True,
+        default=lambda self: self.env.company.id,
         help='The default company for this user.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
         string='Companies', default=lambda self: self.env.company.ids)
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
-    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False, user_writeable=True)
+    email = fields.Char(related='partner_id.email', inherited=True, readonly=False, user_writeable=True)
     email_domain_placeholder = fields.Char(compute="_compute_email_domain_placeholder")
-    phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False)
+    phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False, user_writeable=True)
+    image_1920 = fields.Binary(related='partner_id.image_1920', inherited=True, readonly=False, user_writeable=True)
+    lang = fields.Selection(related='partner_id.lang', inherited=True, readonly=False, user_writeable=True)
+    tz = fields.Selection(related='partner_id.tz', inherited=True, readonly=False, user_writeable=True)
 
     group_ids = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups(), help="Groups explicitly assigned to the user")
     all_group_ids = fields.Many2many('res.groups', string="Groups and implied groups",
