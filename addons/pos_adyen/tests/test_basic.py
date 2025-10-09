@@ -74,6 +74,8 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
             response = Response()
             response.status_code = 200
             response._content = b"ok"
+            response.encoding = "utf-8"
+            response.headers["Content-Type"] = "text/plain"
             return response
 
         with patch(
