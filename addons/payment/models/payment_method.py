@@ -224,6 +224,9 @@ class PaymentMethod(models.Model):
         payment_method_unknown = self.env.ref('payment.payment_method_unknown')
         if payment_method_unknown in self:
             raise UserError(_("You cannot delete the default payment method."))
+        for record in self:
+            if len(record.provider_ids) > 0:
+                raise UserError(_("You cannot delete a payment method that is linked to a provider."))
 
     # === BUSINESS METHODS === #
 

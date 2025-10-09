@@ -250,3 +250,23 @@ class TestPaymentMethod(PaymentCommon):
         }
         self.maxDiff = None
         self.assertDictEqual(report['payment_methods'], expected_pms_report)
+
+    def test_unlink_not_allowed_when_linked_to_providers(self):
+        """ Test that the payment method cannot be deleted if it is linked to providers. """
+        payment_method_with_provider = self.env['payment.method'].create({
+            'name': "Dummy Method",
+            'code': 'dummymethod',
+            'provider_ids': self.provider.ids,
+        })
+        with self.assertRaises(UserError):
+            payment_method_with_provider.unlink()
+
+    def test_unlink_allowed_when_no_linked_providers(self):
+        """ Test that the payment method can be deleted if it is not linked to providers. """
+        payment_method_without_provider = self.env['payment.method'].create({
+            'name': "Dummy Method",
+            'code': 'dummymethod',
+            'provider_ids': [],
+        })
+        res = payment_method_without_provider.unlink()
+        self.assertTrue(res)
