@@ -370,6 +370,47 @@ class TestPartner(TransactionCaseWithUserDemo):
         # current user is always preferred
         self.assertEqual(partner.with_user(portal_user).main_user_id, portal_user)
 
+    def test_res_partner_recursion(self):
+        res_partner = self.env['res.partner']
+        p1 = res_partner.browse(res_partner.name_create('Elmtree')[0])
+        p2 = res_partner.create({'name': 'Elmtree Child 1', 'parent_id': p1.id})
+        p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': p2.id})
+        self.assertFalse(p3._has_cycle())
+        self.assertFalse((p1 + p2 + p3)._has_cycle())
+
+        # special case: empty recordsets don't lead to cycles
+        self.assertFalse(self.env['res.partner']._has_cycle())
+
+        with self.assertRaises(ValidationError):
+            p1.write({'parent_id': p3.id})
+
+        with self.assertRaises(ValidationError):
+            p2.write({'parent_id': p3.id})
+
+        with self.assertRaises(ValidationError):
+            p3.write({'parent_id': p3.id})
+
+        # Indirect hacky write to create cycle in children
+        p3b = p1.create({'name': 'Elmtree Grand-Child 1.2', 'parent_id': p2.id})
+        with self.assertRaises(ValidationError):
+            p2.write({'child_ids': [Command.update(p3.id, {'parent_id': p3b.id}),
+                                         Command.update(p3b.id, {'parent_id': p3.id})]})
+
+        with self.assertRaises(ValidationError):
+            # p3 -> p2 -> p1 -> p2
+            (p3 + p1).parent_id = p2
+
+        # multi-write on several partners in same hierarchy must not trigger a false cycle detection
+        ps = p1 + p2 + p3
+        self.assertTrue(ps.write({'phone': '123456'}))
+
+        # The recursion check must not loop forever
+        p2.parent_id = False
+        p3.parent_id = False
+        p1.parent_id = p2
+        with self.assertRaises(ValidationError):
+            (p3 | p2).write({'parent_id': p1.id})
+
 
 @tagged('res_partner', 'res_partner_address')
 class TestPartnerAddressCompany(TransactionCase):
@@ -1176,63 +1217,6 @@ class TestPartnerForm(TransactionCase):
             partner_form.company_type = 'person'
             partner_form.name = 'Philip'
             self.assertEqual(partner_form.user_id, test_parent_partner.user_id)
-
-
-@tagged('res_partner')
-class TestPartnerRecursion(TransactionCase):
-
-    def setUp(self):
-        super(TestPartnerRecursion, self).setUp()
-        res_partner = self.env['res.partner']
-        self.p1 = res_partner.browse(res_partner.name_create('Elmtree')[0])
-        self.p2 = res_partner.create({'name': 'Elmtree Child 1', 'parent_id': self.p1.id})
-        self.p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': self.p2.id})
-
-    def test_100_res_partner_recursion(self):
-        self.assertFalse(self.p3._has_cycle())
-        self.assertFalse((self.p1 + self.p2 + self.p3)._has_cycle())
-
-        # special case: empty recordsets don't lead to cycles
-        self.assertFalse(self.env['res.partner']._has_cycle())
-
-    # split 101, 102, 103 tests to force SQL rollback between them
-
-    def test_101_res_partner_recursion(self):
-        with self.assertRaises(ValidationError):
-            self.p1.write({'parent_id': self.p3.id})
-
-    def test_102_res_partner_recursion(self):
-        with self.assertRaises(ValidationError):
-            self.p2.write({'parent_id': self.p3.id})
-
-    def test_103_res_partner_recursion(self):
-        with self.assertRaises(ValidationError):
-            self.p3.write({'parent_id': self.p3.id})
-
-    def test_104_res_partner_recursion_indirect_cycle(self):
-        """ Indirect hacky write to create cycle in children """
-        p3b = self.p1.create({'name': 'Elmtree Grand-Child 1.2', 'parent_id': self.p2.id})
-        with self.assertRaises(ValidationError):
-            self.p2.write({'child_ids': [Command.update(self.p3.id, {'parent_id': p3b.id}),
-                                         Command.update(p3b.id, {'parent_id': self.p3.id})]})
-
-    def test_105_res_partner_recursion(self):
-        with self.assertRaises(ValidationError):
-            # p3 -> p2 -> p1 -> p2
-            (self.p3 + self.p1).parent_id = self.p2
-
-    def test_110_res_partner_recursion_multi_update(self):
-        """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
-        ps = self.p1 + self.p2 + self.p3
-        self.assertTrue(ps.write({'phone': '123456'}))
-
-    def test_111_res_partner_recursion_infinite_loop(self):
-        """ The recursion check must not loop forever """
-        self.p2.parent_id = False
-        self.p3.parent_id = False
-        self.p1.parent_id = self.p2
-        with self.assertRaises(ValidationError):
-            (self.p3|self.p2).write({'parent_id': self.p1.id})
 
 
 @tagged('res_partner')
