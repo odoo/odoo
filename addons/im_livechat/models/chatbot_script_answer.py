@@ -48,11 +48,6 @@ class ChatbotScriptAnswer(models.Model):
         if value and operator == 'ilike':
             # search on both name OR step's message (combined with passed args)
             domain = ['|', ('name', operator, value), ('script_step_id.message', operator, value)]
-
-        force_domain_chatbot_script_id = self.env.context.get('force_domain_chatbot_script_id')
-        if force_domain_chatbot_script_id:
-            domain = expression.AND([domain, [('chatbot_script_id', '=', force_domain_chatbot_script_id)]])
-
         return domain
 
     def _to_store_defaults(self):

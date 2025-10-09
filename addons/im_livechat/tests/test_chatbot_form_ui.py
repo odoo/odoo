@@ -3,6 +3,7 @@
 
 from odoo import tests
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.fields import Command
 
 
 @tests.tagged('post_install', '-at_install')
@@ -61,3 +62,40 @@ class TestLivechatChatbotFormUI(HttpCaseWithUserDemo):
         self.assertEqual(chatbot_script.script_step_ids[4].sequence, 4)
         self.assertEqual(chatbot_script.script_step_ids[5].message, 'Step 6')
         self.assertEqual(chatbot_script.script_step_ids[5].sequence, 5)
+
+    def test_chatbot_triggering_answer_dropdown_excludes_other_answers_ui(self):
+        self.env["chatbot.script"].create([
+            {
+                "title": "Chatbot 1",
+                "script_step_ids": [
+                    Command.create({
+                        "step_type": "question_selection",
+                        "message": "1",
+                        "answer_ids": [
+                            Command.create({"name": "Answer 1"}),
+                        ],
+                    }),
+                ],
+            },
+            {
+                "title": "Chatbot 2",
+                "script_step_ids": [
+                    Command.create({
+                        "step_type": "text",
+                        "message": "2",
+                    }),
+                    Command.create({
+                        "step_type": "question_selection",
+                        "message": "3",
+                        "answer_ids": [
+                            Command.create({"name": "Answer 2"}),
+                        ],
+                    }),
+                ],
+            },
+        ])
+        self.start_tour(
+            "/odoo",
+            "im_livechat_chatbot_triggering_answer_dropdown_excludes_other_answers_tour",
+            login="admin",
+        )
