@@ -72,15 +72,6 @@ export class SetShadowModeAction extends BuilderAction {
         return getShadowMode(editingElement, "mode");
     }
     apply({ editingElement, value: shadowMode }) {
-        if (shadowMode === "none") {
-            editingElement.classList.remove(shadowClass);
-            setBoxShadow(editingElement, "");
-            return;
-        }
-
-        if (!editingElement.classList.contains(shadowClass)) {
-            editingElement.classList.add(shadowClass);
-        }
         if (editingElement.style["box-shadow"] === "") {
             setBoxShadow(editingElement, getDefaultShadow(shadowMode));
         } else {
@@ -97,11 +88,20 @@ export class SetShadowModeAction extends BuilderAction {
 export class SetShadowAction extends BuilderAction {
     static id = "setShadow";
     apply({ editingElement, params: { mainParam: attributeName }, value }) {
+        if (editingElement.style["box-shadow"] === "") {
+            setBoxShadow(editingElement, getDefaultShadow("shadow"));
+        }
         const shadow = getCurrentShadow(editingElement);
         shadow[attributeName] = value;
         setBoxShadow(editingElement, shadowToString(shadow));
     }
     getValue({ editingElement, params: { mainParam: attributeName } }) {
         return getCurrentShadow(editingElement)[attributeName];
+    }
+    isApplied({ editingElement }) {
+        return editingElement.classList.contains("custom-shadow");
+    }
+    clean({ editingElement }) {
+        editingElement.style.removeProperty("box-shadow");
     }
 }

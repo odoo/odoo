@@ -136,4 +136,85 @@
     </BuilderContext>
 </t>
 
+<t t-name="website.ThemeShadowOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Normal">
+            <div>
+                <t t-set-slot="collapse">
+                    <BuilderRow label.translate="Color" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderColorPicker actionParam="'box-shadow-color'" defaultColor="''" enabledTabs="['solid', 'custom']"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Offset (X, Y)" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Blur" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-blur-radius'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Spread" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-spread-radius'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </t>
+            </div>
+        </BuilderRow>
+        <BuilderRow label.translate="Small">
+            <div>
+                <t t-set-slot="collapse">
+                    <BuilderRow label.translate="Color" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderColorPicker actionParam="'box-shadow-sm-color'" enabledTabs="['solid', 'custom']"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Offset (X, Y)" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Blur" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-sm-blur-radius'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Spread" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-sm-spread-radius'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </t>
+            </div>
+        </BuilderRow>
+        <BuilderRow label.translate="Large">
+            <div>
+                <t t-set-slot="collapse">
+                    <BuilderRow label.translate="Color" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderColorPicker actionParam="'box-shadow-lg-color'" enabledTabs="['solid', 'custom']"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Offset (X, Y)" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Blur" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-lg-blur-radius'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Spread" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-lg-spread-radius'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </t>
+            </div>
+        </BuilderRow>
+        <BuilderRow label.translate="Inset">
+            <div>
+                <t t-set-slot="collapse">
+                    <BuilderRow label.translate="Color" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderColorPicker actionParam="'box-shadow-inset-color'" enabledTabs="['solid', 'custom']"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Offset (X, Y)" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-inset-offset-x'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderNumberInput actionParam="'box-shadow-inset-offset-y'" unit="'px'" saveUnit="'px'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Blur" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-inset-blur-radius'" unit="'px'" saveUnit="'px'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Spread" level="1" action="'customizeWebsiteVariable'">
+                        <BuilderNumberInput actionParam="'box-shadow-inset-spread-radius'" unit="'px'" saveUnit="'px'"/>
+                    </BuilderRow>
+                </t>
+            </div>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
 </templates>
