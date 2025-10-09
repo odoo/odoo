@@ -99,6 +99,9 @@ const savableSelector = '[data-oe-translation-initial-sha], ' +
     'textarea:contains(data-oe-translation-initial-sha), ' +
     '[alt*="data-oe-translation-initial-sha="]';
 
+const iconSelector =
+    ".carousel-control-prev-icon, .carousel-control-next-icon, .oi-chevron-right, .oi-chevron-left";
+
 export class WebsiteTranslator extends WebsiteEditorComponent {
     setup() {
         super.setup();
@@ -156,6 +159,33 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         return translation;
     }
 
+    /**
+     * Clean up tooltips for carousel buttons.
+     * @param {Object} $editable - Object containing the editable area.
+     */
+    _cleanCarouselTooltips($editable) {
+        const icons = $editable.find(iconSelector);
+
+        for (const icon of icons) {
+            const targetEl = icon.closest("a, div");
+            if (!targetEl) {
+                continue;
+            }
+
+            const htmlTitle = targetEl.getAttribute("title");
+            if (htmlTitle?.includes("<span")) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlTitle, "text/html");
+                if (doc && doc.body) {
+                    const textContent = doc.body.textContent.trim();
+                    if (textContent) {
+                        targetEl.setAttribute("title", textContent);
+                    }
+                }
+            }
+        }
+    }
+
     async _beforeEditorActive($wysiwygEditable) {
         this.$wysiwygEditable = $wysiwygEditable;
         const self = this;
@@ -163,6 +193,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
+        this._cleanCarouselTooltips($editable);
         attrs.forEach((attr) => {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
@@ -280,7 +311,11 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 sticky: false,
             });
         };
+        const elementsToSkip = ".carousel-control-prev, .carousel-control-next";
         for (const translationEl of $editable) {
+            if (translationEl.closest(elementsToSkip)) {
+                continue;
+            }
             if (translationEl.closest('.o_not_editable')) {
                 translationEl.addEventListener('click', (ev) => {
                     ev.stopPropagation();
