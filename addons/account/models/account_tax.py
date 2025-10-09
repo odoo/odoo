@@ -1533,13 +1533,21 @@ class AccountTax(models.Model):
         sign = -1 if delta_amount < 0.0 else 1
         nb_of_errors = round(abs(delta_amount / precision_rounding))
         remaining_errors = nb_of_errors
-        for i, target_factor in enumerate(target_factors):
-            factor = target_factor['factor']
+
+        # Take absolute value of factors and sort them by largest absolute value first
+        factors = [abs(target_factor['factor']) for target_factor in target_factors]
+        factors.sort(reverse=True)
+        sum_of_factors = sum(factors)
+
+        if sum_of_factors == 0.0:
+            return amounts_to_distribute
+
+        for i, factor in enumerate(factors):
             if not remaining_errors:
                 break
 
             nb_of_amount_to_distribute = min(
-                math.ceil(abs(factor * nb_of_errors)),
+                math.ceil(factor / sum_of_factors * nb_of_errors),
                 remaining_errors,
             )
             remaining_errors -= nb_of_amount_to_distribute
@@ -1823,7 +1831,7 @@ class AccountTax(models.Model):
                 delta_amount = tax_amounts[f'raw_{delta_field}'] - tax_amounts[delta_field]
                 target_factors = [
                     {
-                        'factor': abs(base_line['tax_details']['total_included_currency'] / tax_amounts['total_included_currency']),
+                        'factor': base_line['tax_details']['total_included_currency'],
                         'base_line': base_line,
                         'index_tax_data': index_tax_data,
                     }
@@ -1873,7 +1881,7 @@ class AccountTax(models.Model):
 
                 target_factors = [
                     {
-                        'factor': abs(base_line['tax_details']['total_included_currency'] / tax_amounts['total_included_currency']),
+                        'factor': base_line['tax_details']['total_included_currency'],
                         'base_line': base_line,
                         'index_tax_data': index_tax_data,
                     }
@@ -1932,7 +1940,7 @@ class AccountTax(models.Model):
                 continue
 
             # Dispatch the base delta evenly on the base lines, starting from the biggest line.
-            factors = [{'factor': 1.0 / len(base_amounts['base_lines'])}] * len(base_amounts['base_lines'])
+            factors = [{'factor': 1.0}] * len(base_amounts['base_lines'])
             base_lines_sorted = sorted(
                 base_amounts['base_lines'],
                 key=lambda base_line: base_line['tax_details']['total_included_currency'],
@@ -2118,7 +2126,7 @@ class AccountTax(models.Model):
                 delta_amount = tax_amount - total_tax_rep_amounts[field]
                 target_factors = [
                     {
-                        'factor': abs(tax_rep_data[field] / tax_amount) if tax_amount else 0.0,
+                        'factor': tax_rep_data[field],
                         'tax_rep_data': tax_rep_data,
                     }
                     for tax_rep_data in sorted_tax_reps_data

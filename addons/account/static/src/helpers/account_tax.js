@@ -641,14 +641,22 @@ export const accountTaxHelpers = {
         const nb_of_errors = Math.round(Math.abs(delta_amount / precision_rounding));
         let remaining_errors = nb_of_errors;
 
+        // Take absolute value of factors and sort them by largest absolute value first
+        const factors = target_factors.map((x) => Math.abs(x.factor));
+        factors.sort((a, b) => b - a);
+        const sum_of_factors = factors.reduce((a, b) => a + b, 0);
+        if (sum_of_factors === 0.0) {
+            return amounts_to_distribute;
+        }
+
         for (let i = 0; i < target_factors.length; i++) {
-            const factor = target_factors[i].factor;
+            const factor = factors[i];
             if (remaining_errors === 0) {
                 break;
             }
 
             const nb_of_amount_to_distribute = Math.min(
-                Math.ceil(Math.abs(factor * nb_of_errors)),
+                Math.ceil(Math.abs(factor / sum_of_factors * nb_of_errors)),
                 remaining_errors
             );
 
@@ -931,10 +939,7 @@ export const accountTaxHelpers = {
                 const target_factors = tax_amounts.sorted_base_line_x_tax_data
                     .filter(([base_line, index_tax_data]) => index_tax_data)
                     .map(([base_line, index_tax_data]) => ({
-                        factor: Math.abs(
-                            base_line.tax_details.total_included_currency /
-                                tax_amounts.total_included_currency
-                        ),
+                        factor: base_line.tax_details.total_included_currency,
                         base_line: base_line,
                         index_tax_data: index_tax_data,
                     }));
@@ -992,10 +997,7 @@ export const accountTaxHelpers = {
 
                 const target_factors = tax_amounts.sorted_base_line_x_tax_data.map(
                     ([base_line, index_tax_data]) => ({
-                        factor: Math.abs(
-                            base_line.tax_details.total_included_currency /
-                                tax_amounts.total_included_currency
-                        ),
+                        factor: base_line.tax_details.total_included_currency,
                         base_line: base_line,
                         index_tax_data: index_tax_data,
                     })
@@ -1057,7 +1059,7 @@ export const accountTaxHelpers = {
             }
 
             // Dispatch the base delta evenly on the base lines, starting from the biggest line.
-            const factors = Array(base_amounts.base_lines.length).fill({ factor: 1.0 / base_amounts.base_lines.length });
+            const factors = Array(base_amounts.base_lines.length).fill({ factor: 1.0 });
             const base_lines_sorted = base_amounts.base_lines.sort((a, b) => 
                 a.tax_details.total_included_currency - b.tax_details.total_included_currency
             );
