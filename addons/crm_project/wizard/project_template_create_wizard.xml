@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="crm_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">crm.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="project.project_project_view_form_quick_create_template"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/footer/button[@name='create_project_from_template']" position="attributes">
+                <attribute name="name">action_create_project_from_lead</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
