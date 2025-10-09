@@ -798,7 +798,7 @@ class Task(models.Model):
 
         for fname, value in vals.items():
             field = self._fields[fname]
-            if field.type == 'many2one':
+            if field.type == 'many2one' and fname != 'partner_id':
                 self.env[field.comodel_name].browse(value).check_access_rule('read')
 
     def _ensure_fields_are_accessible(self, fields, operation='read', check_group_user=True):
