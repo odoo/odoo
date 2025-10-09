@@ -595,6 +595,7 @@ class AccountMoveSend(models.TransientModel):
 
             email_from = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
             model_description = move.with_context(lang=mail_lang).type_name
+            mail_params['force_email_lang'] = mail_lang
 
             self._send_mail(
                 move,
