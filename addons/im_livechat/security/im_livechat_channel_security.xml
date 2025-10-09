@@ -52,5 +52,35 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
+
+        <record id="ir_rule_discuss_channel_ended_livechat_invitation" model="ir.rule">
+            <field name="name">discuss.channel: can access ended livechat channels with invitation</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [("livechat_ended_is_invited", "=", True)]
+            </field>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_invitation" model="ir.rule">
+            <field name="name">discuss.channel.member: read members of channels with ended livechat invitation</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [("channel_id.livechat_ended_is_invited", "=", True)]
+            </field>
+        </record>
     </data>
 </odoo>

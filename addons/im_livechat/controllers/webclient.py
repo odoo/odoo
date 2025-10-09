@@ -69,3 +69,10 @@ class WebClient(WebclientController):
                     request.env.ref("im_livechat.action_report_livechat_conversation", False),
                 ),
             )
+        if name == "channels_as_member":
+            channels = request.env["discuss.channel"].search([
+                ("livechat_ended_is_invited", "=", True)
+            ])
+            request.update_context(
+                channels=request.env.context["channels"] | channels, add_channels_last_message=True
+            )

@@ -25,4 +25,13 @@
             </div>
         </xpath>
     </t>
+
+    <t t-inherit="discuss.ChannelInvitation.main" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='store.self_partner']" position="attributes">
+            <attribute name="t-if">store.self_partner and !props.thread.livechat_end_dt</attribute>
+        </xpath>
+        <xpath expr="//div[contains(@class,'o-discuss-ChannelInvitation-invitationBox')]//t[@t-if='store.self_partner']" position="attributes">
+            <attribute name="t-if">store.self_partner and !props.thread.livechat_end_dt</attribute>
+        </xpath>
+    </t>
 </templates>

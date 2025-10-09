@@ -3,9 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(threadActionsRegistry.get("invite-people"), {
     condition({ thread }) {
-        if (thread?.channel?.channel_type === "livechat") {
-            return super.condition(...arguments) && !thread.livechat_end_dt;
-        }
         return super.condition(...arguments);
     },
 });

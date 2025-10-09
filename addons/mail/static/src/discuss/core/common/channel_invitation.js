@@ -51,7 +51,7 @@ export class ChannelInvitation extends Component {
         });
         onMounted(() => {
             if (this.store.self_partner && this.props.thread) {
-                this.inputRef.el.focus();
+                this.inputRef.el?.focus();
             }
         });
         useEffect(
