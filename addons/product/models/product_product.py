@@ -602,7 +602,7 @@ class ProductProduct(models.Model):
         if not products and operator in positive_operators and (m := re.search(r'(\[(.*?)\])', name)):
             match_domain = [('default_code', '=', m.group(2))]
             products = self.search_fetch(expression.AND([domain, match_domain]), ['display_name'], limit=limit)
-        if not products and (partner_id := self.env.context.get('partner_id')):
+        if partner_id := self.env.context.get('partner_id'):
             # still no results, partner in context: search on supplier info as last hope to find something
             supplier_domain = [
                 ('partner_id', '=', partner_id),
@@ -611,7 +611,7 @@ class ProductProduct(models.Model):
                 ('product_name', operator, name),
             ]
             match_domain = [('product_tmpl_id.seller_ids', 'any', supplier_domain)]
-            products = self.search_fetch(expression.AND([domain, match_domain]), ['display_name'], limit=limit)
+            products |= self.search_fetch(expression.AND([domain, match_domain]), ['display_name'], limit=limit)
         return [(product.id, product.display_name) for product in products.sudo()]
 
     @api.model
