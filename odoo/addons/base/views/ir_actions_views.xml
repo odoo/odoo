@@ -460,9 +460,6 @@
                                     <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'javascript'}" />
                                 </group>
                             </group>
-                            <group>
-                                <field name="usage"/>
-                            </group>
                             <t invisible="state != 'multi'">
                                 <field name="child_ids" widget="many2many" mode="kanban" context="{
                                     'is_modal': 1,
