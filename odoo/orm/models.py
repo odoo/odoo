@@ -4970,7 +4970,7 @@ class BaseModel(metaclass=MetaModel):
         ):
             raise ValueError(f'Field must be a many2one or many2many relation on itself: {field_name!r}')
 
-        if not self.ids:
+        if not self.ids or not self[field_name]:
             return False
 
         # must ignore 'active' flag, ir.rules, etc.

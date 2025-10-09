@@ -378,8 +378,11 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertFalse(p3._has_cycle())
         self.assertFalse((p1 + p2 + p3)._has_cycle())
 
-        # special case: empty recordsets don't lead to cycles
-        self.assertFalse(self.env['res.partner']._has_cycle())
+        with self.assertQueryCount(0):
+            # special case: empty recordsets don't lead to cycles
+            self.assertFalse(self.env['res.partner']._has_cycle())
+
+            self.assertFalse(p1._has_cycle())  # No query because no parent_id
 
         with self.assertRaises(ValidationError):
             p1.write({'parent_id': p3.id})
