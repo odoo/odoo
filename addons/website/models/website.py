@@ -328,6 +328,8 @@ class Website(models.Model):
             groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
             groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
 
+        self._ensure_default_website_consistency()
+
         return websites
 
     def write(self, vals):
@@ -353,6 +355,9 @@ class Website(models.Model):
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
             (original_company | self.company_id)._compute_website_id()
+
+        if 'sequence' in values:
+            self._ensure_default_website_consistency()
 
         if 'cookies_bar' in values:
             existing_policy_page = self.env['website.page'].search([
@@ -424,6 +429,37 @@ class Website(models.Model):
             if not website.homepage_url.startswith('/'):
                 raise ValidationError(_("The homepage URL should be relative and start with '/'."))
 
+    @api.model
+    def _ensure_default_website_consistency(self):
+        """
+        Ensure the website.default_website record
+        points to the first website by sequence
+        """
+        first_website = self.sudo().search([], limit=1, order='sequence, id')
+        if not first_website:
+            return
+
+        default_website_data = self.env['ir.model.data'].search([
+            ('module', '=', 'website'),
+            ('name', '=', 'default_website'),
+            ('model', '=', 'website')
+        ], limit=1)
+
+        if not default_website_data:
+            self.env['ir.model.data'].create({
+                'name': 'default_website',
+                'module': 'website',
+                'model': 'website',
+                'res_id': first_website.id,
+            })
+        elif default_website_data.res_id != first_website.id:
+            default_website_data.res_id = first_website.id
+            self.env['ir.model.data']._update_xmlids([{
+                'xml_id': 'website.default_website',
+                'record': first_website,
+                'noupdate': True,
+            }])
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
         default_website = self.env.ref('website.default_website', raise_if_not_found=False)
@@ -436,6 +472,9 @@ class Website(models.Model):
         companies = self.company_id
         res = super().unlink()
         companies._compute_website_id()
+
+        self._ensure_default_website_consistency()
+
         return res
 
     def _remove_attachments_on_website_unlink(self):
