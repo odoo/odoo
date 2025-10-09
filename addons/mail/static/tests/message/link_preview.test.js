@@ -466,7 +466,7 @@ test("Internal user can't delete others preview", async () => {
             og_description: "Description",
             og_title: "Article title 2",
             og_type: "article",
-            source_url: "https://www.test.odoo.com/",
+            source_url: "https://example.com",
         },
     ]);
     const partnerId = pyEnv["res.partner"].create({ name: "Test User" });
