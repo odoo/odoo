@@ -18,9 +18,9 @@
         <field name="inherit_id" ref="website_sale.product_attribute_view_form"/>
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
-            <group name="ecommerce_main_fields" position="inside">
+            <field name="visibility" position="before">
                 <field name="category_id"/>
-            </group>
+            </field>
         </field>
     </record>
 
