@@ -109,7 +109,12 @@ This addon provides an extensible, maintainable editor.
         ],
         'html_editor.assets_prism': [
             'web/static/lib/prismjs/prism.js',
+            'web/static/lib/prismjs/themes/default.css',
         ],
+        'html_editor.assets_prism_dark': [
+            'web/static/lib/prismjs/prism.js',
+            'web/static/lib/prismjs/themes/okaida.css',
+        ]
     },
     'license': 'LGPL-3'
 }
