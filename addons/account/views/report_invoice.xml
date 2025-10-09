@@ -221,7 +221,7 @@
                                             else ''">
                                             <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)"/>
                                             <t t-if="is_product" name="account_invoice_line_accountable">
-                                                <td name="account_invoice_line_name" t-att-style="padding_style">
+                                                <td class="w-100" name="account_invoice_line_name" t-att-style="padding_style">
                                                     <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
                                                 </td>
                                                 <td name="td_quantity" class="o_td_quantity text-end">
@@ -240,7 +240,7 @@
                                                     <span class="text-nowrap" t-field="line.discount">0</span>
                                                 </td>
                                                 <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
-                                                <td name="td_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                                <td name="td_taxes" t-if="display_taxes" t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                                     <span t-if="not hide_prices" t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                                 </td>
                                                 <td name="td_subtotal" class="text-end o_price_total">
@@ -356,8 +356,8 @@
                             </tbody>
                         </table>
                         <div class="overflow-hidden">
-                            <div id="right-elements" t-attf-class="#{'col-5 mt-5' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
-                                <div id="total" class="clearfix row">
+                            <div id="right-elements" class="float-end ms-auto">
+                                <div id="total" class="clearfix">
                                     <div class="ms-auto">
                                         <table class="o_total_table table table-borderless avoid-page-break-inside">
 

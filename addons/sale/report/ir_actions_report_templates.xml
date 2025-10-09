@@ -213,6 +213,7 @@
                             <tr t-else="" name="tr_product">
                                 <td
                                     name="td_product_name"
+                                    class="w-100"
                                     t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">Bacon Burger</span>
@@ -241,7 +242,7 @@
                                     </t>
                                 </td>
                                 <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
-                                <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 12 else '' }}">
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_product_subtotal" class="text-end o_price_total">
@@ -313,8 +314,8 @@
             </table>
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row mt-n3" name="total">
-                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <table class="o_total_table table table-borderless">
+                    <div>
+                        <table class="o_total_table table table-borderless ms-auto w-auto">
                             <!-- Tax totals -->
                             <t t-call="sale.document_tax_totals">
                                 <t t-set="tax_totals" t-value="doc.tax_totals"/>
