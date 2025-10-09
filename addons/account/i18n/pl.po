@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2024
@@ -10,22 +10,24 @@
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2025
-#
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2025-10-09 07:23+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/account/"
+"pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -158,9 +160,9 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s osiągnął nieprawidłowy stan w odniesieniu do powiązanego wiersza "
+"%(move)s osiągnął nieprawidłowy stan w odniesieniu do powiązanej pozycji "
 "wyciągu.\n"
-"Aby zachować spójność, wpis w dzienniku musi zawsze mieć dokładnie jeden "
+"Aby zachować spójność, zapis w dzienniku musi zawsze mieć dokładnie jeden "
 "wiersz zawieszenia."
 
 #. module: account
@@ -332,7 +334,7 @@ msgstr "- Sekwencja dokumentu staje się edytowalna na wszystkich dokumentach."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Pokaż częściowo uzgodnione wpisy księgowe"
+msgstr "-> Pokaż częściowo uzgodnione zapisy księgowe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -353,7 +355,7 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Wpisy do dziennika muszą być obliczone przez Odoo przed zaksięgowaniem w "
+". Zapisy dziennika muszą być obliczone przez Odoo przed zaksięgowaniem w "
 "walucie firmy."
 
 #. module: account
@@ -1169,7 +1171,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"                                <i>Zabezpiecz wpisy do</i>\n"
+"                                <i>Zabezpiecz zapisy do</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1566,10 +1568,10 @@ msgid ""
 "rounding made on previous entries; possibly causing an inconsistency with "
 "the new ones."
 msgstr ""
-"<strong>Ta waluta została już wykorzystana do generowania wpisów księgowych."
-"</strong><br/>\n"
+"<strong>Ta waluta została już wykorzystana do generowania zapisów "
+"księgowych.</strong><br/>\n"
 "Zmiana jej współczynnika zaokrąglenia teraz nie zmieni zaokrąglenia "
-"dokonanego na poprzednich wpisach; być może powodując niespójność z nowymi."
+"dokonanego na poprzednich zapisach; być może powodując niespójność z nowymi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1607,7 +1609,7 @@ msgid ""
 "cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Kasa umożliwia zarządzanie wpisami pieniężnymi w dziennikach kasowych.\n"
+"Kasa umożliwia zarządzanie zapisami pieniężnymi w dziennikach kasowych.\n"
 "dziennikach kasowych. Funkcja ta zapewnia łatwy sposób śledzenia płatności "
 "gotówkowych\n"
 "płatności gotówkowych na co dzień."
@@ -1744,7 +1746,7 @@ msgid ""
 "journal entry."
 msgstr ""
 "Płatność z wykorzystaniem nierozliczonego konta nie może zostać potwierdzona "
-"bez posiadania wpisu w dzienniku."
+"bez posiadania zapisu w dzienniku."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1961,7 +1963,7 @@ msgstr "Grupy kont o tej samej granulacji nie mogą się nakładać"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr "Konto ma zaszyfrowane wpisy"
+msgstr "Konto ma zaszyfrowane zapisy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -2009,7 +2011,7 @@ msgstr "Mapowanie konta"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "Odwrócenie wpisu"
+msgstr "Odwrócenie zapisu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
@@ -2229,7 +2231,7 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Konto, które zostanie ustawione na liniach utworzonych w oparciu o wpis "
+"Konto, które zostanie ustawione na liniach utworzonych w oparciu o zapis "
 "dziennika kasowego i służy do śledzenia kwoty podstawy opodatkowania."
 
 #. module: account
@@ -2268,7 +2270,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "Konto z wpisami"
+msgstr "Konto z zapisami"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -2276,7 +2278,7 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"Konto: Zaksięgować wpisy robocze z włączonym auto_post i datą księgowania do "
+"Konto: Zaksięguj zapisy robocze z włączonym auto_post i datą księgowania do "
 "dnia dzisiejszego"
 
 #. module: account
@@ -2405,7 +2407,7 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
 "its reverse entry: %(reverse_entry)s."
 msgstr ""
-"Zapis memoriałowy utworzony w dniu: .%(date)s:%(accrual_entry)s I jego wpis "
+"Zapis memoriałowy utworzony w dniu: .%(date)s:%(accrual_entry)s I jego zapis "
 "odwrotny: %(reverse_entry)s."
 
 #. module: account
@@ -2645,25 +2647,25 @@ msgstr "Dostosowanie kwoty"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entries have been created for this invoice:"
-msgstr "Dla tej faktury utworzono wpisy korygujące:"
+msgstr "Dla tej faktury utworzono zapisy korygujące:"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry"
-msgstr "Dostosowanie wpisu"
+msgstr "Dostosowanie zapisu"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr "Wpis korygujący {link} {percent}%% {amount} uznanej od {date}"
+msgstr "Zapis korygujący {link} {percent}%% {amount} uznanej od {date}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
-msgstr "Wpis korygujący {link} {percent}%% {amount} uznanego w dniu {new_date}"
+msgstr "Zapis korygujący {link} {percent}%% {amount} uznanego w dniu {new_date}"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -3043,8 +3045,8 @@ msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
 msgstr ""
-"Wystąpił błąd podczas obliczania niezmienności. Wszystkie wpisy muszą zostać "
-"uzgodnione."
+"Wystąpił błąd podczas obliczania niezmienności. Wszystkie zapisy muszą "
+"zostać uzgodnione."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3143,7 +3145,7 @@ msgstr "Analityka"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
 msgid "Another entry with the same name already exists."
-msgstr "Wpis o tej nazwie już istnieje."
+msgstr "Zapis o tej nazwie już istnieje."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
@@ -3152,7 +3154,7 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"Każdy wpis do tej daty włącznie zostanie przełożony na późniejszy termin, "
+"Każdy zapis do tej daty włącznie zostanie przełożony na późniejszy termin, "
 "zgodnie z sekwencją dziennika. Data blokady jest nieodwracalna i nie pozwala "
 "na żadne wyjątki."
 
@@ -3162,7 +3164,7 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
-"Każdy wpis do tej daty włącznie zostanie przełożony na późniejszy termin, "
+"Każdy zapis do tej daty włącznie zostanie przełożony na późniejszy termin, "
 "zgodnie z sekwencją dziennika."
 
 #. module: account
@@ -3172,9 +3174,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
-"Każdy wpis z podatkami do tej daty włącznie zostanie przełożony na "
+"Każdy zapis z podatkami do tej daty włącznie zostanie przełożony na "
 "późniejszy termin, zgodnie z sekwencją dziennika. Data blokady podatkowej "
-"jest ustawiana automatycznie po zaksięgowaniu wpisu zamknięcia podatkowego."
+"jest ustawiana automatycznie po zaksięgowaniu zapisu zamknięcia podatkowego."
 
 #. module: account
 #. odoo-python
@@ -3200,7 +3202,7 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Każdy wpis zakupu przed tą datą włącznie zostanie przełożony na późniejszy "
+"Każdy zapis zakupu przed tą datą włącznie zostanie przełożony na późniejszy "
 "termin, zgodnie z sekwencją dziennika."
 
 #. module: account
@@ -3209,7 +3211,7 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Każdy wpis sprzedażowy przed tą datą włącznie zostanie przełożony na "
+"Każdy zapis sprzedażowy przed tą datą włącznie zostanie przełożony na "
 "późniejszy termin, zgodnie z sekwencją dziennika."
 
 #. module: account
@@ -3467,7 +3469,7 @@ msgstr "Automatyczne kursy walut"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
-msgstr "Automatyczny wpis domyślnego dziennika"
+msgstr "Automatyczny zapis domyślnego dziennika"
 
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
@@ -4043,7 +4045,7 @@ msgstr "Budżety"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
 msgid "Button to generate counterpart entry"
-msgstr "Przycisk do generowania wpisu odpowiednika"
+msgstr "Przycisk do generowania zapisu odpowiednika"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -4123,7 +4125,7 @@ msgstr "Może grupować płatności"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Can't disable audit trail when there are existing records."
-msgstr "Nie można wyłączyć ścieżki audytu, gdy wpisy już istnieją."
+msgstr "Nie można wyłączyć ścieżki audytu, gdy zapisy już istnieją."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4144,7 +4146,7 @@ msgstr "Anuluj"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "Anuluj wpis"
+msgstr "Anuluj zapis"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__canceled
@@ -4202,7 +4204,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Cannot generate an unused account code."
-msgstr "Nie można wygenerować konta bez wpisania kodu."
+msgstr "Nie można wygenerować nieużywanego kodu konta."
 
 #. module: account
 #. odoo-python
@@ -4538,7 +4540,7 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Zaznacz to pole, jeśli konto ma zezwalać na uzgadnianie pozycji wpisów "
+"Zaznacz to pole, jeśli konto ma zezwalać na uzgadnianie pozycji zapisów "
 "płatności z fakturami."
 
 #. module: account
@@ -4918,7 +4920,7 @@ msgstr "Potwierdź"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Confirm Entries"
-msgstr "Potwierdź wpisy"
+msgstr "Potwierdź zapisy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -4966,7 +4968,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
-msgstr "Zawiera haszowane wpisy, ale %s także zawiera haszowane wpisy."
+msgstr "Zawiera haszowane zapisy, ale %s także zawiera haszowane zapisy."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_body
@@ -4997,7 +4999,7 @@ msgstr "Super, wygląda na to, że nie masz żadnej kwoty do rozliczenia."
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr ""
-"Uszkodzone dane w wpisie księgowym o identyfikatorze %(id)s (%(name)s)."
+"Uszkodzone dane w zapisie księgowym o identyfikatorze %(id)s (%(name)s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5119,7 +5121,7 @@ msgstr "Utwórz"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Utwórz automatyczne wpisy"
+msgstr "Utwórz automatyczne zapisy"
 
 #. module: account
 #. odoo-python
@@ -5131,12 +5133,12 @@ msgstr "Utwórz rachunek"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Entries upon Emails"
-msgstr "Utwórz wpisy na podstawie emaili"
+msgstr "Utwórz zapisy na podstawie emaili"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
-msgstr "Utwórz wpis"
+msgstr "Utwórz zapis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5146,7 +5148,7 @@ msgstr "Utwórz Faktury na podstawie Emaili"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "Utwórz wpisy dziennika"
+msgstr "Utwórz zapisy dziennika"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
@@ -5183,7 +5185,7 @@ msgstr "Utwórz fakturę klienta"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Utwórz wpis dziennika"
+msgstr "Utwórz zapis dziennika"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -5901,8 +5903,9 @@ msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
-"Data (włącznie), do której numery są rekwirowane. Jeśli nie jest ustawiony, "
-"to wszystkie wpisy dziennika do końca okresu są ponownie sekwencjonowane."
+"Data (włącznie), do której numery są resekwencjonowane. Jeśli nie jest "
+"ustawiony, to wszystkie zapisy dziennika do końca okresu są ponownie "
+"sekwencjonowane."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
@@ -5925,7 +5928,7 @@ msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
 msgstr ""
-"Data, od której księgowość jest zarządzana w Odoo. Jest to data wpisu "
+"Data, od której księgowość jest zarządzana w Odoo. Jest to data zapisu "
 "otwierającego."
 
 #. module: account
@@ -6117,12 +6120,12 @@ msgstr "Domyślne podatki"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
 msgid "Default Terms & Conditions"
-msgstr "Domyślne warunki i wpisy"
+msgstr "Domyślne zasady i warunki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms
 msgid "Default Terms and Conditions"
-msgstr "Domyślne warunki i wpisy"
+msgstr "Domyślne zasady i warunki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
@@ -6716,7 +6719,7 @@ msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
 "Entry."
 msgstr ""
-"Przedpłaty zaksięgowane na tym koncie zostaną uwzględnione przez wpis "
+"Przedpłaty zaksięgowane na tym koncie zostaną uwzględnione przez zapis "
 "zamknięcia podatkowego."
 
 #. module: account
@@ -6754,14 +6757,14 @@ msgstr "Wersja robocza noty kredytowej"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
 msgid "Draft Entries"
-msgstr "Wersje robocze wpisów"
+msgstr "Wersje robocze zapisów"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
-msgstr "Wersja robocza wpisu"
+msgstr "Wersja robocza zapisu"
 
 #. module: account
 #. odoo-python
@@ -6816,7 +6819,7 @@ msgstr "Upuść i pozwól AI na automatyczne przetworzenie Twoich rachunków."
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr "Upuść, aby utworzyć wpisy dziennika z załącznikami."
+msgstr "Upuść, aby utworzyć zapisy dziennika z załącznikami."
 
 #. module: account
 #. odoo-python
@@ -7104,36 +7107,36 @@ msgstr "Dodaj opis"
 #: model:ir.actions.act_window,name:account.action_move_line_form
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Entries"
-msgstr "Wpisy"
+msgstr "Zapisy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
 msgid "Entries Count"
-msgstr "Licznik wpisów"
+msgstr "Licznik zapisów"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr "Wpisy są poprawnie zaszyfrowane"
+msgstr "Zapisy są poprawnie zaszyfrowane"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Entries are not from the same account: %s"
-msgstr "Wpisy nie pochodzą z tego samego konta: %s"
+msgstr "Zapisy nie pochodzą z tego samego konta: %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Entries can only be created for a single company at a time."
-msgstr "Wpisy mogą być tworzone jednocześnie tylko dla jednej firmy."
+msgstr "Zapisy mogą być tworzone jednocześnie tylko dla jednej firmy."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Entries don't belong to the same company: %s"
-msgstr "Wpisy nie należą do tej samej firmy: %s"
+msgstr "Zapisy nie należą do tej samej firmy: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -7141,13 +7144,13 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"Wpisy w przyszłości są domyślnie ustawione na automatyczne publikowanie. "
-"Zaznacz to pole wyboru, aby opublikować je teraz."
+"Zapisy w przyszłości są domyślnie ustawione na automatyczne publikowanie. "
+"Zaznacz to pole wyboru, aby zaksięgować je teraz."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Entries to Review"
-msgstr "Wpisy do sprawdzenia"
+msgstr "Zapisy do sprawdzenia"
 
 #. module: account
 #. odoo-python
@@ -7158,7 +7161,7 @@ msgstr "Zapisy: %(account)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Entry Name"
-msgstr "Nazwa wpisu"
+msgstr "Nazwa zapisu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
@@ -7268,12 +7271,12 @@ msgstr "Dziennik różnic kursowych"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__exchange_move_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
-msgstr "Wymiana wpisu"
+msgstr "Wymiana zapisu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr "Wpisy różnic kursowych:"
+msgstr "Zapisy różnic kursowych:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -7508,7 +7511,7 @@ msgstr "Pierwsza data"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Entry"
-msgstr "Pierwszy wpis"
+msgstr "Pierwszy zapis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -7529,7 +7532,7 @@ msgstr "Pierwsza nowa sekwencja"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 msgid "First recurring entry"
-msgstr "Pierwszy wpis cykliczny"
+msgstr "Pierwszy zapis cykliczny"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -7729,7 +7732,7 @@ msgstr "Aby otrzymać procent wpisz stopę o wartości pomiędzy 0-100."
 #: code:addons/account/models/account_move.py:0
 msgid "For this entry to be automatically posted, it required a bill date."
 msgstr ""
-"Aby ten wpis został automatycznie zaksięgowany, wymagał podania daty "
+"Aby ten zapis został automatycznie zaksięgowany, wymaga podania daty "
 "rachunku."
 
 #. module: account
@@ -7754,7 +7757,7 @@ msgid ""
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
 "Wymusza, aby wszystkie pozycje dziennika na tym koncie miały określoną "
-"walutę (np. dzienniki bankowe). Jeśli nie ustawiono żadnej waluty, wpisy "
+"walutę (np. dzienniki bankowe). Jeśli nie ustawiono żadnej waluty, zapisy "
 "mogą używać dowolnej waluty."
 
 #. module: account
@@ -7953,7 +7956,7 @@ msgstr "Wygenerowane dokumenty"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Generated Entries"
-msgstr "Wygenerowane wpisy"
+msgstr "Wygenerowane zapisy"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report
@@ -8089,7 +8092,7 @@ msgstr "Posiada pozycje księgowe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
 msgid "Has Entries"
-msgstr "posiada wpisy"
+msgstr "posiada zapisy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
@@ -8137,7 +8140,7 @@ msgstr "Ma zaksięgowane zapisy"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "Posiada uzgodnione wpisy"
+msgstr "Posiada uzgodnione zapisy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
@@ -8152,7 +8155,7 @@ msgstr "Ma linie do oświadczeń"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__hash_date
 msgid "Hash All Entries"
-msgstr "Haszuj wszystkie wpisy"
+msgstr "Haszuj wszystkie zapisy"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
@@ -8210,8 +8213,8 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"Najpóźniejsza data w celu zabezpieczenia wszystkich zaksięgowanych wpisów w "
-"dzienniku przed tą datą (włącznie). Uwzględniane są tylko wpisy w dzienniku "
+"Najpóźniejsza data w celu zabezpieczenia wszystkich zaksięgowanych zapisów w "
+"dzienniku przed tą datą (włącznie). Uwzględniane są tylko zapisy w dzienniku "
 "po dacie twardej blokady."
 
 #. module: account
@@ -8401,7 +8404,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
-"Jeśli puste, to będzie stosowany pierwotny dziennik do wpisu odwróconego."
+"Jeśli puste, to będzie stosowany pierwotny dziennik do zapisu odwróconego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
