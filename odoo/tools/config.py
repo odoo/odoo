@@ -1061,7 +1061,8 @@ class configmanager:
         result, updated_hash = crypt_context.verify_and_update(password, stored_hash)
         if result:
             if updated_hash:
-                self.options['admin_passwd'] = updated_hash
+                with self.unlock():
+                    self.options['admin_passwd'] = updated_hash
             return True
         return False
 
