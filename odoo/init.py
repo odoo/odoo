@@ -10,8 +10,10 @@ assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Od
 
 # ----------------------------------------------------------
 # Set gc thresolds if they are default, see `odoo.tools.gc`.
+# Defaults changed from (700, 10, 10) to (2000, 10, 10) in 3.13
+# and the last generation was removed in 3.14.
 # ----------------------------------------------------------
-if gc.get_threshold()[0] == 700:
+if gc.get_threshold()[0] in (700, 2000):
     # Handling requests can sometimes allocate over 5k new objects, let leave
     # some space before starting any collection.
     gc.set_threshold(12_000, 20, 25)
