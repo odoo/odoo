@@ -7,7 +7,12 @@
             t-att-class="{'o_tags_input o_input': !props.readonly}"
             t-ref="many2ManyTagsField"
         >
-            <TagsList tags="tags" visibleItemsLimit="visibleItemsLimit"/>
+            <t t-if="this.canDisplayQuickAssignAvatar">
+                <a class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="0" t-attf-class="{{ this.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" t-att-data-tooltip="this.assignBtnTooltip" t-att-aria-label="this.assignBtnTooltip" t-on-click.stop.prevent="this.openPopover"/>
+            </t>
+            <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
+                <Tag t-props="tag.props"/>
+            </TagsList>
             <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
                 <Many2XAutocomplete
                     id="props.id"
@@ -39,22 +44,6 @@
         </span>
     </t>
 
-    <t t-name="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
-        <xpath expr="//t[@t-foreach='visibleTags']" position="before">
-            <t t-if="canDisplayQuickAssignAvatar">
-                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" data-tooltip="Assign"
-                   aria-label="Assign" class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark" t-attf-class="{{ props.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" role="button"/>
-            </t>
-        </xpath>
-    </t>
-
-    <t t-name="web.KanbanMany2ManyTagsAvatarField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary"
-      >
-        <xpath expr="//TagsList" position="attributes">
-            <attribute name="popoverProps">popoverProps</attribute>
-            <attribute name="readonly">!props.isEditable</attribute>
-        </xpath>
-    </t>
     <t t-name="web.Many2ManyTagsAvatarFieldPopover" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_field_tags')]" position="attributes">
             <attribute name="class" add="p-2 o_m2m_tags_avatar_field_popover o_field_widget o_field_many2many_tags_avatar" remove="d-inline-flex mw-100" separator=" " />
