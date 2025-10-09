@@ -462,7 +462,7 @@ class PosPaymentMethod(models.Model):
                 if not prefix:
                     raise UserError(
                         _(
-                            "Configure the API URL prefix on the payment method to perform this operation.",
+                            "Configure the API URL prefix on the payment method to perform the Adyen '%s' operation." % operation,
                         ),
                     )
                 base_url = (
