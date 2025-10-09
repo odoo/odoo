@@ -1974,6 +1974,16 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_id.id,
         }
 
+    def _get_reward_values_product(self, reward, coupon, product=None, **kwargs):
+        """
+        Hook method for reward values customization.
+        This method is meant to be overridden by other modules (like event_sale)
+        to add specific fields when creating reward lines.
+
+        :return: list of values dict for order line creation
+        """
+        return []
+
     def _prepare_down_payment_section_line(self, **optional_values):
         """ Prepare the values to create a new down payment section.
 

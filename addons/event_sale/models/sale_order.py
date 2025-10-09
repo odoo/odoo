@@ -57,3 +57,29 @@ class SaleOrder(models.Model):
 
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('service_tracking', '!=', 'event')
+
+    def _get_reward_values_product(self, reward, coupon, product=None, **kwargs):
+        """
+        Override to add event_id and event_ticket_id when reward product is an event ticket
+        """
+
+        values_list = super()._get_reward_values_product(reward, coupon, product=product, **kwargs)
+
+        for vals in values_list:
+            line_product_id = vals.get('product_id')
+            if not line_product_id:
+                continue
+
+            line_product = self.env['product.product'].browse(line_product_id)
+            if line_product.service_tracking == 'event':
+                event_ticket = self.env['event.event.ticket'].search([
+                    ('product_id', '=', line_product_id),
+                ], limit=1)
+
+                if event_ticket:
+                    vals.update({
+                        'event_id': event_ticket.event_id.id,
+                        'event_ticket_id': event_ticket.id,
+                    })
+
+        return values_list
