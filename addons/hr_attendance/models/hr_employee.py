@@ -242,11 +242,13 @@ class HrEmployee(models.Model):
                                                             and e.hr_presence_state == "out_of_working_hour")
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if employee.attendance_state == "checked_out" and employee.hr_presence_state == "out_of_working_hour" and \
+            if employee.attendance_state == "checked_in" or not employee.user_id:
+                employee.hr_presence_state = "present"
+            elif not employee.is_in_contract:
+                employee.hr_presence_state = "out_of_working_hour"
+            elif employee.attendance_state == "checked_out" and employee.hr_presence_state == "out_of_working_hour" and \
                     employee.id in working_now_list:
                 employee.hr_presence_state = "absent"
-            elif employee.attendance_state == "checked_in":
-                employee.hr_presence_state = "present"
 
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()
