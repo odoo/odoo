@@ -61,6 +61,11 @@ export class ImageShapeOptionPlugin extends Plugin {
     setup() {
         this.shapeSvgTextCache = {};
         this.imageShapes = this.makeImageShapes();
+        // Compatibility with old shapes.
+        for (const shapeId of Object.keys(this.imageShapes)) {
+            const oldShapeId = shapeId.replace("html_builder", "web_editor");
+            this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
+        }
     }
     async canHaveHoverEffect(imgEl) {
         const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
@@ -90,13 +95,15 @@ export class ImageShapeOptionPlugin extends Plugin {
         return isImageSupportedForProcessing(getMimetype(img, dataset));
     }
     async getShapeSvgText(shapeName) {
-        let shapeSvgText = this.shapeSvgTextCache[shapeName];
+        // Compatibility with old shapes.
+        const shape = shapeName.replace("web_editor", "html_builder");
+        let shapeSvgText = this.shapeSvgTextCache[shape];
         if (shapeSvgText) {
             return shapeSvgText;
         }
-        const shapeURL = getShapeURL(shapeName);
+        const shapeURL = getShapeURL(shape);
         shapeSvgText = await (await fetch(shapeURL)).text();
-        this.shapeSvgTextCache[shapeName] = shapeSvgText;
+        this.shapeSvgTextCache[shape] = shapeSvgText;
         return shapeSvgText;
     }
     async loadShape(img, newData = {}) {
@@ -108,15 +115,11 @@ export class ImageShapeOptionPlugin extends Plugin {
             propName in newDataset ? newDataset[propName] : img.dataset[propName];
         const combinedDataset = { ...img.dataset, ...newDataset };
         const previousShapeId = this.getDefaultShapeId(img.dataset);
-        let shapeId = combinedDataset.shape || this.getDefaultShapeId(combinedDataset);
+        const shapeId = combinedDataset.shape || this.getDefaultShapeId(combinedDataset);
         // todo: should we reset some data if shapeName is not defined?
         if (!shapeId) {
             return;
         }
-        // todo: probably we should replace `web_editor` with `html_builder` in
-        // `data-shape` in every snippet, but this will require a migration
-        // script, and it's too late for 18.4.
-        shapeId = shapeId.replace(/^web_editor/, "html_builder");
 
         const isNewShape = previousShapeId !== shapeId;
         const shapeSvgText = await this.getShapeSvgText(shapeId);
