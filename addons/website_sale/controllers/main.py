@@ -239,6 +239,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'max_price': max_price / conversion_rate,
             'attribute_value_dict': attribute_value_dict,
             'display_currency': post.get('display_currency'),
+            'extra_domain': post.get('extra_domain'),
         }
 
     def _shop_lookup_products(self, options, post, search, website):
@@ -362,6 +363,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if search:
             post['search'] = search
 
+        if not (category or search):
+            post['extra_domain'] = Domain.OR([
+                Domain('public_categ_ids', '=', False),
+                Domain('public_categ_ids.not_in_shop', '=', False),
+            ])
+
         options = self._get_search_options(
             category=category,
             attribute_value_dict=attribute_value_dict,
@@ -422,7 +429,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # categories
 
         Category = request.env['product.public.category']
-        categs_domain = Domain('parent_id', '=', False) & website_domain
+        categs_domain = (
+            Domain('parent_id', '=', False)
+            & Domain('not_in_shop', '=', False)
+            & website_domain
+        )
         if not self.env.user._is_internal():
             categs_domain &= Domain('has_published_products', '=', True)
         if search:

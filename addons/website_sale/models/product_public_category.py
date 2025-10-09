@@ -11,7 +11,7 @@ class ProductPublicCategory(models.Model):
     _name = 'product.public.category'
     _inherit = [
         'website.seo.metadata',
-        'website.multi.mixin',
+        'website.published.multi.mixin',
         'website.located.mixin',
         'website.searchable.mixin',
         'image.mixin',
@@ -29,6 +29,15 @@ class ProductPublicCategory(models.Model):
     name = fields.Char(required=True, translate=True)
     cover_image = fields.Image(
         string="Cover Image", help="Displayed only in the Category List Snippet.",
+    )
+    is_published = fields.Boolean(compute='_compute_is_published')
+    not_in_shop = fields.Boolean(
+        string="Not in Shop",
+        help="If checked, the category will not be displayed in the main catalog page",
+        compute='_compute_not_in_shop',
+        store=True,
+        readonly=False,
+        recursive=True,
     )
     sequence = fields.Integer(default=_default_sequence, index=True)
 
@@ -94,6 +103,17 @@ class ProductPublicCategory(models.Model):
     )
 
     # === COMPUTE METHODS === #
+
+    @api.depends('has_published_products')
+    def _compute_is_published(self):
+        for category in self:
+            category.is_published = category.has_published_products
+
+    @api.depends('parent_id.not_in_shop')
+    def _compute_not_in_shop(self):
+        for category in self:
+            if category.parent_id:
+                category.not_in_shop = category.parent_id.not_in_shop
 
     @api.depends('parent_path')
     def _compute_parents_and_self(self):

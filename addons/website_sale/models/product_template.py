@@ -859,6 +859,8 @@ class ProductTemplate(models.Model):
         min_price = options.get('min_price')
         max_price = options.get('max_price')
         attribute_value_dict = options.get('attribute_value_dict')
+        if extra_domain := options.get('extra_domain'):
+            domains.append(extra_domain)
         if category:
             domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
         if tags:
