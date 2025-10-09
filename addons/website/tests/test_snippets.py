@@ -145,3 +145,9 @@ class TestSnippets(HttpCase):
 
     def test_snippet_popup_open_on_top(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_open_on_top', login='admin')
+
+    def test_footer_slideout_and_animation(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'footer_slideout_and_animation', login='admin')
+
+    def test_snippet_faq_horizontal(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_faq_horizontal', login='admin')
