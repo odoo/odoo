@@ -611,3 +611,25 @@ registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount"
             Order.hasTotal("12.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_ecommerce_paid_order_is_hidden_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A Test Partner 1"),
+            PosSale.checkOrdersListEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_ecommerce_unpaid_order_is_shown_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A Test Partner 1"),
+            PosSale.checkOrdersListNotEmpty(),
+        ].flat(),
+});
