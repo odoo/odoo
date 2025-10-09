@@ -2006,3 +2006,108 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(boxes.package_dest_id.picking_ids, receipt)
         self.assertFalse((pallet | container).package_dest_id)
         self.assertFalse((pallet | container).picking_ids)
+
+    def test_package_removal(self):
+        """ Checks that the button 'Remove' in the package view in pickings behaves as expected:
+            - Only removes related move/move lines from the picking if it was only added through an entire pack
+            - Otherwise, just removes the package as destination
+            - When removing a destination container, don't remove its children, just reset their destination
+        """
+        pack1, pack2, pack3 = self.env['stock.package'].create([{} for _ in range(3)])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse_1.lot_stock_id, 2, package_id=pack1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.warehouse_1.lot_stock_id, 3, package_id=pack2)
+        (pack1 | pack2).parent_package_id = pack3
+
+        pick = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_dest_id': self.pack_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 2,
+                    'location_id': self.warehouse_1.lot_stock_id.id,
+                    'location_dest_id': self.pack_location.id,
+                }),
+            ],
+        })
+        pick.action_confirm()
+        self.assertRecordValues(pick.move_line_ids, [
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': False, 'is_entire_pack': False},
+        ])
+
+        pick.action_add_entire_packs(pack3.id)
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_ids': pack3.ids, 'product_uom_qty': 0},
+            {'product_id': self.productB.id, 'package_ids': pack3.ids, 'product_uom_qty': 2},
+        ])
+        self.assertRecordValues(pick.move_line_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_id': pack1.id, 'result_package_id': pack1.id, 'is_entire_pack': True},
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': pack2.id, 'is_entire_pack': True},
+        ])
+        self.assertEqual(pack1.package_dest_id, pack3)
+        self.assertEqual(pack2.package_dest_id, pack3)
+
+        # Remove pack3 from picking, this should only remove it as destination container
+        pack3.with_context(picking_ids=pick.ids).action_remove_package()
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_ids': pack1.ids, 'product_uom_qty': 0},
+            {'product_id': self.productB.id, 'package_ids': pack2.ids, 'product_uom_qty': 2},
+        ])
+        self.assertRecordValues(pick.move_line_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'package_id': pack1.id, 'result_package_id': pack1.id, 'is_entire_pack': True},
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': pack2.id, 'is_entire_pack': True},
+        ])
+        self.assertFalse((pack1 | pack2).package_dest_id)
+
+        # Remove pack1 from picking, this should also remove its related move & move line
+        pack1.with_context(picking_ids=pick.ids).action_remove_package()
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productB.id, 'package_ids': pack2.ids, 'product_uom_qty': 2},
+        ])
+        self.assertRecordValues(pick.move_line_ids.sorted('product_id'), [
+            {'product_id': self.productB.id, 'package_id': pack2.id, 'result_package_id': pack2.id, 'is_entire_pack': True},
+        ])
+
+        # Remove pack2 from picking, this shouldn't remove its related move
+        pack2.with_context(picking_ids=pick.ids).action_remove_package()
+        self.assertRecordValues(pick.move_ids.sorted('product_id'), [
+            {'product_id': self.productB.id, 'package_ids': [], 'product_uom_qty': 2},
+        ])
+        self.assertFalse(pick.move_line_ids)
+
+    def test_mid_level_package_removal(self):
+        """ Checks that if a package is removed from a picking and implicitly disconnects the top-level packages from the bottom level ones,
+            Then those upper level packages reset their package_dest_id.
+        """
+        packages = self.env['stock.package'].create([{
+            'name': f"p{i}",
+        } for i in range(4)])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.warehouse_1.lot_stock_id, 2, package_id=packages[3])
+
+        # From top to bottom, packages should be organized as p0 (highest level) > p1 > p2 > p3 (lowest level, contains products)
+        for ind in range(3, 0, -1):
+            packages[ind].parent_package_id = packages[ind - 1]
+        self.assertEqual(packages[3].complete_name, 'p0 > p1 > p2 > p3')
+
+        pick = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'location_dest_id': self.pack_location.id,
+        })
+        pick.action_add_entire_packs(packages[0].id)
+        self.assertEqual(packages[3].dest_complete_name, 'p0 > p1 > p2 > p3')
+
+        # Remove p3, this should break the link with p2 and p1, so we need to make sure their package_dest_id is reset
+        self.assertEqual(packages[0].move_line_ids, pick.move_line_ids)
+        packages[2].with_context(picking_ids=pick.ids).action_remove_package()
+
+        self.assertEqual(packages[3].complete_name, 'p0 > p1 > p2 > p3')
+        self.assertEqual(packages[3].dest_complete_name, 'p3')
+
+        self.assertRecordValues(packages, [
+            {'name': 'p0', 'parent_package_id': False, 'package_dest_id': False},
+            {'name': 'p1', 'parent_package_id': packages[0].id, 'package_dest_id': False},
+            {'name': 'p2', 'parent_package_id': packages[1].id, 'package_dest_id': False},
+            {'name': 'p3', 'parent_package_id': packages[2].id, 'package_dest_id': False},
+        ])
