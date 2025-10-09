@@ -60,4 +60,5 @@ class AccountTax(models.Model):
         return [
             'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected', 'has_negative_factor',
             'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id', 'sequence', 'tax_group_id',
+            'fiscal_position_ids',
         ]

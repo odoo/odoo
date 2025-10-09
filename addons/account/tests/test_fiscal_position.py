@@ -364,3 +364,32 @@ class TestFiscalPosition(common.TransactionCase):
             'sequence': sequence
         } for sequence in range(1, 3)])
         self.assertEqual(self.fp._get_fiscal_position(self.jc), fiscal_positions[0])
+
+    def test_tax_map_if_not_in_fiscal_position(self):
+        """
+        - a Tax, having a FP, should be mapped to nothing on another FP that is not linked to the tax
+        - a Tax, without a FP, should be mapped to itself regardless of the FP
+        """
+        self.env['account.tax.group'].create({'name': 'default_tax_group'})
+        dummy_tax = self.env['account.tax'].create({
+            'name': "dummy_tax",
+            'country_id': self.us.id,
+        })
+        fiscal_position_a = self.fp.create([{
+            'name': 'fiscal_position_a',
+        }])
+        fiscal_position_b = self.fp.create([{
+            'name': 'fiscal_position_b',
+        }])
+        dummy_tax.fiscal_position_ids = fiscal_position_b.ids  # if not tax set on a fp, map_tax() always returns empty tax recordset
+        tax_1 = self.env['account.tax'].create({
+            'name': "tax_1",
+            'fiscal_position_ids': fiscal_position_a.ids,
+            'country_id': self.us.id,
+        })
+        tax_2 = self.env['account.tax'].create({
+            'name': "tax_2",
+            'country_id': self.us.id,
+        })
+        self.assertEqual(fiscal_position_b.map_tax(tax_1), self.env['account.tax'])
+        self.assertEqual(fiscal_position_b.map_tax(tax_2), tax_2)
