@@ -878,6 +878,23 @@ export class Form extends Interaction {
     }
 
     /**
+     * Removes error indications from the field, file input, and add files button.
+     * Only acts if a custom error is present.
+     * @param {HTMLElement} fieldEl
+     * @param {HTMLElement} fileInputEl
+     * @param {HTMLElement} addFilesButtonEl
+     */
+    removeFileUploadErrors(fieldEl, fileInputEl, addFilesButtonEl) {
+        const customError = fieldEl.querySelector(".s_website_form_custom_error");
+        if (customError) {
+            customError.remove();
+            fileInputEl?.classList.remove("is-invalid");
+            addFilesButtonEl?.classList.remove("is-invalid");
+            this.el.querySelector("#s_website_form_result")?.replaceChildren();
+        }
+    }
+
+    /**
      * Called when files are uploaded: updates the button text content,
      * displays the file blocks (containing the files name and a cross to
      * delete them) and manages the files.
@@ -918,6 +935,9 @@ export class Form extends Interaction {
                 fileInputEl.fileList.items.add(newFile);
                 const fileDetails = { name: newFile.name, size: newFile.size, type: newFile.type };
                 this.createFileBlock(fileDetails, filesZoneEl);
+
+                // Remove visible error messages only when file is replaced.
+                this.removeFileUploadErrors(fieldEl, fileInputEl, addFilesButtonEl);
             }
         }
         // Update the input files.
@@ -931,15 +951,20 @@ export class Form extends Interaction {
      * @param {Event} ev
      */
     clickFileDelete(ev) {
-        if (!ev.target.closest(".o_file_delete")) {
-            return;
-        }
         const fileBlockEl = ev.target.closest(".o_file_block");
+        if (!fileBlockEl) {
+            return; // Prevent error if not clicking on a file block
+        }
         const fieldEl = fileBlockEl.closest(".s_website_form_field");
         const fileInputEl = fieldEl.querySelector("input[type=file]");
         const fileDetails = fileBlockEl.fileDetails;
         const addFilesButtonEl = fieldEl.querySelector(".o_add_files_button");
 
+        // Remove any visible error messages before proceeding
+        this.removeFileUploadErrors(fieldEl, fileInputEl, addFilesButtonEl);
+        if (!ev.target.closest(".o_file_delete")) {
+            return;
+        }
         // Create a new file list containing the remaining files.
         const newFileList = new DataTransfer();
         for (const file of Object.values(fileInputEl.fileList.files)) {
