@@ -300,14 +300,16 @@ export class PaymentScreen extends Component {
             }
         }
 
-        this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
         let syncOrderResult;
         try {
             // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
+            syncOrderResult = await this.pos.syncAllOrders({
+                orders: [this.currentOrder],
+                throw: true,
+            });
             if (!syncOrderResult) {
                 return;
             }
