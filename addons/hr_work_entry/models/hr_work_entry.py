@@ -26,7 +26,11 @@ class HrWorkEntry(models.Model):
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        index=True,
+        default=lambda self: self.env['hr.work.entry.type'].search([], limit=1),
+        domain=lambda self: self._get_work_entry_type_domain())
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
@@ -304,3 +308,8 @@ class HrWorkEntry(models.Model):
                 # New work entries are handled in the create method,
                 # no need to reload work entries.
                 work_entries.exists()._check_if_error()
+
+    def _get_work_entry_type_domain(self):
+        if len(self.env.companies.country_id.ids) > 1:
+            return [('country_id', '=', False)]
+        return ['|', ('country_id', '=', False), ('country_id', 'in', self.env.companies.country_id.ids)]
