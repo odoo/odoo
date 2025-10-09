@@ -1,4 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { parseBoxShadow } from "@html_builder/utils/utils_css";
@@ -10,10 +11,19 @@ export class ShadowOptionPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
+            SetShadowClassAction,
             SetShadowModeAction,
-            SetShadowAction,
+            SetShadowStyleAction,
         },
     };
+    setup() {
+        // Migrate old shadow elements to use the new custom shadow class.
+        const oldShadowElements = this.editable.querySelectorAll(".shadow[style*=box-shadow]");
+        for (const el of oldShadowElements) {
+            el.classList.remove("shadow");
+            el.classList.add("o-shadow-custom");
+        }
+    }
 }
 
 export function getDefaultShadow(mode) {
@@ -64,6 +74,22 @@ export function shadowToString(shadow) {
 
 registry.category("builder-plugins").add(ShadowOptionPlugin.id, ShadowOptionPlugin);
 
+export class SetShadowClassAction extends ClassAction {
+    static id = "setShadowClass";
+    apply({ editingElement, params: { mainParam: shadowClass } }) {
+        super.apply(...arguments);
+        if (shadowClass === "o-shadow-custom" && editingElement.style.boxShadow === "") {
+            setBoxShadow(editingElement, getDefaultShadow("shadow"));
+        }
+    }
+    clean({ editingElement, params: { mainParam: shadowClass } }) {
+        super.clean(...arguments);
+        if (shadowClass === "o-shadow-custom") {
+            editingElement.style.removeProperty("box-shadow");
+        }
+    }
+}
+
 export class SetShadowModeAction extends BuilderAction {
     static id = "setShadowMode";
     isApplied({ editingElement, value: shadowMode }) {
@@ -73,30 +99,17 @@ export class SetShadowModeAction extends BuilderAction {
         return getShadowMode(editingElement, "mode");
     }
     apply({ editingElement, value: shadowMode }) {
-        if (shadowMode === "none") {
-            editingElement.classList.remove(shadowClass);
-            setBoxShadow(editingElement, "");
-            return;
-        }
-
-        if (!editingElement.classList.contains(shadowClass)) {
-            editingElement.classList.add(shadowClass);
-        }
-        if (editingElement.style["box-shadow"] === "") {
-            setBoxShadow(editingElement, getDefaultShadow(shadowMode));
+        const shadow = getCurrentShadow(editingElement);
+        if (shadowMode === "inset") {
+            shadow.mode = "inset";
         } else {
-            const shadow = getCurrentShadow(editingElement);
-            if (shadowMode === "inset") {
-                shadow.mode = "inset";
-            } else {
-                shadow.mode = "";
-            }
-            setBoxShadow(editingElement, shadowToString(shadow));
+            shadow.mode = "";
         }
+        setBoxShadow(editingElement, shadowToString(shadow));
     }
 }
-export class SetShadowAction extends BuilderAction {
-    static id = "setShadow";
+export class SetShadowStyleAction extends BuilderAction {
+    static id = "setShadowStyle";
     apply({ editingElement, params: { mainParam: attributeName }, value }) {
         const shadow = getCurrentShadow(editingElement);
         shadow[attributeName] = value;
