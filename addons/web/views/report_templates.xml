@@ -145,7 +145,7 @@
                                <tr>
                                    <th name="th_description" class="text-start"><span>Description</span></th>
                                    <th name="th_quantity" class="text-end"><span>Quantity</span></th>
-                                   <th name="th_priceunit" class="text-end d-md-table-cell"><span>Unit Price</span></th>
+                                   <th name="th_priceunit" class="text-end d-md-table-cell text-nowrap"><span>Unit Price</span></th>
                                    <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
                                    <th name="th_subtotal" class="text-end">
                                        <span>Amount</span>
@@ -154,7 +154,7 @@
                            </thead>
                            <tbody class="invoice_tbody">
                                <tr>
-                                   <td name="account_invoice_line_name"><span>[FURN_8999] Three-Seat Sofa<br/>
+                                   <td class="w-100" name="account_invoice_line_name"><span>[FURN_8999] Three-Seat Sofa<br/>
                                        Three Seater Sofa with Lounger in Steel Grey Colour</span></td>
                                    <td class="text-end">
                                        <span>5.00</span>
@@ -187,7 +187,7 @@
                                </tr>
                            </tbody>
                        </table>
-                       <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
+                       <div id="right-elements" class="float-end ms-auto">
                            <div id="total" class="clearfix row mt-n3">
                                <div class="ms-auto">
                                    <table class="o_total_table table table-borderless">
