@@ -17,6 +17,7 @@ from odoo.addons.website_crm_partner_assign.controllers.main import (
     WebsiteAccount,
     WebsiteCrmPartnerAssign,
 )
+from odoo.addons.website_crm_partner_assign.tests.common import patch_geo_find
 
 
 class TestPartnerAssign(TransactionCase):
@@ -37,14 +38,7 @@ class TestPartnerAssign(TransactionCase):
             'partner_id': self.customer_uk.id
         })
 
-        def geo_find(addr, **kw):
-            return {
-                'Wavre, Belgium': (50.7158956, 4.6128075),
-                'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
-            }.get(addr)
-
-        patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find', wraps=geo_find)
-        self.startPatcher(patcher)
+        self.startPatcher(patch_geo_find())
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
