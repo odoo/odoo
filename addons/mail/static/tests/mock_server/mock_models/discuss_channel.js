@@ -495,28 +495,63 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const [channel] = this.browse(ids);
-        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
-        if (memberOfCurrentUser && memberOfCurrentUser.is_pinned !== pinned) {
-            DiscussChannelMember.write([memberOfCurrentUser.id], {
-                unpin_dt: pinned ? false : serializeDateTime(today()),
-            });
+        const target_channels = this._get_target_channels(channel, pinned);
+        const member_ids = DiscussChannelMember.search([
+            ["partner_id", "=", this.env.user.partner_id],
+            ["channel_id", "in", target_channels.map((c) => c.id)],
+        ]);
+        if (member_ids) {
+            const members = DiscussChannelMember.read([...member_ids]);
+            this._update_pin_state(members, pinned);
+        }
+        const store = new mailDataHelpers.Store({ bus_channel: this.env.user });
+        for (const channel of target_channels) {
+            if (!pinned) {
+                store.add(DiscussChannel.browse(channel.id), { close_chat_window: true });
+            } else {
+                store.add(DiscussChannel.browse(channel.id));
+            }
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        if (!pinned) {
-            BusBus._sendone(
-                partner,
-                "mail.record/insert",
-                new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                    close_chat_window: true,
-                    id: channel.id,
-                }).get_result()
-            );
-        } else {
-            BusBus._sendone(
-                partner,
-                "mail.record/insert",
-                new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result()
-            );
+        BusBus._sendone(partner, "mail.record/insert", store.get_result());
+    }
+
+    /**
+     * @param {object} channel - The channel record being pinned/unpinned.
+     * @param {boolean} pinned - True if pinning, False if unpinning.
+     * @returns {object[]} List of channels to update.
+     */
+    _get_target_channels(channel, pinned) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+
+        const targetChannels = [channel];
+        if (!pinned && channel.sub_channel_ids?.length) {
+            targetChannels.push(...DiscussChannel.read(channel.sub_channel_ids));
+        } else if (pinned && channel.parent_channel_id) {
+            targetChannels.push(...DiscussChannel.read(channel.parent_channel_id));
+        }
+        return targetChannels;
+    }
+
+    /**
+     * @param {object[]} members - Channel member records.
+     * @param {boolean} pinned - True to pin, False to unpin.
+     */
+    _update_pin_state(members, pinned) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+
+        const now = serializeDateTime(DateTime.now());
+        const toPin = members.filter((m) => !m.is_pinned && pinned).map((m) => m.id);
+        const toUnpin = members.filter((m) => m.is_pinned && !pinned).map((m) => m.id);
+        if (pinned && toPin.length) {
+            DiscussChannelMember.write(toPin, {
+                unpin_dt: false,
+                last_interest_dt: now,
+            });
+        } else if (!pinned && toUnpin.length) {
+            DiscussChannelMember.write(toUnpin, { unpin_dt: now });
         }
     }
 

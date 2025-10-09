@@ -94,17 +94,19 @@ patch(Thread.prototype, {
             this.store.env.services.action.currentController.action.context.active_id = activeId;
         }
     },
-    async unpin() {
-        this.isLocallyPinned = false;
-        if (this.eq(this.store.discuss.thread)) {
-            router.replaceState({ active_id: undefined });
+    async channelPin(pinned = true) {
+        if (!pinned) {
+            this.isLocallyPinned = false;
+            if (this.eq(this.store.discuss.thread)) {
+                router.replaceState({ active_id: undefined });
+            }
         }
-        if (this.model === "discuss.channel" && this.self_member_id?.is_pinned !== false) {
+        if (this.model === "discuss.channel") {
             await this.store.env.services.orm.silent.call(
                 "discuss.channel",
                 "channel_pin",
                 [this.id],
-                { pinned: false }
+                { pinned: pinned }
             );
         }
     },

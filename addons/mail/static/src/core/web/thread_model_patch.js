@@ -75,11 +75,13 @@ const threadPatch = {
         }
         return true;
     },
-    async unpin() {
-        await this.store.chatHub.initPromise;
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        await chatWindow?.close();
-        await super.unpin(...arguments);
+    async channelPin(pinned) {
+        if (!pinned) {
+            await this.store.chatHub.initPromise;
+            const chatWindow = this.store.ChatWindow.get({ thread: this });
+            await chatWindow?.close();
+        }
+        await super.channelPin(pinned);
     },
     async follow() {
         const data = await rpc("/mail/thread/subscribe", {

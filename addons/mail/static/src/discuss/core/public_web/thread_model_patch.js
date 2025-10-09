@@ -152,5 +152,11 @@ const threadPatch = {
             this.isLocallyPinned = true;
         }
     },
+    async openWithPin() {
+        if (!this.self_member_id.is_pinned) {
+            await this.channelPin();
+        }
+        this.open({ focus: true, bypassCompact: true });
+    },
 };
 patch(Thread.prototype, threadPatch);

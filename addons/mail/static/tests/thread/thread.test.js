@@ -979,3 +979,37 @@ test("Update unread counter when receiving new message", async () => {
     );
     await contains(".o-discuss-badge", { text: "2" });
 });
+
+test("should be able to unpin channel of types 'channel' + 'group'", async () => {
+    const pyEnv = await startServer();
+    const partner1_Id = pyEnv["res.partner"].create({ name: "Demo 1" });
+    const partner2_Id = pyEnv["res.partner"].create({ name: "Demo 2" });
+    pyEnv["discuss.channel"].create({
+        name: "Normal Channel",
+        channel_member_ids: [
+            Command.create({ partner_id: partner1_Id }),
+            Command.create({ partner_id: partner2_Id }),
+            Command.create({ partner_id: serverState.partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "Group Channel",
+        channel_member_ids: [
+            Command.create({ partner_id: partner1_Id }),
+            Command.create({ partner_id: partner2_Id }),
+            Command.create({ partner_id: serverState.partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Normal Channel" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Group Channel" });
+    await click("[title='Channel Actions']");
+    await click(".o-mail-ActionList-button", { text: "Unpin Conversation" });
+    await contains(".o-mail-DiscussSidebarChannel-itemMain[title='Normal Channel']", { count: 0 });
+    await click("[title='Chat Actions']");
+    await click(".o-mail-ActionList-button", { text: "Unpin Conversation" });
+    await contains(".o-mail-DiscussSidebarChannel-itemMain[title='Group Channel']", { count: 0 });
+});

@@ -1184,14 +1184,13 @@ class DiscussChannel(models.Model):
 
     @api.model
     def _get_channels_as_member(self):
-        # 2 different queries because the 2 sub-queries together with OR are less efficient
-        member_domain = [("channel_type", "in", ("channel", "group")), ("is_member", "=", True)]
-        pinned_member_domain = [
-                ("channel_type", "not in", ("channel", "group")),
-                ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
-            ]
-        channels = self.env["discuss.channel"].search(member_domain)
-        channels += self.env["discuss.channel"].search(pinned_member_domain)
+        domain = [
+            ("channel_member_ids", "any", [
+                ("is_self", "=", True),
+                ("is_pinned", "=", True),
+            ]),
+        ]
+        channels = self.env["discuss.channel"].search(domain)
         return channels
 
     def _to_store_defaults(self, target: Store.Target):
@@ -1374,16 +1373,39 @@ class DiscussChannel(models.Model):
 
     def channel_pin(self, pinned=False):
         self.ensure_one()
-        member = self.env['discuss.channel.member'].search(
-            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id), ('is_pinned', '!=', pinned)])
-        if member:
-            member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
+        target_channels = self._get_target_channels(pinned)
+        members = self.env['discuss.channel.member'].search(
+            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', 'in', target_channels.ids)])
+        if members:
+            self._update_pin_state(members, pinned)
         store = Store(bus_channel=self.env.user)
-        if not pinned:
-            store.add(self, {"close_chat_window": True})
-        else:
-            store.add(self)
+        store.add(target_channels, {} if pinned else {'close_chat_window': True})
         store.bus_send()
+
+    def _get_target_channels(self, pinned):
+        """ Determine which channels should be affected by the pin/unpin action.
+              - When unpinning, include all sub-channels.
+              - When pinning, include the parent channel.
+        """
+        target_channels = self
+        if not pinned and self.sub_channel_ids:
+            target_channels |= self.sub_channel_ids
+        elif pinned and self.parent_channel_id:
+            target_channels |= self.parent_channel_id
+        return target_channels
+
+    def _update_pin_state(self, members, pinned):
+        """ Update the pinning fields for the given channel members.
+            Sets or clears 'unpin_dt' and updates 'last_interest_dt' as needed
+            based on the desired pin state.
+        """
+        to_pin = members.filtered(lambda m: not m.is_pinned)
+        to_unpin = members.filtered(lambda m: m.is_pinned)
+        now = fields.Datetime.now()
+        if pinned and to_pin:
+            to_pin.write({'unpin_dt': False, 'last_interest_dt': now})
+        elif not pinned and to_unpin:
+            to_unpin.write({'unpin_dt': now})
 
     def _allow_invite_by_email(self):
         return self.channel_type == "group" or (
