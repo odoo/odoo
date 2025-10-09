@@ -15,7 +15,8 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         invoice_1 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [Command.create({'price_unit': 100})]
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+            'attachment_ids': [Command.create({'name': "Attachment", 'mimetype': 'application/pdf', 'res_model': 'account.move', 'datas': "test"})],
         })
         invoice_2 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -85,3 +86,25 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             self.assertEqual(len(file_names), 2)
             self.assertTrue(self.invoices[0].invoice_pdf_report_id.name in file_names)
             self.assertTrue(self.invoices[1].invoice_pdf_report_id.name in file_names)
+
+    def test_download_moves_attachments(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        url = f'/account/download_move_attachments/{",".join(map(str, self.invoices.ids))}'
+        attachment_names = sorted([doc['filename'] for invoice in self.invoices for doc in invoice._get_invoice_legal_documents_all()])
+        res = self.url_open(url)
+        self.assertEqual(res.status_code, 200)
+        with ZipFile(BytesIO(res.content)) as zip_file:
+            file_names = sorted(zip_file.namelist())
+            self.assertEqual(file_names, attachment_names)
+
+    def test_download_moves_attachments_with_bills(self):
+        bill = self.init_invoice('in_invoice', products=self.product_a)
+        bill.message_main_attachment_id = self.env['ir.attachment'].create({'name': "Attachment", 'mimetype': 'application/pdf', 'res_model': 'account.move', 'datas': "test_bill"})
+        attachment_names = [bill.message_main_attachment_id.name]
+        self.authenticate(self.env.user.login, self.env.user.login)
+        url = f'/account/download_move_attachments/{",".join(map(str, bill.ids))}'
+        res = self.url_open(url)
+        self.assertEqual(res.status_code, 200)
+        with ZipFile(BytesIO(res.content)) as zip_file:
+            file_names = sorted(zip_file.namelist())
+            self.assertEqual(file_names, attachment_names)
