@@ -115,6 +115,7 @@ export class Composer extends Component {
             active: true,
             isFullComposerOpen: false,
         });
+        this.root = useRef("root");
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             refName: "textarea",
@@ -671,16 +672,21 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
+<<<<<<< 3ae387d744bd5ebc2d11807efe2e3bba87872f1d
         const attachments = this.props.composer.attachments;
         if (attachments.some(({ uploading }) => uploading)) {
+||||||| 8d61d23c3ccd41615f445e234424bacf938c3b5e
+        const el = this.ref.el;
+        const attachments = this.props.composer.attachments;
+        if (attachments.some(({ uploading }) => uploading)) {
+=======
+        const el = this.ref.el;
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
+>>>>>>> 1eef8489397462431d820938c030b27e0e62a58f
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
-        } else if (
-            this.props.composer.text.trim() ||
-            attachments.length > 0 ||
-            (this.message && this.message.attachment_ids.length > 0)
-        ) {
+        } else if (this.canProcessMessage) {
             if (!this.state.active) {
                 return;
             }
@@ -693,6 +699,14 @@ export class Composer extends Component {
             this.state.active = true;
             this.ref.el?.focus();
         }
+    }
+
+    get canProcessMessage() {
+        return (
+            this.props.composer.text.trim() ||
+            this.props.composer.attachments.length > 0 ||
+            (this.message && this.message.attachment_ids.length > 0)
+        );
     }
 
     async sendMessage() {
@@ -765,7 +779,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachment_ids.length > 0) {
+        if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -773,6 +787,7 @@ export class Composer extends Component {
                 })
             );
         } else {
+<<<<<<< 3ae387d744bd5ebc2d11807efe2e3bba87872f1d
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
                 onConfirm: () => {
@@ -783,10 +798,28 @@ export class Composer extends Component {
                 },
                 prompt: _t("Are you sure you want to delete this message?"),
             });
+||||||| 8d61d23c3ccd41615f445e234424bacf938c3b5e
+            this.env.services.dialog.add(MessageConfirmDialog, {
+                message: composer.message,
+                onConfirm: () => this.message.remove(),
+                prompt: _t("Are you sure you want to delete this message?"),
+            });
+=======
+            this.env.services.dialog.add(
+                MessageConfirmDialog,
+                {
+                    message: composer.message,
+                    onConfirm: () => this.message.remove(),
+                    prompt: _t("Are you sure you want to delete this message?"),
+                },
+                { context: this }
+            );
+>>>>>>> 1eef8489397462431d820938c030b27e0e62a58f
         }
         this.suggestion?.clearRawMentions();
     }
 
+<<<<<<< 3ae387d744bd5ebc2d11807efe2e3bba87872f1d
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
         const composer = toRaw(this.props.composer);
@@ -801,6 +834,14 @@ export class Composer extends Component {
         }
     }
 
+||||||| 8d61d23c3ccd41615f445e234424bacf938c3b5e
+=======
+    get askDeleteFromEdit() {
+        const composer = toRaw(this.props.composer);
+        return !composer.text && composer.message.attachment_ids.length === 0;
+    }
+
+>>>>>>> 1eef8489397462431d820938c030b27e0e62a58f
     addEmoji(str) {
         const composer = toRaw(this.props.composer);
         const text = composer.text;
