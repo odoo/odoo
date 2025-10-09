@@ -1262,17 +1262,22 @@ class AccountPaymentRegister(models.TransientModel):
                 lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
+                    sub_batches = {}
                     for line in batch_result['lines']:
                         if line not in lines_to_pay:
                             continue
-                        new_batches.append({
-                            **batch_result,
-                            'payment_values': {
-                                **batch_result['payment_values'],
-                                'payment_type': 'inbound' if line.balance > 0 else 'outbound'
-                            },
-                            'lines': line,
-                        })
+                        if line.move_id.id in sub_batches:
+                            sub_batches[line.move_id.id]['lines'] += line
+                        else:
+                            sub_batches[line.move_id.id] = {
+                                **batch_result,
+                                'payment_values': {
+                                    **batch_result['payment_values'],
+                                    'payment_type': 'inbound' if line.balance > 0 else 'outbound'
+                                },
+                                'lines': line,
+                            }
+                    new_batches.extend(sub_batches.values())
                 batches = new_batches
 
             to_process.extend({
