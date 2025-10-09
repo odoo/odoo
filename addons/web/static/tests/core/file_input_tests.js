@@ -207,4 +207,23 @@ QUnit.module("Components", ({ beforeEach }) => {
         await nextTick();
         assert.notOk(input.disabled, "the upload button should be enabled for upload");
     });
+
+    QUnit.test("support preprocessing of files via props", async (assert) => {
+        await createFileInput({
+            props: {
+                onWillUploadFiles(files) {
+                    // This code should be unreachable in this case
+                    assert.step(files[0].name);
+                    return files;
+                },
+            },
+            mockPost: (route, params) => {
+                return JSON.stringify([{ name: params.ufile[0].name }]);
+            },
+        });
+
+        const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+        await editInput(target, ".o_file_input input", file);
+        assert.verifySteps(["fake_file.txt"]);
+    });
 });
