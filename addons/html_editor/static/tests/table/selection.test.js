@@ -526,6 +526,50 @@ describe("single cell selection", () => {
         await animationFrame();
         expect(firstTd).not.toHaveClass("o_selected_td");
     });
+    test("shift + click should correctly extend selection inside a cell", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>ab[]cde</p>
+                        </td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el, editor } = await setupEditor(content);
+        const firstTd = el.querySelector("td");
+        const firstP = firstTd.firstElementChild;
+        const textNode = firstP.firstChild;
+        const targetOffset = 4; // abcd[]e
+
+        // Dispatch mousedown between "d" and "e"
+        const range = document.createRange();
+        range.setStart(textNode, targetOffset);
+        range.setEnd(textNode, targetOffset);
+        const rangeRect = range.getBoundingClientRect();
+
+        await manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+            shiftKey: true,
+        });
+
+        // Simulate shift + mousedown to extend selection.
+        const selection = editor.document.getSelection();
+        selection.extend(textNode, targetOffset);
+        await tick();
+
+        expect(getContent(firstTd)).toBe("<p>ab[cd]e</p>");
+    });
 });
 
 describe("select columns on cross over", () => {
