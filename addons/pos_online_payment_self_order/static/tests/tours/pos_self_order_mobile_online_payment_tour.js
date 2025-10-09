@@ -32,6 +32,13 @@ registry.category("web_tour.tours").add("test_online_payment_kiosk_qr_code", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Free"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Free", "0", "1"),
+        Utils.clickBtn("Pay"),
+        ConfirmationPage.isShown(),
+        Utils.clickBtn("Close"),
+        Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),

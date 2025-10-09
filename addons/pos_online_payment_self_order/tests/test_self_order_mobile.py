@@ -51,7 +51,9 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
 
     def test_online_payment_kiosk_qr_code(self):
         """
-        Verify that when making an order from kiosk with online payment, a QR code is generated
+        Ensure that the payment page is skipped when the order amount is zero,
+        even if an online payment method is configured for kiosk self-ordering.
+        And, verify that when making an order from a kiosk with online payment, a QR code is generated.
         """
         self_route = self.pos_config._get_self_order_route()
         self.pos_config.write({
@@ -62,7 +64,16 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self.start_tour(self_route, "test_online_payment_kiosk_qr_code")
+        self.start_tour(self_route, 'test_online_payment_kiosk_qr_code')
+        self.assertEqual(len(self.pos_config.current_session_id.order_ids), 2)
+        paid_order = self.pos_config.current_session_id.order_ids[1]
+        self.assertEqual(paid_order.state, 'paid')
+        self.assertEqual(len(paid_order.lines), 1)
+        self.assertAlmostEqual(paid_order.amount_total, 0)
+        last_order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(last_order.state, 'draft')
+        self.assertEqual(len(last_order.lines), 1)
+        self.assertAlmostEqual(last_order.amount_total, 2.53)
 
     def test_online_payment_mobile_self_order_preparation_changes(self):
         """
