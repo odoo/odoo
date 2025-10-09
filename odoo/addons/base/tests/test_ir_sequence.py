@@ -238,3 +238,33 @@ class TestIrSequenceInit(common.TransactionCase):
         # Read the value of the current sequence
         n = seq.next_by_id()
         self.assertEqual(n, "0001", 'The actual sequence value must be 1. reading : %s' % n)
+
+    def test_ir_sequence_parent_company(self):
+        IrSequence = self.env['ir.sequence']
+        parent = self.env.company
+        branch = parent.create({'name': "Seq Branch", 'parent_id': parent.id})
+
+        seq_a, seq_b = IrSequence.create([{
+            'name': "A sequence",
+            'code': 'seq.test',
+            'prefix': 'A',
+            'company_id': parent.id,
+        }, {
+            'name': "B sequence",
+            'code': 'seq.test',
+            'prefix': 'B',
+            'company_id': False,
+        }])
+        res = IrSequence.with_company(parent).next_by_code('seq.test')
+        self.assertEqual(res, 'A1')
+        res = IrSequence.with_company(branch).next_by_code('seq.test')
+        self.assertEqual(res, 'A2', "Branch company should continue parent sequence")
+
+        seq_b.company_id = branch
+        res = IrSequence.with_company(branch).next_by_code('seq.test')
+        self.assertEqual(res, 'B1', "Branch company should use own sequence if available")
+
+        seq_a.company_id = branch
+        seq_b.company_id = False
+        res = IrSequence.with_company(parent).next_by_code('seq.test')
+        self.assertEqual(res, 'B2', "Parent company shouldn't use branch sequence")

@@ -279,12 +279,15 @@ class IrSequence(models.Model):
     def next_by_code(self, sequence_code, sequence_date=None):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
-            (multi-company cases), the one from the user's current company will
-            be used.
+            (multi-company cases), the one from the user's current company (or a
+            parent company) will be used.
         """
         self.check_access_rights('read')
         company_id = self.env.company.id
-        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
+        seq_ids = self.search([
+            ('code', '=', sequence_code),
+            '|', ('company_id', '=', False), ('company_id', 'parent_of', company_id),
+        ], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
             return False
