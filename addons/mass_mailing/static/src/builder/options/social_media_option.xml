@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.SocialMediaOption" t-inherit="website.SocialMediaOption">
+    <xpath expr="//BuilderRow[last()]" position="after">
+        <BuilderRow preview="false" label.translate="Company">
+            <BuilderSelect action="'selectCompany'">
+                <t t-foreach="this.companies" t-as="company" t-key="company_index">
+                    <BuilderSelectItem actionValue="company.id" t-esc="company.name"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+    </xpath>
+</t>
+</templates>

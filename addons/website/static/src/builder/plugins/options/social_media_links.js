@@ -17,10 +17,16 @@ export class SocialMediaLinks extends BaseOptionComponent {
         this.rootRef = useRef("root");
         this.domState = useDomState((editingElement) => ({
             presentLinks: [...editingElement.querySelectorAll(":scope > a[href]")].map(
-                (element) => ({
-                    element,
-                    media: element.attributes.href.value.split("/website/social/")[1],
-                })
+                (element) => {
+                    const matches = element.className.match(/s_social_media_(\w+)/);
+                    if (matches) {
+                        return {
+                            element,
+                            media: matches[1],
+                        };
+                    }
+                    return { element };
+                }
             ),
         }));
 

@@ -82,6 +82,10 @@
             # lazy builder assets NOT applied in iframe
             ('include', 'html_builder.assets'),
             ('remove', 'web/static/fonts/fonts.scss'),
+            'website/static/src/builder/plugins/options/social_media_option.xml',
+            'website/static/src/builder/plugins/options/social_media_links.js',
+            'website/static/src/builder/plugins/options/social_media_links.xml',
+            'website/static/src/builder/plugins/options/social_media_option_plugin.js',
             'mass_mailing/static/src/builder/**/*',
         ],
         'mass_mailing.assets_iframe_style': [
@@ -121,6 +125,7 @@
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+            'website/static/src/snippets/s_social_media/000.scss',
         ],
         'mass_mailing.iframe_add_dialog': [
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
