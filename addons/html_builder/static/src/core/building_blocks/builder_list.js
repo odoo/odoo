@@ -35,6 +35,7 @@ export class BuilderList extends Component {
         hiddenProperties: { type: Array, optional: true },
         records: { type: String, optional: true },
         defaultNewValue: { type: Object, optional: true },
+		forbidLastItemRemoval: { type: Boolean, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -44,6 +45,7 @@ export class BuilderList extends Component {
         hiddenProperties: [],
         mode: "button",
         defaultNewValue: {},
+		forbidLastItemRemoval: false,
     };
     static components = { BuilderComponent, Dropdown };
 
