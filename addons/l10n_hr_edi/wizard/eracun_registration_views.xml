@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="eracun_registration_form" model="ir.ui.view">
+        <field name="name">eracun.registration.form</field>
+        <field name="model">eracun.registration</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group name="eracun_registration" invisible="l10n_hr_eracun_proxy_state not in ('not_registered', 'in_verification')">
+                        <div colspan="2" class="text-muted mb-3" invisible="l10n_hr_eracun_proxy_state != 'not_registered'">
+                            Send invoices and receive bills automatically on the eRacun network.
+                        </div>
+
+                        <!-- business fields -->
+                        <field name="identifier_type"
+                               string="Identifier Type"
+                               nolabel="1"
+                               invisible="l10n_hr_eracun_proxy_state != 'not_registered'"
+                               class="o_field_peppol_eas_selection"/>
+                        <field name="identifier_value"
+                               string="Identifier Value"
+                               nolabel="1"
+                               invisible="l10n_hr_eracun_proxy_state != 'not_registered'"/>
+                        <field name="contact_email"
+                               string="Email"
+                               invisible="l10n_hr_eracun_proxy_state != 'not_registered'"/>
+                    </group>
+
+                    <!-- edi mode info -->
+                    <div colspan="2" class="row" invisible="l10n_hr_eracun_proxy_state != 'not_registered'">
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test eRacun network.
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <div name="eracun_activate" invisible="l10n_hr_eracun_proxy_state != 'not_registered'">
+                        <button string="Activate eRacun"
+                                name="button_eracun_registration_activate"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="q"
+                                invisible="edi_mode != 'prod'"/>
+                        <button string="Activate eRacun (Test)"
+                                name="button_eracun_registration_activate"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="q"
+                                invisible="edi_mode != 'test'"/>
+                    </div>
+                    <button name="button_deregister_eracun_participant"
+                            string="Cancel Registration"
+                            type="object"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

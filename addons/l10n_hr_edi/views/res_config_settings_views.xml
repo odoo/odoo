@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="MojEracun E-Invoicing" id="mojeracun" invisible="country_code != 'HR'">
+                    <div id="l10n_hr_mojeracun" class="col-12 o_setting_box">
+                        <div class="o_setting_right_pane border-0">
+
+                            <div invisible="l10n_hr_mer_proxy_state != 'receiver'">
+                                You are sending and receiving your e-invoices via Odoo with this MojEracun username <field name="mer_username" class="oe_inline o_form_label" readonly="1"/>.
+                            </div>
+                            <div invisible="l10n_hr_mer_proxy_state != 'receiver'" class="mt-4">
+                                <div class="row" name="eracun_journal_config">
+                                    <label string="Incoming Invoices Journal"
+                                           for="eracun_purchase_journal_id"
+                                           class="col-lg-3"/>
+                                    <field name="eracun_purchase_journal_id"
+                                           required="l10n_hr_mer_proxy_state == 'receiver'"/>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-1 action_buttons mt-2"
+                                 invisible="l10n_hr_mer_proxy_state != 'receiver'">
+                                <button name="button_update_mojeracun_user_data"
+                                        type="object"
+                                        class="btn btn-primary me-1"
+                                        string="Update contact details"/>
+                                <button name="button_deregister_mojeracun_participant"
+                                        type="object"
+                                        string="Deregister"
+                                        confirm="This will delete your MojEracun credentials."
+                                        class="btn btn-secondary me-1"/>
+                            </div>
+                            <div class="d-flex gap-1 action_buttons" colspan="3">
+                                <!-- Not yet registered on eRacun -->
+                                <div invisible="l10n_hr_mer_proxy_state not in ('not_registered')">
+                                    <div class="text-muted">
+                                        Allow sending and receiving invoices on the eRacun network through MojEracun service provider
+                                    </div>
+                                    <button name="action_open_mojeracun_form"
+                                            type="object"
+                                            string="Start sending via MojEracun"
+                                            class="oe_highlight mt-2"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

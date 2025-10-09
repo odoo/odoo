@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_l10n_hr_eracun" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.hr.eracun</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_edi_ubl_cii.view_partner_property_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@id='invoice_send_settings']" position="inside">
+                    <label for="eracun_identifier_type" string="eRacun Address" invisible="not is_using_eracun"/>
+                    <div id="eracun_address" invisible="not is_using_eracun" class="row">
+                        <field name="eracun_identifier_type" class="w-25"/>
+                        <field name="eracun_identifier_value" placeholder="Endpoint" class="w-75"/>
+                    </div>
+                    <label for="eracun_verification_state"
+                           groups="base.group_no_one"
+                           invisible="not is_using_eracun or not eracun_identifier_value"
+                    />
+                    <div class="row" invisible="not is_using_eracun or not eracun_identifier_value">
+                        <div class="col-4">
+                            <field name="eracun_verification_state" readonly="True"/>
+                        </div>
+                        <div class="col-8 pt-0">
+                            <button name="button_eracun_check_partner_endpoint"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    string="Verify"
+                                    help="Verify partner's eRacun endpoint"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_l10n_hr_eracun" model="ir.actions.server">
+        <field name="name">Verify eRacun</field>
+        <field name="model_id" ref="l10n_hr_edi.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.button_eracun_check_partner_endpoint()
+        </field>
+    </record>
+</odoo>
