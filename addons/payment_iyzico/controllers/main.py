@@ -41,6 +41,21 @@ class IyzicoController(http.Controller):
 
         return request.redirect('/payment/status')
 
+    @http.route(const.WEBHOOK_ROUTE, type='http', auth='public', methods=['POST'], csrf=False)
+    def iyzico_webhook(self):
+        """Process the payment data sent by Iyzico to the webhook.
+
+        :return: An empty string to acknowledge the notification.
+        :rtype: str
+        """
+        data = request.get_json_data()
+        _logger.info("Notification received from Iyzico with data:\n%s", pprint.pformat(data))
+
+        if token := data.get('token'):
+            self._verify_and_process(data['paymentConversationId'], token)
+
+        return request.make_json_response('')  # Acknowledge the notification.
+
     @staticmethod
     def _verify_and_process(tx_ref, token):
         """Verify and process the payment data sent by Iyzico.
