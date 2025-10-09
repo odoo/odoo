@@ -161,6 +161,7 @@ class SaleOrder(models.Model):
         default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id or self.tasks_ids.project_id[:1].id
 
         action['context'] = {
+            'create': True,
             'default_sale_order_id': self.id,
             'default_sale_line_id': default_line.id,
             'default_partner_id': self.partner_id.id,
@@ -210,6 +211,7 @@ class SaleOrder(models.Model):
             'view_mode': 'kanban,tree,form',
             'context': {
                 **self._context,
+                'create': True,
                 'default_partner_id': self.partner_id.id,
                 'default_sale_line_id': default_sale_line.id if default_sale_line else False,
                 'default_allow_billable': 1,
