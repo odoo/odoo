@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, manuallyDispatchProgrammaticEvent, press, tick, waitFor } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -16,7 +16,6 @@ test("should insert a banner with focus inside followed by a paragraph", async (
     expect(".active .o-we-command-name").toHaveText("Banner Info");
 
     await press("enter");
-    await tick(); // Wait for selectionchange to update hints.
     expect(unformat(getContent(el))).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
@@ -24,7 +23,7 @@ test("should insert a banner with focus inside followed by a paragraph", async (
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>Test[]</p>
                     </div>
-                </div><p><br></p>`
+                </div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
 
@@ -57,7 +56,7 @@ test("press 'ctrl+a' inside a banner should select all the banner content", asyn
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>[Test</p><p>Test1</p><p>Test2]</p>
                     </div>
-                </div><p><br></p>`
+                </div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
 });
@@ -82,7 +81,7 @@ test("remove all content should preserve the first paragraph tag inside the bann
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>[Test</p><p>Test1</p><p>Test2]</p>
                     </div>
-                </div><p><br></p>`
+                </div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
 
@@ -92,7 +91,7 @@ test("remove all content should preserve the first paragraph tag inside the bann
             `<p data-selection-placeholder=""><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
                     <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></div>
-                </div><p><br></p>`
+                </div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
 });
@@ -101,7 +100,6 @@ test("Inserting a banner at the top of the editable also inserts a paragraph abo
     const { el, editor } = await setupEditor("<p>test[]</p>");
     await insertText(editor, "/bannerinfo");
     await press("enter");
-    await tick(); // Wait for selectionchange to update hints.
     expect(unformat(getContent(el))).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
@@ -111,7 +109,7 @@ test("Inserting a banner at the top of the editable also inserts a paragraph abo
                     <p>test[]</p>
                 </div>
             </div>
-            <p><br></p>`
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
 });
@@ -276,13 +274,12 @@ test("should move heading element inside the banner, with paragraph element afte
     expect(".active .o-we-command-name").toHaveText("Banner Info");
 
     await press("enter");
-    await tick(); // Wait for selectionchange to update hints.
     expect(getContent(el)).toBe(
         `<p data-selection-placeholder=""><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
                 <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
                 <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                     <h1>Test[]</h1>
                 </div>
-            </div><p><br></p>`
+            </div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
 });
