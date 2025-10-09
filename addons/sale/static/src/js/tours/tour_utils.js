@@ -66,7 +66,7 @@ function checkSOLDescriptionContains(productName, text) {
     // TODO in the future: handle edit mode and look directly into the textarea value
     let trigger = `.o_field_product_label_section_and_note_cell:contains("${productName}")`;
     if (text) {
-        trigger = `${trigger} textarea`;
+        trigger = `${trigger} .o_input`;
     }
     return { trigger };
 }
