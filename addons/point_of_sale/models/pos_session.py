@@ -1143,7 +1143,7 @@ class PosSession(models.Model):
         payment_method = payment.payment_method_id
         if not payment_method.journal_id:
             return self.env['account.move.line']
-        outstanding_account = payment_method.outstanding_account_id
+        outstanding_account = payment_method.outstanding_account_id or self.company_id.transfer_account_id
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
 
