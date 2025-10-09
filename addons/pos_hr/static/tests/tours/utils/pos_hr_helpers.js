@@ -1,6 +1,17 @@
+<<<<<<< 8d278713d6904a8390590ef9d22e4fc65d9143f6
 import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
+||||||| 4d549a5712295f4164c4f725af12474ff99becbf
+import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
+import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
+=======
+import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
+import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
+import { negate } from "@point_of_sale/../tests/tours/utils/common";
+>>>>>>> 8b7d32ca64d943c711fc2090845768adbf03aef0
 
 export function clickLoginButton() {
     return [
@@ -28,16 +39,55 @@ export function loginScreenIsShown() {
         },
     ];
 }
+<<<<<<< 8d278713d6904a8390590ef9d22e4fc65d9143f6
+||||||| 4d549a5712295f4164c4f725af12474ff99becbf
+export function cashierNameIs(name) {
+    return [
+        {
+            isActive: ["desktop"],
+            content: `logged cashier is '${name}'`,
+            trigger: `.pos .oe_status .username:contains("${name}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: `logged cashier is '${name}'`,
+            trigger: `.pos .oe_status img[alt="${name}"]`,
+        },
+    ];
+}
+=======
+export function loginScreenIsNotShown() {
+    return [
+        {
+            content: "login screen is not shown",
+            trigger: negate(".login-overlay .screen-login"),
+        },
+    ];
+}
+export function cashierNameIs(name) {
+    return [
+        {
+            isActive: ["desktop"],
+            content: `logged cashier is '${name}'`,
+            trigger: `.pos .oe_status .username:contains("${name}")`,
+        },
+        {
+            isActive: ["mobile"],
+            content: `logged cashier is '${name}'`,
+            trigger: `.pos .oe_status img[alt="${name}"]`,
+        },
+    ];
+}
+>>>>>>> 8b7d32ca64d943c711fc2090845768adbf03aef0
 export function login(name, pin) {
     const res = [...clickLoginButton(), ...SelectionPopup.has(name, { run: "click" })];
     if (!pin) {
         return res;
     }
-    return res.concat([
-        ...NumberPopup.enterValue(pin),
-        ...NumberPopup.isShown("••••"),
-        Dialog.confirm(),
-    ]);
+    return res.concat(enterPin(pin));
+}
+export function enterPin(pin) {
+    return [...NumberPopup.enterValue(pin), ...NumberPopup.isShown("••••"), Dialog.confirm()];
 }
 export function clickLockButton() {
     return {
