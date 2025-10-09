@@ -13,7 +13,15 @@ import {
 } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    toRaw,
+    useChildSubEnv,
+    useRef,
+    useState,
+    useExternalListener,
+    onWillUnmount,
+} from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -22,6 +30,8 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { browser } from "@web/core/browser/browser";
+import { router } from "@web/core/browser/router";
 
 /**
  * @typedef {Object} Props
@@ -68,6 +78,22 @@ export class ChatWindow extends Component {
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });
+
+        onWillUnmount(() => {
+            if (history.state?.activeChatWindowId === this.props.chatWindow.localId) {
+                history.back();
+            }
+        });
+
+        if (this.ui.isSmall) {
+            if (history.state?.activeChatWindowId) {
+                history.replaceState({ activeChatWindowId: this.props.chatWindow.localId }, "");
+            } else {
+                history.pushState({ activeChatWindowId: this.props.chatWindow.localId }, "");
+            }
+            router.skipLoad = true;
+            useExternalListener(browser, "popstate", this.handlePopstate);
+        }
     }
 
     get composerType() {
@@ -185,5 +211,11 @@ export class ChatWindow extends Component {
     async onActionsMenuStateChanged(isOpen) {
         // await new Promise(setTimeout); // wait for bubbling header
         this.state.actionsMenuOpened = isOpen;
+    }
+
+    handlePopstate() {
+        if (this.ui.isSmall && this.props.chatWindow.isOpen) {
+            this.close();
+        }
     }
 }
