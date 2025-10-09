@@ -28,7 +28,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         """Verify than when the pos is open and self ordering is set to consultation the banner isn't shown"""
         self.pos_config.write({'self_ordering_mode': 'consultation'})
 
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(table_id="1")
 
         # Verify behavior when self Order is opened
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -55,7 +55,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         for mode in ("mobile", "consultation"):
             self.pos_config.write({"self_ordering_mode": mode})
             # The returned route depend of the pos_config mode
-            self_route = self.pos_config._get_self_order_route()
+            self_route = self.pos_config._get_self_order_route(table_id="1")
             self.start_tour(self_route, "self_order_pos_closed")
 
         # Kiosk test
@@ -97,4 +97,4 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
         })
-        self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_product_availability")
+        self.start_tour(self.pos_config._get_self_order_route(table_id=1), "test_self_order_product_availability")

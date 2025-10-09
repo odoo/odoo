@@ -138,16 +138,18 @@ export function cancelOrder() {
     ];
 }
 
-export function checkSlotUnavailable(slotValue) {
+export function clickBtnFirstDayForSlotManagement() {
     return {
-        content: `Check that the first available slot is not ${slotValue}`,
-        trigger: ".slot-select",
-        run: () => {
-            const select = document.querySelector(".slot-select");
-            // select[0] and select[1] are header values
-            if (select[2].innerText === slotValue) {
-                throw new Error(`${slotValue} should not be available`);
-            }
-        },
+        content: "Select first day for slot management",
+        trigger: "button.btn.btn-secondary:contains('Today')",
+        run: "click",
+    };
+}
+
+export function clickFirstSlotRadioForSlotManagement() {
+    return {
+        content: "Select first available radio slot for slot management",
+        trigger: "input.form-check-input[type='radio']:visible",
+        run: "click",
     };
 }

@@ -33,7 +33,7 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
     def test_preset_dine_in_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(table_id="1")
         self.start_tour(self_route, "self_order_preset_dine_in_tour")
 
     def test_preset_takeaway_tour(self):
@@ -74,7 +74,7 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(table_id="1")
         self.start_tour(self_route, "self_order_preset_slot_tour")
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.floating_order_name, 'Dr Dre')
