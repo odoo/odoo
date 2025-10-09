@@ -119,7 +119,10 @@ class AccountMoveSend(models.AbstractModel):
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+            if partner.peppol_verification_state == 'not_verified':
+                partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
             return all([
+                partner.country_code in PEPPOL_LIST,
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
@@ -150,19 +153,7 @@ class AccountMoveSend(models.AbstractModel):
         invoices_data_peppol = {}
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
-            if 'peppol' in invoice_data['sending_methods']:
-                if not partner.peppol_eas or not partner.peppol_endpoint:
-                    invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
-                    continue
-
-                if self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_data['invoice_edi_format']) != 'valid':
-                    invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = _('Please verify partner configuration in partner settings.')
-                    continue
-
-                if not self._is_applicable_to_move('peppol', invoice, **invoice_data):
-                    continue
+            if 'peppol' in invoice_data['sending_methods'] and self._is_applicable_to_move('peppol', invoice, **invoice_data):
 
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
