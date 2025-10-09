@@ -218,5 +218,7 @@ registry.category("web_tour.tours").add("test_coupon_code_stays_set", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.endTour(),
         ].flat(),
 });
