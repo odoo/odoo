@@ -9212,7 +9212,9 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
 
     // set a value on the m2o
     await contains(`.o_field_many2one[name="partner_type_id"] input`).click();
-    expect.verifySteps(["web_name_search"]);
+    expect.verifySteps([], {
+        message: "No additional name search since the request is identical",
+    });
 
     await contains(`.dropdown .dropdown-item:contains(silver)`).click();
     await contains(`.modal-footer .o_form_button_save`).click();
