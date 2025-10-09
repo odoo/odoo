@@ -46,10 +46,7 @@ export class NoInlineRootPlugin extends Plugin {
         if (key?.startsWith("Arrow")) {
             return this.fixSelectionOnEditableRootArrowKeys(nodeAfterCursor, nodeBeforeCursor, key);
         }
-        return (
-            this.fixSelectionOnEditableRootGeneric(nodeAfterCursor, nodeBeforeCursor) ||
-            this.fixSelectionOnEditableRootCreateP(nodeAfterCursor, nodeBeforeCursor)
-        );
+        return this.fixSelectionOnEditableRootGeneric(nodeAfterCursor, nodeBeforeCursor);
     }
     /**
      * @param {Node} nodeAfterCursor
@@ -91,39 +88,5 @@ export class NoInlineRootPlugin extends Plugin {
             return true;
         }
         return false;
-    }
-    /**
-     * Handle cursor not next to a 'P'.
-     * Insert a new 'P' if selection resulted from a mouse click.
-     *
-     * In some situations (notably around tables and horizontal
-     * separators), the cursor could be placed having its anchorNode at
-     * the editable root, allowing the user to insert inlined text at
-     * it.
-     *
-     * @param {Node} nodeAfterCursor
-     * @param {Node} nodeBeforeCursor
-     * @returns {boolean} Whether the selection was fixed
-     */
-    fixSelectionOnEditableRootCreateP(nodeAfterCursor, nodeBeforeCursor) {
-        if (!this.isPointerDown) {
-            return false;
-        }
-
-        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        baseContainer.append(this.document.createElement("br"));
-        if (!nodeAfterCursor) {
-            // Cursor is at the end of the editable.
-            this.editable.append(baseContainer);
-        } else if (!nodeBeforeCursor) {
-            // Cursor is at the beginning of the editable.
-            this.editable.prepend(baseContainer);
-        } else {
-            // Cursor is between two non-p blocks
-            nodeAfterCursor.before(baseContainer);
-        }
-        this.dependencies.selection.setCursorStart(baseContainer);
-        this.dependencies.history.addStep();
-        return true;
     }
 }
