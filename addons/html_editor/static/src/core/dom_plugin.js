@@ -7,6 +7,7 @@ import {
     makeContentsInline,
     removeClass,
     removeStyle,
+    setAttribute,
     splitTextNode,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -498,7 +499,7 @@ export class DomPlugin extends Plugin {
                 continue;
             }
             if (attr.name !== "class" || ignoredClasses.size === 0) {
-                target.setAttribute(attr.name, attr.value);
+                setAttribute(target, attr.name, attr.value);
             } else {
                 const classes = [...source.classList];
                 for (const className of classes) {

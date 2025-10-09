@@ -1,5 +1,6 @@
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
+import { setAttribute } from "@html_editor/utils/dom";
 
 /**
  * @typedef { Object } SanitizeShared
@@ -43,10 +44,10 @@ export class SanitizePlugin extends Plugin {
             el.contentEditable = el.matches(".o-contenteditable-true");
         }
         for (const el of selectElements(element, "[data-oe-role]")) {
-            el.setAttribute("role", el.dataset.oeRole);
+            setAttribute(el, "role", el.dataset.oeRole);
         }
         for (const el of selectElements(element, "[data-oe-aria-label]")) {
-            el.setAttribute("aria-label", el.dataset.oeAriaLabel);
+            setAttribute(el, "aria-label", el.dataset.oeAriaLabel);
         }
     }
 

@@ -4,7 +4,7 @@ import { childNodes, descendants, getCommonAncestor } from "../utils/dom_travers
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { withSequence } from "@html_editor/utils/resource";
 import { Deferred } from "@web/core/utils/concurrency";
-import { toggleClass } from "@html_editor/utils/dom";
+import { setAttribute, toggleClass } from "@html_editor/utils/dom";
 import { omit, pick } from "@web/core/utils/objects";
 import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
 
@@ -1551,6 +1551,7 @@ export class HistoryPlugin extends Plugin {
                 await revertOperation();
                 const def = new Deferred();
                 const revertSavePoint = this.makeSavePoint();
+                this.stageSelection();
                 revertOperation = async () => {
                     await def;
                     revertSavePoint();
@@ -1682,7 +1683,7 @@ export class HistoryPlugin extends Plugin {
 
         // if attributeValue is falsy but not null, we still need to apply it
         if (attributeValue !== null) {
-            node.setAttribute(attributeName, attributeValue);
+            setAttribute(node, attributeName, attributeValue);
         } else {
             node.removeAttribute(attributeName);
         }
@@ -1803,7 +1804,7 @@ export class HistoryPlugin extends Plugin {
             }
 
             for (const node of this._onKeyupResetContenteditableNodes) {
-                node.setAttribute("contenteditable", false);
+                setAttribute(node, "contenteditable", "false");
             }
         }
     }
@@ -1814,7 +1815,7 @@ export class HistoryPlugin extends Plugin {
             this._onKeyupResetContenteditableNodes.length
         ) {
             for (const node of this._onKeyupResetContenteditableNodes) {
-                node.setAttribute("contenteditable", true);
+                setAttribute(node, "contenteditable", "true");
             }
             this._onKeyupResetContenteditableNodes = [];
         }
