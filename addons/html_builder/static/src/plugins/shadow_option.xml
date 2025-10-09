@@ -3,27 +3,45 @@
 
 <t t-name="html_builder.ShadowOption">
     <BuilderRow label.translate="Shadow">
-       <BuilderButtonGroup action="props.setShadowModeAction">
-         <BuilderButton actionValue="'none'" id="'no_shadow'" className="'lh-1'">None</BuilderButton>
-         <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
-         <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
-       </BuilderButtonGroup>
+        <BuilderSelect preview="false">
+            <BuilderSelectItem classAction="'no-shadow'">
+                None
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'shadow'">
+                Normal
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'shadow-sm'">
+                Small
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'shadow-lg'">
+                Large
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'shadow-inset'">
+                Inset
+            </BuilderSelectItem>
+            <BuilderSelectItem id="'custom_shadow'" classAction="'custom-shadow'" action="props.setShadowAction">
+                Custom
+            </BuilderSelectItem>
+        </BuilderSelect>
     </BuilderRow>
-    <BuilderContext t-if="!this.isActiveItem('no_shadow')" action="props.setShadowAction">
-        <BuilderRow label.translate="Color" level="1">
+    <BuilderContext t-if="this.isActiveItem('custom_shadow')">
+        <BuilderRow label.translate="Outset/Inset" level="1">
+            <BuilderButtonGroup action="props.setShadowModeAction">
+                <BuilderButton actionValue="'outset'" title.translate="Outset" iconImg="'/html_builder/static/img/options/shadow_out.svg'"/>
+                <BuilderButton actionValue="'inset'" title.translate="Inset" iconImg="'/html_builder/static/img/options/shadow_in.svg'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Color" level="1" action="props.setShadowAction">
             <BuilderColorPicker actionParam="'color'"  enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
-
-        <BuilderRow label.translate="Offset (X, Y)" level="1">
+        <BuilderRow label.translate="Offset (X, Y)" level="1" action="props.setShadowAction">
             <BuilderNumberInput actionParam="'offsetX'" unit="'px'"/>
             <BuilderNumberInput actionParam="'offsetY'" unit="'px'"/>
         </BuilderRow>
-
-        <BuilderRow label.translate="Blur" level="1">
+        <BuilderRow label.translate="Blur" level="1" action="props.setShadowAction">
             <BuilderNumberInput actionParam="'blur'" unit="'px'"/>
         </BuilderRow>
-
-        <BuilderRow label.translate="Spread" level="1">
+        <BuilderRow label.translate="Spread" level="1" action="props.setShadowAction">
             <BuilderNumberInput actionParam="'spread'" unit="'px'"/>
         </BuilderRow>
     </BuilderContext>
