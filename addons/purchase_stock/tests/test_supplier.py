@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
@@ -19,7 +20,7 @@ class TestSupplier(TestStockCommon):
         route = self.env['stock.route'].create({
             'name': 'Buy',
             'rule_ids': [
-                (0, 0, {
+                Command.create({
                     'name': 'Buy',
                     'location_dest_id': self.stock_location.id,
                     'action': 'buy',
