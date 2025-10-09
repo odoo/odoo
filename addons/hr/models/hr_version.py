@@ -51,6 +51,7 @@ class HrVersion(models.Model):
     active = fields.Boolean(default=True, tracking=True)
 
     date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_user")
+    next_version = fields.Many2one('hr.version', compute="_compute_next_version", store=True, groups="hr.group_hr_user")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
                                         default=lambda self: self.env.uid, required=True, groups="hr.group_hr_user")
     last_modified_date = fields.Datetime(string='Last Modified on', default=fields.Datetime.now, required=True,
@@ -353,6 +354,11 @@ class HrVersion(models.Model):
     def _compute_display_name(self):
         for version in self:
             version.display_name = version.name if not version.employee_id else format_date_abbr(version.env, version.date_version)
+
+    @api.depends('employee_id.version_ids.date_version')
+    def _compute_next_version(self):
+        for version in self:
+            version.next_version = version.employee_id.version_ids.filtered(lambda r: r.date_version > version.date_version).sorted("date_version")[:1]
 
     def _compute_is_current(self):
         today = fields.Date.today()
