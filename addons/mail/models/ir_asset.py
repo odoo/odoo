@@ -7,18 +7,12 @@ from odoo import models
 MODELS_TO_INCLUDE = [
     "discuss.call.history",
     "discuss.channel",
-<<<<<<< Updated upstream
-    "mail.followers",
-    "mail.link.preview",
-=======
     "discuss.channel.member",
     "discuss.channel.rtc.session",
     "ir.attachment",
     "mail.activity",
->>>>>>> Stashed changes
     "mail.activity.type",
     "mail.canned.response",
-    "mail.followers",
     "mail.guest",
     "mail.link.preview",
     "mail.message",
