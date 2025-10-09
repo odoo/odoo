@@ -57,13 +57,10 @@ export class CallParticipantCard extends Component {
     }
 
     get isContextMenuAvailable() {
-        if (!this.rtcSession) {
-            return false;
-        }
-        if (this.env.debug) {
-            return true;
-        }
-        return !this.rtcSession?.eq(this.rtc.state.selfSession);
+        return (
+            this.isOfActiveCall &&
+            (this.rtcSession.notEq(this.rtc.state.selfSession) || this.env.debug)
+        );
     }
 
     get rtcSession() {
