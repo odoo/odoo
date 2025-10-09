@@ -44,7 +44,7 @@ export function createRequestCode({ language, url, requestObj }) {
             "Authorization": "Bearer " + apiKey,
             // "X-Odoo-Database": "...",
         },
-        body: ${objStr},
+        body: JSON.stringify(${objStr}),
     };
 
     const response = await fetch("${url}", request);
