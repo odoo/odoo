@@ -1,6 +1,15 @@
-import { after, expect, getFixture } from "@odoo/hoot";
-import { click, formatXml, queryAll, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
+import {
+    after,
+    animationFrame,
+    click,
+    Deferred,
+    expect,
+    formatXml,
+    getFixture,
+    queryAll,
+    queryAllTexts,
+    tick,
+} from "@odoo/hoot";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -30,7 +39,7 @@ import { registerInlineViewArchs } from "./mock_server/mock_model";
  *  text?: string;
  * }} SelectorOptions
  *
- * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
+ * @typedef {import("@odoo/hoot").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("@web/views/view").ViewProps} ViewProps
  * @typedef {import("./mock_server/mock_model").ViewType} ViewType
  */

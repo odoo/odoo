@@ -1,15 +1,17 @@
 /** @odoo-module */
 
-import { describe, expect, test } from "@odoo/hoot";
 import {
     Deferred,
     advanceTime,
     animationFrame,
+    describe,
+    expect,
     microTick,
     runAllTimers,
+    test,
     tick,
     waitUntil,
-} from "@odoo/hoot-dom";
+} from "@odoo/hoot";
 import { parseUrl } from "../local_helpers";
 
 // timeout of 1 second to ensure all timeouts are actually mocked

@@ -1,3 +1,4 @@
+<<<<<<< 419b8e918542e9e1bc7464938c1caa560a0f8aff
 import {
     after,
     before,
@@ -8,6 +9,24 @@ import {
 } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { rpc, RPCError } from "@web/core/network/rpc";
+||||||| 67490af868f8bd3a502085836d64217fa5fbb459
+import { before, createJobScopedGetter, expect, getCurrent, registerDebugInfo } from "@odoo/hoot";
+import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
+import { RPCError } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+=======
+import {
+    before,
+    createJobScopedGetter,
+    expect,
+    getCurrent,
+    mockFetch,
+    mockWebSocket,
+    registerDebugInfo,
+} from "@odoo/hoot";
+import { RPCError } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+>>>>>>> 0c71ce267d6d55bf37d290b237ab954a25833a5c
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
 import { PersistentCache } from "@web/core/utils/persistent_cache";
@@ -85,7 +104,7 @@ const { DateTime } = luxon;
  *  translations?: Record<string, string>;
  * }} ServerParams
  *
- * @typedef {import("@odoo/hoot-mock").ServerWebSocket} ServerWebSocket
+ * @typedef {import("@odoo/hoot").ServerWebSocket} ServerWebSocket
  *
  * @typedef {string | Iterable<string> | RegExp} StringMatcher
  *
