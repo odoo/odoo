@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 /**
  * Makes sure that blog tags should not be removed on the addition of date filter
@@ -8,18 +8,7 @@ import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_
  */
 registerWebsitePreviewTour("blog_tags_with_date", {
     url: "/blog",
-    edition: true,
 }, () => [{
-        content: "Click on first blog",
-        trigger: ":iframe article[name=blog_post] a",
-        run: "click",
-    }, {
-        content: "Click on sidebar option",
-        trigger: "we-customizeblock-options we-button[data-customize-website-views='website_blog.opt_blog_sidebar_show'] we-checkbox",
-        run: "click"
-    },
-    ...clickOnSave(),
-    {
         content: "Check that the sidebar is present",
         trigger: ":iframe #o_wblog_sidebar",
     }, {
