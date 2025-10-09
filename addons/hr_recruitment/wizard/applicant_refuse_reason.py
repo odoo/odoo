@@ -41,6 +41,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         compute='_compute_from_template_id', readonly=False, store=True,
         help="send emails after that date. This date is considered as being in UTC timezone."
     )
+    model = fields.Char('Related Document Model', compute='_compute_model')
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
@@ -71,6 +72,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
             self.duplicate_applicant_ids = self.env['hr.applicant'].search(self.duplicate_applicant_ids_domain)
         else:
             self.duplicate_applicant_ids = self.env['hr.applicant']
+
+    def _compute_model(self):
+        self.model = 'hr.applicant'
 
     # Overrides of mail.composer.mixin
     @api.depends('refuse_reason_id')  # fake trigger otherwise not computed in new mode
