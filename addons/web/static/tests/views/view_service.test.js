@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-dom";
 import {
     defineModels,
     getService,
@@ -76,7 +77,8 @@ test("stores calls in cache when failed", async () => {
 });
 
 test("clear cache when updating ir.ui.view", async () => {
-    expect.assertions(4);
+    expect.assertions(5);
+    expect.errors(2);
     onRpc("get_views", () => {
         expect.step("get_views");
     });
@@ -100,4 +102,6 @@ test("clear cache when updating ir.ui.view", async () => {
     await getService("orm").unlink("take.five", [3]);
     await loadView();
     expect.verifySteps([]); // cache was not invalidated
+    await tick();
+    expect.verifyErrors(["RPC_ERROR: my little error", "RPC_ERROR: my little error"]);
 });

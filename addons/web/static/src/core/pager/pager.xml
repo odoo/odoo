@@ -29,5 +29,24 @@
             </span>
         </nav>
     </t>
-
+    <t t-name="web.OfflinePager" t-inherit="web.Pager">
+        <xpath expr="//span[hasclass('o_pager_value')]" position="attributes">
+            <attribute name="class" add="opacity-50 o_offline_cursor" separator=" "/>
+        </xpath>
+        <xpath expr="//span[contains(text(), '/')]" position="attributes">
+            <attribute name="class" add="opacity-50 o_offline_cursor" separator=" "/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_pager_limit')][hasclass('o_pager_limit_fetch')]" position="attributes">
+            <attribute name="class" add="opacity-50 o_offline_cursor" separator=" "/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_pager_limit')][not(hasclass('o_pager_limit_fetch'))]" position="attributes">
+            <attribute name="class" add="opacity-50 o_offline_cursor" separator=" "/>
+        </xpath>
+        <xpath expr="//button[hasclass('o_pager_previous')]" position="attributes">
+            <attribute name="class" add="o_offline_cursor" separator=" "/>
+        </xpath>
+        <xpath expr="//button[hasclass('o_pager_next')]" position="attributes">
+            <attribute name="class" add="o_offline_cursor" separator=" "/>
+        </xpath>
+    </t>
 </templates>

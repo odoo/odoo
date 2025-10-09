@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, dblclick, press, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
 import { insertText, undo } from "./_helpers/user_actions";
@@ -541,6 +541,15 @@ test("can undo adding link to image", async () => {
 });
 
 test("can remove the link of an image", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
     await setupEditor(`
         <a href="http://test.test/"><img src="${base64Img}"></a>
     `);
@@ -555,6 +564,15 @@ test("can remove the link of an image", async () => {
 });
 
 test("can undo link removing of an image", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
     const { editor } = await setupEditor(`
         <a href="http://test.test/"><img src="${base64Img}"></a>
     `);

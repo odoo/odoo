@@ -223,6 +223,7 @@ export class View extends Component {
         }
 
         this.viewService = useService("view");
+        this.offlineService = useService("offline");
         this.withSearchProps = null;
 
         useSubEnv({
@@ -341,9 +342,10 @@ export class View extends Component {
             }
         }
 
-        const jsClass = archXmlDoc.hasAttribute("js_class")
+        let jsClass = archXmlDoc.hasAttribute("js_class")
             ? archXmlDoc.getAttribute("js_class")
             : props.jsClass || type;
+
         if (!viewRegistry.contains(jsClass)) {
             await loadBundle(
                 cookie.get("color_scheme") === "dark"
@@ -351,7 +353,11 @@ export class View extends Component {
                     : "web.assets_backend_lazy"
             );
         }
-        const descr = viewRegistry.get(jsClass);
+        let descr = viewRegistry.get(jsClass);
+        if (this.offlineService.offline && !descr.offlineReady) {
+            jsClass = type;
+            descr = viewRegistry.get(jsClass);
+        }
 
         const sample = archXmlDoc.getAttribute("sample");
         const className = computeViewClassName(type, archXmlDoc, [

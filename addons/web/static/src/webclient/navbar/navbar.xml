@@ -176,7 +176,7 @@
                     </t>
                     <t t-else="">
                         <Dropdown>
-                            <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid">
+                            <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid" data-offline-available="">
                                 <span t-esc="section.name" t-att-data-section="section.id" />
                             </button>
                             <t t-set-slot="content">

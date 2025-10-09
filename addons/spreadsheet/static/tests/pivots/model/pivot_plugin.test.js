@@ -468,6 +468,7 @@ test("fetch metadata only once per model", async function () {
 });
 
 test("An error is displayed if the pivot has invalid model", async function () {
+    expect.errors(1);
     const { model, env, pivotId } = await createSpreadsheetWithPivot({
         mockRPC: async function (route, { model, method, kwargs }) {
             if (model === "unknown" && method === "fields_get") {
@@ -487,6 +488,7 @@ test("An error is displayed if the pivot has invalid model", async function () {
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
 });
 
 test("don't fetch pivot data if no formula use it", async function () {

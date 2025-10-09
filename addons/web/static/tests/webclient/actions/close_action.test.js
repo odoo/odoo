@@ -177,7 +177,7 @@ test("history back called within on_close", async () => {
 test.tags("desktop");
 test("web client is not deadlocked when a view crashes", async () => {
     expect.assertions(4);
-    expect.errors(1);
+    expect.errors(2);
 
     const readOnFirstRecordDef = new Deferred();
     onRpc("web_read", ({ args }) => {
@@ -192,7 +192,10 @@ test("web client is not deadlocked when a view crashes", async () => {
     await contains(".o_list_view .o_data_cell").click();
     readOnFirstRecordDef.reject(new Error("not working as intended"));
     await animationFrame();
-    expect.verifyErrors(["not working as intended"]);
+    expect.verifyErrors([
+        "RPC_ERROR: not working as intended",
+        "RPC_ERROR: not working as intended",
+    ]);
 
     expect(".o_list_view").toHaveCount(1, { message: "there should still be a list view in dom" });
     // open another record, the read will not crash

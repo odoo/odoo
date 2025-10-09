@@ -117,32 +117,40 @@ export class RPCCache {
 
         return new Promise((resolve, reject) => {
             const fromCache = new Deferred();
+            // This is a "temporary" promise to be put in the ramCache
+            // this is used when two identical RPCs are done at the same time
+            // we return the promise and do only one call to the RPC.
+            const ramProm = new Deferred();
             let fromCacheValue;
             const onFullfilled = (result) => {
                 resolve(deepCopy(result));
+                // Update the ramCache with the latests data
                 this.ramCache.write(table, key, Promise.resolve(result));
                 const hasChanged =
                     (fromCacheValue && fromCacheValue !== JSON.stringify(result)) || false;
                 this.pendingRequests[requestKey]?.forEach((cb) => cb(deepCopy(result), hasChanged));
                 delete this.pendingRequests[requestKey];
                 if (type === "disk") {
+                    // Update the diskCache with the latests data
                     this.crypto.encrypt(result).then((encryptedResult) => {
                         this.indexedDB.write(table, key, encryptedResult);
                     });
                 }
-                return result;
+                // Update the already returned promises with the result
+                ramProm.resolve(deepCopy(result));
             };
             const onRejected = async (error) => {
-                delete this.pendingRequests[requestKey];
                 await fromCache;
+                delete this.pendingRequests[requestKey];
                 if (fromCacheValue) {
                     // promise has already been fullfilled with the cached value
                     throw error;
                 }
                 this.ramCache.delete(table, key); // remove rejected prom from ram cache
+                ramProm.reject(error);
                 reject(error);
             };
-            const prom = fallback().then(onFullfilled, onRejected);
+            fallback().then(onFullfilled, onRejected);
             if (ramValue) {
                 ramValue.then((value) => {
                     resolve(deepCopy(value));
@@ -150,7 +158,7 @@ export class RPCCache {
                     fromCache.resolve();
                 });
             } else {
-                this.ramCache.write(table, key, prom);
+                this.ramCache.write(table, key, ramProm);
                 if (type === "disk") {
                     this.indexedDB.read(table, key).then(async (result) => {
                         if (result) {
@@ -164,7 +172,10 @@ export class RPCCache {
                                 return;
                             }
                             resolve(deepCopy(decrypted));
+                            // Update the ramCache with the indexedDB value.
                             this.ramCache.write(table, key, Promise.resolve(decrypted));
+                            // Update the already returned promises
+                            ramProm.resolve(decrypted);
                             fromCacheValue = JSON.stringify(decrypted);
                         }
                         fromCache.resolve();

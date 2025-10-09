@@ -739,6 +739,16 @@ test("add a link to an image with a caption", async () => {
 
 test.tags("focus required");
 test("add a caption to an image with a link", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
+
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
@@ -798,6 +808,15 @@ test("add a caption then a link to an image surrounded by text", async () => {
 });
 
 test("add a link then a caption to an image surrounded by text", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
@@ -826,6 +845,15 @@ test("add a link then a caption to an image surrounded by text", async () => {
 });
 
 test("remove a link from an image with a caption", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
     const caption = "Hello";
     const captionId = 1;
     await testEditor({
@@ -872,6 +900,15 @@ test("remove a link from an image with a caption", async () => {
 });
 
 test("remove a caption from an image with a link", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "http://odoo.com/",
+    }));
     const caption = "Hello";
     const captionId = 1;
     await testEditor({

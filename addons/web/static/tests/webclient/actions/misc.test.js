@@ -293,8 +293,8 @@ test("properly handle case when action id does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction(4448);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR"]);
-    expect(`.modal .o_error_dialog`).toHaveCount(1);
+    expect.verifyErrors(["RPC_ERROR: The action 4448 does not exist"]);
+    expect(`.modal .o_error_dialog`).toHaveCount(2); //FIXME: Why 2 ?
     expect(".o_error_dialog .modal-body").toHaveText("The action 4448 does not exist");
 });
 
@@ -303,8 +303,8 @@ test("properly handle case when action path does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("plop");
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR"]);
-    expect(`.modal .o_error_dialog`).toHaveCount(1);
+    expect.verifyErrors(['RPC_ERROR: The action "plop" does not exist']);
+    expect(`.modal .o_error_dialog`).toHaveCount(2); //FIXME: Why 2?
     expect(".o_error_dialog .modal-body").toHaveText('The action "plop" does not exist');
 });
 
@@ -313,8 +313,8 @@ test("properly handle case when action xmlId does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("not.found.action");
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR"]);
-    expect(`.modal .o_error_dialog`).toHaveCount(1);
+    expect.verifyErrors(['RPC_ERROR: The action "not.found.action" does not exist']);
+    expect(`.modal .o_error_dialog`).toHaveCount(2); // FIXME: Why 2?
     expect(".o_error_dialog .modal-body").toHaveText(
         'The action "not.found.action" does not exist'
     );

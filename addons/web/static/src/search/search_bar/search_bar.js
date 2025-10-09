@@ -68,6 +68,8 @@ export class SearchBar extends Component {
         this.items = useState([]);
         this.subItems = {};
 
+        this.offlineService = useService("offline");
+
         this.facetContainerRef = useRef("facetContainerRef");
         this.menuRef = useChildRef();
         this.setupFacetNavigation();
@@ -657,7 +659,7 @@ export class SearchBar extends Component {
             this.resetState();
         }
     }
-    
+
     /**
      * @param {CompositionEvent} ev
      */
