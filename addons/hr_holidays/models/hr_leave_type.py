@@ -117,8 +117,6 @@ class HrLeaveType(models.Model):
         help="If checked, users can request another leave on top of the ones of this type.")
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
         help="If checked, this time off type will be taken into account for accruals computation.")
-    accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
-    accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
@@ -335,12 +333,6 @@ class HrLeaveType(models.Model):
         for allocation in self:
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
-    def _compute_accrual_count(self):
-        accrual_allocations = self.env['hr.leave.accrual.plan']._read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['__count'])
-        mapped_data = {time_off_type.id: count for time_off_type, count in accrual_allocations}
-        for leave_type in self:
-            leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
-
     def _compute_is_used(self):
         leaves_count = self._leaves_count_by_leave_type_id()
         allocations_count = self._allocations_count_by_leave_type_id()
@@ -445,17 +437,6 @@ class HrLeaveType(models.Model):
         ]
         action['context'] = {
             'default_holiday_status_id': self.ids[0],
-        }
-        return action
-
-    def action_see_accrual_plans(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.open_view_accrual_plans")
-        action['domain'] = [
-            ('time_off_type_id', '=', self.id),
-        ]
-        action['context'] = {
-            'default_time_off_type_id': self.id,
         }
         return action
 

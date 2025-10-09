@@ -52,8 +52,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         ('regular', 'Regular Allocation'),
         ('accrual', 'Based on Accrual Plan')
     ], string="Allocation Type", default="regular", required=True)
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan')
     date_from = fields.Date('Start Date', default=fields.Date.context_today, required=True)
     date_to = fields.Date('End Date')
     notes = fields.Text('Reasons')
