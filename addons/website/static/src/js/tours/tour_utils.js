@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
+import { delay } from "@web/core/utils/concurrency";
 
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
@@ -705,3 +706,62 @@ export function clickToolbarButton(elementName, selector, button, expand = false
     }
     return steps;
 }
+
+export function changeBackgroundShape(shape = "html_builder/Connections/01") {
+    return [
+        {
+            content: "Open Background Shape selector",
+            trigger: "div[data-label='Background'] ~ div[data-label='Shape'] button.o-hb-btn",
+            run: "click",
+        },
+        {
+            content: "Wait for panel to open",
+            trigger: ":iframe #wrap",
+            async run() {
+                await delay(200);
+            },
+        },
+        {
+            content: "Pick a Background Shape",
+            trigger: `.o_pager_container .o-hb-bg-shape-btn [data-action-id='setBackgroundShape'][data-action-value='${shape}']`,
+            run: "click",
+        },
+        {
+            content: "Wait for panel to close",
+            trigger: ":iframe #wrap",
+            async run() {
+                await delay(200);
+            },
+        },
+    ];
+}
+
+export function changeImageShape(shape = "html_builder/geometric/geo_shuriken") {
+    return [
+        {
+            content: "Open Image Shape selector",
+            trigger: "div[data-label='Media'] ~ div[data-label='Shape'] button.o-hb-btn",
+            run: "click",
+        },
+        {
+            content: "Wait for panel to open",
+            trigger: ":iframe #wrap",
+            async run() {
+                await delay(200);
+            },
+        },
+        {
+            content: "Pick an Image Shape",
+            trigger: `.o_pager_container .o-hb-img-shape-btn [data-action-id='setImageShape'][data-action-value='${shape}']`,
+            run: "click",
+        },
+        {
+            content: "Wait for panel to close",
+            trigger: ":iframe #wrap",
+            async run() {
+                await delay(200);
+            },
+        },
+    ];
+}
+

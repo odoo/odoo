@@ -18,7 +18,6 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetBackgroundShapeAction,
-            ToggleBgShapeAction,
             ShowOnMobileAction,
             FlipShapeAction,
             SetBgAnimationSpeedAction,
@@ -29,10 +28,11 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         ),
         force_not_editable_selector: ".o_we_shape",
     };
+
     static shared = [
         "getShapeStyleUrl",
         "getShapeData",
-        "showBackgroundShapes",
+        "getBackgroundShapeGroups",
         "getBackgroundShapes",
         "getImplicitColors",
         "applyShape",
@@ -327,7 +327,6 @@ class BaseAnimationAction extends BuilderAction {
         this.getImplicitColors = this.dependencies.backgroundShapeOption.getImplicitColors;
         this.getBackgroundShapes = this.dependencies.backgroundShapeOption.getBackgroundShapes;
         this.createShapeContainer = this.dependencies.backgroundShapeOption.createShapeContainer;
-        this.showBackgroundShapes = this.dependencies.backgroundShapeOption.showBackgroundShapes;
     }
 }
 class SetBackgroundShapeAction extends BaseAnimationAction {
@@ -337,7 +336,9 @@ class SetBackgroundShapeAction extends BaseAnimationAction {
         const shapeData = this.getShapeData(editingElement);
         const applyShapeParams = {
             shape: value,
-            colors: this.getImplicitColors(editingElement, value, shapeData.colors),
+            colors: Object.keys(shapeData.colors).length
+                ? this.getImplicitColors(editingElement, value, shapeData.colors)
+                : {},
             flip: [],
             animated: params.animated,
             shapeAnimationSpeed: shapeData.shapeAnimationSpeed,
@@ -347,44 +348,6 @@ class SetBackgroundShapeAction extends BaseAnimationAction {
     isApplied({ editingElement, value }) {
         const currentShapeApplied = this.getShapeData(editingElement).shape;
         return currentShapeApplied === value;
-    }
-}
-class ToggleBgShapeAction extends BaseAnimationAction {
-    static id = "toggleBgShape";
-    apply({ editingElement }) {
-        const previousSibling = editingElement.previousElementSibling;
-        let shapeToSelect;
-        const allPossiblesShapesUrl = Object.keys(this.getBackgroundShapes());
-        if (previousSibling) {
-            const previousShape = this.getShapeData(previousSibling).shape;
-            shapeToSelect = allPossiblesShapesUrl.find(
-                (shape, i) => allPossiblesShapesUrl[i - 1] === previousShape
-            );
-        }
-        // If there is no previous sibling, if the previous sibling
-        // had the last shape selected or if the previous shape
-        // could not be found in the possible shapes, default to the
-        // first shape.
-        if (!shapeToSelect) {
-            shapeToSelect = allPossiblesShapesUrl[0];
-        }
-        // Only show on mobile by default if toggled from mobile
-        // view.
-        const showOnMobile = this.config.isMobileView(editingElement);
-        this.createShapeContainer(editingElement, shapeToSelect);
-        const applyShapeParams = {
-            shape: shapeToSelect,
-            colors: this.getImplicitColors(editingElement, shapeToSelect),
-            showOnMobile,
-        };
-        this.applyShape(editingElement, () => applyShapeParams);
-        this.showBackgroundShapes([editingElement]);
-    }
-    clean({ editingElement }) {
-        this.applyShape(editingElement, () => ({ shape: "" }));
-    }
-    isApplied({ editingElement }) {
-        return !!this.getShapeData(editingElement).shape;
     }
 }
 class ShowOnMobileAction extends BaseAnimationAction {

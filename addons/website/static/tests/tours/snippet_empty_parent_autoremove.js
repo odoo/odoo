@@ -1,9 +1,9 @@
 import {
-    changeOption,
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
     changeOptionInPopover,
+    changeBackgroundShape,
 } from "@website/js/tours/tour_utils";
 
 function removeSelectedBlock() {
@@ -54,12 +54,7 @@ registerWebsitePreviewTour(
             name: "Cover",
         }),
         // Add a shape
-        changeOption("Cover", "toggleBgShape"),
-        {
-            content: "Click on the back button",
-            trigger: ".o_pager_nav_angle",
-            run: "click",
-        },
+        ...changeBackgroundShape(),
         {
             content: "Check that the parallax element is present",
             trigger: ":iframe #wrap .s_cover .s_parallax_bg",

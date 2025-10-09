@@ -4,8 +4,7 @@
     font-size: $o-we-sidebar-font-size * 1.4;
 }
 
-.o-hb-select-pager-tab-container {
-    border-top: $o-we-border-width solid $o-we-bg-lighter;
+.o_pager_nav {
     border-bottom: $o-we-border-width solid $o-we-bg-lighter;
 }
 
@@ -23,6 +22,10 @@
         $-r: $o-we-sidebar-tabs-size-ratio;
         border-bottom: $o-we-sidebar-tabs-active-border-width solid transparent;
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
+    }
+
+    &:hover {
+        background-color: transparent !important;
     }
 
     &:hover > span {
@@ -55,6 +58,9 @@
         &:hover,
         &:focus-visible {
             background-color: transparent;
+        }
+        &:focus {
+            background-color: rgba($o-we-color-accent, .15);
         }
     }
     .o-hb-bg-shape-btn {

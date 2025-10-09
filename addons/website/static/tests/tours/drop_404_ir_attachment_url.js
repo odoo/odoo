@@ -1,7 +1,7 @@
 import {
-    changeOption,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeImageShape,
 } from '@website/js/tours/tour_utils';
 import { onceAllImagesLoaded } from "@website/utils/images";
 
@@ -33,12 +33,7 @@ registerWebsitePreviewTour('drop_404_ir_attachment_url', {
             }
         },
     },
-    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
-    {
-        content: "Click on the first image shape",
-        trigger: "[data-action-id='setImageShape']",
-        run: "click",
-    },
+    ...changeImageShape(),
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: ':iframe .s_404_snippet img[src^="data:"]',
