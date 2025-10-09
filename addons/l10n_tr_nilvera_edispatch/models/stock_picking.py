@@ -113,21 +113,27 @@ class StockPicking(models.Model):
 
     def _l10n_tr_validate_edispatch_on_done(self):
         partners = (
-            self.company_id.partner_id
-            | self.partner_id
-            | self.partner_id.commercial_partner_id
-            | self.l10n_tr_nilvera_carrier_id
+            self.partner_id
             | self.l10n_tr_nilvera_buyer_id
             | self.l10n_tr_nilvera_seller_supplier_id
             | self.l10n_tr_nilvera_buyer_originator_id
         )
+        partners_requiring_tax_office = (
+            self.company_id.partner_id
+            | self.partner_id.commercial_partner_id
+            | self.l10n_tr_nilvera_carrier_id
+        )
 
-        error_messages = partners._l10n_tr_nilvera_validate_partner_details()
+        error_messages = (
+            partners._l10n_tr_nilvera_validate_partner_details() |
+            partners_requiring_tax_office._l10n_tr_nilvera_validate_partner_details(tax_office_required=True)
+        )
 
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
                 error_messages['invalid_matbudan_date'] = {
                     'message': _("Printed Delivery Note Date is required."),
+                    'level': 'danger',
                 }
             if (
                 not self.l10n_tr_nilvera_delivery_printed_number
@@ -135,6 +141,7 @@ class StockPicking(models.Model):
             ):
                 error_messages['invalid_matbudan_number'] = {
                     'message': _("Printed Delivery Note Number of 16 characters is required."),
+                    'level': 'danger',
                 }
 
         invalid_country_drivers = self.l10n_tr_nilvera_driver_ids.filtered(
@@ -156,6 +163,7 @@ class StockPicking(models.Model):
                 'action': invalid_country_drivers._get_records_action(
                     name=_("Drivers"),
                 ),
+                'level': 'danger',
             }
         if drivers := len(invalid_tckn_drivers):
             driver_placeholder = drivers > 1 and _("Drivers") or _("%s's", invalid_tckn_drivers.name)
@@ -163,6 +171,7 @@ class StockPicking(models.Model):
                 'message': _("%s TCKN is required.", driver_placeholder),
                 'action_text': _("View %s", drivers == 1 and invalid_tckn_drivers.name or _("Drivers")),
                 'action': invalid_tckn_drivers._get_records_action(name=_("Drivers")),
+                'level': 'danger',
             }
 
         if (
@@ -172,16 +181,19 @@ class StockPicking(models.Model):
         ):
             error_messages['required_carrier_details'] = {
                 'message': _("Carrier is required (optional when both the Driver and Vehicle Plate are filled)."),
+                'level': 'danger',
             }
 
         elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_nilvera_driver_ids:
             error_messages['required_driver_details'] = {
                 'message': _("At least one Driver is required."),
+                'level': 'danger',
             }
 
         elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_vehicle_plate:
             error_messages['required_vehicle_details'] = {
                 'message': _("Vehicle Plate is required."),
+                'level': 'danger',
             }
 
         return error_messages or False

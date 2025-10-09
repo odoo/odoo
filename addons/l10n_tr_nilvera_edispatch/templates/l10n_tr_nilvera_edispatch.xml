@@ -31,6 +31,11 @@
                 <cbc:Name t-out="tr_country.name"/>
             </cac:Country>
         </cac:PostalAddress>
+        <cac:PartyTaxScheme t-if="tax_office_required">
+            <cac:TaxScheme>
+                <cbc:Name t-out="partner._get_tax_office_for_edispatch()"/>
+            </cac:TaxScheme>
+        </cac:PartyTaxScheme>
         <cac:Contact>
             <cbc:Telephone t-out="partner.phone"/>
             <cbc:ElectronicMail t-out="partner.email"/>
@@ -109,11 +114,13 @@
             <cac:DespatchSupplierParty>
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
                     <t t-set="partner" t-value="current_company"/>
+                    <t t-set="tax_office_required" t-value="partner.country_code == 'TR'"/>
                 </t>
             </cac:DespatchSupplierParty>
             <cac:DeliveryCustomerParty>
                 <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
                     <t t-set="partner" t-value="picking.partner_id.commercial_partner_id"/>
+                    <t t-set="tax_office_required" t-value="partner.country_code == 'TR'"/>
                 </t>
             </cac:DeliveryCustomerParty>
             <cac:BuyerCustomerParty t-if="picking.l10n_tr_nilvera_buyer_id">
@@ -167,6 +174,7 @@
                     <cac:CarrierParty t-if="picking.l10n_tr_nilvera_carrier_id">
                         <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_details">
                             <t t-set="partner" t-value="picking.l10n_tr_nilvera_carrier_id"/>
+                            <t t-set="tax_office_required" t-value="partner.country_code == 'TR'"/>
                         </t>
                     </cac:CarrierParty>
                     <cac:Despatch>
