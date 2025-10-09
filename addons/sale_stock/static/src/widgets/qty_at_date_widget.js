@@ -36,7 +36,7 @@ export class QtyAtDatePopover extends Component {
     }
 
     get availableLabel() {
-        return _t('Available')
+        return _t('Available Now')
     }
 }
 
@@ -123,6 +123,7 @@ export const qtyAtDateWidget = {
     fieldDependencies: [
         { name: 'display_qty_widget', type: 'boolean'},
         { name: 'free_qty_today', type: 'float'},
+        { name: 'product_uom_qty', type: 'float'},
         { name: 'forecast_expected_date', type: 'datetime'},
         { name: 'is_mto', type: 'boolean'},
         { name: 'move_ids', type: 'one2many'},
