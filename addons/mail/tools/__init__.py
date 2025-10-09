@@ -3,6 +3,7 @@
 
 from . import alias_error
 from . import discuss
+from . import js_model_generation
 from . import link_preview
 from . import mail_validation
 from . import parser

@@ -146,6 +146,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/scss/*.scss',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             'mail/static/src/js/**/*',
+            ('include', 'mail.assets_js_models'),
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
@@ -176,6 +177,9 @@ For more specific needs, you may also assign custom-defined actions
         ],
         "web.assets_frontend": [
             "mail/static/src/utils/common/format.js",
+        ],
+        'mail.assets_js_models': [
+            # hook
         ],
         'mail.assets_discuss_public_test_tours': [
             'web/static/lib/hoot-dom/**/*',
@@ -232,6 +236,7 @@ For more specific needs, you may also assign custom-defined actions
 
             ("include", "html_editor.assets_editor"),
 
+            ('include', 'mail.assets_js_models'),
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
