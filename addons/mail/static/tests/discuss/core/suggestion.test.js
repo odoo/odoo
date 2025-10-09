@@ -1,3 +1,5 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+
 import {
     click,
     contains,
@@ -9,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
 import { press } from "@odoo/hoot-dom";
@@ -26,7 +28,7 @@ beforeEach(() => {
     });
 });
 
-test('display command suggestions on typing "/"', async () => {
+test('[text composer] display command suggestions on typing "/"', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -40,7 +42,29 @@ test('display command suggestions on typing "/"', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
-test("use a command for a specific channel type", async () => {
+test.tags("html composer");
+test("display command suggestions on typing '/'", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "/");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+});
+
+test("[text composer] use a command for a specific channel type", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
@@ -53,7 +77,27 @@ test("use a command for a specific channel type", async () => {
     await contains(".o-mail-Composer-input", { value: "/who " });
 });
 
-test("command suggestion should only open if command is the first character", async () => {
+test.tags("html composer");
+test("use a command for a specific channel type", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "/");
+    await click(".o-mail-Composer-suggestion strong", { text: "who" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "/who" });
+});
+
+test("[text composer] command suggestion should only open if command is the first character", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
@@ -67,6 +111,31 @@ test("command suggestion should only open if command is the first character", as
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     await contains(".o-mail-Composer-input", { value: "bluhbluh " });
     await insertText(".o-mail-Composer-input", "/");
+    // weak test, no guarantee that we waited long enough for the potential list to open
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+});
+
+test.tags("html composer");
+test("command suggestion should only open if command is the first character", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "bluhbluh");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "bluhbluh" });
+    await htmlInsertText(editor, "/");
     // weak test, no guarantee that we waited long enough for the potential list to open
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });
@@ -164,7 +233,7 @@ test("mention suggestion are shown after deleting a character", async () => {
     await contains(".o-mail-Composer-suggestion strong", { text: "John Doe" });
 });
 
-test("command suggestion are shown after deleting a character", async () => {
+test("[text composer] command suggestion are shown after deleting a character", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -184,6 +253,37 @@ test("command suggestion are shown after deleting a character", async () => {
     // Simulate pressing backspace
     const textarea = document.querySelector(".o-mail-Composer-input");
     textarea.value = textarea.value.slice(0, -1);
+    await contains(".o-mail-Composer-suggestion strong", { text: "help" });
+});
+
+test.tags("html composer");
+test("command suggestion are shown after deleting a character", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "/he");
+    await contains(".o-mail-Composer-suggestion strong", { text: "help" });
+    await htmlInsertText(editor, "e");
+    await contains(".o-mail-Composer-suggestion strong", { count: 0, text: "help" });
+    await press("Backspace");
     await contains(".o-mail-Composer-suggestion strong", { text: "help" });
 });
 
