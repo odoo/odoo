@@ -129,14 +129,16 @@ class MaintenanceEquipment(models.Model):
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     active = fields.Boolean(default=True)
-    owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True, index='btree_not_null')
+    owner_user_id = fields.Many2one('res.users', string='Owner', compute='_compute_owner', store=True, readonly=False,
+                                    tracking=True, index='btree_not_null')
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
                                   tracking=True, group_expand='_read_group_category_ids', index='btree_not_null')
     partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
     partner_ref = fields.Char('Vendor Reference')
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
-    assign_date = fields.Date('Assigned Date', tracking=True)
+    assign_date = fields.Date(string='Assigned Date', compute='_compute_equipment_assign_to_date', store=True,
+                              readonly=False, tracking=True)
     cost = fields.Float('Cost')
     note = fields.Html('Note')
     warranty_date = fields.Date('Warranty Expiration Date')
@@ -144,6 +146,7 @@ class MaintenanceEquipment(models.Model):
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
     equipment_properties = fields.Properties('Properties', definition='category_id.equipment_properties_definition', copy=True)
+    equipment_assign_to = fields.Selection(selection=[('other', 'Other')], string='Used By')
 
     @api.onchange('category_id')
     def _onchange_category_id(self):
@@ -176,6 +179,15 @@ class MaintenanceEquipment(models.Model):
         search_domain = self.env['ir.rule']._compute_domain(categories._name)
         category_ids = categories.sudo()._search(search_domain, order=categories._order)
         return categories.browse(category_ids)
+
+    def _compute_owner(self):
+        pass
+
+    def _compute_equipment_assign_to_date(self):
+        pass
+
+    def _get_assign_fields(self):
+        return []
 
 
 class MaintenanceRequest(models.Model):
