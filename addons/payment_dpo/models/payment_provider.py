@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import xml.etree.ElementTree as ET
+from bs4 import BeautifulSoup
 
 from odoo import fields, models
 
@@ -54,3 +55,13 @@ class PaymentProvider(models.Model):
         root = ET.fromstring(response.content.decode('utf-8'))
         transaction_data = {element.tag: element.text for element in root}
         return transaction_data
+
+    def _parse_response_error(self, response):
+        """Override of `payment` to parse the response content"""
+        soup = BeautifulSoup(response.text, "html.parser")
+        unwantedTagNames = ["title", "h1", "h2"]
+
+        for tag in soup(unwantedTagNames):
+            tag.decompose()
+
+        return "\n" + soup.get_text("\n\n", strip=True)
