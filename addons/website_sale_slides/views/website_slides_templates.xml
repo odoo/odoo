@@ -101,18 +101,20 @@
 
 <!-- TOOLS -->
 <template name="Buy Course Link" id="course_buy_course_link">
-    <form class="oe_website_sale">
+    <div class="oe_website_sale">
+        <t t-set="product" t-value="slide.channel_id.product_id"/>
         <button
-            id="add_to_cart"
-            type="button"
+            name="add_to_cart"
             class="btn btn-primary w-100"
-            t-att-data-product-id="slide.channel_id.product_id.id"
-            t-att-data-product-template-id="slide.channel_id.product_id.product_tmpl_id.id"
+            t-att-data-show-quantity="False"
+            t-att-data-product-id="product.id"
+            t-att-data-product-template-id="product.product_tmpl_id.id"
+            t-att-data-product-type="product.product_tmpl_id.type"
         >
             Join this Course
         </button>
         <t t-if="for_resources"> to access resources</t>
-    </form>
+    </div>
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
@@ -161,19 +163,19 @@
             </a>
         </t>
         <div t-else="" class="oe_website_sale">
-            <form>
-                <button
-                    id="add_to_cart"
-                    type="button"
-                    class="btn btn-primary w-100"
-                    t-att-data-product-id="channel.product_id.id"
-                    t-att-data-product-template-id="channel.product_id.product_tmpl_id.id"
-                >
-                    <i class="fa fa-shopping-cart"></i> Add to Cart
-                </button>
-                <!-- Hook for wishlist -->
-                <div id="product_option_block"/>
-            </form>
+            <t t-set="product" t-value="channel.product_id"/>
+            <button
+                name="add_to_cart"
+                class="btn btn-primary w-100"
+                t-att-data-show-quantity="False"
+                t-att-data-product-id="product.id"
+                t-att-data-product-template-id="product.product_tmpl_id.id"
+                t-att-data-product-type="product.product_tmpl_id.type"
+            >
+                <i class="fa fa-shopping-cart"></i> Add to Cart
+            </button>
+            <!-- Hook for wishlist -->
+            <div id="product_option_block"/>
         </div>
     </t>
     <t t-elif="not channel.is_member">
@@ -184,20 +186,22 @@
 </template>
 
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
-    <xpath expr="//form//button[@id='add_to_cart']" position="before">
+    <button name="add_to_cart" position="attributes">
+        <attribute name="class" remove="btn-primary" add="btn-outline-primary" separator=" "/>
+    </button>
+    <button name="add_to_cart" position="before">
         <button
-            id="buy_now"
-            type="button"
+            name="add_to_cart"
             class="btn btn-primary w-100 mb-1"
-            t-att-data-product-id="channel.product_id.id"
-            t-att-data-product-template-id="channel.product_id.product_tmpl_id.id"
+            t-att-data-show-quantity="False"
+            t-att-data-product-id="product.id"
+            t-att-data-product-template-id="product.product_tmpl_id.id"
+            t-att-data-product-type="product.product_tmpl_id.type"
+            data-action="buy_now"
         >
             <i class="fa fa-bolt"></i> Buy Now
         </button>
-    </xpath>
-    <xpath expr="//form//button[@id='add_to_cart']" position="attributes">
-        <attribute name="class" remove="btn-primary" add="btn-outline-primary" separator=" "/>
-    </xpath>
+    </button>
 </template>
 
 </data></odoo>

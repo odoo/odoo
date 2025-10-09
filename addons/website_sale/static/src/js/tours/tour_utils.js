@@ -24,12 +24,12 @@ export function addToCartFromProductPage({ productHasVariants = false } = {}) {
     const steps = [
         {
             content: "Add to cart",
-            trigger: "#product_detail form #add_to_cart",
+            trigger: '.js_product button[name="add_to_cart"]',
             run: "click",
         },
         {
             content: "Check if the button is disabled",
-            trigger: "#add_to_cart.pe-none",
+            trigger: '.js_product button[name="add_to_cart"].pe-none',
         },
     ];
     if (productHasVariants) {

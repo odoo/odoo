@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('website_sale.deleted_archived_variants'
         },
         {
             content: "check add to cart not possible",
-            trigger: '#add_to_cart.disabled',
+            trigger: '.js_product button[name="add_to_cart"]:disabled',
         }
     ]
 });

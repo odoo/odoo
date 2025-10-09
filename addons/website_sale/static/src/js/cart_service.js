@@ -100,8 +100,6 @@ export class CartService {
      * @param {Object} [options] - Define how to add products to the cart.
      * @param {Boolean} [options.isBuyNow=false] - Whether the product should be added immediately,
      *      bypassing optional configurations. Defaults to false.
-     * @param {Boolean} [options.redirectToCart=true] - When `isBuyNow` is `true`, whether to
-     *      redirect the customer to the cart. Defaults to true.
      * @param {Boolean} [options.isConfigured=false] - Whether the product is already configured.
      *      Defaults to false.
      * @param {Boolean} [options.showQuantity=true] - Whether quantity selector should be shown
@@ -121,7 +119,6 @@ export class CartService {
         },
         {
             isBuyNow=false,
-            redirectToCart=true,
             isConfigured=false,
             showQuantity=true,
         } = {},
@@ -162,7 +159,7 @@ export class CartService {
                             comboItem, productTemplateId, remainingData.quantity
                         )
                     ),
-                    shouldRedirectToCart: isBuyNow && redirectToCart,
+                    shouldRedirectToCart: isBuyNow,
                     ...rest
                 });
             }
@@ -188,7 +185,7 @@ export class CartService {
                 uomId,
                 productCustomAttributeValues,
                 noVariantAttributeValues,
-                shouldRedirectToCart: isBuyNow && redirectToCart,
+                shouldRedirectToCart: isBuyNow,
                 ...rest
             });
         }
@@ -224,7 +221,7 @@ export class CartService {
             uomId,
             productCustomAttributeValues,
             noVariantAttributeValues,
-            shouldRedirectToCart: isBuyNow && redirectToCart,
+            shouldRedirectToCart: isBuyNow,
             ...rest
         });
     }

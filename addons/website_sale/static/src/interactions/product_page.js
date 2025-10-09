@@ -15,7 +15,7 @@ import { ProductImageViewer } from '@website_sale/js/components/website_sale_ima
 export class ProductPage extends Interaction {
     static selector = '.o_wsale_product_page';
     dynamicContent = {
-        '.js_main_product input[name="add_qty"]': { 't-on-change': this.onChangeAddQuantity },
+        '.js_product input[name="add_qty"]': { 't-on-change': this.onChangeAddQuantity },
         'a.js_add_cart_json': { 't-on-click.prevent': this.incOrDecQuantity },
         '.o_wsale_product_page_variants': { 't-on-change': this.onChangeVariant },
         '.o_product_page_reviews_link': { 't-on-click': this.onClickReviewsLink },
@@ -47,8 +47,7 @@ export class ProductPage extends Interaction {
      * @param {MouseEvent} ev
      */
     onChangeAddQuantity(ev) {
-        const parent = wSaleUtils.getClosestProductForm(ev.currentTarget);
-        if (parent) this._triggerVariantChange(parent);
+        this._triggerVariantChange(ev.currentTarget.closest('.js_product'));
     }
 
     /**
@@ -317,8 +316,8 @@ export class ProductPage extends Interaction {
      */
     _toggleDisable(parent, isCombinationPossible) {
         parent.classList.toggle('css_not_available', !isCombinationPossible);
-        parent.querySelectorAll('#add_to_cart, #buy_now').forEach(
-            el => el.classList.toggle('disabled', !isCombinationPossible)
+        parent.querySelectorAll('button[name="add_to_cart"]').forEach(
+            el => el.disabled = !isCombinationPossible
         );
     }
 
@@ -332,7 +331,7 @@ export class ProductPage extends Interaction {
         const parent = ev.target.closest('.js_product');
         if (!parent) return Promise.resolve();
         const combination = wSaleUtils.getSelectedAttributeValues(parent);
-        const addToCart = parent.querySelector('#add_to_cart');
+        const addToCart = parent.querySelector('button[name="add_to_cart"]');
 
         const combinationInfo = await this.waitFor(rpc('/website_sale/get_combination_info', {
             'product_template_id': parseInt(addToCart?.dataset?.productTemplateId),
@@ -621,9 +620,7 @@ export class ProductPage extends Interaction {
 
         // Only update the images and tags if the product has changed.
         if (!combination.no_product_change) {
-            this._updateProductImages(
-                parent.closest('tr.js_product, .oe_website_sale'), combination.carousel
-            );
+            this._updateProductImages(parent.closest('#product_detail_main'), combination.carousel);
             const productTags = parent.querySelector('.o_product_tags');
             productTags?.insertAdjacentHTML('beforebegin', markup(combination.product_tags));
             productTags?.remove();

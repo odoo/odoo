@@ -286,7 +286,7 @@
     <template id="website_sale_wishlist.product_wishlist" name="Wishlist Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Wishlist</t>
-            <div id="wrap" class="js_sale">
+            <div id="wrap" class="js_sale o_wsale_wishlist_page">
                 <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
                 <div class="container oe_website_sale">
                     <section class="container wishlist-section pb-5">
@@ -363,12 +363,11 @@
                                                 </a>
                                                 <button
                                                     t-else=""
-                                                    id="add_to_cart_button"
-                                                    type="button"
-                                                    class="o_wsale_product_btn_primary btn btn-primary o_wish_add"
+                                                    name="add_to_cart"
+                                                    class="o_wsale_product_btn_primary btn btn-primary"
                                                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                    t-att-data-product-id="product_variant.id"
                                                     t-att-data-product-template-id="product.id"
-                                                    t-att-data-product-product-id="product_variant.id"
                                                     t-att-data-product-type="product.type"
                                                     t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                                                 >

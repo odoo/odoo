@@ -51,7 +51,7 @@ export class ShopPage extends Interaction {
         if (productGrid) {
             productGrid.classList.add('opacity-50');
         }
-        const form = wSaleUtils.getClosestProductForm(ev.currentTarget);
+        const form = ev.currentTarget.closest('form');
         const filters = form.querySelectorAll('input:checked, select');
         const attributeValues = new Map();
         const tags = new Set();

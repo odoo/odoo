@@ -99,7 +99,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
         },
         {
             content: "add last item to cart",
-            trigger: '.o_wish_add:eq(1)',
+            trigger: 'button[name="add_to_cart"]:eq(1)',
             run: "click",
         },
         {
