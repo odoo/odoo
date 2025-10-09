@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('website_sale.cart_recovery', {
         },
         {
             content: "login as admin and go to the SO (backend)",
-            trigger: ".oe_login_form .oe_login_buttons button:contains(log in)",
+            trigger: ".oe_login_form .oe_login_buttons a:contains(log in)",
             run: "click",
             expectUnloadPage: true,
         },

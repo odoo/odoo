@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     run: "edit test_user",
 }, {
     content: "click da button",
-    trigger: 'button:contains("Log in")',
+    trigger: 'a:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -175,7 +175,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
         helpers.edit("123456");
     }
 }, {
-    trigger: `button:contains("Log in")`,
+    trigger: `a:contains("Log in")`,
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -190,7 +190,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
         helpers.edit(token);
     }
 }, {
-    trigger: `button:contains("Log in")`,
+    trigger: `a:contains("Log in")`,
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -205,7 +205,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     }
 },
 {
-    trigger: `button:contains("Log in")`,
+    trigger: `a:contains("Log in")`,
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -231,7 +231,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     run: "edit test_user",
 }, {
     content: "click da button",
-    trigger: 'button:contains("Log in")',
+    trigger: 'a:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -292,7 +292,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     run: "edit test_user",
 }, {
     content: "click da button again",
-    trigger: 'button:contains("Log in")',
+    trigger: 'a:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
 },  {
@@ -352,7 +352,7 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
     run: "edit test_user",
 }, {
     content: "click da button",
-    trigger: 'button:contains("Log in")',
+    trigger: 'a:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
 },

@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("invite_check_channel_preview_as_public"
             run: "edit portal",
         },
         {
-            trigger: 'button:contains("Log in")',
+            trigger: 'a:contains("Log in")',
             run: "click",
             expectUnloadPage: true,
         },

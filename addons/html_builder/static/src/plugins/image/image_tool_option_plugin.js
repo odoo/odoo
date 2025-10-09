@@ -18,7 +18,7 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
-    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
+    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa, .oe_login_form i.fa";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
@@ -48,7 +48,7 @@ class ImageToolOptionPlugin extends Plugin {
             withSequence(ALIGNMENT_STYLE_PADDING, {
                 template: "html_builder.ImageAndFaOption",
                 selector: "span.fa, i.fa, img",
-                exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
+                exclude: "[data-oe-type='image'] > img, [data-oe-xpath], .oe_login_form i.fa",
                 name: "imageAndFaOption",
             }),
         ],

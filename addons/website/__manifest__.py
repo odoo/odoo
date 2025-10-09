@@ -263,7 +263,6 @@
             'website/static/src/js/text_processing.js',
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
-            'website/static/src/components/user_switch.js',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -282,6 +281,7 @@
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
+            'web/static/src/public/login_form/login_form.js',
             'website/static/src/**/*.edit.*',
             'website/static/src/core/website_edit_service.js',
         ],

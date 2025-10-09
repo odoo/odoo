@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     run: "edit portal",
 }, {
     content: "click da button",
-    trigger: 'button:contains("Log in")',
+    trigger: 'a:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
     run: "edit portal",
 }, {
     content: "click da button",
-    trigger: 'button:contains("Log in")',
+    trigger: 'a:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
 }, {

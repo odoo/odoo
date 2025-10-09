@@ -188,7 +188,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Submit login",
-            trigger: `.oe_signup_form button[type="submit"]`,
+            trigger: `.oe_signup_form a[type="submit"]`,
             run: "click",
             expectUnloadPage: true,
         },
@@ -235,7 +235,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
+            trigger: `.oe_login_form a[type="submit"]`,
             run: "click",
             expectUnloadPage: true,
         },
@@ -319,7 +319,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
+            trigger: `.oe_login_form a[type="submit"]`,
             run: "click",
             expectUnloadPage: true,
         },
@@ -429,7 +429,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         },
         {
             content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
+            trigger: `.oe_login_form a[type="submit"]`,
             run: "click",
             expectUnloadPage: true,
         }]
@@ -474,7 +474,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_2', {
         },
         {
             content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
+            trigger: `.oe_login_form a[type="submit"]`,
             run: "click",
             expectUnloadPage: true,
         },

@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("invited_on_payment_course_public", {
             run: "edit portal",
         },
         {
-            trigger: 'button:contains("Log in")',
+            trigger: 'a:contains("Log in")',
             run: "click",
             expectUnloadPage: true,
         },

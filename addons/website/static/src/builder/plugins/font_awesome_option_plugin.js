@@ -11,7 +11,7 @@ class FontAwesomeOptionPlugin extends Plugin {
             withSequence(FONT_AWESOME, {
                 template: "website.FontAwesomeOption",
                 selector: "span.fa, i.fa",
-                exclude: "[data-oe-xpath]",
+                exclude: "[data-oe-xpath], .oe_login_form i.fa",
             }),
         ],
         builder_actions: {

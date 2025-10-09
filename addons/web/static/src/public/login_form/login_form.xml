@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.login_form.user_list_entry">
+        <button type="button" class="o_user_item list-group-item list-group-item-action d-flex justify-content-between align-items-center"  t-att-data-userid="user.userId">
+            <span class="d-flex justify-content-begin align-items-center">
+                <img class="o_avatar o_user_avatar rounded me-2" t-att-src="avatarUrl" t-att-alt="user.login"/>
+                <t t-esc="user.name" />
+            </span>
+            <i class="fa fa-times o_remove_user_btn" title="Remove user from switcher"/>
+        </button>
+    </t>
+
+</templates>

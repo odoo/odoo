@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add("test_user_switch", {
         },
         {
             content: "click on login button",
-            trigger: 'button:contains("Log in")',
+            trigger: 'a:contains("Log in")',
             run: "click",
             expectUnloadPage: true,
         },
