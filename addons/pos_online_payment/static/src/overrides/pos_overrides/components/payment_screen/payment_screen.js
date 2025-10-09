@@ -11,8 +11,7 @@ patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
         if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
             this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
-            this.pos.addPendingOrder([this.currentOrder.id]);
-            await this.pos.syncAllOrders();
+            await this.pos.syncAllOrders({ orders: [this.currentOrder] });
         }
         return await super.addNewPaymentLine(...arguments);
     },

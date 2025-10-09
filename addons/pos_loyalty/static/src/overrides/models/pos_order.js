@@ -947,7 +947,7 @@ patch(PosOrder.prototype, {
         });
 
         if (newGiftCardCode) {
-            couponId = applicableCouponIds.shift() || loyaltyIdsGenerator();
+            couponId = parseInt(applicableCouponIds.shift() || loyaltyIdsGenerator());
             couponData.coupon_id = couponId;
             couponData.code = newGiftCardCode;
             couponData.partner_id = partner_id;

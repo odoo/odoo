@@ -174,18 +174,6 @@ patch(PosStore.prototype, {
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
-    async getServerOrders() {
-        if (this.config.module_pos_restaurant) {
-            const tableIds = [].concat(
-                ...this.models["restaurant.floor"].map((floor) =>
-                    floor.table_ids.map((table) => table.id)
-                )
-            );
-            await this.syncAllOrders({ table_ids: tableIds });
-        }
-        //Need product details from backand to UI for urbanpiper
-        return await super.getServerOrders();
-    },
     getDefaultSearchDetails() {
         if (this.selectedTable && this.selectedTable.id) {
             return {
