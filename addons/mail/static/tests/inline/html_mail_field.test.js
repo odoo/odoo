@@ -76,7 +76,7 @@ test("HtmlMail save inline html", async function () {
     useCustomStyleRules(`.test-h1-inline .note-editable h1 { color: #111827 !important; }`);
     onRpc("web_save", ({ args }) => {
         expect(args[1].body.replace(/font-size: ?(\d+(\.\d+)?)px/, "font-size: []px")).toBe(
-            `<h1 style="border-radius:0px;border-style:none;padding:0px;margin:0px 0 8px 0;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size: []px;color:#111827;line-height:1.2;font-weight:500;font-family:'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, 'Noto Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';">first</h1>`
+            `<h1 style="border-radius:0px;border-style:none;padding:0px;margin:0px 0 8px 0;box-sizing:border-box;border-left-color:#111827;border-bottom-color:#111827;border-right-color:#111827;border-top-color:#111827;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size: []px;color:#111827;line-height:1.2;font-weight:500;font-family:'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, 'Noto Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';">first</h1>`
         );
         expect.step("web_save");
     });
@@ -124,11 +124,15 @@ test("HtmlMail add icon and save inline html", async function () {
         `.test-icon-inline .note-editable .fa {
             color: rgb(55,65,81) !important;
             background-color: rgb(249,250,251) !important;
-        }`
+        }
+        p, img {
+            border-color: #ff0000 !important;
+        }
+        `
     );
     onRpc("web_save", ({ args }) => {
         expect(args[1].body).toBe(
-            `<p style="border-radius:0px;border-style:none;padding:0px;margin:0px 0 16px 0;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;"><span style="display: inline-block; width: 14px; height: 14px; vertical-align: text-bottom;" class="oe_unbreakable "><img width="14" height="14" src="/web_editor/font_to_img/61440/rgb(55%2C65%2C81)/rgb(249%2C250%2C251)/14x14" data-class="fa fa-glass" data-style="null" style="border-radius:0px;border-style:none;padding:0px;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;box-sizing: border-box; line-height: 14px; width: 14px; height: 14px; vertical-align: unset; margin: 0px;"></span>first</p>`
+            `<p style="border-radius:0px;border-style:none;padding:0px;margin:0px 0 16px 0;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;border-left-color:#ff0000;border-bottom-color:#ff0000;border-right-color:#ff0000;border-top-color:#ff0000;"><span style="display: inline-block; width: 14px; height: 14px; vertical-align: text-bottom;" class="oe_unbreakable "><img width="14" height="14" src="/web_editor/font_to_img/61440/rgb(55%2C65%2C81)/rgb(249%2C250%2C251)/14x14" data-class="fa fa-glass" data-style="null" style="border-radius:0px;border-style:none;padding:0px;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;border-left-color:#ff0000;border-bottom-color:#ff0000;border-right-color:#ff0000;border-top-color:#ff0000;box-sizing: border-box; line-height: 14px; width: 14px; height: 14px; vertical-align: unset; margin: 0px;"></span>first</p>`
         );
         expect.step("web_save");
     });
