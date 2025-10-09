@@ -54,10 +54,22 @@ export class ProductImageViewer extends Dialog {
         );
         onMounted(() => {
             const carousel = document.querySelector('.o_wsale_image_viewer_carousel');
+<<<<<<< f513f2eaa074114f3984f1885e681724f39a294c
             carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
             carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
             const lastImg = carousel.querySelector('li:last-of-type img');
             lastImg?.addEventListener('load', this._updateCarousel.bind(this), { once: true });
+||||||| 7755a92fa4d55d128abf4c75ff3c4ba8403cb259
+            carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
+            carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
+            this._updateCarousel();
+=======
+            if (carousel) {
+                carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
+                carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
+                this._updateCarousel();
+            }
+>>>>>>> 4db059ab84569b4282041612c1d3caa43889cdbc
         });
         // For some reason the styling does not always update properly.
         onRendered(() => {
