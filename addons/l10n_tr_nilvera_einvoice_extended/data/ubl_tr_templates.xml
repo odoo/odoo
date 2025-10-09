@@ -18,7 +18,7 @@
                     <cbc:ID schemeID="INCOTERMS" t-out="vals.get('incoterm_code')"/>
                 </cac:DeliveryTerms>
                 <cac:Shipment>
-                    <cbc:ID>NO_ID</cbc:ID>
+                    <cbc:ID t-out="vals.get('id')"/>
                     <cac:GoodsItem>
                         <cbc:RequiredCustomsID t-out="vals.get('product_customs_code')"/>
                     </cac:GoodsItem>
@@ -31,7 +31,7 @@
     </template>
 
     <template id="ubl_tr_InvoiceLineType" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceLineType" primary="True">
-        <xpath expr="//*[local-name()='TaxTotal']" position="before">
+        <xpath expr="//*[local-name()='AllowanceCharge']" position="before">
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <t t-call="{{InvoiceLineDelivery_template}}">
                     <t t-set="vals" t-value="vals.get('line_delivery_vals', {})"/>
