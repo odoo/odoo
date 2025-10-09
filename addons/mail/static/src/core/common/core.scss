@@ -66,6 +66,20 @@ $o-discuss-talkingColor: lighten($success, 10%);
         select, .form-check-input {
             border-color: $gray-600;
         }
+
+        .form-select {
+            --#{$prefix}form-select-bg-img: #{escape-svg($form-select-indicator-dark)};
+        }
+
+        .form-switch .form-check-input {
+            &:not(:checked):not(:focus) {
+                --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
+            }
+        }
+
+        select option {
+            background-color: $gray-700;
+        }
     }
 
     .o_bottom_sheet_sheet:has(&) {
