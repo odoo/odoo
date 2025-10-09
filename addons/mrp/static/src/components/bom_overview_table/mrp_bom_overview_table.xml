@@ -2,15 +2,8 @@
 <templates xml:space="preserve">
 
     <div t-name="mrp.BomOverviewTable" class="o_content">
-        <div class="o_mrp_bom_report_page py-3 py-lg-5 px-0 overflow-auto border-bottom bg-view">
+        <div class="o_mrp_bom_report_page px-0 overflow-auto border-bottom bg-view">
             <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
-                <div class="d-flex mb-5">
-                    <div class="me-auto">
-                        <h2><a href="#" t-on-click.prevent="goToProduct" t-esc="data.name"/></h2>
-                        <hr t-if="data.bom_code"/>
-                        <h6 t-if="data.bom_code">Reference: <t t-esc="data.bom_code"/></h6>
-                    </div>
-                </div>
                 <table class="o_mrp_bom_expandable table">
                     <thead>
                         <tr>
@@ -18,8 +11,8 @@
                             <th t-attf-class="{{ showUom ? 'text-center' : 'text-end' }}" t-attf-colspan="{{ showUom ? 2 : 1 }}">Quantity</th>
                             <th t-if="forecastMode" class="text-end" title="Availabilities on products.">Free to Use / On Hand</th>
                             <th t-if="forecastMode" class="text-center">Status</th>
-                            <th t-if="forecastMode" class="text-center" title="Reception time estimation.">Availability</th>
                             <th t-if="forecastMode" class="text-end" title="Resupply lead time.">Lead Time</th>
+                            <th t-if="forecastMode"/>
                             <th t-if="forecastMode">Route</th>
                             <th t-else=""/>
                             <th class="text-end" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">Cost</th>

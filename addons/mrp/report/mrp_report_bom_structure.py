@@ -5,7 +5,7 @@ from datetime import date, datetime, time, timedelta
 import json
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round, format_date, float_is_zero, float_repr
+from odoo.tools import float_round, format_date, float_repr
 from odoo.exceptions import UserError
 
 
@@ -241,6 +241,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'has_attachments': has_attachments,
             'phantom_bom': bom.type == 'phantom',
             'parent_id': parent_bom and parent_bom.id or False,
+            'missing_qty': 0,
         }
 
         components = []
@@ -277,12 +278,18 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             else:
                 components.append(component)
             bom_report_line['bom_cost'] += component['bom_cost']
-        for component in components:
             if component['is_storable']:
                 if missing_qty := max(component['quantity'] - component['quantity_forecasted'], 0):
-                    missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
-                    route_name = component['route_name'] or _('Order')
+                    if missing_qty.is_integer():
+                        missing_qty = int(missing_qty)
+                    else:
+                        missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
+                    route_name = component['route_name']
+                    if not component['route_name']:
+                        component['availability_state'] = "unavailable"
+                        continue
                     component['status'] = _("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
+                    component['missing_qty'] = missing_qty
         bom_report_line['components'] = components
         bom_report_line['producible_qty'] = self._compute_current_production_capacity(bom_report_line)
 
@@ -293,14 +300,26 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         bom_report_line.update(availabilities)
 
         if level == 0:
-            if bom_report_line['producible_qty'] > 0:
-                bom_report_line['status'] = _("%(qty)s Ready To Produce", qty=bom_report_line['producible_qty'])
-            else:
-                bom_report_line['status'] = _("No Ready To Produce")
+            # Gives a unique key for the first line that indicates if product is ready for production right now.
+            bom_report_line['components_available'] = all(c['stock_avail_state'] == 'available' for c in components)
+            if bom_report_line['producible_qty'] > 0 and bom_report_line['components_available']:
+                qty = bom_report_line['producible_qty']
+                if bom_report_line['producible_qty'].is_integer():
+                    qty = int(bom_report_line['producible_qty'])
+                else:
+                    qty = float_repr(qty, self.env['decimal.precision'].precision_get('Product Unit'))
+                bom_report_line['status'] = _("%(qty)s Ready To Produce", qty=qty)
         elif missing_qty := max(bom_report_line['quantity'] - bom_report_line['quantity_available'], 0):
-            missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
-            route_name = bom_report_line['route_name'] or _('Order')
-            bom_report_line['status'] = _("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
+            if missing_qty.is_integer():
+                missing_qty = int(missing_qty)
+            else:
+                missing_qty = float_repr(missing_qty, self.env['decimal.precision'].precision_get('Product Unit'))
+            bom_report_line['missing_qty'] = missing_qty
+            route_name = bom_report_line['route_name']
+            if not bom_report_line['route_name']:
+                bom_report_line['availability_state'] = "unavailable"
+            else:
+                bom_report_line['status'] = _("%(qty)s To %(route)s", qty=missing_qty, route=route_name)
 
         if not is_minimized:
 
@@ -313,7 +332,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 bom_report_line['availability_state'] = 'estimated'
                 max_component_delay = bom_report_line['max_component_delay']
                 bom_report_line['availability_delay'] = max_component_delay + max(bom.produce_delay, bom_report_line['operations_delay'])
-                bom_report_line['availability_display'] = self._format_date_display(bom_report_line['availability_state'], bom_report_line['availability_delay'])
+                if not bom_report_line['producible_qty']:
+                    bom_report_line['status'] = self._format_date_display(bom_report_line['availability_state'], bom_report_line['availability_delay'])
             bom_report_line['bom_cost'] += bom_report_line['operations_cost']
 
             byproducts, byproduct_cost_portion = self._get_byproducts_lines(product, bom, current_quantity, level + 1, bom_report_line['bom_cost'], index)
@@ -324,10 +344,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             bom_report_line['bom_cost'] *= bom_report_line['cost_share']
 
         bom_report_line['foldable'] = len(bom.operation_ids) > 0 or (len(bom_report_line['components']) > 0 and level > 0) or any(component.get('foldable', False) for component in bom_report_line['components'])
-
-        if level == 0:
-            # Gives a unique key for the first line that indicates if product is ready for production right now.
-            bom_report_line['components_available'] = all([c['stock_avail_state'] == 'available' for c in components])
         return bom_report_line
 
     @api.model
@@ -382,12 +398,13 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'manufacture_delay': route_info.get('manufacture_delay', False),
             'stock_avail_state': availabilities['stock_avail_state'],
             'resupply_avail_delay': availabilities['resupply_avail_delay'],
-            'availability_display': availabilities['availability_display'],
+            'status': availabilities['status'],
             'availability_state': availabilities['availability_state'],
             'availability_delay': availabilities['availability_delay'],
             'parent_id': parent_bom.id,
             'level': level or 0,
             'has_attachments': has_attachments,
+            'missing_qty': 0,
         }
 
     @api.model
@@ -471,11 +488,11 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             if planning := operations_planning.get(operation, None):
                 availability_state = 'estimated'
                 availability_delay = (planning['date_finished'].date() - date_today).days
-                availability_display = _('Estimated %s', format_date(self.env, planning['date_finished'])) + (" [" + planning['workcenter'].name + "]" if planning['workcenter'] != operation.workcenter_id else "")
+                status = _('Estimated %s', format_date(self.env, planning['date_finished'])) + (" [" + planning['workcenter'].name + "]" if planning['workcenter'] != operation.workcenter_id else "")
             else:
                 availability_state = 'available'
                 availability_delay = 0
-                availability_display = ''
+                status = ''
             operations.append({
                 'type': 'operation',
                 'index': f"{index}{operation_index}",
@@ -491,7 +508,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'model': 'mrp.routing.workcenter',
                 'availability_state': availability_state,
                 'availability_delay': availability_delay,
-                'availability_display': availability_display,
+                'status': status,
             })
             operation_index += 1
         return operations
@@ -545,9 +562,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'level': bom_line['level'],
                 'code': bom_line['code'],
                 'availability_state': bom_line['availability_state'],
-                'availability_display': bom_line['availability_display'],
+                'status': bom_line['status'],
                 'visible': line_visible,
-                'status': bom_line.get('status', ""),
             })
             if bom_line.get('components'):
                 lines += self._get_bom_array_lines(bom_line, level + 1, unfolded_ids, unfolded, line_visible and line_unfolded)
@@ -573,7 +589,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     'level': level + 1,
                     'availability_state': operation['availability_state'],
                     'availability_delay': operation['availability_delay'],
-                    'availability_display': operation['availability_display'],
+                    'status': operation['status'],
                     'visible': operations_unfolded,
                 })
         if data['byproducts']:
@@ -667,12 +683,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         }
         if level != 0 and stock_state != 'unavailable':
             return {**base, **{
-                'availability_display': self._format_date_display(stock_state, stock_delay),
+                'status': self._format_date_display(stock_state, stock_delay),
                 'availability_state': stock_state,
                 'availability_delay': stock_delay,
             }}
         return {**base, **{
-            'availability_display': self._format_date_display(resupply_state, resupply_delay),
+            'status': self._format_date_display(resupply_state, resupply_delay),
             'availability_state': resupply_state,
             'availability_delay': resupply_delay,
         }}
@@ -776,7 +792,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return {
             'resupply_avail_delay': component['resupply_avail_delay'],
             'stock_avail_state': component['stock_avail_state'],
-            'availability_display': component['availability_display'],
+            'status': component['status'],
             'availability_state': component['availability_state'],
             'availability_delay': component['availability_delay'],
         }
