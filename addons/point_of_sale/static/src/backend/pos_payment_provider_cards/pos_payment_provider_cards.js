@@ -76,7 +76,7 @@ export class PosPaymentProviderCards extends Component {
 
 // Selection, module_name, friendly name
 const providers = [
-    ["ingenico", "pos_iot_ingenico", "Ingenico"],
+    ["axepta_bnpp", "pos_iot_worldline", "Axepta BNP Paribas"],
     ["six_iot", "pos_iot_six", "SIX"],
     ["adyen", "pos_adyen", "Adyen"],
     ["mercado_pago", "pos_mercado_pago", "Mercado Pago"],
