@@ -8,6 +8,7 @@
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:Note>test narration</cbc:Note>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+  <cbc:TaxCurrencyCode>EUR</cbc:TaxCurrencyCode>
   <cbc:BuyerReference>ref_partner_1</cbc:BuyerReference>
   <cac:OrderReference>
     <cbc:ID>ref_move</cbc:ID>
@@ -123,6 +124,9 @@
         </cac:TaxScheme>
       </cac:TaxCategory>
     </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="EUR">21.00</cbc:TaxAmount>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="USD">200.00</cbc:LineExtensionAmount>

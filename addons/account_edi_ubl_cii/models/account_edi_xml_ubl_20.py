@@ -60,6 +60,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # EXTENDS account.edi.common
         return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
+    def _is_paid_and_epd_applied(self, invoice):
+        # TODO: check this with LAS
+        payterm_lines = invoice.line_ids.filtered(lambda x: x.display_type == 'payment_term')
+        counterpart_amls = payterm_lines.matched_debit_ids.debit_move_id + payterm_lines.matched_credit_ids.credit_move_id
+        counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
+        counterpart_moves = counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type)
+        has_payments = bool(counterpart_moves)
+        is_paid = invoice.payment_state == invoice._get_invoice_in_payment_state()
+        counterpart_move_has_epd_lines = bool(counterpart_moves.line_ids.filtered(lambda l: l.display_type == 'epd'))
+        return has_payments and is_paid and counterpart_move_has_epd_lines
+
     # -------------------------------------------------------------------------
     # EXPORT
     # -------------------------------------------------------------------------
@@ -231,18 +242,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_means_vals_list(self, invoice):
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = (30, 'credit transfer')
-            else:
-                payment_means_code, payment_means_name = ('ZZZ', 'mutually defined')
-        else:
-            payment_means_code, payment_means_name = (57, 'standing agreement')
-
-        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
-        # as we cannot deduce this information from the invoice
-        if invoice.partner_id.country_code == 'DK':
-            payment_means_code, payment_means_name = 1, 'unknown'
+        payment_means_code, payment_means_name = self._get_payment_means_code(invoice)
 
         vals = {
             'payment_means_code': payment_means_code,
@@ -309,7 +309,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     })
                 tax_totals_vals['tax_subtotal_vals'].append(subtotal)
 
-        if epd_tax_to_discount:
+        if epd_tax_to_discount and not self._is_paid_and_epd_applied(invoice):
             # early payment discounts: hence, need to add a subtotal section
             tax_totals_vals['tax_subtotal_vals'].append({
                 'currency': invoice.currency_id,
@@ -352,6 +352,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'id': product.barcode,
                 'id_attrs': {'schemeID': '0160'},  # GTIN
             } if product.barcode else {},
+            # The intrastat code is added to the product in enterprise module `account_instrastat`
+            'commodity_classification_vals': [{
+                'item_classification_code': product.intrastat_code_id.code,
+                'item_classification_attrs': {'listID': 'HS'},
+            }] if product._fields.get('intrastat_code_id') and product.intrastat_code_id else {},
         }
 
     def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
@@ -363,6 +368,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         The difference between these is the cash discount in case of early payment.
         """
         vals_list = []
+
         # Early Payment Discount
         epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
         if epd_tax_to_discount:
@@ -381,20 +387,52 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'tax_scheme_vals': {'id': 'VAT'},
                     }],
                 })
-            # One global Charge (VAT exempted)
-            vals_list.append({
-                'charge_indicator': 'true',
-                'allowance_charge_reason_code': 'ZZZ',
-                'allowance_charge_reason': _("Conditional cash/payment discount"),
-                'amount': sum(epd_tax_to_discount.values()),
-                'currency_dp': 2,
-                'currency_name': invoice.currency_id.name,
-                'tax_category_vals': [{
+
+            if not self._is_paid_and_epd_applied(invoice):
+                # One global Charge (VAT exempted)
+                vals_list.append({
+                    'charge_indicator': 'true',
+                    'allowance_charge_reason_code': 'ZZZ',
+                    'allowance_charge_reason': _("Conditional cash/payment discount"),
+                    'amount': sum(epd_tax_to_discount.values()),
+                    'currency_dp': 2,
+                    'currency_name': invoice.currency_id.name,
+                    'tax_category_vals': [{
+                        'id': 'E',
+                        'percent': 0.0,
+                        'tax_scheme_vals': {'id': 'VAT'},
+                    }],
+                })
+
+        # Discount from Sales Order
+        for line in self._get_sale_order_discount_lines(invoice):
+            # TODO:
+            #   - multiple taxes?
+            #   - other `amount_type`s
+            tax = line.tax_ids.filtered(lambda tax: tax.amount_type == 'percent')[:1]
+            if tax:
+                tax_category = {
+                    'id': 'S',
+                    'percent': tax.amount,
+                    'tax_scheme_vals': {'id': 'VAT'},
+                }
+            else:
+                # TODO: not sure? maybe we always have a tax anyway?
+                tax_category = {
                     'id': 'E',
                     'percent': 0.0,
                     'tax_scheme_vals': {'id': 'VAT'},
-                }],
+                }
+            vals_list.append({
+                'charge_indicator': 'false',
+                'allowance_charge_reason_code': '66',
+                'allowance_charge_reason': _("Global discount"),
+                'amount': line.amount_currency,
+                'currency_dp': 2,
+                'currency_name': invoice.currency_id.name,
+                'tax_category_vals': [tax_category],
             })
+
         return vals_list
 
     def _get_pricing_exchange_rate_vals_list(self, invoice):
@@ -543,15 +581,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Rounding amounts belonging to a tax ('biggest_tax' strategy) are included already in the tax amounts.
         rounding_amls = invoice.line_ids.filtered(lambda line: line.display_type == 'rounding' and not line.tax_line_id)
         payable_rounding_amount = invoice.direction_sign * sum(rounding_amls.mapped('amount_currency'))
+
+        # In case the invoice is paid alread and an early payment discount has been granted we adjust the totals accordingly.
+        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+        epd_allowance_amount = sum(epd_tax_to_discount.values()) if epd_tax_to_discount and self._is_paid_and_epd_applied(invoice) else 0
+
         return {
             'currency': invoice.currency_id,
             'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
             'line_extension_amount': line_extension_amount,
-            'tax_exclusive_amount': taxes_vals['base_amount_currency'],
-            'tax_inclusive_amount': invoice.amount_total - payable_rounding_amount,
+            'tax_exclusive_amount': taxes_vals['base_amount_currency'] - epd_allowance_amount,
+            'tax_inclusive_amount': invoice.amount_total - payable_rounding_amount - epd_allowance_amount,
             'allowance_total_amount': allowance_total_amount or None,
             'charge_total_amount': charge_total_amount or None,
-            'prepaid_amount': invoice.amount_total - invoice.amount_residual,
+            'prepaid_amount': invoice.amount_total - invoice.amount_residual - epd_allowance_amount,
             'payable_rounding_amount': payable_rounding_amount or None,
             'payable_amount': invoice.amount_residual,
         }
@@ -580,6 +623,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for tax in line.tax_ids:
                 tax_to_discount[tax.amount] += line.amount_currency
         return tax_to_discount
+
+    def _get_sale_order_discount_lines(self, invoice):
+        company = invoice.company_id
+        if company._fields.get('sale_discount_product_id') and company.sale_discount_product_id:
+            return invoice.invoice_line_ids.filtered(
+                lambda line: line.product_id == company.sale_discount_product_id
+            )
+        return self.env['account.move.line']
 
     def _get_tax_grouping_key(self, base_line, tax_data):
         tax = tax_data['tax']
@@ -626,7 +677,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Compute values for invoice lines.
         line_extension_amount = 0.0
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
+        invoice_lines = invoice.invoice_line_ids.filtered(
+            lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required()
+        ) - self._get_sale_order_discount_lines(invoice)
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice, taxes_vals)
         invoice_line_vals_list = []
         for line_id, line in enumerate(invoice_lines):
@@ -1022,9 +1075,25 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             }[vals['document_type']]
         }
 
+    def _get_document_allowance_charge_type(self, base_line):
+        """ The AllowanceCharge "type of the base (or `False` if not applicable). """
+        if base_line['special_type'] == 'early_payment':
+            return 'early_payment'
+        # TODO: we could also make them into a 'special_type' directly when creating the base_line?
+        #       or somewhere at the start
+        # TODO: for l10n_my_edi_pos the 'record' is an (always empty?) dictionary
+        #       ⇝ would be better to get the company somwhere else
+        company = base_line['record'] and base_line['record'].company_id
+        if (company
+            and company._fields.get('sale_discount_product_id')
+            and company.sale_discount_product_id
+            and base_line['product_id'] == company.sale_discount_product_id):
+            return 'global_discount'
+        return False
+
     def _is_document_allowance_charge(self, base_line):
         """ Whether the base line should be treated as a document-level AllowanceCharge. """
-        return base_line['special_type'] == 'early_payment'
+        return bool(self._get_document_allowance_charge_type(base_line))
 
     # -------------------------------------------------------------------------
     # EXPORT: account.move specific templates
@@ -1082,6 +1151,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         vals['base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] != 'cash_rounding']
         vals['cash_rounding_base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
 
+        invoice = vals['invoice']
+
+        if self._is_paid_and_epd_applied(invoice):
+            # TODO: sign based on document type?
+            # Remove the early payment lines representing charges
+            # TODO:?: Filter out the subtotal node; reduce the taxexclusive amount
+            currency = invoice.currency_id  # TODO:?: user currency per line
+            vals['base_lines'] = [base_line for base_line in vals['base_lines']
+                                  if (base_line['special_type'] != 'early_payment'
+                                      or currency.compare_amounts(base_line['tax_details']['total_excluded'], 0) == -1)]
+
     def _add_invoice_currency_vals(self, vals):
         self._add_document_currency_vals(vals)
 
@@ -1130,22 +1210,64 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cac:DeliveryLocation': {
                 'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
             },
+            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+                                 if vals['partner_shipping'] else None,
         }
+
+    def _get_payment_means_code(self, invoice):
+
+        # First we try to determine the payment means by a hardcoded mapping from the
+        # payment method xmlid to the payment means code (and name).
+        # TODO: check: maybe there is a function to get the xmlid already?
+        # TODO: maybe mapping the code would be good enough too?
+        payment_method = invoice.preferred_payment_method_line_id.payment_method_id
+        payment_method_data = self.env['ir.model.data'].search([
+            ('model', '=', 'account.payment.method'),
+            ('res_id', '=', payment_method.id),
+        ], limit=1) if payment_method else None
+        payment_method_xml_id = payment_method_data and f'{payment_method_data.module}.{payment_method_data.name}'
+        payment_means_code, payment_means_name = {
+            # TODO:
+            # 'account.account_payment_method_manual_in': (None, None),
+            # 'account.account_payment_method_manual_out': (None, None),
+            'account_edi_ubl_cii.account_payment_method_credit_card': (54, 'credit card'),
+            'account_edi_ubl_cii.account_payment_method_debit_card': (55, 'debit card'),
+            'account_edi_ubl_cii.account_payment_method_bankgiro_in': (56, 'bankgiro'),
+            'account_edi_ubl_cii.account_payment_method_bankgiro_out': (56, 'bankgiro'),
+            'account_edi_ubl_cii.account_payment_method_standing_agreement_in': (57, 'standing agreement'),
+            'account_edi_ubl_cii.account_payment_method_standing_agreement_out': (57, 'standing agreement'),
+            'account_edi_ubl_cii.account_payment_method_sepa_credit_transfer': (58, 'SEPA credit transfer'),
+            # 'account_edi_ubl_cii.account_payment_method_sepa_direct_debit': (59, 'SEPA direct debit'),
+            'account_sepa_direct_debit.payment_method_sdd': (59, 'SEPA direct debit'),
+            'payment_sepa_direct_debit.payment_method_sepa_direct_debit': (59, 'SEPA direct debit'),
+        }.get(payment_method_xml_id, (None, None))
+        # TODO: https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/DE-R-019/
+        #     Maybe we should check the account for SEPA rules
+        #     Maybe also for bankgiro
+
+        if not payment_means_code:
+            # Fallback in case we can not determine the payment means from the payment methods.
+            # This i.e. happens for user defined payment methods.
+            if invoice.move_type == 'out_invoice':
+                if invoice.partner_bank_id:
+                    payment_means_code, payment_means_name = 30, 'credit transfer'
+                else:
+                    payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
+            else:
+                payment_means_code, payment_means_name = 57, 'standing agreement'
+
+        # In Denmark only some payment means codes are allowed; see rule (DK-R-005):
+        # https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/DK-R-005/
+        # Instead of using a forbidden code we use 1 ("unknown") for now.
+        payment_means_codes_DK = {1, 10, 31, 42, 48, 49, 50, 58, 59, 93, 97}
+        if invoice.partner_id.country_code == 'DK' and payment_means_code not in payment_means_codes_DK:
+            payment_means_code, payment_means_name = 1, 'unknown'
+
+        return payment_means_code, payment_means_name
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         invoice = vals['invoice']
-        if invoice.move_type == 'out_invoice':
-            if invoice.partner_bank_id:
-                payment_means_code, payment_means_name = 30, 'credit transfer'
-            else:
-                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
-        else:
-            payment_means_code, payment_means_name = 57, 'standing agreement'
-
-        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
-        # as we cannot deduce this information from the invoice
-        if invoice.partner_id.country_code == 'DK':
-            payment_means_code, payment_means_name = 1, 'unknown'
+        payment_means_code, payment_means_name = self._get_payment_means_code(invoice)
 
         document_node['cac:PaymentMeans'] = {
             'cbc:PaymentMeansCode': {
@@ -1184,7 +1306,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice = vals['invoice']
         document_node[monetary_total_tag].update({
             'cbc:PrepaidAmount': {
-                '_text': self.format_float(invoice.amount_total - invoice.amount_residual, vals['currency_dp']),
+                '_text': self.format_float(vals['tax_inclusive_amount_currency'] + vals['cash_rounding_base_amount_currency'] - invoice.amount_residual, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             },
             'cbc:PayableRoundingAmount': {
@@ -1632,12 +1754,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """ Generic helper to generate a document-level AllowanceCharge node given a base_line. """
         base_line = vals['base_line']
         currency_suffix = vals['currency_suffix']
+        # TODO: May not be necessary to change the AllowanceChargeReason based on `charge_type`
+        charge_type = self._get_document_allowance_charge_type(base_line)
+        reason = {
+            'early_payment': _("Conditional cash/payment discount"),
+            'global_discount': _("Global discount"),
+        }.get(charge_type, _("Discount"))
         aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
         base_amount = base_line['tax_details'][f'total_excluded{currency_suffix}']
         return {
             'cbc:ChargeIndicator': {'_text': 'false' if base_amount < 0.0 else 'true'},
+            # TODO: May be necessary to change the AllowanceChargeReasonCocde based on `charge_type`
+            #       (`95` / Discount for `global_discount`)
             'cbc:AllowanceChargeReasonCode': {'_text': '66' if base_amount < 0.0 else 'ZZZ'},
-            'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
+            'cbc:AllowanceChargeReason': {'_text': reason},
             'cbc:Amount': {
                 '_text': self.format_float(abs(base_amount), vals['currency_dp']),
                 'currencyID': vals['currency_name']
@@ -1752,6 +1882,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'schemeID': '0160',  # GTIN
                 } if product.barcode else None,
             },
+            # TODO: maybe put the `if` on the `cac:CommodityClassification`
+            'cac:CommodityClassification': [{
+                # The intrastat code is added to the product in enterprise module `account_instrastat`
+                'cbc:ItemClassificationCode': {
+                    '_text': product.intrastat_code_id.code,
+                    'listID': 'HS',
+                } if product._fields.get('intrastat_code_id') and product.intrastat_code_id else None,
+            }],
             'cac:AdditionalItemProperty': [
                 {
                     'cbc:Name': {'_text': value.attribute_id.name},
