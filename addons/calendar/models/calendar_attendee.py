@@ -68,7 +68,13 @@ class Attendee(models.Model):
                 values['email'] = email[0] if email else ''
                 values['common_name'] = values.get("common_name")
         attendees = super().create(vals_list)
+        attendees.event_id.check_access('write')
         attendees._subscribe_partner()
+        return attendees
+
+    def write(self, vals):
+        attendees = super().write(vals)
+        self.event_id.check_access('write')
         return attendees
 
     def unlink(self):

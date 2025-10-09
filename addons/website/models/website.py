@@ -402,6 +402,14 @@ class Website(models.Model):
         if homepage_url:
             vals['homepage_url'] = homepage_url.rstrip('/')
 
+    @api.constrains('domain')
+    def _check_domain(self):
+        for record in self:
+            try:
+                urlparse(record.domain)
+            except ValueError:
+                raise ValidationError(_("The provided website domain is not a valid URL."))
+
     @api.constrains('homepage_url')
     def _check_homepage_url(self):
         for website in self.filtered('homepage_url'):
