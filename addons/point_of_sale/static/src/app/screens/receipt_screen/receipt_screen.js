@@ -32,8 +32,12 @@ export class ReceiptScreen extends Component {
             phone: partner?.phone || "",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
-        this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
-        this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
+        this.doFullPrint = useTrackedAsync(() =>
+            this.pos.printReceipt({ order: this.currentOrder })
+        );
+        this.doBasicPrint = useTrackedAsync(() =>
+            this.pos.printReceipt({ order: this.currentOrder, basic: true })
+        );
     }
     actionSendReceiptOnEmail() {
         this.sendReceipt.call({
