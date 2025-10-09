@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- load taxes with this call because the post init is run after all demo data loaded by manifest  -->
+    <function model="account.chart.template" name="_l10n_ar_wth_post_init"/>
+
+    <!-- Córdoba + profits -->
+    <record id="fiscal_position_cordoba_and_proffits" model="account.fiscal.position">
+        <field name="name">IIBB Córdoba + ganancias</field>
+        <field name="l10n_ar_afip_responsibility_type_ids" eval="[(6, 0, [ref('l10n_ar.res_IVARI')])]"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ar_x')])]"/>
+    </record>
+
+    <record id="fiscal_position_cordoba_and_proffits_perception" model="account.fiscal.position.l10n_ar_tax">
+        <field name="fiscal_position_id" ref="fiscal_position_cordoba_and_proffits"/>
+        <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ri_tax_percepcion_iibb_co_aplicada'))"/>
+        <field name="tax_type">perception</field>
+        <field name="data_source">data_source_cordoba</field>
+    </record>
+    <record id="fiscal_position_cordoba_and_proffits_withholding" model="account.fiscal.position.l10n_ar_tax">
+        <field name="fiscal_position_id" ref="fiscal_position_cordoba_and_proffits"/>
+        <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_iibb_cba_applied'))"/>
+        <field name="tax_type">withholding</field>
+        <field name="data_source">data_source_cordoba</field>
+    </record>
+    <record id="fiscal_position_cordoba_and_proffits_prof_withholding" model="account.fiscal.position.l10n_ar_tax">
+        <field name="fiscal_position_id" ref="fiscal_position_cordoba_and_proffits"/>
+        <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_profits_regimen_21_insc'))"/>
+        <field name="tax_type">withholding</field>
+    </record>
+
+    <!-- Córdoba -->
+    <record id="fiscal_position_cordoba" model="account.fiscal.position">
+        <field name="name">IIBB Córdoba</field>
+        <field name="l10n_ar_afip_responsibility_type_ids" eval="[(6, 0, [ref('l10n_ar.res_IVARI')])]"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="state_ids" eval="[(6, 0, [ref('base.state_ar_x')])]"/>
+    </record>
+
+    <record id="fiscal_position_cordoba_perception" model="account.fiscal.position.l10n_ar_tax">
+        <field name="fiscal_position_id" ref="fiscal_position_cordoba"/>
+        <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ri_tax_percepcion_iibb_co_aplicada'))"/>
+        <field name="tax_type">perception</field>
+        <field name="data_source">data_source_cordoba</field>
+    </record>
+    <record id="fiscal_position_cordoba_withholding" model="account.fiscal.position.l10n_ar_tax">
+        <field name="fiscal_position_id" ref="fiscal_position_cordoba"/>
+        <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_iibb_cba_applied'))"/>
+        <field name="tax_type">withholding</field>
+        <field name="data_source">data_source_cordoba</field>
+    </record>
+
+    <!-- Profits -->
+    <record id="fiscal_position_proffits" model="account.fiscal.position">
+        <field name="name">Ret. ganancias</field>
+        <field name="l10n_ar_afip_responsibility_type_ids" eval="[(6, 0, [ref('l10n_ar.res_IVARI')])]"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="company_id" ref="base.company_ri"/>
+    </record>
+
+    <record id="fiscal_position_proffits_prof_withholding" model="account.fiscal.position.l10n_ar_tax">
+        <field name="fiscal_position_id" ref="fiscal_position_proffits"/>
+        <field name="default_tax_id" eval="ref('account.%s_%s' % (ref('base.company_ri'), 'ex_tax_withholding_profits_regimen_21_insc'))"/>
+        <field name="tax_type">withholding</field>
+    </record>
+
+</odoo>
