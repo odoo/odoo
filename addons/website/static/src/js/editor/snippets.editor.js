@@ -967,7 +967,7 @@ wSnippetMenu.include({
                 const selectOptions = selectEl.tagName === 'SELECT' ? [...selectEl.options] : [];
                 if (selectOptions.length === translatedOptions.length) {
                     selectOptions.map((option, i) => {
-                        option.text = translatedOptions[i].textContent;
+                        option.appendChild(translatedOptions[i].firstChild);
                     });
                 }
                 optionsEl.remove();
