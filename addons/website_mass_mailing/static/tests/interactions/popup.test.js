@@ -8,7 +8,7 @@ describe.current.tags("interaction_dev");
 
 function getTemplate(disabled = false) {
     return `
-        <div class="s_popup o_newsletter_popup o_snippet_invisible"
+        <div class="s_popup o_newsletter_popup"
              data-name="Newsletter Popup" data-vcss="001" data-snippet="s_newsletter_subscribe_popup" id="sPopup">
             <div class="modal fade s_popup_middle o_newsletter_modal modal_shown"
                 style="background-color: var(--black-50) !important; display: none;"
