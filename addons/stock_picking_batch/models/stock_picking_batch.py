@@ -387,11 +387,25 @@ class StockPickingBatch(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('picking_ids', 'in', self.picking_ids.ids)],
             'context': {
-                'picking_id': self.picking_ids[:1].id,
+                'picking_ids': self.picking_ids.ids,
                 'location_id': self.picking_ids[:1].location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,
             },
+        }
+
+    def action_see_package_histories(self):
+        self.ensure_one()
+        return {
+            'name': self.env._("Packages"),
+            'res_model': 'stock.package.history',
+            'view_mode': 'list',
+            'views': [(False, 'list')],
+            'type': 'ir.actions.act_window',
+            'domain': [('picking_ids', 'in', self.picking_ids.ids)],
+            'context': {
+                'search_default_main_packages': 1,
+            }
         }
 
     # -------------------------------------------------------------------------

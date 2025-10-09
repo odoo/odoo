@@ -11,7 +11,9 @@ export class AddPackageListRenderer extends ListRenderer {
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.addDialog = useOwnedDialogs();
-        this.pickingId = this.props.list.context.picking_id || 0;
+        this.pickingId = this.props.list.context.picking_ids?.length
+            ? this.props.list.context.picking_ids[0]
+            : 0;
         this.locationId = this.props.list.context.location_id || 0;
         this.canAddEntirePacks = this.props.list.context?.can_add_entire_packs;
     }
