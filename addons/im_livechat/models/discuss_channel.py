@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
+from odoo.tools import email_normalize, email_split, html_to_plaintext, plaintext2html
 
 from markupsafe import Markup
 from pytz import timezone
@@ -603,9 +603,9 @@ class DiscussChannel(models.Model):
                 parts.append(Markup("<br/>"))
             if not tools.is_html_empty(message.body):
                 if message.author_id == chatbot_op:
-                    parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
+                    parts.append(Markup("<strong>%s</strong><br/>") % html_to_plaintext(message.body))
                 else:
-                    parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+                    parts.append(Markup("%s<br/>") % html_to_plaintext(message.body))
                 last_msg_from_chatbot = message.author_id == chatbot_op
         return Markup("").join(parts)
 
@@ -675,7 +675,7 @@ class DiscussChannel(models.Model):
         for message_id in filtered_message_ids:
             field_name = step_type_to_field[message_id.script_step_id.step_type]
             if not values.get(field_name):
-                values[field_name] = html2plaintext(message_id.user_raw_answer or '')
+                values[field_name] = html_to_plaintext(message_id.user_raw_answer)
 
         return values
 
@@ -694,7 +694,7 @@ class DiscussChannel(models.Model):
         )
 
     def _chatbot_validate_email(self, email_address, chatbot_script):
-        email_address = html2plaintext(email_address)
+        email_address = html_to_plaintext(email_address)
         email_normalized = email_normalize(email_address)
 
         posted_message = False

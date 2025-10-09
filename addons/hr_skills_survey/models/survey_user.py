@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models
 from odoo.fields import Domain
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class SurveyUser_Input(models.Model):
@@ -44,7 +44,7 @@ class SurveyUser_Input(models.Model):
                     'name': survey.title,
                     'date_start': date_start,
                     'date_end': date_start + relativedelta(months=validity_month) if validity_month else False,
-                    'description': html2plaintext(survey.description) if survey.description else '',
+                    'description': html_to_plaintext(survey.description),
                     'line_type_id': line_type.id if line_type else False,
                     'survey_id': survey.id,
                 }

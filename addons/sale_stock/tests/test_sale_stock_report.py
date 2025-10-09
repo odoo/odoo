@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 
 from odoo import Command
 from odoo.tests import Form, tagged
@@ -248,8 +248,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html(
             'account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By Lot\n2.00Units\nLOT0001', "There should be a line that specifies 2 x LOT0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By Lot 2.00Units LOT0001', "There should be a line that specifies 2 x LOT0001")
 
     def test_invoice_before_delivery(self):
         """
@@ -281,8 +281,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html(
             'account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By Lot\n4.00Units\nLOT0001', "There should be a line that specifies 4 x LOT0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By Lot 4.00Units LOT0001', "There should be a line that specifies 4 x LOT0001")
 
     def test_backorder_and_several_invoices(self):
         """
@@ -319,33 +319,33 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         IrActionsReport = self.env['ir.actions.report']
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should be a line that specifies 1 x USN0001")
         self.assertNotIn('USN0002', text)
 
         invoice02 = so._create_invoices()
         invoice02.action_post()
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice02.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0002', "There should be a line that specifies 1 x USN0002")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0002', "There should be a line that specifies 1 x USN0002")
         self.assertNotIn('USN0001', text)
 
         # Posting the second invoice shouldn't change the result of the first one
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should still be a line that specifies 1 x USN0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should still be a line that specifies 1 x USN0001")
         self.assertNotIn('USN0002', text)
 
         # Resetting and posting again the first invoice shouldn't change the results
         invoice01.button_draft()
         invoice01.action_post()
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should still be a line that specifies 1 x USN0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should still be a line that specifies 1 x USN0001")
         self.assertNotIn('USN0002', text)
         html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice02.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0002', "There should be a line that specifies 1 x USN0002")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0002', "There should be a line that specifies 1 x USN0002")
         self.assertNotIn('USN0001', text)
 
     def test_invoice_with_several_returns(self):
@@ -427,8 +427,8 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html(
             'account.report_invoice_with_payments', invoice01.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By Lot\n2.00Units\nLOT0002', "There should be a line that specifies 2 x LOT0002")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By Lot 2.00Units LOT0002', "There should be a line that specifies 2 x LOT0002")
         self.assertNotIn('LOT0001', text)
 
         # Deliver 5 x LOT0002 + 2 x LOT0003
@@ -451,9 +451,9 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html(
             'account.report_invoice_with_payments', invoice02.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By Lot\n6.00Units\nLOT0002', "There should be a line that specifies 6 x LOT0002")
-        self.assertRegex(text, r'Product By Lot\n2.00Units\nLOT0003', "There should be a line that specifies 2 x LOT0003")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By Lot 6.00Units LOT0002', "There should be a line that specifies 6 x LOT0002")
+        self.assertRegex(text, r'Product By Lot 2.00Units LOT0003', "There should be a line that specifies 2 x LOT0003")
         self.assertNotIn('LOT0001', text)
 
     def test_refund_cancel_invoices(self):
@@ -485,9 +485,9 @@ class TestSaleStockInvoices(TestSaleCommon):
         invoice01.action_post()
 
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0002', "There should be a line that specifies 1 x USN0002")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should be a line that specifies 1 x USN0001")
+        self.assertRegex(text, r'Product By USN 1.00Units USN0002', "There should be a line that specifies 1 x USN0002")
 
         # Refund the invoice
         refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
@@ -517,9 +517,9 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         # reversed invoice
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', refund_invoice.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0002', "There should be a line that specifies 1 x USN0002")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should be a line that specifies 1 x USN0001")
+        self.assertRegex(text, r'Product By USN 1.00Units USN0002', "There should be a line that specifies 1 x USN0002")
 
     def test_refund_modify_invoices(self):
         """
@@ -549,8 +549,8 @@ class TestSaleStockInvoices(TestSaleCommon):
         invoice01.action_post()
 
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice01.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should be a line that specifies 1 x USN0001")
 
         # Refund the invoice with full refund and new draft invoice
         refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
@@ -562,5 +562,5 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         # new draft invoice
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice02.ids)[0]
-        text = html2plaintext(html)
-        self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
+        text = html_to_formatted_plaintext(html.decode())
+        self.assertRegex(text, r'Product By USN 1.00Units USN0001', "There should be a line that specifies 1 x USN0001")
