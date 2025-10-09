@@ -59,10 +59,10 @@ import { waitUntil } from "./time";
  *
  * @typedef {{
  *  contains?: string;
+ *  count?: number;
  *  displayed?: boolean;
  *  empty?: boolean;
  *  eq?: number;
- *  exact?: number;
  *  first?: boolean;
  *  focusable?: boolean;
  *  has?: boolean;
@@ -372,6 +372,17 @@ function getWaitForNoneMessage() {
     const message = `expected 0 elements after %timeout%ms and ${lastQueryMessage}`;
     lastQueryMessage = "";
     return message;
+}
+
+/**
+ *
+ * @param {number} count
+ * @param {Parameters<NodeFilter>[0]} _node
+ * @param {Parameters<NodeFilter>[1]} _i
+ * @param {Parameters<NodeFilter>[2]} nodes
+ */
+function hasNodeCount(count, _node, _i, nodes) {
+    return count === nodes.length;
 }
 
 /**
@@ -906,7 +917,10 @@ function _guardedQueryAll(target, options) {
 function _queryAll(target, options) {
     queryAllLevel++;
 
-    const { exact, root, ...modifiers } = options || {};
+    const { count, root, ...modifiers } = options || {};
+    if (count !== null && count !== undefined && (!$isInteger(count) || count <= 0)) {
+        throw new HootDomError(`invalid 'count' option: should be a positive integer`);
+    }
 
     /** @type {Node[]} */
     let nodes = [];
@@ -954,7 +968,7 @@ function _queryAll(target, options) {
     const filteredNodes = applyFilters(modifierFilters, nodes);
 
     // Register query message (if needed), and/or throw an error accordingly
-    const message = registerQueryMessage(filteredNodes, exact);
+    const message = registerQueryMessage(filteredNodes, count);
     if (message) {
         throw new HootDomError(message);
     }
@@ -969,7 +983,7 @@ function _queryAll(target, options) {
  * @param {QueryOptions} options
  */
 function _queryOne(target, options) {
-    return _guardedQueryAll(target, { ...options, exact: 1 })[0];
+    return _guardedQueryAll(target, { ...options, count: 1 })[0];
 }
 
 /**
@@ -1082,6 +1096,16 @@ const customPseudoClasses = new Map();
 
 customPseudoClasses
     .set("contains", makePatternBasedPseudoClass("contains", getNodeText))
+    .set("count", (strCount) => {
+        const count = $parseInt(strCount);
+        if (!$isInteger(count) || count <= 0) {
+            throw selectorError(
+                "count",
+                `expected count to be a positive integer (got ${strCount})`
+            );
+        }
+        return hasNodeCount.bind(null, count);
+    })
     .set("displayed", () => isNodeDisplayed)
     .set("empty", () => isEmpty)
     .set("eq", (strIndex) => {
@@ -1865,6 +1889,8 @@ export function observe(target, callback) {
  *      * given *text* will be matched against:
  *          - an `<input>`, `<textarea>` or `<select>` element's **value**;
  *          - or any other element's **inner text**.
+ * - `:count`: return nodes if their count match the given *count*.
+ *      If not matching, an error is thrown;
  * - `:displayed`: matches nodes that are "displayed" (see {@link isDisplayed});
  * - `:empty`: matches nodes that have an empty *content* (**value** or **inner text**);
  * - `:eq(n)`: matches the *nth* node (0-based index);
@@ -1885,9 +1911,9 @@ export function observe(target, callback) {
  * - `:visible`: matches nodes that are "visible" (see {@link isVisible});
  *
  * An `options` object can be specified to filter[1] the results:
- * - `displayed`: whether the nodes must be "displayed" (see {@link isDisplayed});
- * - `exact`: the exact number of nodes to match (throws an error if the number of
+ * - `count`: the exact number of nodes to match (throws an error if the number of
  *  nodes doesn't match);
+ * - `displayed`: whether the nodes must be "displayed" (see {@link isDisplayed});
  * - `focusable`: whether the nodes must be "focusable" (see {@link isFocusable});
  * - `root`: the root node to query the selector in (defaults to the current fixture);
  * - `viewPort`: whether the nodes must be partially visible in the current viewport
@@ -1895,7 +1921,7 @@ export function observe(target, callback) {
  * - `visible`: whether the nodes must be "visible" (see {@link isVisible}).
  *      * This option implies `displayed`
  *
- * [1] these filters (except for `exact` and `root`) achieve the same result as
+ * [1] these filters (except for `count` and `root`) achieve the same result as
  *  using their homonym pseudo-classes on the final group of the given selector
  *  string (e.g. ```queryAll`ul > li:visible`;``` = ```queryAll("ul > li", { visible: true })```).
  *
@@ -1917,7 +1943,7 @@ export function observe(target, callback) {
  *  queryAll`#editor:shadow div`; // -> [div, div, ...] (inside shadow DOM)
  * @example
  *  // with options
- *  queryAll(`div:first`, { exact: 1 }); // -> [div]
+ *  queryAll(`div:first`, { count: 1 }); // -> [div]
  *  queryAll(`div`, { root: queryOne`iframe` }); // -> [div, div, ...]
  *  // redundant, but possible
  *  queryAll(`button:visible`, { visible: true }); // -> [button, button, ...]
@@ -2039,20 +2065,20 @@ export function queryFirst(target, options) {
 }
 
 /**
- * Performs a {@link queryAll} with the given arguments, along with a forced `exact: 1`
+ * Performs a {@link queryAll} with the given arguments, along with a forced `count: 1`
  * option to ensure only one node matches the given {@link Target}.
  *
  * The returned value is a single node instead of a list of nodes.
  *
  * @param {Target} target
- * @param {Omit<QueryOptions, "exact">} [options]
+ * @param {Omit<QueryOptions, "count">} [options]
  * @returns {Element}
  */
 export function queryOne(target, options) {
     [target, options] = parseRawArgs(arguments);
-    if ($isInteger(options?.exact)) {
+    if ($isInteger(options?.count)) {
         throw new HootDomError(
-            `cannot call \`queryOne\` with 'exact'=${options.exact}: did you mean to use \`queryAll\`?`
+            `cannot call \`queryOne\` with 'count'=${options.count}: did you mean to use \`queryAll\`?`
         );
     }
     return _queryOne(target, options);
