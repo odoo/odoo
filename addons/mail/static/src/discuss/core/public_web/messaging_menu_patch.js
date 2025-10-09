@@ -18,7 +18,7 @@ patch(MessagingMenu.prototype, {
         if (this.hasTouch() && this.canUnpinItem(thread)) {
             return {
                 ...res,
-                action: () => thread.unpin(),
+                action: () => thread.channelPin(false),
                 icon: "fa-times-circle",
                 bgColor: "bg-danger",
             };

@@ -2107,7 +2107,6 @@ test("sidebar: cannot leave channel with group_ids", async () => {
         name: "General",
         channel_member_ids: [
             Command.create({
-                unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
                 partner_id: serverState.partnerId,
             }),
