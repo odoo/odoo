@@ -121,9 +121,8 @@ class HrLeaveAllocation(models.Model):
         ('accrual', 'Accrual Allocation')
     ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        compute="_compute_accrual_plan_id", inverse="_inverse_accrual_plan_id", store=True, index='btree_not_null', readonly=False, tracking=True,
-        domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', compute="_compute_accrual_plan_id",
+    inverse="_inverse_accrual_plan_id", store=True, index='btree_not_null', readonly=False, tracking=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Available Time Off')
@@ -264,12 +263,9 @@ class HrLeaveAllocation(models.Model):
         default_holiday_status_id = None
         for allocation in self:
             if not allocation.holiday_status_id:
-                if allocation.accrual_plan_id:
-                    allocation.holiday_status_id = allocation.accrual_plan_id.time_off_type_id
-                else:
-                    if not default_holiday_status_id:  # fetch when we need it
-                        default_holiday_status_id = self._default_holiday_status_id()
-                    allocation.holiday_status_id = default_holiday_status_id
+                if not default_holiday_status_id:  # fetch when we need it
+                    default_holiday_status_id = self._default_holiday_status_id()
+                allocation.holiday_status_id = default_holiday_status_id
 
     @api.depends('holiday_status_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit', 'employee_id')
     def _compute_number_of_days(self):
@@ -280,21 +276,11 @@ class HrLeaveAllocation(models.Model):
             elif allocation_unit == 'hour' and allocation.employee_id:
                 allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_id._get_hours_per_day(allocation.date_from)
 
-    @api.depends('holiday_status_id', 'allocation_type')
+    @api.depends('allocation_type')
     def _compute_accrual_plan_id(self):
-        accrual_allocations = self.filtered(lambda alloc: alloc.allocation_type == 'accrual' and not alloc.accrual_plan_id and alloc.holiday_status_id)
-        accruals_read_group = self.env['hr.leave.accrual.plan']._read_group(
-            [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
-            ['time_off_type_id'],
-            ['id:array_agg'],
-        )
-        accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
-            if (allocation.allocation_type == 'regular' and allocation.accrual_plan_id) or allocation.accrual_plan_id.time_off_type_id.id not in (False, allocation.holiday_status_id.id):
+            if (allocation.allocation_type == 'regular' and allocation.accrual_plan_id):
                 allocation.accrual_plan_id = False
-            if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
-                if allocation.holiday_status_id:
-                    allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
 
     def _inverse_accrual_plan_id(self):
         for allocation in self:

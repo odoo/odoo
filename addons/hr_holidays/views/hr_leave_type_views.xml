@@ -44,17 +44,6 @@
                                 <span class="o_stat_text">Time Off</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button"
-                                type="object"
-                                name="action_see_accrual_plans"
-                                icon="fa-calendar"
-                                invisible="not id or accrual_count == 0"
-                                help="Count of plans linked to this time off type.">
-                            <div class="o_stat_info">
-                                <field name="accrual_count" class="o_stat_value"/>
-                                <span class="o_stat_text">Accruals</span>
-                            </div>
-                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <label for="name">Time off type</label>

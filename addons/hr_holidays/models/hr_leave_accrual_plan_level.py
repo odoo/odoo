@@ -194,22 +194,20 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             level.sequence = level.start_count * start_type_multipliers[level.start_type]
 
-    @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids', 'accrual_plan_id.time_off_type_id')
+    @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids')
     def _compute_can_modify_value_type(self):
         for level in self:
-            level.can_modify_value_type = not level.accrual_plan_id.time_off_type_id and level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] == level
+            level.can_modify_value_type = level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] == level
 
     def _inverse_added_value_type(self):
         for level in self:
             if level.accrual_plan_id.level_ids[0] == level:
                 level.accrual_plan_id.added_value_type = level.added_value_type
 
-    @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids', 'accrual_plan_id.added_value_type', 'accrual_plan_id.time_off_type_id')
+    @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids', 'accrual_plan_id.added_value_type')
     def _compute_added_value_type(self):
         for level in self:
-            if level.accrual_plan_id.time_off_type_id:
-                level.added_value_type = "day" if level.accrual_plan_id.time_off_type_id.request_unit in ["day", "half_day"] else "hour"
-            elif level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] != level:
+            if level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] != level:
                 level.added_value_type = level.accrual_plan_id.level_ids[0].added_value_type
             elif not level.added_value_type:
                 level.added_value_type = "day"  # default value

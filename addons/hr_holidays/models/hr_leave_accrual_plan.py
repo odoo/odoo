@@ -13,16 +13,11 @@ class HrLeaveAccrualPlan(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char('Name', required=True)
-    time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
-        check_company=True, index='btree_not_null',
-        help="""Specify if this accrual plan can only be used with this Time Off Type.
-                Leave empty if this accrual plan can be used with any Time Off Type.""")
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
     level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True, string="Milestones")
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id',
         export_string_translation=False)
-    company_id = fields.Many2one('res.company', string='Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
-        compute="_compute_company_id", store="True", readonly=False)
+    company_id = fields.Many2one('res.company', string='Company', domain=lambda self: [('id', 'in', self.env.companies.ids)])
     transition_mode = fields.Selection([
         ('immediately', 'Immediately'),
         ('end_of_accrual', "After this accrual's period")],
@@ -92,14 +87,6 @@ class HrLeaveAccrualPlan(models.Model):
         for plan in self:
             plan.employees_count = allocations_dict.get(plan.id, 0)
 
-    @api.depends('time_off_type_id.company_id')
-    def _compute_company_id(self):
-        for accrual_plan in self:
-            if accrual_plan.time_off_type_id:
-                accrual_plan.company_id = accrual_plan.time_off_type_id.company_id
-            else:
-                accrual_plan.company_id = self.env.company
-
     @api.depends("accrued_gain_time")
     def _compute_is_based_on_worked_time(self):
         for plan in self:
@@ -136,7 +123,7 @@ class HrLeaveAccrualPlan(models.Model):
                 new=True,
                 default_can_be_carryover=self.can_be_carryover,
                 default_accrued_gain_time=self.accrued_gain_time,
-                default_can_modify_value_type=not self.time_off_type_id and not self.level_ids,
+                default_can_modify_value_type=not self.level_ids,
                 default_added_value_type=self.added_value_type,
             ),
         }
