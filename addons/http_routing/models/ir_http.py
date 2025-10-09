@@ -105,7 +105,7 @@ class IrHttp(models.AbstractModel):
             url: str | None = None,
             lang_code: str | None = None,
             canonical_domain: str | tuple[str, str, str, str, str] | None = None,
-            prefetch_langs: bool = False, force_default_lang: bool = False) -> str:
+            prefetch_langs: bool = False, force_default_lang: bool = False, change_in_user: bool = False) -> str:
         """ Returns the given URL adapted for the given lang, meaning that:
 
         1. It will have the lang suffixed to it
@@ -152,6 +152,9 @@ class IrHttp(models.AbstractModel):
             path = werkzeug.urls.url_quote_plus(url, safe='/')
         if force_default_lang or lang != request.env['ir.http']._get_default_lang():
             path = f'/{lang.url_code}{path if path != "/" else ""}'
+
+        if change_in_user and not request.env.user._is_public() and request.env.user.lang != lang.code:
+            request.env.user.lang = lang.code
 
         if canonical_domain:
             # canonical URLs should not have qs
