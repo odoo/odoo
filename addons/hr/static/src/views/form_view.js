@@ -4,6 +4,7 @@ import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";
 
 import { useArchiveEmployee } from "@hr/views/archive_employee_hook";
+import { EmployeeFormRenderer } from "@hr/views/form_renderer";
 
 export class EmployeeFormController extends FormController {
     setup() {
@@ -21,4 +22,5 @@ export class EmployeeFormController extends FormController {
 registry.category("views").add("hr_employee_form", {
     ...formView,
     Controller: EmployeeFormController,
+    Renderer: EmployeeFormRenderer,
 });
