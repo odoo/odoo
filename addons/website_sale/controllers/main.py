@@ -421,7 +421,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # categories
 
         Category = request.env['product.public.category']
-        categs_domain = Domain('parent_id', '=', False) & website_domain
+        categs_domain = Domain('parent_id', '=', False) & Domain('not_in_shop', '=', False) & website_domain
         if not self.env.user._is_internal():
             categs_domain &= Domain('has_published_products', '=', True)
         if search:
@@ -434,7 +434,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         categs = Category.search_fetch(categs_domain)
 
         category_entries = Category
-        if category:
+        if category and not category.not_in_shop:
             category_entries = not search and category.child_id or category.child_id.filtered(lambda c: c.id in search_categories.ids)
             if not category_entries:
                 parent = category.parent_id
