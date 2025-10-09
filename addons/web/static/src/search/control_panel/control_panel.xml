@@ -16,7 +16,7 @@
                             </button>
                         </t>
                     </t>
-                    <t t-call="web.embeddedActionsDropdown" />
+                    <t t-call="{{ constructor.smallDeviceEmbeddedActionsTemplate }}"/>
                 </div>
             </Transition>
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-2 gap-lg-3 flex-grow-1">
@@ -79,7 +79,7 @@
 
                 <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
                     <t t-if="state.embeddedInfos.embeddedActions?.length and env.isSmall">
-                        <t t-call="web.embeddedActionsDropdown" />
+                        <t t-call="{{ constructor.smallDeviceEmbeddedActionsTemplate }}"/>
                     </t>
                     <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
                         <Pager t-props="pagerProps"/>

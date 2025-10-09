@@ -4,6 +4,7 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 
 export class ProjectTaskControlPanel extends ControlPanel {
     static template = "project.ProjectTaskControlPanel";
+    static smallDeviceEmbeddedActionsTemplate = "project.TaskembeddedActionsDropdown";
 
     setup() {
         super.setup();

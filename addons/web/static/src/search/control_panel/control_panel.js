@@ -85,6 +85,7 @@ class EmbeddedActionsConfigHandler {
 
 export class ControlPanel extends Component {
     static template = "web.ControlPanel";
+    static smallDeviceEmbeddedActionsTemplate = "web.embeddedActionsDropdown";
     static components = {
         Pager,
         SearchBar,
