@@ -19,10 +19,7 @@ export class ImageShapeOption extends BaseOptionComponent {
         this.imageShapeOption = this.dependencies.imageShapeOption;
         this.toRatio = toRatio;
         this.state = useDomState((editingElement) => {
-            let shape = editingElement.dataset.shape;
-            if (shape) {
-                shape = shape.replace("web_editor", "html_builder");
-            }
+            const shape = editingElement.dataset.shape;
             return {
                 hasShape: !!shape && !this.imageShapeOption.isTechnicalShape(shape),
                 shapeLabel: this.imageShapeOption.getShapeLabel(shape),
