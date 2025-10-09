@@ -3,13 +3,14 @@
 # * stock_fleet
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-30 18:36+0000\n"
-"PO-Revision-Date: 2025-09-17 07:44+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-09 02:30+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/stock_fleet/es_419/>\n"
 "Language: es_419\n"
@@ -44,6 +45,9 @@ msgid ""
 "                        <span class=\"fw-bold\" invisible=\"code "
 "=='outgoing'\">To</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">De</span>\n"
+"                        <span class=\"fw-bold\" invisible="
+"\"code =='outgoing'\">a</span>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
@@ -63,7 +67,7 @@ msgstr "<strong>Vehículo:</strong>"
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
 msgid "Allowed Docks"
-msgstr ""
+msgstr "Muelles permitidos"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
@@ -90,7 +94,7 @@ msgstr "Categoría del modelo"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
 msgid "Dispatch Management"
-msgstr ""
+msgstr "Gestión de despacho"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
@@ -99,13 +103,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Mostrar nombre"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
 msgid "Dock"
-msgstr ""
+msgstr "Muelle"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -120,7 +124,7 @@ msgstr "Ubicación del muelle"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Dock Locations"
-msgstr ""
+msgstr "Ubicaciones del muelle de carga"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
@@ -134,6 +138,9 @@ msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
 msgstr ""
+"Habilita esta opción para mostrar los detalles relacionados con la gestión "
+"del envío en la vista de formulario de un lote u ola y la vista general de "
+"kanban de las operaciones."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
@@ -152,7 +159,7 @@ msgstr "Vista de gráfico"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -192,7 +199,7 @@ msgstr "Flota propia"
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Tipo de recolección"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -300,7 +307,7 @@ msgstr "Etiqueta de unidad de medida de volumen"
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Almacén"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
