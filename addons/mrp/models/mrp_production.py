@@ -1951,7 +1951,8 @@ class MrpProduction(models.Model):
                 move_to_backorder_moves[move] = self.env['stock.move']
                 unit_factor = move.product_uom_qty / initial_qty_by_production[production]
                 initial_move_vals = move.copy_data(move._get_backorder_move_vals())[0]
-                move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor
+                if not move.manual_consumption:
+                    move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor
 
                 for backorder in production_to_backorders[production]:
                     move_vals = dict(
