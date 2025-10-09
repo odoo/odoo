@@ -69,7 +69,7 @@ from .fields_textual import Char
 
 from .identifiers import NewId
 from .utils import (
-    OriginIds, check_object_name, parse_field_expr,
+    OriginIds, Prefetch, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
     SUPERUSER_ID,
@@ -5369,6 +5369,11 @@ class BaseModel(metaclass=MetaModel):
         """
         if prefetch_ids is None:
             prefetch_ids = self._ids
+        else:
+            try:
+                hash(prefetch_ids)  # make sure it is hashable
+            except TypeError:
+                prefetch_ids = tuple(prefetch_ids)
         return self.__class__(self.env, self._ids, prefetch_ids)
 
     def _update_cache(self, values: ValuesType, validate: bool = True) -> None:
@@ -5508,19 +5513,24 @@ class BaseModel(metaclass=MetaModel):
         if not func:
             # align with mapped()
             return self
+
         if callable(func):
             # normal function
             pass
         elif isinstance(func, str):
             if '.' in func:
-                return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if any(rec.mapped(func)))
-            # avoid costly mapped
-            func = self._fields[func].__get__
+                seq_fnames = func
+                func = lambda record: any(record.mapped(seq_fnames))  # noqa: E731
+            else:
+                # avoid costly mapped
+                func = self._fields[func].__get__
         elif isinstance(func, Domain):
             return self.filtered_domain(func)
         else:
             raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
-        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if func(rec))
+
+        ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5565,7 +5575,8 @@ class BaseModel(metaclass=MetaModel):
         if not self or not domain:
             return self
         predicate = Domain(domain)._as_predicate(self)
-        return self.browse(rec_id for rec_id, rec in zip(self._ids, self) if predicate(rec))
+        ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
@@ -5859,14 +5870,20 @@ class BaseModel(metaclass=MetaModel):
             linear time complexity).
         """
         ids = list(self._ids)
+        prefetch_ids_list = [self._prefetch_ids]
         for arg in args:
             try:
                 if arg._name != self._name:
                     raise TypeError(f"inconsistent models in: {self} + {arg}")
                 ids.extend(arg._ids)
+                prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        return self.browse(ids)
+        ids = tuple(ids)
+        # add ids in prefetch_ids_list, in case the other prefetch_ids are
+        # empty (PrefetchRelational with empty cache)
+        prefetch_ids_list.append(ids)
+        return self.__class__(self.env, ids, Prefetch.union(prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -5876,7 +5893,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
-            return self.browse(id_ for id_ in self._ids if id_ not in other_ids)
+            ids = tuple(id_ for id_ in self._ids if id_ not in other_ids)
+            return self.__class__(self.env, ids, self._prefetch_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -5888,7 +5906,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
-            return self.browse(OrderedSet(id_ for id_ in self._ids if id_ in other_ids))
+            ids = {id_: None for id_ in self._ids if id_ in other_ids}
+            return self.__class__(self.env, tuple(ids), self._prefetch_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
@@ -5904,14 +5923,20 @@ class BaseModel(metaclass=MetaModel):
             complexity, with first occurrence order preserved).
         """
         ids = list(self._ids)
+        prefetch_ids_list = [self._prefetch_ids]
         for arg in args:
             try:
                 if arg._name != self._name:
                     raise TypeError(f"inconsistent models in: {self} | {arg}")
                 ids.extend(arg._ids)
+                prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
-        return self.browse(OrderedSet(ids))
+        ids = tuple(dict.fromkeys(ids))
+        # add ids in prefetch_ids_list, in case the other prefetch_ids are
+        # empty (PrefetchRelational with empty cache)
+        prefetch_ids_list.append(ids)
+        return self.__class__(self.env, ids, Prefetch.union(prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
@@ -5994,10 +6019,8 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(key, str):
             # important: one must call the field's getter
             return self._fields[key].__get__(self)
-        elif isinstance(key, slice):
-            return self.browse(self._ids[key])
-        else:
-            return self.browse((self._ids[key],))
+        ids = self._ids[key] if isinstance(key, slice) else (self._ids[key],)
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """

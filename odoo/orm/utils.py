@@ -1,12 +1,12 @@
 import re
 import warnings
-from collections.abc import Reversible
+from collections.abc import Hashable, Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tools import SQL
+from odoo.tools import OrderedSet, SQL
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -127,7 +127,48 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
-class OriginIds(Reversible):
+#
+# The value of _prefetch_ids must be iterable, reversible, and hashable.
+#
+
+class PrefetchRelational(Reversible, Hashable):
+    """ Iterable for the values of a many2one field on the prefetch set of a given record. """
+    __slots__ = ('_field', '_records')
+
+    def __init__(self, field, records):
+        self._field = field
+        self._records = records
+
+    def __hash__(self):
+        return hash(self._field) ^ hash(self._records._prefetch_ids)
+
+    def __eq__(self, other):
+        return isinstance(other, PrefetchRelational) and (
+            self._field is other._field and self._records._prefetch_ids == other._records._prefetch_ids
+        )
+
+    def __iter__(self):
+        field_cache = self._field._get_cache(self._records.env)
+        if self._field.type == 'many2one':
+            for id_ in self._records._prefetch_ids:
+                if (coid := field_cache.get(id_)) is not None:
+                    yield coid
+        else:
+            for id_ in self._records._prefetch_ids:
+                yield from field_cache.get(id_, ())
+
+    def __reversed__(self):
+        field_cache = self._field._get_cache(self._records.env)
+        if self._field.type == 'many2one':
+            for id_ in reversed(self._records._prefetch_ids):
+                if (coid := field_cache.get(id_)) is not None:
+                    yield coid
+        else:
+            for id_ in reversed(self._records._prefetch_ids):
+                yield from field_cache.get(id_, ())
+
+
+class OriginIds(Reversible, Hashable):
     """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
@@ -135,6 +176,12 @@ class OriginIds(Reversible):
 
     def __init__(self, ids):
         self.ids = ids
+
+    def __hash__(self):
+        return hash(self.ids)
+
+    def __eq__(self, other):
+        return isinstance(other, OriginIds) and self.ids == other.ids
 
     def __iter__(self):
         for id_ in self.ids:
@@ -145,3 +192,48 @@ class OriginIds(Reversible):
         for id_ in reversed(self.ids):
             if id_ := id_ or id_.origin:
                 yield id_
+
+
+class ConcatIds(Reversible, Hashable):
+    """ A reversible iterable returning the union of collections of ``ids``. """
+    __slots__ = ['_iterables']
+
+    def __init__(self, iterables):
+        self._iterables = tuple(iterables)
+
+    def __hash__(self):
+        return hash(self._iterables)
+
+    def __eq__(self, other):
+        return isinstance(other, ConcatIds) and self._iterables == other._iterables
+
+    def __iter__(self):
+        for iterable in self._iterables:
+            yield from iterable
+
+    def __reversed__(self):
+        for iterable in reversed(self._iterables):
+            yield from reversed(iterable)
+
+
+class Prefetch:
+    relational = PrefetchRelational
+    origin = OriginIds
+
+    @staticmethod
+    def union(iterables):
+        ids = OrderedSet()      # union of tuples in iterables
+        extra = OrderedSet()    # non-tuple items in iterables
+
+        for it in iterables:
+            if isinstance(it, ConcatIds):
+                for it1 in it._iterables:
+                    ids.update(it1) if isinstance(it1, tuple) else extra.add(it1)
+            else:
+                ids.update(it) if isinstance(it, tuple) else extra.add(it)
+
+        if not extra:
+            return tuple(ids)
+        if not ids and len(extra) == 1:
+            return next(iter(extra))
+        return ConcatIds([tuple(ids), *extra])
