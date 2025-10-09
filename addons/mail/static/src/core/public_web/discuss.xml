@@ -12,7 +12,7 @@
 <t t-name="mail.MobileMailbox">
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
-            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
+            'active o-active shadow-none': mailbox.eq(store.discuss.channel?.thread),
         }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.display_name"
     />
 </t>

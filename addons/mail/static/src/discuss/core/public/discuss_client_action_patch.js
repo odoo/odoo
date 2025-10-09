@@ -12,7 +12,7 @@ patch(DiscussClientAction.prototype, {
             browser.history.replaceState(
                 browser.history.state,
                 null,
-                `/discuss/channel/${this.store.discuss.thread.id}${browser.location.search}`
+                `/discuss/channel/${this.store.discuss.channel.id}${browser.location.search}`
             );
         }
         const url = new URL(browser.location.href);
@@ -30,7 +30,7 @@ patch(DiscussClientAction.prototype, {
     async restoreDiscussThread() {
         await super.restoreDiscussThread(...arguments);
         this.store.is_welcome_page_displayed ||=
-            this.store.discuss.thread?.default_display_mode === "video_full_screen";
+            this.store.discuss.channel?.default_display_mode === "video_full_screen";
     },
     closeWelcomePage() {
         this.store.is_welcome_page_displayed = false;

@@ -22,13 +22,13 @@ patch(DiscussClientAction.prototype, {
         }
         const call = action.context?.call || action.params?.call;
         if (call === "accept") {
-            await this.rtc.joinCall(this.store.discuss.thread);
+            await this.rtc.joinCall(this.store.discuss.channel.thread);
             return;
         }
         if (
             hasFullScreenUrl &&
-            this.store.discuss.thread?.default_display_mode === "video_full_screen" &&
-            this.store.discuss.thread.rtc_session_ids.length > 0
+            this.store.discuss.channel?.default_display_mode === "video_full_screen" &&
+            this.store.discuss.channel.rtc_session_ids.length > 0
         ) {
             this.joinCallWithDefaultSettings();
         }
@@ -36,7 +36,7 @@ patch(DiscussClientAction.prototype, {
     async joinCallWithDefaultSettings() {
         const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
         const camera = browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
-        await this.rtc.toggleCall(this.store.discuss.thread, { audio: !mute, camera });
+        await this.rtc.toggleCall(this.store.discuss.channel, { audio: !mute, camera });
         await this.rtc.enterFullscreen();
     },
 });

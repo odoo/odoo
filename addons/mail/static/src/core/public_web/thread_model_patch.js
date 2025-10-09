@@ -57,9 +57,13 @@ patch(Thread.prototype, {
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {
         if (pushState === undefined) {
-            pushState = this.notEq(this.store.discuss.thread);
+            pushState = this.notEq(this.store.discuss.channel?.thread);
         }
-        this.store.discuss.thread = this;
+        if (this.store.discuss.channel) {
+            this.store.discuss.channel.thread = this;
+        } else {
+            this.store.discuss.channel = { thread: this };
+        }
         this.store.discuss.activeTab = !this.store.env.services.ui.isSmall
             ? "notification"
             : this.model === "mail.box"
@@ -96,7 +100,7 @@ patch(Thread.prototype, {
     },
     async unpin() {
         this.isLocallyPinned = false;
-        if (this.eq(this.store.discuss.thread)) {
+        if (this.eq(this.store.discuss.channel?.thread)) {
             router.replaceState({ active_id: undefined });
         }
         if (this.model === "discuss.channel" && this.self_member_id?.is_pinned !== false) {

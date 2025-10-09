@@ -5,7 +5,11 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     onPinStateUpdated() {
         super.onPinStateUpdated();
-        if (!this.displayToSelf && !this.isLocallyPinned && this.eq(this.store.discuss.thread)) {
+        if (
+            !this.displayToSelf &&
+            !this.isLocallyPinned &&
+            this.eq(this.store.discuss.channel.thread)
+        ) {
             if (this.store.discuss.isActive) {
                 const newThread =
                     this.store.discuss.channelCategory.threads.find(
@@ -13,7 +17,7 @@ patch(Thread.prototype, {
                     ) || this.store.inbox;
                 newThread.setAsDiscussThread();
             } else {
-                this.store.discuss.thread = undefined;
+                this.store.discuss.channel = undefined;
             }
         }
     },
