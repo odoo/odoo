@@ -15,6 +15,7 @@ class AccountMoveLine(models.Model):
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
+    reinvoiced_sale_line_id = fields.Many2one('sale.order.line', index=True)
 
     @api.depends('balance')
     def _compute_is_storno(self):
@@ -81,7 +82,7 @@ class AccountMoveLine(models.Model):
         sale_line_values_to_create = []  # the list of creation values of sale line to create.
         existing_sale_line_cache = {}  # in the sales_price-delivery case, we can reuse the same sale line. This cache will avoid doing a search each time the case happen
         # `map_move_sale_line` is map where
-        #   - key is the move line identifier
+        #   - key is the move line record
         #   - value is either a sale.order.line record (existing case), or an integer representing the index of the sale line to create in
         #     the `sale_line_values_to_create` (not existing case, which will happen more often than the first one).
         map_move_sale_line = {}
@@ -125,7 +126,7 @@ class AccountMoveLine(models.Model):
                 map_entry_key = (sale_order.id, move_line.product_id.id, price)  # cache entry to limit the call to search
                 sale_line = existing_sale_line_cache.get(map_entry_key)
                 if sale_line:  # already search, so reuse it. sale_line can be sale.order.line record or index of a "to create values" in `sale_line_values_to_create`
-                    map_move_sale_line[move_line.id] = sale_line
+                    map_move_sale_line[move_line] = sale_line
                     existing_sale_line_cache[map_entry_key] = sale_line
                 else:  # search for existing sale line
                     sale_line = self.env['sale.order.line'].search([
@@ -135,29 +136,30 @@ class AccountMoveLine(models.Model):
                         ('is_expense', '=', True),
                     ], limit=1)
                     if sale_line:  # found existing one, so keep the browse record
-                        map_move_sale_line[move_line.id] = existing_sale_line_cache[map_entry_key] = sale_line
+                        map_move_sale_line[move_line] = existing_sale_line_cache[map_entry_key] = sale_line
                     else:  # should be create, so use the index of creation values instead of browse record
                         # save value to create it
                         sale_line_values_to_create.append(move_line._sale_prepare_sale_line_values(sale_order, price))
                         # store it in the cache of existing ones
                         existing_sale_line_cache[map_entry_key] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
                         # store it in the map_move_sale_line map
-                        map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
+                        map_move_sale_line[move_line] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
 
             else:  # save its value to create it anyway
                 sale_line_values_to_create.append(move_line._sale_prepare_sale_line_values(sale_order, price))
-                map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
+                map_move_sale_line[move_line] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
 
         # create the sale lines in batch
         new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
-        for move_line_id, unknown_sale_line in map_move_sale_line.items():
+        for move_line, unknown_sale_line in map_move_sale_line.items():
             if isinstance(unknown_sale_line, int):  # index of newly created sale line
-                result[move_line_id] = new_sale_lines[unknown_sale_line]
+                result[move_line.id] = new_sale_lines[unknown_sale_line]
             elif isinstance(unknown_sale_line, models.BaseModel):  # already record of sale.order.line
-                result[move_line_id] = unknown_sale_line
+                result[move_line.id] = unknown_sale_line
+            move_line.reinvoiced_sale_line_id = result[move_line.id] # link the aml to its re-invoiced sol
         return result
 
     def _sale_determine_order(self):
