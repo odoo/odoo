@@ -41,6 +41,25 @@ export function clickMenuDropdownOption(name, { expectUnloadPage = false } = {})
         expectUnloadPage,
     };
 }
+export function existMenuOption(name) {
+    return [
+        clickMenuButton(),
+        {
+            content: `check that ${name} exists in the burger menu`,
+            trigger: `span.dropdown-item:contains(${name})`,
+        },
+        clickMenuButton(),
+    ];
+}
+export function notExistMenuOption(name) {
+    return [
+        clickMenuButton(),
+        {
+            content: `check that ${name} doesn't exist in the burger menu`,
+            trigger: negate(`span.dropdown-item:contains(${name})`),
+        },
+    ];
+}
 export function isCashMoveButtonHidden() {
     return [
         {
