@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.fields import Command
@@ -933,16 +934,35 @@ class TestTimesheet(TestCommonTimesheet):
 
         self.empl_employee.resource_calendar_id = calendar
         self.empl_employee2.resource_calendar_id = calendar
+        with patch.object(self.env.registry['bus.bus'], '_sendone') as mock_send:
+            def create_timesheet_records(days):
+                return HrTimesheet.create([{
+                    'project_id': self.project_customer.id,
+                    'unit_amount': 1,
+                    'date': f'2025-05-{day}',
+                    'employee_id': employee.id,
+                } for day in days for employee in (self.empl_employee, self.empl_employee2)])
 
-        timesheets = HrTimesheet.create([{
-            'project_id': self.project_customer.id,
-            'unit_amount': 1,
-            'date': f'2025-05-{day}',
-            'employee_id': employee.id,
-        } for day in ('25', '26', '27') for employee in (self.empl_employee, self.empl_employee2)])
-        self.assertEqual(len(timesheets), 2)
-        self.assertEqual(fields.Date.to_string(timesheets[0].date), '2025-05-26', "The timesheet creation should skip non-working days")
-        self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-26', "The timesheet creation should skip non-working days")
+            def assert_notification(mock_send, notification_type, message):
+                mock_send.assert_called_with(self.env.user.partner_id, 'simple_notification', {
+                    'type': notification_type,
+                    'message': message,
+                })
+                mock_send.reset_mock()
+
+            timesheets = create_timesheet_records(('25', '26', '27'))
+            self.assertEqual(len(timesheets), 2)
+            self.assertEqual(fields.Date.to_string(timesheets[0].date), '2025-05-26', "The timesheet creation should skip non-working days")
+            self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-26', "The timesheet creation should skip non-working days")
+            assert_notification(mock_send, 'danger', "Some timesheets were not created: employees aren’t working on the selected days")
+
+            timesheets = create_timesheet_records(('18', '25'))
+            self.assertEqual(len(timesheets), 0)
+            assert_notification(mock_send, 'danger', "No timesheets created: employees aren’t working on the selected days")
+
+            timesheets = create_timesheet_records(('8', '9'))
+            self.assertEqual(len(timesheets), 4)
+            assert_notification(mock_send, 'success', "Timesheets successfully created")
 
     def test_keep_create_account_values_at_timesheet_creation(self):
         field_name = self.analytic_plan._column_name()
