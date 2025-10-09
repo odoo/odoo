@@ -50,6 +50,13 @@ class PaymentCommon(BaseCommon):
             'zip': '1000',
             'country_id': cls.country_belgium.id,
         })
+        cls.env.user.groups_id |= cls.env.ref('account.group_validate_bank_account')
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': cls.default_partner.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
+        })
 
         # Create a dummy provider to allow basic tests without any specific provider implementation
         arch = """

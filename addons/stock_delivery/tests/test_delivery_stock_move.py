@@ -21,6 +21,12 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         cls.AccountJournal = cls.env['account.journal']
 
         cls.partner_18 = cls.env['res.partner'].create({'name': 'My Test Customer'})
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': cls.partner_18.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
+        })
         cls.product_11 = cls.env['product.product'].create({'name': 'A product to deliver'})
         cls.product_cable_management_box = cls.env['product.product'].create({
             'name': 'Another product to deliver',

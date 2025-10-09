@@ -13,6 +13,13 @@ class TestAccountPartner(AccountTestInvoicingCommon):
     @freeze_time("2023-05-31")
     def test_days_sales_outstanding(self):
         partner = self.env['res.partner'].create({'name': 'MyCustomer'})
+        self.env['res.partner.bank'].create({
+            'acc_number': 'IT39Z081750601887738Y5SDN41',
+            'partner_id': partner.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
+        })
+
         self.assertEqual(partner.days_sales_outstanding, 0.0)
         move_1 = self.init_invoice("out_invoice", partner, invoice_date="2023-01-01", amounts=[3000], taxes=self.tax_sale_a)
         self.assertEqual(partner.days_sales_outstanding, 0.0)

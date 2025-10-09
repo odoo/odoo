@@ -99,6 +99,13 @@ class TestAccountPaymentMethodLine(AccountTestInvoicingCommon):
 
         # Test with two moves with same payment method lines but different partners
         self.partner_d = self.partner_a.copy()
+        self.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': self.partner_d.id,
+            'acc_type': 'bank',
+            'sequence': 20,
+            'allow_out_payment': True,
+        })
         move_partner_d = self.init_invoice(move_type='out_invoice', partner=self.partner_d, products=self.product_a, post=True)
         self.assertRegisterPayment(
             self.bank_journal_1,

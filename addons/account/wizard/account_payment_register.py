@@ -271,6 +271,24 @@ class AccountPaymentRegister(models.TransientModel):
         partner_bank_account = self.env['res.partner.bank']
         if move.is_invoice(include_receipts=True):
             partner_bank_account = move.partner_bank_id._origin
+        elif line.partner_id:
+            if self.env['ir.module.module']._get('hr').state == 'installed':
+                if line.partner_id.employee:
+                    partner_employee = self.env['hr.employee'].search([
+                        ('user_id', '=', line.partner_id.user_id),
+                        ('user_id', '!=', False)])
+
+                    match len(partner_employee):
+                        case 0:
+                            partner_bank_account = line.partner_id.bank_ids.sorted('sequence')[0]
+                        case 1:
+                            partner_bank_account = self.env['hr.employee'].browse(partner_employee[0].id).bank_account_id
+                        case _:
+                            raise UserError('The employee NOK')
+                else:
+                    partner_bank_account = line.partner_id.bank_ids.sorted('sequence')[0]
+            else:
+                partner_bank_account = line.partner_id.bank_ids.sorted('sequence')[0]
 
         return {
             'partner_id': line.partner_id.id,
@@ -338,11 +356,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         for wizard in self:
             lines = wizard.line_ids._origin
-
-            if len(lines.company_id.root_id) > 1:
-                raise UserError(_("You can't create payments for entries belonging to different companies."))
-            if not lines:
-                raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
+            self._raise_if_erroneous_lines(lines)
 
             batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
             banks_per_partner = defaultdict(lambda: {'inbound': set(), 'outbound': set()})
@@ -392,6 +406,32 @@ class AccountPaymentRegister(models.TransientModel):
                 batch_vals.append(vals)
 
             wizard.batches = batch_vals
+
+    @api.model
+    def _raise_if_erroneous_lines(self, lines):
+        self.ensure_one()
+        if len(lines.company_id.root_id) > 1:
+            raise UserError(_("You can't create payments for entries belonging to different companies."))
+
+        if not lines:
+            raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
+
+        if erroneous_lines := lines.filtered(lambda line: line.partner_id and (len(line.partner_id.bank_ids) == 0
+            or not line.partner_id.bank_ids.sorted('sequence')[0].allow_out_payment)):
+            error_msg = []
+            untrusted = erroneous_lines.filtered(lambda line: len(line.partner_id.bank_ids) > 0
+                and not line.partner_id.bank_ids.sorted('sequence')[0].allow_out_payment)
+            if untrusted:
+                partners_str = [partner.name for partner in untrusted.mapped('partner_id')]
+                error_msg.append(_("The following partners have an untrusted bank account:\n%s", ", ".join(partners_str)))
+            no_bank = erroneous_lines.filtered(lambda line: len(line.partner_id.bank_ids) == 0)
+            if no_bank:
+                partners_str = [partner.name for partner in no_bank.mapped('partner_id')]
+                error_msg.append(_("The following partners are missing a bank account:\n%s", ", ".join(partners_str)))
+
+            if len(error_msg) == 1:
+                raise UserError(error_msg[0])
+            raise UserError("\n\n".join(error_msg))
 
     @api.depends('payment_method_line_id', 'line_ids', 'group_payment', 'partner_bank_id')
     def _compute_trust_values(self):

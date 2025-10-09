@@ -28,6 +28,12 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             groups='base.group_user',
             company_ids=[Command.set(cls.env.companies.ids)],
         )
+        cls.env['res.partner.bank'].create({
+            'acc_number': 'BE91073397502076',
+            'partner_id': cls.expense_user_employee.partner_id.id,
+            'acc_type': 'bank',
+            'allow_out_payment': True,
+        })
         cls.expense_user_manager = mail_new_test_user(
             cls.env,
             name='Expense manager',
