@@ -66,9 +66,7 @@ def check_super(passwd):
 # This should be moved to odoo.modules.db, along side initialize().
 def _initialize_db(db_name, demo, lang, user_password, login='admin', country_code=None, phone=None):
     try:
-        odoo.tools.config['load_language'] = lang
-
-        registry = odoo.modules.registry.Registry.new(db_name, update_module=True, new_db_demo=demo)
+        registry = odoo.modules.registry.Registry.new(db_name, update_module=True, new_db_demo=demo, load_language=lang)
 
         with closing(registry.cursor()) as cr:
             env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
