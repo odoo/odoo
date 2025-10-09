@@ -421,7 +421,7 @@ export class PaymentScreen extends Component {
                     this.pos.orderDone(this.currentOrder);
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextPage = this.pos.defaultPage;
-                    if (switchScreen) {
+                    if (switchScreen && nextPage.page === "ProductScreen") {
                         this.selectNextOrder();
                     }
                 }
