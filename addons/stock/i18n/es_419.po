@@ -3,13 +3,14 @@
 # * stock
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-30 18:35+0000\n"
-"PO-Revision-Date: 2025-09-17 07:46+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-09 02:31+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/stock/es_419/>\n"
 "Language: es_419\n"
@@ -1733,14 +1734,12 @@ msgid ""
 msgstr ""
 "Cantidad disponible (se calcula como cantidad a la mano - cantidad reservada "
 "- cantidad por eliminar)\n"
-"En un contexto de una sola ubicación de existencias, esto incluye los "
-"artículos que se almacenan en esta ubicación o cualquier ubicación "
-"secundaria.\n"
-"En un contexto de un solo almacén, esto incluye los artículos que se "
-"almacenan en la ubicación de existencias de ese almacén o cualquier almacén "
-"secundario.\n"
-"En cualquier otro caso, esto incluye los artículos que se almacenan en "
-"cualquier ubicación de existencias de tipo 'Interna'."
+"En un contexto con una sola ubicación de inventario, incluye los artículos "
+"almacenados en esta ubicación o en cualquier ubicación secundaria.\n"
+"En un contexto con un solo almacén, incluye los artículos almacenados en la "
+"ubicación de inventario de ese almacén o en cualquier almacén secundario.\n"
+"En cualquier otro caso, incluye los artículos almacenados en cualquier "
+"ubicación de inventario de tipo \"Interna\"."
 
 #. module: stock
 #. odoo-javascript
@@ -3926,15 +3925,13 @@ msgid ""
 "type."
 msgstr ""
 "Cantidad pronosticada (calculada como cantidad a la mano - saliente + "
-"entrante - Cantidad a eliminar)\n"
-"En un contexto de una sola ubicación de existencias, esto incluye los "
-"artículos que se almacenan en esta ubicación o cualquier ubicación "
-"secundaria.\n"
-"En un contexto de un solo almacén, esto incluye los artículos que se "
-"almacenan en la ubicación de existencias de ese almacén o cualquier almacén "
-"secundario.\n"
-"En cualquier otro caso, esto incluye los artículos que se almacenan en "
-"cualquier ubicación de existencias de tipo 'Interna'."
+"entrante - cantidad a eliminar)\n"
+"En un contexto con una sola ubicación de inventario, incluye los artículos "
+"almacenados en esta ubicación o cualquier ubicación secundaria.\n"
+"En un contexto con un solo almacén, incluye los artículos almacenados en la "
+"ubicación de inventario de ese almacén o cualquier almacén secundario.\n"
+"En cualquier otro caso, incluye los artículos almacenados en cualquier "
+"ubicación de inventario de tipo \"Interna\"."
 
 #. module: stock
 #. odoo-javascript
@@ -6400,8 +6397,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
-"Cantidad a la mano que no se ha reservado en un traslado y sigue fresca, en "
-"la unidad de medida predeterminada del producto"
+"Cantidad a la mano que no se ha reservado en un traslado y sigue en buen "
+"estado, en la unidad de medida predeterminada del producto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
