@@ -11,7 +11,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { mixCssColors } from '@web/core/utils/colors';
+import { mixCssColors } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
 import {
     Component,
@@ -37,58 +37,58 @@ export const ROUTES = {
 };
 
 export const WEBSITE_TYPES = {
-    1: {id: 1, label: _t("a website"), name: 'business'},
-    2: {id: 2, label: _t("an online store"), name: 'online_store'},
-    3: {id: 3, label: _t("a blog"), name: 'blog'},
-    4: {id: 4, label: _t("an event website"), name: 'event'},
-    5: {id: 5, label: _t("an elearning platform"), name: 'elearning'},
+    1: { id: 1, label: _t("a website"), name: "business" },
+    2: { id: 2, label: _t("an online store"), name: "online_store" },
+    3: { id: 3, label: _t("a blog"), name: "blog" },
+    4: { id: 4, label: _t("an event website"), name: "event" },
+    5: { id: 5, label: _t("an elearning platform"), name: "elearning" },
 };
 
 export const WEBSITE_PURPOSES = {
-    1: {id: 1, label: _t("get leads"), name: 'get_leads'},
-    2: {id: 2, label: _t("develop the brand"), name: 'develop_brand'},
-    3: {id: 3, label: _t("sell more"), name: 'sell_more'},
-    4: {id: 4, label: _t("inform customers"), name: 'inform_customers'},
-    5: {id: 5, label: _t("schedule appointments"), name: 'schedule_appointments'},
+    1: { id: 1, label: _t("get leads"), name: "get_leads" },
+    2: { id: 2, label: _t("develop the brand"), name: "develop_brand" },
+    3: { id: 3, label: _t("sell more"), name: "sell_more" },
+    4: { id: 4, label: _t("inform customers"), name: "inform_customers" },
+    5: { id: 5, label: _t("schedule appointments"), name: "schedule_appointments" },
 };
 
 export const PALETTE_NAMES = [
-    'default-light-1',
-    'default-light-2',
-    'default-light-4',
-    'default-light-3',
-    'default-light-5',
-    'default-24',
-    'default-light-7',
-    'default-light-6',
-    'default-light-11',
-    'default-light-14',
-    'default-light-8',
-    'default-6',
-    'default-7',
-    'default-8',
-    'default-9',
-    'default-23',
-    'default-25',
-    'default-12',
-    'default-14',
-    'default-22',
-    'default-15',
-    'default-16',
-    'default-17',
-    'default-light-10',
-    'default-19',
-    'default-20',
-    'default-5',
-    'default-4',
-    'default-light-9',
-    'default-2',
-    'default-light-13',
-    'default-27',
-    'default-light-12',
-    'default-1',
-    'default-28',
-    'default-21',
+    "default-light-1",
+    "default-light-2",
+    "default-light-4",
+    "default-light-3",
+    "default-light-5",
+    "default-24",
+    "default-light-7",
+    "default-light-6",
+    "default-light-11",
+    "default-light-14",
+    "default-light-8",
+    "default-6",
+    "default-7",
+    "default-8",
+    "default-9",
+    "default-23",
+    "default-25",
+    "default-12",
+    "default-14",
+    "default-22",
+    "default-15",
+    "default-16",
+    "default-17",
+    "default-light-10",
+    "default-19",
+    "default-20",
+    "default-5",
+    "default-4",
+    "default-light-9",
+    "default-2",
+    "default-light-13",
+    "default-27",
+    "default-light-12",
+    "default-1",
+    "default-28",
+    "default-21",
 ];
 
 // Attributes for which background color should be retrieved
@@ -110,15 +110,11 @@ const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
  * of the list is at most 'resultNbrMax'.
  */
 async function getRecommendedThemes(orm, state, resultNbrMax = MAX_NBR_DISPLAY_MAIN_THEMES) {
-    return orm.call("website",
-        "configurator_recommended_themes",
-        [],
-        {
-            "industry_id": state.selectedIndustry.id,
-            "palette": state.selectedPalette,
-            "result_nbr_max": resultNbrMax,
-        },
-    );
+    return orm.call("website", "configurator_recommended_themes", [], {
+        industry_id: state.selectedIndustry.id,
+        palette: state.selectedPalette,
+        result_nbr_max: resultNbrMax,
+    });
 }
 
 //------------------------------------------------------------------------------
@@ -149,24 +145,24 @@ export class WelcomeScreen extends Component {
 }
 
 export class DescriptionScreen extends Component {
-    static template = 'website.Configurator.DescriptionScreen';
+    static template = "website.Configurator.DescriptionScreen";
     static components = { SkipButton, AutoComplete };
     static props = {
         navigate: Function,
         skip: Function,
     };
     setup() {
-        this.industrySelection = useRef('industrySelection');
+        this.industrySelection = useRef("industrySelection");
         this.purposeSelectionRef = useRef("purposeSelection");
         this.state = useStore();
-        this.orm = useService('orm');
+        this.orm = useService("orm");
         useAutofocus();
 
         this.splitRegex = /[|\s,]+/;
 
         // Get all words from the industry names and synonyms
         this.dictionarySet = new Set();
-        for (let industry of this.state.industries) {
+        for (const industry of this.state.industries) {
             let industryWords = this._splitToSet(industry.label);
             if (industry.synonyms) {
                 industryWords = industryWords.union(this._splitToSet(industry.synonyms));
@@ -177,14 +173,17 @@ export class DescriptionScreen extends Component {
         onMounted(() => this.onMounted());
 
         // Autofocus the next field once the current one is confirmed.
-        useEffect((selectedType, selectedIndustry) => {
-            if (selectedType && !selectedIndustry) {
-                this.industrySelection.el.querySelector("input").focus();
-            }
-            if (selectedIndustry) {
-                this.purposeSelectionRef.el.focus();
-            }
-        }, () => [this.state.selectedType, this.state.selectedIndustry]);
+        useEffect(
+            (selectedType, selectedIndustry) => {
+                if (selectedType && !selectedIndustry) {
+                    this.industrySelection.el.querySelector("input").focus();
+                }
+                if (selectedIndustry) {
+                    this.purposeSelectionRef.el.focus();
+                }
+            },
+            () => [this.state.selectedType, this.state.selectedIndustry]
+        );
     }
 
     onMounted() {
@@ -210,9 +209,7 @@ export class DescriptionScreen extends Component {
     get sources() {
         return [
             {
-                options: (request) => {
-                    return request.length < 1 ? [] : this._autocompleteSearch(request);
-                },
+                options: (request) => (request.length < 1 ? [] : this._autocompleteSearch(request)),
             },
         ];
     }
@@ -229,11 +226,11 @@ export class DescriptionScreen extends Component {
      */
     _autocompleteSearch(term) {
         this.state.selectedIndustry = undefined;
-        let termsSet = this._splitToSet(term);
+        const termsSet = this._splitToSet(term);
 
         //-------words correction--------
         // Check and correct all the terms
-        let correctedSet = new Set();
+        const correctedSet = new Set();
         for (const term of termsSet) {
             if (this.dictionarySet.has(term)) {
                 correctedSet.add(term);
@@ -246,25 +243,29 @@ export class DescriptionScreen extends Component {
         const limit = 30;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
-        let matches = this.state.industries.filter((val, index) => {
+        let matches = this.state.industries.filter((val, index) =>
             // To match, every term should be contained in the label
-            return terms.every(term => val.label.toLowerCase().includes(term));
-        });
+            terms.every((term) => val.label.toLowerCase().includes(term))
+        );
 
         matches = matches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         if (matches.length > limit) {
             // Keep matches with the least number of words so that e.g.
             // "restaurant" remains available even if there are 30 specific
             // sub-types that have a higher hit count.
-            matches = matches.sort((x, y) => x.wordCount - y.wordCount)
-                             .slice(0, limit)
-                             .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
+            matches = matches
+                .sort((x, y) => x.wordCount - y.wordCount)
+                .slice(0, limit)
+                .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         } else {
             let synonymMatches = this.state.industries.filter((val, index) => {
                 // To match, every term should be contained in the synonym
-                for (const candidate of [...(val.synonyms || '').split(this.splitRegex)]) {
+                for (const candidate of [...(val.synonyms || "").split(this.splitRegex)]) {
                     // Check if industry label has already matched
-                    if (terms.every(term => candidate.toLowerCase().includes(term)) && !matches.includes(val)) {
+                    if (
+                        terms.every((term) => candidate.toLowerCase().includes(term)) &&
+                        !matches.includes(val)
+                    ) {
                         return true;
                     }
                 }
@@ -299,8 +300,8 @@ export class DescriptionScreen extends Component {
      * - 'searchTermIndexes' keeps the indexes of the bits that matches with the 'terms'
      */
     _getMatchTermOrder(label, terms) {
-        let sortedTerms = terms.sort((a, b) => b.length - a.length);
-        let matchTermOrder = {
+        const sortedTerms = terms.sort((a, b) => b.length - a.length);
+        const matchTermOrder = {
             labelBits: [],
             searchTermIndexes: [],
         };
@@ -313,14 +314,14 @@ export class DescriptionScreen extends Component {
             let bitIndex = 0;
             while (bitIndex < matchTermOrder.labelBits.length) {
                 const currentBit = matchTermOrder.labelBits[bitIndex];
-                const splitBits = currentBit.split(new RegExp(`(${escapeRegExp(term)})`))
+                const splitBits = currentBit.split(new RegExp(`(${escapeRegExp(term)})`));
                 matchTermOrder.labelBits.splice(bitIndex, 1, ...splitBits);
                 bitIndex += splitBits.length;
             }
         }
         // Saves the indexes of the segments matching the terms
         const labelBits = [];
-        for (let i in matchTermOrder.labelBits) {
+        for (const i in matchTermOrder.labelBits) {
             labelBits.push({
                 bit: matchTermOrder.labelBits[i],
                 id: i,
@@ -344,13 +345,13 @@ export class DescriptionScreen extends Component {
     }
 
     checkDescriptionCompletion() {
-        const {selectedType, selectedPurpose, selectedIndustry} = this.state;
+        const { selectedType, selectedPurpose, selectedIndustry } = this.state;
         if (selectedType && selectedPurpose && selectedIndustry) {
             // If the industry name is not known by the server, send it to the
             // IAP server.
             if (selectedIndustry.id === -1) {
-                this.orm.call('website', 'configurator_missing_industry', [], {
-                    'unknown_industry': selectedIndustry.label,
+                this.orm.call("website", "configurator_missing_industry", [], {
+                    unknown_industry: selectedIndustry.label,
                 });
             }
             this.props.navigate(ROUTES.paletteSelectionScreen);
@@ -375,17 +376,17 @@ export class DescriptionScreen extends Component {
 }
 
 export class PaletteSelectionScreen extends Component {
-    static components = {SkipButton};
-    static template = 'website.Configurator.PaletteSelectionScreen';
+    static components = { SkipButton };
+    static template = "website.Configurator.PaletteSelectionScreen";
     static props = {
         navigate: Function,
         skip: Function,
     };
     setup() {
         this.state = useStore();
-        this.logoInputRef = useRef('logoSelectionInput');
+        this.logoInputRef = useRef("logoSelectionInput");
         this.notification = useService("notification");
-        this.orm = useService('orm');
+        this.orm = useService("orm");
 
         onMounted(() => {
             if (this.state.logo) {
@@ -431,10 +432,10 @@ export class PaletteSelectionScreen extends Component {
                 return;
             }
             const data = await getDataURLFromFile(file);
-            const attachment = await rpc('/web_editor/attachment/add_data', {
-                'name': 'logo',
-                'data': data.split(',')[1],
-                'is_image': true,
+            const attachment = await rpc("/web_editor/attachment/add_data", {
+                name: "logo",
+                data: data.split(",")[1],
+                is_image: true,
             });
             if (!attachment.error) {
                 if (previousLogoAttachmentId) {
@@ -443,29 +444,27 @@ export class PaletteSelectionScreen extends Component {
                 this.state.changeLogo(data, attachment.id);
                 this.updatePalettes();
             } else {
-                this.notification.add(
-                    attachment.error,
-                    {
-                        title: file.name,
-                    }
-                );
+                this.notification.add(attachment.error, {
+                    title: file.name,
+                });
             }
         }
     }
 
     async updatePalettes() {
         let img = this.state.logo;
-        if (img.startsWith('data:image/svg+xml')) {
+        if (img.startsWith("data:image/svg+xml")) {
             img = await svgToPNG(img);
         }
-        if (img.startsWith('data:image/webp')) {
+        if (img.startsWith("data:image/webp")) {
             img = await webpToPNG(img);
         }
-        img = img.split(',')[1];
-        const [color1, color2] = await this.orm.call('base.document.layout',
-            'extract_image_primary_secondary_colors',
+        img = img.split(",")[1];
+        const [color1, color2] = await this.orm.call(
+            "base.document.layout",
+            "extract_image_primary_secondary_colors",
             [img],
-            {mitigate: 255},
+            { mitigate: 255 }
         );
         this.state.setRecommendedPalette(color1, color2);
     }
@@ -490,7 +489,7 @@ export class ApplyConfiguratorScreen extends Component {
     static template = "";
     static props = ["*"];
     setup() {
-        this.websiteService = useService('website');
+        this.websiteService = useService("website");
     }
 
     async applyConfigurator(themeName) {
@@ -503,22 +502,22 @@ export class ApplyConfiguratorScreen extends Component {
 
         const attemptConfiguratorApply = async (data, retryCount = 0) => {
             try {
-                return await this.orm.silent.call('website',
-                    'configurator_apply', [], data
-                );
+                return await this.orm.silent.call("website", "configurator_apply", [], data);
             } catch (error) {
                 // Wait a bit before retrying or allowing manual retry.
                 await delay(5000);
                 if (retryCount < 3) {
                     return attemptConfiguratorApply(data, retryCount + 1);
                 }
-                document.querySelector('.o_website_loader_container').remove();
+                document.querySelector(".o_website_loader_container").remove();
                 throw error;
             }
         };
 
         if (themeName !== undefined) {
-            const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+            const selectedFeatures = Object.values(this.state.features)
+                .filter((feature) => feature.selected)
+                .map((feature) => feature.id);
             this.websiteService.showLoader({
                 showTips: true,
                 selectedFeatures: selectedFeatures,
@@ -534,9 +533,9 @@ export class ApplyConfiguratorScreen extends Component {
                     this.state.selectedPalette.color5,
                 ];
             }
-            const resp = await attemptConfiguratorApply(this.getConfigurationData(
-                selectedFeatures, selectedPalette, themeName,
-            ));
+            const resp = await attemptConfiguratorApply(
+                this.getConfigurationData(selectedFeatures, selectedPalette, themeName)
+            );
 
             this.props.clearStorage();
 
@@ -544,29 +543,33 @@ export class ApplyConfiguratorScreen extends Component {
             // Here the website service goToWebsite method is not used because
             // the web client needs to be reloaded after the new modules have
             // been installed.
-            redirect(`/odoo/action-website.website_preview?website_id=${encodeURIComponent(resp.website_id)}`);
+            redirect(
+                `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                    resp.website_id
+                )}`
+            );
         }
     }
 
     getConfigurationData(selectedFeatures, selectedPalette, themeName) {
         return {
-            'selected_features': selectedFeatures,
-            'industry_id': this.state.selectedIndustry.id,
-            'industry_name': this.state.selectedIndustry.label.toLowerCase(),
-            'selected_palette': selectedPalette,
-            'theme_name': themeName,
-            'website_purpose': WEBSITE_PURPOSES[
-                this.state.selectedPurpose || this.state.formerSelectedPurpose
-            ].name,
-            'website_type': WEBSITE_TYPES[this.state.selectedType].name,
-            'logo_attachment_id': this.state.logoAttachmentId,
+            selected_features: selectedFeatures,
+            industry_id: this.state.selectedIndustry.id,
+            industry_name: this.state.selectedIndustry.label.toLowerCase(),
+            selected_palette: selectedPalette,
+            theme_name: themeName,
+            website_purpose:
+                WEBSITE_PURPOSES[this.state.selectedPurpose || this.state.formerSelectedPurpose]
+                    .name,
+            website_type: WEBSITE_TYPES[this.state.selectedType].name,
+            logo_attachment_id: this.state.logoAttachmentId,
         };
     }
 }
 
 export class FeaturesSelectionScreen extends Component {
-    static components = {SkipButton};
-    static template = 'website.Configurator.FeatureSelection';
+    static components = { SkipButton };
+    static template = "website.Configurator.FeatureSelection";
     static props = {
         navigate: Function,
         skip: Function,
@@ -607,14 +610,18 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
         super.setup();
 
-        this.uiService = useService('ui');
-        this.orm = useService('orm');
+        this.uiService = useService("ui");
+        this.orm = useService("orm");
         this.maxNbrDisplayExtraThemes = 100;
         const env = useEnv();
         env.store["extraThemesLoaded"] = false;
         env.store["extraThemes"] = [];
         this.state = useState(env.store);
-        this.themeSVGPreviews = [useRef('ThemePreview1'), useRef('ThemePreview2'), useRef('ThemePreview3')];
+        this.themeSVGPreviews = [
+            useRef("ThemePreview1"),
+            useRef("ThemePreview2"),
+            useRef("ThemePreview3"),
+        ];
         this.extraThemesButtonRef = useRef("extraThemesButton");
         this.extraThemeSVGPreviews = [];
         for (let i = 0; i < this.maxNbrDisplayExtraThemes; i++) {
@@ -623,7 +630,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         onWillStart(async () => {
             const themes = await getRecommendedThemes(this.orm, this.state);
             if (!themes.length) {
-                await this.applyConfigurator('theme_default');
+                await this.applyConfigurator("theme_default");
             } else {
                 this.state.updateRecommendedThemes(themes);
             }
@@ -634,7 +641,8 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         });
 
         useEffect(
-            () => this.blockUiDuringImageLoading(this.state.extraThemes, this.extraThemeSVGPreviews),
+            () =>
+                this.blockUiDuringImageLoading(this.state.extraThemes, this.extraThemeSVGPreviews),
             () => [this.state.extraThemes]
         );
     }
@@ -646,8 +654,10 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
      * be displayed.
      */
     get showViewMoreThemesButton() {
-        return !this.state.extraThemesLoaded
-            && this.state.themes.length === MAX_NBR_DISPLAY_MAIN_THEMES;
+        return (
+            !this.state.extraThemesLoaded &&
+            this.state.themes.length === MAX_NBR_DISPLAY_MAIN_THEMES
+        );
     }
 
     /**
@@ -663,18 +673,31 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
             return;
         }
         const proms = [];
-        this.uiService.block({delay: 700});
+        this.uiService.block({ delay: 700 });
         themes.forEach((theme, idx) => {
-            const svgEl = new DOMParser().parseFromString(theme.svg, "image/svg+xml").documentElement;
+            const svgEl = new DOMParser().parseFromString(
+                theme.svg,
+                "image/svg+xml"
+            ).documentElement;
             for (const imgEl of svgEl.querySelectorAll("image")) {
-                proms.push(new Promise((resolve, reject) => {
-                    imgEl.addEventListener("load", () => {
-                        resolve(imgEl);
-                    }, {once: true});
-                    imgEl.addEventListener("error", () => {
-                        reject(imgEl);
-                    }, {once: true});
-                }));
+                proms.push(
+                    new Promise((resolve, reject) => {
+                        imgEl.addEventListener(
+                            "load",
+                            () => {
+                                resolve(imgEl);
+                            },
+                            { once: true }
+                        );
+                        imgEl.addEventListener(
+                            "error",
+                            () => {
+                                reject(imgEl);
+                            },
+                            { once: true }
+                        );
+                    })
+                );
             }
             themeSVGPreviews[idx].el.appendChild(svgEl);
         });
@@ -699,7 +722,9 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         // Filter the extra themes to not propose a theme that is already
         // present in the main themes.
         const mainThemeNames = this.state.themes.map((theme) => theme.name);
-        this.state.extraThemes = themes.filter((extraTheme) => !mainThemeNames.includes(extraTheme.name));
+        this.state.extraThemes = themes.filter(
+            (extraTheme) => !mainThemeNames.includes(extraTheme.name)
+        );
         this.state.extraThemesLoaded = true;
         removeLoadingEffect();
     }
@@ -755,7 +780,7 @@ export class Store {
      */
     getSelectedPaletteName() {
         const palette = this.selectedPalette;
-        return palette ? (palette.name || 'recommendedPalette') : false;
+        return palette ? palette.name || "recommendedPalette" : false;
     }
 
     //-------------------------------------------------------------------------
@@ -763,9 +788,13 @@ export class Store {
     //-------------------------------------------------------------------------
 
     selectWebsiteType(id) {
-        Object.values(this.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
-            feature.selected = feature.website_config_preselection.includes(WEBSITE_TYPES[id].name);
-        });
+        Object.values(this.features)
+            .filter((feature) => feature.module_state !== "installed")
+            .forEach((feature) => {
+                feature.selected = feature.website_config_preselection.includes(
+                    WEBSITE_TYPES[id].name
+                );
+            });
         this.selectedType = id;
     }
 
@@ -776,10 +805,13 @@ export class Store {
         if (!id && this.selectedPurpose) {
             this.formerSelectedPurpose = this.selectedPurpose;
         }
-        Object.values(this.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
-            // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
-            feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
-        });
+        Object.values(this.features)
+            .filter((feature) => feature.module_state !== "installed")
+            .forEach((feature) => {
+                // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
+                feature.selected |=
+                    id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
+            });
         this.selectedPurpose = id;
     }
 
@@ -797,7 +829,7 @@ export class Store {
     }
 
     selectPalette(paletteName) {
-        if (paletteName === 'recommendedPalette') {
+        if (paletteName === "recommendedPalette") {
             this.selectedPalette = this.recommendedPalette;
         } else {
             this.selectedPalette = this.palettes[paletteName];
@@ -806,21 +838,21 @@ export class Store {
 
     toggleFeature(featureId) {
         const feature = this.features[featureId];
-        const isModuleInstalled = feature.module_state === 'installed';
+        const isModuleInstalled = feature.module_state === "installed";
         feature.selected = !feature.selected || isModuleInstalled;
     }
 
     setRecommendedPalette(color1, color2) {
         if (color1 && color2) {
             if (color1 === color2) {
-                color2 = mixCssColors('#FFFFFF', color1, 0.2);
+                color2 = mixCssColors("#FFFFFF", color1, 0.2);
             }
             const recommendedPalette = {
                 color1: color1,
                 color2: color2,
-                color3: mixCssColors('#FFFFFF', color2, 0.9),
-                color4: '#FFFFFF',
-                color5: mixCssColors(color1, '#000000', 0.125),
+                color3: mixCssColors("#FFFFFF", color2, 0.9),
+                color4: "#FFFFFF",
+                color5: mixCssColors(color1, "#000000", 0.125),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
                 recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];
@@ -850,12 +882,12 @@ export class Configurator extends Component {
         FeaturesSelectionScreen,
         ThemeSelectionScreen,
     };
-    static template = 'website.Configurator.Configurator';
+    static template = "website.Configurator.Configurator";
     static props = { ...standardActionServiceProps };
 
     setup() {
-        this.orm = useService('orm');
-        this.action = useService('action');
+        this.orm = useService("orm");
+        this.action = useService("action");
         this.website = useService("website");
 
         // Using the back button must update the router state.
@@ -878,7 +910,7 @@ export class Configurator extends Component {
         useSubEnv({ store });
 
         onWillStart(async () => {
-            this.websiteId = (await this.orm.call('website', 'get_current_website'))[0];
+            this.websiteId = (await this.orm.call("website", "get_current_website"))[0];
 
             await store.start(() => this.getInitialState());
             this.updateStorage(store);
@@ -899,7 +931,9 @@ export class Configurator extends Component {
     }
 
     get pathname() {
-        return `/website/configurator${this.state.currentStep ? `/${encodeURIComponent(this.state.currentStep)}` : ''}`;
+        return `/website/configurator${
+            this.state.currentStep ? `/${encodeURIComponent(this.state.currentStep)}` : ""
+        }`;
     }
 
     get storageItemName() {
@@ -907,7 +941,11 @@ export class Configurator extends Component {
     }
 
     updateBrowserUrl() {
-        history.pushState({ skipRouteChange: true, configuratorStep: this.state.currentStep }, '', this.pathname);
+        history.pushState(
+            { skipRouteChange: true, configuratorStep: this.state.currentStep },
+            "",
+            this.pathname
+        );
     }
 
     get currentComponent() {
@@ -949,10 +987,10 @@ export class Configurator extends Component {
 
     async getInitialState() {
         // Load values from python and iap
-        var results = await this.orm.call('website', 'configurator_init');
+        var results = await this.orm.call("website", "configurator_init");
         const r = {
             industries: results.industries,
-            logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
+            logo: results.logo ? "data:image/png;base64," + results.logo : false,
             configurator_done: results.configurator_done,
         };
         r.industries = r.industries.map((industry, index) => ({
@@ -967,10 +1005,13 @@ export class Configurator extends Component {
 
         PALETTE_NAMES.forEach((paletteName) => {
             const palette = {
-                name: paletteName
+                name: paletteName,
             };
             for (let j = 1; j <= 5; j += 1) {
-                palette[`color${j}`] = getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
+                palette[`color${j}`] = getCSSVariableValue(
+                    `o-palette-${paletteName}-o-color-${j}`,
+                    style
+                );
             }
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
                 palette[attr] = getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
@@ -984,14 +1025,16 @@ export class Configurator extends Component {
             if (localState.selectedIndustry && localState.selectedPalette) {
                 themes = await getRecommendedThemes(this.orm, localState);
             }
-            return Object.assign(r, {...localState, palettes, themes});
+            return Object.assign(r, { ...localState, palettes, themes });
         }
 
         const features = {};
-        results.features.forEach(feature => {
-            features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
-            const wtp = features[feature.id]['website_config_preselection'];
-            features[feature.id]['website_config_preselection'] = wtp ? wtp.split(',') : [];
+        results.features.forEach((feature) => {
+            features[feature.id] = Object.assign({}, feature, {
+                selected: feature.module_state === "installed",
+            });
+            const wtp = features[feature.id]["website_config_preselection"];
+            features[feature.id]["website_config_preselection"] = wtp ? wtp.split(",") : [];
         });
 
         // Palette color used by default as background color for menu and footer.
@@ -1000,7 +1043,7 @@ export class Configurator extends Component {
         CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
             const color = getCSSVariableValue(`o-default-${attr}-bg`, style);
             const match = color.match(/o-color-(?<idx>[1-5])/);
-            const colorIdx = parseInt(match.groups['idx']);
+            const colorIdx = parseInt(match.groups["idx"]);
             defaultColors[attr] = `color${colorIdx}`;
         });
 
@@ -1046,4 +1089,4 @@ export class Configurator extends Component {
     }
 }
 
-registry.category('actions').add('website_configurator', Configurator);
+registry.category("actions").add("website_configurator", Configurator);

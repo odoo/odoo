@@ -24,11 +24,11 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     // eventual border-width/radius styles must be removed because they would
     // otherwise take precedence.
     removeInlineBorderIfNecessary({ editingElement, params }) {
-        const newStyleBeingEdited = NEW_STYLES.find(style => {
-            return params.mainParam === style
-                || CSS_SHORTHANDS[style].includes(params.mainParam);
-        });
-        if (newStyleBeingEdited && OLD_STYLES.some(style => editingElement.style[style])) {
+        const newStyleBeingEdited = NEW_STYLES.find(
+            (style) =>
+                params.mainParam === style || CSS_SHORTHANDS[style].includes(params.mainParam)
+        );
+        if (newStyleBeingEdited && OLD_STYLES.some((style) => editingElement.style[style])) {
             // Remove all old inline styles related to border-width/radius as
             // the new CSS rules + variables rely on both being right, i.e. not
             // messed up by any inline style...
@@ -44,7 +44,11 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
             // children with %o-we-background-layer classes too (note: the code
             // that handled adding inline style on child nodes only handled
             // those specific ones here after).
-            const compatLayerSelectors = [".o_we_bg_filter", ".o_bg_video_container", ".s_parallax_bg"];
+            const compatLayerSelectors = [
+                ".o_we_bg_filter",
+                ".o_bg_video_container",
+                ".s_parallax_bg",
+            ];
             const selector = `:scope > ${compatLayerSelectors.join(", :scope > ")}`;
             for (const childNode of editingElement.querySelectorAll(selector)) {
                 childNode.style.setProperty("border-radius", "");
@@ -54,5 +58,6 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     }
 }
 
-registry.category("builder-plugins")
+registry
+    .category("builder-plugins")
     .add(CompatibilityInlineBorderRemovalPlugin.id, CompatibilityInlineBorderRemovalPlugin);

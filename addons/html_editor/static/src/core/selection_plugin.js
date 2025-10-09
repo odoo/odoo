@@ -1037,7 +1037,10 @@ export class SelectionPlugin extends Plugin {
 
         const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
         // If selection includes a non-editable element, focusing editor will move cursor to different position.
-        if (!closestNonEditable(editableSelection.anchorNode) && !closestNonEditable(editableSelection.focusNode)) {
+        if (
+            !closestNonEditable(editableSelection.anchorNode) &&
+            !closestNonEditable(editableSelection.focusNode)
+        ) {
             // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
             this.editable.focus({ preventScroll: true });
         }

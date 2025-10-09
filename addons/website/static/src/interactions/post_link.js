@@ -9,7 +9,7 @@ export class PostLink extends Interaction {
         _root: {
             "t-on-click.prevent": this.onClickPost,
             "t-att-class": () => ({
-                "o_post_link_js_loaded": true,
+                o_post_link_js_loaded: true,
             }),
         },
     };
@@ -25,6 +25,4 @@ export class PostLink extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.post_link", PostLink);
+registry.category("public.interactions").add("website.post_link", PostLink);

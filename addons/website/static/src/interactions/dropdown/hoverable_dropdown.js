@@ -13,7 +13,7 @@ export class HoverableDropdown extends Interaction {
         ".nav:not(.o_mega_menu_is_offcanvas) .o_mega_menu": {
             "t-att-style": () => ({
                 "margin-top": this.isSmall() ? "" : "0 !important",
-                "top": this.isSmall() ? "" : "unset",
+                top: this.isSmall() ? "" : "unset",
             }),
         },
         _window: {
@@ -40,11 +40,7 @@ export class HoverableDropdown extends Interaction {
      */
     updateDropdownVisibility(dropdownEl, show) {
         const dropdownToggleEl = dropdownEl.querySelector(".dropdown-toggle");
-        if (
-            this.isSmall()
-            || !dropdownToggleEl
-            || dropdownEl.closest(".o_extra_menu_items")
-        ) {
+        if (this.isSmall() || !dropdownToggleEl || dropdownEl.closest(".o_extra_menu_items")) {
             return;
         }
         const dropdown = Dropdown.getOrCreateInstance(dropdownToggleEl);
@@ -56,8 +52,9 @@ export class HoverableDropdown extends Interaction {
      * @param {HTMLElement} currentTargetEl
      */
     onMouseEnter(ev, currentTargetEl) {
-        const focusedEl = this.el.ownerDocument.querySelector(":focus")
-            || window.frameElement?.ownerDocument.querySelector(":focus");
+        const focusedEl =
+            this.el.ownerDocument.querySelector(":focus") ||
+            window.frameElement?.ownerDocument.querySelector(":focus");
 
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the (or in the) extra menu ('+').
@@ -90,6 +87,4 @@ export class HoverableDropdown extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.hoverable_dropdown", HoverableDropdown);
+registry.category("public.interactions").add("website.hoverable_dropdown", HoverableDropdown);
