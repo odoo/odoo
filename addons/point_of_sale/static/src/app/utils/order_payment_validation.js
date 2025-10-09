@@ -109,7 +109,9 @@ export default class OrderPaymentValidation {
         if ((await this.askBeforeValidation()) === false) {
             return false;
         }
-        await this._askForCustomerIfRequired();
+        if ((await this._askForCustomerIfRequired()) === false) {
+            return false;
+        }
         this.pos.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
