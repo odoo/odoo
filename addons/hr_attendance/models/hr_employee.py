@@ -220,7 +220,7 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
+            "views": [[self.env.ref('hr_attendance_gantt.hr_attendance_gantt_view').id, "gantt"]],
             "context": {
                 "create": 0,
                 "search_default_check_in_filter": 1,
