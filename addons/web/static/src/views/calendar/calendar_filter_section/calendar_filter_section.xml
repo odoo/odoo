@@ -3,7 +3,8 @@
 
     <t t-name="web.CalendarFilterSection">
         <div t-if="section.filters.length gt 0 or section.canAddFilter"
-             class="o_calendar_filter d-flex flex-column gap-1 mt-3 mb-2"
+             class="o_calendar_filter d-flex flex-column gap-1 mt-3"
+             t-attf-class="{{ state.collapsed ? 'mb-2' : 'mb-4' }}"
              t-att-data-name="section.fieldName"
         >
             <t t-if="section.label">

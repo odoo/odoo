@@ -129,6 +129,12 @@ export class AttendeeCalendarModel extends CalendarModel {
             let duplicatedRecordIdx = -1;
             for (const event of Object.values(data.records)) {
                 const eventData = event.rawRecord;
+                // Do not duplicate if none of the event partner_ids are in the attendee filters
+                if (!eventData.partner_ids.some((p_id) => activeAttendeeIds.has(p_id))) {
+                    this.updateSingleEventAttendeeData(data, event);
+                    newRecords[event.id] = event;
+                    continue;
+                }
                 const attendees =
                     eventData.partner_ids && eventData.partner_ids.length
                         ? eventData.partner_ids
@@ -163,16 +169,20 @@ export class AttendeeCalendarModel extends CalendarModel {
             data.records = newRecords;
         } else {
             for (const event of Object.values(data.records)) {
-                const eventData = event.rawRecord;
-                event.attendeeId = eventData.partner_id && eventData.partner_id[0];
-                const attendeeInfo = data.attendees.find(
-                    (a) => a.id === currentPartnerId && a.event_id === event.id
-                );
-                if (attendeeInfo) {
-                    event.isAlone = attendeeInfo.is_alone;
-                    event.calendarAttendeeId = attendeeInfo.attendee_id;
-                }
+                this.updateSingleEventAttendeeData(data, event);
             }
+        }
+    }
+
+    updateSingleEventAttendeeData(data, event) {
+        const eventData = event.rawRecord;
+        event.attendeeId = eventData.partner_id && eventData.partner_id[0];
+        const attendeeInfo = data.attendees.find(
+            (a) => a.id === user.partnerId && a.event_id === event.id
+        );
+        if (attendeeInfo) {
+            event.isAlone = attendeeInfo.is_alone;
+            event.calendarAttendeeId = attendeeInfo.attendee_id;
         }
     }
 
