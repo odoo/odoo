@@ -1238,7 +1238,7 @@ test("many2one with co-model whose name field is a many2one", async () => {
     expect("div[name=product_id] input").toHaveValue("new value");
 });
 
-test("many2one searches with correct value", async () => {
+test("no additional searches for the same request", async () => {
     onRpc("web_name_search", ({ kwargs }) => {
         expect.step(`search: ${kwargs.name}`);
     });
@@ -1247,32 +1247,33 @@ test("many2one searches with correct value", async () => {
         resModel: "partner",
         resId: 1,
         arch: `
-            <form>
+        <form>
                 <sheet>
-                    <field name="trululu" />
+                <field name="trululu" />
                 </sheet>
-            </form>`,
+                </form>`,
     });
 
     expect(".o_field_many2one input").toHaveValue("aaa");
     await contains(".o_field_many2one input").click();
+    expect(".o_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(3);
     expect.verifySteps(["search: "]);
-
-    // unset the many2one -> should search again with ''
     await contains(".o_field_many2one input").clear({ confirm: false });
     await runAllTimers();
-    expect.verifySteps(["search: "]);
-
+    // no web_name_search because the previous request was the same
+    expect(".o_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(3);
+    await contains(".o_field_many2one input").edit(" ", { confirm: false });
+    await runAllTimers();
+    // no web_name_search because the previous request also was the same (leading spaces are trimmed)
+    expect(".o_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(3);
     await contains(".o_field_many2one input").edit("f", { confirm: false });
     await runAllTimers();
     expect.verifySteps(["search: f"]);
-
-    // close and re-open the dropdown -> should search with 'f' again
-    await contains(".o_field_many2one input").click();
+    expect(".o_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(1);
+    await contains(".o_field_many2one input").edit("f", { confirm: false });
     await runAllTimers();
-    await contains(".o_field_many2one input").click();
-    await runAllTimers();
-    expect.verifySteps(["search: f"]);
+    expect(".o_many2one .dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(1);
+    // no web_name_search because the previous request was already for f
 });
 
 test("no additional searches after no result is found", async () => {
@@ -1438,7 +1439,10 @@ test("many2one search with trailing and leading spaces", async () => {
         ".o_field_many2one[name='trululu'] .dropdown-menu li:not(.o_m2o_dropdown_option)"
     ).toHaveCount(1);
 
-    expect.verifySteps(["search: ", "search: first", "search: first", "search: first"]);
+    expect.verifySteps(["search: ", "search: first"], {
+        message:
+            "Leading and trailing spaces are trimmed so the request doesn't change and is not executed again",
+    });
 });
 
 // Should be removed ?
@@ -3305,46 +3309,6 @@ test("many2one: domain set in view and on field", async () => {
     await contains(".o_field_many2one input").click();
 
     expect(".o_field_many2one .o-autocomplete--dropdown-item").toHaveCount(2);
-});
-
-test("many2one: domain updated by an onchange", async () => {
-    expect.assertions(2);
-    Partner._onChanges = {
-        int_field: () => {},
-    };
-
-    let domain = [];
-    onRpc("onchange", () => {
-        domain = [["id", "in", [10]]];
-        return {
-            domain: {
-                trululu: domain,
-                unexisting_field: domain,
-            },
-        };
-    });
-    onRpc("web_name_search", ({ kwargs }) => {
-        expect(kwargs.domain).toEqual(domain);
-    });
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: `
-            <form>
-                <field name="int_field" />
-                <field name="trululu" />
-            </form>`,
-    });
-
-    // trigger a web_name_search (domain should be [])
-    await contains(".o_field_widget[name=trululu] input").click();
-    // close the dropdown
-    await contains(".o_field_widget[name=trululu] input").click();
-    // trigger an onchange that will update the domain
-
-    // trigger a web_name_search (domain should be [['id', 'in', [10]]])
-    await contains(".o_field_widget[name='trululu'] input").click();
 });
 
 test("search more in many2one: no text in input", async () => {

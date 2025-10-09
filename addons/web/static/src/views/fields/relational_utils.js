@@ -353,18 +353,8 @@ export class Many2XAutocomplete extends Component {
         };
     }
 
-    async search(name) {
-        const domain = this.props.getDomain();
-        const context = this.props.context;
-        if (
-            this.lastEmptySearch &&
-            deepEqual(this.lastEmptySearch.domain, domain) &&
-            deepEqual(this.lastEmptySearch.context, context) &&
-            (name.startsWith(this.lastEmptySearch.name) || name.length < this.props.searchThreshold)
-        ) {
-            return [];
-        }
-        const records = await this.orm.call(this.props.resModel, "web_name_search", [], {
+    async search(name, domain, context) {
+        return await this.orm.call(this.props.resModel, "web_name_search", [], {
             name,
             operator: "ilike",
             domain,
@@ -372,13 +362,34 @@ export class Many2XAutocomplete extends Component {
             context,
             specification: this.searchSpecification,
         });
-        if (!records.length) {
-            this.lastEmptySearch = {
-                context,
-                domain,
-                name,
-            };
+    }
+
+    async memoizedSearch(name) {
+        const domain = this.props.getDomain();
+        const context = this.props.context;
+        if (
+            this.previousSearch &&
+            deepEqual(this.previousSearch.domain, domain) &&
+            deepEqual(this.previousSearch.context, context)
+        ) {
+            if (this.previousSearch.name === name) {
+                return this.previousSearch.records;
+            }
+            if (
+                !this.previousSearch.records.length &&
+                (name.startsWith(this.previousSearch.name) ||
+                    name.length < this.props.searchThreshold)
+            ) {
+                return [];
+            }
         }
+        const records = await this.search(name, domain, context);
+        this.previousSearch = {
+            context,
+            domain,
+            name,
+            records,
+        };
         return records;
     }
 
@@ -415,7 +426,7 @@ export class Many2XAutocomplete extends Component {
                 suggestions.push(this.buildStartTypingSuggestion());
             }
         } else {
-            records = await lock(this.search(request));
+            records = await lock(this.memoizedSearch(request));
             if (records.length) {
                 for (const record of records) {
                     suggestions.push(this.buildRecordSuggestion(request, record));
