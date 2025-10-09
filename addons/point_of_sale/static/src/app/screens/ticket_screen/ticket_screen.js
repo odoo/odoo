@@ -319,10 +319,10 @@ export class TicketScreen extends Component {
                 discount: refundLine.discount,
                 tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
                 refunded_orderline_id: refundLine,
-                pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => [
-                    "create",
-                    { lot_name: packLot.lot_name },
-                ]),
+                // Only include as many pack_lot_ids as the refunded quantity requires.
+                pack_lot_ids: refundLine.pack_lot_ids
+                    .slice(0, refundDetail.qty)
+                    .map((packLot) => ["create", { lot_name: packLot.lot_name }]),
                 price_type: "automatic",
             });
             lines.push(line);
