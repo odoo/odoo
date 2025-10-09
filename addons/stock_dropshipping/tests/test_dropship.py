@@ -40,6 +40,7 @@ class TestDropship(common.TransactionCase):
             })],
             'route_ids': [(4, cls.dropshipping_route.id, 0)]
         })
+        cls.env['account.chart.template'].try_loading('generic_coa', cls.env.company, install_demo=False)
 
     def test_change_qty(self):
         # enable the dropship and MTO route on the product
