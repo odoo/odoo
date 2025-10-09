@@ -552,7 +552,7 @@ export function useSequential() {
 export function useDiscussSystray() {
     const ui = useService("ui");
     return {
-        class: "o-mail-DiscussSystray-class",
+        class: "o-mail-DiscussSystray-class d-contents",
         get contentClass() {
             return `d-flex flex-column flex-grow-1 ${
                 ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
