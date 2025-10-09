@@ -359,14 +359,67 @@ test("Changing max files number option updates file input 'multiple' attribute",
         </form>
     </section>
         `);
-    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1")
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
     await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("2");
-    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2")
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2");
     expect(":iframe input[type=file]").toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
     await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("1");
-    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1")
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
+});
+
+test("Last list entry cannot be removed", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(`
+<section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+    <form data-model_name="mail.mail">
+        <div class="s_website_form_rows">
+			<div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+			    <div class="row s_col_no_resize s_col_no_bgcolor">
+			        <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
+			            <span class="s_website_form_label_content">Custom Text</span>
+			        </label>
+			        <div class="col-sm">
+			            <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
+			                <div class="checkbox col-12 col-lg-4 col-md-6">
+			                    <div class="form-check">
+			                        <input type="checkbox" class="s_website_form_input form-check-input" id="ofwe8fyqws370" name="Custom Text" value="Option 1" data-fill-with="undefined">
+			                        <label class="form-check-label s_website_form_check_label" for="ofwe8fyqws370">Option 1</label>
+			                    </div>
+			                </div>
+			                <div class="checkbox col-12 col-lg-4 col-md-6">
+			                    <div class="form-check">
+			                        <input type="checkbox" class="s_website_form_input form-check-input" id="ofwe8fyqws371" name="Custom Text" value="Option 2">
+			                        <label class="form-check-label s_website_form_check_label" for="ofwe8fyqws371">Option 2</label>
+			                    </div>
+			                </div>
+			                <div class="checkbox col-12 col-lg-4 col-md-6">
+			                    <div class="form-check">
+			                        <input type="checkbox" class="s_website_form_input form-check-input" id="ofwe8fyqws372" name="Custom Text" value="Option 3">
+			                        <label class="form-check-label s_website_form_check_label" for="ofwe8fyqws372">Option 3</label>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+            </div>
+	    </div>
+    </form>
+</section>
+        `);
+    await contains(":iframe .s_website_form_field").click();
+    expect(".options-container .builder_list_remove_item").toHaveCount(3);
+    await contains(
+        ".options-container .o_row_draggable:has(input[data-id='0']) .builder_list_remove_item"
+    ).click();
+    expect(".options-container .builder_list_remove_item").toHaveCount(2);
+    await contains(
+        ".options-container .o_row_draggable:has(input[data-id='1']) .builder_list_remove_item"
+    ).click();
+    expect(".options-container .builder_list_remove_item").toHaveCount(0);
+    await contains(".options-container .builder_list_add_item").click();
+    expect(".options-container .builder_list_remove_item").toHaveCount(2);
 });
