@@ -251,6 +251,52 @@ describe("RPC calls", () => {
         });
     });
 
+    test("'web_read_group': no group (list view)", async () => {
+        /**
+         * This test ensures groups returned by web_read_group in case
+         * list view or when auto_unfold = false contains sample records
+         * if a group is unfolded
+         */
+        const server = new DeterministicSampleServer("hobbit", fields.hobbit);
+        server.setExistingGroups(null);
+        const result = await server.mockRpc({
+            method: "web_read_group",
+            model: "hobbit",
+            groupBy: ["profession"],
+            aggregates: ["__count"],
+            auto_unfold: false,
+            unfold_read_specification: { display_name: {}, age: {}, profession: {} },
+            opening_info: [
+                {"value": "adventurer", "folded": false},
+                {"value": "brewer", "folded": true},
+                {"value": "gardener", "folded": false},
+            ]
+        });
+        // the sample records we receive in case of list view are random (not of same group)
+        expect(result).toEqual({
+            groups: [
+                {
+                    __extra_domain: [],
+                    profession: "adventurer",
+                    __count: 5,
+                    __records: server.data.hobbit.records.slice(0, 5),
+                },
+                {
+                    __extra_domain: [],
+                    profession: "brewer",
+                    __count: 5,
+                },
+                {
+                    __extra_domain: [],
+                    profession: "gardener",
+                    __count: 6,
+                    __records: server.data.hobbit.records.slice(0, 6),
+                },
+            ],
+            length: 3,
+        });
+    });
+
     test("'web_read_group': 2 groups", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const existingGroups = [

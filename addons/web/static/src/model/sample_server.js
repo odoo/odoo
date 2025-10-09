@@ -639,6 +639,19 @@ export class SampleServer {
                 delete group["id:array_agg"];
             }
         }
+        if (params.opening_info) {
+            const unFoldedGroups = params.opening_info.filter(o => !o.folded).map(o => o.value);
+            const firstGroupBy = params.groupBy[0];
+            groups.forEach(group => {
+                const val = Array.isArray(group[firstGroupBy]) ? group[firstGroupBy][0] : group[firstGroupBy];
+                if (unFoldedGroups.includes(val) && !group.__records) {
+                    group.__records = this._mockWebSearchReadUnity({
+                        model: params.model,
+                        specification: params.unfold_read_specification,
+                    }).records.slice(0, group.__count);
+                }
+            });
+        }
 
         return {
             groups,
