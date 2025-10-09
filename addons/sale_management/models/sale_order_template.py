@@ -166,7 +166,7 @@ class SaleOrderTemplate(models.Model):
                 'product_uom_qty': 0,
             }),
             Command.create({
-                'product_id': self.env.ref('product.product_product_6').id,
+                'product_id': self.env.ref('product.product_product_7').id,
                 'product_uom_qty': 0,
             }),
             Command.create({
