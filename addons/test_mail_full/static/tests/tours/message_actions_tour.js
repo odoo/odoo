@@ -68,7 +68,11 @@ registry.category("web_tour.tours").add("message_actions_tour", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(Message content changed)",
-            run: "hover && click #chatterRoot:shadow button[title='Delete']",
+            run: "hover && click #chatterRoot:shadow button[title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
             trigger: "#chatterRoot:shadow button:contains(Delete)",
