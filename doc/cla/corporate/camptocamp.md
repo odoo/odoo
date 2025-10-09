@@ -55,3 +55,4 @@ Sarah Jallon sarah.jallon@camptocamp.com https://github.com/sarsurgithub
 Ricardo Almeida Soares ricardo.almeidasoares@camptocamp.com https://github.com/ricardoalso
 Italo Lopes italo.lopes@camptocamp.com https://github.com/imlopes
 Luca Policastro luca.policastro@camptocamp.com https://github.com/Luca-Policastro
+Tomasz Walter tomasz.walter@camptocamp.com https://github.com/twalter-c2c
