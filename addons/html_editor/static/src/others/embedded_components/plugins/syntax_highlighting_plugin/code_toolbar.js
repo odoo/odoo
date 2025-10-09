@@ -1,3 +1,4 @@
+import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import { Component, useEffect, useState } from "@odoo/owl";
 import { CopyButton } from "@web/core/copy_button/copy_button";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -16,7 +17,7 @@ export class CodeToolbar extends Component {
     setup() {
         super.setup();
         this.state = useState({
-            language: this.props.target.dataset.languageId,
+            language: getEmbeddedProps(this.props.target).languageId,
         });
         useEffect(
             () => this.props.onLanguageChange(this.state.language),
