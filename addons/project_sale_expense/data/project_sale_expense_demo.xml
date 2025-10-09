@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_expense_re_invoice" model="product.product">
+            <field name="name">Expense re-invoice</field>
+            <field name="list_price">60.0</field>
+            <field name="standard_price">50.0</field>
+            <field name="type">service</field>
+            <field name="categ_id" eval="ref('product.product_category_expenses', raise_if_not_found=False)"/>
+            <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="expense_policy">sales_price</field>
+        </record>
+
+        <!-- expense for the 'Expenses' section in the 'revenues' group-->
+        <record id="restaurant_expense_revenues" model="hr.expense">
+            <field name="name">Profitable expense</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="analytic_distribution" eval="{ref('project.analytic_profitable_project'): 100}"/>
+            <field name="sale_order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="product_id" ref="product_expense_re_invoice"/>
+            <field name="date" eval="time.strftime('%Y-%m-10')"/>
+        </record>
+
+        <record id="expense_revenue_move_profitability" model="account.move">
+            <field name="name">/</field>
+            <field name="expense_ids" eval="[Command.link(ref('restaurant_expense_revenues'))]"/>
+            <field name="ref">Profitable expense</field>
+            <field name="move_type">in_invoice</field>
+            <field name="partner_id" ref="hr.employee_al"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="line_ids" eval="[
+                Command.create({
+                    'name' : 'Ronnie Hart: Profitable expense',
+                    'quantity': 1.0,
+                    'price_unit': 50.0,
+                    'product_id': ref('product_expense_re_invoice'),
+                    'product_uom_id': ref('uom.product_uom_unit'),
+                    'analytic_distribution': {ref('project.analytic_profitable_project'): 100.0},
+                    'expense_id': ref('restaurant_expense_revenues'),
+                    'partner_id': ref('hr.employee_al'),
+                    'journal_id': ref('hr_expense.hr_expense_account_journal'),
+                    'invoice_date': time.strftime('%Y-%m-10'),
+                }),
+            ]"/>
+        </record>
+
+        <function model="account.move" name="action_post" eval="[ref('expense_revenue_move_profitability')]"/>
+
+    </data>
+</odoo>

@@ -128,6 +128,12 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <record id="analytic_profitable_project" model="account.analytic.account">
+            <field name="name">A very profitable project</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
         <!-- Stage templates -->
         <record id="project.project_project_stage_2" model="project.project.stage">
             <field name="mail_template_id" ref="project.project_done_email_template"/>
@@ -594,6 +600,22 @@
             <field name="description">Collect and organize customer feedback to identify insights for improving your [Kitchen Assembly Project].</field>
             <field name="project_id" ref="project.project_template_2"/>
             <field name="sequence">45</field>
+        </record>
+
+        <!-- Project used to fill every section of the profitability feature-->
+        <record id="project_a_very_profitable_project" model="project.project">
+            <field name="date_start" eval="DateTime.today() - relativedelta(weeks=9)"/>
+            <field name="date" eval="DateTime.today() + relativedelta(weekday=4,weeks=1)"/>
+            <field name="name">A very profitable project</field>
+            <field name="color">3</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type_ids" eval="[Command.link(ref('project_stage_0')), Command.link(ref('project_stage_1')), Command.link(ref('project_stage_2')), Command.link(ref('project_stage_3'))]"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="privacy_visibility">portal</field>
+            <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="tag_ids" eval="[Command.link(ref('project.project_tags_05'))]"/>
+            <field name="stage_id" ref="project.project_project_stage_1"/>
+            <field name="account_id" ref="project.analytic_profitable_project"/>
         </record>
 
         <!-- Personal Stages: Mitchell Admin-->

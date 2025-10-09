@@ -44,7 +44,7 @@
         </record>
 
         <function model="project.project" name="write">
-            <value model="project.project" search="[('id', '=', ref('project.project_home_construction'))]"/>
+            <value model="project.project" search="[('id', 'in', [ref('project.project_home_construction'), ref('project.project_a_very_profitable_project')])]"/>
             <value eval="{
                 'allow_billable': 'True',
             }"/>
@@ -115,6 +115,17 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
         </record>
 
+        <record id="product_product_flooring_profitability_prepaid" model="product.product">
+            <field name="name">Flooring Services (prepaid)</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">700.00</field>
+            <field name="standard_price">1000.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+        </record>
+
         <record id="sale_order_construction_material" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -175,6 +186,88 @@
 
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction_material')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction')]]"/>
+
+        <!-- sale order for project profitability -->
+        <record id="sale_order_project_profitability" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+        </record>
+
+        <!-- sale line used for the 'Timesheets (Fixed Price)' section of the 'revenues' group
+            this section is named 'Services revenues' if the timesheet module is not installed -->
+        <record id="sale_line_profitability_prepaid" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="product_product_flooring_profitability_prepaid"/>
+            <field name="product_uom_qty" eval="1"/>
+        </record>
+        <!-- sale line used for the 'Materials' section of the 'revenues' group -->
+        <record id="sale_line_profitability_materials" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="sale_project.product_product_screw_driver"/>
+            <field name="product_uom_qty" eval="5"/>
+        </record>
+        <!-- sale line used for the 'Down Payments' section -->
+        <record id="sale_line_profitability_downpayment" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_uom_qty" eval="0"/>
+            <field name="is_downpayment" eval="True"/>
+            <field name="price_unit" eval="50"/>
+        </record>
+
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_project_profitability')]]"/>
+
+        <!-- invoice for the 'Down payments' section-->
+        <record id="downpayment_profitability" model="account.move">
+            <field name="name">/</field>
+            <field name="ref"></field>
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" ref="base.user_admin"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="invoice_user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="invoice_line_ids" eval="[
+                Command.create({
+                    'display_type': 'product',
+                    'sequence': 4,
+                    'name': 'Down Payment',
+                    'product_id': False,
+                    'product_uom_id': False,
+                    'quantity': 1.0,
+                    'discount': 0.0,
+                    'price_unit': 50.00,
+                    'sale_line_ids': [Command.link(ref('sale_project.sale_line_profitability_downpayment'))],
+                    'is_downpayment': True,
+                    'analytic_distribution': {ref('project.analytic_profitable_project'): 100.0},
+                }),
+            ]"/>
+        </record>
+        <!-- invoice for the 'Customer invoices' section -->
+        <record id="other_invoice_profitability" model="account.move">
+            <field name="name">/</field>
+            <field name="ref"></field>
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_user_id" ref="base.user_admin"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="invoice_user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="invoice_line_ids" eval="[
+                Command.create({
+                    'display_type': 'product',
+                    'name': 'Down Payment',
+                    'product_id': ref('sale_project.product_product_screw_driver'),
+                    'quantity': 1.0,
+                    'discount': 0.0,
+                    'analytic_distribution': {ref('project.analytic_profitable_project'): 100.0},
+                }),
+            ]"/>
+        </record>
+        <function model="account.move" name="action_post" eval="[[ref('sale_project.downpayment_profitability'), ref('sale_project.other_invoice_profitability')]]"/>
 
         <!-- Set users and state to task -->
         <function model="project.task" name="write">

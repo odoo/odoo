@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- delivery for the 'Materials' section in the 'costs' group -->
+        <record id="outgoing_shipment_main_warehouse" model="stock.picking">
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="origin">outgoing shipment</field>
+            <field name="user_id"></field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="scheduled_date" eval="DateTime.today()"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="state">draft</field>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+            <field name="move_ids" model="stock.move" eval="[(0, 0, {
+                'product_id': ref('product.product_product_27'),
+                'product_uom': ref('uom.product_uom_unit'),
+                'product_uom_qty': 1.0,
+                'picking_type_id': ref('stock.picking_type_out'),
+                'location_id': ref('stock.stock_location_stock'),
+                'location_dest_id': ref('stock.stock_location_customers'),
+            })]"/>
+        </record>
+        <record id="analytic_line_profitability_material_costs" model="account.analytic.line">
+            <field name="name">[FURN_8855] Drawer</field>
+            <field name="account_id" ref="project.analytic_profitable_project"/>
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="amount" eval="-100"/>
+            <field name="unit_amount" eval="1"/>
+            <field name="category">picking_entry</field>
+        </record>
+    </data>
+</odoo>
