@@ -299,12 +299,15 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     def _get_invoice_line_delivery_vals(self, line):
         """Build delivery values for each invoice line.
 
-        Used to fill the cac:InvoiceLine/cac:Item node in UBL TR XML export.
+        cac:InvoiceLine/cac:Item node in UBL TR XML export, the ID
+        node is required to be present inside the shipmemnt delivery
+        block before GoodsItem node.
 
         :param line: An invoice line.
         :return: A dictionary with delivery information.
         """
         return {
+            "id": "NO_ID",
             "incoterm_code": line.move_id.invoice_incoterm_id.code,
             "product_customs_code": line.l10n_tr_ctsp_number or line.product_id.l10n_tr_ctsp_number,
             "shipping_method_code": line.move_id.l10n_tr_shipping_type,
