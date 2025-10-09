@@ -64,6 +64,9 @@ export class ImageShapeOptionPlugin extends Plugin {
     }
     async canHaveHoverEffect(imgEl) {
         const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
+        if (dataset.shape) {
+            dataset.shape = dataset.shape.replace("web_editor", "html_builder");
+        }
         return (
             imgEl.tagName === "IMG" &&
             !this.isDeviceShape(imgEl) &&
