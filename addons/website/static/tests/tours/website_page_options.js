@@ -80,7 +80,7 @@ registerWebsitePreviewTour('website_page_options', {
     ...clickOnSave(),
     {
         content: "Check that the header is hidden",
-        trigger: ':iframe #wrapwrap:has(header#top.d-none.o_snippet_invisible)',
+        trigger: ':iframe #wrapwrap:has(header#top.d-none)',
     },
     ...clickOnEditAndWaitEditMode(),
     {
@@ -101,6 +101,6 @@ registerWebsitePreviewTour('website_page_options', {
     },
     {
         content: "Check that the footer is hidden",
-        trigger: ':iframe #wrapwrap:has(.o_footer.d-none.o_snippet_invisible)',
+        trigger: ':iframe #wrapwrap:has(.o_footer.d-none)',
     },
 ]);
