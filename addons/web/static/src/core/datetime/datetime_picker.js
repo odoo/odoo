@@ -322,6 +322,7 @@ export class DateTimePicker extends Component {
         isDateValid: { type: Function, optional: true },
         dayCellClass: { type: Function, optional: true },
         tz: { type: String, optional: true },
+        withButtons: { type: Boolean, optional: true },
     };
 
     static defaultProps = {
@@ -332,6 +333,7 @@ export class DateTimePicker extends Component {
         rounding: 5,
         showWeekNumbers: true,
         type: "datetime",
+        withButtons: true,
     };
 
     static template = "web.DateTimePicker";
