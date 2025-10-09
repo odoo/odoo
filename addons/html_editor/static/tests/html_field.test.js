@@ -2574,7 +2574,7 @@ describe("codeview enabled", () => {
     });
 });
 
-test("should never insert Table of Contents as the first child of the editable", async () => {
+test("should always have a block before a Table of Contents", async () => {
     Partner._records = [
         {
             id: 1,
@@ -2598,5 +2598,7 @@ test("should never insert Table of Contents as the first child of the editable",
     await animationFrame();
     const firstChild = htmlEditor.editable.firstChild;
     expect(firstChild.getAttribute("data-embedded")).not.toBe("tableOfContent");
-    expect(firstChild).toHaveOuterHTML('<div class="o-paragraph"><br></div>');
+    expect(firstChild).toHaveOuterHTML(
+        '<div class="o-paragraph" data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></div>'
+    );
 });
