@@ -36,7 +36,7 @@
                         </div>
                         <div class="o_notification_alert alert alert-warning mt-1 mb-0" invisible="not pos_has_active_session" role="alert">
                             A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
-                            <button class="btn-link" style="padding:0" name="pos_open_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
+                            <button class="btn-link" style="padding:0" name="pos_close_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
                         </div>
                         <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template or chart_template" role="alert">
                             There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
