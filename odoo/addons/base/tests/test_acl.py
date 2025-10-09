@@ -5,11 +5,13 @@ from lxml import etree
 
 from odoo.exceptions import AccessError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged
 from odoo.tools.misc import mute_logger
 from odoo import Command
 
 
+
+@tagged('at_install', '-post_install')
 class TestACL(TransactionCaseWithUserDemo):
 
     @classmethod
@@ -191,6 +193,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self.assertTrue('email' in views['models']['res.partner']["fields"])
 
 
+@tagged('at_install', '-post_install')
 class TestIrRule(TransactionCaseWithUserDemo):
 
     def test_ir_rule(self):

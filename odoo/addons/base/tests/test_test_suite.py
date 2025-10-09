@@ -11,7 +11,14 @@ from unittest import SkipTest, skip
 from unittest.mock import patch
 
 from odoo.tests.case import TestCase
-from odoo.tests.common import BaseCase, TransactionCase, users, warmup, RegistryRLock
+from odoo.tests.common import (
+    BaseCase,
+    RegistryRLock,
+    TransactionCase,
+    tagged,
+    users,
+    warmup,
+)
 from odoo.tests.result import OdooTestResult
 
 _logger = logging.getLogger(__name__)
@@ -30,6 +37,7 @@ class TestTestSuite(TestCase):
             return []
 
 
+@tagged('at_install', '-post_install')
 class TestRunnerLoggingCommon(TransactionCase):
     """
     The purpose of this class is to do some "metatesting": it actually checks

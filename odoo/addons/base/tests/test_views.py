@@ -5259,7 +5259,7 @@ class CompRegexTest(common.TransactionCase):
         self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "{{ __comp__ }}"))
 
 
-@common.tagged('at_install', 'modifiers')
+@common.tagged('at_install', '-post_install', 'modifiers')
 class ViewModifiers(ViewCase):
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
