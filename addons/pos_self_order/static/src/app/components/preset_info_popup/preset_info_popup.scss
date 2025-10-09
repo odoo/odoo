@@ -1,0 +1,28 @@
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;   
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  
+}
+
+.slots-container { 
+  -webkit-overflow-scrolling: touch; 
+}
+
+
+/* mobile */
+@media (max-width: 575.98px) {
+  .slots-container { max-height: 40vh; overflow-y: auto; }
+}
+
+/* ≥ sm */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .slots-container { max-height: 55vh; overflow-y: auto; }
+}
+
+/* ≥ md */
+@media (min-width: 768px) {
+  .slots-container { max-height: 60vh; overflow-y: auto; }
+}

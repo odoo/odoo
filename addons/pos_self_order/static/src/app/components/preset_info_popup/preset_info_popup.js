@@ -3,6 +3,7 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { localization } from "@web/core/l10n/localization";
 import { isValidEmail } from "@point_of_sale/utils";
+import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
@@ -11,7 +12,10 @@ export class PresetInfoPopup extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        this.datetime = DateTime;
         this.state = useState({
+            step: 1,
+            selectedDate: null,
             selectedSlot: null,
             selectedPartnerId: null,
             name: "",
@@ -26,7 +30,76 @@ export class PresetInfoPopup extends Component {
 
         onWillStart(async () => {
             await this.selfOrder.syncPresetSlotAvaibility(this.preset);
+            if (!this.preset.needsSlot) {
+                this.state.step = 2;
+            }
+            const avail = this.preset.availabilities || this.preset.uiState?.availabilities || {};
+            const todayStr = DateTime.local().toFormat("yyyy-MM-dd");
+            const hasSlots = (d) => avail[d] && Object.keys(avail[d]).length > 0;
+
+            if (hasSlots(todayStr)) {
+                this.state.selectedDate = todayStr;
+            } else {
+                const firstWithSlots = Object.keys(avail).find(hasSlots);
+                if (firstWithSlots) {
+                    this.state.selectedDate = firstWithSlots;
+                }
+            }
         });
+    }
+
+    get needsInfo() {
+        const p = this.preset;
+        return !!(p.needsEmail || p.needsName || p.needsPartner);
+    }
+
+    get validSlotStep() {
+        return (
+            !this.preset.needsSlot ||
+            (DateTime.fromFormat(this.state.selectedDate || "", "yyyy-MM-dd").isValid &&
+                this.state.selectedSlot)
+        );
+    }
+
+    get validInfoStep() {
+        const partnerInfo =
+            this.state.name &&
+            this.state.phone &&
+            this.state.street &&
+            this.state.city &&
+            this.state.countryId &&
+            (this.state.stateId || !this.states.length) &&
+            this.state.zip;
+
+        return (
+            (!this.preset.needsName || this.state.name) &&
+            (!this.preset.needsEmail || isValidEmail(this.state.email)) &&
+            (!this.preset.needsPartner || partnerInfo)
+        );
+    }
+
+    onSlotSubmit(ev) {
+        ev.preventDefault();
+        if (!this.validSlotStep) {
+            return;
+        }
+        if (this.needsInfo) {
+            this.state.step = 2;
+        } else {
+            this.setInformations();
+        }
+    }
+
+    onInfoSubmit(ev) {
+        ev.preventDefault();
+        if (!this.validInfoStep) {
+            return;
+        }
+        this.setInformations();
+    }
+
+    backToSlots() {
+        this.state.step = 1;
     }
 
     async setInformations() {
@@ -122,5 +195,47 @@ export class PresetInfoPopup extends Component {
     formatDate(date) {
         const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
         return dateObj.toFormat(localization.dateFormat);
+    }
+
+    shortFormatDate(date) {
+        const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
+        return dateObj.toFormat("MM/dd");
+    }
+
+    getSlotsForDate(preset, date) {
+        const slots = Object.values(preset.availabilities[date]);
+        return slots.reduce((acc, slot) => {
+            if (!acc[slot.periode]) {
+                acc[slot.periode] = [];
+            }
+
+            acc[slot.periode].push(slot);
+            return acc;
+        }, {});
+    }
+
+    getPeriodName(period) {
+        const periodNames = {
+            morning: _t("Morning"),
+            lunch: _t("Lunch"),
+            afternoon: _t("Afternoon"),
+        };
+
+        return periodNames[period];
+    }
+
+    get selectedDateLabel() {
+        if (!this.state.selectedSlot) {
+            return "";
+        }
+        const dt = DateTime.fromSQL(this.state.selectedSlot);
+        return this.formatDate(dt.toFormat("yyyy-MM-dd"));
+    }
+
+    get selectedTimeLabel() {
+        if (!this.state.selectedSlot) {
+            return "";
+        }
+        return DateTime.fromSQL(this.state.selectedSlot).toFormat("HH:mm");
     }
 }

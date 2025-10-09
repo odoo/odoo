@@ -46,8 +46,10 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route_table = self.pos_config._get_self_order_route(table_id=1)
+        self.start_tour(self_route_table, "self_mobile_online_payment_meal_table")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_mobile_online_payment_meal_table")
+        self.start_tour(self_route, "self_mobile_online_payment_meal")
 
     def test_online_payment_kiosk_qr_code(self):
         """

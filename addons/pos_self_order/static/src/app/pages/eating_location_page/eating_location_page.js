@@ -24,6 +24,13 @@ export class EatingLocationPage extends Component {
     }
 
     get presets() {
-        return this.selfOrder.models["pos.preset"].getAll();
+        const all = this.selfOrder.models["pos.preset"].getAll();
+        console.log(all);
+        this.ret =
+            this.router.getTableIdentifier() != null
+                ? all
+                : all.filter((item) => item.identification !== "none");
+        console.log(this.ret);
+        return this.ret;
     }
 }

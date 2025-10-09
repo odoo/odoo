@@ -123,3 +123,11 @@ export function clickMissingRequireds() {
         run: "click",
     };
 }
+
+export function writeName(name) {
+    return {
+        content: "enter name in field",
+        trigger: "input[placeholder='Name']",
+        run: "edit " + name,
+    };
+}

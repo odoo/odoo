@@ -8,6 +8,13 @@ export function selectLocation(locationName) {
     };
 }
 
+export function checkLocation(locationName) {
+    return {
+        content: `Check on location '${locationName}'`,
+        trigger: `.o_self_eating_location_box .preset_btn:contains('${locationName}')`,
+    };
+}
+
 export function isClosed() {
     return {
         content: `Check if the POS is closed`,
