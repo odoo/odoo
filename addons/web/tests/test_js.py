@@ -139,6 +139,18 @@ class HOOTCommon(odoo.tests.HttpCase):
         self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
         self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
 
+
+@odoo.tests.tagged('hoot', 'post_install', '-at_install')
+class HootSuite(QunitCommon, HOOTCommon, odoo.tests.CrossModule):
+    def test_js(self, modules):
+        print(self._test_params)
+        print(modules)
+
+    def test_js_mobile(self, modules):
+        print(self._test_params)
+        print(modules)
+
+
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
 
