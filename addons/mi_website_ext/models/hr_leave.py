@@ -19,6 +19,8 @@ class HrLeave(models.Model):
         return super().write(vals)
 
     def _check_remunerated_permission_limit(self, vals, is_write=False):
+        if self.env.context.get('bypass_remunerated_check'):
+            return
        
         if self.env.user.id == 6:
             return 
@@ -73,5 +75,7 @@ class HrLeave(models.Model):
         monthly_limit = 8.0
         if used_hours + requested_hours > monthly_limit:
             raise ValidationError(_("Usted ha utilizado el límite mensual de horas de permiso permitidas.")) 
-                
-                
+
+    def action_force_cancel(self):
+        self.with_context(bypass_remunerated_check=True).sudo().write({'state': 'cancel'})
+        return True

@@ -1,8 +1,8 @@
 # En mi_website_ext/models/res_users.py
 from odoo import models, fields, api
 from datetime import date 
-from dateutil.relativedelta import relativedelta # Para cálculos de mes
-from odoo.tools.misc import format_date # Para formateo de fecha localizado
+from dateutil.relativedelta import relativedelta 
+from odoo.tools.misc import format_date 
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -33,10 +33,10 @@ class Users(models.Model):
     x_employee_first_contract_date = fields.Date(
         string="Fecha Primer Contrato (para Aniversario)",
         compute='_compute_anniversary_details',
-        store=False # Se calcula al vuelo
+        store=False 
     )
     
-    # Guardamos los años cumplidos para usar en QWeb
+   
     x_employee_years_in_company = fields.Integer(
         string="Años en Compañía (Aniversario)",
         compute='_compute_anniversary_details',
@@ -70,9 +70,9 @@ class Users(models.Model):
 
             domain = [
                 ('employee_id', '=', employee.id),
-                ('state', '=', 'validate'),  # Solo ausencias aprobadas
-                ('request_date_to', '>', today), # Que empiecen después de hoy
-                ('holiday_status_id', '=', vacation_leave_type_id), # Solo tipo "Vacaciones"
+                ('state', '=', 'validate'),  
+                ('request_date_to', '>', today), 
+                ('holiday_status_id', '=', vacation_leave_type_id), 
             ]
 
             next_vacation = HrLeave.sudo().search(domain, order='request_date_from asc', limit=1)
@@ -210,8 +210,6 @@ class Users(models.Model):
                     _logger.warning(f"Error al parsear duration_display: {e}")
 
         return max(0, monthly_allowance_hours - hours_taken)
-
-     # Método de cómputo para los detalles del aniversario
     
     @api.depends_context('uid') 
     def _compute_anniversary_details(self):
@@ -222,9 +220,9 @@ class Users(models.Model):
         HrEmployee = self.env['hr.employee']
         HrContract = self.env['hr.contract']
 
-        for user in self: # 'user' aquí es un registro de res.users
+        for user in self: 
             user.x_employee_first_contract_date = False
-            user.x_employee_years_in_company = 0 # Valor por defecto importante
+            user.x_employee_years_in_company = 0 
 
             employee = HrEmployee.search([('user_id', '=', user.id)], limit=1)
             if not employee:
@@ -234,17 +232,15 @@ class Users(models.Model):
             first_contract = HrContract.search([
                 ('employee_id', '=', employee.id),
                 ('date_start', '!=', False),
-                ('date_start', '<=', today) # El contrato debe haber iniciado
+                ('date_start', '<=', today) 
             ], order='date_start asc', limit=1)
 
             _logger.debug(f"Aniversario - Usuario: {user.name}, Empleado: {employee.name}, Contrato ID: {first_contract.id if first_contract else 'N/A'}, Fecha Contrato: {first_contract.date_start if first_contract else 'N/A'}")
 
             if first_contract and first_contract.date_start:
                 hire_date = first_contract.date_start 
-                user.x_employee_first_contract_date = hire_date # Se asigna la fecha
-                
-                # Condición clave: el mes de contratación debe ser el mes actual
-                # Y el año actual debe ser mayor que el año de contratación (para celebrar a partir del 1er aniversario)
+                user.x_employee_first_contract_date = hire_date 
+
                 if hire_date.month == current_month and current_year > hire_date.year:
                     user.x_employee_years_in_company = current_year - hire_date.year
                     _logger.debug(f"Aniversario - ¡CUMPLE!: Usuario {user.name}, Años: {user.x_employee_years_in_company}, Fecha Contrato: {hire_date}")
@@ -256,18 +252,16 @@ class Users(models.Model):
     @api.depends_context('uid')
     def _compute_days_in_company(self):
         today = date.today()
-        # Buscamos los empleados asociados a los usuarios actuales
         employees = self.env['hr.employee'].search([('user_id', 'in', self.ids)])
         employee_map = {employee.user_id.id: employee for employee in employees}
 
         for user in self:
-            user.x_days_in_company = 0 # Valor por defecto
+            user.x_days_in_company = 0 
 
             employee = employee_map.get(user.id)
             if not employee:
                 continue
 
-            # Buscamos el primer contrato del empleado
             first_contract = self.env['hr.contract'].search([
                 ('employee_id', '=', employee.id),
                 ('date_start', '!=', False),

@@ -8,22 +8,32 @@
             <xpath expr="//button[@name='action_approve']" position="attributes">
                 <attribute name="invisible">state != 'confirm' or (holiday_status_id.name != 'Solicitud de permiso' and uid != 6)</attribute>
             </xpath>
-
             <xpath expr="//button[@name='action_validate']" position="attributes">
                 <attribute name="invisible">state != 'validate1' or uid != 6</attribute>
                 <attribute name="groups"/>
             </xpath>
-            
-             <xpath expr="//button[@name='action_refuse']" position="attributes">
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            
             <xpath expr="//button[@name='action_refuse']" position="after">
                 <button string="Rechazar" name="action_refuse" type="object" icon="fa-times"
                         invisible="state != 'confirm' or (holiday_status_id.name != 'Solicitud de permiso' and uid != 6)"
                         groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Rechazar" name="action_refuse" type="object" icon="fa-times"
                         invisible="state != 'validate1' or uid != 6"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="hr_leave_view_form_inherit_enable_cancel" model="ir.ui.view">
+        <field name="name">hr.leave.form.inherit.enable.cancel</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_force_cancel" string="Cancelar Solicitud" type="object"
+                class="btn-secondary"
+                invisible="state not in ('draft', 'confirm')"
+            />
             </xpath>
         </field>
     </record>

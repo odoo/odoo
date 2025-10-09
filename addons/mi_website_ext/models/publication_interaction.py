@@ -5,7 +5,7 @@ from odoo import models, fields, api
 class PublicationComment(models.Model):
     _name = "publication.comment"
     _description = "Comentario de Publicación del Portal"
-    _order = "create_date asc"  # Mostramos los más antiguos primero
+    _order = "create_date asc" 
 
     res_model = fields.Char(
         string="Modelo Relacionado", readonly=True, required=True, index=True
@@ -46,7 +46,6 @@ class PublicationComment(models.Model):
     def _compute_is_liked(self):
         current_user_partner_id = self.env.user.partner_id.id
         for comment in self:
-            # Busca si existe un like de este usuario para este comentario
             existing_like = self.env["publication.comment.like"].search(
                 [
                     ("comment_id", "=", comment.id),

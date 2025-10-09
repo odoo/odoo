@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 class WebsiteCustom(http.Controller):
     @http.route("/galeria", type="http", auth="public", website=True)
     def render_gallery(self, **kwargs):
-        # Buscamos todos los álbumes que estén publicados
         albums = request.env["website.gallery.album"].search(
             [("is_published", "=", True)]
         )
@@ -30,13 +29,12 @@ class WebsiteCustom(http.Controller):
         website=True,
     )
     def render_gallery_album_detail(self, album, **kwargs):
-        # Verificamos que el álbum esté publicado
         if not album.is_published:
             return request.not_found()
 
         values = {
             "album": album,
-            "photos": album.photo_ids,  # Pasamos las fotos del álbum a la plantilla
+            "photos": album.photo_ids,  
             "main_object": album,
             "hide_sidebar": True,
         }
@@ -81,7 +79,6 @@ class WebsiteCustom(http.Controller):
             "hide_sidebar": True,
             "has_read": has_read,
         }
-        # Asegúrate de tener una plantilla llamada 'blog_post_detail_template'
         return request.render("mi_website_ext.blog_post_detail_template", values)
 
     @http.route("/news", type="http", auth="public", website=True)
@@ -132,22 +129,19 @@ class WebsiteCustom(http.Controller):
 
     @http.route("/policy", type="http", auth="user", website=True)
     def render_policy(self, **kwargs):
-        # 1. Buscamos en el modelo 'website.publication' con el tipo 'policy'
         Publication = request.env['website.publication']
         policies = Publication.search([
             ('publication_type', '=', 'policy'),
             ('is_published', '=', True),
         ])
 
-        # 2. Buscamos en 'publication.view.log' los registros de lectura para estas publicaciones
         read_logs = request.env['publication.view.log'].search([
             ('user_id', '=', request.env.user.id),
-            ('res_model', '=', 'website.publication'), # El modelo de origen es 'website.publication'
+            ('res_model', '=', 'website.publication'), 
             ('res_id', 'in', policies.ids)
         ])
         read_policy_ids = read_logs.mapped('res_id')
 
-        # 3. Preparamos y pasamos los datos a la plantilla
         values = {
             'policies': policies,
             'read_policy_ids': read_policy_ids,
@@ -277,7 +271,6 @@ class WebsiteCustom(http.Controller):
     def render_program(self, **kwargs):
         return request.render("mi_website_ext.program")
 
-    # This is for the comments
     @http.route(
         "/portal/add_comment", type="json", auth="user", methods=["POST"], website=True
     )
@@ -285,7 +278,6 @@ class WebsiteCustom(http.Controller):
         if not content or not content.strip():
             return {"error": "El comentario no puede estar vacío."}
 
-        # Validar que el modelo sea uno de los permitidos para comentar
         if res_model not in ["website.publication", "hr.employee"]:
             return {"error": "Tipo de registro no válido para comentar."}
 
@@ -301,8 +293,6 @@ class WebsiteCustom(http.Controller):
 
             new_comment = request.env["publication.comment"].sudo().create(vals)
 
-            # Recargar la página es la forma más simple de ver el nuevo comentario
-            # En el futuro podemos hacerlo 100% dinámico con una plantilla QWeb de JS
             return {"success": True}
         except Exception as e:
             _logger.error(f"Error al crear comentario: {e}")
@@ -337,7 +327,6 @@ class WebsiteCustom(http.Controller):
 
     @http.route("/get_calendar_activities", type="json", auth="public")
     def get_calendar_activities(self):
-        # Buscamos eventos de los próximos 3 meses, por ejemplo
         today = fields.Date.today()
         limit_date = today + relativedelta(months=3)
 
@@ -345,11 +334,9 @@ class WebsiteCustom(http.Controller):
             [
                 ("start", ">=", today),
                 ("start", "<=", limit_date),
-                # Puedes añadir un filtro para solo mostrar eventos públicos si quieres
             ]
         )
 
-        # Formateamos los eventos para que FullCalendar los entienda
         event_list = []
         for event in events:
             event_list.append(
@@ -380,7 +367,6 @@ class WebsiteCustom(http.Controller):
         try:
             _logger.warning("✅ Iniciando proceso de notificación para %s", employee.name)
 
-            # 1. Obtener tipo de ausencia por ID
             leave_type = request.env['hr.leave.type'].sudo().search([
     ('name', '=', 'Ausencias por enfermedad'),
     ('company_id', 'in', [False, user.company_id.id])
@@ -393,7 +379,6 @@ class WebsiteCustom(http.Controller):
             today = fields.Date.today()
             _logger.warning("📅 Fecha de hoy: %s", today)
 
-            # 2. Crear ausencia
             leave = request.env['hr.leave'].sudo().create({
                 "name": f"Ausencia por enfermedad - {employee.name}",
                 "employee_id": employee.id,
@@ -404,7 +389,6 @@ class WebsiteCustom(http.Controller):
             })
             _logger.warning("✅ Ausencia creada con ID: %s", leave.id)
 
-            # 3. Obtener o crear canal de RRHH
             channel_name = "Notificaciones por Enfermedad"
             channel = request.env['discuss.channel'].sudo().search([
                 ("name", "=", channel_name)
@@ -420,7 +404,7 @@ class WebsiteCustom(http.Controller):
                 })
             _logger.warning("✅ Canal RRHH disponible: %s", channel.name)
 
-            # 4. Publicar mensaje en canal
+
             message = f"📢 El colaborador {employee.name.upper()} ha notificado una AUSENCIA POR ENFERMEDAD para hoy ({today})."
             channel.message_post(
                 body=message,
@@ -457,7 +441,6 @@ class WebsiteCustom(http.Controller):
         if not announcements:
             return []
 
-        # Obtenemos los registros de lectura para estas publicaciones y el usuario actual
         read_logs = request.env["publication.view.log"].search(
             [
                 ("user_id", "=", request.env.user.id),
@@ -467,7 +450,6 @@ class WebsiteCustom(http.Controller):
         )
         read_announcement_ids = read_logs.mapped("res_id")
 
-        # Construimos la lista de resultados, añadiendo si ya fue leído
         results = []
         for ann in announcements:
             results.append(
@@ -476,7 +458,7 @@ class WebsiteCustom(http.Controller):
                     "name": ann.name,
                     "website_url": ann.website_url or f"/announcements/{ann.id}",
                     "is_read": ann.id
-                    in read_announcement_ids,  # <-- Clave para el bloqueo
+                    in read_announcement_ids,  
                 }
             )
         return results
@@ -485,10 +467,10 @@ class WebsiteCustom(http.Controller):
         "/portal/mark_as_read", type="json", auth="user", methods=["POST"], website=True
     )
     def mark_as_read(self, res_model, res_id, **kwargs):
-        # Validamos que el modelo sea uno de los que permitimos registrar
+     
         allowed_models = [
             "website.publication"
-        ]  # En el futuro puedes añadir más, como 'website.gallery.album'
+        ] 
         if res_model not in allowed_models:
             return {"error": "Tipo de contenido no válido."}
 
@@ -551,11 +533,10 @@ class WebsiteCustom(http.Controller):
     def my_custom_profile(self, **kwargs):
         values = {
             'user': request.env.user,
-            'hide_sidebar': True, # Esta línea es crucial
+            'hide_sidebar': True, 
         }
         return request.render("mi_website_ext.portal_my_profile", values)
 
-    # ===== RUTA PARA ACTUALIZAR EL AVATAR (esta se queda igual) =====
     @http.route('/my/account/update_avatar', type='http', auth='user', methods=['POST'], website=True)
     def update_avatar(self, avatar, **post):
         user = request.env.user

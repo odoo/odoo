@@ -39,7 +39,6 @@ class WebsitePublication(models.Model):
         help="Subtítulo para Actividades, Blogs o Noticias.",
     )
 
-    # Usaremos un campo HTML para el contenido principal. El editor de Odoo permite añadir imágenes.
     content_html = fields.Html(
         string="Contenido / Párrafo Principal",
         translate=True,
@@ -47,7 +46,6 @@ class WebsitePublication(models.Model):
         help="Cuerpo principal de la publicación. Puedes insertar imágenes adicionales aquí.",
     )
 
-    # Campos específicos para la "Frase del Día"
     author_name = fields.Char(string="Autor de la Frase")
     author_description = fields.Char(
         string="Descripción del Autor", help="Ej: Físico y matemático"
@@ -58,7 +56,6 @@ class WebsitePublication(models.Model):
         help="Selecciona al empleado si esta publicación es sobre un cumpleaños o aniversario.",
     )
 
-    # Campo para el estado
     is_published = fields.Boolean(
         string="Publicado en Sitio Web", default=True, index=True
     )
@@ -70,7 +67,6 @@ class WebsitePublication(models.Model):
         "res.company", string="Compañía", default=lambda self: self.env.company
     )
 
-    # Campo para la URL en el frontend
     website_url = fields.Char(
         string="URL del Sitio Web",
         compute="_compute_website_url",
@@ -93,7 +89,6 @@ class WebsitePublication(models.Model):
         ('Diciembre', 'Diciembre'),
     ], string="Mes del Ganador")
 
-    # Campos para la integración con el calendario
     activity_datetime = fields.Datetime(string="Fecha y Hora de la Actividad")
     calendar_event_id = fields.Many2one(
         "calendar.event", string="Evento de Calendario", readonly=True, copy=False
@@ -131,7 +126,6 @@ class WebsitePublication(models.Model):
                     pub.attachment_url = False
 
     def _get_url_base_for_publication(self):
-        """Método auxiliar para obtener la URL base según el tipo."""
         self.ensure_one()
        
         url_map = {
@@ -150,12 +144,9 @@ class WebsitePublication(models.Model):
         for publication in self:
             base_url = publication._get_url_base_for_publication()
             if base_url and publication.id:
-                # URL amigable simple con ID. Más adelante se puede mejorar con un "slug".
                 publication.website_url = f"{base_url}/{publication.id}"
             else:
                 publication.website_url = False
-
-    # Al final de la clase WebsitePublication
 
     def open_view_wizard(self):
         self.ensure_one()
@@ -191,7 +182,6 @@ class WebsitePublication(models.Model):
     def _synchronize_calendar_event(self):
         self.ensure_one()
         if not self.activity_datetime:
-            # Si no hay fecha de actividad, no hacemos nada (o borramos el evento existente)
             if self.calendar_event_id:
                 self.calendar_event_id.unlink()
             return
@@ -200,56 +190,35 @@ class WebsitePublication(models.Model):
             "name": self.name,
             "start": self.activity_datetime,
             "stop": self.activity_datetime
-            + timedelta(hours=1),  # Asumimos 1 hora de duración
+            + timedelta(hours=1),  
             "description": self.subtitle,
-            # Puedes añadir más campos, como 'location', 'partner_ids', etc.
         }
 
         if self.calendar_event_id:
-            # Si ya existe un evento, lo actualizamos
             self.calendar_event_id.write(event_vals)
         else:
-            # Si no existe, lo creamos y guardamos su ID
             event = self.env["calendar.event"].create(event_vals)
             self.write(
                 {"calendar_event_id": event.id}
-            )  # Usamos write para no causar recursión
+            )  
 
     @api.onchange("employee_id", "publication_type")
     def _onchange_set_name_for_winner(self):
-        """
-        Cuando el tipo es 'Ganador' y se selecciona un empleado,
-        se genera un título automáticamente.
-        """
         if self.publication_type == "winner" and self.employee_id:
             self.name = f"Ganador: {self.employee_id.name}"
 
-    #read_by_user_ids = fields.Many2many(
-    #    comodel_name='res.users',
-    #    relation='website_publication_read_user_rel',
-    ##    column1='publication_id',
-    #    column2='user_id',
-    #    string='Leído por los usuarios',
-    #    copy=False
-    #)   
+
 
     @api.model
     def _publish_scheduled_posts(self):
-        """
-        Este método es llamado por un cron para publicar posts programados.
-        Busca todas las publicaciones no publicadas cuya fecha de publicación
-        es hoy o anterior, y las marca como publicadas.
-        """
         _logger.info("Ejecutando cron de publicación programada...")
 
-        # Buscamos los registros que cumplen la condición
         posts_to_publish = self.search([
             ('is_published', '=', False),
             ('publish_date', '<=', fields.Date.today())
         ])
 
         if posts_to_publish:
-            # Si se encontraron posts, los marcamos como publicados
             posts_to_publish.write({'is_published': True})
             _logger.info(f"Se han publicado {len(posts_to_publish)} posts programados.")
         else:

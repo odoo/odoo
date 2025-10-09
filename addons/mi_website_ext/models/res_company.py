@@ -4,5 +4,4 @@ from odoo import models, fields
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    # Nuevo campo para guardar la imagen de fondo del portal
     portal_background_image = fields.Image(string="Imagen de Fondo del Portal")

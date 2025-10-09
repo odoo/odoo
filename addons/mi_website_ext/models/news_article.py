@@ -33,7 +33,6 @@ class NewsArticle(models.Model):
             return
 
         sources = [
-            # Puedes cambiar estas URLs por otras válidas más adelante
             ("https://www.muycomputer.com/feed/", "MuyComputer"),
             ("https://diariodesign.com/feed/", "Diariodesign"),
             ("https://lamenteesmaravillosa.com/feed/", "La Mente es Maravillosa"),
@@ -64,7 +63,6 @@ class NewsArticle(models.Model):
                     summary = entry.get("summary", "")
                     link = entry.get("link", "")
 
-                    # Evitar duplicados
                     if title in existing_titles or link in existing_links:
                         _logger.info("⏩ Noticia duplicada ignorada: %s", title)
                         continue
@@ -87,7 +85,6 @@ class NewsArticle(models.Model):
                         "image_url": "",
                     })
 
-                    # Agregar a sets para evitar futuros duplicados en la misma ejecución
                     existing_titles.add(title)
                     existing_links.add(link)
 
