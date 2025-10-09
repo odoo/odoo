@@ -15,7 +15,7 @@ odoo.define('payment_flutterwave.payment_form', require => {
          * @param {object} processingValues - The processing values of the transaction
          * @return {undefined}
          */
-        _processTokenPayment: (provider_code, tokenId, processingValues) => {
+        _processTokenPayment: function (provider_code, tokenId, processingValues) {
             if (provider_code === 'flutterwave' && processingValues.auth_redirect_form_html) {
                 // Append the redirect form to the body
                 const $redirectForm = $(processingValues.auth_redirect_form_html).attr(
