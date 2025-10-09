@@ -13,6 +13,7 @@ MODELS_TO_INCLUDE = [
     "mail.activity",
     "mail.activity.type",
     "mail.canned.response",
+    "mail.followers",
     "mail.guest",
     "mail.link.preview",
     "mail.message",
@@ -37,6 +38,7 @@ MODELS_TO_INCLUDE = [
 # so new models can be progressively exposed without fetching everything.
 MODELS_TO_EXPOSE = [
     "mail.activity",
+    "mail.followers",
     "mail.message",
     "mail.message.link.preview",
 ]
