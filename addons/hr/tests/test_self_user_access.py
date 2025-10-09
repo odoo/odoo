@@ -124,9 +124,10 @@ class TestSelfAccessRights(TestHrCommon):
         # Compute fields and id field are always readable by everyone
         cls.read_protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if not v.compute and k != 'id'])
         cls.self_protected_fields_user = OrderedDict([
-            (k, v)
-            for k, v in cls.env['res.users']._fields.items()
-            if v.groups == 'hr.group_hr_user' and k in cls.env['res.users'].SELF_READABLE_FIELDS
+            (k, field)
+            for k, field in cls.env['res.users']._fields.items()
+            # get fields built with `employee_field` function
+            if callable(field.compute) and hasattr(field.compute, 'is_field_employee')
         ])
 
     # Read hr.employee #
@@ -185,11 +186,11 @@ class TestSelfAccessRights(TestHrCommon):
 
     def test_onchange_readable_fields_with_no_access(self):
         """
-            The purpose is to test that the onchange logic takes into account `SELF_READABLE_FIELDS`.
+            The purpose is to test that the onchange logic takes into account custom field access.
 
-            The view contains fields that are in `SELF_READABLE_FIELDS` (example: `private_street`).
+            The view contains fields that are `field_employee` (example: `private_street`).
             Even if the user does not have read access to the employee,
-            it should not cause an access error if these fields are in `SELF_READABLE_FIELDS`.
+            it should not cause an access error for these fields.
         """
         self.env['res.lang']._activate_lang("fr_FR")
         with Form(self.richard.with_user(self.richard), view='hr.res_users_view_form_preferences') as form:

@@ -42,7 +42,7 @@ class TestHrOrgChart(TestHrCommon, HttpCase):
             self.fail('The employee should not have been deleted')
 
     def test_indirect_subordinates(self):
-        self.res_users_hr_officer.employee_id = self.employee_georges
+        self.res_users_hr_officer.employee_ids = self.employee_georges
         self.employee_paul.parent_id = self.employee_georges
         self.employee_pierre.parent_id = self.employee_paul
 
@@ -53,7 +53,7 @@ class TestHrOrgChart(TestHrCommon, HttpCase):
         )
 
     def test_is_subordinate(self):
-        self.res_users_hr_officer.employee_id = self.employee_georges
+        self.res_users_hr_officer.employee_ids = self.employee_georges
         self.employee_paul.parent_id = self.employee_georges
         employees = self.employee_paul + self.employee_pierre
         self.assertTrue(
