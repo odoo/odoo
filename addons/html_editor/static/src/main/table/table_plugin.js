@@ -821,35 +821,37 @@ export class TablePlugin extends Plugin {
     onMousedown(ev) {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
-        this.deselectTable();
         const isPointerInsideCell = this.isPointerInsideCell(ev);
         const td = closestElement(ev.target, "td");
-        if (
-            isPointerInsideCell &&
-            !isProtected(td) &&
-            !isProtecting(td) &&
-            ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
-        ) {
-            this.hanldeFirefoxSelection();
-            this.selectTableCells(this.dependencies.selection.getEditableSelection());
-            if (isBrowserFirefox()) {
-                // In firefox, selection changes when hitting mouseclick
-                // second time in an empty cell. It calls updateSelectionTable
-                // which deselects the single cell. Hence, we need a label
-                // to keep it selected.
-                this._isFirefoxDoubleMousedown = true;
-            }
-            if (ev.detail === 3) {
-                // Doing a tripleclick on a text will change the selection.
-                // In such case updateSelectionTable should not do anything.
-                this._isTripleClickInTable = true;
-            }
-        }
         if (isPointerInsideCell) {
-            this.editable.addEventListener("mousemove", this.onMousemove);
-            const currentSelection = this.dependencies.selection.getEditableSelection();
-            // disable dragging on table
-            this.dependencies.selection.setCursorStart(currentSelection.anchorNode);
+            if (
+                !isProtected(td) &&
+                !isProtecting(td) &&
+                ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
+            ) {
+                this.hanldeFirefoxSelection();
+                this.selectTableCells(this.dependencies.selection.getEditableSelection());
+                if (isBrowserFirefox()) {
+                    // In firefox, selection changes when hitting mouseclick
+                    // second time in an empty cell. It calls updateSelectionTable
+                    // which deselects the single cell. Hence, we need a label
+                    // to keep it selected.
+                    this._isFirefoxDoubleMousedown = true;
+                }
+                if (ev.detail === 3) {
+                    // Doing a tripleclick on a text will change the selection.
+                    // In such case updateSelectionTable should not do anything.
+                    this._isTripleClickInTable = true;
+                }
+            } else {
+                this.editable.addEventListener("mousemove", this.onMousemove);
+                const currentSelection = this.dependencies.selection.getEditableSelection();
+                // disable dragging on table
+                if (closestElement(ev.target, "td.o_selected_td")) {
+                    this.dependencies.selection.setCursorStart(currentSelection.anchorNode);
+                }
+                this.deselectTable();
+            }
         }
     }
 
