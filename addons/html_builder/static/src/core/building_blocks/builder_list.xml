@@ -6,7 +6,7 @@
         <div class="w-100 p-2 py-0">
             <t t-if="state.value?.length > 2">
                 <div class="o_we_table_wrapper">
-                    <table t-ref="table">
+                    <table t-ref="table" class="position-relative">
                         <t t-foreach="formatRawValue(state.value)" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
                                 <td t-if="props.sortable" class="o_handle_cell">
