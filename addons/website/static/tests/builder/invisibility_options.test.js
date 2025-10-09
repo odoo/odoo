@@ -204,7 +204,7 @@ test("Hide element conditionally", async () => {
     await contains(":iframe section").click();
     await contains("[data-label='Visibility'] button.dropdown").click();
     await contains("div.dropdown-item:contains(Conditionally)").click();
-    expect(":iframe section").toHaveClass("o_snippet_invisible");
+    expect(":iframe section").toHaveAttribute("data-visibility", "conditional");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry").toHaveCount(1);
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute(
         "data-icon",
@@ -212,14 +212,14 @@ test("Hide element conditionally", async () => {
     );
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
+    expect(":iframe section").toHaveClass("o_conditional_hidden");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute(
         "data-icon",
         "visibility_off"
     );
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    expect(":iframe section.o_snippet_invisible").not.toHaveClass("o_conditional_hidden");
+    expect(":iframe section").not.toHaveClass("o_conditional_hidden");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute(
         "data-icon",
         "visibility"
@@ -227,7 +227,7 @@ test("Hide element conditionally", async () => {
 
     await contains("[data-label='Visibility'] button.dropdown").click();
     await contains("div.dropdown-item:contains('No Condition')").click();
-    expect(":iframe section").not.toHaveClass("o_snippet_invisible");
+    expect(":iframe section").not.toHaveAttribute("data-visibility", "conditional");
 });
 
 test("Show conditionally hidden elements should not be tracked in history", async () => {
@@ -238,7 +238,7 @@ test("Show conditionally hidden elements should not be tracked in history", asyn
     await contains(":iframe section").click();
     await contains("[data-label='Visibility'] button.dropdown").click();
     await contains("div.dropdown-item:contains(Conditionally)").click();
-    expect(":iframe section").toHaveClass("o_snippet_invisible");
+    expect(":iframe section").toHaveAttribute("data-visibility", "conditional");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry").toHaveCount(1);
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute(
         "data-icon",
@@ -246,7 +246,7 @@ test("Show conditionally hidden elements should not be tracked in history", asyn
     );
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
+    expect(":iframe section").toHaveClass("o_conditional_hidden");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute(
         "data-icon",
         "visibility_off"
@@ -258,7 +258,7 @@ test("Show conditionally hidden elements should not be tracked in history", asyn
     });
     await insertText(getEditor(), "x"); // something to undo
     undo(getEditor());
-    expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
+    expect(":iframe section").toHaveClass("o_conditional_hidden");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute(
         "data-icon",
         "visibility_off"
