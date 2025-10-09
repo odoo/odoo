@@ -571,6 +571,37 @@ export function enterLotNumbers(numbers) {
     return steps;
 }
 
+export function enterExistingLotNumbers(numbers) {
+    const steps = [
+        {
+            trigger: ".o-autocomplete input",
+            run: "click",
+        },
+    ];
+    for (const lot of numbers) {
+        steps.push(
+            {
+                content: "enter lot number",
+                trigger: ".o-autocomplete input",
+                run: "edit " + lot,
+            },
+            {
+                trigger: ".o-autocomplete input",
+                run: "press Enter",
+            },
+            {
+                content: "check entered lot number",
+                trigger: `.lot-container .lot-item:eq(-1) span:contains(${lot})`,
+            },
+            {
+                trigger: ".o-autocomplete input:value()",
+            }
+        );
+    }
+    steps.push(Dialog.confirm());
+    return steps;
+}
+
 export function isShown() {
     return [
         {
