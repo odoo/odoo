@@ -493,10 +493,13 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         order_tz = self._get_program_timezone()
-        confirmed_txs = self.transaction_ids.filtered(lambda tx: tx.state in ('done', 'authorized'))
-        if confirmed_txs:
+        # In sudo mode because payment transactions require accounting access
+        confirmed_txs_dates = self.sudo().transaction_ids.filtered(
+            lambda tx: tx.state in ('done', 'authorized'),
+        ).mapped('create_date')
+        if confirmed_txs_dates:
             # If order is getting confirmed, use the earliest finalized transaction's create date
-            tx_date = min(confirmed_txs.mapped('create_date'))
+            tx_date = min(confirmed_txs_dates)
             return tx_date.astimezone(timezone(order_tz)).date()
         return fields.Date.context_today(self.with_context(tz=order_tz))
 
