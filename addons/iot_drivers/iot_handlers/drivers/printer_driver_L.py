@@ -14,7 +14,8 @@ from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
 from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, wifi, route
+from odoo.addons.iot_drivers.tools import helpers, route, system, wifi
+from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
 
@@ -109,8 +110,8 @@ class PrinterDriver(PrinterDriverBase):
 
     @classmethod
     def _get_iot_status(cls):
-        identifier = helpers.get_identifier()
-        mac_address = helpers.get_mac_address()
+        identifier = IOT_IDENTIFIER
+        mac_address = system.get_mac_address()
         pairing_code = connection_manager.pairing_code
         ssid = wifi.get_access_point_ssid() if wifi.is_access_point() else wifi.get_current()
 
@@ -152,7 +153,7 @@ class PrinterDriver(PrinterDriverBase):
             dev.set_with_default(align='center', double_height=False, double_width=False)
             for elem in body.decode().split('\n'):
                 dev.textln(elem)
-            dev.qr(f"http://{helpers.get_ip()}", size=6)
+            dev.qr(f"http://{system.get_ip()}", size=6)
             dev.cut()
         else:
             title = commands['title'] % title

@@ -5,46 +5,19 @@ import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
-    path_file,
     require_db,
     toggleable,
+)
+from odoo.addons.iot_drivers.tools.system import (
+    rpi_only,
+    IS_TEST,
+    git,
+    pip,
+    path_file,
     unlink_file,
 )
-from odoo.addons.iot_drivers.tools.system import rpi_only, IS_RPI, IS_TEST
 
 _logger = logging.getLogger(__name__)
-
-
-def git(*args):
-    """Run a git command with the given arguments, taking system
-    into account.
-
-    :param args: list of arguments to pass to git
-    """
-    git_executable = 'git' if IS_RPI else path_file('git', 'cmd', 'git.exe')
-    command = [git_executable, f'--work-tree={path_file("odoo")}', f'--git-dir={path_file("odoo", ".git")}', *args]
-
-    p = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=False)
-    if p.returncode == 0:
-        return p.stdout.strip()
-    return None
-
-
-def pip(*args):
-    """Run a pip command with the given arguments, taking system
-    into account.
-
-    :param args: list of arguments to pass to pip
-    """
-    python_executable = [] if IS_RPI else [path_file('python', 'python.exe'), '-m']
-    command = [*python_executable, 'pip', *args]
-
-    if IS_RPI and args[0] == 'install':
-        command.append('--user')
-        command.append('--break-system-package')
-
-    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    return p.returncode
 
 
 def get_db_branch(server_url):
