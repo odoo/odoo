@@ -5,7 +5,8 @@ import { CallSettings } from "@mail/discuss/call/common/call_settings";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("call", {
-    condition: ({ store, thread }) => thread?.allowCalls && !thread?.eq(store.rtc.channel),
+    condition: ({ channel, store, thread }) =>
+        thread?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-phone",
     name: ({ thread }) =>
         thread.rtc_session_ids.length > 0 ? _t("Join the Call") : _t("Start Call"),
@@ -15,7 +16,8 @@ registerThreadAction("call", {
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("camera-call", {
-    condition: ({ store, thread }) => thread?.allowCalls && !thread?.eq(store.rtc.channel),
+    condition: ({ channel, store, thread }) =>
+        thread?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-video-camera",
     name: ({ thread }) =>
         thread.rtc_session_ids.length > 0

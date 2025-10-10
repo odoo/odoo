@@ -185,7 +185,7 @@ const ThreadPatch = {
      */
     updateCallFocusStack(session) {
         if (
-            this.notEq(this.store.rtc?.channel) ||
+            this.channel?.notEq(this.store.rtc?.channel) ||
             session.eq(this.store.rtc.selfSession) ||
             !this.activeRtcSession ||
             !this.store.settings.useCallAutoFocus ||

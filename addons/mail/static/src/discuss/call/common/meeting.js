@@ -70,6 +70,6 @@ export class Meeting extends Component {
     }
 
     get thread() {
-        return this.store.rtc.channel;
+        return this.store.rtc.channel?.thread;
     }
 }
