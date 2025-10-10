@@ -28,7 +28,6 @@
                     t-on-change="onChange"
                     t-on-keydown.capture="onKeydown"
                     t-att-placeholder="getPlaceholder()"
-                    tabindex="-1"
                 />
                 <t t-set-slot="content">
                     <t t-foreach="suggestions" t-as="value" t-key="value_index">

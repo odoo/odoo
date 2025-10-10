@@ -5,6 +5,7 @@ import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
 import { ensureArray, zip, zipWith } from "../utils/arrays";
 import { shallowEqual } from "../utils/objects";
+import { getNextTabableElement } from "../utils/ui";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
 
@@ -255,7 +256,7 @@ export const datetimePickerService = {
                 /**
                  * @param {number} inputIndex Input from which to open the picker
                  */
-                function open(inputIndex) {
+                function open(inputIndex, focus) {
                     pickerProps.focusedDateIndex = inputIndex;
 
                     if (!isOpen()) {
@@ -264,8 +265,11 @@ export const datetimePickerService = {
                         }
                         popover.open(getPopoverTarget(), { pickerProps });
                     }
-
-                    focusActiveInput();
+                    if (focus) {
+                        getNextTabableElement(document.querySelector(".o_datetime_picker")).focus();
+                    } else {
+                        focusActiveInput();
+                    }
                 }
 
                 /**

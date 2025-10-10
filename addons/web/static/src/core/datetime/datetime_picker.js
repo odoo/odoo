@@ -463,6 +463,46 @@ export class DateTimePicker extends Component {
     }
 
     /**
+     * @param {PointerEvent} ev
+     */
+    dateTimePickerNavigation(ev) {
+        const { target, key } = ev;
+        if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown", " "].includes(key)) {
+            return;
+        }
+
+        let targetBtn;
+        if (key === " " && target.classList.contains("o_datetime_button")) {
+            target.click();
+        } else if (key === "ArrowRight") {
+            targetBtn = target.nextElementSibling;
+        } else if (key === "ArrowLeft") {
+            targetBtn = target.previousElementSibling;
+        } else if (key === "ArrowUp" || key === "ArrowDown") {
+            const buttonIndex = [...target.parentElement.children].indexOf(target);
+            const nbColumns = getComputedStyle(target).getPropertyValue(
+                "--DateTimePicker__Day-template-columns"
+            );
+            targetBtn =
+                target.parentElement.children[
+                    buttonIndex + (key === "ArrowUp" ? -1 : 1) * nbColumns
+                ];
+            if (!targetBtn) {
+                const row =
+                    key === "ArrowUp"
+                        ? target.parentElement.previousElementSibling
+                        : target.parentElement.nextElementSibling;
+                if (row?.matches(".o_date_picker")) {
+                    targetBtn = row.children[buttonIndex];
+                }
+            }
+        }
+        if (targetBtn && targetBtn.classList.contains("o_datetime_button")) {
+            targetBtn.focus();
+        }
+    }
+
+    /**
      * @param {PrecisionLevel} minPrecision
      * @param {PrecisionLevel} maxPrecision
      */

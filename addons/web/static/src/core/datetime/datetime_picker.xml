@@ -38,8 +38,10 @@
                                     'cursor-pointer': itemInfo.isValid,
                                 }"
                                 t-att-disabled="!itemInfo.isValid"
+                                t-att-tabindex="itemInfo.includesToday ? 0 : -1"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
                                 t-on-click="() => this.zoomOrSelect(itemInfo)"
+                                t-on-keydown="dateTimePickerNavigation"
                             >
                                 <div t-att-class="{'w-75 align-content-center text-center rounded-circle': itemInfo.includesToday}">
                                     <t t-esc="itemInfo.label" />
@@ -89,7 +91,9 @@
                         'opacity-50': !itemInfo.isValid,
                     }"
                     t-att-disabled="!itemInfo.isValid"
+                    t-att-tabindex="itemInfo.includesToday ? 0 : -1"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
+                    t-on-keydown="dateTimePickerNavigation"
                 >
                     <t t-esc="itemInfo.label" />
                 </div>
@@ -106,20 +110,17 @@
                 <button
                     class="o_previous btn btn-sm opacity-75 opacity-100-hover"
                     t-on-click="previous"
-                    tabindex="-1"
                 >
                     <i class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
                 </button>
                 <button
                     class="o_next btn btn-sm opacity-75 opacity-100-hover"
                     t-on-click="next"
-                    tabindex="-1"
                 >
                     <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
                 </button>
                 <button
                     class="o_zoom_out o_datetime_button btn opacity-75 opacity-100-hover text-truncate"
-                    tabindex="-1"
                     t-att-class="{ 'disabled': isLastPrecisionLevel }"
                     t-att-title="!isLastPrecisionLevel and activePrecisionLevel.mainTitle"
                     t-on-click="zoomOut"
