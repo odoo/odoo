@@ -68,6 +68,7 @@ class FleetVehicle(models.Model):
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
+    incident_count = fields.Integer(compute="_compute_count_all", string='Incident Count')
     next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
     order_date = fields.Date('Order Date')
     acquisition_date = fields.Date('Registration Date', required=False,
@@ -268,15 +269,18 @@ class FleetVehicle(models.Model):
         LogService = self.env['fleet.vehicle.log.services'].with_context(active_test=False)
         LogContract = self.env['fleet.vehicle.log.contract'].with_context(active_test=False)
         History = self.env['fleet.vehicle.assignation.log']
+        Incident = self.env['fleet.vehicle.incident']
         odometers_data = Odometer._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['__count'])
         services_data = LogService._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id', 'active'], ['__count'])
         logs_data = LogContract._read_group([('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')], ['vehicle_id', 'active'], ['__count'])
         histories_data = History._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['__count'])
+        incidents_data = Incident._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['__count'])
 
         mapped_odometer_data = defaultdict(lambda: 0)
         mapped_service_data = defaultdict(lambda: defaultdict(lambda: 0))
         mapped_log_data = defaultdict(lambda: defaultdict(lambda: 0))
         mapped_history_data = defaultdict(lambda: 0)
+        mapped_incident_data = defaultdict(lambda: 0)
 
         for vehicle, count in odometers_data:
             mapped_odometer_data[vehicle.id] = count
@@ -286,12 +290,15 @@ class FleetVehicle(models.Model):
             mapped_log_data[vehicle.id][active] = count
         for vehicle, count in histories_data:
             mapped_history_data[vehicle.id] = count
+        for vehicle, count in incidents_data:
+            mapped_incident_data[vehicle.id] = count
 
         for vehicle in self:
             vehicle.odometer_count = mapped_odometer_data[vehicle.id]
             vehicle.service_count = mapped_service_data[vehicle.id][vehicle.active]
             vehicle.contract_count = mapped_log_data[vehicle.id][vehicle.active]
             vehicle.history_count = mapped_history_data[vehicle.id]
+            vehicle.incident_count = mapped_incident_data[vehicle.id]
 
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
@@ -475,6 +482,19 @@ class FleetVehicle(models.Model):
             )
             return res
         return False
+
+    def action_open_incident_form_view(self):
+        self.ensure_one()
+        if self.incident_count > 0:
+            return self.return_action_to_open()
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'fleet.vehicle.incident',
+                'view_mode': 'form',
+                'target': 'current',
+                'context': dict(self.env.context, default_vehicle_id=self.id)
+            }
 
     def act_show_log_cost(self):
         """ This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
