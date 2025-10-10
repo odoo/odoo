@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderRange">
     <BuilderComponent>
-        <div class="o-hb-range d-flex flex-row flex-nowrap align-items-center"
+        <div t-attf-class="o-hb-range d-flex flex-row flex-nowrap align-items-center {{ props.classes or '' }}"
             t-att-data-action-id="info.actionId"
             t-att-data-action-param="info.actionParam"
             t-att-data-action-value="info.actionValue"

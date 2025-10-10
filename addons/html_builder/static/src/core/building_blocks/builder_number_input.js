@@ -79,13 +79,21 @@ export class BuilderNumberInput extends Component {
                 /(?<savedValue>[\d.e+-]+)(?<savedUnit>\w*)/
             ).groups;
             if (savedUnit || this.props.saveUnit) {
+                const numericSavedValue = parseFloat(savedValue);
+                if (Number.isNaN(numericSavedValue)) {
+                    return value;
+                }
                 // Convert value from saveUnit to unit
-                value = convertNumericToUnit(
-                    parseFloat(savedValue),
+                let displayValue = convertNumericToUnit(
+                    numericSavedValue,
                     savedUnit || this.props.saveUnit,
                     unit,
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
+                if (this.props.step) {
+                    displayValue = this.roundToStepPrecision(displayValue);
+                }
+                value = `${displayValue}`;
             }
             // Put *at most* 3 decimal digits
             return parseFloat(parseFloat(value).toFixed(3)).toString();
@@ -160,6 +168,22 @@ export class BuilderNumberInput extends Component {
 
     get displayValue() {
         return this.formatRawValue(this.state.value);
+    }
+
+    get stepPrecision() {
+        if (!this.props.step) {
+            return null;
+        }
+        const decimals = this.props.step.toString().split(".")[1];
+        return decimals ? decimals.length : 0;
+    }
+
+    roundToStepPrecision(value) {
+        const precision = this.stepPrecision;
+        if (precision == null || Number.isNaN(value)) {
+            return value;
+        }
+        return parseFloat(value.toFixed(precision));
     }
 
     onKeydown(e) {

@@ -1,4 +1,4 @@
-import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
@@ -23,8 +23,9 @@ export class BuilderRow extends Component {
         initialExpandAnim: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
         observeCollapseContent: { type: Boolean, optional: true },
+        sync: { type: Boolean, optional: true },
     };
-    static defaultProps = { expand: false, observeCollapseContent: false };
+    static defaultProps = { expand: false, observeCollapseContent: false, sync: false };
 
     setup() {
         useBuilderComponent();
@@ -34,6 +35,31 @@ export class BuilderRow extends Component {
             expanded: this.props.expand,
         });
         this.hasTooltip = this.props.tooltip ? true : undefined;
+        this.syncedComponents = new Set();
+
+        if (this.props.sync) {
+            const registerSyncedBuilderComponent = (component) => {
+                if (!component || component === this) {
+                    return () => {};
+                }
+                this.syncedComponents.add(component);
+                return () => {
+                    this.syncedComponents.delete(component);
+                };
+            };
+            const onBuilderComponentStateChange = ({ component, reason, value } = {}) => {
+                if (!component || !this.syncedComponents.has(component)) {
+                    return;
+                }
+                if (reason === "preview" && value !== undefined) {
+                    this.propagatePreviewValue(component, value);
+                }
+            };
+            useSubEnv({
+                registerSyncedBuilderComponent,
+                onBuilderComponentStateChange,
+            });
+        }
 
         if (this.props.slots.collapse) {
             useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
@@ -128,6 +154,14 @@ export class BuilderRow extends Component {
     closeTooltip() {
         if (this.removeTooltip) {
             this.removeTooltip();
+        }
+    }
+
+    propagatePreviewValue(value) {
+        for (const component of this.syncedComponents) {
+            if (component.state && "value" in component.state) {
+                component.state.value = value;
+            }
         }
     }
 }

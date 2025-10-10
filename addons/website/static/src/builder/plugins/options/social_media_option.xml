@@ -19,12 +19,24 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Size">
-        <BuilderSelect applyTo="'.fa'">
-            <BuilderSelectItem classAction="''">Small</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-2x'">Medium</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-3x'">Big</BuilderSelectItem>
-        </BuilderSelect>
+    <BuilderRow label.translate="Size"
+        sync="true"
+        action="'resetSocialMediaIconSize'"
+        applyTo="'.fa'"
+        styleAction="{ mainParam: '--s-social-media-icon-size', extraClass: 'o_sm_custom_size' }">
+        <BuilderRange
+            classes="'me-2'"
+            unit="'px'"
+            saveUnit="'rem'"
+            min="16"
+            max="100"
+            step="1"/>
+        <BuilderNumberInput
+            unit="'px'"
+            saveUnit="'rem'"
+            min="16"
+            max="100"
+            step="1"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Color">

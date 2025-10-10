@@ -1,4 +1,5 @@
 import { Component, useRef } from "@odoo/owl";
+import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     basicContainerBuilderComponentProps,
     useActionInfo,
@@ -18,6 +19,9 @@ export class BuilderRange extends Component {
         displayRangeValue: { type: Boolean, optional: true },
         computedOutput: { type: Function, optional: true },
         unit: { type: String, optional: true },
+        saveUnit: { type: String, optional: true },
+        applyWithUnit: { type: Boolean, optional: true },
+        classes: { type: String, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,
@@ -25,10 +29,15 @@ export class BuilderRange extends Component {
         max: 100,
         step: 1,
         displayRangeValue: false,
+        applyWithUnit: true,
     };
     static components = { BuilderComponent };
 
     setup() {
+        if (this.props.saveUnit && !this.props.unit) {
+            throw new Error("'unit' must be defined to use the 'saveUnit' props");
+        }
+
         this.info = useActionInfo();
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
@@ -46,19 +55,47 @@ export class BuilderRange extends Component {
     }
 
     formatRawValue(value) {
-        if (this.props.unit) {
-            // Remove the unit
-            value = value.slice(0, -this.props.unit.length);
+        const { unit, saveUnit } = this.props;
+        if (!value || !unit) {
+            return value;
         }
-        return value;
+        if (saveUnit) {
+            const match = value.match(/(?<savedValue>[\d.e+-]+)(?<savedUnit>\w*)/);
+            if (!match?.groups) {
+                return value;
+            }
+            const { savedValue, savedUnit } = match.groups;
+            const numericValue = parseFloat(savedValue);
+            if (Number.isNaN(numericValue)) {
+                return value;
+            }
+            const convertedValue = convertNumericToUnit(
+                numericValue,
+                savedUnit || saveUnit,
+                unit,
+                getHtmlStyle(this.env.getEditingElement().ownerDocument)
+            );
+            return `${convertedValue}`;
+        }
+        return value.endsWith(unit) ? value.slice(0, -unit.length) : value;
     }
 
     parseDisplayValue(value) {
-        if (this.props.unit) {
-            // Add the unit
-            value = `${value}${this.props.unit}`;
+        if (!value) {
+            return value;
         }
-        return value;
+
+        const { unit, saveUnit, applyWithUnit } = this.props;
+
+        let out = value;
+        if (unit && saveUnit) {
+            const num = typeof value === "number" ? value : parseFloat(value);
+            const style = getHtmlStyle(this.env.getEditingElement().ownerDocument);
+            out = convertNumericToUnit(num, unit, saveUnit, style);
+        }
+
+        const suffix = unit && applyWithUnit ? saveUnit ?? unit : "";
+        return `${out}${suffix}`;
     }
 
     onChange(e) {
