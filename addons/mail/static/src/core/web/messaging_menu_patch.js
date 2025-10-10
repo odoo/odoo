@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
+import { useCommand } from "@web/core/commands/command_hook";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -19,6 +20,11 @@ patch(MessagingMenu.prototype, {
             searchOpen: false,
         });
 
+        useCommand(
+            _t("Toggle Messaging Menu"),
+            () => (this.dropdown.isOpen ? this.dropdown.close() : this.dropdown.open()),
+            { hotkey: "Alt+Shift+M" }
+        );
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
         useEffect(
             () => {
