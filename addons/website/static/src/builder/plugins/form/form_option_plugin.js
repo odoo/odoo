@@ -65,6 +65,10 @@ export class FormOptionPlugin extends Plugin {
         "defaultMessage",
     ];
     resources = {
+        // The following line explicitly makes editable the container of the
+        // login form buttons. This trick is needed to allow the user to properly
+        // insert spaces while editing the text of the buttons.
+        o_editable_selectors: ".oe_login_form .oe_login_buttons",
         builder_header_middle_buttons: [
             {
                 Component: FormOptionAddFieldButton,
