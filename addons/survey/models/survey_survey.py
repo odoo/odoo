@@ -817,14 +817,31 @@ class SurveySurvey(models.Model):
             (not first_section_has_description and page_or_question == self.question_ids[0])
         return is_first_page_or_question
 
-    def _is_last_page_or_question(self, user_input, page_or_question):
-        """ Check if the given question or page is the last one, accounting for conditional questions.
+    def _is_last_page_or_question(self, user_input, page_or_question, exclude_all_conditonals=False):
+        """Determines if a page or question is functionally the last in the survey flow.
 
-        A question/page will be determined as the last one if any of the following is true:
-          - The survey layout is "one_page",
-          - There are no more questions/page after `page_or_question` in `user_input`,
-          - All the following questions are conditional AND were not triggered by previous answers.
-            Not accounting for the question/page own conditionals.
+        In a survey with conditional branching, "last" can have two meanings, controlled by the
+        `exclude_all_conditonals` flag. This function evaluates if there are any guaranteed subsequent pages/questions.
+
+        1.  Default Behavior (`exclude_all_conditonals=False`):
+            Checks if the page is the last one based on the user's current answers. It returns True if all following
+            questions are conditional and have *not* been triggered.
+
+        2.  Structural Check (`exclude_all_conditonals=True`):
+            Checks if the page is the last non-optional stop. It returns True if all following questions in the
+            survey's sequence are conditional, regardless of whether they have been triggered.
+
+        Args:
+            user_input (survey.user_input): The user's current answer session, which contains the answers that
+                determine the active path.
+            page_or_question (survey.question): The page or question to evaluate.
+            exclude_all_conditonals (bool, optional): Controls the evaluation mode.
+                - False (default): Considers the user's current path.
+                - True: Ignores the user's answers and checks the survey's underlying structure for any subsequent
+                  non-conditional questions.
+
+        Returns:
+            bool: True if the page or question is considered the last one based on the chosen mode, False otherwise.
         """
         if self.questions_layout == "one_page":
             return True
@@ -833,14 +850,17 @@ class SurveySurvey(models.Model):
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
         if not next_page_or_question_candidates:
             return True
-        inactive_questions = user_input._get_inactive_conditional_questions()
+        if exclude_all_conditonals:
+            questions_to_exclude = self._get_conditional_questions()
+        else:
+            questions_to_exclude = user_input._get_inactive_conditional_questions()
         if self.questions_layout == 'page_per_question':
             return not (
-                any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                any(next_question not in questions_to_exclude for next_question in next_page_or_question_candidates)
             )
         elif self.questions_layout == 'page_per_section':
             for section in next_page_or_question_candidates:
-                if any(next_question not in inactive_questions for next_question in section.question_ids):
+                if any(next_question not in questions_to_exclude for next_question in section.question_ids):
                     return False
         return True
 
@@ -897,6 +917,20 @@ class SurveySurvey(models.Model):
                 triggered_questions_by_answer[triggering_answer_id] |= question
 
         return triggering_answers_by_question, triggered_questions_by_answer
+
+    def _get_conditional_questions(self):
+        """Retrieves all questions that are subject to conditional display rules.
+
+        This method scans the survey's structure to find any question that is configured to appear
+        only when a specific answer to another question is selected. It is a structural check and
+        does not depend on the user's current answers.
+
+        Returns:
+            survey.question recordset: A recordset of all conditional questions in the survey.
+        """
+        self.ensure_one()
+        triggering_answers_by_question, _ = self._get_conditional_maps()
+        return self.env['survey.question'].concat(*triggering_answers_by_question.keys())
 
     # ------------------------------------------------------------
     # SESSIONS MANAGEMENT
