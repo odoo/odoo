@@ -290,7 +290,7 @@ class HrVersion(models.Model):
                 work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
                 # All benefits generated here are using datetimes converted from the employee's timezone
                 version_vals += [dict([
-                    ('name', "%s: %s" % (work_entry_type.name, employee.name)),
+                    ('name', ""),
                     ('date_start', interval[0].astimezone(pytz.utc).replace(tzinfo=None)),
                     ('date_stop', interval[1].astimezone(pytz.utc).replace(tzinfo=None)),
                     ('work_entry_type_id', work_entry_type.id),
@@ -316,7 +316,7 @@ class HrVersion(models.Model):
                     interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                     version_vals += [dict([
-                        ('name', "%s%s" % (leave_entry_type.name + ": " if leave_entry_type else "", employee.name)),
+                        ('name', ""),
                         ('date_start', interval_start),
                         ('date_stop', interval_stop),
                         ('work_entry_type_id', leave_entry_type.id),

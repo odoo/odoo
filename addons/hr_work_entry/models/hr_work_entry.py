@@ -56,14 +56,6 @@ class HrWorkEntry(models.Model):
             duration = str(timedelta(hours=work_entry.duration)).split(":")
             work_entry.display_name = "%s - %sh%s" % (work_entry.work_entry_type_id.name, duration[0], duration[1])
 
-    @api.depends('work_entry_type_id', 'employee_id')
-    def _compute_name(self):
-        for work_entry in self:
-            if not work_entry.employee_id:
-                work_entry.name = _('Undefined')
-            else:
-                work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name or _('Undefined Type'), work_entry.employee_id.name)
-
     @api.depends('state')
     def _compute_conflict(self):
         for rec in self:

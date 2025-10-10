@@ -93,9 +93,9 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" string="Description" placeholder="Additional Description..." readonly="state == 'validated'"/>
                             <field name="work_entry_type_id" readonly="state == 'validated'" options="{'no_create': True, 'no_open': True}" widget="many2one_work_entry_type"/>
                             <field name="employee_id" readonly="state != 'draft'" widget="many2one_avatar_employee"/>
+                            <field name="name" string="Description" placeholder="Additional Description..." readonly="state == 'validated'"/>
                         </group>
                         <group>
                             <field name="date" readonly="state != 'draft'"/>
@@ -154,7 +154,7 @@
                        decoration-success="state == 'validated'"
                        decoration-warning="state == 'conflict'"
                 />
-                <field name="name" optional="hide"/>
+                <field name="name" string="Description" optional="hide"/>
                 <field name="code" optional="hidden"/>
                 <field name="external_code" optional="hidden"/>
             </list>
