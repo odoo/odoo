@@ -15,6 +15,8 @@ export class ProjectProject extends models.Model {
     allow_task_dependencies = fields.Boolean({ string: "Task Dependencies", default: false });
     allow_milestones = fields.Boolean({ string: "Milestones", default: false });
     allow_recurring_tasks = fields.Boolean({ string: "Recurring Tasks", default: false });
+    account_id = fields.Many2one({ relation: "account.analytic.account" });
+    allow_timesheets = fields.Boolean();
 
     _records = [
         {
@@ -23,6 +25,8 @@ export class ProjectProject extends models.Model {
             stage_id: 1,
             date: "2024-01-09 07:00:00",
             date_start: "2024-01-03 12:00:00",
+            account_id: 101,
+            allow_timesheets: true,
         },
         { id: 2, name: "Project 2", stage_id: 2 },
     ];
@@ -178,6 +182,16 @@ export class ProjectMilestone extends models.Model {
     _records = [{ id: 1, name: "Milestone 1" }];
 }
 
+export class AnalyticAccount extends models.Model {
+    _name = "account.analytic.account";
+
+    name = fields.Char();
+
+    _records = [
+        { id: 101, name: "Test Analytic Account" },
+    ];
+}
+
 export function defineProjectModels() {
     defineMailModels();
     defineModels(projectModels);
@@ -189,4 +203,5 @@ export const projectModels = {
     ProjectTask,
     ProjectTaskType,
     ProjectMilestone,
+    AnalyticAccount,
 };
