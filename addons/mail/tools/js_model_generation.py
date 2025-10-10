@@ -38,5 +38,8 @@ MODELS_TO_EXPOSE = [
     "mail.followers",
     "mail.message",
     "mail.message.link.preview",
+    "res.groups",
+    "res.groups.privilege",
     "res.lang",
+    "res.partner",
 ]

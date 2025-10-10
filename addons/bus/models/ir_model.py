@@ -26,6 +26,7 @@ class IrModel(models.Model):
                     inverse_fields = [
                         field for field in model.pool.field_inverses[model._fields[fname]]
                         if field.model_name in model_names_to_fetch
+                        and field.type != "many2one_reference"
                         and model.env[field.model_name]._has_field_access(field, 'read')
                     ]
                     if inverse_fields:
