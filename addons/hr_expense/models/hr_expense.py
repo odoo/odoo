@@ -7,7 +7,7 @@ import logging
 import werkzeug
 
 from odoo import api, fields, Command, models, _
-from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty
 
 
@@ -44,6 +44,7 @@ class HrExpense(models.Model):
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     @api.model
     def _default_employee_id(self):
@@ -271,9 +272,9 @@ class HrExpense(models.Model):
     )
 
     # Security fields
-    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True, compute_sudo=True)
-    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True, compute_sudo=True)
-    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True, compute_sudo=True)
+    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True)
+    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True)
+    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
 
     # Legacy sheet field, allow grouping of expenses to keep the grouping mechanic data and allow it to be re-used when re-implemented
     former_sheet_id = fields.Integer(string='Former Report')
@@ -355,7 +356,7 @@ class HrExpense(models.Model):
             managers = (
                 expense.manager_id
                 | employee.expense_manager_id
-                | employee.department_id.manager_id.user_id
+                | employee.sudo().department_id.manager_id.user_id
             )
             if is_all_approver:
                 managers |= self.env.user
@@ -818,7 +819,8 @@ class HrExpense(models.Model):
         res = super().write(vals)
 
         if vals.get('state') == 'approved' or vals.get('approval_state') == 'approved':
-            self._check_can_approve()
+            # filter out auto approved expenses
+            self.filtered(lambda expense: expense.manager_id - expense.employee_id.user_id or expense.employee_id.expense_manager_id)._check_can_approve()
         elif vals.get('state') == 'refused' or vals.get('approval_state') == 'refused':
             self._check_can_refuse()
 
@@ -1122,7 +1124,7 @@ class HrExpense(models.Model):
         expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
-            expenses_autovalidated._do_approve(check=False)
+            expenses_autovalidated._do_approve()
         self.sudo().update_activities_and_mails()
 
     def action_approve(self):
@@ -1141,7 +1143,7 @@ class HrExpense(models.Model):
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
             action['context'] = {'default_expense_ids': duplicates.ids}
             return action
-        self._do_approve(False)
+        self._do_approve()
 
     def action_refuse(self):
         """ Refuse an expense with a reason """
@@ -1192,7 +1194,9 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
-        self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
+        if not self.has_access('write') and self.employee_id.user_id != self.env.user:
+            raise AccessError(_("You don't have the access rights to modify this expense."))
+        self.sudo()._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
 
     @api.model
     def _get_untitled_expense_name(self, *args):
@@ -1383,7 +1387,7 @@ class HrExpense(models.Model):
             elif not is_hr_admin:
                 current_managers = (
                         expense_employee.expense_manager_id
-                        | expense_employee.department_id.manager_id.user_id
+                        | expense_employee.sudo().department_id.manager_id.user_id
                         | expense.manager_id
                 )
                 if expense_employee.id in expenses_employee_ids_under_user_ones:
@@ -1415,9 +1419,7 @@ class HrExpense(models.Model):
         if False in self.mapped('payment_mode'):
             raise UserError(_("Please specify if the expenses were paid by the company, or the employee."))
 
-    def _do_approve(self, check=True):
-        if check:
-            self._check_can_approve()
+    def _do_approve(self):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
         for expense in expenses_to_approve:
             expense.write({

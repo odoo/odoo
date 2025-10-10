@@ -111,7 +111,7 @@
                             invisible="nb_attachment == 0 or state != 'approved'" groups="account.group_account_invoice"/>
 
                     <!-- With attachments the attach document comes last-->
-                    <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
+                    <widget name="expense_attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
                     <button name="action_submit" string="Submit" type="object" class="o_expense_submit"
                             invisible="nb_attachment &gt;= 1 or state != 'draft'" data-hotkey="v"/>
                     <button name="action_approve" string="Approve" type="object" data-hotkey="q" context="{'validate_analytic': True}"
@@ -133,7 +133,7 @@
                             groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
 
                     <!-- With attachments the attach_document comes last -->
-                    <widget name="attach_document" string="Attach Receipt" action="attach_document" invisible="nb_attachment == 0"/>
+                    <widget name="expense_attach_document" string="Attach Receipt" action="attach_document" invisible="nb_attachment == 0"/>
 
                     <!-- Statusbar -->
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved,posted,paid"
