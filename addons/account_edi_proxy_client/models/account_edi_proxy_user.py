@@ -59,18 +59,11 @@ class AccountEdiProxyClientUser(models.Model):
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_active_edi_identification', '', 'This edi identification is already assigned to an active user'),
         ('unique_active_company_proxy', '', 'This company has an active user already created for this EDI type'),
     ]
 
     def _auto_init(self):
         super()._auto_init()
-        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_edi_identification'):
-            self.env.cr.execute("""
-                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_edi_identification
-                                 ON account_edi_proxy_client_user(edi_identification, proxy_type, edi_mode)
-                              WHERE (active = True)
-            """)
         if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_company_proxy'):
             self.env.cr.execute("""
                 CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_company_proxy
