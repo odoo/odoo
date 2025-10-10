@@ -41,6 +41,9 @@ models which only purpose is to run tests.""",
         'web.assets_tests': [
             'test_website/static/tests/tours/*',
         ],
+        'web.assets_unit_tests': [
+            'test_website/static/tests/builder/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

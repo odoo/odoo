@@ -194,6 +194,7 @@ export class SnippetModel extends Reactive {
                     key: snippetEl.dataset.oeSnippetKey,
                     thumbnailSrc: snippetEl.dataset.oeThumbnail,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
+                    dragImagePreviewSrc: snippetEl.dataset.oDragImagePreview || null,
                     isCustom: false,
                     label: this.getSnippetLabel(snippetEl),
                     isDisabled: false,

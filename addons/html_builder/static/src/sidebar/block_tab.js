@@ -325,6 +325,19 @@ export class BlockTab extends Component {
                     dynamicSvgEl.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
                 });
 
+                const dragImagePreviewSrc = snippet.dragImagePreviewSrc;
+                // Use an image as a placeholder for a snippet that takes too
+                // long to load or doesn’t load when dragging over a dropzone.
+                if (dragImagePreviewSrc) {
+                    const dragPreviewEl = document.createElement("div");
+                    dragPreviewEl.classList.add("o_snippet_drag_preview");
+                    const imgPreviewEl = document.createElement("img");
+                    imgPreviewEl.src = dragImagePreviewSrc;
+                    imgPreviewEl.classList.add("img-fluid", "mx-auto");
+                    dragPreviewEl.appendChild(imgPreviewEl);
+                    snippetEl.appendChild(dragPreviewEl);
+                    snippetEl.classList.add("o_snippet_previewing_on_drag");
+                }
                 // The dragged element may change while dragging.
                 Object.assign(this.dragState, { draggedEl: snippetEl, snippetEl, snippet });
 
@@ -406,6 +419,11 @@ export class BlockTab extends Component {
 
                 if (currentDropzoneEl) {
                     let draggedEl = this.dragState.draggedEl;
+
+                    // If a preview image was displayed during the drag, we remove it.
+                    draggedEl.querySelector(".o_snippet_drag_preview")?.remove();
+                    this.dragState.snippetEl.classList.remove("o_snippet_previewing_on_drag");
+
                     if (isDroppedOver) {
                         this.env.editor.dispatchTo("on_snippet_dropped_over_handlers", {
                             droppedEl: draggedEl,
