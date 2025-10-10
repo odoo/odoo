@@ -2,9 +2,9 @@ import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import {
-    badgeSelectionField,
-    BadgeSelectionField,
-} from "@web/views/fields/badge_selection/badge_selection_field";
+    listBadgeSelectionField,
+    ListBadgeSelectionField,
+} from "@web/views/fields/badge_selection/list_badge_selection_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export function getRottingDaysTitle(modelName, rotDays) {
@@ -46,7 +46,7 @@ export class KanbanRottingField extends Component {
     }
 }
 
-export class ListBadgeSelectionRotting extends BadgeSelectionField {
+export class ListBadgeSelectionRotting extends ListBadgeSelectionField {
     static template = "mail.ListBadgeSelectionRotting";
     setup() {
         super.setup();
@@ -62,6 +62,6 @@ registry.category("fields").add("kanban.rotting", {
 });
 
 registry.category("fields").add("list.badge_rotting", {
-    ...badgeSelectionField,
+    ...listBadgeSelectionField,
     component: ListBadgeSelectionRotting,
 });
