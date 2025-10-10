@@ -154,7 +154,7 @@ export class EventRegistrationSummaryDialog extends Component {
         const iotBoxUrl = this.selectedPrinter?.ipUrl;
 
         try {
-            const response = await browser.fetch(`${iotBoxUrl}/hw_proxy/hello`, { signal: timeoutController.signal });
+            const response = await browser.fetch(`${iotBoxUrl}/hw_proxy/hello`, { signal: timeoutController.signal, targetAddressSpace: "local" });
             return response.ok;
         } catch {
             return false;
