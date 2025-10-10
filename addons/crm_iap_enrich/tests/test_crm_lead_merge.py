@@ -8,6 +8,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('lead_manage')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadMerge(TestLeadMergeCommon):
 
     @users('user_sales_manager')

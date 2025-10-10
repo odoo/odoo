@@ -51,6 +51,7 @@ class TestMrpValuationCommon(TestStockValuationCommon):
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpValuationStandard(TestMrpValuationCommon):
     def test_fifo_fifo_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'

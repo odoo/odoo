@@ -83,6 +83,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
 
 
 @tagged('out_of_office')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
 
     @classmethod

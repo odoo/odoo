@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 
 
 @tagged("recruitment")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitmentTalentPool(TransactionCase):
     @classmethod
     def setUpClass(cls):

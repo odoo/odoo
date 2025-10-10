@@ -4,11 +4,11 @@
 from freezegun import freeze_time
 
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo import Command, fields
 
 
-
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockReplenish(TestStockCommon):
 
     def test_base_delay(self):

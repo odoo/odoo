@@ -193,6 +193,7 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual([custo.active, default.active], [True, True])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestViewSaving(TestViewSavingCommon):
 
     def eq(self, a, b):

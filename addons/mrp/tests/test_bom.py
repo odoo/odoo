@@ -10,6 +10,7 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
 @freeze_time(fields.Date.today())
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBoM(TestMrpCommon):
 
     @classmethod

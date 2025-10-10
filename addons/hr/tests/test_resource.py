@@ -8,9 +8,12 @@ from odoo.tools.intervals import Intervals
 from odoo.fields import Date
 from odoo.tools.date_utils import sum_intervals
 
+from odoo.tests import tagged
+
 from .common import TestHrCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResource(TestHrCommon):
 
     @classmethod

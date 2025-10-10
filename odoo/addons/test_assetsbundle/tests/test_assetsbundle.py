@@ -26,6 +26,7 @@ GETMTINE = os.path.getmtime
 # ruff: noqa: S320
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAddonPaths(TransactionCase):
     def test_operations(self):
         asset_paths = AssetPaths()
@@ -125,6 +126,7 @@ class FileTouchable(AddonManifestPatched):
         return patch('os.path.getmtime', lambda filename: self.touches.get(filename) or GETMTINE(filename))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestJavascriptAssetsBundle(FileTouchable):
     @classmethod
     def setUpClass(cls):
@@ -667,6 +669,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
     </body>
 </html>"""))
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestXMLAssetsBundle(FileTouchable):
 
     def _get_asset(self, bundle, rtl=False, debug_assets=False):
@@ -784,6 +788,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAssetsBundleWithIRAMock(FileTouchable):
     def setUp(self):
         super(TestAssetsBundleWithIRAMock, self).setUp()
@@ -854,6 +859,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
 
 
 @tagged('assets_manifest')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAssetsManifest(AddonManifestPatched):
 
     def make_asset_view(self, asset_key, t_call_assets_attrs=None):

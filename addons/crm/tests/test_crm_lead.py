@@ -17,6 +17,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('lead_internals')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLead(TestCrmCommon):
 
     @classmethod
@@ -991,6 +992,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(lead.phone_sanitized)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLeadRotting(TestCrmCommon):
     @classmethod
     def setUpClass(cls):
@@ -1143,6 +1145,7 @@ class TestCRMLeadRotting(TestCrmCommon):
 
 
 @tagged('lead_internals')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadFormTools(FormatAddressCase):
 
     def test_address_view(self):
@@ -1151,6 +1154,7 @@ class TestLeadFormTools(FormatAddressCase):
 
 
 @tagged('lead_internals', 'is_query_count')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
 
     @classmethod

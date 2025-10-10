@@ -6,9 +6,12 @@ import odoo.tests
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.exceptions import UserError
 from odoo.http import root
+from odoo.tests import tagged
+
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReports(odoo.tests.HttpCase):
     def test_report_session_cookie(self):
         """ Asserts wkhtmltopdf forwards the user session when requesting resources to Odoo, such as images,

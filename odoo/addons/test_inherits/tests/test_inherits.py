@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo.tests import common
+from odoo.tests import tagged, common
 from odoo.exceptions import ValidationError
 from odoo import Command
 from unittest.mock import patch
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_inherits(common.TransactionCase):
 
     def test_ir_model_inherit(self):

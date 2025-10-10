@@ -1,8 +1,9 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 from odoo.addons.base.tests.test_mimetypes import JPG, SVG
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebSave(TransactionCase):
 
     def test_web_save_create(self):

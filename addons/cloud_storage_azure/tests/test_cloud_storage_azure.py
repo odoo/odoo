@@ -10,7 +10,7 @@ import base64
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests.common import TransactionCase
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError, UserError
 
 from ..utils.cloud_storage_azure_utils import UserDelegationKey
@@ -56,6 +56,7 @@ class TestCloudStorageAzureCommon(TransactionCase):
         CloudStorageAzureUserDelegationKeys.clear()
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
     def test_get_user_delegation_key_success(self):
         request_num = 0

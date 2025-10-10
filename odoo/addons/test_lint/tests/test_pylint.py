@@ -13,7 +13,7 @@ import subprocess
 
 from odoo import tools
 from odoo.modules import Manifest
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.tools.which import which
 
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -21,6 +21,7 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 _logger = logging.getLogger(__name__)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPyLint(TransactionCase):
     def _skip_test(self, reason):
         _logger.warning(reason)

@@ -75,6 +75,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
 
 
 @tagged('mail_template')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplate(TestMailTemplateCommon):
 
     def test_template_add_context_action(self):

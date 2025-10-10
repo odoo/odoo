@@ -3,10 +3,11 @@
 from odoo import Command
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from unittest.mock import patch
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPackingDelivery(TestPackingCommon):
 
     @classmethod

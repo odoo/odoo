@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 
 
 @tagged('negative_time_off')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNegative(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):

@@ -10,6 +10,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mailing_manage')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingTest(TestMassMailCommon):
 
     @classmethod
@@ -162,6 +163,7 @@ class TestMailingTest(TestMassMailCommon):
 
 
 @tagged('mailing_manage', 'twilio')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
 
     @classmethod

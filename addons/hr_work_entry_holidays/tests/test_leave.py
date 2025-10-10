@@ -11,6 +11,7 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 from odoo.tests import tagged
 
 @tagged('test_leave')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
     def test_resource_leave_has_work_entry_type(self):

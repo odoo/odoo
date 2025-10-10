@@ -1,9 +1,9 @@
 from unittest.mock import patch
 
 from odoo.fields import Command, Domain
-from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user, tagged
 
-
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class Many2manyCase(TransactionCase):
     def setUp(self):
         super().setUp()

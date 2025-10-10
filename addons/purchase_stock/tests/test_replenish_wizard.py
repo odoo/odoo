@@ -4,10 +4,11 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from .common import PurchaseTestCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReplenishWizard(PurchaseTestCommon):
     @classmethod
     def setUpClass(cls):

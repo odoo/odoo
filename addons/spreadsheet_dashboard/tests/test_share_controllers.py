@@ -1,11 +1,13 @@
 import json
 import base64
 
-from odoo.tests.common import HttpCase
+from odoo.tests.common import tagged, HttpCase
 from odoo.tools import mute_logger
 
 from .common import DashboardTestCommon
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestShareController(DashboardTestCommon, HttpCase):
     def test_dashboard_share_portal(self):
         dashboard = self.create_dashboard()

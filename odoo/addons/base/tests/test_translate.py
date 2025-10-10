@@ -20,6 +20,7 @@ _stats_logger = logging.getLogger('odoo.tests.stats')
 SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
@@ -363,6 +364,7 @@ class TranslationToolsTestCase(BaseCase):
         self.assertEqual(result, source)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLanguageInstall(TransactionCase):
     def test_language_install(self):
         fr = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
@@ -394,6 +396,7 @@ class TestTranslationExport(TransactionCase):
             TranslationModuleReader(self.env.cr)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -608,6 +611,8 @@ class TestTranslation(TransactionCase):
     #     with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
     #         country_3 = Country.create({'name': 'Odoo'})
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTranslationWrite(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -957,6 +962,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(info['models'][model._name]["fields"]['name']['string'], LABEL)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestXMLTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1654,6 +1660,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view1_us.arch_db, xml % ('Soccer', 'Clbus', 'Ranking'))  # fr_FR should fall back to en_US
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestXMLDuplicateTranslations(TransactionCase):
     """
     duplicate translations are not supported
@@ -1795,6 +1802,7 @@ class TestXMLDuplicateTranslations(TransactionCase):
         self.assertEqual(view1_en_copy.with_context(lang='es_ES').arch_db, self.xml % ('una estudiante', 'una estudiante'))  # 'un estudiante' is dropped
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHTMLTranslation(TransactionCase):
     def test_write_non_existing(self):
         html = '''
@@ -1844,6 +1852,7 @@ class TestLanguageInstallPerformance(TransactionCase):
         _stats_logger.info("installed language fr_BE in %.3fs", t1 - t0)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTranslationTrigramIndexPatterns(BaseCase):
     def test_value_conversion(self):
         sc = SPECIAL_CHARACTERS

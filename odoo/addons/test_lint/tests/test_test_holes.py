@@ -5,6 +5,8 @@ import unittest.mock
 from collections import Counter
 
 from odoo.addons.test_lint.tests.lint_case import LintCase
+from odoo.tests import tagged
+
 from odoo.modules import Manifest
 
 
@@ -32,6 +34,7 @@ class InitChecker(ast.NodeVisitor):
                     self.names[f'{self.prefix}{alias.name}.py'] += 1
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTestHoles(LintCase):
     """
     Tries to catch common test issues:

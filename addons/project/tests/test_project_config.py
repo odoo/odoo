@@ -1,6 +1,8 @@
 from .test_project_base import TestProjectCommon
+from odoo.tests import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectConfig(TestProjectCommon):
     """Test module configuration and its effects on projects."""
 

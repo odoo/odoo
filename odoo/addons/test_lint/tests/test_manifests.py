@@ -4,7 +4,7 @@ import logging
 from os.path import join as opj
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
-from odoo.tests import BaseCase
+from odoo.tests import tagged, BaseCase
 from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
@@ -19,6 +19,7 @@ MANIFEST_KEYS = {
 }
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class ManifestLinter(BaseCase):
 
     def test_manifests(self):

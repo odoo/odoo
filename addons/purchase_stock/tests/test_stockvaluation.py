@@ -17,6 +17,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuation(TransactionCase):
     @classmethod
     def setUpClass(cls):

@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools.intervals import Intervals, intervals_overlap, invert_intervals
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIntervals(TransactionCase):
 
     def ints(self, pairs):
@@ -71,6 +72,7 @@ class TestIntervals(TransactionCase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUtils(TransactionCase):
 
     def test_intervals_intersections(self):
@@ -138,6 +140,7 @@ class TestUtils(TransactionCase):
                 self.assertListEqual(invert_intervals(test_intervals, start, end), expected_result)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestKeepDistinctIntervals(TransactionCase):
 
     def ints(self, pairs):

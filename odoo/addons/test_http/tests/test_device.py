@@ -12,9 +12,12 @@ from odoo.addons.test_http.utils import (
     USER_AGENT_linux_chrome,
     USER_AGENT_linux_firefox
 )
+from odoo.tests import tagged
+
 from .test_common import TestHttpBase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDevice(TestHttpBase):
 
     def setUp(self):

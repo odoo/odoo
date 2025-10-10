@@ -1,11 +1,12 @@
 from lxml import etree
 
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, common
+from odoo.tests import tagged, Form, common
 
 from odoo.addons.base.tests.test_views import ViewCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDefaultView(common.TransactionCase):
 
     def test_default_form_view(self):

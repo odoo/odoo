@@ -101,6 +101,8 @@ class TestSelfAccessPreferences(TestHrCommon):
         self.assertEqual(action['type'], 'ir.actions.act_window')
         self.assertEqual(action['display_name'], 'Change my Preferences')
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod

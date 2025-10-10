@@ -1,7 +1,8 @@
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
-from odoo.tests import Form, users
+from odoo.tests import tagged, Form, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTodoQuickCreate(TestProjectCommon):
 
     @users('armandel')

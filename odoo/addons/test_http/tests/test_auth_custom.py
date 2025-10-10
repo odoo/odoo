@@ -1,9 +1,10 @@
 from http import HTTPStatus
 
 import odoo.tools
-from odoo.tests import HttpCase
+from odoo.tests import HttpCase, tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCustomAuth(HttpCase):
     # suppress "WARNING: Access Error" when auth fails on json endpoints
     @odoo.tools.mute_logger('odoo.http')

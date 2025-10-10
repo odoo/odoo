@@ -4,11 +4,12 @@ import sys
 import time
 from pathlib import Path
 
-from odoo.tests import BaseCase
+from odoo.tests import tagged, BaseCase
 
 _logger = logging.getLogger(__name__)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestInit(BaseCase):
 
     @classmethod

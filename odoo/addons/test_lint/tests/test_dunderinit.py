@@ -4,6 +4,8 @@ import logging
 from pathlib import Path
 
 from odoo.modules import Manifest
+from odoo.tests import tagged
+
 from . import lint_case
 
 _logger = logging.getLogger(__name__)
@@ -12,6 +14,7 @@ _logger = logging.getLogger(__name__)
 WHITELIST = ['test_data_module', ]
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDunderinit(lint_case.LintCase):
 
     def test_dunderinit(self):

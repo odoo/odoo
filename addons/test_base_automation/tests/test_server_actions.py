@@ -1,9 +1,12 @@
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.base.models.ir_actions import ServerActionWithWarningsError
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
+
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestServerActionsValidation(TestServerActionsBase):
     def test_multi_action_children_warnings(self):
         self.action.write({

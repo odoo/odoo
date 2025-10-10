@@ -8,9 +8,10 @@ import unittest
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import CacheMiss
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecordCache(TransactionCaseWithUserDemo):
 
     def test_cache(self):

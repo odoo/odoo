@@ -6,10 +6,11 @@ import unittest
 from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
-from odoo.tests import BaseCase
+from odoo.tests import tagged, BaseCase
 from odoo.tools import config, file_path
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCommand(BaseCase):
 
     @classmethod

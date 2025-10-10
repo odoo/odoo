@@ -15,6 +15,7 @@ class TestPackingCommon(TestStockCommon):
         cls.picking_type_out.reservation_method = 'at_confirm'
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPacking(TestPackingCommon):
 
     def test_put_in_pack(self):

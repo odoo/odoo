@@ -13,6 +13,7 @@ from odoo.tools.misc import format_date
 
 
 @tagged('mail_activity', 'mail_activity_plan')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivitySchedule(ActivityScheduleCase):
     """ Test plan and activity schedule
 

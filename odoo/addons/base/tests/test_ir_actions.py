@@ -85,6 +85,7 @@ except:
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestServerActions(TestServerActionsBase):
     def test_00_server_action(self):
         with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',
@@ -647,6 +648,7 @@ class TestCommonCustomFields(common.TransactionCase):
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCustomFields(TestCommonCustomFields):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """

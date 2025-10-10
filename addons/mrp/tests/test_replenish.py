@@ -5,12 +5,12 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from json import loads
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo import fields, Command
 
 
-
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpReplenish(TestMrpCommon):
 
     def _create_wizard(self, product, warehouse):

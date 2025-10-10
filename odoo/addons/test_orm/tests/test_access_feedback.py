@@ -1,7 +1,7 @@
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.tools.misc import mute_logger
 
 
@@ -20,6 +20,7 @@ class Feedback(TransactionCase):
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSudo(Feedback):
     """ Test the behavior of method sudo(). """
     def test_sudo(self):
@@ -86,6 +87,7 @@ class TestSudo(Feedback):
         self.assertFalse(record2.env.su)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestACLFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.model.access errors
     """
@@ -158,6 +160,7 @@ Contact your administrator to request access if necessary."""
         self.assertEqual(ctx.exception.args[0], expected)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
@@ -427,6 +430,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!""")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFieldGroupFeedback(Feedback):
 
     @classmethod

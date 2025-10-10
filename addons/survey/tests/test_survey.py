@@ -8,9 +8,10 @@ from freezegun import freeze_time
 from odoo import _, Command, fields
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.survey.tests import common
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
     @users('survey_manager')

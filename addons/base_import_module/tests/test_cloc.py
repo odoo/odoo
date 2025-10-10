@@ -5,6 +5,8 @@ from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from odoo.tools import cloc
+from odoo.tests import tagged
+
 from odoo.addons.base.tests import test_cloc
 
 VALID_XML = """
@@ -33,6 +35,8 @@ VALID_XML_2 = """<?xml version="1.0" encoding="UTF-8"?>
 </odoo>
 """
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestClocFields(test_cloc.TestClocCustomization):
 
     def create_studio_module(self):

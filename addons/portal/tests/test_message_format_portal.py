@@ -6,6 +6,7 @@ from odoo.tests import common, tagged
 
 
 @tagged('mail_message')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessageFormatPortal(common.TransactionCase):
 
     @mute_logger('odoo.models.unlink')

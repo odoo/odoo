@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import tagged
+
 from odoo.addons.stock_account.tests.test_lot_valuation import TestLotValuation
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLotValuationPurchase(TestLotValuation):
     def test_poline_price_unit(self):
         """ Purchase order line price unit is the average of the lots from the product form """

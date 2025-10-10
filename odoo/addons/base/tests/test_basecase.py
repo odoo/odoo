@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSingleTransactionCase(common.SingleTransactionCase):
     """
     Check the whole-class transaction behavior of SingleTransactionCase.
@@ -39,6 +40,7 @@ class TestSingleTransactionCase(common.SingleTransactionCase):
         self.assertEqual(partner, partner2, "browse_ref() should resolve xid to browse records")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTransactionCase(common.TransactionCase):
     """
     Check the per-method transaction behavior of TransactionCase.

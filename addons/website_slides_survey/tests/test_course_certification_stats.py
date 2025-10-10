@@ -2,9 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.tests import tagged
+
 from odoo.addons.survey.tests.common import TestSurveyCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCourseCertificationStats(TestSurveyCommon):
     @classmethod
     def setUpClass(cls):

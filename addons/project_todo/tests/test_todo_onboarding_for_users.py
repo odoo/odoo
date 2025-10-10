@@ -1,6 +1,7 @@
-from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests.common import tagged, TransactionCase, new_test_user
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTodoOnboardingUsers(TransactionCase):
     """Test personal stages onboarding and onboarding task creation for project_todo."""
 

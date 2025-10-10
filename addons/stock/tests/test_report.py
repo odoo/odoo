@@ -4,7 +4,7 @@
 from datetime import date, datetime, timedelta
 from re import findall
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from odoo import Command
 
 
@@ -77,6 +77,7 @@ class TestReportsCommon(TransactionCase):
         return res
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReports(TestReportsCommon):
     def _check_closure_commands(self, zpl_rendered_template):
         wrong_xz_count = findall(r'\^XZ[^\\]+[^n]', str(zpl_rendered_template))

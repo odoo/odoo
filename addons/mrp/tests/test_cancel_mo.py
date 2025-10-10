@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as Dt
@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpCancelMO(TestMrpCommon):
 
     def test_cancel_mo_without_routing_1(self):

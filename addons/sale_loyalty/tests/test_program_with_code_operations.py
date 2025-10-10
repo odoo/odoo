@@ -3,9 +3,12 @@
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
+from odoo.tests import tagged
+
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on an coupon program on which we should
     # apply the reward when the code is correct or remove the reward automatically when the reward is

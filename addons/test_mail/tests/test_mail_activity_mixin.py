@@ -15,6 +15,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mail_activity', 'mail_activity_mixin')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityMixin(TestActivityCommon):
 
     @classmethod
@@ -669,6 +670,7 @@ class TestActivityMixin(TestActivityCommon):
 
 
 @tests.tagged('mail_activity', 'mail_activity_mixin')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestORM(TestActivityCommon):
     """Test for read_progress_bar"""
 

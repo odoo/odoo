@@ -10,6 +10,8 @@ from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrEmployee(TestHrCommon):
 
     def setUp(self):

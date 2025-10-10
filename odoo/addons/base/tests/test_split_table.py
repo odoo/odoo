@@ -1,4 +1,4 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import file_open
 from odoo.addons.base.models.ir_actions_report import _split_table
 from lxml import etree
@@ -6,6 +6,8 @@ from lxml import etree
 def cleanup_string(s):
     return ''.join(s.split())
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSplitTable(TransactionCase):
     def test_split_table(self):
         # NOTE: All the tests's xml are in split_table/ relative to this file
