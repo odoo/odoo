@@ -63,7 +63,12 @@ class IrQweb(models.AbstractModel):
         view = self.env['ir.ui.view']._get_template_view(key)
         name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
+        # If provided, this image is used as the placeholder in the snippet
+        # dialog.
         image_preview = el.attrib.pop('t-image-preview', None)
+        # If provided, this image is used as the snippet placeholder while
+        # dragging the snippet onto the page (shown when over a dropzone).
+        drag_image_preview = el.attrib.pop('t-drag-image-preview', None)
         # Forbid sanitize contains the specific reason:
         # - "true": always forbid
         # - "form": forbid if forms are sanitized
@@ -72,7 +77,7 @@ class IrQweb(models.AbstractModel):
         snippet_group = el.attrib.pop('snippet-group', None)
         group = el.attrib.pop('group', None)
         label = el.attrib.pop('label', None)
-        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s %s>') % (
+        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s %s %s>') % (
             name,
             escape_silent(image_preview),
             thumbnail,
@@ -84,6 +89,7 @@ class IrQweb(models.AbstractModel):
             Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
             Markup('data-o-group="%s"') % group if group else '',
             Markup('data-o-label="%s"') % label if label else '',
+            Markup('data-o-drag-image-preview="%s"') % drag_image_preview if drag_image_preview else '',
         )
         self._append_text(div, compile_context)
         code = self._compile_node(el, compile_context, indent)
