@@ -36,6 +36,11 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
+    def _post_process_pending_get_sale_orders_to_notify(self):
+        """Returns orders to send quotations for and to notify."""
+        # TODO: add a flag on the payment provider to control this behavior?
+        return self.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
+
     def _post_process(self):
         """ Override of `payment` to add Sales-specific logic to the post-processing.
 
@@ -45,9 +50,7 @@ class PaymentTransaction(models.Model):
         """
         for pending_tx in self.filtered(lambda tx: tx.state == 'pending'):
             super(PaymentTransaction, pending_tx)._post_process()
-            sales_orders = pending_tx.sale_order_ids.filtered(
-                lambda so: so.state in ['draft', 'sent']
-            )
+            sales_orders = pending_tx._post_process_pending_get_sale_orders_to_notify()
             sales_orders.filtered(
                 lambda so: so.state == 'draft'
             ).with_context(tracking_disable=True).action_quotation_sent()
