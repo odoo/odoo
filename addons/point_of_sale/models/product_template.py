@@ -349,7 +349,7 @@ class ProductTemplate(models.Model):
         while not tax_to_use and company:
             tax_to_use = self.taxes_id.filtered(lambda tax: tax.company_id.id == company.id)
             if not tax_to_use:
-                company = company.parent_id
+                company = company.sudo().parent_id
         taxes = tax_to_use.compute_all(price, config.currency_id, quantity, self)
         grouped_taxes = {}
         for tax in taxes['taxes']:
