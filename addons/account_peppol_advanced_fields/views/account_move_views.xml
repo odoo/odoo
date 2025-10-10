@@ -7,17 +7,7 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@id='other_tab']/group" position="inside">
-                    <group string="Advanced Peppol" name="peppol_info_group">
-                            <field name="peppol_contract_document_reference"/>
-                            <field name="peppol_project_reference"/>
-                            <field name="peppol_originator_document_reference"/>
-                            <field name="peppol_despatch_document_reference"/>
-                            <field name="peppol_additional_document_reference"/>
-                            <field name="peppol_accounting_cost"/>
-                            <field name="peppol_delivery_location_id"/>
-                            <field name="ubl_cii_xml_filename" invisible="1" groups="base.group_no_one" /> <!-- used to show the name of the binary file -->
-                            <field name="ubl_cii_xml_file" string="XML Invoice" groups="base.group_no_one" filename="ubl_cii_xml_filename"/>
-                    </group>
+                    <!-- DEPRECATED -->
                 </xpath>
             </field>
         </record>
