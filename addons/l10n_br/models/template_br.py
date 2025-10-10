@@ -31,6 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_template_in_icms_interno17',
                 'expense_account_id': 'account_template_30101030101',
                 'income_account_id': 'account_template_30101010105',
+                'extract_single_line_per_tax': False,
             },
         }
 
