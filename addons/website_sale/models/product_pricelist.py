@@ -81,6 +81,44 @@ class ProductPricelist(models.Model):
 
     #=== BUSINESS METHODS ===#
 
+    def _get_product_price(self, product, *args, **kwargs):
+        """Compute the pricelist price for the specified product, qty & uom.
+
+        Note: self and self.ensure_one()
+
+        :param product: product record (product.product/product.template)
+        :param float quantity: quantity of products requested (in given uom)
+        :param currency: record of currency (res.currency) (optional)
+        :param uom: unit of measure (uom.uom record) (optional)
+            If not specified, prices returned are expressed in product uoms
+        :param date: date to use for price computation and currency conversions (optional)
+        :type date: date or datetime
+        :param bool apply_taxes: if True, return price with/without taxes depending on tax display
+            setting (default = system config).
+        :param website: optional website record to determine tax display mode
+        :param website: optional fiscal position record to apply on product taxes
+
+        :returns: unit price of the product, considering pricelist rules if any
+        :rtype: float
+        """
+        self and self.ensure_one()  # self is at most one record
+        price_without_taxes = self._compute_price_rule(product, *args, **kwargs)[product.id][0]
+
+        website = kwargs.get('website')
+
+        if not (kwargs.get('apply_taxes') and website):
+            return super()._get_product_price(product, *args, **kwargs)
+
+        if website.show_line_subtotals_tax_selection:
+            taxes_incl = website.show_line_subtotals_tax_selection == 'tax_included'
+
+        fiscal_position = kwargs.get('fiscal_position')
+
+        product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+        mapped_taxes = fiscal_position.map_tax(product_taxes)
+        taxes_res = mapped_taxes.compute_all(price_without_taxes, self.currency_id, 1.0, product=product)
+        return taxes_res['total_included'] if taxes_incl else taxes_res['total_excluded']
+
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
         domain = super()._get_partner_pricelist_multi_search_domain_hook(company_id)
         website = ir_http.get_request_website()
