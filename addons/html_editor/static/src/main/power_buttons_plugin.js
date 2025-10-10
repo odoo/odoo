@@ -107,7 +107,7 @@ export class PowerButtonsPlugin extends Plugin {
         const editableRect = this.editable.getBoundingClientRect();
         if (
             editableSelection.isCollapsed &&
-            element?.matches(baseContainerGlobalSelector) &&
+            block?.matches(baseContainerGlobalSelector) &&
             editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
             !descendants(block).some(isEditorTab) &&
