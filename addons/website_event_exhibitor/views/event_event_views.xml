@@ -15,9 +15,11 @@
                     <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                 </button>
             </field>
-            <xpath expr="//label[@for='community_menu']" position="before">
-                <label for="exhibitor_menu"/>
-                <field name="exhibitor_menu"/>
+            <xpath expr="//span[@name='community_menu']" position="before">
+                <span name="exhibitor_menu" class="ms-2">
+                    <label for="exhibitor_menu"/>
+                    <field name="exhibitor_menu"/>
+                </span>
             </xpath>
         </field>
     </record>

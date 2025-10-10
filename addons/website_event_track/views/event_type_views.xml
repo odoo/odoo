@@ -6,12 +6,12 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
-                <xpath expr="//span[@name='website_menu']" position='after'>
-                <span>
+            <xpath expr="//span[@name='website_menu']" position='after'>
+                <span class="ms-2">
                     <label for="website_track" string="Tracks Menu Item"/>
                     <field name="website_track"/>
                 </span>
-                <span name="website_track_proposal">
+                <span name="website_track_proposal" class="ms-2">
                     <label for="website_track_proposal" string="Track Proposals Menu Item"/>
                     <field name="website_track_proposal"/>
                 </span>
