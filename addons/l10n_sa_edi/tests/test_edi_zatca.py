@@ -7,7 +7,7 @@ from lxml import etree
 from pytz import timezone
 from odoo import Command
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tests import tagged
 from odoo.tools import misc
 from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
@@ -459,3 +459,36 @@ class TestEdiZatca(TestSaEdiCommon):
         qr_company_name = decoded_qr[2:2 + length].decode()
 
         self.assertEqual(xml_company_name, qr_company_name, "Seller name on the xml does not match the seller name on the QR code")
+
+    def test_company_missing_country_on_standard_invoice(self):
+        """Test standard invoice generation when the company does not have a country set."""
+        # setup new company to prevent errors in other tests
+        vals = self._get_company_vals({"name": "SA Company (Minus Country)"})
+        new_company = self.setup_company_data("SA Branch", "sa", **vals)["company"]
+        new_company.l10n_sa_private_key = self.env['res.company']._l10n_sa_generate_private_key()
+
+        new_company_customer_invoice_journal = self.env['account.journal'].search([
+            ('company_id', '=', new_company.id),
+            ('type', '=', 'sale'),
+        ], limit=1)
+        new_company_customer_invoice_journal._l10n_sa_load_edi_demo_data()
+
+        new_company.country_id = False
+
+        # missing tax should always cause a user error, even if the country is blank
+        move_data = {
+            'name': 'INV/2022/00014',
+            'invoice_date': '2022-09-05',
+            'invoice_date_due': '2022-09-22',
+            'company_id': new_company,
+            'partner_id': self.partner_sa,
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'price_unit': self.product_a.standard_price,
+                'tax_ids': False,
+            }],
+        }
+
+        invoice = self._create_invoice(**move_data)
+        with self.assertRaises(UserError):
+            invoice.action_post()
