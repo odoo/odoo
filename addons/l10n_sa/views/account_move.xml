@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="view_move_form" model="ir.ui.view">
+		<field name="name">account.move.form.inherit.l10n_sa</field>
+		<field name="model">account.move</field>
+		<field name="inherit_id" ref="account.view_move_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='delivery_date']" position="attributes">
+				<attribute name="invisible" add="country_code == 'SA'" separator=" or "/>
+			</xpath> 
+            <xpath expr="//field[@name='delivery_date']" position="after">
+                <field name="delivery_date" string="Supply Date" invisible="not show_delivery_date or country_code != 'SA'" readonly="state != 'draft'" help="Date when the supply of the goods and services is performed. You can set this date to when you want ZATCA to recognize the VAT Due Liability, as ZATCA will consider the earlier of this date and the Confirmation Date. In case of multiple deliveries, you should take the date of the latest one."/>
+			</xpath>
+			<xpath expr="//group[@id='other_tab_group']/group/field[@name='delivery_date']" position="attributes">
+				<attribute name="invisible" add="country_code == 'SA'" separator=" or "/>
+			</xpath>
+			<xpath expr="//group[@id='other_tab_group']/group/field[@name='delivery_date']" position="after">
+                <field name="delivery_date" string="Supply Date" invisible="not show_delivery_date or country_code != 'SA'" readonly="state != 'draft'" help="Date when the supply of the goods and services is performed. You can set this date to when you want ZATCA to recognize the VAT Due Liability, as ZATCA will consider the earlier of this date and the Confirmation Date. In case of multiple deliveries, you should take the date of the latest one."/>
+			</xpath>
+		</field>
+	</record>
+</odoo>

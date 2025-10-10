@@ -28,6 +28,7 @@ Activates:
         'data/account_data.xml',
         'data/account_tax_report_data.xml',
         'data/report_paperformat_data.xml',
+        'views/account_move.xml',
         'views/report_invoice.xml',
         'views/report_templates_views.xml'
     ],
