@@ -30,7 +30,7 @@ patch(TicketScreen.prototype, {
         );
         if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
             return this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t("You cannot edit a discount line."),
             });
         }

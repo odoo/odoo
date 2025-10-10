@@ -936,7 +936,7 @@ export class FloorScreen extends Component {
             ]);
         } catch {
             this.dialog.add(AlertDialog, {
-                title: _t("Delete Error"),
+                title: _t("Warning"),
                 body: _t("You cannot delete a floor with orders still in draft for this floor."),
             });
             return;
@@ -993,7 +993,7 @@ export class FloorScreen extends Component {
             }
         } catch {
             this.dialog.add(AlertDialog, {
-                title: _t("Delete Error"),
+                title: _t("Warning"),
                 body: _t("You cannot delete a table with orders still in draft for this table."),
             });
         }

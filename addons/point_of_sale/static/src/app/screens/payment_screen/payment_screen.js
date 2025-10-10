@@ -148,7 +148,7 @@ export class PaymentScreen extends Component {
         }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
             this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t("There is already an electronic payment in progress."),
             });
             return;
@@ -172,7 +172,7 @@ export class PaymentScreen extends Component {
             return true;
         } else {
             this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+                title: _t("Oh snap !"),
                 body: _t("There is already an electronic payment in progress."),
             });
             return false;

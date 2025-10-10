@@ -173,7 +173,7 @@ export default class OrderPaymentValidation {
                     this.pos.dialog.add(AlertDialog, {
                         title: _t("Backend Invoice"),
                         body: _t(
-                            "An error occurred while generating an invoice. You can try again from the order list."
+                            "An error occurred while trying to generate an invoice. Try again from the order tab or generate the invoice from the backend."
                         ),
                     });
                 }
@@ -352,7 +352,7 @@ export default class OrderPaymentValidation {
                 this.pos.dialog.add(AlertDialog, {
                     title: _t("Cannot return change without a cash payment method"),
                     body: _t(
-                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration"
+                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale settings."
                     ),
                 });
                 return false;

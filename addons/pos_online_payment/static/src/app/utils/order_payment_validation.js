@@ -65,7 +65,7 @@ patch(OrderPaymentValidation.prototype, {
                 this.cancelOnlinePayment(this.order);
                 this.pos.dialog.add(AlertDialog, {
                     title: _t("Online payment unavailable"),
-                    body: _t("The QR Code for paying could not be generated."),
+                    body: _t("The QR code payment could not be generated."),
                 });
                 return false;
             }
