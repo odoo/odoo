@@ -16,6 +16,24 @@ import { ACTIVE_ELEMENT_CLASS } from "@web/core/navigation/navigation";
 
 const parsers = registry.category("parsers");
 
+const parseValue = (value, fieldType) => {
+    const parser = parsers.contains(fieldType) ? parsers.get(fieldType) : (str) => str;
+    switch (fieldType) {
+        case "date": {
+            return serializeDate(parser(value));
+        }
+        case "datetime": {
+            return serializeDateTime(parser(value));
+        }
+        case "many2one": {
+            return value;
+        }
+        default: {
+            return parser(value);
+        }
+    }
+};
+
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
 const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 
@@ -231,6 +249,7 @@ export class SearchBar extends Component {
                 if (fuzzyTest(trimmedQuery.toLowerCase(), label.toLowerCase())) {
                     items.push({
                         id: nextItemId++,
+                        fieldType,
                         searchItemDescription: searchItem.description,
                         preposition,
                         searchItemId: searchItem.id,
@@ -245,29 +264,16 @@ export class SearchBar extends Component {
             return items;
         }
 
-        const parser = parsers.contains(fieldType) ? parsers.get(fieldType) : (str) => str;
         let value;
         try {
-            switch (fieldType) {
-                case "date":
-                    value = serializeDate(parser(trimmedQuery));
-                    break;
-                case "datetime":
-                    value = serializeDateTime(parser(trimmedQuery));
-                    break;
-                case "selection":
-                case "many2one":
-                    value = trimmedQuery;
-                    break;
-                default:
-                    value = parser(trimmedQuery);
-            }
+            value = parseValue(trimmedQuery, fieldType);
         } catch {
             return [];
         }
 
         const item = {
             id: nextItemId++,
+            fieldType,
             searchItemDescription: searchItem.description,
             preposition,
             searchItemId: searchItem.id,
@@ -467,7 +473,20 @@ export class SearchBar extends Component {
         }
 
         if (!item.unselectable) {
-            const { searchItemId, label, operator, value } = item;
+            const { searchItemId, fieldType, operator } = item;
+            let { label, value } = item;
+            if (
+                !["selection", "boolean", "tags"].includes(fieldType) &&
+                this.state.query !== label &&
+                !item.isChild
+            ) {
+                // The query (the search input) changed but it hasn't been reflected yet in the
+                // items (a rendering is scheduled but hasn't been applied to the DOM yet), so select
+                // the item but use the current query. Typical usecase is when scanning a barcode,
+                // as the keystrokes are closer than when a user uses a regular keyboard.
+                label = this.state.query;
+                value = parseValue(this.state.query.trim(), fieldType);
+            }
             const autoCompleteValue = manageSearchWithQuotes({ label, operator, value });
             this.env.searchModel.addAutoCompletionValues(searchItemId, autoCompleteValue);
         }
@@ -639,7 +658,7 @@ export class SearchBar extends Component {
             this.resetState();
         }
     }
-    
+
     /**
      * @param {CompositionEvent} ev
      */
