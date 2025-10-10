@@ -96,7 +96,7 @@ export class WebsiteBuilder extends Component {
         if (!this.editor) {
             return;
         }
-        if (!this.isSaving && this.editor.shared.history.canUndo()) {
+        if (this.editor.shared.history.canUndo()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
@@ -125,15 +125,14 @@ export class WebsiteBuilder extends Component {
     }
 
     async save() {
-        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
-    }
-
-    async _save() {
-        this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
-        await this.editor.shared.savePlugin.save({ alwaysSkipAfterSaveHandlers: false });
-        this.props.builderProps.closeEditor();
-        this.isSaving = false;
+        await this.editor.shared.operation.next(
+            async () => {
+                await this.editor.shared.savePlugin.save();
+                this.props.builderProps.closeEditor();
+            },
+            { withLoadingEffect: false }
+        );
     }
 
     get builderProps() {
