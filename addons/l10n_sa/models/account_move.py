@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from datetime import datetime
 
 from odoo import api, fields, models
 from odoo.tools import float_repr, format_datetime
@@ -9,12 +9,28 @@ from odoo.tools import float_repr, format_datetime
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    l10n_sa_hide_equal_date = fields.Boolean(compute='_compute_l10n_sa_hide_equal_date', store=False)
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
-    l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date',
-                                                    readonly=True,
+    l10n_sa_confirmation_datetime = fields.Datetime(string='Issue Date',
+                                                    default=fields.Datetime.now,
+                                                    store=True,
                                                     copy=False,
-                                                    help="""Date when the invoice is confirmed and posted.
-                                                    In other words, it is the date on which the invoice is generated as final document (after securing all internal approvals).""")
+                                                    readonly=False,
+                                                    compute='_compute_l10n_sa_confirmation_datetime',
+                                                    inverse='_inverse_l10n_sa_confirmation_datetime',
+                                                    help="""Date on which the invoice is generated as a final document (after securing all internal approvals).""")
+
+    @api.depends('invoice_date')
+    def _compute_l10n_sa_confirmation_datetime(self):
+        for move in self.filtered(lambda move: move.state == 'draft' and move.show_delivery_date and move.is_sale_document()):
+            time = fields.Datetime.now().time() if move.invoice_date == fields.Date.context_today(self.with_context(tz='Asia/Riyadh')) else datetime.strptime('09:00:00', '%H:%M:%S').time()
+            move.l10n_sa_confirmation_datetime = move.invoice_date and datetime.combine(move.invoice_date, time)
+
+    def _inverse_l10n_sa_confirmation_datetime(self):
+        zatca_moves = self.filtered(lambda move: move.state == 'draft' and move.show_delivery_date)
+        for move in zatca_moves:
+            move.invoice_date = move.l10n_sa_confirmation_datetime
+        self.env.add_to_compute(self._fields['date'], zatca_moves)
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
@@ -34,8 +50,8 @@ class AccountMove(models.Model):
             company_name_tag_encoding = tag.to_bytes(length=1, byteorder='big')
             company_name_length_encoding = len(company_name_byte_array).to_bytes(length=1, byteorder='big')
             return company_name_tag_encoding + company_name_length_encoding + company_name_byte_array
-
-        for record in self:
+        self.l10n_sa_qr_code_str = ''
+        for record in self.filtered(lambda move: move.is_sale_document()):
             qr_code_str = ''
             if record.l10n_sa_confirmation_datetime and record.company_id.vat:
                 seller_name_enc = get_qr_encoding(1, record.company_id.display_name)
@@ -68,16 +84,14 @@ class AccountMove(models.Model):
         self.ensure_one()
         return format_datetime(self.env, self.l10n_sa_confirmation_datetime, tz='Asia/Riyadh', dt_format='Y-MM-dd\nHH:mm:ss')
 
-    def _l10n_sa_reset_confirmation_datetime(self):
-        self.filtered(lambda m: m.country_code == 'SA').l10n_sa_confirmation_datetime = False
-
-    def button_draft(self):
-        self._l10n_sa_reset_confirmation_datetime()
-        super().button_draft()
-
     def _get_l10n_sa_totals(self):
         self.ensure_one()
         return {
             'total_amount': self.amount_total_signed,
             'total_tax': self.amount_tax_signed,
         }
+
+    @api.depends('l10n_sa_confirmation_datetime', 'invoice_date')
+    def _compute_l10n_sa_hide_equal_date(self):
+        for record in self:
+            record.l10n_sa_hide_equal_date = not self.invoice_date or self.invoice_date == self.l10n_sa_confirmation_datetime.date()
