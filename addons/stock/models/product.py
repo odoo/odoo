@@ -125,15 +125,14 @@ class Product(models.Model):
     def _compute_quantities(self):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
+        # Set qty fields to 0 for all products as services have 0 quantities. Also skips calling __setitem__ on products with 0 quantites in res.
+        self.qty_available = 0.0
+        self.incoming_qty = 0.0
+        self.outgoing_qty = 0.0
+        self.virtual_available = 0.0
+        self.free_qty = 0.0
         for product in products:
-            product.update(res[product.id])
-        # Services need to be set with 0.0 for all quantities
-        services = self - products
-        services.qty_available = 0.0
-        services.incoming_qty = 0.0
-        services.outgoing_qty = 0.0
-        services.virtual_available = 0.0
-        services.free_qty = 0.0
+            product.update({key: val for key, val in res[product.id].items() if val})
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
