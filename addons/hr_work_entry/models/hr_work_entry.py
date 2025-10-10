@@ -26,7 +26,14 @@ class HrWorkEntry(models.Model):
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        index=True,
+        default=lambda self: self.env['hr.work.entry.type'].search([], limit=1),
+        domain="[('id', 'in', _allowed_work_entry_type_ids)]")
+    _allowed_work_entry_type_ids = fields.Many2many(
+        'hr.work.entry.type',
+        compute='_compute_allowed_work_entry_type_ids')
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
@@ -46,6 +53,16 @@ class HrWorkEntry(models.Model):
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
+
+    def _compute_allowed_work_entry_type_ids(self):
+        work_entry_types = self.env['hr.work.entry.type'].search([])
+        for record in self:
+            if record.country_id:
+                record._allowed_work_entry_type_ids = work_entry_types.filtered(lambda work_entry: not work_entry.country_id or work_entry.country_id.id == record.country_id.id)
+            elif len(self.env.companies) > 1 or not self.env.companies:
+                record._allowed_work_entry_type_ids = work_entry_types.filtered(lambda work_entry: not work_entry.country_id)
+            else:
+                record._allowed_work_entry_type_ids = work_entry_types.filtered(lambda work_entry: not work_entry.country_id or work_entry.country_id.id == self.env.company.country_id.id)
 
     @api.depends('display_code', 'duration')
     def _compute_display_name(self):
