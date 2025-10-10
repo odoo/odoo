@@ -27,10 +27,10 @@ const StorePatch = {
         });
         this.allActiveRtcSessions = fields.Many("discuss.channel.rtc.session");
         this.nextTalkingTime = 1;
-        this.fullscreenChannel = fields.One("mail.thread");
+        this.fullscreenChannel = fields.One("discuss.channel");
         this._hasFullscreenUrl = fields.Attr(false, {
             compute() {
-                return this.discuss?.thread?.eq(this.fullscreenChannel);
+                return this.discuss?.thread?.channel?.eq(this.fullscreenChannel);
             },
             onUpdate() {
                 if (!this.discuss?.hasRestoredThread) {
