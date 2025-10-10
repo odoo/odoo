@@ -709,9 +709,11 @@ class TestStockLot(TestStockCommon):
             'quantity': 100,
             'lot_id': lot.id,
         })
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.use_create_lots = False
         picking = self.PickingObj.create({
             'partner_id': self.partner_1.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': picking_type_out.id,
             'move_ids': [Command.create({
                 'product_id': self.apple_product.id,
                 'product_uom_qty': 2,
