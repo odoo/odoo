@@ -589,7 +589,7 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field):
         isinstance(getattr(model, name, None), fields.Field)
         for model in [model_cls] + [model_cls.pool[inherit] for inherit in model_cls._inherits]
     )
-    if not (is_class_field or name.startswith('x_')):
+    if not (is_class_field or model_cls.pool['ir.model.fields']._is_manual_name(None, name)):
         raise ValidationError(  # pylint: disable=missing-gettext
             f"The field `{name}` is not defined in the `{model_cls._name}` Python class and does not start with 'x_'"
         )
