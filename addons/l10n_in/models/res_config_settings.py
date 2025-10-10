@@ -22,6 +22,10 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_hsn_code_digit',
         readonly=False
     )
+    l10n_in_upi_id = fields.Char(
+        related='company_id.l10n_in_upi_id',
+        readonly=False
+    )
 
     # TDS/TCS settings
     l10n_in_tds_feature = fields.Boolean(

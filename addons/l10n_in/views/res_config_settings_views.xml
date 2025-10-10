@@ -134,6 +134,17 @@
                     </div>
                 </setting>
             </block>
+            <xpath expr="//setting[@id='qr_code_invoices']" position="attributes">
+                <attribute name="invisible">country_code == 'IN'</attribute>
+            </xpath>
+            <block id="pay_invoice_online_setting_container" position="inside">
+                <setting string="UPI ID"
+                         help="Add a payment QR-code to your invoices."
+                         company_dependent="1"
+                         invisible="country_code != 'IN'">
+                    <field name="l10n_in_upi_id" placeholder="Add UPI ID"/>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>

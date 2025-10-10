@@ -595,9 +595,14 @@ class AccountMove(models.Model):
         self.ensure_one()
         return (self.country_code != 'IN' or not self.posted_before) and super()._can_be_unlinked()
 
-    def _generate_qr_code(self, silent_errors=False):
+    def _generate_l10n_in_qr_code(self):
         self.ensure_one()
-        if self.company_id.country_code == 'IN' and self.company_id.l10n_in_upi_id:
+        if (
+            self.company_id.country_code == 'IN'
+            and self.company_id.l10n_in_upi_id
+            and self.amount_residual
+            and self.move_type == 'out_invoice'
+        ):
             payment_url = 'upi://pay?pa=%s&pn=%s&am=%s&tr=%s&tn=%s' % (
                 self.company_id.l10n_in_upi_id,
                 self.company_id.name,
@@ -606,7 +611,6 @@ class AccountMove(models.Model):
                 ("Payment for %s" % self.name))
             barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120, quiet=False)
             return image_data_uri(base64.b64encode(barcode))
-        return super()._generate_qr_code(silent_errors)
 
     def _l10n_in_get_hsn_summary_table(self):
         self.ensure_one()
