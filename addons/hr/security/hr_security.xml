@@ -53,6 +53,12 @@
         ]</field>
     </record>
 
+    <record id="ir_rule_hr_employee_departure_multi_company" model="ir.rule">
+        <field name="name">HR Employee Departure: Multi Company</field>
+        <field name="model_id" ref="model_hr_employee_departure"/>
+        <field name="domain_force">[('employee_id.company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="hr_job_comp_rule" model="ir.rule">
         <field name="name">Job multi company rule</field>
         <field name="model_id" ref="model_hr_job"/>
