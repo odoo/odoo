@@ -13,4 +13,48 @@
         <field name="res_model">product.template</field>
     </record>
 
+<!-- Forecast 'all' report-->
+    <record id="view_forecast_graph" model="ir.ui.view">
+        <field name="name">stock.forecast.graph</field>
+        <field name="model">report.stock.quantity</field>
+        <field name="arch" type="xml">
+            <graph string="Forecasted Report" sample="1" type="line" stacked="0" disable_linking="1" js_class="stock_forecasted_graph">
+                <field name="date" interval="day"/>
+                <field name="product_id"/>
+                <field name="product_qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="stock_search_forecast_report" model="ir.ui.view">
+        <field name="name">stock.search.forecast.report</field>
+        <field name="model">report.stock.quantity</field>
+        <field name="arch" type="xml">
+            <search string="Stock Forecast">
+                <field name="product_id" string="Product"/>
+                <filter string="Next Month" name="next_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Next 3 Months" name="next_3_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
+                <group>
+                    <filter string="Date" name="groupby_day" context="{'group_by': 'date:day'}"/>
+                    <filter string="Product" name="groupby_product" domain="[('product_id', '!=', False)]"  context="{'group_by': 'product_id'}"/>
+                </group>
+                <searchpanel view_types="graph"> <!-- Doesn't show up if view_types isn't specified -->
+                    <field name="warehouse_id" icon="fa-filter" groups="stock.group_stock_multi_locations" string="Warehouse"/>
+                    <field name="product_category_id" icon="fa-filter" string="Product Category"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="stock_forecast_action" model="ir.actions.act_window">
+        <field name="name">Forecasted Report</field>
+        <field name="res_model">report.stock.quantity</field>
+        <field name="view_id" ref="view_forecast_graph"/>
+        <field name="search_view_id" ref="stock_search_forecast_report"/>
+        <field name="view_mode">graph</field>
+        <field name="context">{'search_default_next_month': 1, 'search_default_groupby_day': 2, 'search_default_groupby_product': 3}</field>
+        <field name="domain">[('state', '=', 'forecast')]</field>
+    </record>
+
+    <menuitem action="stock_forecast_action" id="stock_forecast_menu" name="Forecasted Report" parent="stock.menu_warehouse_report" sequence="235"/>
 </odoo>

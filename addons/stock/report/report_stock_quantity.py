@@ -21,6 +21,7 @@ class ReportStockQuantity(models.Model):
     date = fields.Date(string='Date', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    product_category_id = fields.Many2one('product.category', string='Product Category', related='product_tmpl_id.categ_id', readonly=True)
     state = fields.Selection([
         ('forecast', 'Forecasted Stock'),
         ('in', 'Forecasted Receipts'),
