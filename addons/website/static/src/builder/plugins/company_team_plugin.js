@@ -15,7 +15,7 @@ class CompanyTeamPlugin extends Plugin {
                 ...filteredContentEditableEl.querySelectorAll(".s_company_team .o_not_editable *"),
             ]
         );
-        return extraContentEditableEls.filter((el) => isMediaElement(el) || el.tagName === "IMG");
+        return extraContentEditableEls.filter((el) => isMediaElement(el));
     }
 }
 

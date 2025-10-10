@@ -87,12 +87,8 @@ const VOID_ELEMENT_NAMES = [
     "WBR",
 ];
 
-export function isArtificialVoidElement(node) {
-    return isMediaElement(node) || node.nodeName === "HR";
-}
-
 export function isNotAllowedContent(node) {
-    return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
+    return isMediaElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
 export const isHtmlContentSupported = weakMemoize(
