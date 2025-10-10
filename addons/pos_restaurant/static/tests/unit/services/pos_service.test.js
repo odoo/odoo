@@ -230,17 +230,18 @@ describe("restaurant pos_store.js", () => {
             let id = 1;
             let lineId = 1;
             const createOrderForTable = async () => {
+                const orderId = `${id++}_string`;
                 const lines = [
                     {
                         id: `${lineId++}_string`,
-                        order_id: 31,
+                        order_id: orderId,
                         product_id: 5,
                         qty: 1,
                         write_date: date,
                     },
                     {
                         id: `${lineId++}_string`,
-                        order_id: 31,
+                        order_id: orderId,
                         product_id: 6,
                         qty: 1,
                         write_date: date,
@@ -248,7 +249,7 @@ describe("restaurant pos_store.js", () => {
                 ];
                 const order = [
                     {
-                        id: `${id++}_string`,
+                        id: orderId,
                         lines: lines.map((line) => line.id),
                         write_date: date,
                         table_id: table.id,
