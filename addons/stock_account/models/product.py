@@ -275,7 +275,7 @@ class ProductProduct(models.Model):
 
         # TODO Only browse from last product_value
         for move in moves:
-            if product_values and move.date > product_values[0].date:
+            while product_values and move.date >= product_values[0].date:
                 product_value = product_values[0]
                 product_values = product_values[1:]
                 avco_value = product_value.value
