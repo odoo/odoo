@@ -393,13 +393,13 @@ class AccountDocumentImportMixin(models.AbstractModel):
         appear in the chatter's attachments, to avoid cluttering the attachments view.
         """
         self.ensure_one()
-        attachments_to_attach = attachments.filtered(self._should_attach_to_record)
+        attachments_to_attach = attachments.filtered(lambda a: self._should_attach_to_record(a) and (a.res_model, a.res_id) != (self._name, self.id))
         if attachments_to_attach:
             attachments_to_attach.write({
                 'res_model': self._name,
                 'res_id': self.id,
             })
-        attachments_to_unattach = (attachments - attachments_to_attach).filtered(lambda a: a.res_model == self._name and not a.res_field)
+        attachments_to_unattach = (attachments - attachments_to_attach).filtered(lambda a: not self._should_attach_to_record(a) and (a.res_model, a.res_id) == (self._name, self.id) and not a.res_field)
         if attachments_to_unattach:
             attachments_to_unattach.write({
                 'res_model': False,
