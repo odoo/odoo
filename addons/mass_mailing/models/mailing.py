@@ -5,6 +5,7 @@ from collections import defaultdict
 import hashlib
 import hmac
 import io
+import json
 import logging
 import lxml
 import random

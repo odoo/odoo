@@ -8,10 +8,12 @@ import {
     clickSave,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { advanceFrame, click, queryAny, queryOne, waitFor } from "@odoo/hoot-dom";
+import { runAllTimers } from "@odoo/hoot-mock";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
+import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -21,7 +23,19 @@ class Mailing extends models.Model {
     body_arch = fields.Html();
     body_html = fields.Html();
     mailing_model_id = fields.Many2one({ relation: "ir.model", string: "Recipients" });
+    mailing_model_real = fields.Char({
+        string: "Recipients Model Name (real)",
+        compute: "compute_model_real",
+    });
     mailing_model_name = fields.Char({ string: "Recipients Model Name" });
+
+    compute_model_real() {
+        for (const record of this) {
+            record.mailing_model_real = this.env["ir.model"].browse([
+                record.mailing_model_id,
+            ])[0].model;
+        }
+    }
 
     action_fetch_favorites() {
         return [];
@@ -70,26 +84,40 @@ class Event extends models.Model {
 
 defineMailModels();
 defineModels([IrModel, IrUiView, Mailing, Event]);
-
-const mailViewArch = `
-<form>
-    <field name="mailing_model_name" invisible="1"/>
-    <field name="mailing_model_id" invisible="1"/>
-    <field name="body_html" invisible="1"/>
-    <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
-        options="{ 'inline_field': 'body_html' }"/>
-</form>
-`;
-
+/**
+ * @type {import("@html_editor/fields/html_field").HtmlField}
+ */
+let htmlField;
 describe.current.tags("desktop");
 describe("field HTML", () => {
     beforeEach(() => {
         patchWithCleanup(MassMailingIframe.prototype, {
             // Css assets are not needed for these tests.
-            loadIframeAssets() {},
+            loadIframeAssets() {
+                return {
+                    "mass_mailing.assets_inside_builder_iframe": {
+                        disable: () => {},
+                        enable: () => {},
+                    },
+                };
+            },
+        });
+        patchWithCleanup(MassMailingHtmlField.prototype, {
+            setup() {
+                super.setup();
+                htmlField = this;
+            },
         });
     });
     test("save arch and html", async () => {
+        const mailViewArch = `
+        <form>
+            <field name="mailing_model_name" invisible="1"/>
+            <field name="mailing_model_id" invisible="1"/>
+            <field name="body_html" invisible="1"/>
+            <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+                options="{ 'inline_field': 'body_html' }"/>
+        </form>`;
         onRpc("web_save", ({ args }) => {
             expect(args[1].body_arch).toMatch(/^<div/);
             expect(args[1].body_html).toMatch(/^<table/);
@@ -107,5 +135,41 @@ describe("field HTML", () => {
         expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass("o_empty_theme");
         await clickSave();
         await expect.waitForSteps(["web_save mail body"]);
+    });
+    test("preprocess some domain", async () => {
+        const mailViewArch = `
+        <form>
+            <field name="mailing_model_name" invisible="1"/>
+            <field name="mailing_model_id" invisible="1"/>
+            <field name="mailing_model_real" invisible="1"/>
+            <field name="body_html" class="o_mail_body_inline"/>
+            <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+                options="{ 'inline_field': 'body_html' }"/>
+        </form>`;
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 1,
+            arch: mailViewArch,
+        });
+        await click(waitFor(".o_mailing_template_preview_wrapper a[data-name='default']"));
+        await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
+        expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
+            "o_default_theme"
+        );
+        await runAllTimers();
+        const section = queryAny(":iframe section");
+        section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
+        htmlField.isDirty = true;
+        await click(section);
+        await advanceFrame();
+        expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe(
+            "id = 1".toLowerCase()
+        );
+        await clickSave();
+        expect(queryOne("table[data-filter-domain]")).toHaveAttribute(
+            "t-if",
+            'object.filtered_domain([("id", "=", 1)])'
+        );
     });
 });

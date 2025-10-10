@@ -1,0 +1,12 @@
+section[data-filter-domain] {
+    position: relative;
+    & > *::before {
+        right: 1rem;
+        top: 0;
+        position: absolute;
+        font-family: "FontAwesome";
+        content: "\f070";
+        font-size: xx-large;
+        color: $o-we-color-accent;
+    }
+}
