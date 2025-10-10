@@ -11,11 +11,12 @@ from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.x509.oid import NameOID
 from odoo.addons.base.models.res_company import ResCompany
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools.misc import file_open
 from odoo.tools.pdf.signature import PdfSigner
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSignature(TransactionCase):
     """Tests on signature tool"""
 

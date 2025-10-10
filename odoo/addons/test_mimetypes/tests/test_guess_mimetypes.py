@@ -1,7 +1,7 @@
 import os.path
 import unittest
 
-from odoo.tests import BaseCase
+from odoo.tests import tagged, BaseCase
 from odoo.tools.mimetypes import _odoo_guess_mimetype, guess_mimetype
 from odoo.tools.misc import file_open
 
@@ -92,6 +92,7 @@ class MimeGuessingCases:
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMimeGuessingOdoo(BaseCase, MimeGuessingCases):
     guess_mimetype = staticmethod(_odoo_guess_mimetype)
 
@@ -103,6 +104,7 @@ class TestMimeGuessingOdoo(BaseCase, MimeGuessingCases):
 
 
 @unittest.skipIf(guess_mimetype is _odoo_guess_mimetype, "python-magic not installed")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMimeGuessingMagic(BaseCase, MimeGuessingCases):
     guess_mimetype = staticmethod(guess_mimetype)
 

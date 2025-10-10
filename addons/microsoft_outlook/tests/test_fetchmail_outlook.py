@@ -6,9 +6,10 @@ import time
 from unittest.mock import ANY, Mock, patch
 
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFetchmailOutlook(TransactionCase):
 
     @patch('odoo.addons.mail.models.fetchmail.OdooIMAP4_SSL')

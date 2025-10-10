@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.tests import tagged, common, Form
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProcurementException(common.TransactionCase):
 
     def test_00_procurement_exception(self):

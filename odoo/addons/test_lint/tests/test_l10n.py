@@ -6,6 +6,8 @@ import itertools
 import os
 
 from . import lint_case
+from odoo.tests import tagged
+
 from odoo.tools.misc import file_open
 
 class L10nChecker(lint_case.NodeVisitor):
@@ -39,6 +41,7 @@ class L10nChecker(lint_case.NodeVisitor):
         return []
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class L10nLinter(lint_case.LintCase):
     def test_l10n_test_tags(self):
         checker = L10nChecker()

@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from odoo.tools.misc import submap
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -12,6 +12,7 @@ def strip_prefix(prefix, names):
     return [name[size:] for name in names if name.startswith(prefix)]
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOnchange(SavepointCaseWithUserDemo):
 
     def setUp(self):
@@ -956,6 +957,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeOnchange2(TransactionCase):
 
     def test_create(self):

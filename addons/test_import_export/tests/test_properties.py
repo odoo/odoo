@@ -1,7 +1,8 @@
 import json
-from odoo.tests.common import RecordCapturer, HttpCase
+from odoo.tests.common import tagged, RecordCapturer, HttpCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPropertiesExportImport(HttpCase):
     maxDiff = None
 

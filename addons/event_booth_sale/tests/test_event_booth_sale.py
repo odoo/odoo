@@ -43,6 +43,7 @@ class TestEventBoothSaleWData(TestEventBoothSaleCommon, TestSalesCommon):
         cls.event_booth_product.taxes_id = cls.tax_10
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventBoothSale(TestEventBoothSaleWData):
 
     @users('user_sales_salesman')

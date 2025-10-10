@@ -16,6 +16,7 @@ from odoo.tests.common import BaseCase, HttpCase, tagged
 from odoo.tools import config
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDatabaseManager(HttpCase):
     def test_database_manager(self):
         if not config['list_db']:

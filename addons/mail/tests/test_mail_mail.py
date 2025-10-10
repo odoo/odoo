@@ -1,8 +1,9 @@
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from unittest import mock
 import smtplib
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class MailCase(TransactionCase):
 
     def test_mail_send_non_connected_smtp_session(self):

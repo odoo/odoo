@@ -3,9 +3,10 @@
 
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.exceptions import UserError, AccessError
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPortalWizard(MailCommon):
     def setUp(self):
         super(TestPortalWizard, self).setUp()

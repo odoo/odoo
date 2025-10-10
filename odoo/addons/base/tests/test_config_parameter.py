@@ -3,9 +3,10 @@
 
 from odoo.addons.base.models.ir_config_parameter import _default_parameters
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrConfigParameter(TransactionCase):
 
     def test_default_parameters(self):

@@ -1,8 +1,11 @@
 from datetime import date, datetime
 
+from odoo.tests import tagged
+
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResMixin(TestResourceCommon):
 
     def test_adjust_calendar(self):

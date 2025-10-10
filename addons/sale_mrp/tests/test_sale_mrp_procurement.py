@@ -3,11 +3,12 @@
 
 import time
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from odoo.tools import mute_logger
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleMrpProcurement(TransactionCase):
 
     @classmethod

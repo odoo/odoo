@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMembership(TestSalesCommon):
     """Tests to ensure membership behavior """
 

@@ -4,9 +4,12 @@
 import psycopg2
 
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests import tagged
+
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResPartnerIap(MailCommon):
 
     @mute_logger("odoo.sql_db")

@@ -419,6 +419,7 @@ class TestSelectorSelection(TransactionCase):
         self.assertTrue(tags.check(self), "A parametric tag should enable test")
         self.assertEqual(self._test_params, [('+', '-someparam')])
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTestClass(BaseCase):
     def test_canonical_tag(self):
         self.assertEqual(self.canonical_tag, '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')

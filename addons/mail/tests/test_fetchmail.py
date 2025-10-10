@@ -3,7 +3,7 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-from odoo.tests import TransactionCase, mute_logger
+from odoo.tests import tagged, TransactionCase, mute_logger
 
 
 class MockedConnection:
@@ -23,6 +23,7 @@ class MockedConnection:
         pass
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFetchmail(TransactionCase):
 
     @classmethod

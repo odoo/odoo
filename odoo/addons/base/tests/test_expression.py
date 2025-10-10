@@ -2633,6 +2633,7 @@ class TestMany2many(TransactionCase):
             self.User.search([('group_ids', '=', False)], order='id')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAnyfy(TransactionCase):
     def _test_combine_anies(self, domain, expected):
         model = self.env['res.partner']

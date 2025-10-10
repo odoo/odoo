@@ -3,11 +3,12 @@
 
 import functools
 
-from odoo.tests.common import BaseCase
+from odoo.tests.common import tagged, BaseCase
 from odoo.tools import frozendict, lazy
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFrozendict(BaseCase):
     def test_frozendict_immutable(self):
         """ Ensure that a frozendict is immutable. """
@@ -50,6 +51,7 @@ class TestFrozendict(BaseCase):
         }))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLazy(BaseCase):
     def test_lazy_compare(self):
         """ Ensure that a lazy can be compared with an other lazy. """

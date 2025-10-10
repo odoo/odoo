@@ -6,9 +6,10 @@ from freezegun import freeze_time
 
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventData(TestEventSaleCommon):
 
     @users('user_eventmanager')
@@ -64,6 +65,7 @@ class TestEventData(TestEventSaleCommon):
         self.assertTrue(event.event_registrations_open)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventTicketData(TestEventSaleCommon):
 
     @freeze_time('2020-01-31 10:00:00')

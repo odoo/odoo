@@ -926,6 +926,7 @@ class TestEmailTools(BaseCase):
                 )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTools(BaseCase):
     """ Test mail utility methods. """
 

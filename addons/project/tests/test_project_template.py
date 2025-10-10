@@ -1,11 +1,12 @@
 from datetime import date
 
 from odoo import Command
-from odoo.tests import freeze_time
+from odoo.tests import tagged, freeze_time
 
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectTemplates(TestProjectCommon):
     @classmethod
     def setUpClass(cls):

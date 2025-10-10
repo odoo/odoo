@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.exceptions import UserError
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 from unittest.mock import patch
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlidesManagement(slides_common.SlidesCase):
 
     @users('user_officer')
@@ -314,6 +315,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertFalse(were_emails_sent(), "Participants should not receive emails when all remaining slides are deleted.")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSequencing(slides_common.SlidesCase):
 
     @users('user_officer')

@@ -4,9 +4,10 @@
 from odoo import exceptions
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.crm_iap_mine.tests.common import MockIAPReveal
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadMine(TestCrmCommon, MockIAPReveal):
 
     @classmethod

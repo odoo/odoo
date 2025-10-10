@@ -867,6 +867,7 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
             self.assertTrue(contact.subscription_ids.opt_out)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingScheduleDateWizard(MassMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -891,6 +892,7 @@ class TestMailingScheduleDateWizard(MassMailCommon):
         self.assertEqual(mailing.state, 'in_queue')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailingActions(MassMailCommon):
     def test_mailing_action_open(self):
         mass_mailings = self.env['mailing.mailing'].create([

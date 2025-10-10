@@ -15,6 +15,7 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale.tests.test_pricelist import TestWebsitePriceList
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceList, WebsiteSaleCommon):
 
     @classmethod

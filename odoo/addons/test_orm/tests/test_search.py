@@ -1,8 +1,9 @@
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.fields import Command, Domain
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubqueries(TransactionCase):
     """ Test the subqueries made by search() with relational fields. """
     maxDiff = None
@@ -416,6 +417,7 @@ class TestSubqueries(TransactionCase):
             Head.search([('node_id', 'parent_of', nodes.ids)])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSearchRelated(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1286,6 +1288,7 @@ class TestSearchRelated(TransactionCase):
             model.search([('foo_bar_name', '=', 'a')])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSearchAny(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1499,6 +1502,7 @@ class TestSearchAny(TransactionCase):
             model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFlushSearch(TransactionCase):
 
     @classmethod
@@ -1875,6 +1879,7 @@ class TestDatePartNumber(TransactionExpressionCase):
         self.assertEqual(result, account)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNonIntId(TransactionCase):
     def test_query_non_int(self):
         records = self.env['test_orm.view.str.id'].search([('name', '=', 'test')])

@@ -1,10 +1,11 @@
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import patch
+from odoo.tests import tagged, patch
 from odoo.tests.common import TransactionCase
 from odoo.tools import frozendict
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCompanyCheck(TransactionCase):
 
     @classmethod

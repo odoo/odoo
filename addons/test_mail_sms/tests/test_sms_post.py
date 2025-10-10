@@ -441,6 +441,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
         ], self._test_body, messages)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSApi(SMSCommon):
 
     @classmethod

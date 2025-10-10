@@ -87,6 +87,7 @@ class TestSelfAccessPreferences(TestHrCommon):
         internal_user = new_test_user(self.env, login='mireille', groups='base.group_user', name='Mireille', email='mireille@example.com')
         self.env['hr.employee'].with_user(internal_user).search([]).read([])
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod

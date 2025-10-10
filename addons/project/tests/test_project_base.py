@@ -1,7 +1,7 @@
 from lxml import etree
 
 from odoo import Command, fields
-from odoo.tests import Form, users
+from odoo.tests import tagged, Form, users
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
@@ -91,6 +91,7 @@ class TestProjectCommon(TransactionCase):
             })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectBase(TestProjectCommon):
 
     def test_delete_project_with_tasks(self):

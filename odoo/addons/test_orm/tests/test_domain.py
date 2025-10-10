@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from itertools import combinations
 
 from odoo.fields import Command, Domain
-from odoo.tests import TransactionCase, users
+from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import SQL, OrderedSet
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
@@ -395,6 +395,7 @@ class TestDomainComplement(TransactionExpressionCase):
             self._search(Model, [('parent_id', '>=', 'Par')])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDomainOptimize(TransactionCase):
     number_domain = Domain('number', '>', 5)
 

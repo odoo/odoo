@@ -40,6 +40,7 @@ class TestEquipmentCommon(TransactionCase):
         })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEquipment(TestEquipmentCommon):
 
     def test_10_equipment_request_category(self):

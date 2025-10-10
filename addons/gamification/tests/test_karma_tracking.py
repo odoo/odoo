@@ -9,9 +9,10 @@ from unittest.mock import patch
 
 from odoo import exceptions, fields, _
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestKarmaTrackingCommon(common.TransactionCase):
 
     @classmethod
@@ -289,6 +290,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(tracking_3.gain, 100)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeRankCommon(common.TransactionCase):
 
     @classmethod

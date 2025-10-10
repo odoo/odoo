@@ -19,6 +19,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def setUp(self):
@@ -3740,6 +3741,7 @@ class TestX2many(TransactionExpressionCase):
                 })
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHtmlField(TransactionCase):
 
     def setUp(self):
@@ -3902,6 +3904,7 @@ class TestHtmlField(TransactionCase):
         self.assertEqual(patch.call_count, 2)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMagicFields(TransactionCase):
 
     def test_write_date(self):
@@ -3943,6 +3946,7 @@ class TestMagicFields(TransactionCase):
         self.assertTrue(field.store)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestParentStore(TransactionCase):
 
     def setUp(self):
@@ -4127,6 +4131,7 @@ class TestParentStore(TransactionCase):
             self.assertEqual(cat.depth, 2)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequiredMany2one(TransactionCase):
 
     def test_explicit_ondelete(self):
@@ -4149,6 +4154,7 @@ class TestRequiredMany2one(TransactionCase):
             field.setup_nonrelated(Model)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequiredMany2oneTransient(TransactionCase):
 
     def test_explicit_ondelete(self):
@@ -4516,6 +4522,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFieldParametersValidation(TransactionCase):
     def test_invalid_parameter(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4573,6 +4580,7 @@ def update(model, *fnames):
     )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeQueries(TransactionCase):
     """ Test the queries made by create() with computed fields. """
 
@@ -4772,12 +4780,14 @@ class TestComputeQueries(TransactionCase):
             self.assertEqual(patch_compute.call_count, 1)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeSudo(TransactionCaseWithUserDemo):
     def test_compute_sudo_depends_context_uid(self):
         record = self.env['test_orm.compute.sudo'].create({})
         self.assertEqual(record.with_user(self.user_demo).name_for_uid, self.user_demo.name)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_shared_cache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
         # Test case: Check that the shared cache is not used if a compute_sudo stored field
@@ -4878,6 +4888,7 @@ class TestWrongRelatedError(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrecomputeModel(TransactionCase):
 
     def test_precompute_consistency(self):
@@ -4937,6 +4948,7 @@ class TestPrecomputeModel(TransactionCase):
             self.registry.get_trigger_tree(Model._fields.values())
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrecompute(TransactionCase):
 
     def test_precompute(self):
@@ -5119,6 +5131,7 @@ class TestPrecompute(TransactionCase):
             model.create({})
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestModifiedPerformance(TransactionCase):
 
     @classmethod

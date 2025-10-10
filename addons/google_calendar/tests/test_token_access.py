@@ -2,8 +2,9 @@
 
 from odoo import fields, Command
 from odoo.exceptions import AccessError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTokenAccess(TransactionCase):
 
     @classmethod

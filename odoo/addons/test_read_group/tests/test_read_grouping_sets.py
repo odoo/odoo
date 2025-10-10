@@ -1,7 +1,8 @@
 from odoo import Command
-from odoo.tests import common, new_test_user
+from odoo.tests import tagged, common, new_test_user
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrivateReadGroupingSets(common.TransactionCase):
 
     def test_simple_read_grouping_sets(self):
@@ -292,6 +293,7 @@ class TestPrivateReadGroupingSets(common.TransactionCase):
                 self.assertEqual(result, expected_result)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFormattedReadGroupingSets(common.TransactionCase):
 
     @classmethod

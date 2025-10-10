@@ -5,9 +5,12 @@ from odoo.addons.hr.tests.common import TestHrCommon
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 
+from odoo.tests import tagged
+
 from odoo.exceptions import AccessError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompanyReport(TestHrCommon):
 
     @classmethod
@@ -43,6 +46,7 @@ class TestMultiCompanyReport(TestHrCommon):
             )._render_qweb_pdf('hr.hr_employee_print_badge', res_ids=self.employees.ids)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompany(TestHrCommon):
     @classmethod
     def setUpClass(cls):

@@ -1,9 +1,10 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from unittest import mock
 from datetime import datetime
 from freezegun import freeze_time
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrMailServer(TransactionCase):
 
     @classmethod

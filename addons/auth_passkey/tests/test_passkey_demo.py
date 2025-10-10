@@ -11,6 +11,7 @@ from odoo.tools import SQL, mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class PasskeyTest(HttpCaseWithUserDemo):
     @classmethod
     def setUpClass(self):

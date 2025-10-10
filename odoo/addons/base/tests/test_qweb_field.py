@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQwebFieldTime(common.TransactionCase):
     def value_to_html(self, value, options=None):
         options = options or {}
@@ -45,6 +46,7 @@ class TestQwebFieldTime(common.TransactionCase):
             self.value_to_html(24)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQwebFieldInteger(common.TransactionCase):
     def value_to_html(self, value, options=None):
         options = options or {}
@@ -58,6 +60,7 @@ class TestQwebFieldInteger(common.TransactionCase):
             "125.125k"
         )
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQwebFieldContact(common.TransactionCase):
     @classmethod
     def setUpClass(cls):

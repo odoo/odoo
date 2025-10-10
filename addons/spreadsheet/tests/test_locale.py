@@ -1,10 +1,11 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.addons.spreadsheet.utils.formatting import (
     strftime_format_to_spreadsheet_time_format,
     strftime_format_to_spreadsheet_date_format,
 )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLocale(TransactionCase):
     def test_time_format_conversion(self):
         # Simple format

@@ -4,7 +4,7 @@ from odoo import Command
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.exceptions import ValidationError
 from odoo.service.model import retrying
-from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests.common import tagged, TransactionCase, new_test_user
 from odoo.tools import mute_logger
 
 from unittest import TestCase
@@ -12,6 +12,7 @@ from unittest import TestCase
 import psycopg2
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsiteResUsers(TransactionCase):
 
     def setUp(self):

@@ -1,7 +1,8 @@
 from odoo import Command
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRoutes(TransactionCase):
 
     def test_allow_rule_creation_for_route_without_company(self):

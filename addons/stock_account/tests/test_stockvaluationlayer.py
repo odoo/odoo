@@ -195,6 +195,7 @@ class TestStockValuationCommon(TransactionCase):
         move.value_manual = move.price_unit * move.quantity
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationStandard(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -407,6 +408,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(sub_loc_quant.quantity, 30)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -649,6 +651,7 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.qty_available, 2)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -847,6 +850,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
             self.env.user.company_id = old_company
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
         """ The accounting impact of this cost method change is neutral.

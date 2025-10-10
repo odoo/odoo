@@ -14,11 +14,14 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger
+from odoo.tests import tagged
+
 from odoo.tools.image import image_to_base64
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrAttachment(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestIrAttachment, self).setUp()
@@ -283,6 +286,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             self.assertEqual(patch_file_read.call_count, 0)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPermissions(TransactionCaseWithUserDemo):
     def setUp(self):
         super().setUp()

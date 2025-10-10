@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests.common import tagged, BaseCase, TransactionCase
 from odoo.tools import Query, SQL
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
@@ -119,6 +120,7 @@ class QueryTestCase(BaseCase):
         self.assertIsNone(query._ids, "adding where clause resets the ids")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQuery(TransactionCase):
     def test_auto(self):
         model = self.env['res.partner.category']

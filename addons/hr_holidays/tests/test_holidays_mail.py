@@ -9,9 +9,12 @@ from odoo import Command
 from odoo.tools import mute_logger
 
 from .common import TestHrHolidaysCommon
+from odoo.tests import tagged
+
 from odoo.addons.mail.tests.common import MailCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
     """Test that mails are correctly sent when a timeoff is taken"""
 

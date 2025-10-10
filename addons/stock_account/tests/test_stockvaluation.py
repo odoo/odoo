@@ -6,7 +6,7 @@ from unittest import skip
 
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
-from odoo.tests import Form, TransactionCase
+from odoo.tests import tagged, Form, TransactionCase
 from odoo import Command
 
 
@@ -156,6 +156,7 @@ class TestStockValuationBase(TransactionCase):
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuation(TestStockValuationBase):
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,

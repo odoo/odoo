@@ -1,8 +1,9 @@
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 from odoo.addons.portal.controllers.portal import pager
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPager(TransactionCase):
 
     def test_pager_functionality(self):

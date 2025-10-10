@@ -27,6 +27,7 @@ def _extract_values_from_document(rendered_document):
     }
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardMail(MailCase, MarketingCardCommon):
 
     def assertSentMailCorrectCard(self, sent_mails, cards):
@@ -140,6 +141,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         self.assertSentMailCorrectCard(self._mails, cards)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardRender(MarketingCardCommon):
 
     @users('marketing_card_user')
@@ -337,6 +339,7 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
         self.assertEqual(self.campaign.card_share_count, 11)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMarketingCardSecurity(MarketingCardCommon):
 
     @users('marketing_card_manager')

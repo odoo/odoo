@@ -5,11 +5,12 @@ from unittest import skip
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo import Command
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLotValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):

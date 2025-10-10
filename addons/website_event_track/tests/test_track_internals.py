@@ -178,6 +178,7 @@ class TestTrackData(TestEventOnlineCommon):
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTrackSuggestions(TestEventOnlineCommon):
 
     def test_track_suggestion(self):

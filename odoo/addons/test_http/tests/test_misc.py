@@ -283,6 +283,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(res.text, 'basededonnée1')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestContentDisposition(BaseCase):
 
     def test_content_disposition(self):
