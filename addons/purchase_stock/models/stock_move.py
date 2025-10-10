@@ -147,7 +147,7 @@ class StockMove(models.Model):
 
     def _get_value_from_account_move(self, quantity, at_date=None):
         valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
-        if not (self.purchase_line_id and self.purchase_line_id):
+        if not self.purchase_line_id:
             return valuation_data
 
         aml_quantity = 0
