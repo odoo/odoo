@@ -65,6 +65,9 @@ class Im_LivechatChannel(models.Model):
     are_you_inside = fields.Boolean(string='Are you inside the matrix?',
         compute='_are_you_inside', store=False, readonly=True)
     available_operator_ids = fields.Many2many('res.users', compute='_compute_available_operator_ids')
+    available_operator_ids_count = fields.Integer(
+        "Agents Connected", compute="_compute_available_operator_ids"
+    )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
@@ -134,6 +137,7 @@ class Im_LivechatChannel(models.Model):
         operators_by_livechat_channel = self._get_available_operators_by_livechat_channel()
         for livechat_channel in self:
             livechat_channel.available_operator_ids = operators_by_livechat_channel[livechat_channel]
+            livechat_channel.available_operator_ids_count = len(operators_by_livechat_channel[livechat_channel])
 
     @api.constrains("review_link")
     def _check_review_link(self):
