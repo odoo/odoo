@@ -1562,6 +1562,122 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 2)
 
+    def test_future_accrual_time_with_cap(self):
+        """
+            Test that we can correctly take time off in the future, even if
+            we've accrued more than the cap over the lifetime of the
+            allocation. This ensures that the cap doesn't get in the way of
+            simulating future accruals.
+
+            We'll start by creating a new accrual plan that has a cap of 2
+            days. We'll then request 1 day off in each month after we accrue
+            a day, 3 times. At this point, we've used 3 days of accrued time
+            in total. Then, when we have 1 day available to use, we'll try to
+            request time off in a future month. Our accrual plan's cap of 2
+            days should not prevent us from requesting time off in the future,
+            even if we've used more than the cap.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Accrual Cap Test',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+            'request_unit': 'day',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual plan for Accrual Cap Test',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 0,           # Start accruing immediately
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'cap_accrued_time': True,
+                'maximum_leave': 2,
+            })],
+        })
+
+        def get_remaining_leaves(*args):
+            data = leave_type.get_allocation_data(self.employee_emp, datetime.date(*args))[self.employee_emp][0][1]
+            return {'remaining_leaves': data['virtual_remaining_leaves'], 'max_leaves': data['max_leaves']}
+
+        with freeze_time('2024-01-01'):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for Accrual Cap Test',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'holiday_type': 'employee',
+            })
+            allocation.action_validate()
+        # Request 1 day off in February after accruing 1 day.
+        with freeze_time('2024-02-01'):
+            allocation._update_accrual()
+            self.env['hr.leave'].create({
+                'name': 'Accrual Cap Test Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-02-15',
+                'request_date_to': '2024-02-15',
+            }).action_validate()
+        # Days accrued: 1
+        # Days used: 1
+        # Request another day off in March after accruing another day.
+        with freeze_time('2024-03-01'):
+            allocation._update_accrual()
+            self.env['hr.leave'].create({
+                'name': 'Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-03-15',
+                'request_date_to': '2024-03-15',
+            }).action_validate()
+        # Days accrued: 2
+        # Days used: 2
+        # Request another day off in April after accruing another day.
+        with freeze_time('2024-04-01'):
+            allocation._update_accrual()
+            self.env['hr.leave'].create({
+                'name': 'Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-04-15',
+                'request_date_to': '2024-04-15',
+            }).action_validate()
+        # Days accrued: 3
+        # Days used: 3
+        # At this point, we've accrued more than the cap would allow us to
+        # hold at any given time. Now, try to request time off in a future
+        # month.
+        with freeze_time('2024-05-01'):
+            allocation._update_accrual()  # Accrued 4 in total, with 1 available
+            # Check June's available leaves -> 2 out of 2 remaining.
+            remaining_leaves = get_remaining_leaves(2024, 6, 1)
+            self.assertEqual(remaining_leaves['remaining_leaves'], 2, "We should have accrued 1 more day in June.")
+            self.assertEqual(remaining_leaves['max_leaves'], 2, "Max leaves should always be 2")
+
+            # Check July's available leaves -> 2 (capped) out of 2 remaining.
+            remaining_leaves = get_remaining_leaves(2024, 7, 1)
+            self.assertEqual(remaining_leaves['remaining_leaves'], 2, "We should be capped at 2 days in July, even though we would accrue 1 more day.")
+            self.assertEqual(remaining_leaves['max_leaves'], 2, "Max leaves should always be 2")
+
+            # Now try to use a available leave in June, and then check how
+            # many days are available in July. It should still be 2.
+            self.env['hr.leave'].create({
+                'name': 'Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-06-10',
+                'request_date_to': '2024-06-10',
+            }).action_validate()
+            remaining_leaves = get_remaining_leaves(2024, 7, 1)
+            self.assertEqual(remaining_leaves['remaining_leaves'], 2, "After using a day in June, we should still be able to accrue 1 more day in July, without being capped.")
+            self.assertEqual(remaining_leaves['max_leaves'], 2, "Max leaves should always be 2")
+
     def test_added_type_during_onchange(self):
         """
             The purpose is to test whether the value of the `added_value_type`
