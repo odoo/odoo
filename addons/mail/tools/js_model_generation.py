@@ -36,6 +36,7 @@ MODELS_TO_EXPOSE = [
     "discuss.call.history",
     "mail.activity",
     "mail.followers",
+    "mail.guest",
     "mail.message",
     "mail.message.link.preview",
     "res.groups",
