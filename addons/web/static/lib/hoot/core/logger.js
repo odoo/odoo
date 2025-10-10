@@ -123,13 +123,13 @@ class Logger {
         $groupEnd();
     }
     /**
-     * @param  {...any} args
+     * @param {...any} args
      */
     table(...args) {
         $table(...args);
     }
     /**
-     * @param  {...any} args
+     * @param {...any} args
      */
     trace(...args) {
         $trace(...args);

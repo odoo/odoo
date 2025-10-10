@@ -157,7 +157,7 @@ export function getTagSimilarities() {
  * Used in Hoot internal tests to remove tags introduced within a test.
  *
  * @private
- * @param  {Iterable<string>} tagKeys
+ * @param {Iterable<string>} tagKeys
  */
 export function undefineTags(tagKeys) {
     for (const tagKey of tagKeys) {
