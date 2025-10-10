@@ -767,7 +767,7 @@ export class Rtc extends Record {
             if (this.microphonePermission !== "granted") {
                 joinCallOpts.audio = false;
             }
-            await this.joinCall(channel.thread, joinCallOpts);
+            await this.joinCall(channel, joinCallOpts);
         }
     }
 
@@ -1442,13 +1442,12 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} thread
+     * @param {import("models").DiscussChannel} channel
      * @param {object} [initialState]
      * @param {boolean} [initialState.audio] whether to request and use the user audio input (microphone) at start
      * @param {boolean} [initialState.camera] whether to request and use the user video input (camera) at start
      */
-    async joinCall(thread, { audio = true, camera = false } = {}) {
-        const channel = thread.channel;
+    async joinCall(channel, { audio = true, camera = false } = {}) {
         if (!IS_CLIENT_RTC_COMPATIBLE) {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
@@ -1516,7 +1515,7 @@ export class Rtc extends Record {
                 event.preventDefault();
             })
         );
-        this.channel?.thread.focusAvailableVideo();
+        this.channel?.focusAvailableVideo();
     }
 
     newLogs() {
