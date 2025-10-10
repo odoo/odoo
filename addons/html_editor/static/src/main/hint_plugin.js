@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
-import { removeClass } from "@html_editor/utils/dom";
+import { removeClass, setAttribute } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 
@@ -69,7 +69,7 @@ export class HintPlugin extends Plugin {
 
     makeHint(el, text) {
         this.dispatchTo("make_hint_handlers", el);
-        el.setAttribute("o-we-hint-text", text);
+        setAttribute(el, "o-we-hint-text", text);
         el.classList.add("o-we-hint");
     }
 

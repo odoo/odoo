@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { setAttribute } from "@html_editor/utils/dom";
 import { registry } from "@web/core/registry";
 
 export class BuilderContentEditablePlugin extends Plugin {
@@ -20,7 +21,7 @@ export class BuilderContentEditablePlugin extends Plugin {
     };
 
     setup() {
-        this.editable.setAttribute("contenteditable", false);
+        setAttribute(this.editable, "contenteditable", "false");
     }
 
     filterContentEditable(contentEditableEls) {

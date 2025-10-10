@@ -341,6 +341,14 @@ export class ToolbarPlugin extends Plugin {
      */
     updateToolbar = debounce(this._updateToolbar, 0, { trailing: true });
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
+        const inEditable =
+            selectionData.currentSelectionIsInEditable &&
+            !selectionData.documentSelectionIsProtected &&
+            !selectionData.documentSelectionIsProtecting;
+        if (!inEditable) {
+            this.closeToolbar();
+            return;
+        }
         const targetedNodes = this.getFilteredTargetedNodes();
         this.updateNamespace(targetedNodes);
         this.updateToolbarVisibility(selectionData, targetedNodes);
@@ -377,13 +385,6 @@ export class ToolbarPlugin extends Plugin {
     }
 
     shouldBeVisible(selectionData, targetedNodes) {
-        const inEditable =
-            selectionData.currentSelectionIsInEditable &&
-            !selectionData.documentSelectionIsProtected &&
-            !selectionData.documentSelectionIsProtecting;
-        if (!inEditable) {
-            return false;
-        }
         const canDisplayToolbar = this.getResource("can_display_toolbar").every((fn) =>
             fn(this.state.namespace)
         );

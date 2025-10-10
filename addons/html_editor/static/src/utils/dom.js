@@ -321,3 +321,16 @@ export function fixNonEditableFirstChild(editable, node, baseContainerNodeName) 
         node.before(firstBaseContainer);
     }
 }
+
+/**
+ * This function allows you to update an element's attribute if it is a new value.
+ * It avoids recalculating the layout if the value is the same.
+ * @param {HTMLElement} element
+ * @param {string} attribute
+ * @param {string} value
+ */
+export function setAttribute(element, attribute, value) {
+    if (element.getAttribute(attribute) !== value) {
+        element.setAttribute(attribute, value);
+    }
+}

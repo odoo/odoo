@@ -5,6 +5,7 @@ import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
 import { omit } from "@web/core/utils/objects";
+import { setAttribute } from "@html_editor/utils/dom";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -226,7 +227,7 @@ registry.category("services").add("website_edit", {
                     insert(...args) {
                         const el = args[0];
                         super.insert(...args);
-                        el.setAttribute("contenteditable", "false");
+                        setAttribute(el, "contenteditable", "false");
                     },
                 }),
                 patch(publicInteractions.constructor.prototype, {

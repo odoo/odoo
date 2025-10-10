@@ -1,3 +1,4 @@
+import { setAttribute } from "@html_editor/utils/dom";
 import { Plugin } from "../plugin";
 import { isProtecting, isUnprotecting } from "../utils/dom_info";
 import { childNodes } from "../utils/dom_traversal";
@@ -171,10 +172,10 @@ export class ProtectedNodePlugin extends Plugin {
         // functions of the editor are allowed to work (and how) in that
         // editable part (none?) => should be enforced.
         if (protecting) {
-            elem.setAttribute("contenteditable", "false");
+            setAttribute(elem, "contenteditable", "false");
             this.protectDescendants(elem);
         } else {
-            elem.setAttribute("contenteditable", "true");
+            setAttribute(elem, "contenteditable", "true");
             this.unProtectDescendants(elem);
         }
     }

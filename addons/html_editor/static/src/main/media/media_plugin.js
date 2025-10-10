@@ -17,6 +17,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
+import { setAttribute } from "@html_editor/utils/dom";
 
 /**
  * @typedef { Object } MediaShared
@@ -134,10 +135,12 @@ export class MediaPlugin extends Plugin {
             if (isProtected(el) || isProtecting(el)) {
                 continue;
             }
-            el.setAttribute(
+            setAttribute(
+                el,
                 "contenteditable",
                 el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
             );
+
             // Do not update the text if it's already OK to avoid recording a
             // mutation on Firefox. (Chrome filters them out.)
             if (isIconElement(el) && el.textContent !== "\u200B") {
