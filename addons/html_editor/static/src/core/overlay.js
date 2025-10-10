@@ -11,7 +11,6 @@ import {
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -98,7 +97,8 @@ export class EditorOverlay extends Component {
             useActiveElement("root");
         }
         const topDocument = editable.ownerDocument.defaultView.top.document;
-        const container = closestScrollable(editable) || topDocument.documentElement;
+        const scrollContainer = this.getScrollContainer(editable);
+        const container = scrollContainer || topDocument.documentElement;
         const resizeObserver = new ResizeObserver(() => position.unlock());
         resizeObserver.observe(container);
         onWillDestroy(() => resizeObserver.disconnect());
@@ -108,7 +108,7 @@ export class EditorOverlay extends Component {
             ...this.props.positionOptions,
             onPositioned: (el, solution) => {
                 this.props.positionOptions?.onPositioned?.(el, solution);
-                this.updateVisibility(el, solution, container);
+                this.updateVisibility(el, solution, scrollContainer);
             },
         };
         position = usePosition("root", getTarget, positionOptions);
@@ -173,6 +173,9 @@ export class EditorOverlay extends Component {
      * @param {HTMLElement} container
      */
     shouldOverlayBeVisible(overlayElement, solution, container) {
+        if (!container) {
+            return true;
+        }
         const containerRect = container.getBoundingClientRect();
         const overflowsTop = solution.top < containerRect.top;
         const overflowsBottom = solution.top + overlayElement.offsetHeight > containerRect.bottom;
@@ -198,16 +201,34 @@ export class EditorOverlay extends Component {
         }
         return true;
     }
-}
 
-/**
- * Wrapper around closestScrollableY that keeps searching outside of iframes.
- *
- * @param {HTMLElement} el
- */
-function closestScrollable(el) {
-    if (!el) {
+    /**
+     * @param {HTMLElement} el
+     * @returns {HTMLElement|null}
+     */
+    getScrollContainer(el) {
+        // find a ancestor that is:
+        // - scrollable
+        // - not also ancestor of a fixed element encosing "el" in the same document
+        // because a fixed element prevents a scrollable ancestor to affect it on scroll
+        // but a scrollable in a parent document does.
+        const isFixed = (el) => getComputedStyle(el).position === "fixed";
+        const isScrollable = (el) =>
+            el.scrollHeight > el.clientHeight &&
+            // no parent means it's the document element (html tag)
+            (!el.parentElement || /\bauto\b|\bscroll\b/.test(getComputedStyle(el)["overflow-y"]));
+        while (el) {
+            if (isScrollable(el)) {
+                return el;
+            }
+            if (isFixed(el)) {
+                // Any scroll container ancestor in the same document does not affect it.
+                // Search in the enclosing document, if any.
+                el = el.ownerDocument.defaultView.frameElement;
+                continue;
+            }
+            el = el.parentElement || el.ownerDocument.defaultView.frameElement;
+        }
         return null;
     }
-    return closestScrollableY(el) || closestScrollable(el.ownerDocument.defaultView.frameElement);
 }
