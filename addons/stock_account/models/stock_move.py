@@ -208,9 +208,16 @@ class StockMove(models.Model):
         """
         return ['in', 'out', 'dropshipped', 'dropshipped_returned']
 
-    def _set_value(self):
-        """Set the value of the move"""
-        # TODO groupby product to avoid using twice the same stack
+    def _set_value(self, correction_quantity=None):
+        """Set the value of the move.
+
+        :param correction_quantity: if set, it means that the quantity of the move has been
+            changed by this amount (can be positive or negative). In that case, we just update
+            the value of the move based on the ratio of extra_quantity / quantity. It only applies
+            on out_move since their value is computed during action_done, and it's used to get a
+            more accurate value for COGS. In case of in move correction, you have to call _set_value
+            without arguments.
+        """
         products_to_recompute = set()
         lots_to_recompute = set()
 
@@ -225,6 +232,11 @@ class StockMove(models.Model):
                 continue
             # Outgoing moves
             if not move._is_out():
+                continue
+            if correction_quantity:
+                previous_qty = move.quantity - correction_quantity
+                ratio = correction_quantity / previous_qty if previous_qty else 0
+                move.value += ratio * move.value
                 continue
             if move.product_id.lot_valuated:
                 value = 0.0
