@@ -18,7 +18,7 @@ import {
 } from "@odoo/owl";
 
 import { loadBundle } from "@web/core/assets";
-import { _t } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -571,6 +571,8 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     env: component.env,
                     props: pickerMobileProps,
                     getTemplate,
+                    translatableAttributes: ["data-tooltip"],
+                    translateFn: appTranslateFn,
                 });
                 app.mount(ref.el);
                 remove = () => {
