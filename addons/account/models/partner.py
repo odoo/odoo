@@ -676,7 +676,7 @@ class ResPartner(models.Model):
         return self.env['res.partner.bank'].search(domain)
 
     @api.depends_context('company')
-    @api.depends('country_code')
+    @api.depends('country_code', 'vat')
     def _compute_invoice_edi_format(self):
         for partner in self:
             if not partner.commercial_partner_id or partner.commercial_partner_id.invoice_edi_format_store == 'none':
@@ -718,6 +718,15 @@ class ResPartner(models.Model):
     def _get_suggested_invoice_edi_format(self):
         # TO OVERRIDE
         self.ensure_one()
+        if self._use_local_invoice_edi_format():
+            return self._get_local_invoice_edi_format()
+        return False
+
+    def _use_local_invoice_edi_format(self):
+        """The local format should be used between two contacts of the same country (but not cross-border)."""
+        return self.env.company.country_code == self._deduce_country_code()
+
+    def _get_local_invoice_edi_format(self):
         return False
 
     def _find_accounting_partner(self, partner):
