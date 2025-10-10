@@ -1,5 +1,5 @@
 import { resourceSequenceSymbol, withSequence } from "@html_editor/utils/resource";
-// import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
+import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { Deferred } from "@web/core/utils/concurrency";
 
 /**
@@ -253,17 +253,17 @@ export class MailHtmlConverter {
     }
 
     async htmlConversion() {
-        // // Old toInline
-        // // TODO EGGMAIL: adapt usage, use plugin instead of old method
-        // const cssRules = getCSSRules(this.containerDocument);
-        // await toInline(this.config.reference, cssRules);
+        // Old toInline
+        // TODO EGGMAIL: adapt usage, use plugin instead of old method
+        const cssRules = getCSSRules(this.containerDocument);
+        await toInline(this.config.reference, cssRules);
 
-        // 1 load async content (i.e. image) for final dimensions
-        await Promise.all(
-            this.getResource("load_reference_content_handlers")
-                .map((job) => job({ root: this.config.reference }))
-                .flat()
-        );
+        // // 1 load async content (i.e. image) for final dimensions
+        // await Promise.all(
+        //     this.getResource("load_reference_content_handlers")
+        //         .map((job) => job({ root: this.config.reference }))
+        //         .flat()
+        // );
     }
 
     preparePlugins() {
