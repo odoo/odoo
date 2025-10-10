@@ -19,7 +19,7 @@ export class Chart extends Interaction {
 
     start() {
         const data = JSON.parse(this.el.dataset.data);
-        data.datasets.forEach(el => {
+        data.datasets.forEach((el) => {
             el.backgroundColor = this.convertToCSS(el.backgroundColor);
             el.borderColor = this.convertToCSS(el.borderColor);
             el.borderWidth = this.el.dataset.borderWidth;
@@ -105,7 +105,7 @@ export class Chart extends Interaction {
         this.chart = new window.Chart(canvasEl, chartData);
         this.registerCleanup(() => {
             this.chart.destroy();
-            this.el.querySelectorAll(".chartjs-size-monitor").forEach(el => el.remove());
+            this.el.querySelectorAll(".chartjs-size-monitor").forEach((el) => el.remove());
         });
     }
 
@@ -114,7 +114,7 @@ export class Chart extends Interaction {
      */
     convertToCSS(paramColor) {
         return Array.isArray(paramColor)
-            ? paramColor.map(color => this.convertToCSSColor(color))
+            ? paramColor.map((color) => this.convertToCSSColor(color))
             : this.convertToCSSColor(paramColor);
     }
 
@@ -126,6 +126,4 @@ export class Chart extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.chart", Chart);
+registry.category("public.interactions").add("website.chart", Chart);

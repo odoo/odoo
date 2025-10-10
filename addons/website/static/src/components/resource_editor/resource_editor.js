@@ -141,9 +141,10 @@ export class ResourceEditor extends Component {
             required: true,
         };
         if (this.state.type === "xml") {
-            const choices = this.state.sortedXML.map((view) => {
-                return { value: view.id, label: view.label };
-            });
+            const choices = this.state.sortedXML.map((view) => ({
+                value: view.id,
+                label: view.label,
+            }));
             const value = this.state.currentResource?.id;
             return { ...props, choices, value };
         } else {
@@ -382,7 +383,7 @@ export class ResourceEditor extends Component {
         await rpc("/website/save_xml", {
             view_id: id,
             arch: arch,
-        })
+        });
         delete resource.dirty;
     }
 

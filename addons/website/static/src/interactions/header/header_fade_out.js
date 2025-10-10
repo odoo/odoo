@@ -8,7 +8,7 @@ export class HeaderFadeOut extends BaseHeaderSpecial {
         super.setup();
         this.isAnimated = true;
         this.el.style.transitionDuration = "400ms";
-        this.el.style.transitionProperty = 'opacity';
+        this.el.style.transitionProperty = "opacity";
     }
 
     transformShow() {
@@ -20,17 +20,13 @@ export class HeaderFadeOut extends BaseHeaderSpecial {
         this.el.style.opacity = 0;
         this.isVisible = false;
         // We want to translate the header after the transition is complete
-        this.waitForTimeout(() => this.el.style.transform = "translate(0, -100%)", 400);
+        this.waitForTimeout(() => (this.el.style.transform = "translate(0, -100%)"), 400);
         this.adaptToHeaderChangeLoop(1);
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.header_fade_out", HeaderFadeOut);
+registry.category("public.interactions").add("website.header_fade_out", HeaderFadeOut);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.header_fade_out", {
-        Interaction: HeaderFadeOut,
-    });
+registry.category("public.interactions.edit").add("website.header_fade_out", {
+    Interaction: HeaderFadeOut,
+});

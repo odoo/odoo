@@ -11,7 +11,7 @@ export class Many2OneOption extends BaseOptionComponent {
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             this.model = el.dataset.oeMany2oneModel;
-            this.domain = JSON.parse(el.dataset.oeMany2oneDomain|| "[]");
+            this.domain = JSON.parse(el.dataset.oeMany2oneDomain || "[]");
             const searchResult = await this.orm.searchRead(
                 "ir.model",
                 [["model", "=", this.model]],

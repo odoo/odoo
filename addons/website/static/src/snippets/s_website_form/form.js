@@ -28,17 +28,19 @@ export class Form extends Interaction {
         _endMessage: () => this.el.parentNode.querySelector(".s_website_form_end_message"),
     };
     dynamicContent = {
-        ".s_website_form_send, .o_website_form_send": { "t-on-click.prevent": this.locked(this.send, true) }, // !compatibility
+        ".s_website_form_send, .o_website_form_send": {
+            "t-on-click.prevent": this.locked(this.send, true),
+        }, // !compatibility
         _root: {
             "t-on-submit.prevent": this.locked(this.send, true),
             "t-att-class": () => ({
                 "d-none": this.isHidden,
-            })
+            }),
         },
         _endMessage: {
             "t-att-class": () => ({
                 "d-none": !this.isHidden,
-            })
+            }),
         },
         "input[type=file]": { "t-on-change": this.changeFile },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
@@ -51,11 +53,12 @@ export class Form extends Interaction {
         ".s_website_form_field:not(.s_website_form_model_required) .s_website_form_input": {
             "t-att-disabled": (el) => !this.isInputVisible(el) || undefined,
         },
-        ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date": {
-            "t-att-class": () => ({
-                "s_website_form_datepicker_initialized": this.datepickerInitialized,
-            }),
-        },
+        ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date":
+            {
+                "t-att-class": () => ({
+                    s_website_form_datepicker_initialized: this.datepickerInitialized,
+                }),
+            },
     };
 
     setup() {
@@ -66,8 +69,12 @@ export class Form extends Interaction {
         this.disabledStates = new Map();
         this.visibilityFunctionByFieldEl = new Map();
         this.visibilityFunctionByFieldName = new Map();
-        this.inputEls = this.el.querySelectorAll(".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input");
-        this.dateFieldEls = this.el.querySelectorAll(".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date");
+        this.inputEls = this.el.querySelectorAll(
+            ".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input"
+        );
+        this.dateFieldEls = this.el.querySelectorAll(
+            ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date"
+        );
         this.disableDateTimePickers = [];
         this.preFillValues = {};
         this.lastFormData = this.getFormDataIncludingDisabledFields(this.el);
@@ -80,11 +87,14 @@ export class Form extends Interaction {
         }
         // fetch user data (required by fill-with behavior)
         if (user.userId) {
-            this.preFillValues = (await this.services.orm.read(
-                "res.users",
-                [user.userId],
-                this.getUserPreFillFields()
-            ))[0] || {};
+            this.preFillValues =
+                (
+                    await this.services.orm.read(
+                        "res.users",
+                        [user.userId],
+                        this.getUserPreFillFields()
+                    )
+                )[0] || {};
         }
         // Reset the form first, as it is still filled when coming back
         // after a redirect.
@@ -102,7 +112,7 @@ export class Form extends Interaction {
             this.visibilityFunctionByFieldEl.set(fieldEl, func);
         }
         for (const [name, funcs] of visibilityFunctionsByFieldName.entries()) {
-            this.visibilityFunctionByFieldName.set(name, () => funcs.some(func => func()));
+            this.visibilityFunctionByFieldName.set(name, () => funcs.some((func) => func()));
         }
     }
 
@@ -115,7 +125,7 @@ export class Form extends Interaction {
         this.updateContent();
 
         if (session.geoip_phone_code) {
-            this.el.querySelectorAll(`input[type="tel"]`).forEach(telField => {
+            this.el.querySelectorAll(`input[type="tel"]`).forEach((telField) => {
                 if (!telField.value) {
                     telField.value = "+" + session.geoip_phone_code;
                 }
@@ -127,7 +137,7 @@ export class Form extends Interaction {
         }
 
         // Add the files zones where the file blocks will be displayed.
-        this.el.querySelectorAll("input[type=file]").forEach(inputEl => {
+        this.el.querySelectorAll("input[type=file]").forEach((inputEl) => {
             const filesZoneEl = document.createElement("DIV");
             filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
             inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
@@ -142,20 +152,22 @@ export class Form extends Interaction {
         this.resetForm();
 
         // Apply default values
-        this.el.querySelectorAll(`input[type="text"], input[type="email"], input[type="number"]`).forEach(el => {
-            let value = el.getAttribute("value");
-            if (value) {
-                if (el.classList.contains("datetimepicker-input")) {
-                    const format =
-                        el.closest(".s_website_form_field").dataset.type === "date"
-                            ? formatDate
-                            : formatDateTime;
-                    value = format(DateTime.fromSeconds(parseInt(value)));
+        this.el
+            .querySelectorAll(`input[type="text"], input[type="email"], input[type="number"]`)
+            .forEach((el) => {
+                let value = el.getAttribute("value");
+                if (value) {
+                    if (el.classList.contains("datetimepicker-input")) {
+                        const format =
+                            el.closest(".s_website_form_field").dataset.type === "date"
+                                ? formatDate
+                                : formatDateTime;
+                        value = format(DateTime.fromSeconds(parseInt(value)));
+                    }
+                    el.value = value;
                 }
-                el.value = value;
-            }
-        });
-        this.el.querySelectorAll("textarea").forEach(el => el.value = el.textContent);
+            });
+        this.el.querySelectorAll("textarea").forEach((el) => (el.value = el.textContent));
 
         // Remove saving of the error colors
         for (const errorEl of this.el.querySelectorAll(".o_has_error")) {
@@ -174,7 +186,9 @@ export class Form extends Interaction {
         }
 
         // All 'hidden if' fields start with d-none
-        this.el.querySelectorAll(".s_website_form_field_hidden_if:not(.d-none)").forEach(el => el.classList.add("d-none"));
+        this.el
+            .querySelectorAll(".s_website_form_field_hidden_if:not(.d-none)")
+            .forEach((el) => el.classList.add("d-none"));
 
         // Prevent "data-for" values removal on destroy, they are still used
         // in edit mode to keep the form linked to its predefined server
@@ -205,14 +219,21 @@ export class Form extends Interaction {
         for (const fieldEl of this.dateFieldEls) {
             const inputEl = fieldEl.querySelector("input");
             const defaultValue = inputEl.getAttribute("value");
-            this.disableDateTimePickers.push(this.services.datetime_picker.create({
-                target: inputEl,
-                onChange: () => inputEl.dispatchEvent(new Event("input", { bubbles: true })),
-                pickerProps: {
-                    type: fieldEl.matches(".s_website_form_date, .o_website_form_date") ? "date" : "datetime",
-                    value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
-                },
-            }).enable());
+            this.disableDateTimePickers.push(
+                this.services.datetime_picker
+                    .create({
+                        target: inputEl,
+                        onChange: () =>
+                            inputEl.dispatchEvent(new Event("input", { bubbles: true })),
+                        pickerProps: {
+                            type: fieldEl.matches(".s_website_form_date, .o_website_form_date")
+                                ? "date"
+                                : "datetime",
+                            value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                        },
+                    })
+                    .enable()
+            );
         }
         this.datepickerInitialized = true;
     }
@@ -231,9 +252,7 @@ export class Form extends Interaction {
         // default values...)
         if (dataForValues || Object.keys(this.preFillValues).length) {
             dataForValues = dataForValues || {};
-            const fieldNames = [...this.el.querySelectorAll("[name]")].map(
-                (el) => el.name
-            );
+            const fieldNames = [...this.el.querySelectorAll("[name]")].map((el) => el.name);
             // All types of inputs do not have a value property (eg:hidden),
             // for these inputs any function that is supposed to put a value
             // property actually puts a HTML value attribute. Because of
@@ -248,7 +267,9 @@ export class Form extends Interaction {
                 // take priority over set default values. The 'email_to'
                 // field is however treated as an exception at the moment
                 // so that values set by users are always used.
-                if (name === "email_to" && fieldEl.value
+                if (
+                    name === "email_to" &&
+                    fieldEl.value &&
                     // The following value is the default value that
                     // is set if the form is edited in any way. (see the
                     // @website/js/form_editor_registry module in editor
@@ -257,7 +278,8 @@ export class Form extends Interaction {
                     // unless explicitely manipulated by the user or on
                     // custom form addition but that seems risky to
                     // change as a stable fix.
-                    && fieldEl.value !== "info@yourcompany.example.com") {
+                    fieldEl.value !== "info@yourcompany.example.com"
+                ) {
                     continue;
                 }
 
@@ -287,7 +309,7 @@ export class Form extends Interaction {
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
-            if (inputElement && inputElement.type !== 'file') {
+            if (inputElement && inputElement.type !== "file") {
                 formFields.push({ name: key, value: value });
             }
         });
@@ -327,8 +349,12 @@ export class Form extends Interaction {
         });
 
         // force server date format usage for existing fields
-        for (const fieldEl of this.el.querySelectorAll(".s_website_form_field:not(.s_website_form_custom)")) {
-            for (const dateEl of fieldEl.querySelectorAll(".s_website_form_date, .s_website_form_datetime")) {
+        for (const fieldEl of this.el.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_custom)"
+        )) {
+            for (const dateEl of fieldEl.querySelectorAll(
+                ".s_website_form_date, .s_website_form_datetime"
+            )) {
                 const inputEl = dateEl.querySelector("input");
                 const { value } = inputEl;
                 if (!value) {
@@ -361,7 +387,11 @@ export class Form extends Interaction {
         }
 
         // Post form and handle result
-        return post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
+        return post(
+            this.el.getAttribute("action") +
+                (this.el.dataset.force_action || this.el.dataset.model_name),
+            formData
+        )
             .then(async (resultData) => {
                 if (!resultData.id) {
                     // Failure, the server didn't return the created record ID
@@ -401,12 +431,18 @@ export class Form extends Interaction {
                                     successPage = successPage.replace("#", "/#");
                                     hashIndex++;
                                 }
-                                if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + "#"))) {
+                                if (
+                                    [successPage, "/" + session.lang_url_code + successPage].some(
+                                        (link) => link.startsWith(currentUrlPath + "#")
+                                    )
+                                ) {
                                     successPage = successPage.substring(hashIndex);
                                 }
                             }
                             if (successPage.charAt(0) === "#") {
-                                const successAnchorEl = document.getElementById(successPage.substring(1));
+                                const successAnchorEl = document.getElementById(
+                                    successPage.substring(1)
+                                );
                                 if (successAnchorEl) {
                                     // Check if the target of the link is a modal.
                                     if (successAnchorEl.classList.contains("modal")) {
@@ -415,10 +451,12 @@ export class Form extends Interaction {
                                         // popup.
                                         window.location.href = successPage;
                                     } else {
-                                        await this.waitFor(scrollTo(successAnchorEl, {
-                                            duration: 500,
-                                            extraOffset: 0,
-                                        }));
+                                        await this.waitFor(
+                                            scrollTo(successAnchorEl, {
+                                                duration: 500,
+                                                extraOffset: 0,
+                                            })
+                                        );
                                     }
                                 }
                                 break;
@@ -449,10 +487,12 @@ export class Form extends Interaction {
                     this.resetForm();
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 this.updateStatus(
                     "error",
-                    error.message && error.message === 'Content too large' ? _t("Uploaded file is too large.") : "",
+                    error.message && error.message === "Content too large"
+                        ? _t("Uploaded file is too large.")
+                        : ""
                 );
             });
     }
@@ -467,10 +507,10 @@ export class Form extends Interaction {
         this.removeErrorMessages();
         // For file inputs, remove the files zone, restore the file input
         // and remove the files list.
-        this.el.querySelectorAll("input[type=file]").forEach(inputEl => {
+        this.el.querySelectorAll("input[type=file]").forEach((inputEl) => {
             const fieldEl = inputEl.closest(".s_website_form_field");
-            fieldEl.querySelectorAll(".o_files_zone").forEach(el => el.remove());
-            fieldEl.querySelectorAll(".o_add_files_button").forEach(el => el.remove());
+            fieldEl.querySelectorAll(".o_files_zone").forEach((el) => el.remove());
+            fieldEl.querySelectorAll(".o_add_files_button").forEach((el) => el.remove());
             inputEl.classList.remove("d-none");
             delete inputEl.fileList;
         });
@@ -479,14 +519,19 @@ export class Form extends Interaction {
     checkErrorFields(errorFields) {
         let formValid = true;
         // Loop on all fields
-        for (const fieldEl of this.el.querySelectorAll(".form-field, .s_website_form_field")) { // !compatibility
+        for (const fieldEl of this.el.querySelectorAll(".form-field, .s_website_form_field")) {
+            // !compatibility
             // FIXME that seems broken, "for" does not contain the field
             // but this is used to retrieve errors sent from the server...
             // need more investigation.
             const fieldName = fieldEl.querySelector(".col-form-label")?.getAttribute("for");
 
             // Validate inputs for this field
-            const inputEls = [...fieldEl.querySelectorAll(".s_website_form_input:not(#editable_select), .o_website_form_input:not(#editable_select)")]; // !compatibility
+            const inputEls = [
+                ...fieldEl.querySelectorAll(
+                    ".s_website_form_input:not(#editable_select), .o_website_form_input:not(#editable_select)"
+                ),
+            ]; // !compatibility
             const invalidInputs = inputEls.filter((inputEl) => {
                 // Special check for multiple required checkbox for same
                 // field as it seems checkValidity forces every required
@@ -501,7 +546,9 @@ export class Form extends Interaction {
                     // filter neither on required, nor on checkbox and
                     // checking the validity of the group of checkbox is
                     // currently done for each checkbox of that group...
-                    const checkboxes = inputEls.filter(el => el.required && el.type === "checkbox");
+                    const checkboxes = inputEls.filter(
+                        (el) => el.required && el.type === "checkbox"
+                    );
                     return !checkboxes.some((checkbox) => checkbox.checkValidity());
 
                     // Special cases for dates and datetimes
@@ -511,12 +558,14 @@ export class Form extends Interaction {
                     // was made)... need more investigation (if restored,
                     // consider checking the date inputs are not disabled before
                     // saying they are invalid (see checkValidity used here))
-                } else if (inputEl.matches(".s_website_form_date, .o_website_form_date")) { // !compatibility
+                } else if (inputEl.matches(".s_website_form_date, .o_website_form_date")) {
+                    // !compatibility
                     const date = parseDate(inputEl.value);
                     if (!date || !date.isValid) {
                         return true;
                     }
-                } else if (inputEl.matches(".s_website_form_datetime, .o_website_form_datetime")) { // !compatibility
+                } else if (inputEl.matches(".s_website_form_datetime, .o_website_form_datetime")) {
+                    // !compatibility
                     const date = parseDateTime(inputEl.value);
                     if (!date || !date.isValid) {
                         return true;
@@ -541,7 +590,9 @@ export class Form extends Interaction {
             });
 
             // Update field color if invalid or erroneous
-            const controlEls = fieldEl.querySelectorAll(".form-control, .form-select, .form-check-input");
+            const controlEls = fieldEl.querySelectorAll(
+                ".form-control, .form-select, .form-check-input"
+            );
             fieldEl.classList.remove("o_has_error");
             for (const controlEl of controlEls) {
                 controlEl.classList.remove("is-invalid");
@@ -574,13 +625,22 @@ export class Form extends Interaction {
             message = _t("An error has occured, the form has not been sent.");
         }
 
-        const renderedEls = this.renderAt(`website.s_website_form_status_${status}`, {
-            message: message,
-        }, resultEl, "afterend", undefined, false);
+        const renderedEls = this.renderAt(
+            `website.s_website_form_status_${status}`,
+            {
+                message: message,
+            },
+            resultEl,
+            "afterend",
+            undefined,
+            false
+        );
         // Handle cleanup manually to keep s_website_form_result in DOM.
         this.registerCleanup(() => {
             for (const el of renderedEls) {
-                const renderedResultEl = el.matches("#s_website_form_result") ? el : el.querySelector("#s_website_form_result");
+                const renderedResultEl = el.matches("#s_website_form_result")
+                    ? el
+                    : el.querySelector("#s_website_form_result");
                 renderedResultEl.replaceChildren();
             }
         });
@@ -772,8 +832,10 @@ export class Form extends Interaction {
         const between = fieldEl.dataset.visibilityBetween;
         return () => {
             // To be visible, at least one field with the dependency name must be visible.
-            const dependencyVisibilityFunction = this.visibilityFunctionByFieldName.get(dependencyName);
-            const dependencyIsVisible = !dependencyVisibilityFunction || dependencyVisibilityFunction();
+            const dependencyVisibilityFunction =
+                this.visibilityFunctionByFieldName.get(dependencyName);
+            const dependencyIsVisible =
+                !dependencyVisibilityFunction || dependencyVisibilityFunction();
             if (!dependencyIsVisible) {
                 return false;
             }
@@ -781,7 +843,12 @@ export class Form extends Interaction {
             const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
                 ? this.lastFormData.getAll(dependencyName).join()
                 : this.lastFormData.get(dependencyName);
-            return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
+            return this.compareTo(
+                comparator,
+                currentValueOfDependency,
+                visibilityCondition,
+                between
+            );
         };
     }
 
@@ -847,7 +914,13 @@ export class Form extends Interaction {
      *      displayed
      */
     createFileBlock(fileDetails, filesZoneEl) {
-        this.renderAt("website.file_block", { fileName: fileDetails.name }, filesZoneEl, "beforeend", (els) => els[0].fileDetails = fileDetails);
+        this.renderAt(
+            "website.file_block",
+            { fileName: fileDetails.name },
+            filesZoneEl,
+            "beforeend",
+            (els) => (els[0].fileDetails = fileDetails)
+        );
     }
 
     /**
@@ -861,7 +934,8 @@ export class Form extends Interaction {
         addFilesButtonEl.classList.add("o_add_files_button", "form-control");
         addFilesButtonEl.type = "button";
         addFilesButtonEl.value = inputEl.hasAttribute("multiple")
-            ? _t("Add Files") : _t("Replace File");
+            ? _t("Add Files")
+            : _t("Replace File");
         inputEl.parentNode.insertBefore(addFilesButtonEl, inputEl);
         inputEl.classList.add("d-none");
     }
@@ -891,7 +965,7 @@ export class Form extends Interaction {
         const addFilesButtonEl = fieldEl.querySelector(".o_add_files_button");
 
         // The zone where the file blocks are displayed.
-        let filesZoneEl = fieldEl.querySelector(".o_files_zone");
+        const filesZoneEl = fieldEl.querySelector(".o_files_zone");
         // Update the button text content.
         if (!addFilesButtonEl) {
             this.createAddFilesButton(fileInputEl);
@@ -913,8 +987,14 @@ export class Form extends Interaction {
 
         // Add the uploaded files if they are not already there.
         for (const newFile of uploadedFiles) {
-            if (![...fileInputEl.fileList.files].some(file => newFile.name === file.name &&
-                newFile.size === file.size && newFile.type === file.type)) {
+            if (
+                ![...fileInputEl.fileList.files].some(
+                    (file) =>
+                        newFile.name === file.name &&
+                        newFile.size === file.size &&
+                        newFile.type === file.type
+                )
+            ) {
                 fileInputEl.fileList.items.add(newFile);
                 const fileDetails = { name: newFile.name, size: newFile.size, type: newFile.type };
                 this.createFileBlock(fileDetails, filesZoneEl);
@@ -943,8 +1023,11 @@ export class Form extends Interaction {
         // Create a new file list containing the remaining files.
         const newFileList = new DataTransfer();
         for (const file of Object.values(fileInputEl.fileList.files)) {
-            if (file.name !== fileDetails.name || file.size !== fileDetails.size
-                || file.type !== fileDetails.type) {
+            if (
+                file.name !== fileDetails.name ||
+                file.size !== fileDetails.size ||
+                file.type !== fileDetails.type
+            ) {
                 newFileList.items.add(file);
             }
         }
@@ -981,6 +1064,4 @@ export class Form extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.form", Form);
+registry.category("public.interactions").add("website.form", Form);

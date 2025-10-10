@@ -10,7 +10,7 @@ export class BottomFixedElement extends Interaction {
             "t-on-resize": this.hideBottomFixedElements,
             "t-on-scroll": this.hideBottomFixedElements,
         },
-    }
+    };
 
     destroy() {
         this.restoreBottomFixedElements();
@@ -41,8 +41,11 @@ export class BottomFixedElement extends Interaction {
 
         this.restoreBottomFixedElements();
 
-        if (document.scrollingElement.offsetHeight + document.scrollingElement.scrollTop >= document.scrollingElement.scrollHeight - 2) {
-            const buttonEls = [...this.el.querySelectorAll('a, .btn')].filter(isVisible);
+        if (
+            document.scrollingElement.offsetHeight + document.scrollingElement.scrollTop >=
+            document.scrollingElement.scrollHeight - 2
+        ) {
+            const buttonEls = [...this.el.querySelectorAll("a, .btn")].filter(isVisible);
             for (const bottomFixedEl of bottomFixedEls) {
                 const bcr = bottomFixedEl.getBoundingClientRect();
                 const touchingButtonEl = touching(buttonEls, {
@@ -55,11 +58,15 @@ export class BottomFixedElement extends Interaction {
                     x: bcr.x,
                     y: bcr.y,
                 });
-                if (!!touchingButtonEl.length) {
+                if (touchingButtonEl.length) {
                     if (bottomFixedEl.classList.contains("o_bottom_fixed_element_move_up")) {
-                        bottomFixedEl.style.marginBottom = window.innerHeight - touchingButtonEl.getBoundingClientRect().top + 5 + 'px';
+                        bottomFixedEl.style.marginBottom =
+                            window.innerHeight -
+                            touchingButtonEl.getBoundingClientRect().top +
+                            5 +
+                            "px";
                     } else {
-                        bottomFixedEl.classList.add('o_bottom_fixed_element_hidden');
+                        bottomFixedEl.classList.add("o_bottom_fixed_element_hidden");
                     }
                 }
             }
@@ -77,12 +84,8 @@ export class BottomFixedElement extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.bottom_fixed_element", BottomFixedElement);
+registry.category("public.interactions").add("website.bottom_fixed_element", BottomFixedElement);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.bottom_fixed_element", {
-        Interaction: BottomFixedElement,
-    });
+registry.category("public.interactions.edit").add("website.bottom_fixed_element", {
+    Interaction: BottomFixedElement,
+});

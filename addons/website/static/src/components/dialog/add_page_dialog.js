@@ -2,10 +2,10 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
-import { useAutofocus, useService } from '@web/core/utils/hooks';
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { WebsiteDialog } from '@website/components/dialog/dialog';
-import { Switch } from '@html_editor/components/switch/switch';
+import { WebsiteDialog } from "@website/components/dialog/dialog";
+import { Switch } from "@html_editor/components/switch/switch";
 import {
     applyTextHighlight,
     removeTextHighlight,
@@ -115,7 +115,7 @@ class AddPageTemplatePreview extends Component {
             if (isFirefox) {
                 // Make sure empty preview iframe is loaded.
                 // This event is never triggered on Chrome.
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     iframeEl.contentDocument.body.onload = resolve;
                 });
             }
@@ -131,7 +131,7 @@ class AddPageTemplatePreview extends Component {
             // Adjust styles.
             const styleEl = document.createElement("style");
             // Does not work with fit-content in Firefox.
-            const carouselHeight = isFirefox ? '450px' : 'fit-content';
+            const carouselHeight = isFirefox ? "450px" : "fit-content";
             // Prevent successive resizes.
             const fullHeight = getComputedStyle(document.querySelector(".o_action_manager")).height;
             const halfHeight = `${Math.round(parseInt(fullHeight) / 2)}px`;
@@ -187,7 +187,10 @@ class AddPageTemplatePreview extends Component {
             wrapwrapEl.id = "wrapwrap";
             wrapwrapEl.appendChild(mainEl);
             iframeEl.contentDocument.body.appendChild(wrapwrapEl);
-            const templateDocument = new DOMParser().parseFromString(this.props.template.template, "text/html");
+            const templateDocument = new DOMParser().parseFromString(
+                this.props.template.template,
+                "text/html"
+            );
             const wrapEl = templateDocument.getElementById("wrap");
             mainEl.appendChild(wrapEl);
             // Make image loading eager.
@@ -227,7 +230,8 @@ class AddPageTemplatePreview extends Component {
             if (this.props.isCustom) {
                 this.adaptCustomTemplate(wrapEl);
             }
-            for (const textEl of iframeEl.contentDocument?.querySelectorAll(".o_text_highlight") || []) {
+            for (const textEl of iframeEl.contentDocument?.querySelectorAll(".o_text_highlight") ||
+                []) {
                 for (const elToObserve of getObservedEls(textEl)) {
                     this.resizeObserver.observe(elToObserve);
                 }
@@ -236,9 +240,11 @@ class AddPageTemplatePreview extends Component {
     }
 
     adaptCustomTemplate(wrapEl) {
-        for (const sectionEl of wrapEl.querySelectorAll("section:not(.o_snippet_desktop_invisible)")) {
+        for (const sectionEl of wrapEl.querySelectorAll(
+            "section:not(.o_snippet_desktop_invisible)"
+        )) {
             const style = window.getComputedStyle(sectionEl);
-            if (!style.height || style.display === 'none') {
+            if (!style.height || style.display === "none") {
                 const messageEl = renderToElement("website.AddPageTemplatePreviewDynamicMessage", {
                     message: _t(
                         "No preview for the %s block because it is dynamically rendered.",
@@ -256,7 +262,9 @@ class AddPageTemplatePreview extends Component {
         }
         const wrapEl = this.iframeRef.el.contentDocument.getElementById("wrap").cloneNode(true);
         const templateId = this.props.template.key;
-        for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview, .s_dialog_preview")) {
+        for (const previewEl of wrapEl.querySelectorAll(
+            ".o_new_page_snippet_preview, .s_dialog_preview"
+        )) {
             previewEl.remove();
         }
         this.resizeObserver.disconnect();
@@ -265,7 +273,11 @@ class AddPageTemplatePreview extends Component {
         for (const textHighlightEl of wrapEl.querySelectorAll(".o_text_highlight")) {
             removeTextHighlight(textHighlightEl);
         }
-        this.env.addPage(wrapEl.innerHTML, this.props.template.name && _t("Copy of %s", this.props.template.name), templateId);
+        this.env.addPage(
+            wrapEl.innerHTML,
+            this.props.template.name && _t("Copy of %s", this.props.template.name),
+            templateId
+        );
     }
 }
 
@@ -318,22 +330,24 @@ class AddPageTemplates extends Component {
         useAutofocus();
 
         this.state = useState({
-            pages: [{
-                Component: AddPageTemplatePreviews,
-                title: _t("Loading..."),
-                isPreloading: true,
-                props: {
-                    id: "basic",
-                    title: _t("Basic"),
-                    // Blank and 5 preloading boxes.
-                    templates: [{ isBlank: true }, {}, {}, {}, {}, {}],
+            pages: [
+                {
+                    Component: AddPageTemplatePreviews,
+                    title: _t("Loading..."),
+                    isPreloading: true,
+                    props: {
+                        id: "basic",
+                        title: _t("Basic"),
+                        // Blank and 5 preloading boxes.
+                        templates: [{ isBlank: true }, {}, {}, {}, {}, {}],
+                    },
                 },
-            }],
+            ],
         });
         this.pages = undefined;
 
         onWillStart(() => {
-            this.preparePages().then(pages => {
+            this.preparePages().then((pages) => {
                 this.state.pages = pages;
             });
         });
@@ -342,7 +356,11 @@ class AddPageTemplates extends Component {
     async preparePages() {
         // Fetch templates without client-side caching to reflect recent changes
         // to custom templates within the same session.
-        const loadTemplates = rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { silent: true });
+        const loadTemplates = rpc(
+            "/website/get_new_page_templates",
+            { context: { website_id: this.website.currentWebsiteId } },
+            { silent: true }
+        );
 
         // Forces the correct website if needed before fetching the templates.
         // Displaying the correct images in the previews also relies on the
@@ -448,16 +466,17 @@ export class AddPageDialog extends Component {
 
         this.primaryTitle = _t("Create");
         this.switchLabel = _t("Add to menu");
-        this.website = useService('website');
+        this.website = useService("website");
         this.dialogs = useService("dialog");
-        this.http = useService('http');
-        this.action = useService('action');
+        this.http = useService("http");
+        this.action = useService("action");
 
         this.cssLinkEls = undefined;
         this.lastTabName = "";
 
         useSubEnv({
-            addPage: (sectionsArch, name, templateId) => this.addPage(sectionsArch, name, templateId),
+            addPage: (sectionsArch, name, templateId) =>
+                this.addPage(sectionsArch, name, templateId),
             getCssLinkEls: () => this.getCssLinkEls(),
         });
     }
@@ -488,23 +507,27 @@ export class AddPageDialog extends Component {
         const data = await this.http.post(`/website/add/${encodeURIComponent(pageName)}`, {
             // Needed to be passed as a (falsy) string because false would be
             // converted to 'false' with a POST.
-            'sections_arch': sectionsArch || '',
-            'add_menu': addMenu || '',
+            sections_arch: sectionsArch || "",
+            add_menu: addMenu || "",
 
-            'website_id': this.props.websiteId,
-            'csrf_token': odoo.csrf_token,
-            'page_title': pageTitle,
+            website_id: this.props.websiteId,
+            csrf_token: odoo.csrf_token,
+            page_title: pageTitle,
         });
         if (data.view_id) {
             this.action.doAction({
-                'res_model': 'ir.ui.view',
-                'res_id': data.view_id,
-                'views': [[false, 'form']],
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
+                res_model: "ir.ui.view",
+                res_id: data.view_id,
+                views: [[false, "form"]],
+                type: "ir.actions.act_window",
+                view_mode: "form",
             });
         } else if (this.props.goToPage) {
-            this.website.goToWebsite({path: data.url, edition: true, websiteId: this.props.websiteId});
+            this.website.goToWebsite({
+                path: data.url,
+                edition: true,
+                websiteId: this.props.websiteId,
+            });
         }
         this.props.onAddPage();
         this.props.close();
@@ -520,10 +543,12 @@ export class AddPageDialog extends Component {
                     resolve(iframe.contentDocument.head.querySelectorAll("link[type='text/css']"));
                 } else {
                     // If there is no website preview or it was not ready yet, fetch page.
-                    this.http.get(`/website/force/${this.props.websiteId}?path=/`, "text").then(html => {
-                        const doc = new DOMParser().parseFromString(html, "text/html");
-                        resolve(doc.head.querySelectorAll("link[type='text/css']"));
-                    });
+                    this.http
+                        .get(`/website/force/${this.props.websiteId}?path=/`, "text")
+                        .then((html) => {
+                            const doc = new DOMParser().parseFromString(html, "text/html");
+                            resolve(doc.head.querySelectorAll("link[type='text/css']"));
+                        });
                 }
             });
         }

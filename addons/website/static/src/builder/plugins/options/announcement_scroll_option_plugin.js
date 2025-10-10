@@ -5,7 +5,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { after } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
 
-
 // TODO this should not be needed: the interaction of this snippet heavily
 // relies on the size of its inner elements: it should restart on any change
 // of the related options, at least... but this does not seem achievable without
@@ -18,7 +17,7 @@ class RestartInteraction extends BuilderAction {
     static dependencies = ["edit_interaction"];
 
     apply({ editingElement, value, params }) {
-        const snippetEl = editingElement.closest('.s_announcement_scroll');
+        const snippetEl = editingElement.closest(".s_announcement_scroll");
         this.dependencies.edit_interaction.restartInteractions(snippetEl);
     }
 }
@@ -34,7 +33,7 @@ class SetItemTextAction extends BuilderAction {
         editingElement.textContent = value;
 
         // TODO. See ANNOUNCEMENT_SCROLL_INTERACTION_RESTART.
-        const snippetEl = editingElement.closest('.s_announcement_scroll');
+        const snippetEl = editingElement.closest(".s_announcement_scroll");
         this.dependencies.edit_interaction.restartInteractions(snippetEl);
     }
 }
@@ -56,5 +55,6 @@ export class AnnouncementScrollOptionPlugin extends Plugin {
     };
 }
 
-registry.category("website-plugins")
+registry
+    .category("website-plugins")
     .add(AnnouncementScrollOptionPlugin.id, AnnouncementScrollOptionPlugin);
