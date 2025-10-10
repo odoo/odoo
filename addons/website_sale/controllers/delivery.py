@@ -158,7 +158,7 @@ class Delivery(WebsiteSale):
         """
         order_sudo = request.website.sale_get_order()
         if not order_sudo:
-            return []
+            raise UserError(_("Your cart is empty. Please refresh the page."))
 
         self._include_country_and_state_in_address(partial_delivery_address)
         partial_delivery_address, _side_values = self._parse_form_data(partial_delivery_address)
