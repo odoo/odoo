@@ -363,3 +363,56 @@ class TestSaleMrpProcurement(TransactionCase):
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.picking_type_id, warehouse.out_type_id)
+
+    def test_routes_on_sale_order_line(self):
+        """ Ensure that when multiple routes are available/applicable on a product and sale order line,
+        the system considers routes on the Sale Order Line (SOL) and respects their priority over product routes.
+
+        For example, if a delivery route is selected on the sale order line (while the product has applicable Manufacture route with MTO),
+        Only delivery should be created instead of triggering a Manufacturing Order.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        delivery_route = warehouse.delivery_route_id
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
+        # Make delivery route selectable for sales.
+        delivery_route.sale_selectable = True
+
+        partner = self.env['res.partner'].create([{'name': 'partner'}])
+        product = self.env['product.product'].create([{
+            'name': 'product',
+            'is_storable': True,
+            'route_ids': [Command.link(mto_route.id)],
+        }])
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+
+        # Create a sale order without specified the routes on sale order line.
+        so1 = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                })],
+        })
+        so1.action_confirm()
+        # MO and delivery is created for this product, as mrp route is applicable on product default.
+        self.assertEqual(len(so1.stock_reference_ids.production_ids), 1)
+
+        # Create a sale order specified the delivery route on sale order line.
+        so2 = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    "route_ids": [Command.link(delivery_route.id)],
+                })],
+        })
+        so2.action_confirm()
+        # MO is not created for this product and only delivery is created, as delivery route is selected on sale order line.
+        self.assertEqual(len(so2.stock_reference_ids.production_ids), 0)

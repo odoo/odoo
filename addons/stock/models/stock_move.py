@@ -1661,7 +1661,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         product_id = self.product_id.with_context(lang=self._get_lang())
         dates_info = {'date_planned': self._get_mto_procurement_date()}
-        route = []
+        route = self.env['stock.route']
         if self.location_id.warehouse_id and self.location_id.warehouse_id.lot_stock_id.parent_path in self.location_id.parent_path:
             dates_info = self.product_id._get_dates_info(self.date, self.location_id, route_ids=self.route_ids)
         warehouse = self.warehouse_id or self.picking_type_id.warehouse_id

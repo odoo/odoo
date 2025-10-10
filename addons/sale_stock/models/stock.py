@@ -126,6 +126,8 @@ class StockMove(models.Model):
         # to pass sale_line_id fom SO to MO in mto
         if self.sale_line_id:
             res['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id.route_ids:
+                res['route_ids'] |= self.sale_line_id.route_ids
         return res
 
 
