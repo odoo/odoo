@@ -309,8 +309,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         failed += 1
                         _logger.info('Failed to process mail from %s server %s.', *server_type_and_name, exc_info=True)
                         remaining_time = MailThread.env['ir.cron']._commit_progress()
-                    else:
-                        server_connection.handled_message(message_num)
+                    server_connection.handled_message(message_num)
                     if count >= batch_limit or not remaining_time:
                         break
                 server.error_date = False
