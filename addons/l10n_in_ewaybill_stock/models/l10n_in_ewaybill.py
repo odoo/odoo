@@ -36,6 +36,36 @@ class L10nInEwaybill(models.Model):
         challan.display_name = _("Challan")
         super(L10nInEwaybill, self - challan)._compute_display_name()
 
+    @api.depends('picking_id')
+    def _compute_l10n_in_ewaybill_warning(self):
+        _ = self.env._
+        for ewaybill in (ewaybill_stock := self.filtered(
+            lambda ewb: ewb.picking_id and ewb.state == 'pending'
+        )):
+            warnings = {}
+            if (products := ewaybill.move_ids.filtered(
+                lambda line: len(line.product_id.name) > 100
+            ).mapped('product_id')):
+                warnings['l10n_in_ewaybill_product_name_warning'] = {
+                    'message': _(
+                        "Some product names exceed the 100-character limit required for e-waybill "
+                        "and will be automatically trimmed if you proceed."
+                    ),
+                    'action_text': _("View Product(s)"),
+                    'action': products._get_records_action(name=_("Check Product(s)")),
+                }
+            if ewaybill.move_ids.filtered(
+                lambda line: len(line.description_picking) > 100
+            ):
+                warnings['l10n_in_ewaybill_line_description_warning'] = {
+                    'message': _(
+                        "Some descriptions exceed the 100-character limit required for e-waybill "
+                        "and will be automatically trimmed if you proceed."
+                    ),
+                }
+            ewaybill.l10n_in_ewaybill_warning = warnings
+        super(L10nInEwaybill, self - ewaybill_stock)._compute_l10n_in_ewaybill_warning()
+
     def _get_ewaybill_dependencies(self):
         return ['account_move_id', 'picking_id']
 
@@ -220,9 +250,9 @@ class L10nInEwaybill(models.Model):
             AccountMove = self.env['account.move']
             product = line.product_id
             line_details = {
-                'productName': product.name,
+                'productName': product.name[:100],
                 'hsnCode': AccountMove._l10n_in_extract_digits(product.l10n_in_hsn_code),
-                'productDesc': product.name,
+                'productDesc': line.description_picking[:100],
                 'quantity': line.quantity,
                 'qtyUnit': (
                     line.product_uom.l10n_in_code

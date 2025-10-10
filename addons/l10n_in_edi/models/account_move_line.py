@@ -21,6 +21,10 @@ class AccountMoveLine(models.Model):
                 "Set an appropriate GST tax on invoice lines "
                 "(if it's zero rated or nil rated then apply it too)"
             ),
+            'desc_length_validation': _(
+                "Some invoice line product descriptions exceed the 300-character limit required "
+                "for e-invoicing. If you continue, these descriptions will be automatically trimmed."
+            ),
         }
 
         error_lines = {}
@@ -34,20 +38,23 @@ class AccountMoveLine(models.Model):
                 error_codes.append('restrict_negative_discount_line')
             if not any(tax.l10n_in_tax_type in ['gst', 'nil_rated', 'exempt', 'non_gst'] for tax in line.tax_ids.flatten_taxes_hierarchy()):
                 error_codes.append('tax_validation')
+            if line.name and len(line.name.replace("\n", "")) > 300:
+                error_codes.append('desc_length_validation')
             for code in error_codes:
                 error_lines[code] = error_lines.get(code, self.env['account.move.line']) | line
 
         return {
             f"l10n_in_edi_{error_code}": {
+                'level': 'danger' if error_code == 'invalid_hsn' else 'warning',
                 'message': error_messages[error_code],
-                'action_text': _("View Invoice Lines"),
+                'action_text': _("View Invoice Line(s)"),
                 # The context are set in view_move_line_tree_hsn_l10n_in
                 # Please make sure to change, if any change in error codes
                 'action': lines.with_context(**{
                     error_code: True,
                     'send_and_print': True
                 })._get_records_action(
-                    name=_("Check Invoice Lines"),
+                    name=_("Check Invoice Line(s)"),
                     domain=[('id', 'in', lines.ids)],
                     views=[(
                         self.env.ref('l10n_in.view_move_line_tree_hsn_l10n_in').id,
