@@ -1,7 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from base64 import b64encode
+
 import odoo
 from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCommon
+from odoo.tools.misc import file_open
+from .files import AES_pdf, unicode_pdf
 
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
@@ -56,3 +60,26 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
             allowed=False,
             thread=channel,
         )
+
+    def test_first_page_access_of_mail_attachment_pdf(self):
+        """Test accessing the first page of a PDF that is encrypted(test_AES.pdf) or has invalid encoding(test_unicode.pdf)."""
+
+        def get_pdf_datas(file_path):
+            with file_open(file_path, "rb") as file:
+                return b64encode(file.read())
+
+        attachments = self.env['ir.attachment'].create([
+            {
+                'name': f"{pdf}",
+                'datas': get_pdf_datas(pdf),
+                'mimetype': 'application/pdf',
+            } for pdf in (AES_pdf, unicode_pdf)
+        ])
+
+        self.authenticate("admin", "admin")
+
+        for attachment in attachments:
+            ownership_token = attachment._get_ownership_token()
+            url = f'/mail/attachment/pdf_first_page/{attachment.id}?access_token={ownership_token}'
+            response = self.url_open(url)
+            self.assertEqual(response.status_code, 415)
