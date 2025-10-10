@@ -61,9 +61,11 @@ export class HtmlField extends Component {
         codeview: { type: Boolean, optional: true },
         editorConfig: { type: Object, optional: true },
         embeddedComponents: { type: Boolean, optional: true },
+        signatureCommand: { type: Boolean, optional: true, default: false },
     };
     static defaultProps = {
         dynamicPlaceholder: false,
+        signatureCommand: false,
     };
     static components = {
         Wysiwyg,
@@ -249,6 +251,7 @@ export class HtmlField extends Component {
             dynamicPlaceholder: this.props.dynamicPlaceholder,
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
+            signatureCommand: this.props.signatureCommand,
             direction: localization.direction || "ltr",
             getRecordInfo: () => {
                 const { resModel, resId, data, fields, id } = this.props.record;
@@ -375,6 +378,7 @@ export const htmlField = {
             sandboxedPreview: Boolean(options.sandboxedPreview),
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),
+            signatureCommand: options.signature_command,
         };
     },
 };

@@ -231,10 +231,11 @@ export class MassMailingHtmlField extends HtmlField {
         if (codeViewCommand) {
             codeViewCommand.isAvailable = () => this.env.debug;
         }
+        const SignaturePlugin = (config.Plugins || []).find((plugin) => plugin.id === "signature");
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
-            Plugins: [...MAIN_EDITOR_PLUGINS, DynamicPlaceholderPlugin],
+            Plugins: [...MAIN_EDITOR_PLUGINS, DynamicPlaceholderPlugin, SignaturePlugin],
         };
     }
 
@@ -337,6 +338,7 @@ export const massMailingHtmlField = {
             isCollaborative: false,
             sandboxedPreview: false,
             codeview: true,
+            signatureCommand: true,
         });
         return props;
     },
