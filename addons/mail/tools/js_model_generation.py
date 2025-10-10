@@ -35,6 +35,7 @@ MODELS_TO_INCLUDE = [
 MODELS_TO_EXPOSE = [
     "discuss.call.history",
     "mail.activity",
+    "mail.activity.type",
     "mail.followers",
     "mail.guest",
     "mail.link.preview",
