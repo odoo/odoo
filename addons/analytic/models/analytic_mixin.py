@@ -12,6 +12,7 @@ class AnalyticMixin(models.AbstractModel):
     _name = 'analytic.mixin'
     _description = 'Analytic Mixin'
 
+    company_id = fields.Many2one('res.company')  # used in widget `analytic_distribution`
     analytic_distribution = fields.Json(
         'Analytic Distribution',
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
