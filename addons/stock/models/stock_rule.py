@@ -683,57 +683,73 @@ class StockRule(models.Model):
                 ('picking_type_id.reservation_method', '=', 'at_confirm'),
         ])
 
-    @api.model
-    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(remaining=self._get_scheduler_tasks_to_do())
+    # --------------------------------------------------
+    # SCHEDULERS
+    # --------------------------------------------------
 
-        # Minimum stock rules
+    @api.model
+    def _run_scheduler_orderpoints(self, company_id=False):
         domain = self._get_orderpoint_domain(company_id=company_id)
-        orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
-        orderpoints.sudo()._compute_qty_to_order_computed()
-        orderpoints.sudo()._compute_deadline_date()
-        orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
+        all_orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
 
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
+        self.env['ir.cron']._commit_progress(remaining=len(all_orderpoints))
+        for orderpoints in split_every(1000, all_orderpoints.ids, self.env['stock.warehouse.orderpoint'].browse):
+            orderpoints.sudo()._compute_qty_to_order_computed()
+            orderpoints.sudo()._compute_deadline_date()
+            orderpoints.sudo()._procure_orderpoint_confirm(company_id=company_id, raise_user_error=False)
 
-        # Search all confirmed stock_moves and try to assign them
+            self.env['ir.cron']._commit_progress(processed=len(orderpoints))
+            _logger.info("Updated %d orderpoints out of %d orderpoints", len(orderpoints), len(all_orderpoints))
+
+    @api.model
+    def _run_scheduler_reservations(self, company_id=False):
         domain = self._get_moves_to_assign_domain(company_id)
-        moves_to_assign = self.env['stock.move'].search(domain, limit=None,
+        all_moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='reservation_date, priority desc, date asc, id asc')
-        for moves_chunk in split_every(1000, moves_to_assign.ids):
+
+        self.env['ir.cron']._commit_progress(remaining=len(all_moves_to_assign))
+        for moves_chunk in split_every(1000, all_moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
-            if use_new_cursor:
-                self.env.cr.commit()
-                _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
 
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
-
-        # Merge duplicated quants
-        self.env['stock.quant']._quant_tasks()
-
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
+            self.env['ir.cron']._commit_progress(processed=len(moves_chunk))
+            _logger.info("Assigned and committed %d out of %d moves", len(moves_chunk), len(all_moves_to_assign))
 
     @api.model
-    def _get_scheduler_tasks_to_do(self):
-        """ Number of task to be executed by the stock scheduler. This number will be given in log
-        message to know how many tasks succeeded."""
-        return 3
+    def _run_scheduler_deduplicate_quants(self):
+        self.env['stock.quant']._deduplicate_quants(True)
 
     @api.model
-    def run_scheduler(self, use_new_cursor=False, company_id=False):
-        """ Call the scheduler in order to check the running procurements (super method), to check the minimum stock rules
-        and the availability of moves. This function is intended to be run for all the companies at the same time, so
-        we run functions as SUPERUSER to avoid intercompanies and access rights issues. """
+    def _run_scheduler_reserve_quants(self):
+        self.env['stock.quant']._unlink_zero_quants()  # TODO commit_progress
+
+    @api.model
+    def _run_scheduler_unlink_quants(self):
+        self.env['stock.quant']._clean_reservations()  # TODO commit_progress
+
+    @api.model
+    def run_stock_scheduler(self, scheduler_name):
+        """ Run schedulers with a Try / Except # TODO why ? """
+        schedulers = {
+            "orderpoints": self.env["stock.rule"]._run_scheduler_orderpoints,
+            "reservations": self.env["stock.rule"]._run_scheduler_reservations,
+            "deduplicate_quants": self.env["stock.rule"]._run_scheduler_deduplicate_quants,
+            "unlink_quants": self.env["stock.rule"]._run_scheduler_unlink_quants,
+            "reserve_quants": self.env["stock.rule"]._run_scheduler_reserve_quants,
+        }
+
+        fn = schedulers.get("scheduler_name")
+        if not fn:
+            _logger.error(
+                "Skipping unknown stock scheduler '%s'. Allowed schedulers: %s.",
+                scheduler_name,
+                ", ".join(sorted(schedulers))
+            )
+            return
         try:
-            self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+            return fn()
         except Exception:
-            _logger.error("Error during stock scheduler", exc_info=True)
+            _logger.exception("An error occurred while processing scheduler %s.", scheduler_name)
             raise
-        return {}
 
     @api.model
     def _get_orderpoint_domain(self, company_id=False):
