@@ -435,12 +435,22 @@ export class FlipImageShapeAction extends BuilderAction {
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, params: { axis } }) {
         const currentAxis = img.dataset.shapeFlip || "";
-        const newAxis = currentAxis.includes(axis)
+        let newAxis = currentAxis.includes(axis)
             ? currentAxis.replace(axis, "")
             : currentAxis + axis;
-        return this.dependencies.imageShapeOption.loadShape(img, {
-            shapeFlip: newAxis === "yx" ? "xy" : newAxis,
-        });
+        if (newAxis == "yx") {
+            newAxis = "xy";
+        }
+        if (newAxis == "xy" && img.dataset.shapeRotate == "180") {
+            return this.dependencies.imageShapeOption.loadShape(img, {
+                shapeRotate: 0,
+                shapeFlip: "",
+            });
+        } else {
+            return this.dependencies.imageShapeOption.loadShape(img, {
+                shapeFlip: newAxis,
+            });
+        }
     }
     apply({ loadResult: updateImageAttributes }) {
         updateImageAttributes();
@@ -454,7 +464,16 @@ export class RotateImageShapeAction extends BuilderAction {
         const currentRotateValue = parseInt(img.dataset.shapeRotate) || 0;
         const rotation = side === "left" ? -90 : 90;
         const newRotateValue = (currentRotateValue + rotation + 360) % 360;
-        return this.dependencies.imageShapeOption.loadShape(img, { shapeRotate: newRotateValue });
+        if (newRotateValue == 180 && img.dataset.shapeFlip == "xy") {
+            return this.dependencies.imageShapeOption.loadShape(img, {
+                shapeRotate: 0,
+                shapeFlip: "",
+            });
+        } else {
+            return this.dependencies.imageShapeOption.loadShape(img, {
+                shapeRotate: newRotateValue,
+            });
+        }
     }
     apply({ loadResult: updateImageAttributes }) {
         updateImageAttributes();

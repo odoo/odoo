@@ -18,13 +18,6 @@ export class ProductsDesignPanelPlugin extends Plugin {
             ProductsDesignPanel,
         },
         save_handlers: this.onSave.bind(this),
-        change_current_options_containers_listeners: () => {
-            this.panels.forEach(panel => {
-                if (panel.state.overlayVisible) {
-                    panel.closeDesignOverlay();
-                }
-            });
-        },
     };
 
     setup() {

@@ -1,9 +1,9 @@
 import { patch } from "@web/core/utils/patch";
 import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import {
-    changeOption,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeImageShape,
 } from '@website/js/tours/tour_utils';
 
 const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
@@ -48,12 +48,7 @@ registerWebsitePreviewTour('test_replace_media', {
         content: "ensure image size is displayed",
         trigger: ".o_customize_tab [data-container-title='Image'] .options-container-header:contains('kb')",
     },
-    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
-    {
-        content: "Click on the first image shape",
-        trigger: "button[data-action-id='setImageShape']",
-        run: "click",
-    },
+    ...changeImageShape(),
     {
         content: "Open MediaDialog from an image",
         trigger: "button[data-action-id='replaceMedia']",

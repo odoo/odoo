@@ -3,18 +3,13 @@ import { BackgroundPositionOverlay } from "@html_builder/plugins/background_opti
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
-
-test("show and leave the 'BackgroundShapeComponent'", async () => {
-    await setupWebsiteBuilder(`<section>AAAA</section>`);
-    await contains(":iframe section").click();
-    await contains("button[data-action-id='toggleBgShape']").click();
-    await contains("button.o_pager_nav_angle").click();
-    await animationFrame();
-    expect("button[data-action-id='toggleBgShape']").toBeVisible();
-});
 
 test("change the background shape of elements", async () => {
     addOption({
@@ -39,7 +34,7 @@ test("change the background shape of elements", async () => {
             </div>
         </div>`);
     await contains(":iframe .selector").click();
-    await contains("[data-label='Shape'] button").click();
+    await contains("div[data-label='Shape'] button.o-hb-btn").click();
     await contains(
         ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) [data-action-id='setBackgroundShape']"
     ).click();
@@ -59,9 +54,9 @@ test("remove background shape", async () => {
             AAAA
         </section>`);
     await contains(":iframe section").click();
-    await contains("button[data-action-id='setBackgroundShape']").click();
+    await contains("div[data-label='Shape'] button[data-action-id='setBackgroundShape']").click();
     expect(":iframe section").not.toHaveAttribute("data-oe-shape-data");
-    expect("button[data-action-id='setBackgroundShape']").not.toHaveCount();
+    expect("div[data-label='Shape'] button[data-action-id='setBackgroundShape']").not.toHaveCount();
 });
 
 test("toggle Show/Hide on mobile of the shape background", async () => {
@@ -388,12 +383,12 @@ test("changing shape's background color doesn't hide the shape itself", async ()
         }
     );
     await contains(":iframe section").click();
-    await contains("button[data-action-id='toggleBgShape']").click();
+    await contains("div[data-label='Shape'] button.o-hb-btn").click();
     await contains(
         ".o_pager_container .o-hb-bg-shape-btn [data-action-value='html_builder/Connections/01'][data-action-id='setBackgroundShape']"
     ).click();
     const backgroundImageValue = getComputedStyle(queryOne(":iframe .o_we_shape")).backgroundImage;
-    expect(backgroundImageValue).toMatch(/Connections\/01/);
+    expect(backgroundImageValue).toMatch(/Connections(\/|%2F)01/);
     await contains("[data-label='Colors'] button:nth-child(2)").click();
     await contains(".o_colorpicker_section button[data-color='o-color-1']").click();
     expect(":iframe .o_we_shape").toHaveStyle({ backgroundImage: backgroundImageValue });

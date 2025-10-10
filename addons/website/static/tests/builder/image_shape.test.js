@@ -1,11 +1,22 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, queryFirst, waitFor, advanceTime } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { delay } from "@web/core/utils/concurrency";
 import { testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
+
+const selectImageShape = async (shape) => {
+    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn").click();
+    // Wait for the panel to be opened
+    await advanceTime(200);
+    await animationFrame();
+    await contains(`[data-action-value='${shape}']`).click();
+    // Wait for the panel to be closed
+    await advanceTime(200);
+    await animationFrame();
+};
 
 test("Should set a shape on an image", async () => {
     const { getEditor } = await setupWebsiteBuilder(`
@@ -16,8 +27,7 @@ test("Should set a shape on an image", async () => {
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    await selectImageShape("html_builder/geometric/geo_shuriken");
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
 
@@ -56,8 +66,7 @@ test("Should change the shape color of an image", async () => {
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+    await selectImageShape("html_builder/pattern/pattern_wave_4");
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
     await waitDomUpdated();
@@ -120,8 +129,7 @@ test("Should change the shape color of an image with a class color", async () =>
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+    await selectImageShape("html_builder/pattern/pattern_wave_4");
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
 
@@ -181,8 +189,7 @@ test("Should not show transform action on shape that cannot bet transformed", as
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    await selectImageShape("html_builder/geometric/geo_shuriken");
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
     await animationFrame();
@@ -200,8 +207,7 @@ describe("flip shape axis", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -227,8 +233,7 @@ describe("flip shape axis", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -255,8 +260,7 @@ describe("flip shape axis", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -282,8 +286,7 @@ describe("flip shape axis", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -312,8 +315,7 @@ describe("rotate shape", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -339,8 +341,7 @@ describe("rotate shape", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -367,8 +368,7 @@ describe("rotate shape", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        await selectImageShape("html_builder/geometric/geo_tetris");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -395,8 +395,7 @@ test("Should not show animate speed if the shape is not animated", async () => {
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+    await selectImageShape("html_builder/geometric/geo_tetris");
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
     await animationFrame();
@@ -412,8 +411,7 @@ test("Should change the speed of an animated shape", async () => {
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await contains("[data-label='Shape'] .dropdown").click();
-    await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+    await selectImageShape("html_builder/pattern/pattern_wave_4");
     // ensure the shape action has been applied
     await editor.shared.operation.next(() => {});
 
@@ -443,8 +441,7 @@ describe("toggle ratio", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+        await selectImageShape("html_builder/pattern/pattern_wave_4");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
         await animationFrame();
@@ -460,8 +457,7 @@ describe("toggle ratio", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
 
-        await contains("[data-label='Shape'] .dropdown").click();
-        await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+        await selectImageShape("html_builder/geometric/geo_shuriken");
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
         await animationFrame();

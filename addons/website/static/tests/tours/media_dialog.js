@@ -1,8 +1,8 @@
 import {
-    changeOption,
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeImageShape,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("website_media_dialog_undraw", {
@@ -148,12 +148,7 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
         trigger: ":iframe .s_text_image img:not(:visible), :iframe .s_text_image img",
         run: "click",
     },
-    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
-    {
-        content: "Click on the first image shape",
-        trigger: "[data-action-id='setImageShape']",
-        run: "click",
-    },
+    ...changeImageShape(),
     {
         content: "Open MediaDialog from an image",
         trigger: ".btn-success[data-action-id='replaceMedia']",

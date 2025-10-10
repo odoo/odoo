@@ -7,7 +7,6 @@ import { getShapeURL } from "../image/image_helpers";
 export class ShapeSelector extends BaseOptionComponent {
     static template = "html_builder.shapeSelector";
     static props = {
-        onClose: Function,
         selectorTitle: String,
         shapeGroups: Object,
         shapeActionId: String,
@@ -56,5 +55,19 @@ export class ShapeSelector extends BaseOptionComponent {
                 this.state.activeGroup = groupId;
             }
         }
+    }
+
+    onClose() {
+        this.rootRef.el.parentElement
+            .querySelector(".hb-overlay-panel-header div[role='button']")
+            .click();
+    }
+
+    onFocusIn(ev) {
+        ev.target.dispatchEvent(new Event("pointerenter"));
+    }
+
+    onFocusOut(ev) {
+        ev.target.dispatchEvent(new Event("pointerleave"));
     }
 }
