@@ -1483,6 +1483,7 @@ class ChangePasswordUser(models.TransientModel):
     user_login = fields.Char(string='User Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')
 
+    @check_identity
     def change_password_button(self):
         for line in self:
             if line.new_passwd:
