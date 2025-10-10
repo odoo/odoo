@@ -3,7 +3,6 @@
 
 from odoo import Command
 from odoo.addons.hr.tests.test_mail_activity_plan import ActivityScheduleHRCase
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged, users
 
 
@@ -69,16 +68,17 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         self.assertTrue(form.has_warning)
         n_warning = form.warning.count('<li>')
         self.assertEqual(n_warning, 1)
-        self.assertIn(f"The vehicle of employee {self.employee_1.name} is not linked to a fleet manager, assigning to you.", form.warning)
+        self.assertIn(
+            f"{self.employee_1.name}'s vehicle has no fleet manager, assigning activity to you.", form.warning
+        )
         # assert form can now be saved without raising an error
         form.save()
 
         self.employee_1.car_ids = self.env["fleet.vehicle"]
         form = self._instantiate_activity_schedule_wizard(employees)
         form.plan_id = self.plan_fleet
-        self.assertTrue(form.has_error)
-        n_error = form.error.count('<li>')
-        self.assertEqual(n_error, 1)
-        self.assertIn(f"Employee {self.employee_1.name} is not linked to a vehicle.", form.error)
-        with self.assertRaises(ValidationError):
-            form.save()
+        self.assertTrue(form.has_warning)
+        n_warning = form.warning.count('<li>')
+        self.assertEqual(n_warning, 1)
+        self.assertIn(f"{self.employee_1.name} is not linked to a vehicle.", form.warning)
+        form.save()

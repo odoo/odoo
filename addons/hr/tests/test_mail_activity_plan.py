@@ -5,7 +5,7 @@ from freezegun import freeze_time
 from odoo import fields, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 
@@ -229,18 +229,18 @@ class TestActivitySchedule(ActivityScheduleHRCase):
                 self.assertEqual(activities[1].user_id, self.user_coach)
                 self.assertEqual(activities[2].user_id, employee.user_id)
 
-            # Cases with errors
+            # Warning case: missing manager and coach
             self.employee_1.parent_id = False
             self.employee_1.coach_id = False
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
-            self.assertTrue(form.has_error)
-            n_error = form.error.count('<li>')
-            self.assertEqual(n_error, 2)
-            self.assertIn(f'Manager of employee {self.employee_1.name} is not set.', form.error)
-            self.assertIn(f'Coach of employee {self.employee_1.name} is not set.', form.error)
-            with self.assertRaises(ValidationError):
-                form.save()
+            self.assertTrue(form.has_warning)
+            n_warning = form.warning.count('<li>')
+            self.assertEqual(n_warning, 2)
+            self.assertIn(f'{self.employee_1.name} has no coach.', form.warning)
+            self.assertIn(f'{self.employee_1.name} has no manager.', form.warning)
+            form.save()
+            # Additional warnings when users are not linked
             self.employee_1.parent_id = self.employee_manager
             self.employee_1.coach_id = self.employee_coach
             self.employee_coach.user_id = False
@@ -250,11 +250,11 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             self.assertTrue(form.has_warning)
             n_warning = form.warning.count('<li>')
             self.assertEqual(n_warning, 2 * len(employees))
-            self.assertIn(f"The user of {self.employee_1.name}'s coach is not set.", form.warning)
-            self.assertIn(f'The manager of {self.employee_1.name} should be linked to a user.', form.warning)
+            self.assertIn(f"{self.employee_1.name}'s coach ({self.employee_coach.name}) has no user.", form.warning)
+            self.assertIn(f"{self.employee_1.name}'s manager ({self.employee_manager.name}) has no user.", form.warning)
             if len(employees) > 1:
-                self.assertIn(f"The user of {self.employee_2.name}'s coach is not set.", form.warning)
-                self.assertIn(f'The manager of {self.employee_2.name} should be linked to a user.', form.warning)
+                self.assertIn(f"{self.employee_2.name}'s coach ({self.employee_coach.name}) has no user.", form.warning)
+                self.assertIn(f"{self.employee_2.name}'s manager ({self.employee_manager.name}) has no user.", form.warning)
             # should save without error, with coach
             form.save()
             self.employee_coach.user_id = self.user_coach
