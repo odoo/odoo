@@ -52,7 +52,7 @@ class StockMoveLine(models.Model):
     result_package_id = fields.Many2one(
         'stock.package', 'Destination Package',
         ondelete='restrict', required=False, check_company=True,
-        domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
+        domain="['|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=?', location_dest_id)]",
         help="If set, the operations are packed into this package")
     result_package_dest_name = fields.Char('Destination Package Name', related='result_package_id.dest_complete_name')
     package_history_id = fields.Many2one('stock.package.history', string="Package History", index='btree_not_null')
@@ -1043,6 +1043,7 @@ class StockMoveLine(models.Model):
                 'all_move_line_ids': move_lines.ids,
                 'default_move_line_ids': self.ids,
                 'default_location_dest_id': self.location_dest_id.id,
+                'picking_ids': move_lines.picking_id.ids,
             }
             return action
 

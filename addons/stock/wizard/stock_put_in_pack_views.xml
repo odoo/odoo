@@ -8,7 +8,7 @@
                 <group>
                     <field name="package_type_id" placeholder="Select a Package Type" options="{'no_create': True}"/>
                     <field name="result_package_id"
-                           domain="[('package_type_id', '=?', package_type_id), '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', 'in', origin_package_ids)]"
+                           domain="[('package_type_id', '=?', package_type_id), '|', '|', ('location_id', '=', location_dest_id), ('id', 'in', origin_package_ids), '&amp;', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]"
                            context="{'default_package_type_id': package_type_id, 'show_src_package': 1}"
                            widget="package_m2o"
                            placeholder="Leave empty to create new"/>
