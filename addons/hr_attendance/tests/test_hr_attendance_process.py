@@ -118,6 +118,8 @@ class TestHrAttendance(TransactionCase):
     #     employee = self.env['hr.employee'].create({
     #         'name': "James P. Sullivan",
     #         'company_id': company.id,
+    #         'date_version': date(2021, 1, 1),
+    #         'contract_date_start': date(2021, 1, 1),
     #     })
     #     breakpoint()
 
