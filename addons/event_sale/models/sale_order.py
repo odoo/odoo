@@ -92,3 +92,25 @@ class SaleOrder(models.Model):
                     'title': _("Get Your Tickets") if has_single_event else _("%(event_name)s - Tickets", event_name=event.name)
                 })
         return groups
+
+    def _get_reward_values_product(self, reward, coupon, product=None, **kwargs):
+        """
+        Override to add event_id and event_ticket_id when reward product is an event ticket
+        """
+
+        values_list = super()._get_reward_values_product(reward, coupon, product=product, **kwargs)
+
+        reward_product = product or reward.reward_product_ids[:1]
+        if reward_product and reward_product.service_tracking == 'event':
+            event_ticket = self.env['event.event.ticket'].search([
+                ('product_id', '=', reward_product.id),
+            ], limit=1)
+
+            if event_ticket:
+                for vals in values_list:
+                    vals.update({
+                        'event_id': event_ticket.event_id.id,
+                        'event_ticket_id': event_ticket.id,
+                    })
+
+        return values_list
