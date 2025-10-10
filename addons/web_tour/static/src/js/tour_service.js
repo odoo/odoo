@@ -4,7 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { loadBundle } from "@web/core/assets";
-import { createPointerState } from "@web_tour/js/tour_pointer/tour_pointer_state";
+import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 import { tourState } from "@web_tour/js/tour_state";
 import { callWithUnloadCheck } from "@web_tour/js/utils/tour_utils";
 import {
@@ -65,8 +65,7 @@ export const tourService = {
         await whenReady();
         let toursEnabled = session?.tour_enabled;
         const tourRegistry = registry.category("web_tour.tours");
-        const pointer = createPointerState();
-        pointer.stop = () => {};
+        let removePointer = () => {};
 
         debugMenuRegistry.add("onboardingItem", () => ({
             type: "component",
@@ -124,7 +123,7 @@ export const tourService = {
         }
 
         async function startTour(tourName, options = {}) {
-            pointer.stop();
+            removePointer();
             const tourFromRegistry = getTourFromRegistry(tourName);
 
             if (!tourFromRegistry && !options.fromDB) {
@@ -177,34 +176,38 @@ export const tourService = {
 
             tour.steps.forEach((step) => validateStep(step));
 
-            if (tourConfig.mode === "auto") {
-                if (!odoo.loader.modules.get("@web_tour/js/tour_automatic/tour_automatic")) {
-                    await loadBundle("web_tour.automatic", { css: false });
-                }
-                const { TourAutomatic } = odoo.loader.modules.get(
-                    "@web_tour/js/tour_automatic/tour_automatic"
-                );
-                new TourAutomatic(tour).start();
-            } else {
-                await loadBundle("web_tour.interactive");
+            if (
+                tourConfig.mode === "manual" ||
+                (tourConfig.mode === "automatic" && tourConfig.showPointerDuration)
+            ) {
                 const { TourPointer } = odoo.loader.modules.get(
                     "@web_tour/js/tour_pointer/tour_pointer"
                 );
-                pointer.stop = overlay.add(
+                removePointer = overlay.add(
                     TourPointer,
                     {
-                        pointerState: pointer.state,
+                        pointerState,
                         bounce: !(tourConfig.mode === "auto" && tourConfig.keepWatchBrowser),
                     },
                     {
                         sequence: 1100, // sequence based on bootstrap z-index values.
                     }
                 );
+            }
+
+            if (tourConfig.mode === "auto") {
+                await loadBundle("web_tour.automatic", { css: false });
+                const { TourAutomatic } = odoo.loader.modules.get(
+                    "@web_tour/js/tour_automatic/tour_automatic"
+                );
+                new TourAutomatic(tour).start();
+            } else {
+                await loadBundle("web_tour.interactive");
                 const { TourInteractive } = odoo.loader.modules.get(
                     "@web_tour/js/tour_interactive/tour_interactive"
                 );
-                new TourInteractive(tour).start(env, pointer, async () => {
-                    pointer.stop();
+                new TourInteractive(tour).start(env, async () => {
+                    removePointer();
                     tourState.clear();
                     browser.console.log("tour succeeded");
                     let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
