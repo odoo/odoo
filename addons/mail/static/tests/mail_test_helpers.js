@@ -1,5 +1,5 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
-import { after, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
+import { after, afterEach, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
@@ -25,7 +25,7 @@ import {
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { contains } from "./mail_test_helpers_contains";
 
-import { mailGlobal } from "@mail/utils/common/misc";
+import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
@@ -76,6 +76,8 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+import { Network } from "@mail/discuss/call/common/rtc_service";
+import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
 export * from "./mail_test_helpers_contains";
 
@@ -430,52 +432,45 @@ export async function patchUiSize({ height, size, width }) {
     await resize({ width, height });
 }
 
+/** @type {MediaStream[]} */
+export const streams = [];
+/** @type {AudioContext[]} */
+const audioContexts = [];
+
+afterEach(() => {
+    // stop all streams and contexts as some tests may not do actions that lead to proper cleanup
+    streams.splice(0).forEach((stream) => closeStream(stream));
+    audioContexts.splice(0).forEach((ctx) => ctx.close?.().catch(() => {}));
+});
+
+function createAudioStream({ frequency = 440 } = {}) {
+    const ctx = new window.AudioContext();
+    audioContexts.push(ctx);
+    const dest = ctx.createMediaStreamDestination();
+    const osc = ctx.createOscillator();
+
+    osc.frequency.value = frequency;
+    osc.connect(dest);
+    ctx.resume?.().catch(() => {});
+    osc.start();
+    streams.push(dest.stream);
+    return dest.stream;
+}
+
+export function createVideoStream() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = 1;
+    const stream = canvas.captureStream(1);
+    streams.push(stream);
+    return stream;
+}
+
 /**
  * Mocks the browser's `navigator.mediaDevices.getUserMedia` and `navigator.mediaDevices.getDisplayMedia`
  * Also mocks the permissions API to return "granted" for camera and microphone permissions by default.
  */
 export function mockGetMedia() {
-    class MockMediaStreamTrack extends EventTarget {
-        enabled = true;
-        readyState = "live";
-        constructor(kind) {
-            super();
-            this.kind = kind;
-        }
-        stop() {
-            this.readyState = "ended";
-        }
-        clone() {
-            return Object.assign(new MockMediaStreamTrack(this.kind), { ...this });
-        }
-    }
-    /**
-     * The audio streams are mocked as there is no way to create a MediaStream
-     * with an audio track without really requesting it from the device.
-     */
-    class MockAudioMediaStream extends MediaStream {
-        mockTracks = [new MockMediaStreamTrack("audio")];
-        getTracks() {
-            return this.mockTracks;
-        }
-        getAudioTracks() {
-            return this.mockTracks;
-        }
-        getVideoTracks() {
-            return [];
-        }
-    }
-    const streams = [];
-    /**
-     * The video streams are real MediaStreams created from a 1x1 canvas at 1fps.
-     */
-    const createVideoStream = (constraints) => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 1;
-        canvas.height = 1;
-        const stream = canvas.captureStream(1);
-        return stream;
-    };
     // Mock permissions API to return "granted" by default.
     patchWithCleanup(browser.navigator.permissions, {
         async query() {
@@ -489,28 +484,101 @@ export function mockGetMedia() {
     });
     patchWithCleanup(browser.navigator.mediaDevices, {
         getUserMedia(constraints) {
-            let stream;
             if (constraints.audio) {
-                stream = new MockAudioMediaStream();
+                return createAudioStream();
             } else {
-                // The video streams are real MediaStreams
-                stream = createVideoStream();
+                return createVideoStream();
             }
-            streams.push(stream);
-            return stream;
         },
-        getDisplayMedia() {
-            const stream = createVideoStream();
-            streams.push(stream);
-            return stream;
+        getDisplayMedia: createVideoStream,
+    });
+}
+
+/**
+ * A MockRemote represents the network API of a remote user, for example calling remote.updateUpload() behaves as if that remote user
+ * had called this function on their own rtc_service.network
+ *
+ * @typedef {Object} MockRemote
+ * @property {number} sessionId
+ * @property {function(string):Promise} updateConnectionState (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_service").streamType,MediaStreamTrack):Promise} updateUpload (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_session_model").SessionInfo):Promise} updateInfo (emits "update" event)
+ */
+
+/**
+ * @typedef {Object} MockNetwork
+ * @property { function(number): MockRemote } makeMockRemote
+ */
+
+/**
+ * Mocks {import("@mail/discuss/call/common/rtc_service").Network} and allows testing of features that rely on network behavior, such
+ * as other participants changing the state of their microphone, sharing screen,...
+ *
+ * @param {Object} param0
+ * @param {Partial<OdooEnv>} param0.env
+ * @param {number} param0.channelId
+ * @returns {Promise<MockNetwork>}
+ */
+export async function makeMockRtcNetwork({ env, channelId }) {
+    const mockNetwork = new EventTarget();
+    const pyEnv = MockServer.current.env;
+    const rtc = env.services["discuss.rtc"];
+    const dispatchUpdate = (payload) => {
+        mockNetwork.dispatchEvent(new CustomEvent("update", { detail: payload }));
+    };
+    const rtcServiceIsListening = new Deferred();
+    patchWithCleanup(Network.prototype, {
+        addEventListener(name, f) {
+            if (name === "update") {
+                rtcServiceIsListening.resolve();
+                // disabling the p2p network so that it does not try to send webRTC events like candidates and offers.
+                rtc.network.p2p.disconnect();
+            }
+            mockNetwork.addEventListener(name, f);
+            after(() => mockNetwork.removeEventListener(name, f));
         },
     });
-    after(() => {
-        // stop all streams as some tests may not do actions that lead to the ending of tracks
-        streams.forEach((stream) => {
-            stream.getTracks().forEach((track) => track.stop());
-        });
-    });
+
+    return {
+        makeMockRemote(channelMemberId) {
+            const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+                channel_member_id: channelMemberId,
+                channel_id: channelId,
+            });
+            return {
+                sessionId,
+                async updateConnectionState(state) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.CONNECTION_CHANGE,
+                        payload: {
+                            id: sessionId,
+                            state,
+                        },
+                    });
+                },
+                async updateInfo(info) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.INFO_CHANGE,
+                        payload: { [sessionId]: info },
+                    });
+                },
+                async updateUpload(type, track) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.TRACK,
+                        payload: {
+                            sessionId,
+                            type,
+                            track,
+                            active: Boolean(track),
+                        },
+                    });
+                },
+            };
+        },
+    };
 }
 
 /**
