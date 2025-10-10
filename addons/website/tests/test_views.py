@@ -192,6 +192,19 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual(set(actives), {'website.test_view'})
         self.assertEqual([custo.active, default.active], [True, True])
 
+    def test_find_available_name(self):
+        View = self.env['ir.ui.view']
+        used_names = ['Unrelated name']
+        initial_name = "Test name"
+        name = View._find_available_name(initial_name, used_names)
+        self.assertEqual(initial_name, name)
+        used_names.append(name)
+        name = View._find_available_name(initial_name, used_names)
+        self.assertEqual('Test name (2)', name)
+        used_names.append(name)
+        name = View._find_available_name(initial_name, used_names)
+        self.assertEqual('Test name (3)', name)
+
 
 class TestViewSaving(TestViewSavingCommon):
 
@@ -220,11 +233,24 @@ class TestViewSaving(TestViewSavingCommon):
                     h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')))
                 ))
         )
-        self.view_id = self.env['ir.ui.view'].create({
+        View = self.env['ir.ui.view']
+        self.view_id = View.create({
             'name': "Test View",
             'type': 'qweb',
             'key': 'website.test_view',
             'arch': ET.tostring(self.arch, encoding='unicode')
+        })
+        self.first_view = View.create({
+            'name': 'Test View 1',
+            'type': 'qweb',
+            'arch': '<div>Hello World</div>',
+            'key': 'website.test_first_view',
+        })
+        self.second_view = View.create({
+            'name': 'Test View 2',
+            'type': 'qweb',
+            'arch': '<div><t t-call="website.test_first_view"/></div>',
+            'key': 'website.test_second_view',
         })
 
     def test_embedded_extraction(self):
@@ -391,6 +417,37 @@ class TestViewSaving(TestViewSavingCommon):
             replacement,
             str(self.env['ir.qweb']._render(view.id)).replace(u'&', u'&amp;'),
             'text node characters wrongly unescaped when rendering'
+        )
+
+    def test_oe_structure_as_inherited_view(self):
+        View = self.env['ir.ui.view']
+
+        base = View.create({
+            'name': 'Test View oe_structure',
+            'type': 'qweb',
+            'arch': """<xpath expr='//t[@t-call="website.test_first_view"]' position='after'>
+                        <div class="oe_structure" id='oe_structure_test_view_oe_structure'/>
+                    </xpath>""",
+            'key': 'website.oe_structure_view',
+            'inherit_id': self.second_view.id
+        })
+
+        # check view mode
+        self.assertEqual(base.mode, 'extension')
+
+        # update content of the oe_structure
+        value = '''<div class="oe_structure" id="oe_structure_test_view_oe_structure" data-oe-id="%s"
+                         data-oe-xpath="/div" data-oe-model="ir.ui.view" data-oe-field="arch">
+                        <p>Hello World!</p>
+                   </div>''' % base.id
+
+        base.with_context(website_id=1).save(value=value, xpath='/xpath/div')
+
+        self.assertEqual(len(base.with_context(website_id=1).inherit_children_ids), 1)
+        self.assertEqual(base.with_context(website_id=1).inherit_children_ids.mode, 'extension')
+        self.assertIn(
+            '<p>Hello World!</p>',
+            base.with_context(website_id=1).inherit_children_ids.get_combined_arch(),
         )
 
     def test_save_oe_structure_with_attr(self):
