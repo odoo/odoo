@@ -28,6 +28,7 @@ import {
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -362,9 +363,14 @@ export class DescriptionScreen extends Component {
      * @param {FocusEvent} ev
      */
     onDropdownFocusout(ev) {
-        if (ev.relatedTarget?.closest(".dropdown") !== ev.currentTarget) {
-            window.Dropdown.getOrCreateInstance(ev.currentTarget).hide();
-        }
+        const dropdown = ev.currentTarget;
+        const delay = isBrowserSafari() ? 100 : 0;
+
+        setTimeout(() => {
+            if (dropdown && !dropdown.contains(document.activeElement)) {
+                window.Dropdown.getOrCreateInstance(dropdown).hide();
+            }
+        }, delay);
     }
 
     onAutocompleteInput({ inputValue }) {
