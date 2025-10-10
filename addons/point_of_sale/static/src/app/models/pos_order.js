@@ -465,6 +465,7 @@ export class PosOrder extends Base {
         const lines_to_recompute = this.getLinesToCompute();
 
         for (const line of lines_to_recompute) {
+<<<<<<< 4aff082f551101f98684c6d397c7aeae6b9d44ef
             const newPrice = line.product_id.getPrice(
                 pricelist,
                 line.getQuantity(),
@@ -473,6 +474,35 @@ export class PosOrder extends Base {
                 line.product_id
             );
             line.setUnitPrice(newPrice);
+||||||| 8f50b9bbfce15e9f43517c4be4a1af75ee2abf8c
+            const newPrice = line.product_id.get_price(
+                pricelist,
+                line.get_quantity(),
+                line.get_price_extra()
+            );
+            line.set_unit_price(newPrice);
+=======
+            if (line.isLotTracked()) {
+                const related_lines = [];
+                const price = line.product_id.get_price(
+                    pricelist,
+                    line.get_quantity(),
+                    line.get_price_extra(),
+                    false,
+                    false,
+                    line,
+                    related_lines
+                );
+                related_lines.forEach((line) => line.set_unit_price(price));
+            } else {
+                const newPrice = line.product_id.get_price(
+                    pricelist,
+                    line.get_quantity(),
+                    line.get_price_extra()
+                );
+                line.set_unit_price(newPrice);
+            }
+>>>>>>> 55c917a8b79d42a79c10bad2abf0d79bca6e4fe7
         }
 
         const attributes_prices = {};
