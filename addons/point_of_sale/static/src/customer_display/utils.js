@@ -18,6 +18,7 @@ export function openProxyCustomerDisplay(
             Accept: "application/json",
             "Content-Type": "application/json",
         },
+        targetAddressSpace: "local",
         body: JSON.stringify({
             params: {
                 action: "open",

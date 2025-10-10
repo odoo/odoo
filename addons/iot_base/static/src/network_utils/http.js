@@ -47,6 +47,7 @@ export async function post(ip, route, params = {}, timeout = 6000, headers = {})
         method: "POST",
         headers: {"Content-Type": "application/json", ...headers},
         signal: AbortSignal.timeout(timeout),
+        targetAddressSpace: "local",
     });
 
     return response.json();
