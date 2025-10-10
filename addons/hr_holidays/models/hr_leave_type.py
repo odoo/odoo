@@ -103,9 +103,12 @@ class HrLeaveType(models.Model):
     time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Time Off",
                                  help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.")
     request_unit = fields.Selection([
-        ('day', 'Day'),
+        ('day', 'Full Day'),
         ('half_day', 'Half-Day'),
-        ('hour', 'Hours')], default='day', string='Duration Type', required=True)
+        ('hour', 'Custom Hours')], default='day', string='Duration Type', required=True,
+        help="Define the minimum time off duration in which an employee can take when requesting a leave")
+    unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of measure", required=True,
+                                       help="Define if the time off type will be allocated/accrued in hours or days")
     unpaid = fields.Boolean('Is Unpaid', default=False)
     include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
@@ -115,8 +118,6 @@ class HrLeaveType(models.Model):
         help="If checked, users can request another leave on top of the ones of this type.")
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
         help="If checked, this time off type will be taken into account for accruals computation.")
-    accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
-    accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
@@ -333,12 +334,6 @@ class HrLeaveType(models.Model):
         for allocation in self:
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
-    def _compute_accrual_count(self):
-        accrual_allocations = self.env['hr.leave.accrual.plan']._read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['__count'])
-        mapped_data = {time_off_type.id: count for time_off_type, count in accrual_allocations}
-        for leave_type in self:
-            leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
-
     def _compute_is_used(self):
         leaves_count = self._leaves_count_by_leave_type_id()
         allocations_count = self._allocations_count_by_leave_type_id()
@@ -445,17 +440,6 @@ class HrLeaveType(models.Model):
         }
         return action
 
-    def action_see_accrual_plans(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.open_view_accrual_plans")
-        action['domain'] = [
-            ('time_off_type_id', '=', self.id),
-        ]
-        action['context'] = {
-            'default_time_off_type_id': self.id,
-        }
-        return action
-
     # ------------------------------------------------------------
     # Leave - Allocation link methods
     # ------------------------------------------------------------
@@ -525,6 +509,7 @@ class HrLeaveType(models.Model):
                         'virtual_excess_data': {},
                         'exceeding_duration': extra_data[employee][leave_type]['exceeding_duration'],
                         'request_unit': leave_type.request_unit,
+                        'unit_of_measure': leave_type.unit_of_measure,
                         'icon': leave_type.sudo().icon_id.url,
                         'allows_negative': leave_type.allows_negative,
                         'max_allowed_negative': leave_type.max_allowed_negative,
@@ -595,7 +580,7 @@ class HrLeaveType(models.Model):
                         # closest_allocation_duration corresponds to the time remaining before the allocation expires
                         calendar_attendance = calendar._work_intervals_batch(start_datetime, end_datetime, resources=employee.resource_id)
                         closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
-                    if leave_type.request_unit in ['hour']:
+                    if leave_type.unit_of_measure in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']
                     else:
                         closest_allocation_duration = closest_allocation_dict['days']
