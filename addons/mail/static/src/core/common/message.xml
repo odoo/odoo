@@ -127,6 +127,8 @@
                                         </t>
                                     </t>
                                     <t t-if="message.bubbleColor and message.hasTextContent and !env.inChatWindow and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
+                                    <Poll t-if="props.message?.started_poll_ids.length" poll="props.message.started_poll_ids[0]"/>
+                                    <PollResult t-elif="props.message?.ended_poll_ids.length" poll="props.message.ended_poll_ids[0]"/>
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList

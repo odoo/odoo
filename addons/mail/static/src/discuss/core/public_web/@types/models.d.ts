@@ -5,8 +5,8 @@ declare module "models" {
 
     export interface DiscussApp {
         allCategories: DiscussAppCategory[];
-        channels: DiscussAppCategory;
-        chats: DiscussAppCategory;
+        channelCategory: DiscussAppCategory;
+        chatCategory: DiscussAppCategory;
         computeChatCategory: () => object;
         unreadChannels: Thread[];
     }

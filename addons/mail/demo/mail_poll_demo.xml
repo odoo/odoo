@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail.favorite_food_poll_message_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.channel_public_community_demo"/>
+            <field name="message_type">mail_poll</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="create_uid" ref="base.user_admin"/>
+        </record>
+        <record model="mail.poll" id="mail.favorite_food_poll_demo">
+            <field name="poll_question">What's your favorite food?</field>
+            <field name="option_ids" eval="[
+                Command.create({'option_label': '🍣 Sushi'}),
+                Command.create({'option_label': '🍕 Pizza'}),
+                Command.create({'option_label': '🍔 Burger'}),
+            ]"/>
+            <field name="poll_duration">1440</field>
+            <field name="allow_multiple_options" eval="True"/>
+            <field name="start_message_id" ref="mail.favorite_food_poll_message_demo"/>
+            <field name="create_uid" ref="base.user_admin"/>
+        </record>
+    </data>
+</odoo>
