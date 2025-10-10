@@ -1285,7 +1285,7 @@ export class Rtc extends Record {
                     this.selfSession?.persona.main_user_id?.share !== false ||
                     this.serverInfo ||
                     this.state.fallbackMode ||
-                    !session?.channel.channel?.eq(this.state.channel)
+                    !session?.channel.eq(this.state.channel)
                 ) {
                     return;
                 }

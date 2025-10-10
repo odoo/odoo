@@ -118,7 +118,7 @@ export class CallParticipantCard extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.rtcSession && this.rtcSession.channel?.channel?.eq(this.rtc.channel));
+        return Boolean(this.rtcSession && this.rtcSession.channel?.eq(this.rtc.channel));
     }
 
     get showConnectionState() {

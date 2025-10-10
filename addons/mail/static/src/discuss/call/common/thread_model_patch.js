@@ -137,7 +137,7 @@ const ThreadPatch = {
             compute() {
                 if (
                     this.channel?.channel_type === "chat" &&
-                    this.store.rtc.selfSession?.channel?.eq(this)
+                    this.store.rtc.selfSession?.channel?.eq(this.channel)
                 ) {
                     return this.store.rtc.selfSession.is_camera_on;
                 }
