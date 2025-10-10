@@ -9,6 +9,7 @@ import { dispatch } from "@odoo/hoot-dom";
 import { insertText, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { setSelection } from "../_helpers/selection";
+import { tick } from "@odoo/hoot-mock";
 
 describe("ensureFocus", () => {
     // TODO @phoenix: unskipped when ensureFocus is add in the code base
@@ -161,5 +162,34 @@ describe("getAdjacentCharacter", () => {
         setSelection({ anchorNode: p, anchorOffset: nodeSize(p) });
         const selection = editor.document.getSelection();
         expect(getAdjacentCharacter(selection, "previous", el)).toBe("\u200b");
+    });
+
+    test("should return the correct character for non collapsed selection on previous side", async () => {
+        const { editor, el } = await setupEditor("<p>abcdef</p>");
+        const p = el.firstChild;
+        // Select "ab[cde]f"
+        setSelection({
+            anchorNode: p.firstChild,
+            anchorOffset: 2,
+            focusNode: p.firstChild,
+            focusOffset: 5,
+        });
+        await tick();
+        const selection = editor.document.getSelection();
+        expect(getAdjacentCharacter(selection, "previous", el, "move")).toBe("b");
+    });
+
+    test("should return the correct character for non collapsed selection across multiple text nodes", async () => {
+        const { editor, el } = await setupEditor("<p>abcd</p>");
+        const p = el.firstChild;
+        const efg = document.createTextNode("efg");
+        const hij = document.createTextNode("hij");
+        p.appendChild(efg);
+        p.appendChild(hij);
+        // Select "abcd[efghi]j"
+        setSelection({ anchorNode: efg, anchorOffset: 0, focusNode: hij, focusOffset: 2 });
+        await tick();
+        const selection = editor.document.getSelection();
+        expect(getAdjacentCharacter(selection, "previous", el, "move")).toBe("d");
     });
 });
