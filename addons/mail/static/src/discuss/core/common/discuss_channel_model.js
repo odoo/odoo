@@ -25,6 +25,13 @@ export class DiscussChannel extends Record {
         inverse: "channel",
         onDelete: (r) => r?.delete(),
     });
+
+    /**
+     * @returns {boolean} true if the channel was opened, false otherwise
+     */
+    openChannel() {
+        return false;
+    }
 }
 
 DiscussChannel.register();
