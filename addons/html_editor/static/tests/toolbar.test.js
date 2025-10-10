@@ -1127,6 +1127,118 @@ describe("toolbar open and close on user interaction", () => {
             await expectElementCount(".o-we-toolbar", 1);
         });
     });
+
+    describe("contentEditable false", () => {
+        test("toolbar should not open when selection is inside of a contentEditable false elelement", async () => {
+            const { el } = await setupEditor(
+                `<div>t[es]t</div><div contenteditable="false">contenteditable false </div>`
+            );
+            await waitFor(".o-we-toolbar");
+            expect(".o-we-toolbar").toHaveCount(1);
+
+            setContent(
+                el,
+                `<div>test</div><div contenteditable="false">conte[ntedita]ble false </div>`
+            );
+            await tick(); // selectionChange
+
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(0);
+        });
+        test("toolbar should not open when selection only includes contentEditable false elelement", async () => {
+            const { el } = await setupEditor(
+                `<div>t[es]t</div><div contenteditable="false">contenteditable </div><div contenteditable="false">false </div>`
+            );
+            await waitFor(".o-we-toolbar");
+            expect(".o-we-toolbar").toHaveCount(1);
+
+            setContent(
+                el,
+                `<div>test</div>[<div contenteditable="false">contenteditable </div><div contenteditable="false">false </div>]`
+            );
+            await tick(); // selectionChange
+
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(0);
+        });
+        test("toolbar should not open when selection only includes contentEditable false elelement (2)", async () => {
+            const { el } = await setupEditor(
+                `<div>t[es]t</div>
+                <div>
+                    <t contenteditable="false">
+                        <div>
+                            <strong>Address block</strong>
+                            <div>Usually contains the address of the document's recipient.</div>
+                        </div>
+                    </t>
+                </div>`
+            );
+            await waitFor(".o-we-toolbar");
+            expect(".o-we-toolbar").toHaveCount(1);
+
+            setContent(
+                el,
+                `<div>test</div>
+                <div>
+                    [<t contenteditable="false">
+                        <div>
+                            <strong>Address block</strong>
+                            <div>Usually contains the address of the document's recipient.</div>
+                        </div>
+                    </t>]
+                </div>`
+            );
+            await tick(); // selectionChange
+
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(0);
+        });
+        test("toolbar should open when selection's anchor and focus nodes are content editable, even a contenteditable false element in the middle", async () => {
+            const { el } = await setupEditor(
+                `<p>t[]est<span contenteditable="false">contenteditable false </span>test</p>`
+            );
+            expect(".o-we-toolbar").toHaveCount(0);
+
+            setContent(
+                el,
+                `<p>t[est<span contenteditable="false">contenteditable false </span>te]st</p>`
+            );
+            await tick(); // selectionChange
+
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(1);
+        });
+        test("toolbar should open when anchor node is content editable, focus node is contenteditable false (not possible in practice)", async () => {
+            const { el } = await setupEditor(
+                `<p>t[]est<span contenteditable="false">contenteditable false </span>test</p>`
+            );
+            expect(".o-we-toolbar").toHaveCount(0);
+
+            setContent(
+                el,
+                `<p>t[est<span contenteditable="false">contente]ditable false </span>test</p>`
+            );
+            await tick(); // selectionChange
+
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(1);
+        });
+        test("toolbar should open when focus node is content editable, anchor node is contenteditable false (not possible in practice)", async () => {
+            const { el } = await setupEditor(
+                `<p>t[]est<span contenteditable="false">contenteditable false </span>test</p>`
+            );
+            expect(".o-we-toolbar").toHaveCount(0);
+
+            setContent(
+                el,
+                `<p>test<span contenteditable="false">contente[ditable false </span>te]st</p>`
+            );
+            await tick(); // selectionChange
+
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(1);
+        });
+    });
 });
 
 test.tags("desktop");

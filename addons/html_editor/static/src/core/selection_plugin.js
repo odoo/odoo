@@ -1,6 +1,7 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    isContentEditable,
     isMediaElement,
     isProtected,
     isProtecting,
@@ -47,6 +48,7 @@ import { closestScrollableY } from "@web/core/utils/scrolling";
  * @property { boolean } documentSelectionIsInEditable
  * @property { boolean } documentSelectionIsProtected
  * @property { boolean } documentSelectionIsProtecting
+ * @property { boolean } documentSelectionIsContenteditable
  */
 
 /**
@@ -530,6 +532,50 @@ export class SelectionPlugin extends Plugin {
                 return documentSelection?.anchorNode
                     ? isProtected(documentSelection.anchorNode)
                     : false;
+            }.bind(this),
+        });
+        Object.defineProperty(selectionData, "documentSelectionIsContenteditable", {
+            get: function () {
+                const selectionInContentEditable =
+                    isContentEditable(documentSelection.anchorNode) ||
+                    isContentEditable(documentSelection.focusNode);
+
+                const selectionInIcon =
+                    documentSelection.anchorNode.classList?.contains?.("fa") ||
+                    documentSelection.focusNode.classList?.contains?.("fa") ||
+                    documentSelection.anchorNode.parentElement.classList?.contains?.("fa") ||
+                    documentSelection.focusNode.parentElement.classList?.contains?.("fa") ||
+                    false;
+
+                // when there is no fully selected node, it's set to true cause
+                // we only care about selectionInContentEditable in this case
+                // when there are fully selected nodes, it's initialized to false
+                // and set to true if any of the traversed nodes is contenteditable
+                var traversedNodesAreContentEditable = !this.getSelectedNodes().length;
+                // case when traversed nodes are fully selected
+                if (
+                    this.getSelectedNodes().length &&
+                    this.getTraversedNodes().length === this.getSelectedNodes().length
+                ) {
+                    traversedNodesAreContentEditable = this.getTraversedNodes().some(
+                        (node) => node?.classList?.contains?.("fa") || isContentEditable(node)
+                    );
+                }
+                // case when some traversed nodes are not fully selected
+                if (
+                    this.getSelectedNodes().length &&
+                    this.getTraversedNodes().length !== this.getSelectedNodes().length
+                ) {
+                    traversedNodesAreContentEditable = this.getTraversedNodes()
+                        .slice(1)
+                        .some(
+                            (node) => node?.classList?.contains?.("fa") || isContentEditable(node)
+                        );
+                }
+                return documentSelection?.anchorNode && documentSelection?.focusNode
+                    ? (selectionInContentEditable && traversedNodesAreContentEditable) ||
+                          selectionInIcon
+                    : true;
             }.bind(this),
         });
 
