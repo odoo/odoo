@@ -100,16 +100,19 @@ class TestCalendarMail(CalendarMailCommon):
         suggested = event._message_get_suggested_recipients()
         self.assertListEqual(suggested, [
             {
+                'display_name': self.customers[0].display_name,
                 'create_values': {},
                 'email': self.customers[0].email_normalized,
                 'name': self.customers[0].name,
                 'partner_id': self.customers[0].id,
             }, {  # wrong email suggested, can be corrected ?
+                'display_name': self.customers[1].display_name,
                 'create_values': {},
                 'email': self.customers[1].email_normalized,
                 'name': self.customers[1].name,
                 'partner_id': self.customers[1].id,
             }, {
+                'display_name': self.user_employee_2.partner_id.display_name,
                 'create_values': {},
                 'email': self.user_employee_2.partner_id.email_normalized,
                 'name': self.user_employee_2.partner_id.name,

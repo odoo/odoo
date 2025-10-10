@@ -5,7 +5,7 @@
         <DropdownItem class="'o-mail-Follower d-flex justify-content-between p-0'">
             <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 o-min-width-0" t-att-class="{ 'o-inactive opacity-75 text-reset text-decoration-line-through': !props.follower.is_active }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev)">
                 <img class="o-mail-Follower-avatar me-2 rounded" t-att-src="props.follower.partner.avatarUrl" alt=""/>
-                <span class="flex-shrink text-truncate" t-esc="props.follower.partner.name"/>
+                <span class="flex-shrink text-truncate" t-esc="props.follower.displayName"/>
             </a>
             <div t-if="props.follower.isEditable" class="d-flex align-items-center me-2">
                 <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev)">

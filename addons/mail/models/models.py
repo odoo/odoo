@@ -506,6 +506,7 @@ class Base(models.AbstractModel):
             ))
 
             recipients = [{
+                'display_name': partner.display_name,
                 'email': partner.email_normalized,
                 'name': partner.name,
                 'partner_id': partner.id,

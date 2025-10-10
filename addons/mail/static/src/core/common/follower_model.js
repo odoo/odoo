@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 export class Follower extends Record {
     static _name = "mail.followers";
@@ -11,6 +12,10 @@ export class Follower extends Record {
     /** @type {boolean} */
     is_active;
     partner = fields.One("Persona");
+
+    get displayName() {
+        return this.partner.name || this.display_name || _t("Unnamed");
+    }
 
     /** @returns {boolean} */
     get isEditable() {

@@ -46,6 +46,7 @@ class TestSlidesMail(SlidesCase):
         self.assertDictEqual(
             suggested_recipient,
             {
+                'display_name': user_id.partner_id.display_name,
                 'email': user_id.email, 'name': user_id.name,
                 'partner_id': user_id.partner_id.id, 'create_values': {}
             }
