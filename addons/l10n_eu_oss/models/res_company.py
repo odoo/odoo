@@ -46,7 +46,9 @@ class ResCompany(models.Model):
             oss_countries = eu_countries - company.account_fiscal_country_id - multi_tax_reports_countries_fpos.country_id
             tg = self.env['account.tax.group'].search([
                 *self.env['account.tax.group']._check_company_domain(company),
-                ('tax_payable_account_id', '!=', False)], limit=1)
+                ('tax_payable_account_id', '!=', False), ('tax_receivable_account_id', '!=', False)], limit=1)
+            if not tg:
+                continue
             default_oss_payable_account = self.env['account.account']
 
             eu_vat_country_group_id = self.env.ref('account.europe_vat').id
