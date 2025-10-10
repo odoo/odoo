@@ -637,7 +637,7 @@ class ProductProduct(models.Model):
         products = self.browse()
         domain = Domain(domain or Domain.TRUE)
         if operator in positive_operators:
-            products = self.search_fetch(domain & Domain('default_code', '=', name), ['display_name'], limit=limit) \
+            products = self.search_fetch(domain & Domain('default_code', operator, name), ['display_name'], limit=limit) \
                 or self.search_fetch(domain & Domain('barcode', '=', name), ['display_name'], limit=limit)
         if not products:
             if is_positive:
