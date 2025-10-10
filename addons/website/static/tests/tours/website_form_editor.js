@@ -210,6 +210,14 @@
             content: "Form has a model name",
             trigger: 'iframe section.s_website_form form[data-model_name="mail.mail"]',
         }, {
+            content: "Set the offset and width of the Phone Number field",
+            trigger: 'iframe input[name="phone"]',
+            run: function () {
+                const fieldEl = this.$anchor[0].closest('.s_website_form_field');
+                fieldEl.classList.add('offset-lg-3');
+                fieldEl.classList.add('col-lg-9');
+            },
+        }, {
             content: 'Edit the Phone Number field',
             trigger: 'iframe input[name="phone"]',
         }, {
@@ -545,6 +553,19 @@
         {
             content: 'Verify that phone field is still auto-fillable',
             trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
+        },
+        {
+            content: "Check that the offset and width of the Phone Number field are still correct",
+            trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]',
+            run: function () {
+                const fieldEl = this.$anchor[0].closest('.s_website_form_field');
+                if (!fieldEl.classList.contains('offset-lg-3')) {
+                    return;
+                }
+                if (!fieldEl.classList.contains('col-lg-9')) {
+                    return;
+                }
+            },
         },
         // Check that the resulting form behavior is correct.
         {
