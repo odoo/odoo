@@ -987,7 +987,7 @@ class HrExpense(models.Model):
         expenses_submitted_to_review = self.env['hr.expense']
         for expense in self:
             if expense.state == 'submitted':
-                expense.activity_schedule(
+                expense.with_context(mail_activity_quick_update=True).activity_schedule(
                     'hr_expense.mail_act_expense_approval',
                     user_id=expense.manager_id.id or
                     expense.sudo()._get_default_responsible_for_approval().id or
