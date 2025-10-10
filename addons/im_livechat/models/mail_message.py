@@ -69,8 +69,3 @@ class MailMessage(models.Model):
                     store.add(
                         message, {"chatbotStep": {"scriptStep": step.id, "message": message.id}}
                     )
-
-    def _get_store_partner_name_fields(self):
-        if self.channel_id.channel_type == "livechat":
-            return self.env["res.partner"]._get_store_livechat_username_fields()
-        return super()._get_store_partner_name_fields()

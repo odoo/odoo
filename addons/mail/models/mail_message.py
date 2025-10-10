@@ -1237,6 +1237,8 @@ class MailMessage(models.Model):
 
     def _get_store_partner_name_fields(self):
         self.ensure_one()
+        if self.channel_id:
+            return self.channel_id._get_store_partner_name_fields()
         return ["name"]
 
     def _get_store_attachment_fields(self, target):

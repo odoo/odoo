@@ -1192,6 +1192,10 @@ class DiscussChannel(models.Model):
         channels += self.env["discuss.channel"].search(pinned_member_domain)
         return channels
 
+    def _get_store_partner_name_fields(self):
+        self.ensure_one()
+        return ["name"]
+
     def _to_store_defaults(self, target: Store.Target):
         # As the method uses partial recordsets with filtered (that lose the prefetch ids) it is
         # best to prefetch these computed fields once to avoid doing partial queries multiple times,
