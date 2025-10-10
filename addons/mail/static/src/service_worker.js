@@ -1,5 +1,7 @@
 /* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
+/* global idbKeyval */
+importScripts("/mail/static/lib/idb-keyval/idb-keyval.js");
 
 const MESSAGE_TYPE = {
     UNEXPECTED_CALL_TERMINATION: "UNEXPECTED_CALL_TERMINATION", // deprecated
@@ -14,11 +16,13 @@ const PUSH_NOTIFICATION_ACTION = {
     DECLINE: "DECLINE",
 };
 
+const { Store, set, get } = idbKeyval;
 const LOG_AGE_LIMIT = 24 * 60 * 60 * 1000; // 24h
-let db;
+let rtc_db;
+const unread_store = new Store("odoo-discuss-unread-db", "odoo-discuss-unread-store");
 let interactionSinceCleanupCount = 0;
 
-async function openDatabase() {
+async function openRtcDatabase() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open("RtcLogsDB", 1);
         request.onupgradeneeded = function (event) {
@@ -29,13 +33,13 @@ async function openDatabase() {
             }
         };
         request.onsuccess = async function (event) {
-            db = event.target.result;
+            rtc_db = event.target.result;
             try {
-                await cleanupLogs(db);
+                await cleanupLogs(rtc_db);
             } catch (error) {
                 console.error("Error cleaning up logs:", error);
             }
-            resolve(db);
+            resolve(rtc_db);
         };
         request.onerror = function (event) {
             reject(event.target.error);
@@ -44,7 +48,7 @@ async function openDatabase() {
 }
 
 self.addEventListener("activate", (event) => {
-    event.waitUntil(openDatabase());
+    event.waitUntil(openRtcDatabase());
 });
 
 async function cleanupLogs(dataBase) {
@@ -69,18 +73,18 @@ async function cleanupLogs(dataBase) {
 }
 
 async function storeLogs(logs, { download = false } = {}) {
-    if (!db) {
-        await openDatabase();
+    if (!rtc_db) {
+        await openRtcDatabase();
     }
     if (interactionSinceCleanupCount > 30) {
         // cleanup logs in case the service worker lives for a long time
         interactionSinceCleanupCount = 0;
-        await cleanupLogs(db);
+        await cleanupLogs(rtc_db);
     }
     interactionSinceCleanupCount++;
     return new Promise((resolve, reject) => {
         let output;
-        const tx = db.transaction("logs", "readwrite");
+        const tx = rtc_db.transaction("logs", "readwrite");
         const store = tx.objectStore("logs");
         for (const log of logs) {
             if (!log) {
@@ -232,6 +236,13 @@ self.addEventListener("message", ({ data }) => {
     }
 });
 
+async function incrementUnread() {
+    const oldCounter = (await get("unread", unread_store)) ?? 0;
+    const newCounter = oldCounter + 1;
+    set("unread", newCounter, unread_store);
+    navigator.setAppBadge?.(newCounter);
+}
+
 async function handlePushEvent(notification) {
     const { model, res_id } = notification.options?.data || {};
     const correlationId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -255,7 +266,8 @@ async function handlePushEvent(notification) {
                 })
             );
         });
-        timeoutId = setTimeout(() => {
+        timeoutId = setTimeout(async () => {
+            await incrementUnread();
             self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
                 clients.forEach((client) =>
                     client.postMessage({

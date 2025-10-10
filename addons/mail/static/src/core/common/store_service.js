@@ -24,6 +24,12 @@ import { cookie } from "@web/core/browser/cookie";
 
 let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
+const unread_store = (() => {
+    if (!window.idbKeyval) {
+        return undefined;
+    }
+    return new window.idbKeyval.Store("odoo-discuss-unread-db", "odoo-discuss-unread-store");
+})();
 
 export const pyToJsModels = {
     "discuss.channel": "Thread",
@@ -151,6 +157,17 @@ export class Store extends BaseStore {
             }
         },
     });
+    globalCounter = fields.Attr(0, {
+        compute() {
+            return this.computeGlobalCounter();
+        },
+        onUpdate() {
+            this.updateAppBadge();
+        },
+    });
+    computeGlobalCounter() {
+        return 0;
+    }
 
     messagePostMutex = new Mutex();
 
@@ -475,13 +492,20 @@ export class Store extends BaseStore {
                     });
                 }
             }
-            if (
-                type === "notification-displayed" &&
-                ["mail.thread", "discuss.channel"].includes(payload.model)
-            ) {
-                this.env.services["mail.out_of_focus"]._playSound();
+            if (type === "notification-displayed") {
+                this.updateAppBadge();
+                if (["mail.thread", "discuss.channel"].includes(payload.model)) {
+                    this.env.services["mail.out_of_focus"]._playSound();
+                }
             }
         });
+    }
+
+    updateAppBadge() {
+        if (unread_store) {
+            window.idbKeyval.set("unread", this.globalCounter, unread_store);
+            Promise.resolve(navigator.setAppBadge?.(this.globalCounter)).catch(() => {}); // FIXME: Illegal invocation error in HOOT
+        }
     }
 
     /**
