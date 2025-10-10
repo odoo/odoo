@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ast import literal_eval
-from odoo import api, fields, models
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
+from odoo.addons.website.tools import get_stored_models
 
 
 class WebsiteControllerPage(models.Model):
@@ -82,6 +86,10 @@ class WebsiteControllerPage(models.Model):
         return False
 
     def write(self, vals):
+        if self.model_id.model not in get_stored_models(self.env):
+            raise ValidationError(_(
+                "You cannot create Model Page with Exposed Model '%(model)s'", model=self.model_id.model
+            ))
         res = super().write(vals)
         for rec in self:
             rec.menu_ids.write({
