@@ -877,3 +877,22 @@ test("convert image to webp", async () => {
     );
     await setFiles(imageFile);
 });
+
+test("ImageField with bg_transparent option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" options="{'bg_transparent': True}" />
+            </form>
+        `,
+    });
+    expect(".o_field_image img").toHaveAttribute(
+        "style",
+        "--ImageField-background-color: transparent;",
+        {
+            message: "image field should have transparent background",
+        }
+    );
+});
