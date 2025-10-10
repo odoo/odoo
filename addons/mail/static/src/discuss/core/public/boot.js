@@ -27,6 +27,7 @@ import { makeEnv, startServices } from "@web/env";
         dev: env.debug,
         env,
         templates,
+        translatableAttributes: ["data-tooltip"],
         translateFn: _t,
     });
 })();
