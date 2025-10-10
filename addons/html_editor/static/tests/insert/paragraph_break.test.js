@@ -149,7 +149,7 @@ describe("Selection collapsed", () => {
                         value: "ab\ncd",
                         textareaRange: 3, // "ab\n[]cd"
                     }),
-                    contentAfter: `<pre data-language-id="plaintext">ab<br>cd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab<br>cd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -164,7 +164,7 @@ describe("Selection collapsed", () => {
                         preHtml: "abc<br><br>",
                         textareaRange: 4, // "abc\n[]"
                     }),
-                    contentAfter: `<pre data-language-id="plaintext">abc<br><br></pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abc<br><br></pre>[]`,
                     config: configWithEmbeddings,
                 });
             });

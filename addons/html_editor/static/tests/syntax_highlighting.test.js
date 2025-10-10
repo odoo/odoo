@@ -59,7 +59,7 @@ test("starting edition with a pre activates syntax highlighting", async () => {
             await animationFrame();
         },
         contentAfterEdit: highlightedPre({ value: "some code" }), // Undo did nothing.
-        contentAfter: `<pre data-language-id="plaintext">some code</pre>`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">some code</pre>`,
         config: configWithEmbeddings,
     });
 });
@@ -100,7 +100,7 @@ test("starting edition with a pre activates syntax highlighting (with dataset va
             language: "javascript",
             textareaRange: 12, // "Hello world![]"
         }), // Undo did nothing.
-        contentAfter: `<pre data-language-id="javascript">Hello world!</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">Hello world!</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -121,7 +121,7 @@ test("inserting a code block activates syntax highlighting plugin, typing trigge
             await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 4 }), // The change of value in the textarea is reflected in the pre.
-        contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -132,7 +132,7 @@ test("inserting an empty code block activates syntax highlighting plugin with an
         contentBefore: "<p><br>[]</p>",
         stepFunction: insertPre,
         contentAfterEdit: highlightedPre({ value: "", textareaRange: 0 }),
-        contentAfter: `<pre data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -162,7 +162,7 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
                 textareaRange: 0,
             })}`
         ),
-        contentAfter: `<p><br></p><pre data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -181,7 +181,7 @@ test("changing languages in a code block changes its highlighting", async () => 
             language: "javascript",
             textareaRange: 9,
         }),
-        contentAfter: `<pre data-language-id="javascript">some code</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">some code</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -199,7 +199,7 @@ test("should fill an empty pre", async () => {
             await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({ value: "", textareaRange: 0 }), // Note: the BR is outside the highlight.
-        contentAfter: `<pre data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -214,7 +214,7 @@ test("the textarea should never contains zws", async () => {
             await click(textarea);
         },
         contentAfterEdit: highlightedPre({ value: "abc", textareaRange: 3 }),
-        contentAfter: `<pre data-language-id="plaintext">abc</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abc</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -251,7 +251,7 @@ test("can copy content with the copy button", async () => {
             await animationFrame(); // wait for effect
         },
         contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 4 }),
-        contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -272,7 +272,7 @@ test("tab in code block inserts 4 spaces", async () => {
             value: "co    de",
             textareaRange: 6, // "co    []de"
         }),
-        contentAfter: `<pre data-language-id="plaintext">co    de</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">co    de</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -294,7 +294,7 @@ test("tab in selection in code block indents each selected line", async () => {
             value: valueAfter,
             textareaRange: [5, 19], // "    a[\n    b c\n     ]d"
         }),
-        contentAfter: `<pre data-language-id="plaintext">${valueAfter.replaceAll(
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">${valueAfter.replaceAll(
             "\n",
             "<br>"
         )}</pre>[]`,
@@ -330,7 +330,7 @@ test("shift+tab in code block outdents the current line", async () => {
             value: valueAfter,
             textareaRange: 15, // "    some\nco    []de\n    for you"
         }),
-        contentAfter: `<pre data-language-id="plaintext">${valueAfter.replaceAll(
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">${valueAfter.replaceAll(
             "\n",
             "<br>"
         )}</pre>[]`,
@@ -367,7 +367,7 @@ test("shift+tab in selection in code block outdents each selected line", async (
             textareaRange: [1, 6], // "a[\nb c\n]d"
         }),
         config: configWithEmbeddings,
-        contentAfter: `<pre data-language-id="plaintext">a<br>b c<br>d</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b c<br>d</pre>[]`,
     });
 });
 
