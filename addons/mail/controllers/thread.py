@@ -59,8 +59,10 @@ class ThreadController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):
+    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None, context=None):
         thread = self._get_thread_with_access(thread_model, thread_id, mode="read")
+        if context:
+            request.update_context(**context)
         res = request.env["mail.message"]._message_fetch(domain=None, thread=thread, **(fetch_params or {}))
         messages = res.pop("messages")
         if not request.env.user._is_public():
