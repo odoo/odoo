@@ -4,11 +4,11 @@
 from odoo import fields
 
 from odoo.tests import Form, tagged
-from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
+from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
 
 
 @tagged('post_install', '-at_install')
-class TestSaleStockMargin(TestStockValuationCommon):
+class TestSaleStockMargin(TestStockValuationBase):
 
     @classmethod
     def setUpClass(cls):
