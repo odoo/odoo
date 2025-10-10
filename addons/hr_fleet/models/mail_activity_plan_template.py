@@ -19,7 +19,7 @@ class MailActivityPlanTemplate(models.Model):
             if template.responsible_type == 'fleet_manager':
                 raise exceptions.ValidationError(_("Fleet Manager is limited to Employee plans."))
 
-    def _determine_responsible(self, on_demand_responsible, employee):
+    def _determine_responsible(self, on_demand_responsible, on_demand_responsible_fname, employee):
         if self.responsible_type == 'fleet_manager' and self.plan_id.res_model == 'hr.employee':
             employee_id = self.env['hr.employee'].browse(employee._origin.id)
             vehicle = employee_id.car_ids[:1]
@@ -34,4 +34,4 @@ class MailActivityPlanTemplate(models.Model):
                 'error': error,
                 'warning': warning
             }
-        return super()._determine_responsible(on_demand_responsible, employee)
+        return super()._determine_responsible(on_demand_responsible, on_demand_responsible_fname, employee)

@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class MailActivityPlanTemplate(models.Model):
@@ -127,7 +127,7 @@ class MailActivityPlanTemplate(models.Model):
             return base_date + delta
         return base_date - delta
 
-    def _determine_responsible(self, on_demand_responsible, applied_on_record):
+    def _determine_responsible(self, on_demand_responsible, on_demand_responsible_fname, applied_on_record):
         """ Determine the responsible for the activity based on the template
         for the given record and on demand responsible.
 
@@ -143,6 +143,8 @@ class MailActivityPlanTemplate(models.Model):
         coach user of the employee.
 
         :param <res.user> on_demand_responsible: on demand responsible
+        :param str on_demand_responsible_fname: name of the user field of the applied
+            record to find the responsible when not given by 'on_demand_responsible'
         :param recordset applied_on_record: the record on which the activity
             will be created
         :returns: {'responsible': <res.user>, error: str|False}
@@ -150,15 +152,33 @@ class MailActivityPlanTemplate(models.Model):
         """
         self.ensure_one()
         error = False
+        error_detail = False
         warning = False
         if self.responsible_type == 'other':
             responsible = self.responsible_id
         elif self.responsible_type == 'on_demand':
             responsible = on_demand_responsible
+            if not responsible and on_demand_responsible_fname:
+                try:
+                    applied_on_record._find_value_from_field_path(on_demand_responsible_fname)
+                except UserError as err:
+                    error_detail = err.args[0]
+                if not error_detail:
+                    user = applied_on_record.mapped(on_demand_responsible_fname)
+                    if user._name != 'res.users':
+                        error_detail = _(
+                            'The field "%(field_name)s" must be related to the res.users model.',
+                            field_name=on_demand_responsible_fname,
+                        )
+                    elif user:
+                        # if x2m field, assign to the first user found
+                        # (same behavior as Field.traverse_related)
+                        responsible = user[0]
             if not responsible:
-                error = _('No responsible specified for %(activity_type_name)s: %(activity_summary)s.',
+                error = _('No responsible specified for %(activity_type_name)s: %(activity_summary)s.%(error_detail)s',
                           activity_type_name=self.activity_type_id.name,
-                          activity_summary=self.summary or '-')
+                          activity_summary=self.summary or '-',
+                          error_detail=f"\n\n{error_detail}" if error_detail else '')
         else:
             raise ValueError(f'Invalid responsible value {self.responsible_type}.')
         return {
