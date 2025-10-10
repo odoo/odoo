@@ -183,6 +183,14 @@ class StockForecasted(models.AbstractModel):
     def _get_report_moves_fields(self):
         return ['id', 'date']
 
+    def _reconcile_with_reserved_stock(self, lines, ins, reserved_move, reserved_out, demand_out, out, read):
+        # ins passed in to be used for inherited methods but not used in base stock method
+        if reserved_out > 0:
+            demand_out = max(demand_out - reserved_out, 0)
+            in_transit = bool(reserved_move.move_orig_ids)
+            lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
+        return demand_out
+
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents):
@@ -356,12 +364,7 @@ class StockForecasted(models.AbstractModel):
                 taken_from_stock_out = moves_data[out].get('taken_from_stock')
                 reserved_move = moves_data[out].get('reserved_move')
                 demand_out = out.product_qty
-                # Reconcile with the reserved stock.
-                if reserved_out > 0:
-                    demand_out = max(demand_out - reserved_out, 0)
-                    in_transit = bool(reserved_move.move_orig_ids)
-                    lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
-
+                demand_out = self._reconcile_with_reserved_stock(lines, ins_per_product[product.id], reserved_move, reserved_out, demand_out, out, read)
                 if float_is_zero(demand_out, precision_rounding=product_rounding):
                     continue
 

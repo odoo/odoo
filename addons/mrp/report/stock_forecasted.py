@@ -57,3 +57,15 @@ class StockForecasted(models.AbstractModel):
             'name': move[m2o].name,
             'id': move[m2o].id
         }
+
+    def _reconcile_with_reserved_stock(self, lines, ins, reserved_move, reserved_out, demand_out, out, read):
+        if reserved_out > 0 and reserved_move.production_id:
+            demand_out = max(demand_out - reserved_out, 0)
+            in_transit = bool(reserved_move.move_orig_ids)
+            # set the move_in to WH IN move for MOs and delete the move_in after to prevent duplicate line creation
+            for index, in_ in enumerate(ins):
+                lines.append(self._prepare_report_line(reserved_out, move_in=in_['move'], move_out=out, reserved_move=in_['move'], in_transit=in_transit, read=read))
+                del ins[index]
+                return demand_out
+        else:
+            return super()._reconcile_with_reserved_stock(lines, ins, reserved_move, reserved_out, demand_out, out, read)
