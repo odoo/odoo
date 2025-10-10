@@ -6,10 +6,13 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { findFurthest } from "@html_editor/utils/dom_traversal";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
+import { isElement, isZwnbsp } from "@html_editor/utils/dom_info";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history"];
+    static dependencies = ["dom", "history", "split"];
     static defaultConfig = {
         allowFile: true,
     };
@@ -43,8 +46,14 @@ export class FilePlugin extends Plugin {
                 },
             }),
         selectors_for_feff_providers: () => ".o_file_box",
+        after_insert_handlers: this.afterFileInsert.bind(this),
         functional_empty_node_predicates: (node) =>
             node?.nodeName === "SPAN" && node.classList.contains("o_file_box"),
+        is_node_editable_predicates: (node) => {
+            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
+                return false;
+            }
+        },
     };
 
     get recordInfo() {
@@ -88,5 +97,28 @@ export class FilePlugin extends Plugin {
         });
         const { name: filename, mimetype, id } = attachment;
         return renderStaticFileBox(filename, mimetype, url, id);
+    }
+
+    afterFileInsert(nodes) {
+        const fileBox = nodes.find(
+            (node) => node?.nodeName === "SPAN" && node.classList.contains("o_file_box")
+        );
+        if (fileBox) {
+            const splitAroundNode = [];
+            if (isZwnbsp(fileBox.previousSibling)) {
+                splitAroundNode.push(fileBox.previousSibling);
+            }
+            splitAroundNode.push(fileBox);
+            if (isZwnbsp(fileBox.nextSibling)) {
+                splitAroundNode.push(fileBox.nextSibling);
+            }
+            let limit = findFurthest(
+                fileBox,
+                closestBlock(fileBox),
+                (node) => isElement(node) && isBlock(node.parentElement)
+            );
+            limit = this.dependencies.split.splitAroundUntil(splitAroundNode, limit);
+            limit.parentElement.replaceChild(fileBox, limit);
+        }
     }
 }

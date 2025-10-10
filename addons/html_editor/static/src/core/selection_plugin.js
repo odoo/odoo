@@ -204,7 +204,6 @@ export class SelectionPlugin extends Plugin {
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
-        is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
 
     setup() {
@@ -1024,7 +1023,13 @@ export class SelectionPlugin extends Plugin {
     }
 
     isNodeEditable(node) {
-        return this.getResource("is_node_editable_predicates").some((p) => p(node));
+        const results = this.getResource("is_node_editable_predicates")
+            .map((p) => p(node))
+            .filter((r) => r !== undefined);
+        if (!results.length) {
+            return node.parentElement?.isContentEditable;
+        }
+        return results.every((r) => r);
     }
 
     focusEditable() {
@@ -1037,7 +1042,10 @@ export class SelectionPlugin extends Plugin {
 
         const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
         // If selection includes a non-editable element, focusing editor will move cursor to different position.
-        if (!closestNonEditable(editableSelection.anchorNode) && !closestNonEditable(editableSelection.focusNode)) {
+        if (
+            !closestNonEditable(editableSelection.anchorNode) &&
+            !closestNonEditable(editableSelection.focusNode)
+        ) {
             // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
             this.editable.focus({ preventScroll: true });
         }
