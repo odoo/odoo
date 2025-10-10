@@ -944,7 +944,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
         self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
-        self.assertEqual(message.body, Markup('<p>New Body</p><span class="o-mail-Message-edited"></span>'))
+        self.assertEqual(message.body, Markup('<p>New Body <span class="o-mail-Message-edited"></span></p>'))
 
         # void attachments
         ticket_record._message_update_content(
@@ -954,7 +954,7 @@ class TestAPI(ThreadRecipients):
         )
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
-        self.assertEqual(message.body, Markup('<p>Another Body, void attachments</p><span class="o-mail-Message-edited"></span>'))
+        self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited"></span></p>'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
