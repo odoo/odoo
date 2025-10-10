@@ -265,7 +265,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_additional_shop_values(self, values, **kwargs):
         """ Hook to update values used for rendering website_sale.products template """
-        return {}
+        values['products_in_wishlist'] = request.env['product.wishlist'].current().product_id.product_tmpl_id
+        return values
 
     def _get_product_query_params(self, **kwargs):
         """Allow to configure the product page URL's query string."""
@@ -1795,7 +1796,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product_page_image_layout', 'product_page_image_width', 'product_page_grid_columns',
             'product_page_image_spacing', 'product_page_image_ratio',
             'product_page_image_ratio_mobile', 'product_page_cols_order',
-            'product_page_image_roundness', 'product_page_cta_design'
+            'product_page_image_roundness', 'product_page_cta_design',
+            'wishlist_opt_products_design_classes', 'wishlist_grid_columns', 'wishlist_mobile_columns', 'wishlist_gap'
         }
         # Default ppg to 1.
         if 'ppg' in options and not options['ppg']:
@@ -1967,3 +1969,45 @@ class WebsiteSale(payment_portal.PaymentPortal):
             int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
             for pair in attribute_value_pairs
         }
+
+    @route('/shop/compare', type='http', auth='public', website=True, sitemap=False)
+    def product_compare(self, **post):
+        product_ids = [int(i) for i in post.get('products', '').split(',') if i.isdigit()]
+        if not product_ids:
+            return request.redirect('/shop')
+
+        # use search to check read access on each record/ids
+        products = request.env['product.product'].search([('id', 'in', product_ids)])
+        return request.render(
+            'website_sale.product_compare',
+            {
+                'products': products.with_context(display_default_code=False),
+            }
+        )
+
+    @route('/shop/compare/get_product_data', type='jsonrpc', auth='public', website=True)
+    def get_product_data(self, product_ids):
+        products = request.env['product.product'].search([('id', 'in', product_ids)])
+        product_data = []
+
+        for product in products:
+            combination_info = product._get_combination_info_variant()
+            product_data_item = {
+                'id': product.id,
+                'display_name': combination_info['display_name'],
+                'website_url': product.website_url,
+                'image_url': product._get_image_1024_url(),
+                'price': combination_info['price'],
+                'prevent_zero_price_sale': combination_info['prevent_zero_price_sale'],
+                'currency_id': combination_info['currency'].id,
+            }
+            if combination_info['has_discounted_price']:
+                product_data_item['strikethrough_price'] = combination_info['list_price']
+            elif (
+                combination_info.get('compare_list_price')
+                and combination_info['compare_list_price'] > combination_info['price']
+            ):
+                product_data_item['strikethrough_price'] = combination_info['compare_list_price']
+            product_data.append(product_data_item)
+
+        return product_data

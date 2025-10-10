@@ -964,7 +964,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # Trigger cow on website_sale hierarchy for website 1
         self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
 
-        # Simulate website_sale_comparison install
+    # Simulate website_sale_comparison install
         View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'name': 'Add to comparison in product page',
             'mode': 'extension',

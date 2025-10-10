@@ -6,6 +6,7 @@ from . import delivery_carrier
 from . import digest
 from . import ir_http
 from . import payment_token
+from . import product_attribute_category
 from . import product_attribute
 from . import product_document
 from . import product_feed
@@ -19,9 +20,11 @@ from . import product_tag
 from . import product_template
 from . import product_template_attribute_line
 from . import product_template_attribute_value
+from . import product_wishlist
 from . import res_company
 from . import res_config_settings
 from . import res_partner
+from . import res_users
 from . import sale_order
 from . import sale_order_line
 from . import theme_utils
