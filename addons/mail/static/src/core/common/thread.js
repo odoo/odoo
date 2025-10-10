@@ -30,7 +30,6 @@ import { escape } from "@web/core/utils/strings";
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
 /**
  * @typedef {Object} Props
- * @property {boolean} [isInChatWindow=false]
  * @property {number} [jumpPresent=0]
  * @property {number} [jumpToNewMessage=0]
  * @property {"asc"|"desc"} [order="asc"]
@@ -44,7 +43,6 @@ export class Thread extends Component {
     static props = [
         "autofocus?",
         "showDates?",
-        "isInChatWindow?",
         "jumpPresent?",
         "jumpToNewMessage?",
         "thread",
@@ -55,7 +53,6 @@ export class Thread extends Component {
         "messageActions?",
     ];
     static defaultProps = {
-        isInChatWindow: false,
         jumpPresent: 0,
         order: "asc",
         showDates: true,
