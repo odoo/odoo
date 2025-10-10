@@ -608,6 +608,7 @@ export class PaymentScreen extends Component {
     }
     async sendForceDone(line) {
         line.set_payment_status("done");
+        this.pos.paymentTerminalInProgress = false;
         const config = this.pos.config;
         const currency = this.pos.currency;
         const currentOrder = line.pos_order_id;
