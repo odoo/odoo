@@ -6,10 +6,11 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
                         <group>
                             <field name="code" readonly="1"/>
-                            <field name="expiration_date"/>
+                            <field name="expiration_date" invisible="program_type == 'loyalty'"/>
                             <field name="partner_id"/>
                             <label string="Balance" for="points_display"/>
                             <button
@@ -48,7 +49,7 @@
                 <field name="code" readonly="1"/>
                 <field name="create_date" optional="hide"/>
                 <field name="points_display" string="Balance"/>
-                <field name="expiration_date"/>
+                <field name="expiration_date" column_invisible="context.get('program_type') == 'loyalty'"/>
                 <field name="program_id"/>
                 <field name="partner_id"/>
                 <button name="action_coupon_send" string="Send" type="object" icon="fa-paper-plane-o"/>
@@ -67,6 +68,7 @@
                 <separator/>
                 <filter name="active" string="Active" domain="['&amp;', ('program_id.active', '=', True), '&amp;', ('points', '>', 0), '|', ('expiration_date', '>=', 'today'), ('expiration_date', '=', False)]"/>
                 <filter name="inactive" string="Inactive" domain="['|', ('program_id.active', '=', False), '|', ('points', '&lt;=', 0), ('expiration_date', '&lt;', 'today')]"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>
