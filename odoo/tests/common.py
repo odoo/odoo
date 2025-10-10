@@ -314,7 +314,7 @@ class BaseCase(case.TestCase):
         super().__init_subclass__()
         if cls.__module__.startswith('odoo.addons.'):
             if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard'}
+                cls.test_tags = {'standard', 'post_install'}
             cls.test_module = cls.__module__.split('.')[2]
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
