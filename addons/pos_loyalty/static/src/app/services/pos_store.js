@@ -395,7 +395,7 @@ patch(PosStore.prototype, {
             selectedProgram = linkedPrograms[0];
         }
 
-        const orderTotal = this.getOrder().getTotalWithTax();
+        const orderTotal = this.getOrder().priceIncl;
         if (
             selectedProgram &&
             ["gift_card", "ewallet"].includes(selectedProgram.program_type) &&

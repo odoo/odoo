@@ -12,12 +12,16 @@ patch(PosStore.prototype, {
         if (razorpayPaymentMethod && refundedOrder) {
             const paymentIds = refundedOrder.payment_ids || [];
             // Add all the available payment lines in the refunded order if the current order amount is the same as the refunded order
-            if (Math.abs(currentOrder.getTotalDue()) === refundedOrder.amount_total) {
+            if (Math.abs(currentOrder.totalDue) === refundedOrder.amount_total) {
                 paymentIds.forEach((pi) => {
                     if (pi.payment_method_id) {
-                        const paymentLine = currentOrder.addPaymentline(pi.payment_method_id);
-                        paymentLine.setAmount(-pi.amount);
-                        paymentLine.updateRefundPaymentLine(pi);
+                        const result = currentOrder.addPaymentline(pi.payment_method_id);
+                        if (!result.status) {
+                            return;
+                        }
+
+                        result.data.setAmount(-pi.amount);
+                        result.data.updateRefundPaymentLine(pi);
                     }
                 });
             } else {
@@ -27,16 +31,20 @@ patch(PosStore.prototype, {
                     (pi) => pi.payment_method_id.use_payment_terminal === "razorpay"
                 );
                 razorpayPaymentlines.forEach((pi) => {
-                    const currentDue = currentOrder.getDue();
+                    const currentDue = currentOrder.remainingDue;
                     if (currentDue < 0) {
-                        const paymentLine = currentOrder.addPaymentline(pi.payment_method_id);
-                        paymentLine.setAmount(-Math.min(Math.abs(currentDue), pi.amount));
-                        paymentLine.updateRefundPaymentLine(pi);
+                        const result = currentOrder.addPaymentline(pi.payment_method_id);
+                        if (!result.status) {
+                            return false;
+                        }
+
+                        result.data.setAmount(-Math.min(Math.abs(currentDue), pi.amount));
+                        result.data.updateRefundPaymentLine(pi);
                     }
                 });
-                if (currentOrder.getDue() < 0) {
+                if (currentOrder.remainingDue < 0) {
                     paymentIds.forEach((pi) => {
-                        const currentDue = currentOrder.getDue();
+                        const currentDue = currentOrder.remainingDue;
                         if (
                             currentDue < 0 &&
                             pi.payment_method_id &&

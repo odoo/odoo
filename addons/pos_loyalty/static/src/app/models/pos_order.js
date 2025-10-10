@@ -3,7 +3,6 @@ import { patch } from "@web/core/utils/patch";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
-import { computePriceForcePriceInclude } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -384,7 +383,7 @@ patch(PosOrder.prototype, {
                 if (this._validForPointsCorrection(reward, line, rule)) {
                     if (rule.reward_point_mode === "money") {
                         res -= ProductPrice.round(
-                            rule.reward_point_amount * line.getPriceWithTax()
+                            rule.reward_point_amount * line.prices.total_included
                         );
                     } else if (rule.reward_point_mode === "unit") {
                         res += rule.reward_point_amount * line.getQuantity();
@@ -427,7 +426,6 @@ patch(PosOrder.prototype, {
     /**
      * @returns {number} The points that are left for the given coupon for this order.
      */
-    //FIXME use of pos
     _getRealCouponPoints(coupon_id) {
         let points = 0;
         const dbCoupon = this.models["loyalty.card"].get(coupon_id);
@@ -552,16 +550,16 @@ patch(PosOrder.prototype, {
                     (sum, line) =>
                         sum +
                         (line.combo_line_ids.length > 0
-                            ? line.getComboTotalPrice()
-                            : line.getPriceWithTax()),
+                            ? line.comboTotalPrice
+                            : line.prices.total_included),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
                     (sum, line) =>
                         sum +
                         (line.combo_line_ids.length > 0
-                            ? line.getComboTotalPriceWithoutTax()
-                            : line.getPriceWithoutTax()),
+                            ? line.comboTotalPriceWithoutTax
+                            : line.prices.total_excluded),
                     0
                 );
                 const amountCheck =
@@ -604,8 +602,8 @@ patch(PosOrder.prototype, {
                         }
                         orderedProductPaid +=
                             line.combo_line_ids.length > 0
-                                ? line.getComboTotalPrice()
-                                : line.getPriceWithTax();
+                                ? line.comboTotalPrice
+                                : line.prices.total_included;
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -643,7 +641,7 @@ patch(PosOrder.prototype, {
                                 continue;
                             }
                             const pointsPerUnit = ProductPrice.round(
-                                (rule.reward_point_amount * line.getPriceWithTax()) /
+                                (rule.reward_point_amount * line.prices.total_included) /
                                     line.getQuantity()
                             );
                             if (pointsPerUnit > 0) {
@@ -746,8 +744,8 @@ patch(PosOrder.prototype, {
                 }))
             );
         const result = [];
-        const totalWithTax = this.getTotalWithTax();
-        const totalWithoutTax = this.getTotalWithoutTax();
+        const totalWithTax = this.priceIncl;
+        const totalWithoutTax = this.priceExcl;
         const totalIsZero = totalWithTax === 0;
         const globalDiscountLines = this._getGlobalDiscountLines();
         const globalDiscountPercent = globalDiscountLines.length
@@ -951,11 +949,11 @@ patch(PosOrder.prototype, {
             const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
                 ? line.tax_ids.map((t) => t.id)
                 : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
-            discountable += line.getPriceWithTax();
+            discountable += line.prices.total_included;
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }
-            discountablePerTax[taxKey] += line.getBasePrice();
+            discountablePerTax[taxKey] += line.prices.total_excluded;
         }
         return { discountable, discountablePerTax };
     },
@@ -973,7 +971,7 @@ patch(PosOrder.prototype, {
                 applicableProductIds.has(line.getProduct().id)
         );
         return filtered_lines.toSorted(
-            (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
+            (lineA, lineB) => lineA.comboTotalPrice / lineA.qty - lineB.comboTotalPrice / lineB.qty
         )[0];
     },
     /**
@@ -986,9 +984,9 @@ patch(PosOrder.prototype, {
         }
         const taxKey = cheapestLine.tax_ids.map((t) => t.id);
         return {
-            discountable: cheapestLine.getComboTotalPriceWithoutTax(),
+            discountable: cheapestLine.comboTotalPriceWithoutTax,
             discountablePerTax: Object.fromEntries([
-                [taxKey, cheapestLine.getComboTotalPriceWithoutTax()],
+                [taxKey, cheapestLine.comboTotalPriceWithoutTax],
             ]),
         };
     },
@@ -1029,7 +1027,7 @@ patch(PosOrder.prototype, {
             if (!line.getQuantity() || !line.price_unit) {
                 continue;
             }
-            remainingAmountPerLine[line.uuid] = line.getPriceWithTax();
+            remainingAmountPerLine[line.uuid] = line.prices.total_included;
             const product_id = line.combo_parent_id?.product_id.id || line.getProduct().id;
             if (
                 applicableProductIds.has(product_id) ||
@@ -1100,7 +1098,8 @@ patch(PosOrder.prototype, {
                 discountablePerTax[taxKey] = 0;
             }
             discountablePerTax[taxKey] +=
-                line.getBasePrice() * (remainingAmountPerLine[line.uuid] / line.getPriceWithTax());
+                line.prices.total_excluded *
+                (remainingAmountPerLine[line.uuid] / line.prices.total_included);
         }
         return { discountable, discountablePerTax };
     },
@@ -1139,7 +1138,7 @@ patch(PosOrder.prototype, {
             return _t("Unknown discount type");
         }
         let { discountable, discountablePerTax } = getDiscountable(reward);
-        discountable = Math.min(this.getTotalWithTax(), discountable);
+        discountable = Math.min(this.priceIncl, discountable);
         if (floatIsZero(discountable)) {
             return [];
         }
@@ -1166,20 +1165,23 @@ patch(PosOrder.prototype, {
         // These are considered payments and do not require to be either taxed or split by tax
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
-            const new_price = computePriceForcePriceInclude(
-                discountProduct.taxes_id,
-                -Math.min(maxDiscount, discountable),
-                discountProduct,
-                {},
-                this.company,
-                this.currency,
-                this.models
-            );
+            const price = discountProduct.getTaxDetails({
+                overridedValues: {
+                    tax_ids: discountProduct.taxes_id,
+                    price_unit: -Math.min(maxDiscount, discountable),
+                    special_mode: "total_included",
+                },
+            });
+
+            let newPrice = price.total_excluded;
+            newPrice += price.taxes_data
+                .filter((tax) => tax.price_include)
+                .reduce((sum, tax) => (sum += tax.tax_amount), 0);
 
             return [
                 {
                     product_id: discountProduct,
-                    price_unit: new_price,
+                    price_unit: newPrice,
                     qty: 1,
                     reward_id: reward,
                     is_reward_line: true,
@@ -1202,7 +1204,7 @@ patch(PosOrder.prototype, {
 
             lst.push({
                 product_id: discountProduct,
-                price_unit: -(Math.min(this.getTotalWithTax(), entry[1]) * discountFactor),
+                price_unit: -(Math.min(this.priceIncl, entry[1]) * discountFactor),
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,

@@ -35,7 +35,7 @@ export class ManageGiftCardPopup extends Component {
             lockGiftCardFields: false,
             loading: false,
             inputValue: this.props.startingValue,
-            amountValue: this.props.line.getPriceWithTax().toString(),
+            amountValue: this.props.line.prices.total_included.toString(),
             error: false,
             amountError: false,
             expirationDate: luxon.DateTime.now().plus({ year: 1 }),

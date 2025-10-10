@@ -52,7 +52,8 @@ export class SplitBillScreen extends Component {
             const currentQty = this.qtyTracker[uuid] || 0;
             const nextQty = currentQty === maxQty ? 0 : currentQty + 1;
             this.qtyTracker[uuid] = Math.min(nextQty, maxQty);
-            this.priceTracker[uuid] = (line.getPriceWithTax() / line.qty) * this.qtyTracker[uuid];
+            this.priceTracker[uuid] =
+                (line.prices.total_included / line.qty) * this.qtyTracker[uuid];
             this.setLineQtyStr(line);
         }
     }
