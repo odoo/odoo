@@ -2,7 +2,7 @@ import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { expect, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -114,11 +114,13 @@ test("Refresh the overlay buttons when toggling the mobile preview", async () =>
 
     await contains(":iframe .g-col-lg-4").click();
     await contains("[data-action='mobile']").click();
+    await animationFrame();
     expect(".overlay .o_send_back, .overlay .o_bring_front").toHaveCount(0);
     expect(".overlay .fa-angle-left").toHaveCount(1);
     expect(".overlay .fa-angle-right").toHaveCount(1);
 
     await contains("[data-action='mobile']").click();
+    await animationFrame();
     expect(".overlay .o_send_back").toHaveCount(1);
     expect(".overlay .o_bring_front").toHaveCount(1);
     expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);

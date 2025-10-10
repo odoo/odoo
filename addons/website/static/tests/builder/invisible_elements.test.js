@@ -1,8 +1,8 @@
-import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { getSnippetStructure, waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { unformat } from "@html_editor/../tests/_helpers/format";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
@@ -12,12 +12,18 @@ import {
     invisibleEl,
     setupWebsiteBuilder,
     waitForSnippetDialog,
+    addPlugin,
+    TestInvisibleElementPlugin,
+    styleDeviceInvisible,
+    styleConditionalInvisible,
 } from "./website_helpers";
+import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 
 defineWebsiteModels();
 
 test("click on invisible elements in the invisible elements tab (check eye icon)", async () => {
-    await setupWebsiteBuilder(`${invisibleEl}`);
+    addPlugin(TestInvisibleElementPlugin);
+    await setupWebsiteBuilder(invisibleEl);
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry")).toHaveText(
         "Invisible Element"
     );
@@ -37,9 +43,9 @@ test("click on invisible elements in the invisible elements tab (check sidebar t
         selector: ".s_test",
         template: xml`<BuilderButton classAction="'my-custom-class'"/>`,
     });
-    await setupWebsiteBuilder(
-        '<div class="s_test d-lg-none o_snippet_desktop_invisible" data-invisible="1">a</div>'
-    );
+    await setupWebsiteBuilder('<div class="s_test d-lg-none o_snippet_desktop_invisible">a</div>', {
+        styleContent: styleDeviceInvisible,
+    });
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect("button:contains('Style')").toHaveClass("active");
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
@@ -52,7 +58,7 @@ test("Add an element on the invisible elements tab", async () => {
             name: "Test",
             groupName: "a",
             content: unformat(
-                `<div class="s_popup_test o_snippet_invisible" data-snippet="s_popup_test" data-name="Popup">
+                `<div class="s_popup_test s_invisible_el" data-snippet="s_popup_test" data-name="Popup">
                     <div class="test_a">Hello</div>
                 </div>`
             ),
@@ -63,6 +69,7 @@ test("Add an element on the invisible elements tab", async () => {
         selector: "*",
         dropNear: "section",
     });
+    addPlugin(TestInvisibleElementPlugin);
     await setupWebsiteBuilder(`${invisibleEl} <section><p>Text</p></section>`, {
         snippets: {
             snippet_groups: [
@@ -92,8 +99,9 @@ test("Add an element on the invisible elements tab", async () => {
 });
 
 test("mobile and desktop invisible elements panel", async () => {
+    addPlugin(TestInvisibleElementPlugin);
     await setupWebsiteBuilder(`
-        <div class="o_snippet_invisible" data-name="Popup1"></div>
+        <div class="s_invisible_el" data-name="Popup1"></div>
         <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
         <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
     `);
@@ -102,6 +110,7 @@ test("mobile and desktop invisible elements panel", async () => {
         "Popup3",
     ]);
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
         "Popup1",
         "Popup2",
@@ -109,21 +118,23 @@ test("mobile and desktop invisible elements panel", async () => {
 });
 
 test("mobile and desktop option container", async () => {
-    await setupWebsiteBuilder(`
-        <section class="o_snippet_desktop_invisible"></section>
-    `);
+    await setupWebsiteBuilder(
+        `<section class="o_snippet_desktop_invisible d-lg-none">x</section>`,
+        { styleContent: styleDeviceInvisible }
+    );
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
     expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
+    await animationFrame();
     expect(".options-container").not.toHaveCount();
 });
 
 test("desktop option undo after override", async () => {
-    const builder = await setupWebsiteBuilder(`
-        <section>test</section>
-    `);
+    const builder = await setupWebsiteBuilder(`<section>test</section>`, {
+        styleContent: styleDeviceInvisible,
+    });
     await contains(":iframe section").click();
     await contains(
         "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
@@ -136,12 +147,15 @@ test("desktop option undo after override", async () => {
 });
 
 test("keep the option container of a visible snippet even if there are hidden snippet on the page", async () => {
-    await setupWebsiteBuilder(`
+    await setupWebsiteBuilder(
+        `
         <section id="my_el">
             <p>TEST</p>
         </section>
-        <section class="o_snippet_mobile_invisible"></section>
-    `);
+        <section class="o_snippet_mobile_invisible d-none d-lg-block"></section>
+        `,
+        { styleContent: styleDeviceInvisible }
+    );
     await contains(":iframe #my_el").click();
     expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
@@ -149,20 +163,95 @@ test("keep the option container of a visible snippet even if there are hidden sn
 });
 
 test("invisible elements efficiency", async () => {
-    patchWithCleanup(InvisibleElementsPanel.prototype, {
-        updateInvisibleElementsPanel(invisibleEls) {
-            if (invisibleEls.length) {
-                expect.step("update invisible panel");
-            }
-            return super.updateInvisibleElementsPanel(...arguments);
+    patchWithCleanup(VisibilityPlugin.prototype, {
+        getInvisibleEntries() {
+            expect.step("update invisible panel");
+            return super.getInvisibleEntries();
         },
     });
     await setupWebsiteBuilder(`
-        <div class="o_snippet_invisible" data-name="Popup1"></div>
+        <div class="s_invisible_el" data-name="Popup1"></div>
         <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
         <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
     `);
     expect.verifySteps(["update invisible panel"]);
     await contains("button[data-action='mobile']").click();
     expect.verifySteps(["update invisible panel"]);
+});
+
+test("set section desktop invisible then undo redo should show consistent eye", async () => {
+    const builder = await setupWebsiteBuilder(`<section>test</section>`, {
+        styleContent: styleDeviceInvisible,
+    });
+    await contains(":iframe section").click();
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(":iframe section").not.toBeVisible();
+    undo(builder.getEditor());
+    await animationFrame();
+    expect(".o_we_invisible_entry").toHaveCount(0);
+    expect(":iframe section").toBeVisible();
+    redo(builder.getEditor());
+    await animationFrame();
+    expect(":iframe section").toBeVisible();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+});
+
+test("set section desktop invisible then show then set desktop visible then undo should show consistent eye", async () => {
+    const builder = await setupWebsiteBuilder(`<section>test</section>`, {
+        styleContent: styleDeviceInvisible,
+    });
+    await contains(":iframe section").click();
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(":iframe section").not.toBeVisible();
+
+    await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(":iframe section").toBeVisible();
+
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(".o_we_invisible_entry").toHaveCount(0);
+    expect(":iframe section").toBeVisible();
+
+    undo(builder.getEditor());
+    await animationFrame();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(":iframe section").toBeVisible();
+});
+
+test("set section desktop invisible then show then set conditionally invisible then hide then switch to mobile should show consistent eye", async () => {
+    const builder = await setupWebsiteBuilder(`<section>test</section>`, {
+        styleContent: styleDeviceInvisible + styleConditionalInvisible,
+    });
+    await contains(":iframe section").click();
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(":iframe section").not.toBeVisible();
+
+    await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(":iframe section").toBeVisible();
+
+    await contains("[data-label='Visibility'] button.dropdown").click();
+    await contains("div.dropdown-item:contains(Conditionally)").click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(":iframe section").toBeVisible();
+
+    await contains(".o_we_invisible_entry i.fa-eye").click();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(":iframe section").not.toBeVisible();
+
+    undo(builder.getEditor());
+    await animationFrame();
+    expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(":iframe section").toBeVisible();
 });

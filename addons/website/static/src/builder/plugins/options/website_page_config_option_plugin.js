@@ -40,15 +40,13 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                 groups: ["website.group_website_designer"],
             }),
         ],
-        target_show: this.onTargetVisibilityToggle.bind(this, true),
-        target_hide: this.onTargetVisibilityToggle.bind(this, false),
         save_handlers: this.onSave.bind(this),
     };
 
     getVisibilityItem() {
         const isHidden = this.document
             .querySelector("#wrapwrap > header")
-            .classList.contains("o_snippet_invisible");
+            .classList.contains("d-none");
         const isOverlay = this.document
             .getElementById("wrapwrap")
             .classList.contains("o_header_overlay");
@@ -56,9 +54,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     }
 
     getFooterVisibility() {
-        return this.document
-            .querySelector("#wrapwrap > footer")
-            .classList.contains("o_snippet_invisible");
+        return this.document.querySelector("#wrapwrap > footer").classList.contains("d-none");
     }
 
     getColorValue(attribute, classPrefix) {
@@ -107,24 +103,6 @@ class WebsitePageConfigOptionPlugin extends Plugin {
     setFooterVisible(show) {
         const footerEl = this.document.querySelector("#wrapwrap > footer");
         footerEl.classList.toggle("d-none", !show);
-        footerEl.classList.toggle("o_snippet_invisible", !show);
-        this.dependencies.visibility.onOptionVisibilityUpdate(footerEl, show);
-    }
-
-    onTargetVisibilityToggle(show, target) {
-        if (show && target.matches("#wrapwrap > header")) {
-            this.dependencies.builderActions.applyAction("setWebsiteHeaderVisibility", {
-                editingElement: target,
-                value: "regular",
-                isPreviewing: false,
-            });
-        }
-        if (show && target.matches("#wrapwrap > footer")) {
-            this.dependencies.builderActions.applyAction("setWebsiteFooterVisible", {
-                editingElement: target,
-                isPreviewing: false,
-            });
-        }
     }
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
@@ -161,8 +139,6 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
     setHeaderVisible(shouldApply) {
         const headerEl = this.document.querySelector("#wrapwrap > header");
         headerEl.classList.toggle("d-none", shouldApply);
-        headerEl.classList.toggle("o_snippet_invisible", shouldApply);
-        this.visibility.onOptionVisibilityUpdate(headerEl, !shouldApply);
     }
 
     resetHeaderColor() {

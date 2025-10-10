@@ -10,7 +10,7 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { after, describe } from "@odoo/hoot";
+import { describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
@@ -33,6 +33,7 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { WebsiteBuilder } from "@website/builder/website_builder";
 
 class Website extends models.Model {
     _name = "website";
@@ -51,7 +52,25 @@ class IrUiView extends models.Model {
 export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
-    '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
+    '<div class="s_invisible_el" data-name="Invisible Element" style="display: none">Invisible</div>';
+export class TestInvisibleElementPlugin extends Plugin {
+    static id = "testInvisibleElement";
+    resources = {
+        invisible_items: {
+            selector: ".s_invisible_el",
+            toggle: (el, show) => (el.style.display = show ? null : "none"),
+        },
+    };
+}
+export const styleConditionalInvisible = `.o_conditional_hidden { display: none !important; }`;
+export const styleDeviceInvisible = `
+    .d-none { display: none !important; }
+    @media (min-width: 992px) {
+        .d-lg-none { display: none !important; }
+        .d-lg-block { display: block !important; }
+    }
+    .o_snippet_override_invisible { display: block !important; }
+`;
 
 export function defineWebsiteModels() {
     describe.current.tags("desktop");
@@ -281,9 +300,12 @@ async function openBuilderSidebar(editAssetsLoaded) {
 }
 
 export function addPlugin(Plugin) {
-    registry.category("website-plugins").add(Plugin.id, Plugin);
-    after(() => {
-        registry.category("website-plugins").remove(Plugin.id);
+    patchWithCleanup(WebsiteBuilder.prototype, {
+        get builderProps() {
+            const props = super.builderProps;
+            props.Plugins.push(Plugin);
+            return props;
+        },
     });
 }
 
@@ -315,10 +337,7 @@ export function addOption({
         title,
         reloadTarget,
     });
-    registry.category("website-plugins").add(pluginId, Class);
-    after(() => {
-        registry.category("website-plugins").remove(pluginId);
-    });
+    addPlugin(Class);
 }
 function makeOptionPlugin({
     pluginId,
@@ -367,10 +386,7 @@ export function addActionOption(actions = {}) {
             builder_actions: actions,
         };
     }
-    registry.category("website-plugins").add(pluginId, P);
-    after(() => {
-        registry.category("website-plugins").remove(P);
-    });
+    addPlugin(P);
 }
 
 export function addDropZoneSelector(selector) {
@@ -382,11 +398,7 @@ export function addDropZoneSelector(selector) {
             dropzone_selector: [selector],
         };
     }
-
-    registry.category("website-plugins").add(pluginId, P);
-    after(() => {
-        registry.category("website-plugins").remove(P);
-    });
+    addPlugin(P);
 }
 
 export async function setupWebsiteBuilderWithDummySnippet(content) {

@@ -1,6 +1,5 @@
 import { omit } from "@web/core/utils/objects";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 
 export class DisableSnippetsPlugin extends Plugin {
     static id = "disableSnippets";
@@ -10,7 +9,6 @@ export class DisableSnippetsPlugin extends Plugin {
         on_removed_handlers: this.disableUndroppableSnippets.bind(this),
         post_undo_handlers: this.disableUndroppableSnippets.bind(this),
         post_redo_handlers: this.disableUndroppableSnippets.bind(this),
-        on_mobile_preview_clicked: withSequence(20, this.disableUndroppableSnippets.bind(this)),
     };
 
     setup() {
