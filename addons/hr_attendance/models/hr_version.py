@@ -19,7 +19,33 @@ class HrVersion(models.Model):
          domain=_domain_current_countries,
          groups="hr.group_hr_manager",
          tracking=True,
+         compute="_compute_ruleset",
+         store=True,
+         readonly=False,
     )
+
+    @api.depends('country_id', 'employee_id')
+    def _compute_ruleset(self):
+        default_ruleset_country = {}
+        for version in self:
+            if not version.employee_id:
+                version.ruleset_id = False
+                continue
+
+            ruleset = version.ruleset_id
+            version_country = version.employee_id.company_id.country_id
+            if not ruleset or (ruleset.country_id != version_country
+                and (not version.employee_id.company_id.country_id or ruleset.country_id)):
+                default_ruleset = default_ruleset_country.get(version_country.id)
+                if default_ruleset is None:
+                    if version_country:
+                        default_ruleset = default_ruleset_country[version_country.id] = \
+                            self.env['hr.attendance.overtime.ruleset'].search([('country_id', '=', version_country.id)], limit=1)
+                    if default_ruleset is None:
+                        default_ruleset = default_ruleset_country[version_country.id if version_country else False] = \
+                            self.env['hr.attendance.overtime.ruleset'].search([('country_id', '=', False)], limit=1)
+
+                version.ruleset_id = default_ruleset
 
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):

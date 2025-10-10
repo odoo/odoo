@@ -116,6 +116,7 @@ class HrAttendanceOvertimeRule(models.Model):
     sequence = fields.Integer(default=10)
 
     ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset', required=True, index=True)
+    # Deprecated
     company_id = fields.Many2one(related='ruleset_id.company_id')
 
     paid = fields.Boolean("Pay Extra Hours")
@@ -184,7 +185,7 @@ class HrAttendanceOvertimeRule(models.Model):
 
         if self.timing_type in ['work_days', 'non_work_days']:
 
-            unusual_days = self.company_id.resource_calendar_id._get_unusual_days(start_dt, end_dt)
+            unusual_days = employee.company_id.resource_calendar_id._get_unusual_days(start_dt, end_dt)
 
             attendance_intervals = []
             for date, day_attendances in attendances.filtered(
