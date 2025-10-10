@@ -407,13 +407,27 @@
         </div>
     </template>
 
+    <template id="portal.profile_picture_card" name="Profile picture card">
+        <div class="o_profile_picture_card">
+            <div class="d-flex justify-content-center">
+                <input type="file" class="o_file_upload d-none" t-att-name="image_field" accept="image/*"/>
+                <img class="o_profile_picture_img w-75 mb-3" t-att-src="image_src" />
+            </div>
+            <div class="text-center">
+                <a class="btn o_portal_profile_editor btn-primary d-inline-block" t-att-data-user-id="request.env.user.id">
+                    <i class="fa fa-pencil me-2"/> Edit Profile Picture
+                </a>
+            </div>
+        </div>
+    </template>
+
     <template id="portal.portal_my_details" name="Contact Details">
         <t t-set="no_footer" t-value="1"/>
         <t t-call="portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
             <div class="o_customer_address_fill">
                 <div class="row">
-                    <div name="address_div" class="oe_clear_stucture col-12 col-lg-8">
+                    <div name="address_div" class="oe_clear_stucture col-12">
                         <div>
                             <div id="errors"/> <!-- for js -->
                             <form
@@ -424,10 +438,26 @@
                                 t-att-data-company-country-code="res_company.country_id.code"
                                 t-att-data-submit-url="'/my/address/submit'"
                             >
-                                <div name="address_details" class="row">
-                                    <t t-call="portal.address_form_fields"/>
+                                <div name="address_details" class="row d-flex flex-column-reverse flex-md-row">
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <t t-call="portal.address_form_fields"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card o_card_people mt-3">
+                                            <div class="card-body">
+                                                <t t-call="portal.profile_picture_card">
+                                                    <t t-set="image_field" t-value="'image_1920'"/>
+                                                    <t t-set="image_src" t-value="website.image_url(partner_sudo, 'avatar_128')"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <t t-call="portal.address_footer"/>
+                                <div class="col-md-9">
+                                    <t t-call="portal.address_footer"/>
+                                </div>
                             </form>
                         </div>
                     </div>

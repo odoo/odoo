@@ -187,6 +187,16 @@ class CustomerPortal(Controller):
         values.update(self._prepare_home_portal_values([]))
         return request.render("portal.portal_my_home", values)
 
+    @http.route('/my/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
+    def save_edited_profile(self, **kwargs):
+        user_id = int(kwargs.get('user_id', 0))
+        if 'image_1920' in kwargs:
+            value = {
+                'image_1920': kwargs.get('image_1920'),
+            }
+            if user_id and request.env.user.id == user_id:
+                request.env.user.write(value)
+
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, **kwargs):
         response = request.render(
