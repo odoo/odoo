@@ -134,14 +134,14 @@
                 <ItemDescription t-out="line['ItemDescription']"/>
                 <Quantity t-out="line['Quantity']"/>
                 <UnitOfMeasure t-out="line.get('UnitOfMeasure')"/>
-                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], file_currency.decimal_places)"/>
-                <TotalCost t-out="float_repr(refund_multiplier*line['TotalCost'], file_currency.decimal_places)"/>
+                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], 8)"/>
+                <TotalCost t-out="float_repr(refund_multiplier*line['TotalCost'], 8)"/>
                 <DiscountsAndRebates t-if="line.get('DiscountsAndRebates')">
                     <t t-foreach="line['DiscountsAndRebates']" t-as="discount">
                         <Discount>
                             <DiscountReason t-out="discount['DiscountReason']"/>
                             <DiscountRate t-out="discount.get('DiscountRate')"/>
-                            <DiscountAmount t-out="float_repr(refund_multiplier*discount['DiscountAmount'], file_currency.decimal_places)"/>
+                            <DiscountAmount t-out="float_repr(refund_multiplier*discount['DiscountAmount'], 8)"/>
                         </Discount>
                     </t>
                 </DiscountsAndRebates>
@@ -150,11 +150,11 @@
                         <Charge>
                             <ChargeReason t-out="charge['ChargeReason']"/>
                             <ChargeRate t-out="charge.get('ChargeRate')"/>
-                            <ChargeAmount t-out="float_repr(refund_multiplier*charge['ChargeAmount'], file_currency.decimal_places)"/>
+                            <ChargeAmount t-out="float_repr(refund_multiplier*charge['ChargeAmount'], 8)"/>
                         </Charge>
                     </t>
                 </Charges>
-                <GrossAmount t-out="float_repr(refund_multiplier*line['GrossAmount'], file_currency.decimal_places)"/>
+                <GrossAmount t-out="float_repr(refund_multiplier*line['GrossAmount'], 8)"/>
                 <TaxesWithheld t-if="line.get('TaxesWithheld')">
                     <t t-foreach="line['TaxesWithheld']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
                 </TaxesWithheld>
