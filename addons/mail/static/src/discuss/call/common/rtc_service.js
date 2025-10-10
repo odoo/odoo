@@ -1674,7 +1674,12 @@ export const rtcService = {
                 }
             }
         );
+        this._extra_bus_events(rtc, services);
         return rtc;
+    },
+
+    _extra_bus_events(rtc, services) {
+        // This method is intended to be patched to add extra bus events
     },
 };
 
