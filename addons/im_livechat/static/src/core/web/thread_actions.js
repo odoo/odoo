@@ -7,8 +7,8 @@ import { joinChannelAction } from "@mail/discuss/core/web/thread_actions";
 
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
-    condition: ({ owner, thread }) =>
-        thread?.channel?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, owner }) =>
+        channel?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
@@ -18,18 +18,16 @@ registerThreadAction("livechat-info", {
 });
 registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
-    condition: ({ owner, thread }) =>
-        thread?.channel?.channel_type === "livechat" &&
-        !thread.livechat_end_dt &&
-        !owner.isDiscussContent,
+    condition: ({ channel, owner }) =>
+        channel?.channel_type === "livechat" && !channel.livechat_end_dt && !owner.isDiscussContent,
     dropdown: true,
     dropdownMenuClass: "p-0",
     dropdownTemplate: "im_livechat.LivechatStatusSelection",
     dropdownTemplateParams: ({ thread }) => ({ livechatThread: thread }),
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
-    icon: ({ store, thread }) => {
+    icon: ({ channel, store }) => {
         const btn = store.livechatStatusButtons.find(
-            (btn) => btn.status === thread.livechat_status
+            (btn) => btn.status === channel.livechat_status
         );
         if (!btn) {
             return undefined;
@@ -47,12 +45,12 @@ registerThreadAction("livechat-status", {
 });
 
 patch(joinChannelAction, {
-    async open({ store, thread }) {
-        if (thread.livechat_status === "need_help") {
+    async open({ channel, store, thread }) {
+        if (channel.livechat_status === "need_help") {
             const hasJoined = await store.env.services.orm.call(
                 "discuss.channel",
                 "livechat_join_channel_needing_help",
-                [[thread.id]]
+                [[channel.id]]
             );
             if (!hasJoined && thread.isDisplayed) {
                 store.env.services.notification.add(

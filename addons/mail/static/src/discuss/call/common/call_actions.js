@@ -325,7 +325,8 @@ export class CallAction extends Action {
     }
 
     get params() {
-        return Object.assign(super.params, { thread: this.threadFn() });
+        const thread = this.threadFn();
+        return Object.assign(super.params, { channel: thread?.channel, thread });
     }
 
     get isTracked() {
