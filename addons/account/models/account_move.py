@@ -2581,20 +2581,43 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
-        payment_terms = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
-        return self.currency_id == currency \
-            and self.move_type in self._early_payment_discount_move_types() \
-            and self.invoice_payment_term_id.early_discount \
-            and (
+        return self._is_eligible_for_early_payment_discount_batched(currency, reference_date)[self.id]
+
+    def _is_eligible_for_early_payment_discount_batched(self, currency, reference_date):
+        is_eligible_by_move_id = {move.id: False for move in self}
+        move_types_for_epd = self._early_payment_discount_move_types()
+        eligible_moves = self.filtered(lambda m:
+                                       m.currency_id == currency
+                                       and m.move_type in move_types_for_epd
+                                       and m.invoice_payment_term_id.early_discount
+                                       )
+        if not eligible_moves:
+            return is_eligible_by_move_id
+
+        # A move is not eligible if any of its payment term lines are reconciled
+        unreconciled_pt_lines = self.env['account.move.line'].search([
+            ('move_id', 'in', eligible_moves.ids),
+            ('display_type', '=', 'payment_term'),
+        ]).filtered(lambda line: line.amount_residual != 0)
+
+        pt_lines_by_move = unreconciled_pt_lines.grouped('move_id')
+        for move in eligible_moves:
+            move_payment_terms = pt_lines_by_move.get(move)
+            if not move_payment_terms:
+                continue
+
+            first_payment_term = fields.first(move_payment_terms)
+            if (
                 not reference_date
-                or not self.invoice_date
+                or not move.invoice_date
                 or (
-                    (existing_discount_date := fields.first(payment_terms).discount_date)
-                    and
-                    reference_date <= existing_discount_date
+                    (existing_discount_date := first_payment_term.discount_date)
+                    and existing_discount_date >= reference_date
                 )
-            ) \
-            and not (payment_terms.sudo().matched_debit_ids + payment_terms.sudo().matched_credit_ids)
+            ):
+                is_eligible_by_move_id[move.id] = True
+
+        return is_eligible_by_move_id
 
     def _early_payment_discount_move_types(self):
         return ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
