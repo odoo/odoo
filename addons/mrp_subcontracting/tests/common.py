@@ -44,6 +44,7 @@ class TestMrpSubcontractingCommon(TransactionCase):
             bom_line.product_id = cls.comp2
             bom_line.product_qty = 1
         cls.bom = bom_form.save()
+        cls.bom.consumption = 'strict'
 
         # Create a BoM for cls.comp2
         cls.comp2comp = cls.env['product.product'].create({
