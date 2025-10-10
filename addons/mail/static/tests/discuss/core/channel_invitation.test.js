@@ -174,3 +174,35 @@ test("unnamed group chat should display correct name just after being invited", 
         text: "You have been invited to #Jane and Mitchell Admin",
     });
 });
+
+test("can invite peoples in self chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId_1 });
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            name: "TestChannel",
+            channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+            channel_type: "chat",
+        },
+        {
+            name: "TestChannel 2",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ guest_id: guestId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelIds[0]);
+    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await insertText(".o-discuss-ChannelInvitation-search", "TestPartner");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click("button[title='Start a Conversation']:enabled");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "TestPartner" });
+});
