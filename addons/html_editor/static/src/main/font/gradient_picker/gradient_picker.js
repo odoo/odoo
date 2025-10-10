@@ -22,6 +22,7 @@ export class GradientPicker extends Component {
     setup() {
         this.state = useState({
             type: "linear",
+            repeating: false,
             angle: 135,
             currentColorIndex: 0,
             size: "closest-side",
@@ -65,19 +66,31 @@ export class GradientPicker extends Component {
             this.colors.push({ hex: rgbaToHex(color[1]), percentage: color[2].replace("%", "") });
         }
 
-        const isLinear = gradient.startsWith("linear-gradient(");
-        if (isLinear) {
+        const isLinear =
+            gradient.startsWith("linear-gradient(") ||
+            gradient.startsWith("repeating-linear-gradient(");
+        const isRadial =
+            gradient.startsWith("radial-gradient(") ||
+            gradient.startsWith("repeating-radial-gradient(");
+        const isConic =
+            gradient.startsWith("conic-gradient(") ||
+            gradient.startsWith("repeating-conic-gradient(");
+
+        this.state.type = isLinear ? "linear" : isRadial ? "radial" : "conic";
+        this.state.repeating = gradient.startsWith("repeating-");
+
+        if (isRadial) {
+            const size = gradient.match(/(closest|farthest)-(side|corner)/);
+            this.state.size = size ? size[0] : "farthest-corner";
+        }
+        if (isLinear || isConic) {
             const angle = gradient.match(/(-?[0-9]+)deg/);
             if (angle) {
-                this.state.angle = parseInt(angle[1]);
+                this.state.angle = isLinear ? parseInt(angle[1]) : (parseInt(angle[1]) + 630) % 360;
             }
-        } else {
-            this.state.type = "radial";
-            const sizeMatch = gradient.match(/(closest|farthest)-(side|corner)/);
-            const size = sizeMatch ? sizeMatch[0] : "farthest-corner";
-            this.state.size = size;
-
-            const position = gradient.match(/ at ([0-9]+)% ([0-9]+)%/) || ["", "50", "50"];
+        }
+        if (isRadial || isConic) {
+            const position = gradient.match(/ at (-?[0-9]+)% (-?[0-9]+)%/) || ["", "50", "50"];
             this.positions.x = position[1];
             this.positions.y = position[2];
         }
@@ -90,10 +103,15 @@ export class GradientPicker extends Component {
         this.onColorGradientChange();
     }
 
+    toggleRepeating() {
+        this.state.repeating = !this.state.repeating;
+        this.onColorGradientChange();
+    }
+
     onAngleChange(ev) {
         const angle = parseInt(ev.target.value);
         if (!isNaN(angle)) {
-            const clampedAngle = Math.min(Math.max(angle, 0), 360);
+            const clampedAngle = Math.min(Math.max(angle, -360), 360);
             ev.target.value = clampedAngle;
             this.state.angle = clampedAngle;
             this.onColorGradientChange();
@@ -103,7 +121,7 @@ export class GradientPicker extends Component {
     onPositionChange(position, ev) {
         const inputValue = parseFloat(ev.target.value);
         if (!isNaN(inputValue)) {
-            const clampedValue = Math.min(Math.max(inputValue, 0), 100);
+            const clampedValue = Math.min(Math.max(inputValue, -100), 200);
             ev.target.value = clampedValue;
             this.positions[position] = clampedValue;
             this.onColorGradientChange();
@@ -207,9 +225,13 @@ export class GradientPicker extends Component {
             sliderThumbStyle += `${selector}::-moz-range-thumb { ${style} }\n`;
         }
 
+        const suffixe = this.state.repeating ? "repeating-" : "";
         this.cssGradients.preview = `linear-gradient(90deg, ${gradientColors})`;
-        this.cssGradients.linear = `linear-gradient(${this.state.angle}deg, ${gradientColors})`;
-        this.cssGradients.radial = `radial-gradient(circle ${this.state.size} at ${this.positions.x}% ${this.positions.y}%, ${gradientColors})`;
+        this.cssGradients.linear = `${suffixe}linear-gradient(${this.state.angle}deg, ${gradientColors})`;
+        this.cssGradients.radial = `${suffixe}radial-gradient(circle ${this.state.size} at ${this.positions.x}% ${this.positions.y}%, ${gradientColors})`;
+        this.cssGradients.conic = `${suffixe}conic-gradient(from ${this.state.angle + 90}deg at ${
+            this.positions.x
+        }% ${this.positions.y}%, ${gradientColors})`;
         this.cssGradients.sliderThumbStyle = sliderThumbStyle;
     }
 
