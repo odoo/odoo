@@ -383,6 +383,17 @@ registry.category("web_tour.tours").add("test_order_table_assignement_meal", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_sub_categories_products_displayed", {
+    steps: () =>
+        [
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickCategory("Miscellaneous"),
+            ProductPage.clickProduct("Coca-Cola"),
+            ProductPage.clickCategory("Parent"),
+            ProductPage.clickProduct("Fanta"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_mobile_self_order_preparation_changes", {
     steps: () =>
         [
