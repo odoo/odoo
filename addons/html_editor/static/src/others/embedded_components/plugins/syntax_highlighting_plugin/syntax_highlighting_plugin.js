@@ -55,6 +55,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
             // Save only the `<pre>` element, with information to rebuild the
             // embedded component, so the saved DOM is independent of this plugin.
             const pre = codeBlock.querySelector("pre");
+            pre.dataset.embedded = "readonlySyntaxHighlighting"; // Make it work in readonly.
             const embeddedProps = getEmbeddedProps(codeBlock);
             const value = embeddedProps.value;
             pre.dataset.languageId = embeddedProps.languageId;
