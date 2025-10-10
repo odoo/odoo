@@ -74,7 +74,10 @@ export class AnnouncementScroll extends Interaction {
     setParallaxPosition() {
         const MIN_LEFT_SHIFT = 50;
 
-        if (!this.el.classList.contains('s_announcement_scroll_parallax')) {
+        if (
+            !this.el.classList.contains("s_announcement_scroll_parallax") ||
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches === true
+        ) {
             this.parallaxPosition = -MIN_LEFT_SHIFT;
             return;
         }
@@ -133,9 +136,3 @@ export class AnnouncementScroll extends Interaction {
 registry
     .category("public.interactions")
     .add("website.announcement_scroll", AnnouncementScroll);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.announcement_scroll", {
-        Interaction: AnnouncementScroll,
-    });
