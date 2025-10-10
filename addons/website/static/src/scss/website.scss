@@ -351,10 +351,6 @@ body {
         --HeaderSeparator-bg-color: #{rgba($navbar-dark-active-color, .15)};
 
         @extend .navbar-dark;
-
-        .btn-close {
-            filter: $btn-close-white-filter;
-        }
     }
     @include o-add-gradient('menu-gradient');
 
@@ -637,6 +633,12 @@ font[class*='bg-'] {
         &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, 30px); }
         &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, 30px); }
         &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), 30px); }
+    }
+}
+
+.btn-close {
+    @if (lightness($body-bg) < 50) {
+        @extend .btn-close-white;
     }
 }
 
