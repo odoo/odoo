@@ -30,6 +30,7 @@ import {
     createDataURL,
     isGif,
     getDataURLBinarySize,
+    isWebGLEnabled,
 } from "@web_editor/js/editor/image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { pick } from "@web/core/utils/objects";
@@ -1117,6 +1118,10 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
      * @param {Event} ev
      */
     _shouldIgnoreClick(ev) {
+        if (this.el.dataset.disabled === "true") {
+            ev.preventDefault();
+            return true;
+        }
         return !!ev.target.closest('[role="button"]');
     },
     /**
@@ -6217,6 +6222,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         // loadImageInfo RPC that obtains the file size.
         // This does not update the target.
         await this._applyOptions(false);
+        this._updateFilterAvailability();
     },
 
     //--------------------------------------------------------------------------
@@ -6238,6 +6244,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             this.$weight.removeClass('d-none');
             this._relocateWeightEl();
         }
+        this._updateFilterAvailability();
     },
 
     //--------------------------------------------------------------------------
@@ -6364,6 +6371,31 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         // TODO: remove in saas-18.4 since XML is static and will be up to date
         const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
         optQuality.setAttribute('data-name', 'quality_range_opt');
+    },
+    /**
+     * Toggle the WebGL filter widget based on browser support, restoring the expected dataset name
+     * when the DOM predates the snippet patch (e.g., legacy custom snippets).
+     *
+     * @private
+     */
+    _updateFilterAvailability() {
+        if (!this.el) {
+            return;
+        }
+        let filterWidget = this.el.querySelector('we-select[data-name="glfilter_select_opt"]');
+        if (!filterWidget) {
+            return;
+        }
+        const tooltipTarget = filterWidget.querySelector("we-toggler") || filterWidget;
+        if (!isWebGLEnabled()) {
+            filterWidget.dataset.disabled = "true";
+            filterWidget.setAttribute("aria-disabled", "true");
+            tooltipTarget.setAttribute("title", _t("WebGL is not enabled on your browser."));
+        } else {
+            delete filterWidget.dataset.disabled;
+            filterWidget.removeAttribute("aria-disabled");
+            tooltipTarget.removeAttribute("title");
+        }
     },
     /**
      * Returns a list of valid formats for a given image or an empty list if
