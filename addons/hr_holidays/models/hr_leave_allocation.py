@@ -195,6 +195,8 @@ class HolidaysAllocation(models.Model):
             allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
             origin = allocation._origin
             allocation.leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
+            print(f'{allocation.id} - Recomputing leaves to {allocation.leaves_taken} - {allocation.nextcall}')
+            # allocation._onchange_date_from()
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
@@ -326,6 +328,7 @@ class HolidaysAllocation(models.Model):
             days_to_add = min(days_to_add, capped_total_balance - self.number_of_days)
         self.number_of_days += days_to_add
         self.yearly_accrued_amount += days_to_add
+        print(f"{self.id} - Processing nextcall {self.nextcall} - Number Of Days {self.number_of_days} - Added {days_to_add}")
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
@@ -450,6 +453,7 @@ class HolidaysAllocation(models.Model):
             # get current level and normal period boundaries, then set nextcall, adjusted for level transition and carryover
             # add days, trimmed if there is a maximum_leave
             while allocation.nextcall <= date_to:
+                print(f"Processing nextcall {allocation.nextcall} - Date To {date_to}")
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
                 if not current_level:
                     break
@@ -626,6 +630,7 @@ class HolidaysAllocation(models.Model):
             return 0
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
+        fake_allocation.leaves_taken = max(fake_allocation.leaves_taken, self.leaves_taken)
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
         if self.holiday_status_id.request_unit in ['hour']:
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
@@ -882,6 +887,20 @@ class HolidaysAllocation(models.Model):
         self.number_of_days_display = 0.0
         self.number_of_hours_display = 0.0
         self.number_of_days = 0.0
+        self.already_accrued = False
+        self.carried_over_days_expiration_date = False
+        self.expiring_carryover_days = 0
+        date_to = min(self.date_to, date.today()) if self.date_to else False
+        self._process_accrual_plans(date_to)
+
+    # For debugging purpose only, will remove it before merge
+    def reprocess(self):
+        self.lastcall = self.date_from
+        self.actual_lastcall = False
+        self.nextcall = False
+        self.number_of_days = 0.0
+        self.number_of_days_display = 0.0
+        self.number_of_hours_display = 0.0
         self.already_accrued = False
         self.carried_over_days_expiration_date = False
         self.expiring_carryover_days = 0
