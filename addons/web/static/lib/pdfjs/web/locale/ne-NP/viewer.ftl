@@ -113,14 +113,6 @@ pdfjs-document-properties-page-size-orientation-landscape = परिदृश�
 pdfjs-document-properties-page-size-name-letter = अक्षर
 pdfjs-document-properties-page-size-name-legal = कानूनी
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-linearized-yes = हो
@@ -194,9 +186,6 @@ pdfjs-page-scale-actual = वास्तविक आकार
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = यो PDF लोड गर्दा एउटा त्रुटि देखापर्‍यो।
@@ -222,13 +211,3 @@ pdfjs-password-invalid = अवैध गोप्यशब्द। पुन�
 pdfjs-password-ok-button = ठिक छ
 pdfjs-password-cancel-button = रद्द गर्नुहोस्
 pdfjs-web-fonts-disabled = वेब फन्ट असक्षम छन्: एम्बेडेड PDF फन्ट प्रयोग गर्न असमर्थ।
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

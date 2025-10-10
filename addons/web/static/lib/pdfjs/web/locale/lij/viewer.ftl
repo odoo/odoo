@@ -207,9 +207,6 @@ pdfjs-page-scale-actual = Dimenscioin efetive
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = S'é verificou 'n'erô itno caregamento do PDF.
@@ -235,13 +232,3 @@ pdfjs-password-invalid = Paròlla segreta sbalia. Preuva torna.
 pdfjs-password-ok-button = Va ben
 pdfjs-password-cancel-button = Anulla
 pdfjs-web-fonts-disabled = I font do web en dizativæ: inposcibile adeuviâ i carateri do PDF.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

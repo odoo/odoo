@@ -185,9 +185,6 @@ pdfjs-page-scale-actual = Dite kikome
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Bal otime kun cano PDF.
@@ -213,13 +210,3 @@ pdfjs-password-invalid = Mung me donyo pe atir. Tim ber i tem doki.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Juki
 pdfjs-web-fonts-disabled = Kijuko dit pa coc me kakube woko: pe romo tic ki dit pa coc me PDF ma kiketo i kine.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

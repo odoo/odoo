@@ -236,13 +236,3 @@ pdfjs-password-invalid = ناجائز پاس ورڈ. براےؑ کرم دوبا�
 pdfjs-password-ok-button = ٹھیک ہے
 pdfjs-password-cancel-button = منسوخ کریں
 pdfjs-web-fonts-disabled = ویب فانٹ نا اہل ہیں: شامل PDF فانٹ استعمال کرنے میں ناکام۔
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

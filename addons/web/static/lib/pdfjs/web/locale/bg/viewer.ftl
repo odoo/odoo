@@ -332,6 +332,10 @@ pdfjs-editor-ink-opacity-input = Прозрачност
 pdfjs-editor-stamp-add-image-button =
     .title = Добавяне на изображение
 pdfjs-editor-stamp-add-image-button-label = Добавяне на изображение
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
+    .aria-label = Текстов редактор
+    .default-content = Започнете да пишете…
 pdfjs-free-text =
     .aria-label = Текстов редактор
 pdfjs-free-text-default-content = Започнете да пишете…
@@ -342,7 +346,6 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
-# Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = Алтернативен текст
 pdfjs-editor-alt-text-edit-button-label = Промяна на алтернативния текст
 pdfjs-editor-alt-text-dialog-label = Изберете от възможностите
@@ -405,13 +408,7 @@ pdfjs-editor-colorpicker-pink =
 pdfjs-editor-colorpicker-red =
     .title = Червено
 
-## Show all highlights
-## This is a toggle button to show/hide all the highlights.
-
-
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
-
-## Image alt-text settings
-
+pdfjs-editor-new-alt-text-not-now-button = Не сега

@@ -189,9 +189,6 @@ pdfjs-page-scale-actual = యథార్ధ పరిమాణం
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF లోడవుచున్నప్పుడు ఒక దోషం ఎదురైంది.
@@ -222,7 +219,7 @@ pdfjs-password-ok-button = సరే
 pdfjs-password-cancel-button = రద్దుచేయి
 pdfjs-web-fonts-disabled = వెబ్ ఫాంట్లు అచేతనించబడెను: ఎంబెడెడ్ PDF ఫాంట్లు ఉపయోగించలేక పోయింది.
 
-## Editing
+##
 
 # Editor Parameters
 pdfjs-editor-free-text-color-input = రంగు
@@ -230,10 +227,3 @@ pdfjs-editor-free-text-size-input = పరిమాణం
 pdfjs-editor-ink-color-input = రంగు
 pdfjs-editor-ink-thickness-input = మందం
 pdfjs-editor-ink-opacity-input = అకిరణ్యత
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

@@ -220,6 +220,21 @@ pdfjs-find-match-diacritics-checkbox-label = Respectar los diacritics
 pdfjs-find-entire-word-checkbox-label = Mots entièrs
 pdfjs-find-reached-top = Naut de la pagina atenh, perseguida del bas
 pdfjs-find-reached-bottom = Bas de la pagina atench, perseguida al començament
+# Variables:
+#   $current (Number) - the index of the currently active find result
+#   $total (Number) - the total number of matches in the document
+pdfjs-find-match-count =
+    { $total ->
+        [one] Ocurréncia { $current } de { $total }
+       *[other] Ocurréncia { $current } de { $total }
+    }
+# Variables:
+#   $limit (Number) - the maximum number of matches
+pdfjs-find-match-count-limit =
+    { $limit ->
+        [one] Mai de { $limit } ocurréncia
+       *[other] Mai de { $limit } ocurréncias
+    }
 pdfjs-find-not-found = Frasa pas trobada
 
 ## Predefined zoom values
@@ -260,6 +275,9 @@ pdfjs-annotation-date-string = { $date } a { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [Anotacion { $type }]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -312,6 +330,10 @@ pdfjs-editor-stamp-add-image-button =
 pdfjs-editor-stamp-add-image-button-label = Apondre imatge
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Espessor
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
+    .aria-label = Editor de tèxte
+    .default-content = Començatz de picar…
 pdfjs-free-text =
     .aria-label = Editor de tèxte
 pdfjs-free-text-default-content = Començatz d’escriure…
@@ -322,17 +344,12 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
-# Alternative text (alt text) helps when people can't see the image.
 pdfjs-editor-alt-text-button-label = Tèxt alternatiu
 pdfjs-editor-alt-text-edit-button-label = Modificar lo tèxt alternatiu
 pdfjs-editor-alt-text-dialog-label = Causir una opcion
 pdfjs-editor-alt-text-add-description-label = Apondre una descripcion
 pdfjs-editor-alt-text-cancel-button = Anullar
 pdfjs-editor-alt-text-save-button = Enregistrar
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
 
 ## Color picker
 
@@ -359,3 +376,30 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = O afichar tot
 pdfjs-editor-highlight-show-all-button =
     .title = O afichar tot
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+pdfjs-editor-new-alt-text-error-close-button = Tampar
+
+## Image alt-text settings
+
+pdfjs-editor-alt-text-settings-automatic-title = Tèxte alternatiu automatic
+pdfjs-editor-alt-text-settings-create-model-button-label = Crear un tèxte alternatiu automaticament
+pdfjs-editor-alt-text-settings-delete-model-button = Suprimir
+pdfjs-editor-alt-text-settings-download-model-button = Telecargar
+pdfjs-editor-alt-text-settings-downloading-model-button = Telecargament…
+pdfjs-editor-alt-text-settings-editor-title = Editor de tèxte alternatiu
+pdfjs-editor-alt-text-settings-close-button = Tampar
+
+## "Annotations removed" bar
+
+pdfjs-editor-undo-bar-message-freetext = Tèxte suprimit
+pdfjs-editor-undo-bar-message-ink = Dessenh suprimit
+pdfjs-editor-undo-bar-message-stamp = Imatge suprimit
+pdfjs-editor-undo-bar-undo-button =
+    .title = Anullar
+pdfjs-editor-undo-bar-undo-button-label = Anullar
+pdfjs-editor-undo-bar-close-button =
+    .title = Tampar
+pdfjs-editor-undo-bar-close-button-label = Tampar

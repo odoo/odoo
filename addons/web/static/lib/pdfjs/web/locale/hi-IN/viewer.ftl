@@ -201,9 +201,6 @@ pdfjs-page-scale-actual = वास्तविक आकार
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = PDF लोड करते समय एक त्रुटि हुई.
@@ -234,34 +231,7 @@ pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = रद्द करें
 pdfjs-web-fonts-disabled = वेब फॉन्ट्स निष्क्रिय हैं: अंतःस्थापित PDF फॉन्टस के उपयोग में असमर्थ.
 
-## Editing
-
-
-## Remove button for the various kind of editor.
-
-
 ##
 
 # Editor Parameters
 pdfjs-editor-free-text-color-input = रंग
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
-
-## Color picker
-
-
-## Show all highlights
-## This is a toggle button to show/hide all the highlights.
-
-
-## New alt-text dialog
-## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
-
-
-## Image alt-text settings
-

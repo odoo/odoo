@@ -94,14 +94,6 @@ pdfjs-document-properties-producer = Cruthaitheoir an PDF:
 pdfjs-document-properties-version = Leagan PDF:
 pdfjs-document-properties-page-count = Líon Leathanach:
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-close-button = Dún
@@ -173,9 +165,6 @@ pdfjs-page-scale-actual = Fíormhéid
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Tharla earráid agus an cháipéis PDF á lódáil.
@@ -201,13 +190,3 @@ pdfjs-password-invalid = Focal faire mícheart. Déan iarracht eile.
 pdfjs-password-ok-button = OK
 pdfjs-password-cancel-button = Cealaigh
 pdfjs-web-fonts-disabled = Tá clófhoirne Gréasáin díchumasaithe: ní féidir clófhoirne leabaithe PDF a úsáid.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-

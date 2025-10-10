@@ -88,14 +88,6 @@ pdfjs-document-properties-producer = PDF berandikaw:
 pdfjs-document-properties-version = PDF dumi:
 pdfjs-document-properties-page-count = Moo hinna:
 
-## Variables:
-##   $width (Number) - the width of the (current) page
-##   $height (Number) - the height of the (current) page
-##   $unit (String) - the unit of measurement of the (current) page
-##   $name (String) - the name of the (current) page
-##   $orientation (String) - the orientation of the (current) page
-
-
 ##
 
 pdfjs-document-properties-close-button = Daabu
@@ -166,9 +158,6 @@ pdfjs-page-scale-actual = Adadu cimi
 #   $scale (Number) - percent value for page scale
 pdfjs-page-scale-percent = { $scale }%
 
-## PDF page
-
-
 ## Loading indicator messages
 
 pdfjs-loading-error = Firka bangay kaŋ PDF goo ma zumandi.
@@ -194,13 +183,3 @@ pdfjs-password-invalid = Šennikufal laalo. Ceeci koyne taare.
 pdfjs-password-ok-button = Ayyo
 pdfjs-password-cancel-button = Naŋ
 pdfjs-web-fonts-disabled = Interneti šigirawey kay: ši hin ka goy nda PDF šigira hurantey.
-
-## Editing
-
-
-## Alt-text dialog
-
-
-## Editor resizers
-## This is used in an aria label to help to understand the role of the resizer.
-
