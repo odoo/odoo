@@ -683,7 +683,6 @@ export const analyticDistribution = {
     supportedTypes: ["json"],
     fieldDependencies: [
         { name: "analytic_precision", type: "integer" },
-        { name: "company_id", type: "many2one" },
     ],
     supportedOptions: [
         {
