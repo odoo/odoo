@@ -11,6 +11,7 @@ import {
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { useInputField } from "@web/views/fields/input_field_hook";
 
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
 
@@ -105,7 +106,6 @@ export class ProductLabelSectionAndNoteFieldAutocomplete extends Many2XAutocompl
         isNote: { type: Boolean },
         isSection: { type: Boolean },
         onFocusout: { type: Function, optional: true },
-        updateLabel: { type: Function, optional: true },
     };
     static template = "account.ProductLabelSectionAndNoteFieldAutocomplete";
     setup() {
@@ -139,6 +139,13 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
         this.productNode = useRef("productNodeRef");
         useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
+
+        useInputField({
+            ref: this.labelNode,
+            fieldName: "name",
+            getValue: () => this.label,
+            parse: (value) => this.parseLabel(value),
+        });
 
         useEffect(
             () => {
@@ -197,7 +204,6 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         props.isSection = this.isSection(this.props.record);
         props.isNote = this.isNote(this.props.record);
         props.placeholder = _t("Search a product");
-        props.updateLabel = this.updateLabel.bind(this);
         return props;
     }
 
@@ -237,14 +243,10 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         this.switchToLabel = true;
     }
 
-    updateLabel(value) {
-        this.props.record.update({
-            name: (
-                this.productName && value && this.productName.concat("\n", value)
-                || !value && this.productName
-                || value
-            ),
-        });
+    parseLabel(value) {
+        return this.productName && value && this.productName.concat("\n", value)
+            || !value && this.productName 
+            || value
     }
 }
 
