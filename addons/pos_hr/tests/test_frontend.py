@@ -23,6 +23,26 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             "pin": False,
         })
 
+        # Managers
+        cls.manager_user = new_test_user(
+            cls.env,
+            login="manager_user",
+            groups="point_of_sale.group_pos_manager",
+            name="Pos Manager",
+            email="manager_user@pos.com",
+        )
+        cls.manager1 = cls.env['hr.employee'].create({
+            'name': 'Test Manager 1',
+            "company_id": cls.env.company.id,
+            "user_id": cls.manager_user.id,
+            "pin": "5651"
+        })
+        cls.manager2 = cls.env['hr.employee'].create({
+            'name': 'Test Manager 2',
+            "company_id": cls.env.company.id,
+            "pin": "5652"
+        })
+
         # User employee
         cls.emp1 = cls.env['hr.employee'].create({
             'name': 'Test Employee 1',
@@ -57,8 +77,15 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
 
         cls.main_pos_config.write({
+<<<<<<< 8d278713d6904a8390590ef9d22e4fc65d9143f6
             'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)],
             'minimal_employee_ids': [Command.link(cls.emp4.id)],
+||||||| 4d549a5712295f4164c4f725af12474ff99becbf
+            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)]
+=======
+            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)],
+            'advanced_employee_ids': [Command.link(cls.manager1.id), Command.link(cls.manager2.id)]
+>>>>>>> 8b7d32ca64d943c711fc2090845768adbf03aef0
         })
 
 
@@ -159,6 +186,7 @@ class TestUi(TestPosHrHttpCommon):
         order = self.main_pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.cashier, "Test Employee 3")
         self.assertEqual(order.employee_id.display_name, "Test Employee 3")
+<<<<<<< 8d278713d6904a8390590ef9d22e4fc65d9143f6
 
     def test_minimal_employee_refund(self):
         minimal_emp = self.env['hr.employee'].create({
@@ -210,3 +238,12 @@ class TestUi(TestPosHrHttpCommon):
             "test_cost_and_margin_visibility",
             login="pos_admin",
         )
+||||||| 4d549a5712295f4164c4f725af12474ff99becbf
+=======
+
+    def test_go_backend(self):
+        self.main_pos_config.with_user(self.manager_user).open_ui()
+
+        self.start_pos_tour("pos_hr_go_backend_closed_registered", login="manager_user")
+        self.start_pos_tour("pos_hr_go_backend_opened_registered", login="manager_user")
+>>>>>>> 8b7d32ca64d943c711fc2090845768adbf03aef0
