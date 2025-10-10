@@ -401,6 +401,6 @@ registry.category("pos_pages").add("PaymentScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/payment/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: false,
+        orderFinalized: [true, false],
     },
 });

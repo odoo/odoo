@@ -160,6 +160,37 @@ export function nthRowContains(n, string, viewMode) {
         },
     ];
 }
+export function checkOrderDetailsDialog(orderRef, totalPayment, payments) {
+    return [
+        {
+            trigger: ".modal .modal-content",
+        },
+        {
+            trigger: `.modal-content .order-details p:contains("Order Reference"):contains(${orderRef})`,
+        },
+        {
+            trigger: `.modal-content .payment-header span:contains(${totalPayment})`,
+        },
+        {
+            content: "Check payments with proper amount",
+            trigger: `.modal-content .order-payments ul`,
+            run: () => {
+                const allPayments = document.querySelectorAll(
+                    ".modal-content .order-payments ul li"
+                );
+                for (const payment of allPayments) {
+                    const pm = payment.textContent.split(":")[0].trim();
+                    const amountPaid = payment.textContent.split(":")[1].trim().replace(/\s/g, " ");
+                    if (payments[pm] !== amountPaid) {
+                        throw Error(
+                            `The order should have ${payments[pm]} payment shown using ${pm}`
+                        );
+                    }
+                }
+            },
+        },
+    ];
+}
 export function nthRowIsHighlighted(n) {
     return [
         {

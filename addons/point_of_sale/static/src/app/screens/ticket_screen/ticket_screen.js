@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
+import { orderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
@@ -197,6 +198,9 @@ export class TicketScreen extends Component {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
         }
+    }
+    showDetails(order) {
+        this.dialog.add(orderDetailsDialog, { order });
     }
     async onClickReprintAll(order) {
         const printingChanges = order.uiState?.lastPrints;

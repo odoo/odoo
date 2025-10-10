@@ -248,3 +248,11 @@ export function confirmOrderWarningDialog() {
         Dialog.confirm(),
     ];
 }
+export function clickEditPayment() {
+    return [
+        {
+            trigger: '.receipt-screen .edit-order-payment:contains("Edit Payment")',
+            run: "click",
+        },
+    ];
+}

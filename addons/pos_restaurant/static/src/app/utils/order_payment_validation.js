@@ -31,6 +31,7 @@ patch(OrderPaymentValidation.prototype, {
     async askBeforeValidation() {
         if (
             this.pos.config.module_pos_restaurant &&
+            !this.order.finalized &&
             this.pos.categoryCount.length &&
             !this.order.isRefund
         ) {

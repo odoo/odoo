@@ -756,6 +756,11 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             })
 
         def create_payment(payment_method, amount):
+            """
+            Paid orders will duplicate payment lines if the same payload is synced twice, because finalized orders can be edited
+            and synced again from the UI.To allow double sync via sync_from_ui in tests ensuring only a single payment line we can
+            either delete old lines or clear and set new [[5, 0, 0]/[2, id], [0, 0, new_line]].
+            """
             return (0, 0, {
                 'amount': amount,
                 'name': fields.Datetime.now(),

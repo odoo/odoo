@@ -30,7 +30,6 @@ import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
@@ -2152,27 +2151,11 @@ export class PosStore extends WithLazyGetterTrap {
     async allowProductCreation() {
         return await user.hasGroup("base.group_system");
     }
-    orderDetailsProps(order) {
-        return {
-            resModel: "pos.order",
-            resId: order.id,
-            onRecordSaved: async (record) => {
-                await this.data.callRelated(
-                    "pos.order",
-                    "read_pos_orders",
-                    [[["id", "=", record.evalContext.id]]],
-                    {},
-                    false,
-                    true
-                );
-                this.action.doAction({
-                    type: "ir.actions.act_window_close",
-                });
-            },
-        };
-    }
     async orderDetails(order) {
-        this.dialog.add(FormViewDialog, this.orderDetailsProps(order));
+        this.setOrder(order);
+        this.navigate("PaymentScreen", {
+            orderUuid: order.uuid,
+        });
     }
     async closePos() {
         this._resetConnectedCashier();

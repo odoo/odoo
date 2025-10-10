@@ -221,6 +221,6 @@ registry.category("pos_pages").add("SplitBillScreen", {
     route: `/pos/ui/${odoo.pos_config_id}/splitting/{string:orderUuid}`,
     params: {
         orderUuid: true,
-        orderFinalized: false,
+        orderFinalized: [false],
     },
 });
