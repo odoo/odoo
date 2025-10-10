@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
+import math
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api, exceptions, _
@@ -162,6 +163,27 @@ class HrEmployee(models.Model):
             att = employee.last_attendance_id.sudo()
             employee.attendance_state = att and not att.check_out and 'checked_in' or 'checked_out'
 
+    def _calculate_employee_distance_from_workplace(self, lat, long):
+        """ Calculate the Haversine distance between company's workplace and employee's check-in location.
+
+        See https://en.wikipedia.org/wiki/Haversine_formula.
+
+        :return: The distance between the employee and workplace (in meters).
+        :rtype: float
+        """
+        R = 6371 * 1000  # The radius of Earth.
+        lat1, long1 = self.company_id.workplace_latitude, self.company_id.workplace_longitude
+        dlat = math.radians(lat - lat1)
+        dlong = math.radians(long - long1)
+        arcsin = (
+            math.sin(dlat / 2) * math.sin(dlat / 2)
+            + math.cos(math.radians(lat1)) * math.cos(math.radians(lat))
+            * (math.sin(dlong / 2) * math.sin(dlong / 2))
+        )
+        distance = 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))
+
+        return distance
+
     def _attendance_action_change(self, geo_information=None):
         """ Check In/Check Out action
             Check In: create a new attendance record
@@ -177,6 +199,11 @@ class HrEmployee(models.Model):
                     'check_in': action_date,
                     **{'in_%s' % key: geo_information[key] for key in geo_information}
                 }
+                if self.company_id.geo_fence_attendance and self.company_id.workplace_location and vals['in_latitude'] and vals['in_longitude']:
+                    location_distance = self._calculate_employee_distance_from_workplace(vals['in_latitude'], vals['in_longitude'])
+                    vals['location_distance'] = location_distance
+                    if location_distance > self.company_id.workplace_radius:
+                        vals['outside_geo_fence'] = True
             else:
                 vals = {
                     'employee_id': self.id,

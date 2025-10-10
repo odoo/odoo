@@ -21,6 +21,11 @@ class ResConfigSettings(models.TransientModel):
     auto_check_out = fields.Boolean(related="company_id.auto_check_out", readonly=False)
     auto_check_out_tolerance = fields.Float(related="company_id.auto_check_out_tolerance", readonly=False)
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
+    geo_fence_attendance = fields.Boolean(related="company_id.geo_fence_attendance", readonly=False)
+    workplace_latitude = fields.Float(related="company_id.workplace_latitude", readonly=False)
+    workplace_longitude = fields.Float(related="company_id.workplace_longitude", readonly=False)
+    workplace_location = fields.Char(related="company_id.workplace_location", readonly=False)
+    workplace_radius = fields.Float(related="company_id.workplace_radius", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
 
     @api.model
@@ -49,3 +54,15 @@ class ResConfigSettings(models.TransientModel):
     def regenerate_kiosk_key(self):
         if self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
             self.company_id._regenerate_attendance_kiosk_key()
+
+    def open_workplace_location_map(self):
+        # Opens the map popup to select location
+        return {
+            "type": "ir.actions.client",
+            "tag": "open_workplace_location_map",
+            "target": "new",
+            "name": "Select the Workplace Location",
+            "context": {
+                "footer": False,
+            },
+        }

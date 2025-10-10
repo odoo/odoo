@@ -103,6 +103,12 @@
                                     groups="hr_attendance.group_hr_attendance_user"/>
                                 <field name="check_in" options="{'rounding': 0}" readonly="not is_manager"/>
                                 <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not is_manager"/>
+                                <label for="location_distance" invisible="in_mode == 'manual' or not geo_fence_enabled"/>
+                                <div class="o_row" invisible="in_mode == 'manual' or not geo_fence_enabled">
+                                    <span>
+                                        <field name="location_distance"/>
+                                    </span>m
+                                </div>
                             </group>
                             <group col="2">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
@@ -278,6 +284,7 @@
                         domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=', '-1d')]"/>
                 <filter string="Automatically Checked-Out" name="auto_check"
                         domain="[('out_mode', '=', 'auto_check_out')]"/>
+                <filter string="Offsite Attendances" name="flagged_attendances" domain="[('outside_geo_fence', '=', True)]"/>
                 <separator/>
                 <filter string="Date" name="check_in_filter" date="check_in"/>
                 <separator/>
