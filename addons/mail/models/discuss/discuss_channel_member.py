@@ -525,6 +525,10 @@ class DiscussChannelMember(models.Model):
                 [("partner_id", "=", False)],
                 [("partner_id.user_ids.manual_im_status", "!=", "busy")],
             ]),
+            Domain.OR([
+                [("guest_id", "=", False)],
+                [("guest_id.presence_ids", "!=", False)],
+            ]),
         ])
         if member_ids:
             domain &= Domain('id', 'in', member_ids)
