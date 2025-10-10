@@ -1,5 +1,7 @@
 import { Component } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Router } from "@pos_self_order/app/router";
 import { LandingPage } from "@pos_self_order/app/pages/landing_page/landing_page";
@@ -39,6 +41,14 @@ export class selfOrderIndex extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         window.posmodel = this.selfOrder;
+        window.KioskBoard.init({
+            keysJsonUrl: `/pos_self_order/static/lib/kiosk_board/${this.keyBoardByRegion()}.json`,
+            capsLockActive: false,
+            allowRealKeyboard: true,
+            allowMobileKeyboard: true,
+            keysSpacebarText: _t("Space"),
+            keysEnterText: _t("Enter"),
+        });
 
         // Disable cursor on touch devices (required on IoT Box Kiosk)
         if (hasTouch()) {
@@ -61,5 +71,30 @@ export class selfOrderIndex extends Component {
     }
     get selfIsReady() {
         return this.selfOrder.models["product.product"].length > 0;
+    }
+
+    keyBoardByRegion() {
+        const code = (localization.code || "").toLowerCase();
+
+        switch (true) {
+            case code.includes("fr_"):
+                return "kioskboard-keys-azerty";
+            case code.includes("de_"):
+                return "kioskboard-keys-german";
+            case code.includes("hu_"):
+                return "kioskboard-keys-hungarian";
+            case code.includes("fa_"):
+                return "kioskboard-keys-persian";
+            case code.includes("ar_"):
+                return "kioskboard-keys-arabic";
+            case code.includes("ru_"):
+                return "kioskboard-keys-russian";
+            case code.includes("es_"):
+                return "kioskboard-keys-spanish";
+            case code.includes("tr_"):
+                return "kioskboard-keys-turkish";
+            default:
+                return "kioskboard-keys-qwerty";
+        }
     }
 }
