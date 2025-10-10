@@ -64,7 +64,7 @@ test("starting edition with a pre activates syntax highlighting", async () => {
             '<p data-selection-placeholder=""><br></p>' +
             highlightedPre({ value: "some code" }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Undo did nothing.
-        contentAfter: `<pre data-language-id="plaintext">some code</pre>`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">some code</pre>`,
         config: configWithEmbeddings,
     });
 });
@@ -113,7 +113,7 @@ test("starting edition with a pre activates syntax highlighting (with dataset va
                 textareaRange: 12, // "Hello world![]"
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Undo did nothing.
-        contentAfter: `<pre data-language-id="javascript">Hello world!</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">Hello world!</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -138,7 +138,7 @@ test("inserting a code block activates syntax highlighting plugin, typing trigge
             '<p data-selection-placeholder=""><br></p>' +
             highlightedPre({ value: "abcd", textareaRange: 4 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // The change of value in the textarea is reflected in the pre.
-        contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -152,7 +152,7 @@ test("inserting an empty code block activates syntax highlighting plugin with an
             '<p data-selection-placeholder=""><br></p>' +
             highlightedPre({ value: "", textareaRange: 0 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -183,7 +183,7 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
             })}
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
-        contentAfter: `<p><br></p><pre data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -208,7 +208,7 @@ test("changing languages in a code block changes its highlighting", async () => 
                 textareaRange: 9,
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="javascript">some code</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="javascript">some code</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -231,7 +231,7 @@ test("should fill an empty pre", async () => {
             '<p data-selection-placeholder=""><br></p>' +
             highlightedPre({ value: "", textareaRange: 0 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Note: the BR is outside the highlight.
-        contentAfter: `<pre data-language-id="plaintext"><br></pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -252,7 +252,7 @@ test("the textarea should never contains zws", async () => {
             '<p data-selection-placeholder=""><br></p>' +
             highlightedPre({ value: "abc", textareaRange: 3 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="plaintext">abc</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abc</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -295,7 +295,7 @@ test("can copy content with the copy button", async () => {
             '<p data-selection-placeholder=""><br></p>' +
             highlightedPre({ value: "abcd", textareaRange: 4 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -321,7 +321,7 @@ test("tab in code block inserts 4 spaces", async () => {
                 textareaRange: 6, // "co    []de"
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="plaintext">co    de</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">co    de</pre>[]`,
         config: configWithEmbeddings,
     });
 });
@@ -348,7 +348,7 @@ test("tab in selection in code block indents each selected line", async () => {
                 textareaRange: [5, 19], // "    a[\n    b c\n     ]d"
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="plaintext">${valueAfter.replaceAll(
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">${valueAfter.replaceAll(
             "\n",
             "<br>"
         )}</pre>[]`,
@@ -390,7 +390,7 @@ test("shift+tab in code block outdents the current line", async () => {
                 textareaRange: 15, // "    some\nco    []de\n    for you"
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-        contentAfter: `<pre data-language-id="plaintext">${valueAfter.replaceAll(
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">${valueAfter.replaceAll(
             "\n",
             "<br>"
         )}</pre>[]`,
@@ -433,7 +433,7 @@ test("shift+tab in selection in code block outdents each selected line", async (
             }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         config: configWithEmbeddings,
-        contentAfter: `<pre data-language-id="plaintext">a<br>b c<br>d</pre>[]`,
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b c<br>d</pre>[]`,
     });
 });
 
