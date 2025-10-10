@@ -423,3 +423,61 @@ class TestRecruitment(TransactionCase):
 
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
+
+    def test_make_similar_applicants_obsolete(self):
+        """
+        Ensure that the 'is_obsolete' field is correctly computed and stored
+        for related applicants based on email, phone and LinkedIn profile.
+        """
+        A1, A2, A3 = self.env["hr.applicant"].create(
+            [
+                {"partner_name": "Legit-Email", "email_from": "a@odoo.com"},
+                {"partner_name": "Legit-Phone", "partner_phone": "1000"},
+                {"partner_name": "Legit-LinkedIn", "linkedin_profile": "odoo"},
+            ]
+        )
+        previous_applicants = [A1, A2, A3]
+        self.assertTrue(
+            all(not app.is_obsolete for app in previous_applicants),
+            "All applicants must be legit as they have unique email, phone and LinkedIn.",
+        )
+
+        B1, B2, B3 = self.env["hr.applicant"].create(
+            [
+                {"partner_name": "Duplicated-Email", "email_from": "a@odoo.com"},
+                {"partner_name": "Duplicated-Phone", "partner_phone": "1000"},
+                {"partner_name": "Duplicated-LinkedIn", "linkedin_profile": "odoo"},
+            ]
+        )
+        new_applicants = [B1, B2, B3]
+        self.assertTrue(
+            all(not app.is_obsolete for app in new_applicants),
+            "None of the new applicants must be obsolete as they are the ones to be considered.",
+        )
+        self.assertTrue(
+            all(app.is_obsolete for app in previous_applicants),
+            "All previous applicants must now be obsolete as they have newer copies.",
+        )
+
+    def test_transitive_duplicated_applicants(self):
+        """
+        Ensure that the 'is_obsolete' flag is marked on duplicated applicants
+        when they share transitive duplicated identifiers (email, phone or LinkedIn).
+        """
+        A = self.env["hr.applicant"].create(
+            {"partner_name": "A", "email_from": "a@odoo.com", "partner_phone": "123"}
+        )
+        self.assertFalse(A.is_obsolete, "Applicant A is legit and unique.")
+
+        B = self.env["hr.applicant"].create(
+            {"partner_name": "Disguised-A", "email_from": "a@odoo.com"}
+        )
+        self.assertTrue(A.is_obsolete, "Applicant A is now obsolete due to its email.")
+        self.assertFalse(B.is_obsolete, "Applicant B is the currently the legit one.")
+
+        C = self.env["hr.applicant"].create(
+            {"partner_name": "Disguised-A", "partner_phone": "123"}
+        )
+        self.assertTrue(A.is_obsolete, "Applicant A is still obsolete.")
+        self.assertTrue(B.is_obsolete, "Applicant B obsolete due to transitivity.")
+        self.assertFalse(C.is_obsolete, "Applicant C is currently the legit one.")
