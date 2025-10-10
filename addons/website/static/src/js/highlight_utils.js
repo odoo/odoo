@@ -257,7 +257,14 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const inPreviewIframe =
         highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
     const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
-    const firstRect = highlightEl.getClientRects()[0];
+    const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
+    let firstRect;
+    if (rtl) { // Take the first top right element instead of top left
+        firstRect = [...highlightEl.getClientRects()].sort((a, b) => a.top - b.top || (b.left + b.width) - (a.left + a.width))[0];
+    } else {
+        firstRect = highlightEl.getClientRects()[0];
+    }
+
     const svgs = [];
     for (const rects of finalRects) {
         const svg = makeHighlightSvg(highlightID || getCurrentTextHighlight(highlightEl), {
@@ -266,12 +273,19 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
             numberOfCharPerWidth,
         });
         svgs.push(svg);
-        const spanOffsetX = firstRect.x - containerRect.x;
         const spanOffsetY = firstRect.y - containerRect.y;
-        svg.style.left = `${(rects.x - containerRect.x - spanOffsetX) * scale}px`;
         svg.style.top = `${(rects.y - containerRect.y - spanOffsetY) * scale}px`;
         svg.style.bottom = `0px`;
-        svg.style.right = `0px`;
+        if (rtl) { // Position from the right instead of left and mirror the SVG
+            const spanOffsetX = containerRect.x + containerRect.width - firstRect.x - firstRect.width;
+            svg.style.left = `0px`;
+            svg.style.right = `${(containerRect.x + containerRect.width - rects.x - rects.width - spanOffsetX) * scale}px`;
+            svg.style.transform = 'scale(-1, 1)';
+        } else {
+            const spanOffsetX = firstRect.x - containerRect.x;
+            svg.style.left = `${(rects.x - containerRect.x - spanOffsetX) * scale}px`;
+            svg.style.right = `0px`;
+        }
     }
     return svgs;
 }
@@ -442,10 +456,6 @@ function getTextnodeRects(el) {
     range.setEnd(el, el.textContent.length);
     return [...range.getClientRects()];
 }
-// todo: handle RTL
-// function isRTL(el) {
-//     return window.getComputedStyle(el).direction === "rtl";
-// }
 
 /**
  * Returns the closest ancestor element that should be observed for adapting
