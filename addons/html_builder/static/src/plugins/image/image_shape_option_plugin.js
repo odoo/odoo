@@ -18,6 +18,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
+import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -43,6 +44,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         "isAnimableShape",
         "isTogglableRatioShape",
         "getShapeLabel",
+        "makeImageShapes",
         "loadShape",
     ];
     resources = {
@@ -185,8 +187,10 @@ export class ImageShapeOptionPlugin extends Plugin {
         };
     }
     async processImagePost(b64url, handlerDataset, processContext) {
-        const { svg, svgAspectRatio, svgWidth } = processContext;
-        if (!svg) {
+        const { svg, svgAspectRatio, svgWidth, newDataset } = processContext;
+        // Skip SVG conversion if svg not found or the shape supports
+        // imageShapeClass.
+        if (!svg || newDataset.imageShapeClass) {
             return;
         }
         svg.querySelectorAll("image").forEach((image) => {
@@ -397,15 +401,54 @@ export class ImageShapeOptionPlugin extends Plugin {
 export class SetImageShapeAction extends BuilderAction {
     static id = "setImageShape";
     static dependencies = ["imageShapeOption"];
-    async load({ editingElement: img, value: shapeId }) {
-        const params = { shape: shapeId };
+
+    removeBorderRadiusVars(imgEl) {
+        CSS_SHORTHANDS["--box-border-radius"].forEach((borderRadiusVar) =>
+            imgEl.style.removeProperty(borderRadiusVar)
+        );
+    }
+    async load({ editingElement: img, value: shapeId, params: { imageShapeClass } }) {
+        const params = { shape: shapeId, imageShapeClass };
         // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
         return this.dependencies.imageShapeOption.loadShape(img, params);
     }
-    apply({ editingElement: img, loadResult: updateImageAttributes }) {
+    apply({
+        editingElement: img,
+        loadResult: updateImageAttributes,
+        isPreviewing,
+        params: { imageShapeClass },
+    }) {
+        // Remove previously applied shape classes (if any)
+        if (img.dataset.imageShapeClass) {
+            const oldClasses = img.dataset.imageShapeClass.split(/\s+/).filter(Boolean);
+            img.classList.remove(...oldClasses);
+        }
+
         updateImageAttributes();
-        const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
-        img.dataset.fileName = `${imgFilename}.svg`;
+
+        // Add shape classes to the image
+        if (imageShapeClass) {
+            const classes = imageShapeClass.trim().split(/\s+/).filter(Boolean);
+            img.classList.add(...classes);
+            img.dataset.imageShapeClass = imageShapeClass;
+            // Since most shape classes apply styles using `border-radius`, we
+            // need to reset any previously applied `border-radius` to prevent
+            // conflicts when applying a new shape.
+            this.removeBorderRadiusVars(img);
+        }
+        // Extract filename and extension from the `originalSrc`.
+        if (!isPreviewing) {
+            const fullName = img.dataset.originalSrc.split("/").pop();
+            if (fullName) {
+                const parts = fullName.split(".");
+                const fileExtension = parts.pop();
+                const fileName = parts.join(".");
+
+                img.dataset.fileName = imageShapeClass
+                    ? `${fileName}.${fileExtension}`
+                    : `${fileName}.svg`;
+            }
+        }
     }
 }
 export class SetImgShapeColorAction extends BuilderAction {
@@ -485,6 +528,7 @@ export class ToggleImageShapeRatioAction extends BuilderAction {
     async load({ editingElement: img }) {
         const isStretched = img.dataset.aspectRatio !== "1/1";
         return this.dependencies.imageShapeOption.loadShape(img, {
+            imageShapeClass: img.dataset.imageShapeClass,
             aspectRatio: isStretched ? "1/1" : "0/0",
             x: undefined,
             y: undefined,

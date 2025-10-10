@@ -1,5 +1,28 @@
 import { _t } from "@web/core/l10n/translation";
 
+/**
+ * Defines all available image shapes in the builder.
+ * Each shape is keyed by an SVG path, used for:
+ *  - preview in the builder sidebar (always)
+ *  - SVG mask at runtime (if no `imageShapeClass` is provided)
+ *
+ * At runtime, a shape uses a CSS class when available (preferred, lighter)
+ * or falls back to an SVG mask.
+ *
+ * Shape properties:
+ *  - `selectLabel`    : Localized name shown in the builder.
+ *  - `transform`      : If `false`, hides shape transformation options.
+ *  - `togglableRatio` : If `true`, shows an option for toggling aspect ratio.
+ *  - `animated`       : If `true`, adds an "Animated" label in the builder,
+ *                       indicating that this is an animated shape.
+ *  - `imgSize`        : Fixed ratio for device-frame shapes.
+ *  - `imageShapeClass`: Space-separated CSS classes applied directly to the
+ *                       <img> element.
+ *                       If present - add CSS class to the image.
+ *                       If absent - applies SVG mask instead.
+ *                       Best for simple shapes (e.g., circles, rounded corners)
+ *  - `isTechnical`    : Marks internal-only shapes (hidden from users).
+ */
 export const imageShapeDefinitions = {
     basic: {
         label: _t("Basic"),
@@ -122,6 +145,7 @@ export const imageShapeDefinitions = {
                         selectLabel: _t("Circle"),
                         transform: false,
                         togglableRatio: true,
+                        imageShapeClass: "rounded-circle",
                     },
                     "html_builder/geometric_round/geo_round_square": {
                         selectLabel: _t("Square (R)"),
