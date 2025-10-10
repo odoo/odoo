@@ -232,19 +232,21 @@ class AccountMove(models.Model):
                 })
         return administrative_centers
 
-    def _l10n_es_edi_facturae_get_tax_node_from_tax_data(self, values):
+    def _l10n_es_edi_facturae_get_tax_node_from_tax_data(self, values, round=False):
         self.ensure_one()
         tax = values['grouping_key']
+        prefix = '' if round else 'raw_'
+        tax_sign = -1 if tax.amount < 0.0 else 1
         return {
             'tax_record': tax,
             'TaxRate': f'{abs(tax.amount):.3f}',
             'TaxableBase': {
-                'TotalAmount': self.currency_id.round(values['raw_base_amount_currency']),
-                'EquivalentInEuros': self.company_currency_id.round(values['raw_base_amount']),
+                'TotalAmount': self.currency_id.round(values[f'{prefix}base_amount_currency']),
+                'EquivalentInEuros': self.company_currency_id.round(values[f'{prefix}base_amount']),
             },
             'TaxAmount': {
-                'TotalAmount': self.currency_id.round(abs(values['raw_tax_amount_currency'])),
-                'EquivalentInEuros': self.company_currency_id.round(abs(values['raw_tax_amount'])),
+                'TotalAmount': self.currency_id.round(tax_sign * values[f'{prefix}tax_amount_currency']),
+                'EquivalentInEuros': self.company_currency_id.round(tax_sign * values[f'{prefix}tax_amount']),
             },
         }
 
@@ -321,7 +323,7 @@ class AccountMove(models.Model):
             xml_values['Charges'].append({
                 'ChargeReason': '/',
                 'ChargeRate': f'{-line.discount:.2f}',
-                'ChargeAmount': discount_amount,
+                'ChargeAmount': -discount_amount,
             })
 
         xml_values['TaxesOutputs'] = [
@@ -429,13 +431,21 @@ class AccountMove(models.Model):
             invoice_values['TotalGrossAmount'] += invoice_line_values['GrossAmount']
             invoice_values['Items'].append(invoice_line_values)
 
+        def grouping_function(base_line, tax_data):
+            return {
+                'record': base_line['record'],
+                'tax': tax_data['tax'] if tax_data else None,
+            }
+
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        for tax, values in values_per_grouping_key.items():
+        for grouping_key, values in values_per_grouping_key.items():
+            tax = grouping_key['tax']
             if not tax:
                 continue
 
             is_withholding = tax.amount < 0.0
-            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
+            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax}, round=True)
             invoice_values['TaxesWithheld' if is_withholding else 'TaxOutputs'].append(tax_data)
             invoice_values['TotalTaxesWithheld' if is_withholding else 'TotalTaxOutputs'] += values['tax_amount_currency']
 
