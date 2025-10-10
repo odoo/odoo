@@ -76,6 +76,19 @@ test("toolbar is also visible when selection is collapsed in mobile", async () =
     await expectElementCount(".o-we-toolbar", 1);
 });
 
+test.tags("mobile");
+test("should show bold button highlighted after applying format when selection is collapsed", async () => {
+    const { el } = await setupEditor("<p>te[]st</p>");
+
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Click on toggle bold
+    await contains(".btn[name='bold']").click();
+
+    expect(".btn[name='bold']").toHaveClass("active");
+    expect(getContent(el)).toBe(`<p>te${strong("[]\u200B", "first")}st</p>`);
+});
+
 test("toolbar closes when selection leaves editor", async () => {
     const { el } = await setupEditor("<p>test</p>");
     setContent(el, "<p>[test]</p>");

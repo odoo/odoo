@@ -285,7 +285,7 @@ export class ToolbarPlugin extends Plugin {
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
-                    (!isTextNode(node) || (node.textContent.trim().length && !isZWS(node)))
+                    (!isTextNode(node) || node.textContent.trim().length)
             );
     }
 
@@ -319,7 +319,8 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        return this.getFilteredTargetedNodes().length;
+        return this.getFilteredTargetedNodes().filter((node) => !isTextNode(node) || !isZWS(node))
+            .length;
     }
 
     shouldPreventClosing(selectionData) {
