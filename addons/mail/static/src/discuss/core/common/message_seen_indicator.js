@@ -1,8 +1,9 @@
 import { Component, useExternalListener, useRef } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useBackNavigation, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 class MessageSeenIndicatorDialog extends Component {
     static components = { Dialog };
@@ -22,6 +23,9 @@ class MessageSeenIndicatorDialog extends Component {
             },
             true
         );
+        if (isMobileOS()) {
+            useBackNavigation({ action: () => this.props.close() });
+        }
     }
 }
 

@@ -1,6 +1,15 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+import {
+    status,
+    useComponent,
+    useEffect,
+    useRef,
+    onWillUnmount,
+    useState,
+    toRaw,
+    useExternalListener,
+} from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -284,4 +293,23 @@ export function useRefListener(ref, ...listener) {
         },
         () => [ref.el]
     );
+}
+
+/**
+ * Handle mobile "back" gesture and "back" navigation button.
+ * Push a history state when the component opens, intercept the browser's
+ * history events, prevents navigation by pushing another state and executes the action.
+ *
+ * @param {() => void} [options.action] Function called when back navigation is detected.
+ * @param {() => boolean} [options.predicate] Optional function to enable back navigation detection.
+ */
+export function useBackNavigation({ action, predicate = () => true } = {}) {
+    const component = useComponent();
+    window.history.pushState({ [component.constructor.name]: true }, "");
+    useExternalListener(window, "popstate", (ev) => {
+        if (predicate()) {
+            window.history.pushState({ [component.constructor.name]: true }, "");
+            action();
+        }
+    });
 }
