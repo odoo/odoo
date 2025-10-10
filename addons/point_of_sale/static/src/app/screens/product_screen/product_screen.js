@@ -274,6 +274,32 @@ export class ProductScreen extends Component {
             this.pos.setDiscountFromUI(last_orderline, code.value);
         }
     }
+<<<<<<< 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+||||||| c05740cbdfdd0105cfda490d822f061269e44fbd
+    async _parseElementsFromGS1(parsed_results) {
+        const productBarcode = parsed_results.find((element) => element.type === "product");
+        const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const product = await this._getProductByBarcode(productBarcode);
+        return { product, lotBarcode, customProductOptions: {} };
+    }
+=======
+    async _parseElementsFromGS1(parsed_results) {
+        const productBarcode = parsed_results.find((element) => element.type === "product");
+        const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const qty = parsed_results.find((element) => element.type === "quantity");
+        const product = await this._getProductByBarcode(productBarcode);
+        const customProductOptions = {};
+        if (
+            qty &&
+            product?.uom_id[0] &&
+            qty?.rule?.associated_uom_id &&
+            product.uom_id[0] == qty.rule.associated_uom_id[0]
+        ) {
+            customProductOptions.quantity = qty.value;
+        }
+        return { product, lotBarcode, customProductOptions };
+    }
+>>>>>>> fdad755a25906f0e6bbab97819d8d3784e881151
     /**
      * Add a product to the current order using the product identifier and lot number from parsed results.
      * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
