@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-25 17:33+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -22,56 +22,39 @@ msgstr ""
 
 #. module: sale_edi_ubl
 #. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid ", Email: %(email)s"
-msgstr ", E-mail: %(email)s"
+#: code:addons/sale_edi_ubl/models/sale_edi_xml_ubl_bis3.py:0
+msgid "Could not retrieve the product named: %(name)s"
+msgstr ""
 
 #. module: sale_edi_ubl
 #. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid ", Phone: %(phone)s"
-msgstr ", Telefone: %(phone)s"
+#: code:addons/sale_edi_ubl/models/sale_edi_xml_ubl_bis3.py:0
+msgid "Discount"
+msgstr ""
 
 #. module: sale_edi_ubl
-#: model:ir.model,name:sale_edi_ubl.model_sale_edi_common
-msgid "Common functions for EDI orders"
-msgstr "Funções comuns para ordens de EDI"
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_edi_xml_ubl_bis3__display_name
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_order__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Could not retrieve Delivery Address with Details: { %s }"
-msgstr "Não foi possível recuperar o endereço de entrega com detalhes: { %s }"
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_product_product__id
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_edi_xml_ubl_bis3__id
+#: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_order__id
+msgid "ID"
+msgstr ""
 
 #. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Could not retrieve product for line '%s'"
-msgstr "Não foi possível recuperar o produto da linha '%s'"
+#: model:ir.model,name:sale_edi_ubl.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Could not retrive Customer with Details: { %s }"
-msgstr "Não foi possível recuperar o cliente com detalhes: { %s }"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Format used to import the invoice: %s"
-msgstr "Formato usado para importar a fatura: %s"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Insufficient details to extract Customer: { %s }"
-msgstr "Informações insuficientes para extrair o cliente: { %s }"
-
-#. module: sale_edi_ubl
-#. odoo-python
-#: code:addons/sale_edi_ubl/models/sale_edi_common.py:0
-msgid "Name: %(name)s, Vat: %(vat)s"
-msgstr "Nome: %(name)s, CPF/CNPJ: %(vat)s"
+#: model:ir.model,name:sale_edi_ubl.model_sale_edi_xml_ubl_bis3
+msgid "Sale BIS Ordering 3.5"
+msgstr ""
 
 #. module: sale_edi_ubl
 #: model:ir.model,name:sale_edi_ubl.model_sale_order
@@ -81,10 +64,39 @@ msgstr "Pedido de venda"
 #. module: sale_edi_ubl
 #. odoo-python
 #: code:addons/sale_edi_ubl/models/sale_order.py:0
-msgid "Some information could not be imported"
-msgstr "Não foi possível importar algumas informações"
+msgid "Some information could not be imported:"
+msgstr ""
 
-#. module: sale_edi_ubl
-#: model:ir.model,name:sale_edi_ubl.model_sale_edi_xml_ubl_bis3
-msgid "UBL BIS Ordering 3.0"
-msgstr "Pedido UBL BIS 3.0"
+#~ msgid ", Email: %(email)s"
+#~ msgstr ", E-mail: %(email)s"
+
+#~ msgid ", Phone: %(phone)s"
+#~ msgstr ", Telefone: %(phone)s"
+
+#~ msgid "Common functions for EDI orders"
+#~ msgstr "Funções comuns para ordens de EDI"
+
+#~ msgid "Could not retrieve Delivery Address with Details: { %s }"
+#~ msgstr ""
+#~ "Não foi possível recuperar o endereço de entrega com detalhes: { %s }"
+
+#~ msgid "Could not retrieve product for line '%s'"
+#~ msgstr "Não foi possível recuperar o produto da linha '%s'"
+
+#~ msgid "Could not retrive Customer with Details: { %s }"
+#~ msgstr "Não foi possível recuperar o cliente com detalhes: { %s }"
+
+#~ msgid "Format used to import the invoice: %s"
+#~ msgstr "Formato usado para importar a fatura: %s"
+
+#~ msgid "Insufficient details to extract Customer: { %s }"
+#~ msgstr "Informações insuficientes para extrair o cliente: { %s }"
+
+#~ msgid "Name: %(name)s, Vat: %(vat)s"
+#~ msgstr "Nome: %(name)s, CPF/CNPJ: %(vat)s"
+
+#~ msgid "Some information could not be imported"
+#~ msgstr "Não foi possível importar algumas informações"
+
+#~ msgid "UBL BIS Ordering 3.0"
+#~ msgstr "Pedido UBL BIS 3.0"

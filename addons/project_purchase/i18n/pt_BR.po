@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-25 13:47+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -29,6 +29,20 @@ msgstr "Tijolos"
 #: model:product.template,name:project_purchase.product_product_cement_product_template
 msgid "Cement"
 msgstr "Cimento"
+
+#. module: project_purchase
+#: model:ir.model.fields,field_description:project_purchase.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: project_purchase
+#: model:ir.model.fields,field_description:project_purchase.field_project_project__id
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order_line__id
+msgid "ID"
+msgstr ""
 
 #. module: project_purchase
 #. odoo-python
@@ -58,12 +72,6 @@ msgid "Purchase Order"
 msgstr "Pedido de compra"
 
 #. module: project_purchase
-#. odoo-python
-#: code:addons/project_purchase/models/project_project.py:0
-msgid "Purchase Order Items"
-msgstr "Itens do pedido de compra"
-
-#. module: project_purchase
 #: model:ir.model,name:project_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
 msgstr "Linha do pedido de compra"
@@ -72,6 +80,7 @@ msgstr "Linha do pedido de compra"
 #. odoo-python
 #: code:addons/project_purchase/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_purchase.project_embedded_action_purchase_orders
+#: model:ir.embedded.actions,name:project_purchase.project_embedded_action_purchase_orders_dashboard
 msgid "Purchase Orders"
 msgstr "Pedidos de compra"
 
@@ -79,3 +88,6 @@ msgstr "Pedidos de compra"
 #: model:product.template,name:project_purchase.product_product_sand_product_template
 msgid "Sand"
 msgstr "Areia"
+
+#~ msgid "Purchase Order Items"
+#~ msgstr "Itens do pedido de compra"

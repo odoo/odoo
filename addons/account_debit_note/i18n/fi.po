@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:34+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -37,8 +37,8 @@ msgstr "Peruuta"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
 msgstr ""
 "Valitse tämä, jos et halua, että tästä kirjanpidon päiväkirjasta tehdyille "
 "laskuille ja veloituslaskuille käytetään samaa järjestystä"
@@ -114,7 +114,8 @@ msgstr "Tunnus"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr "Mikäli tyhjä, käytetään sen kirjanpitovientiä veloituksen kirjaamiseen."
+msgstr ""
+"Mikäli tyhjä, käytetään sen kirjanpitovientiä veloituksen kirjaamiseen."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -194,7 +195,7 @@ msgstr "Tälle laskulle luodut veloituslaskut"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "Veloituslasku luotiin kohteesta %s"
 
@@ -223,8 +224,8 @@ msgstr "Veloituslaskuja voi luoda vain kirjatuista siirroista."
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
 msgstr ""
 "Et voi tehdä veloitulaskua laskulle, joka on jo linkitetty veloituslaskuun."
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-14 21:20+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -27,7 +27,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -35,22 +36,22 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    マイルストンが見つかりませんでした。作成しましょう!\n"
 "                </p><p>\n"
-"                    "
-"成功するために到達すべき重要な進捗ポイントを管理しましょう。\n"
+"                    成功するために到達すべき重要な進捗ポイントを管理しましょ"
+"う。\n"
 "                </p>\n"
 "            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Sales Order Items"
-msgstr "%(name)sの販売オーダ項目"
+msgid "%(name)s's %(action_name)s"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "%(name)s's Sales Orders"
-msgstr ""
+msgid "%(name)s's Sales Order Items"
+msgstr "%(name)sの販売オーダ項目"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -79,22 +80,23 @@ msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
 "order associated with this task has been cancelled. We recommend either "
 "updating the sales order item or cancelling this task in alignment with the "
-"cancellation of the sales order.\" invisible=\"sale_order_state != 'cancel'\""
-"/>"
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span>販売オーダ "
-"\n"
+"                            <span class=\"o_stat_value\">0</span>販売オー"
+"ダ \n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            請求可能にする\n"
@@ -112,13 +114,19 @@ msgstr ""
 "                        </span>"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
-msgid ""
-"<span class=\"o_stat_text\">Customer</span>\n"
-"                        <span class=\"o_stat_text\">Preview</span>"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "<span class=\"o_stat_text\"> Projects</span>"
 msgstr ""
-"<span class=\"o_stat_text\">顧客</span>\n"
-"                        <span class=\"o_stat_text\">プレビュー</span>"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "<span class=\"o_stat_text\"> Tasks</span>"
+msgstr ""
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "<span class=\"o_stat_text\">Preview</span>"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -128,9 +136,17 @@ msgid "<span class=\"o_stat_text\">Sales Order</span>"
 msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
-msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr "<span class=\"o_stat_text\">タスク</span>"
+#: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
+msgid ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">A rating "
+"request will be sent as soon as a task reaches this stage, provided the "
+"project is billable.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">Rating "
+"requests will be sent as long as the task remains in this stage, provided "
+"the project is billable.</span>\n"
+"                </span>"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -141,8 +157,10 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation or on the form of products creating a task on order.\n"
-"The following products need a project in which to put their task: %(product_names)s"
+"A project must be defined on the quotation %(order)s or on the form of "
+"products creating a task on order.\n"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
 
 #. module: sale_project
@@ -152,25 +170,28 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
-"販売オーダが確定した時点で、プロジェクト用のタスクが作成されます。このプロジ"
-"ェクトの分析的な分布は、新たに作成された販売オーダ項目に関する参考情報として"
-"も役立ちます。"
+"販売オーダが確定した時点で、プロジェクト用のタスクが作成されます。このプロ"
+"ジェクトの分析的な分布は、新たに作成された販売オーダ項目に関する参考情報とし"
+"ても役立ちます。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されます: "
-"\n"
+"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されま"
+"す: \n"
 "  - 手動: 数量を明細上で手動で設定します\n"
 "  - 費用からの分析: 数量は計上された費用からの合計数量です\n"
-"  - タイムシート:数量は、"
-"この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - タイムシート:数量は、この売上明細にリンクされたタスクに記録された時間の合"
+"計です\n"
 "  - 在庫移動: 数量は確定したピッキングに由来します\n"
 
 #. module: sale_project
@@ -188,6 +209,7 @@ msgstr "マイルストンに基づく"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__allow_billable
 msgid "Billable"
 msgstr "請求可能"
 
@@ -198,9 +220,29 @@ msgid "Cancelled"
 msgstr "キャンセル済"
 
 #. module: sale_project
-#: model:ir.model,name:sale_project.model_res_config_settings
-msgid "Config Settings"
-msgstr "詳細設定"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
+msgid "Confirm & Close"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid ""
+"Converting this template to a regular project will unlink it from its "
+"associated products."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Cost of Goods Sold"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_project.py:0
+msgid "Cost of Goods Sold Items"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -208,16 +250,27 @@ msgid "Create Project"
 msgstr "プロジェクト作成"
 
 #. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
+msgid "Create Sales Order"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "Create a customer invoice"
-msgstr "顧客請求書を作成"
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "Create a Project"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model,website_form_label:sale_project.model_project_task
+msgid "Create a Task"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgid "Create a customer invoice"
+msgstr "顧客請求書を作成"
 
 #. module: sale_project
 #. odoo-python
@@ -251,7 +304,8 @@ msgstr "オーダ用に空のプロジェクトを作成し費やした時間を
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr "請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したりし"
+msgstr ""
+"請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したりし"
 "ます。"
 
 #. module: sale_project
@@ -260,7 +314,8 @@ msgstr "請求書を作成したり、支払登録したり、顧客とのコミ
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr "請求書を作成したり、支払を登録したり、仕入先とのコミュニケーションを管理した"
+msgstr ""
+"請求書を作成したり、支払を登録したり、仕入先とのコミュニケーションを管理した"
 "りします。"
 
 #. module: sale_project
@@ -275,12 +330,14 @@ msgstr "オーダで作成"
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
-msgstr "プロジェクトまたはタスクを後で作成し、それらをオーダにリンクして費やした時間"
+msgstr ""
+"プロジェクトまたはタスクを後で作成し、それらをオーダにリンクして費やした時間"
 "を追跡します。"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Customer"
 msgstr "顧客"
 
@@ -298,6 +355,7 @@ msgstr "見積上に定義済"
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Delivered"
 msgstr "配送済"
 
@@ -305,6 +363,31 @@ msgstr "配送済"
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
 msgstr "デジタルマーケティングキャンペーン(プロジェクト)"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
+msgid "Discard"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_project.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task_type__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_update__display_name
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -334,10 +417,36 @@ msgid "Flooring Services"
 msgstr "フローリングサービス"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_account_move__id
+#: model:ir.model.fields,field_description:sale_project.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_project.field_product_product__id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__id
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__id
+#: model:ir.model.fields,field_description:sale_project.field_project_project__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task_type__id
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__id
+#: model:ir.model.fields,field_description:sale_project.field_project_update__id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "In Progress"
 msgstr "進行中"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+msgid "Internal link"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
@@ -354,6 +463,7 @@ msgstr "顧客にタイムアンドマテリアル方式で請求する"
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Invoiced"
 msgstr "請求済"
 
@@ -390,9 +500,12 @@ msgstr "もっと読み込む"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
 "注文時に手動で数量を設定:分析アカウントを作成せずに、手動で入力した数量に基づ"
 "いて請求します。\n"
@@ -426,6 +539,11 @@ msgid "New Sales Order Item"
 msgstr "新規販売オーダ項目"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
+msgid "New project"
+msgstr ""
+
+#. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -445,13 +563,6 @@ msgstr "オフィス家具設定(タスク)"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-msgid ""
-"Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
 msgid "Other Services"
 msgstr "その他サービス"
 
@@ -461,16 +572,27 @@ msgid "Painting"
 msgstr "絵画"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr "マイルストンに達すると自動的に配送されるオーダ数量の割合。"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
 msgstr "配管サービス"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project_task.py:0
+msgid "Portal Sale Order"
+msgstr ""
 
 #. module: sale_project
 #. odoo-python
@@ -492,8 +614,8 @@ msgstr "プロダクトバリアント"
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
-"generate analytic costs, will be re-invoiced in this sales order if they are"
-" set up for it."
+"generate analytic costs, will be re-invoiced in this sales order if they are "
+"set up for it."
 msgstr ""
 "分析原価を生成するようにオペレーションタイプが設定されている在庫ピッキングに"
 "追加されたプロダクトは、そのように設定されていれば、この販売オーダで再請求さ"
@@ -532,20 +654,24 @@ msgstr "プロジェクトマイルストン"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
+#: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "Project Template"
 msgstr "プロジェクトテンプレート"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_template_create_wizard
+msgid "Project Template create Wizard"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_update
+msgid "Project Update"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
 msgstr "プロジェクト販売オーダ"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order.py:0
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
-msgid "Projects"
-msgstr "プロジェクト"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
@@ -562,6 +688,11 @@ msgstr "数量 (%)"
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
 msgstr "見積テンプレート明細"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
+msgid "Role To Users"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -605,9 +736,14 @@ msgstr "マイルストンに達すると販売オーダ項目は更新されま
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
 "顧客に請求するために、このタスクの消費時間を追加する販売オーダ項目。\n"
 "デフォルトでは、プロジェクトに設定された販売オーダ項目が選択されます。この項"
@@ -620,6 +756,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Sales Order Items"
 msgstr "販売オーダ明細"
 
@@ -639,12 +776,15 @@ msgstr "販売オーダ"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"このプロジェクトのタスクとタイムシートでデフォルトで選択される販売オーダ項目"
-"。ただし、タイムシートに設定された従業員がプロジェクトの別の販売オーダ項目に"
-"明確にリンクされている場合を除きます。\n"
+"このプロジェクトのタスクとタイムシートでデフォルトで選択される販売オーダ項"
+"目。ただし、タイムシートに設定された従業員がプロジェクトの別の販売オーダ項目"
+"に明確にリンクされている場合を除きます。\n"
 "必要であれば、各タスクやタイムシートで個別に変更することができます。"
 
 #. module: sale_project
@@ -666,11 +806,12 @@ msgstr "請求書内を検索"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
-msgid "Search in Sales Order"
+msgid "Search in Sales Order Item"
 msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
+#: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Select who to bill..."
 msgstr "誰に請求するかを選択..."
 
@@ -683,6 +824,7 @@ msgstr "サービス請求ポリシー"
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
+#: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Sold"
 msgstr "販売数"
 
@@ -709,6 +851,17 @@ msgid "Task Recurrence"
 msgstr "タスクの繰り返し"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task_type
+msgid "Task Stage"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
+msgid "Task Template"
+msgstr ""
+
+#. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
 msgid "Tasks"
 msgstr "タスク"
@@ -720,8 +873,8 @@ msgstr "タスク分析"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/sale_order_line.py:0
-msgid "The Sale Order Item should contain a service product."
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "The Sales Order must contain at least one service product."
 msgstr ""
 
 #. module: sale_project
@@ -730,7 +883,8 @@ msgstr ""
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr "プロジェクトが生成されるので、プロダクト%sにグローバル・プロジェクトがあって"
+msgstr ""
+"プロジェクトが生成されるので、プロダクト%sにグローバル・プロジェクトがあって"
 "はいけません。"
 
 #. module: sale_project
@@ -739,7 +893,8 @@ msgstr "プロジェクトが生成されるので、プロダクト%sにグロ�
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr "プロジェクトは生成されないので、プロダクト%sにプロジェクトもプロジェクト・テ"
+msgstr ""
+"プロジェクトは生成されないので、プロダクト%sにプロジェクトもプロジェクト・テ"
 "ンプレートもあってはいけません。"
 
 #. module: sale_project
@@ -748,21 +903,16 @@ msgstr "プロジェクトは生成されないので、プロダクト%sにプ�
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "グローバル・プロジェクトでタスクを生成するので、プロダクト%sにプロジェクト・"
+msgstr ""
+"グローバル・プロジェクトでタスクを生成するので、プロダクト%sにプロジェクト・"
 "テンプレートがあってはいけません。"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid ""
-"The project couldn't be created as the Sales Order must be confirmed, is "
-"already linked to a project, or doesn't involve any services."
-msgstr ""
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/models/sale_order.py:0
-msgid "This Sales Order must contain at least one product of type \"Service\"."
+"The project couldn't be created as the Sales Order must be confirmed or is "
+"already linked to a project."
 msgstr ""
 
 #. module: sale_project
@@ -789,9 +939,26 @@ msgid "Track Service"
 msgstr "サービス追跡"
 
 #. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
 msgid "Vendor Bills"
 msgstr "仕入先請求書"
 
@@ -816,11 +983,40 @@ msgstr "配線サービス"
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
-msgstr "オーダ項目%(order_id)s-%(product_id)sは再請求された費用であるため、このタスク"
+msgstr ""
+"オーダ項目%(order_id)s-%(product_id)sは再請求された費用であるため、このタスク"
 "にリンクすることはできません。"
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/project_project.py:0
-msgid "You will be able to create an invoice and collect the payment."
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "[Project] %(task_name)s"
 msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "delivered_manual"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "sale_line_id"
+msgstr ""
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\">Customer</span>\n"
+#~ "                        <span class=\"o_stat_text\">Preview</span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\">顧客</span>\n"
+#~ "                        <span class=\"o_stat_text\">プレビュー</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Tasks</span>"
+#~ msgstr "<span class=\"o_stat_text\">タスク</span>"
+
+#~ msgid "Config Settings"
+#~ msgstr "詳細設定"
+
+#~ msgid "Projects"
+#~ msgstr "プロジェクト"

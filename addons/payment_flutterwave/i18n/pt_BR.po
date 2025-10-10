@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-17 17:32+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -35,10 +35,11 @@ msgid "Code"
 msgstr "Código"
 
 #. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "Não foi possível estabelecer a conexão com a API."
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_flutterwave
 #: model:ir.model.fields.selection,name:payment_flutterwave.selection__payment_provider__code__flutterwave
@@ -66,10 +67,11 @@ msgid "Flutterwave Webhook Secret"
 msgstr "Flutterwave – Webhook secreto"
 
 #. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Nenhuma transação encontrada com a referência %s."
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_flutterwave.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_provider
@@ -92,25 +94,9 @@ msgid "Public Key"
 msgstr "Chave pública"
 
 #. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "Dados recebidos com referência ausente."
-
-#. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Secret Key"
 msgstr "Chave secreta"
-
-#. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_provider.py:0
-msgid ""
-"The communication with the API failed. Flutterwave gave us the following "
-"information: '%s'"
-msgstr ""
-"A comunicação com a API falhou. O Flutterwave nos forneceu as seguintes "
-"informações '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
@@ -131,12 +117,6 @@ msgstr "O código técnico deste provedor de pagamento."
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "A transação não está vinculada a um token."
-
-#. module: payment_flutterwave
-#. odoo-python
-#: code:addons/payment_flutterwave/models/payment_transaction.py:0
 msgid "Unknown payment status: %s"
 msgstr "Status de pagamento desconhecido: %s"
 
@@ -144,3 +124,22 @@ msgstr "Status de pagamento desconhecido: %s"
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
 msgstr "Segredo do webhook"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "Não foi possível estabelecer a conexão com a API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Nenhuma transação encontrada com a referência %s."
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "Dados recebidos com referência ausente."
+
+#~ msgid ""
+#~ "The communication with the API failed. Flutterwave gave us the following "
+#~ "information: '%s'"
+#~ msgstr ""
+#~ "A comunicação com a API falhou. O Flutterwave nos forneceu as seguintes "
+#~ "informações '%s'"
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "A transação não está vinculada a um token."

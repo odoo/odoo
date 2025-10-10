@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-14 21:18+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -215,7 +215,8 @@ msgstr "ブースタイプ"
 msgid ""
 "Booth categories are used to represent the different types of booths you "
 "rent (Premium Booth, Table and Chairs, ...)"
-msgstr "ブースのカテゴリは、レンタルするブースの種類(プレミアムブース、テーブル＆チェ"
+msgstr ""
+"ブースのカテゴリは、レンタルするブースの種類(プレミアムブース、テーブル＆チェ"
 "ア、...)を表すために使用されます。"
 
 #. module: event_booth
@@ -277,6 +278,8 @@ msgstr "説明"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_type__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -370,12 +373,6 @@ msgid "Gold Booth 3"
 msgstr "ゴールドブース 3"
 
 #. module: event_booth
-#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
-#: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_search
-msgid "Group By"
-msgstr "グループ化"
-
-#. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__has_message
 msgid "Has Message"
 msgstr "メッセージあり"
@@ -383,6 +380,8 @@ msgstr "メッセージあり"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__id
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__id
+#: model:ir.model.fields,field_description:event_booth.field_event_event__id
+#: model:ir.model.fields,field_description:event_booth.field_event_type__id
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__id
 msgid "ID"
 msgstr "ID"
@@ -704,3 +703,6 @@ msgstr "例: 第1ブース 通路1"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
 msgid "e.g. Premium Booth"
 msgstr "例: プレミアムブース"
+
+#~ msgid "Group By"
+#~ msgstr "グループ化"

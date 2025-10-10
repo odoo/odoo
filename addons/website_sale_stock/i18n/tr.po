@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 02:32+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -28,8 +28,31 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"%(product_name)s has not been added to your cart since it is not available."
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "<span invisible=\"not show_availability\">Units</span>"
+msgid "<span invisible=\"not default_show_availability\">units</span>"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "All warehouses"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
+msgid "Assign"
 msgstr ""
 
 #. module: website_sale_stock
@@ -38,20 +61,22 @@ msgid "Back in stock Notifications"
 msgstr "Stoklara geri dön"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Below"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
 msgstr "Yapılandırma Ayarları"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Continue Selling"
 msgstr "Satışa Devam Et"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
 msgstr "Stokta kalmadığında satışa devam et"
 
@@ -70,9 +95,28 @@ msgstr ""
 "ayarlanmıştır. Bu, ürün düzeyinde değiştirilebilir."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default visibility for custom messages."
-msgstr "Özel mesajlar için varsayılan görünürlük."
+#: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
+msgid ""
+"Defines how this ribbon is assigned to products:\n"
+"- Manually: You assign the ribbon manually to products.\n"
+"- Sale: Applied when the product is visibly on sale.\n"
+"- New: Applied based on the New period you will define.\n"
+"- Out Of Stock: Applied when the product is out of stock."
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -81,10 +125,18 @@ msgid "Get notified when back in stock"
 msgstr "Tekrar stokta olduğunda bildirim alın"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "How to display products having low quantities (on hand - reserved)"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__id
+msgid "ID"
 msgstr ""
-"Miktarları düşük olan ürünler nasıl görüntülenir (eldeki - rezerve edilmiş)"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -104,24 +156,24 @@ msgid "Inventory Defaults"
 msgstr "Envanter Varsayılanları"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Only"
-msgstr "Yalnız"
-
-#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
 msgstr "Hemen Alın"
 
 #. module: website_sale_stock
 #. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
 msgstr "Stokta kalmadı"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
 msgstr "Stokta kalmadı"
@@ -140,9 +192,24 @@ msgid "Product"
 msgstr "Ürün"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_combo
+msgid "Product Combo"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_feed
+msgid "Product Feed"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
 msgstr "Ürün Varyantı"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_ribbon
+msgid "Product ribbon"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -165,22 +232,32 @@ msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+msgid "Sell when Out-of-Stock"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Qty"
 msgstr "Uygun Miktarı Göster"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Quantity"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_available_threshold
 msgid "Show Threshold"
 msgstr "Sınırı Göster"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_show_availability
 msgid "Show availability Qty"
 msgstr "Uygun Miktarı Göster"
 
@@ -201,31 +278,14 @@ msgstr "Takip edilen ürün artık mevcuttur."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
-msgid "The item has not been added to your cart since it is not available."
-msgstr ""
-
-#. module: website_sale_stock
-#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "'%(product_name)s' ürünü artık mevcut"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "This product is out of stock."
-msgstr "Bu ürün stokta yoktur."
-
-#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Aktarım"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Units"
-msgstr "Adet"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -237,8 +297,8 @@ msgstr "Depo"
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "We'll notify you once the product is back in stock."
-msgstr "Ürün tekrar stoğa girdiğinde sizi bilgilendireceğiz."
+msgid "We'll notify you once the product is back in stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -254,55 +314,96 @@ msgstr "E-Ticaret siparişleri için bu siparişin verildiği web sitesi."
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added"
-msgstr "Zaten ekledin"
+msgid "You already added all the available product in your cart"
+msgstr ""
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added all the available product in your cart."
-msgstr "Mevcut tüm ürünleri sepetinize eklediniz."
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You already have %s Units in your cart."
-msgstr "Sepetinizde zaten %s birim var."
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
-#: code:addons/website_sale_stock/models/sale_order_line.py:0
-msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+msgid ""
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr ""
-"%(desired_qty)s ürünleri istiyorsunuz ancak yalnızca %(new_qty)s mevcut"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "%s Birimleri istiyorsunuz ancak yalnızca %s mevcut."
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "in your cart."
-msgstr "Sepetinizde."
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "left in stock."
-msgstr "stokta kaldı."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "e.g. 'Will be back soon'"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in stock"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in your cart)"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
 msgstr "sadece altındaysa"
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
+msgid "when out of stock"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
 msgstr "youremail@gmail.com"
+
+#~ msgid "Default visibility for custom messages."
+#~ msgstr "Özel mesajlar için varsayılan görünürlük."
+
+#~ msgid "How to display products having low quantities (on hand - reserved)"
+#~ msgstr ""
+#~ "Miktarları düşük olan ürünler nasıl görüntülenir (eldeki - rezerve "
+#~ "edilmiş)"
+
+#~ msgid "Only"
+#~ msgstr "Yalnız"
+
+#~ msgid "This product is out of stock."
+#~ msgstr "Bu ürün stokta yoktur."
+
+#~ msgid "Units"
+#~ msgstr "Adet"
+
+#~ msgid "We'll notify you once the product is back in stock."
+#~ msgstr "Ürün tekrar stoğa girdiğinde sizi bilgilendireceğiz."
+
+#~ msgid "You already added"
+#~ msgstr "Zaten ekledin"
+
+#~ msgid "You already added all the available product in your cart."
+#~ msgstr "Mevcut tüm ürünleri sepetinize eklediniz."
+
+#~ msgid "You already have %s Units in your cart."
+#~ msgstr "Sepetinizde zaten %s birim var."
+
+#~ msgid ""
+#~ "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+#~ msgstr ""
+#~ "%(desired_qty)s ürünleri istiyorsunuz ancak yalnızca %(new_qty)s mevcut"
+
+#~ msgid "You ask for %s Units but only %s are available."
+#~ msgstr "%s Birimleri istiyorsunuz ancak yalnızca %s mevcut."
+
+#~ msgid "in your cart."
+#~ msgstr "Sepetinizde."
+
+#~ msgid "left in stock."
+#~ msgstr "stokta kaldı."

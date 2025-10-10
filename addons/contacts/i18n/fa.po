@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Hanna Kheradroosta, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -40,14 +40,14 @@ msgid "Configuration"
 msgstr "پیکربندی"
 
 #. module: contacts
+#: model:ir.model,name:contacts.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
 msgstr "برچسب‌های مخاطبان"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "عناوین مخاطبان"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
@@ -72,9 +72,26 @@ msgid "Create a Contact in your address book"
 msgstr "یک مخاطب در دفترچه آدرس خود ایجاد کنید"
 
 #. module: contacts
+#: model:ir.model,website_form_label:contacts.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__display_name
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "ایالت‌های فدرال"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__id
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
@@ -89,9 +106,13 @@ msgstr "بومی‌سازی"
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
 msgid "Odoo helps you track all activities related to your contacts."
-msgstr "Odoo به شما کمک می کند تمام فعالیت های مربوط به مخاطبین خود را ردیابی کنید."
+msgstr ""
+"Odoo به شما کمک می کند تمام فعالیت های مربوط به مخاطبین خود را ردیابی کنید."
 
 #. module: contacts
 #: model:ir.model,name:contacts.model_res_users
 msgid "User"
 msgstr "کاربر"
+
+#~ msgid "Contact Titles"
+#~ msgstr "عناوین مخاطبان"

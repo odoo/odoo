@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -25,42 +25,17 @@ msgstr ""
 #. module: website_sale_stock_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
 msgid ""
-"<i class=\"fa fa-bell\"/>\n"
-"                        We'll notify you once the product is back in stock."
+"<i class=\"fa fa-circle text-danger me-1\" aria-hidden=\"true\"/>\n"
+"                    Out of stock"
 msgstr ""
-"<i class=\"fa fa-bell\"/>\n"
-"                        產品返貨時，會立即通知你。"
 
 #. module: website_sale_stock_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
 msgid ""
-"<i class=\"fa fa-times text-danger\"/>\n"
-"                                Invalid email"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
+"                <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-times text-danger\"/>\n"
-"                                電郵地址無效"
-
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
-msgid ""
-"<small>\n"
-"                            <i class=\"fa fa-envelope-o\"/>\n"
-"                            Get notified when back in stock\n"
-"                        </small>"
-msgstr ""
-"<small>\n"
-"                            <i class=\"fa fa-envelope-o\"/>\n"
-"                            返貨時收取通知\n"
-"                        </small>"
-
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
-msgid ""
-"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
-"                <span class=\"d-none d-md-inline\">Add</span>"
-msgstr ""
-"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
-"                <span class=\"d-none d-md-inline\">加入</span>"
 
 #. module: website_sale_stock_wishlist
 #. odoo-javascript
@@ -97,22 +72,48 @@ msgid "Product Wishlist"
 msgstr "產品願望清單"
 
 #. module: website_sale_stock_wishlist
-#. odoo-javascript
-#: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
-msgid "Save for later"
-msgstr "儲存至稍後再看"
-
-#. module: website_sale_stock_wishlist
 #: model:ir.model.fields,field_description:website_sale_stock_wishlist.field_product_wishlist__stock_notification
 msgid "Stock Notification"
 msgstr "到貨通知"
 
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
-msgid "Temporarily out of stock"
-msgstr "暫時缺貨"
+#~ msgid ""
+#~ "<i class=\"fa fa-bell\"/>\n"
+#~ "                        We'll notify you once the product is back in "
+#~ "stock."
+#~ msgstr ""
+#~ "<i class=\"fa fa-bell\"/>\n"
+#~ "                        產品返貨時，會立即通知你。"
 
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
-msgid "youremail@gmail.com"
-msgstr "youremail@example.com"
+#~ msgid ""
+#~ "<i class=\"fa fa-times text-danger\"/>\n"
+#~ "                                Invalid email"
+#~ msgstr ""
+#~ "<i class=\"fa fa-times text-danger\"/>\n"
+#~ "                                電郵地址無效"
+
+#~ msgid ""
+#~ "<small>\n"
+#~ "                            <i class=\"fa fa-envelope-o\"/>\n"
+#~ "                            Get notified when back in stock\n"
+#~ "                        </small>"
+#~ msgstr ""
+#~ "<small>\n"
+#~ "                            <i class=\"fa fa-envelope-o\"/>\n"
+#~ "                            返貨時收取通知\n"
+#~ "                        </small>"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+#~ "                <span class=\"d-none d-md-inline\">Add</span>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+#~ "                <span class=\"d-none d-md-inline\">加入</span>"
+
+#~ msgid "Save for later"
+#~ msgstr "儲存至稍後再看"
+
+#~ msgid "Temporarily out of stock"
+#~ msgstr "暫時缺貨"
+
+#~ msgid "youremail@gmail.com"
+#~ msgstr "youremail@example.com"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 04:48+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -38,7 +38,8 @@ msgstr ""
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
@@ -50,13 +51,13 @@ msgstr ""
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible="
-"\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class="
-"\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        유효한 Gmail 토큰\n"
 "                    </span>"
 
@@ -75,10 +76,17 @@ msgid "Access Token Expiration Timestamp"
 msgstr "액세스 토큰 만료 타임스탬프"
 
 #. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__active
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__active
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__active
+msgid "Active"
+msgstr ""
+
+#. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
-msgid "An error occur during the authentication process."
-msgstr "인증 과정 중에 오류가 발생했습니다."
+msgid "An error occurred during the authentication process."
+msgstr ""
 
 #. module: google_gmail
 #. odoo-python
@@ -87,16 +95,15 @@ msgid "An error occurred when fetching the access token."
 msgstr "액세스 토큰을 가져오는 중에 오류가 발생했습니다."
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "An error occurred: %s."
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
 msgstr "다음으로 인증"
-
-#. module: google_gmail
-#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_authorization_code
-#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
-#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
-msgid "Authorization Code"
-msgstr "인증 코드"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
@@ -108,7 +115,8 @@ msgstr "환경 설정"
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
-"You will be redirected to the Gmail login page where you will need to accept the permission."
+"You will be redirected to the Gmail login page where you will need to accept "
+"the permission."
 msgstr ""
 "OAuth 인증 프로세스를 통하여 Gmail 계정을 연결합니다.\n"
 "권한을 수락할 수 있도록 Gmail 로그인 페이지로 이동합니다."
@@ -118,11 +126,27 @@ msgstr ""
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
 "OAuth 인증 프로세스를 통하여 Gmail 계정을 연결합니다.  \n"
-"기본값으로, 이메일 주소가 일치하는 사용자만 이 서버를 사용할 수 있습니다. "
-"확장해서 사용하려면, \"mail.default.from\" 시스템 매개변수를 설정해야 합니다."
+"기본값으로, 이메일 주소가 일치하는 사용자만 이 서버를 사용할 수 있습니다. 확"
+"장해서 사용하려면, \"mail.default.from\" 시스템 매개변수를 설정해야 합니다."
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
+msgid "Gmail"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -141,11 +165,27 @@ msgid "Gmail OAuth Authentication"
 msgstr "Gmail OAuth 인증"
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Gmail is not configured on IAP."
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.google_gmail_oauth_error
+msgid "Go back"
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
 msgstr "Google Gmail 믹스인"
 
 #. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__id
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__id
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__id
+#: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__id
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID"
 msgstr "ID"
@@ -166,8 +206,9 @@ msgstr "수신 메일 서버"
 msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
-msgstr "Gmail 메일 서버 “%s”에 대한 연결 보안이 잘못되었습니다. “TLS(STARTTLS)\"로 "
-"설정하세요."
+msgstr ""
+"Gmail 메일 서버 “%s”에 대한 연결 보안이 잘못되었습니다. “TLS(STARTTLS)\"로 설"
+"정하세요."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -183,8 +224,33 @@ msgstr "관리자만 Gmail 메일 서버를 연결할 수 있습니다."
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Oops, we could not authenticate you. Please try again later."
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/controllers/main.py:0
+msgid ""
+"Oops, you're creating an authorization to send from %(email_login)s but your "
+"address is %(email_server)s. Make sure your addresses match!"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__outgoing_mail_server_type
+msgid "Outgoing Mail Server Type"
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Please configure your Gmail credentials."
 msgstr "Gmail 자격 증명을 구성하십시오."
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Please enter a valid email address."
+msgstr ""
 
 #. module: google_gmail
 #. odoo-python
@@ -194,8 +260,8 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
-"\"사용자 이름\" 필드에 Gmail 사용자 이름 (이메일 주소)을 입력하세요. 이 "
-"계정은 Gmail OAuth 인증 토큰에 사용된 계정과 동일해야 합니다."
+"\"사용자 이름\" 필드에 Gmail 사용자 이름 (이메일 주소)을 입력하세요. 이 계정"
+"은 Gmail OAuth 인증 토큰에 사용된 계정과 동일해야 합니다."
 
 #. module: google_gmail
 #. odoo-python
@@ -203,8 +269,9 @@ msgstr ""
 msgid ""
 "Please leave the password field empty for Gmail mail server “%s”. The OAuth "
 "process does not require it"
-msgstr "OAuth 프로세스에는 암호가 필요하지 않습니다. Gmail 메일 서버 “%s”의 암호 "
-"필드를 비워 두세요."
+msgstr ""
+"OAuth 프로세스에는 암호가 필요하지 않습니다. Gmail 메일 서버 “%s”의 암호 필드"
+"를 비워 두세요."
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -217,6 +284,12 @@ msgstr "더 읽기"
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_refresh_token
 msgid "Refresh Token"
 msgstr "새로 고침 토큰"
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/fetchmail_server.py:0
+msgid "SSL is required for server “%s”."
+msgstr ""
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -234,15 +307,6 @@ msgid "Server Type"
 msgstr "서버 유형"
 
 #. module: google_gmail
-#: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
-msgid ""
-"Setup your Gmail API credentials in the general settings to link a Gmail "
-"account."
-msgstr "Gmail 계정을 연결하려면 일반 설정 항목에서 Gmail API 자격 증명을 "
-"설정하십시오."
-
-#. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
@@ -255,3 +319,27 @@ msgstr "구글로부터 인증 코드를 생성하기 위한 URL."
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "URI"
 msgstr "URL"
+
+#. module: google_gmail
+#: model:ir.model,name:google_gmail.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "You don't have an active subscription."
+msgstr ""
+
+#~ msgid "An error occur during the authentication process."
+#~ msgstr "인증 과정 중에 오류가 발생했습니다."
+
+#~ msgid "Authorization Code"
+#~ msgstr "인증 코드"
+
+#~ msgid ""
+#~ "Setup your Gmail API credentials in the general settings to link a Gmail "
+#~ "account."
+#~ msgstr ""
+#~ "Gmail 계정을 연결하려면 일반 설정 항목에서 Gmail API 자격 증명을 설정하십"
+#~ "시오."

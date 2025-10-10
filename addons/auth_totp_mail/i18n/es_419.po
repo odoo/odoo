@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 07:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -34,13 +34,21 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
-"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-style=\"background-color:{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
 "                Activate my two-factor Authentication\n"
 "            </a>\n"
 "        </p>\n"
@@ -50,8 +58,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Apreciable <t t-out=\"object.partner_id.name or 'usuario'\"/>:<br/><"
-"br/>\n"
+"        Apreciable <t t-out=\"object.partner_id.name or 'usuario'\"/>:<br/"
+"><br/>\n"
 "        <t t-out=\"user.name  or ''\"/> solicitó que actives la "
 "autenticación de dos factores para proteger tu cuenta.<br/><br/>\n"
 "        La autenticación de dos factores (\"A2F\") es un sistema de doble "
@@ -62,11 +70,11 @@ msgstr ""
 "Microsoft Authenticator.\n"
 "\n"
 "        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-style"
-"=\"background-color:{{object.company_id.email_secondary_color or '#875A7B'}};"
-" padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
-"\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
 "                Activa tu autenticación de dos factores\n"
 "            </a>\n"
 "        </p>\n"
@@ -87,14 +95,18 @@ msgid ""
 "    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
 "    <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
 "</ul>\n"
-"<p>If this is you, please enter the following code to complete the login:</p>\n"
+"<p>If this is you, please enter the following code to complete the login:</"
+"p>\n"
 "<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
 "<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
 "<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
 "<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"/>\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
 "</div>\n"
-"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</small>\n"
+"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
+"small>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
 "    If you did NOT initiate this log-in,\n"
@@ -102,11 +114,14 @@ msgid ""
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px;\">\n"
-"    We also strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"    We also strongly recommend enabling the two-factor authentication using "
+"an authenticator app to help secure your account.\n"
 "</p>\n"
 "\n"
 "<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
 "        Activate my two-factor authentication\n"
 "    </a>\n"
 "</p>\n"
@@ -159,11 +174,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
-"                To login, enter below the six-digit authentication code just sent via email to"
+"                To login, enter below the six-digit authentication code just "
+"sent via email to"
 msgstr ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                Para iniciar sesión, escribe el código de seis dígitos que "
 "te acabamos de enviar a"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
@@ -184,12 +208,6 @@ msgid ""
 msgstr "Se eliminó un dispositivo de confianza de tu cuenta: %(device_names)s"
 
 #. module: auth_totp_mail
-#. odoo-python
-#: code:addons/auth_totp_mail/models/res_users.py:0
-msgid "Account Security"
-msgstr "Seguridad de la cuenta"
-
-#. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
 msgid "All users"
 msgstr "Todos los usuarios"
@@ -208,6 +226,11 @@ msgstr ""
 "de correo electrónico."
 
 #. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Click to enable 2FA."
+msgstr ""
+
+#. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
@@ -223,6 +246,11 @@ msgstr "Nombre en pantalla"
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
 msgstr "Solo empleados"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Enable 2FA"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
@@ -278,11 +306,6 @@ msgid "Learn More"
 msgstr "Más información"
 
 #. module: auth_totp_mail
-#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
-msgid "Name"
-msgstr "Nombre"
-
-#. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "New Connection to your Account"
@@ -297,6 +320,12 @@ msgstr "Abrir la configuración de la autenticación de dos factores"
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Re-send email"
 msgstr "Reenviar correo electrónico"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+msgid "Security"
+msgstr ""
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -325,6 +354,11 @@ msgstr "Ajustes: Invitación para el uso de A2F"
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
 msgstr "Ajustes: Nuevo inicio de sesión A2F"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Two-factor Authentication"
+msgstr ""
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
@@ -357,7 +391,8 @@ msgstr "La verificación falló, revisa el código de 6 dígitos"
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid ""
-"We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"We strongly recommend enabling the two-factor authentication using an "
+"authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
 "Te recomendamos activar la autenticación de dos factores con una aplicación "
@@ -373,3 +408,9 @@ msgstr "Tu código de autenticación de dos factores"
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
 msgstr "activar la autenticación de dos factores"
+
+#~ msgid "Account Security"
+#~ msgstr "Seguridad de la cuenta"
+
+#~ msgid "Name"
+#~ msgstr "Nombre"

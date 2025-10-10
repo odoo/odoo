@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-14 21:17+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_holidays
@@ -283,8 +283,9 @@ msgid ""
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
 "'confirm'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\" invisible=\"allocation_type == 'accrual' or state != 'confirm'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
+"'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -293,8 +294,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -309,8 +310,8 @@ msgid ""
 "'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Giorni</span>\n"
-"                            <span class=\"ml8\" invisible="
-"\"request_unit != 'hour'\">Ore</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">Ore</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -320,8 +321,8 @@ msgid ""
 "invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Giorni</span>\n"
-"                                <span class=\"ml8\" invisible="
-"\"type_request_unit != 'hour'\">Ore</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">Ore</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -564,8 +565,8 @@ msgid ""
 "(leave_type_name)s can only be taken by days."
 msgstr ""
 "Secondo il tuo piano lavorativo devi lavorare %(days)s giorni in questo "
-"periodo ma verranno usati %(nb_days)s giorni perché questo congedo "
-"%(leave_type_name)s può essere richiesto solo per giorni."
+"periodo ma verranno usati %(nb_days)s giorni perché questo congedo %"
+"(leave_type_name)s può essere richiesto solo per giorni."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -883,7 +884,8 @@ msgstr "Tipo di assegnazione"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
-msgstr "L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
+msgstr ""
+"L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3276,7 +3278,8 @@ msgstr "Solo un responsabile/manager delle ferie può approvare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can approve an allocation."
-msgstr "Solo un responsabile/manager delle ferie può approvare un'assegnazione."
+msgstr ""
+"Solo un responsabile/manager delle ferie può approvare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3288,7 +3291,8 @@ msgstr "Solo un responsabile/manager delle ferie può rifiutare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
-msgstr "Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
+msgstr ""
+"Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4060,8 +4064,8 @@ msgid ""
 "allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
-"Le ferie pianificate nel futuro superano il valore massimo dell'assegnazione."
-"\n"
+"Le ferie pianificate nel futuro superano il valore massimo "
+"dell'assegnazione.\n"
 "                Non sarà possibile prenderle tutte."
 
 #. module: hr_holidays
@@ -4201,7 +4205,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr "Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
+msgstr ""
+"Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type

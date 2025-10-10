@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:24+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -80,8 +80,8 @@ msgid ""
 "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages could not be delivered.</span>"
 msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\""
-">ไม่สามารถส่งข้อความ SMS ได้</span>"
+"<span name=\"failed_text_sms\" invisible=\"mailing_type != "
+"'sms'\">ไม่สามารถส่งข้อความ SMS ได้</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -89,14 +89,14 @@ msgid ""
 "<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\">This "
 "SMS marketing is scheduled for </span>"
 msgstr ""
-"<span name=\"next_departure_text\" invisible=\"mailing_type != 'sms'\""
-">การตลาดผ่าน SMS นี้มีกำหนดไว้สำหรับ </span>"
+"<span name=\"next_departure_text\" invisible=\"mailing_type != "
+"'sms'\">การตลาดผ่าน SMS นี้มีกำหนดไว้สำหรับ </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text"
-" Messages are being processed.</span>"
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+"Messages are being processed.</span>"
 msgstr ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">ข้อความ "
 "SMS กำลังได้รับการประมวลผล</span>"
@@ -128,7 +128,8 @@ msgstr "<span widget=\"statinfo\">เปิดผู้รับ</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                            It appears you don't have enough IAP credits. "
+"Click here to buy credits.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
@@ -139,7 +140,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                            It appears your SMS account is not registered. "
+"Click here to set up your account.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
@@ -202,6 +204,11 @@ msgid "Attachment Count"
 msgstr "จำนวนสิ่งที่แนบมา"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_authentication
+msgid "Authentication Error\""
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Average of Bounced"
@@ -226,8 +233,8 @@ msgid ""
 "Blacklist through SMS Marketing unsubscribe (mailing ID: %(mailing_id)s - "
 "model: %(model)s)"
 msgstr ""
-"ยกเลิกการสมัครบัญชีแบล็กลิสต์ผ่าน SMS Marketing (รหัสไปรษณีย์: %(mailing_id)s - รุ่น: "
-"%(model)s)"
+"ยกเลิกการสมัครบัญชีแบล็กลิสต์ผ่าน SMS Marketing (รหัสไปรษณีย์: %(mailing_id)s - รุ่น: %"
+"(model)s)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_blacklist
@@ -419,6 +426,11 @@ msgstr ""
 "สำหรับ SMS หมายถึงชื่อภายในของข้อความ"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_to
+msgid "From / To identic"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
 msgid "Has Message"
 msgstr "มีข้อความ"
@@ -457,8 +469,8 @@ msgstr "ถ้าเลือก ข้อความบางข้อคว�
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 "หากหมายเลขโทรศัพท์ที่ถูกต้องอยู่ในบัญชีดำ ผู้ติดต่อจะไม่ได้รับ SMS ทางเมลกลุ่มจากรายการใด ๆ "
 "อีกต่อไป"
@@ -466,8 +478,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid ""
-"Immediately send the SMS Mailing instead of queuing up. Use at your own "
-"risk."
+"Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
 msgstr "ส่งจดหมาย SMS ทันทีแทนการรอคิว ใช้ภายใต้ความเสี่ยงของคุณเอง"
 
 #. module: mass_mailing_sms
@@ -475,6 +486,11 @@ msgstr "ส่งจดหมาย SMS ทันทีแทนการรอ�
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
 msgstr "รวมลิงก์ยกเลิก"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_callback
+msgid "Incorrect callback URL"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -581,8 +597,7 @@ msgstr "ประเภทการส่งอีเมล"
 msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "contact directory."
-msgstr ""
-"รายชื่อติดต่อทางเมลทำให้คุณสามารถแยกผู้ชมทางการตลาดออกจากไดเรกทอรีรายชื่อติดต่อของคุณได้"
+msgstr "รายชื่อติดต่อทางเมลทำให้คุณสามารถแยกผู้ชมทางการตลาดออกจากไดเรกทอรีรายชื่อติดต่อของคุณได้"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__manual
@@ -616,6 +631,11 @@ msgid "Messages"
 msgstr "ข้อความ"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_missing
+msgid "Missing From Number"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
 msgstr "หมายเลขที่หายไป"
@@ -638,8 +658,8 @@ msgstr "ยังไม่มีข้อมูล!"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid ""
-"No need to import mailing lists, you can send SMS to contacts saved in other"
-" Odoo apps."
+"No need to import mailing lists, you can send SMS to contacts saved in other "
+"Odoo apps."
 msgstr ""
 "ไม่จำเป็นต้องนำเข้ารายการส่งจดหมาย คุณสามารถส่ง SMS ไปยังผู้ติดต่อที่บันทึกไว้ในแอป Odoo อื่นๆ "
 "ได้"
@@ -692,8 +712,8 @@ msgstr "จำนวน"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"Once you send these text messages, they'll be making a grand entrance in all"
-" pockets, creating quite the bzzzzz!"
+"Once you send these text messages, they'll be making a grand entrance in all "
+"pockets, creating quite the bzzzzz!"
 msgstr ""
 "เมื่อคุณส่งอีเมลเหล่านี้ อีเมลเหล่านี้จะเข้ามามีบทบาทอย่างมากในกล่องจดหมายทั้งหมด "
 "ซึ่งจะทำให้เกิดกระแสฮือฮาอย่างมาก!"
@@ -999,8 +1019,7 @@ msgstr "เกิดข้อผิดพลาดขณะพยายามย
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
-"หมายเลขโทรศัพท์นี้ถูกขึ้นบัญชีดำสำหรับการตลาดผ่าน SMS คลิกเพื่อยกเลิกบัญชีดำ"
+msgstr "หมายเลขโทรศัพท์นี้ถูกขึ้นบัญชีดำสำหรับการตลาดผ่าน SMS คลิกเพื่อยกเลิกบัญชีดำ"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_subject
@@ -1085,8 +1104,7 @@ msgstr "คัดเลือกผู้ชนะ"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid ""
-"Write an appealing SMS Text Message, define recipients and track its "
-"results."
+"Write an appealing SMS Text Message, define recipients and track its results."
 msgstr "เขียนข้อความ SMS ที่น่าดึงดูด กำหนดผู้รับ และติดตามผลลัพธ์"
 
 #. module: mass_mailing_sms

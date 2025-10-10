@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:48+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -35,16 +35,16 @@ msgid "Code"
 msgstr "코드"
 
 #. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "API 연결을 설정할 수 없습니다."
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_worldline
 #: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
@@ -70,33 +70,16 @@ msgstr "결제 상태가 누락된 데이터가 수신되었습니다."
 #. module: payment_worldline
 #. odoo-python
 #: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "Received data with missing reference %(ref)s."
-msgstr "참조 %(ref)s가 누락된 데이터가 수신되었습니다."
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
 msgid ""
-"Received invalid transaction status %(status)s with error code "
-"%(error_code)s."
-msgstr "잘못된 거래 상태 %(status)s 및 %(error_code)s 오류 코드가 수신되었습니다."
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_provider.py:0
-msgid "The communication with the API failed. Details: %s"
-msgstr "API와의 통신에 실패했습니다. 세부 정보: %s"
+"Received invalid transaction status %(status)s with error code %"
+"(error_code)s."
+msgstr ""
+"잘못된 거래 상태 %(status)s 및 %(error_code)s 오류 코드가 수신되었습니다."
 
 #. module: payment_worldline
 #: model:ir.model.fields,help:payment_worldline.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "이 결제대행업체의 기술 코드입니다."
-
-#. module: payment_worldline
-#. odoo-python
-#: code:addons/payment_worldline/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "거래가 토큰에 연결되어 있지 않습니다."
 
 #. module: payment_worldline
 #. odoo-python
@@ -149,3 +132,18 @@ msgstr "Worldline 웹훅 키"
 #: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_secret
 msgid "Worldline Webhook Secret"
 msgstr "Worldline 웹훅 비밀번호"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "API 연결을 설정할 수 없습니다."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#~ msgid "Received data with missing reference %(ref)s."
+#~ msgstr "참조 %(ref)s가 누락된 데이터가 수신되었습니다."
+
+#~ msgid "The communication with the API failed. Details: %s"
+#~ msgstr "API와의 통신에 실패했습니다. 세부 정보: %s"
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "거래가 토큰에 연결되어 있지 않습니다."

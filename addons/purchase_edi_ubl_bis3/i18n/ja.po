@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-14 21:11+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -22,7 +22,19 @@ msgstr ""
 #. module: purchase_edi_ubl_bis3
 #. odoo-python
 #: code:addons/purchase_edi_ubl_bis3/models/purchase_edi_xml_ubl_bis3.py:0
-msgid "Discount"
+msgid "Could not retrieve the product named: %(name)s"
+msgstr ""
+
+#. module: purchase_edi_ubl_bis3
+#: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_edi_xml_ubl_bis3__display_name
+#: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_order__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: purchase_edi_ubl_bis3
+#: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_edi_xml_ubl_bis3__id
+#: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_order__id
+msgid "ID"
 msgstr ""
 
 #. module: purchase_edi_ubl_bis3
@@ -32,15 +44,11 @@ msgstr "購買オーダ"
 
 #. module: purchase_edi_ubl_bis3
 #: model:ir.model,name:purchase_edi_ubl_bis3.model_purchase_edi_xml_ubl_bis3
-msgid "UBL BIS 3 Peppol Order transaction 3.4"
+msgid "Purchase UBL BIS Ordering 3.5"
 msgstr ""
 
 #. module: purchase_edi_ubl_bis3
-#: model_terms:ir.ui.view,arch_db:purchase_edi_ubl_bis3.bis3_OrderType
-msgid "urn:fdc:peppol.eu:poacc:bis:ordering:3"
-msgstr ""
-
-#. module: purchase_edi_ubl_bis3
-#: model_terms:ir.ui.view,arch_db:purchase_edi_ubl_bis3.bis3_OrderType
-msgid "urn:fdc:peppol.eu:poacc:trns:order:3"
+#. odoo-python
+#: code:addons/purchase_edi_ubl_bis3/models/purchase_order.py:0
+msgid "Some information could not be imported:"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 15:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -20,9 +20,30 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_project_stock
+#: model:ir.model.fields,field_description:sale_project_stock.field_project_project__display_name
+#: model:ir.model.fields,field_description:sale_project_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_project_stock
+#: model:ir.model.fields,field_description:sale_project_stock.field_project_project__id
+#: model:ir.model.fields,field_description:sale_project_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_project_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_project_stock.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_project_stock
 #: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
 msgid "No stock move found"
 msgstr "没有库存移动"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_project_project
+msgid "Project"
+msgstr ""
 
 #. module: sale_project_stock
 #: model:ir.model,name:sale_project_stock.model_sale_order_line
@@ -40,8 +61,9 @@ msgstr "库存移动"
 msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
 "You cannot validate a stock picking on a cancelled Sales Order."
-msgstr "与项目%(project)s关联的销售订单 %(order)s "
-"已取消。您无法在已取消的销售订单上验证库存调拨。"
+msgstr ""
+"与项目%(project)s关联的销售订单 %(order)s 已取消。您无法在已取消的销售订单上"
+"验证库存调拨。"
 
 #. module: sale_project_stock
 #. odoo-python
@@ -50,7 +72,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s is currently "
 "locked. You cannot validate a stock picking on a locked Sales Order. Please "
 "create a new SO linked to this Project."
-msgstr "与项目%(project)s关联的销售订单%(order)s当前已锁定。您无法在锁定的销售订单上"
+msgstr ""
+"与项目%(project)s关联的销售订单%(order)s当前已锁定。您无法在锁定的销售订单上"
 "验证选股。请创建一个与该项目关联的新销售订单。"
 
 #. module: sale_project_stock
@@ -59,13 +82,15 @@ msgstr "与项目%(project)s关联的销售订单%(order)s当前已锁定。您�
 msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s must be "
 "validated before validating the stock picking."
-msgstr "在验证库存拣货之前，必须先验证与项目%(project)s相关联的销售订单%(order)s。"
+msgstr ""
+"在验证库存拣货之前，必须先验证与项目%(project)s相关联的销售订单%(order)s。"
 
 #. module: sale_project_stock
 #: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
 msgid ""
 "This menu gives you the full traceability of inventory\n"
-"                operations on a specific product. You can filter on the product\n"
+"                operations on a specific product. You can filter on the "
+"product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
 "此菜单能让您完整的追溯某一特定产品的盘点\n"

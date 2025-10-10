@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 04:47+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
@@ -50,6 +50,21 @@ msgstr "<span class=\"o_stat_text\"> Lead</span>"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
 msgid "Active"
 msgstr "Aktif"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_question_view_form
+msgid "Add a rule"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "All Event templates"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "All Events"
+msgstr ""
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -116,6 +131,11 @@ msgid "Create a Lead Generation Rule"
 msgstr "Buat Peraturan Pembuatan Lead"
 
 #. module: event_crm
+#: model:ir.model,website_form_label:event_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
 msgstr "Lead yang Dibuat"
@@ -153,8 +173,12 @@ msgid "Default lead type when this rule is applied."
 msgstr "Tipe lead default saat peraturan ini diterapkan."
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_event__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_question_answer__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
@@ -181,6 +205,11 @@ msgid "Event Lead Rules"
 msgstr "Peraturan Lead Acara"
 
 #. module: event_crm
+#: model:ir.model,name:event_crm.model_event_question_answer
+msgid "Event Question Answer"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
 msgid "Event Registration"
 msgstr "Pendaftaran acara"
@@ -189,6 +218,11 @@ msgstr "Pendaftaran acara"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
 msgid "Event Templates"
 msgstr "Templat-Templat Acara"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_lead_rule_answer_action
+msgid "Event lead Rule"
+msgstr ""
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
@@ -204,6 +238,16 @@ msgstr "Acara memicu peraturan yang membuat lead ini"
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
 msgid "Event:"
 msgstr "Acara:"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Execute Rule"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Execute this rule for all ongoing and future events."
+msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
@@ -222,8 +266,8 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
 msgid ""
-"Filter the attendees to include those of this specific event. If not set, no"
-" event restriction will be applied."
+"Filter the attendees to include those of this specific event. If not set, no "
+"event restriction will be applied."
 msgstr ""
 "Filter peserta untuk memasukkan mereka ke kategori acara ini. Bila tidak "
 "ditetapkan, tidak ada batasan acara yang akan diterapkan."
@@ -234,7 +278,7 @@ msgid "For any of these Events"
 msgstr "Untuk salah satu dari Acara-Acara ini"
 
 #. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+#: model:ir.actions.server,name:event_crm.action_generate_leads
 msgid "Generate Leads"
 msgstr "Buat Lead"
 
@@ -247,8 +291,12 @@ msgstr ""
 "lagi!"
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:event_crm.field_event_event__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+#: model:ir.model.fields,field_description:event_crm.field_event_question_answer__id
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__id
 msgid "ID"
 msgstr "ID"
 
@@ -268,6 +316,7 @@ msgid "Last Updated on"
 msgstr "Terakhir Diperbarui pada"
 
 #. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
 msgid "Lead"
 msgstr "Prospek"
@@ -299,14 +348,14 @@ msgid "Lead Generation Rules"
 msgstr "Peraturan Pembuatan Lead"
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_lead_rule_ids
+msgid "Lead Rules"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
 msgstr "Tipe Lead"
-
-#. module: event_crm
-#: model:ir.model,name:event_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr ""
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
@@ -343,11 +392,6 @@ msgstr "Tidak ada lead yang ditemuka"
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
 msgid "No registration found"
 msgstr "Tidak ada pendaftaran yang ditemukan"
-
-#. module: event_crm
-#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
-msgid "Ongoing Generation Request"
-msgstr ""
 
 #. module: event_crm
 #. odoo-python
@@ -413,7 +457,8 @@ msgstr "Pendaftaran memicu peraturan yang membuat lead ini"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
 msgid ""
-"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"Restrict the trigger of this rule to events belonging to a specific "
+"company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
 "Batasi pemicu peraturan ini ke acara yang berasal dari perusahaan tertentu.\n"
@@ -448,11 +493,6 @@ msgstr "Penjual"
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
 msgstr "Cari Peraturan Pembuatan Lead"
-
-#. module: event_crm
-#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
-msgid "Set to True when a Lead Generation Request is currently running."
-msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -493,6 +533,11 @@ msgstr "Tipe Pemicu"
 #: code:addons/event_crm/models/event_registration.py:0
 msgid "Updated registrations"
 msgstr "Pendaftaran diupdate"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger

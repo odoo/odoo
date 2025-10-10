@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-24 19:23+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -41,11 +41,6 @@ msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
 msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Cancelado</b>"
 
 #. module: sale_mrp
-#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_form_mrp
-msgid "<span class=\"o_stat_text\">Manufacturing</span>"
-msgstr "<span class=\"o_stat_text\">Fabricación</span>"
-
-#. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">Venta</span>"
@@ -59,7 +54,8 @@ msgstr "<strong>Órdenes de fabricación</strong>"
 #. odoo-python
 #: code:addons/sale_mrp/models/mrp_bom.py:0
 msgid ""
-"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"As long as there are some sale order lines that must be delivered/invoiced "
+"and are related to these bills of materials, you can not remove them.\n"
 "The error concerns these products: %s"
 msgstr ""
 "Mientras haya algunas líneas de órdenes de venta que se deban entregar o "
@@ -88,9 +84,36 @@ msgid "Date:"
 msgstr "Fecha:"
 
 #. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line
 msgid "Journal Item"
 msgstr "Apunte contable"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_form_mrp
+msgid "Manufacturing"
+msgstr ""
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_mrp_production
@@ -138,3 +161,6 @@ msgstr "Órdenes de venta de origen de %s"
 #: model:ir.model,name:sale_mrp.model_stock_rule
 msgid "Stock Rule"
 msgstr "Regla de inventario"
+
+#~ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+#~ msgstr "<span class=\"o_stat_text\">Fabricación</span>"

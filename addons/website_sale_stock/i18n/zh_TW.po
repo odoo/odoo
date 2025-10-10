@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -24,9 +24,16 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"%(product_name)s has not been added to your cart since it is not available."
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr "<span invisible=\"not show_availability\">件</span>"
+msgid "<span invisible=\"not default_show_availability\">units</span>"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -40,9 +47,19 @@ msgid "All warehouses"
 msgstr "所有倉庫"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
+msgid "Assign"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
 msgstr "返貨通知"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Below"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -50,15 +67,12 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Continue Selling"
 msgstr "繼續銷售"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
 msgstr "當缺貨時繼續銷售"
 
@@ -75,13 +89,20 @@ msgid ""
 msgstr "在新增的庫存產品上設置預設可用性模式。這可以在產品級別更改。"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default visibility for custom messages."
-msgstr "自訂訊息的預設顯示設定。"
+#: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
+msgid ""
+"Defines how this ribbon is assigned to products:\n"
+"- Manually: You assign the ribbon manually to products.\n"
+"- Sale: Applied when the product is visibly on sale.\n"
+"- New: Applied based on the New period you will define.\n"
+"- Out Of Stock: Applied when the product is out of stock."
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
@@ -98,13 +119,10 @@ msgid "Get notified when back in stock"
 msgstr "返貨時通知我"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "How to display products having low quantities (on hand - reserved)"
-msgstr "如何展示存貨量較少產品（現貨量減已預留量）"
-
-#. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
@@ -132,18 +150,13 @@ msgid "Inventory Defaults"
 msgstr "庫存預設設定"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Only"
-msgstr "只剩"
-
-#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
 msgstr "立即訂購"
 
 #. module: website_sale_stock
 #. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
 msgstr "暫時缺貨"
@@ -155,7 +168,6 @@ msgid "Out of stock"
 msgstr "缺貨"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
 msgstr "暫時缺貨"
@@ -179,9 +191,19 @@ msgid "Product Combo"
 msgstr "產品組合"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_feed
+msgid "Product Feed"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
 msgstr "產品款式"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_ribbon
+msgid "Product ribbon"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -194,12 +216,6 @@ msgid "Regards,"
 msgstr "順祝 安康"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
-msgid "Requested quantity not available"
-msgstr "沒有所要求的數量"
-
-#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
 msgstr "銷售訂單"
@@ -210,22 +226,32 @@ msgid "Sales Order Line"
 msgstr "銷售訂單明細"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+msgid "Sell when Out-of-Stock"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Qty"
 msgstr "顯示可銷售數量"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Quantity"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_available_threshold
 msgid "Show Threshold"
 msgstr "呈現數量門檻"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_show_availability
 msgid "Show availability Qty"
 msgstr "呈現可銷售數量"
 
@@ -233,8 +259,8 @@ msgstr "呈現可銷售數量"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
 msgstr "一些產品目前已下架，已更新您的購物車。給您帶來不便我們深感抱歉。"
 
 #. module: website_sale_stock
@@ -244,31 +270,14 @@ msgstr "以下產品目前已到貨"
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
-msgid "The item has not been added to your cart since it is not available."
-msgstr "項目未加入至你的購物車，因為它目前不可用。"
-
-#. module: website_sale_stock
-#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "您願望清單內的 '%(product_name)s' 產品已經到貨"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "This product is out of stock."
-msgstr "此產品暫時缺貨。"
-
-#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "轉移"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Units"
-msgstr "單位"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -280,8 +289,8 @@ msgstr "倉庫"
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "We'll notify you once the product is back in stock."
-msgstr "當產品再有存貨時，我們會立刻通知你。"
+msgid "We'll notify you once the product is back in stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -297,20 +306,8 @@ msgstr "此訂單下單的網站，適用於電子商務訂單。"
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added"
-msgstr "你已經加入"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added all the available product in your cart."
-msgstr "所有可供出售貨品，都已加至你的購物車。"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You already have %s Units in your cart."
-msgstr "你的購物車已有 %s 件商品。"
+msgid "You already added all the available product in your cart"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -318,42 +315,91 @@ msgstr "你的購物車已有 %s 件商品。"
 msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
-msgstr "你要求 %(desired_qty)s 件 %(product_name)s，但只有 %(new_qty)s 件可供出售。"
+msgstr ""
+"你要求 %(desired_qty)s 件 %(product_name)s，但只有 %(new_qty)s 件可供出售。"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"You ask for %(desired_qty)s products but only %(available_qty)s is "
-"available."
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr "你要求 %(desired_qty)s 件產品，但只有 %(available_qty)s 件可用。"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
-msgstr "你要求的數量是 %(quantity1)s 件，但目前只有 %(quantity2)s 可用。"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "in your cart."
-msgstr "至你的購物車。"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "left in stock."
-msgstr "有存貨。"
-
-#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "e.g. 'Will be back soon'"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in stock"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in your cart)"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
 msgstr "只有當少於"
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
+msgid "when out of stock"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
 msgstr "youremail@example.com"
+
+#~ msgid "<span invisible=\"not show_availability\">Units</span>"
+#~ msgstr "<span invisible=\"not show_availability\">件</span>"
+
+#~ msgid "Default visibility for custom messages."
+#~ msgstr "自訂訊息的預設顯示設定。"
+
+#~ msgid "How to display products having low quantities (on hand - reserved)"
+#~ msgstr "如何展示存貨量較少產品（現貨量減已預留量）"
+
+#~ msgid "Only"
+#~ msgstr "只剩"
+
+#~ msgid "Requested quantity not available"
+#~ msgstr "沒有所要求的數量"
+
+#~ msgid "The item has not been added to your cart since it is not available."
+#~ msgstr "項目未加入至你的購物車，因為它目前不可用。"
+
+#~ msgid "This product is out of stock."
+#~ msgstr "此產品暫時缺貨。"
+
+#~ msgid "Units"
+#~ msgstr "單位"
+
+#~ msgid "We'll notify you once the product is back in stock."
+#~ msgstr "當產品再有存貨時，我們會立刻通知你。"
+
+#~ msgid "You already added"
+#~ msgstr "你已經加入"
+
+#~ msgid "You already added all the available product in your cart."
+#~ msgstr "所有可供出售貨品，都已加至你的購物車。"
+
+#~ msgid "You already have %s Units in your cart."
+#~ msgstr "你的購物車已有 %s 件商品。"
+
+#~ msgid ""
+#~ "You ask for %(quantity1)s Units but only %(quantity2)s are available."
+#~ msgstr "你要求的數量是 %(quantity1)s 件，但目前只有 %(quantity2)s 可用。"
+
+#~ msgid "in your cart."
+#~ msgstr "至你的購物車。"
+
+#~ msgid "left in stock."
+#~ msgstr "有存貨。"

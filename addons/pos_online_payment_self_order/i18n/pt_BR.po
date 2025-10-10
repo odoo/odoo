@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-17 17:21+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -25,25 +25,43 @@ msgid "Config Settings"
 msgstr "Configurações"
 
 #. module: pos_online_payment_self_order
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_online_payment_self_order
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_payment_transaction__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Online Payment"
 msgstr "Pagamento online"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Order"
 msgstr "Pedido"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay"
 msgstr "Pagar"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay at cashier"
 msgstr "Pagar no caixa"
 
@@ -58,8 +76,13 @@ msgid "Payment Methods"
 msgstr "Formas de pagamento"
 
 #. module: pos_online_payment_self_order
+#: model:ir.model,name:pos_online_payment_self_order.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
 msgstr "Pagamento em andamento"
 
@@ -80,7 +103,7 @@ msgstr "Formas de pagamento no PDV"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Scan the QR code to pay"
 msgstr "Escaneie o código QR para pagar"
 
@@ -92,7 +115,7 @@ msgstr "Pagamento online"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.js:0
 msgid "The current order cannot be paid (maybe it is already paid)."
 msgstr "O pedido atual não pode ser pago (talvez já tenha sido pago)."
 

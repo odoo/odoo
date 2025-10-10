@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:30+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -37,77 +37,37 @@ msgid "2-Factor authentication is now enabled."
 msgstr "Se habilitó la autenticación de dos factores."
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
-"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
+"<i class=\"fa fa-check text-success\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            Enabled\n"
+"                        </span>"
 msgstr ""
-"<span class=\"d-md-none d-block\">O instale una aplicación de "
-"autenticación</span>\n"
-"                                        <span class=\"d-none d-md-block\""
-">Instale una aplicación de autenticación en su dispositivo móvil</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
-"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
-msgstr ""
-"<span class=\"d-none d-md-block\">Cuando se le pida hacerlo, escanee el "
-"código de barras de abajo</span>\n"
-"                                    <span class=\"d-block d-md-none\">Cuando "
-"se le pida, copie la clave de abajo</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
-"or the Microsoft Authenticator.</span>"
-msgstr ""
-"<span class=\"text-muted\">Las aplicaciones populares incluyen Authy, Google "
-"Authenticator o Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
-"protected!</span>"
+"<i class=\"fa fa-remove text-danger\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            Disabled\n"
+"                        </span>"
 msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Esta cuenta está "
-"protegida</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
-"protected!</span>"
-msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Su cuenta está "
-"protegida</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Added On"
-msgstr "Añadido en"
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Are you sure? The user may be asked to enter two-factor codes again on those"
-" devices"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Add this key in your Authenticator app"
 msgstr ""
-"¿Está seguro? Es posible que se le pida al usuario ingresar códigos de dos "
-"factores de nuevo en esos dispositivos"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"Are you sure? You may be asked to enter two-factor codes again on those "
-"devices"
-msgstr ""
-"¿Está seguro? Es posible que se le pida ingresar códigos de dos factores de "
-"nuevo en esos dispositivos"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -120,13 +80,7 @@ msgid "Authentication Device"
 msgstr "Dispositivo de autenticación"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Authenticator App Setup"
-msgstr "Configuración de la aplicación de autenticación"
-
-#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -134,11 +88,6 @@ msgstr "Cancelar"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "¿No lo puede escanear?"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Click on this link to open your authenticator app"
-msgstr "Haga clic en este enlace para abrir la aplicación de autenticación"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -170,19 +119,18 @@ msgstr "Descripción"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Device"
-msgstr "Dispositivo"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Disable 2FA"
-msgstr "Deshabilitar la A2F"
+msgid "Disable"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
 msgstr "Deshabilitar la autenticación de dos factores"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Discard"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -207,11 +155,6 @@ msgstr "Habilitar la A2F"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable Two-Factor Authentication"
 msgstr "Habilitar la autenticación de dos factores"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Enter your six-digit code below"
-msgstr "Ingrese su código de 6 dígitos abajo"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
@@ -251,8 +194,6 @@ msgstr "Última actualización el"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Learn More"
 msgstr "Más información"
 
@@ -267,36 +208,14 @@ msgid "Log in"
 msgstr "Iniciar sesión"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Look for an \"Add an account\" button"
-msgstr "Busque el botón \"añadir una cuenta\""
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "On Apple Store"
-msgstr "En Apple Store"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "On Google Play"
-msgstr "En Google Play"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
 msgstr "Código QR"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Revoke"
-msgstr "Revocar"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Revoke All"
-msgstr "Revocar todo"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Scan this barcode in your Authenticator app"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -327,7 +246,8 @@ msgstr "El código de verificación solo debe contener dígitos"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid ""
-"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"To login, enter below the six-digit authentication code provided by your "
+"Authenticator app.\n"
 "                        <br/>"
 msgstr ""
 "Para iniciar sesión, ingrese el código de autenticación de seis dígitos que "
@@ -346,8 +266,6 @@ msgstr "Secreto TOTP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
 msgstr "Dispositivos de confianza"
 
@@ -363,21 +281,6 @@ msgstr "Activación de la autenticación de dos factores"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
 msgstr "Autenticación de dos factores"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
-msgstr ""
-"La autenticación de dos factores (A2F) es un sistema de autenticación doble."
-"\n"
-"La primera autentificación se hace con su contraseña, la segunda con un "
-"código que obtendrá de una aplicación específica para móviles.\n"
-"Entre las aplicaciones populares se encuentran Authy, Google Authenticator o "
-"Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -411,8 +314,8 @@ msgstr "Solo usted puede habilitar la autenticación de dos factores"
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication disabled for the following user(s): %s"
 msgstr ""
-"Se deshabilitó la autenticación de dos factores para los siguientes usuarios:"
-" %s"
+"Se deshabilitó la autenticación de dos factores para los siguientes "
+"usuarios: %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -429,9 +332,13 @@ msgstr "Usuario"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification Code"
 msgstr "Código de verificación"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Verification code"
+msgstr ""
 
 #. module: auth_totp
 #. odoo-python
@@ -445,6 +352,11 @@ msgstr "La verificación falló, revise el código de 6 dígitos"
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Verification failed, please use the latest 6-digit code"
 msgstr "La verificación falló. Use el último código de 6 dígitos."
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Write the code given by your app"
+msgstr ""
 
 #. module: auth_totp
 #. odoo-python
@@ -468,6 +380,110 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "e.g. 123456"
 msgstr "p. ej. 123456"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Install an authenticator app on your mobile device</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none d-block\">O instale una aplicación de "
+#~ "autenticación</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Instale una aplicación de autenticación en su dispositivo móvil</"
+#~ "span>"
+
+#~ msgid ""
+#~ "<span class=\"d-none d-md-block\">When requested to do so, scan the "
+#~ "barcode below</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">When requested to do so, copy the key below</span>"
+#~ msgstr ""
+#~ "<span class=\"d-none d-md-block\">Cuando se le pida hacerlo, escanee el "
+#~ "código de barras de abajo</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">Cuando se le pida, copie la clave de abajo</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\">Popular ones include Authy, Google "
+#~ "Authenticator or the Microsoft Authenticator.</span>"
+#~ msgstr ""
+#~ "<span class=\"text-muted\">Las aplicaciones populares incluyen Authy, "
+#~ "Google Authenticator o Microsoft Authenticator.</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
+#~ "protected!</span>"
+#~ msgstr ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Esta cuenta "
+#~ "está protegida</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
+#~ "protected!</span>"
+#~ msgstr ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Su cuenta está "
+#~ "protegida</span>"
+
+#~ msgid "Added On"
+#~ msgstr "Añadido en"
+
+#~ msgid ""
+#~ "Are you sure? The user may be asked to enter two-factor codes again on "
+#~ "those devices"
+#~ msgstr ""
+#~ "¿Está seguro? Es posible que se le pida al usuario ingresar códigos de "
+#~ "dos factores de nuevo en esos dispositivos"
+
+#~ msgid ""
+#~ "Are you sure? You may be asked to enter two-factor codes again on those "
+#~ "devices"
+#~ msgstr ""
+#~ "¿Está seguro? Es posible que se le pida ingresar códigos de dos factores "
+#~ "de nuevo en esos dispositivos"
+
+#~ msgid "Authenticator App Setup"
+#~ msgstr "Configuración de la aplicación de autenticación"
+
+#~ msgid "Click on this link to open your authenticator app"
+#~ msgstr "Haga clic en este enlace para abrir la aplicación de autenticación"
+
+#~ msgid "Device"
+#~ msgstr "Dispositivo"
+
+#~ msgid "Disable 2FA"
+#~ msgstr "Deshabilitar la A2F"
+
+#~ msgid "Enter your six-digit code below"
+#~ msgstr "Ingrese su código de 6 dígitos abajo"
+
+#~ msgid "Look for an \"Add an account\" button"
+#~ msgstr "Busque el botón \"añadir una cuenta\""
+
+#~ msgid "On Apple Store"
+#~ msgstr "En Apple Store"
+
+#~ msgid "On Google Play"
+#~ msgstr "En Google Play"
+
+#~ msgid "Revoke"
+#~ msgstr "Revocar"
+
+#~ msgid "Revoke All"
+#~ msgstr "Revocar todo"
+
+#~ msgid ""
+#~ "Two-factor Authentication (\"2FA\") is a system of double "
+#~ "authentication.\n"
+#~ "                        The first one is done with your password and the "
+#~ "second one with a code you get from a dedicated mobile app.\n"
+#~ "                        Popular ones include Authy, Google Authenticator "
+#~ "or the Microsoft Authenticator."
+#~ msgstr ""
+#~ "La autenticación de dos factores (A2F) es un sistema de autenticación "
+#~ "doble.\n"
+#~ "La primera autentificación se hace con su contraseña, la segunda con un "
+#~ "código que obtendrá de una aplicación específica para móviles.\n"
+#~ "Entre las aplicaciones populares se encuentran Authy, Google "
+#~ "Authenticator o Microsoft Authenticator."

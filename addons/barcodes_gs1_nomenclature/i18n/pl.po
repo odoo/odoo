@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:27+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
@@ -21,6 +21,14 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
+
+#. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
 msgid "Alpha-Numeric Name"
 msgstr "Nazwa alfanumeryczna"
@@ -31,8 +39,8 @@ msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
 msgstr ""
-"Alternatywny delimiter regex dla FNC1. Separator nie może odpowiadać począ"
-"tkowi/końcowi żadnego powiązanego wzorca reguł."
+"Alternatywny delimiter regex dla FNC1. Separator nie może odpowiadać "
+"początkowi/końcowi żadnego powiązanego wzorca reguł."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -184,8 +192,8 @@ msgstr "Ilość"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
 msgstr ""
-"Alternatywa separatora FNC1 nie jest prawidłowym wyrażeniem regularnym: "
-"%(error)s"
+"Alternatywa separatora FNC1 nie jest prawidłowym wyrażeniem regularnym: %"
+"(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -193,8 +201,8 @@ msgid ""
 "The GS1 content type defines what kind of data the rule will process the "
 "barcode as:        * Date: the barcode will be converted into a Odoo "
 "datetime;        * Measure: the barcode's value is related to a specific "
-"unit;        * Numeric Identifier: fixed length barcode following a specific"
-" encoding;        * Alpha-Numeric Name: variable length barcode."
+"unit;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
 "Typ zawartości GS1 definiuje, jakiego rodzaju dane reguła będzie przetwarzać "
 "w kodzie kreskowym:         * Data: kod kreskowy zostanie przekonwertowany "
@@ -220,16 +228,18 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
 msgstr ""
-"Wzorzec reguły \"%(rule)s\" nie jest prawidłowym wyrażeniem regularnym: "
-"%(error)s"
+"Wzorzec reguły \"%(rule)s\" nie jest prawidłowym wyrażeniem regularnym: %"
+"(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Coś jest nie tak z regułą kodu kreskowego \"%s\" .\n"
 "Jeśli reguła używa wartości dziesiętnych, sprawdź, czy nie może uzyskać "

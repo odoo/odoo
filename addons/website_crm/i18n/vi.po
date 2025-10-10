@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 04:44+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -46,6 +46,11 @@ msgid "Assign leads/opportunities to a salesperson."
 msgstr "Phân công lead/cơ hội cho một chuyên viên sales."
 
 #. module: website_crm
+#: model:ir.model,website_form_label:website_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr "Bộ phận sales mặc định cho lead mới được tạo qua biểu mẫu Liên hệ."
@@ -66,9 +71,23 @@ msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr "Chuyên viên sales mặc định cho lead mới tạo qua biểu mẫu Liên hệ."
 
 #. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website__display_name
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:website_crm.field_website__id
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__id
+msgid "ID"
+msgstr ""
+
+#. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Lead/Cơ hội"
+msgid "Lead"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
@@ -165,3 +184,6 @@ msgstr "Tên"
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 msgid "Your Question"
 msgstr "Câu hỏi của bạn"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Lead/Cơ hội"

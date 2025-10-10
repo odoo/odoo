@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-14 21:21+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -25,8 +25,9 @@ msgstr ""
 msgid ""
 "%(credit_count)d credits will be consumed to find %(company_count)d "
 "companies."
-msgstr "%(credit_count)dクレジットが%(company_count)d会社を見つけるために消費されます"
-"。"
+msgstr ""
+"%(credit_count)dクレジットが%(company_count)d会社を見つけるために消費されま"
+"す。"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -38,8 +39,9 @@ msgstr "<b>連絡先</b>"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -66,9 +68,8 @@ msgid ""
 "<span invisible=\"error_type != 'no_result'\">Your request did not return "
 "any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
-"<span invisible=\"error_type != 'no_result'\""
-">要求は対応されませんでした。(クレジットは使用されていません)いくつかのフィル"
-"タを解除してみて下さい。</span>"
+"<span invisible=\"error_type != 'no_result'\">要求は対応されませんでした。(ク"
+"レジットは使用されていません)いくつかのフィルタを解除してみて下さい。</span>"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
@@ -188,6 +189,11 @@ msgid "Create a Lead Mining Request"
 msgstr "リード発掘リクエストを作成"
 
 #. module: crm_iap_mine
+#: model:ir.model,website_form_label:crm_iap_mine.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
@@ -221,6 +227,7 @@ msgstr "デフォルトタグ"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -325,11 +332,6 @@ msgid "Generated Lead / Opportunity"
 msgstr "作成されたリード/案件"
 
 #. module: crm_iap_mine
-#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
-msgid "Group By"
-msgstr "グループ化"
-
-#. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
 msgid "Health Care Equipment & Services"
 msgstr "ヘルスケア機器・サービス"
@@ -366,6 +368,7 @@ msgstr "IAP リード生成通知"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__id
 msgid "ID"
 msgstr "ID"
 
@@ -418,6 +421,11 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
 msgstr "リード連絡先クレジット"
@@ -450,11 +458,6 @@ msgid "Lead Total Credits"
 msgstr "リード合計クレジット"
 
 #. module: crm_iap_mine
-#: model:ir.model,name:crm_iap_mine.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr ""
-
-#. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
@@ -468,9 +471,9 @@ msgstr "法務"
 #. module: crm_iap_mine
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
-msgstr "より多くの案件をお探しですか？<br><b>リード作成</b>ツールをお試し下さい。"
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"より多くの案件をお探しですか？<br><b>リード作成</b>ツールをお試し下さい。"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
@@ -756,9 +759,10 @@ msgstr "タイプ"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid ""
-"Up to %(credit_count)d additional credits will be consumed to identify "
-"%(contact_count)d contacts per company."
-msgstr "最大%(credit_count)dの追加クレジットが、1社あたり%(contact_count)d連絡先を識"
+"Up to %(credit_count)d additional credits will be consumed to identify %"
+"(contact_count)d contacts per company."
+msgstr ""
+"最大%(credit_count)dの追加クレジットが、1社あたり%(contact_count)d連絡先を識"
 "別するために消費されます。"
 
 #. module: crm_iap_mine
@@ -802,3 +806,6 @@ msgstr "マネージャー"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "to"
+
+#~ msgid "Group By"
+#~ msgstr "グループ化"

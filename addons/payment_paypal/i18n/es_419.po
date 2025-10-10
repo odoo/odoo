@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-17 06:24+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -37,14 +37,14 @@ msgstr "Código"
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "No se pudo establecer la conexión con la API."
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "Could not generate a new access token."
 msgstr "No se pudo generar un nuevo token de acceso."
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
@@ -62,6 +62,12 @@ msgid "How to configure your paypal account?"
 msgstr "¿Cómo configurar su cuenta de PayPal?"
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/controllers/main.py:0
 msgid "Invalid response format, can't normalize."
@@ -72,12 +78,6 @@ msgstr "El formato de respuesta no es válido, no se puede normalizar."
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
 msgstr "Valor faltante para txn_id (%(txn_id)s) o txn_type (%(txn_type)s)."
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "No se encontró ninguna transacción que coincida con la referencia %s."
 
 #. module: payment_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
@@ -126,7 +126,7 @@ msgstr "Transacción de pago"
 
 #. module: payment_paypal
 #. odoo-javascript
-#: code:addons/payment_paypal/static/src/js/payment_form.js:0
+#: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Error al procesar el pago"
 
@@ -135,12 +135,6 @@ msgstr "Error al procesar el pago"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
 msgstr "Información recibida con estado de pago no válido: %s"
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "The communication with the API failed. Details: %s"
-msgstr "Ocurrió un error en la comunicación con la API. Detalles: %s"
 
 #. module: payment_paypal
 #. odoo-python
@@ -173,6 +167,12 @@ msgid "The technical code of this payment provider."
 msgstr "El código técnico de este proveedor de pagos."
 
 #. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Unable to verify the payment data"
+msgstr ""
+
+#. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Webhook ID"
 msgstr "ID del webhook"
@@ -182,3 +182,13 @@ msgstr "ID del webhook"
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "You must have an HTTPS connection to generate a webhook."
 msgstr "Debe tener una conexión HTTPS para generar un webhook."
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "No se pudo establecer la conexión con la API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr ""
+#~ "No se encontró ninguna transacción que coincida con la referencia %s."
+
+#~ msgid "The communication with the API failed. Details: %s"
+#~ msgstr "Ocurrió un error en la comunicación con la API. Detalles: %s"

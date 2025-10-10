@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-17 17:23+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -55,10 +55,10 @@ msgid "Code"
 msgstr "Code"
 
 #. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "Impossible d'établir la connexion à l'API."
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
@@ -71,20 +71,26 @@ msgid "Expiration"
 msgstr "Expiration"
 
 #. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_xendit
 #. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
 msgid "Invalid CVN"
 msgstr "CVC invalide"
 
 #. module: payment_xendit
 #. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
 msgid "Invalid Card Number"
 msgstr "Numéro de carte invalide"
 
 #. module: payment_xendit
 #. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
 msgid "Invalid Date"
 msgstr "Date invalide"
 
@@ -99,12 +105,6 @@ msgid "MM"
 msgstr "MM"
 
 #. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Aucune transaction ne correspond à la référence %s."
-
-#. module: payment_xendit
 #: model:ir.model,name:payment_xendit.model_payment_provider
 msgid "Payment Provider"
 msgstr "Fournisseur de paiement"
@@ -116,7 +116,7 @@ msgstr "Transaction de paiement"
 
 #. module: payment_xendit
 #. odoo-javascript
-#: code:addons/payment_xendit/static/src/js/payment_form.js:0
+#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Échec du traitement du paiement"
 
@@ -131,12 +131,6 @@ msgid "Public Key"
 msgstr "Clé publique"
 
 #. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "Données reçues avec référence manquante."
-
-#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Secret Key"
 msgstr "Clé secrète"
@@ -147,25 +141,9 @@ msgid "Smith"
 msgstr "Smith"
 
 #. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/models/payment_provider.py:0
-msgid ""
-"The communication with the API failed. Xendit gave us the following "
-"information: '%s'"
-msgstr ""
-"Échec de la communication avec l'API. Xendit nous a fourni les informations "
-"suivantes : '%s'"
-
-#. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Le code technique de ce fournisseur de paiement."
-
-#. module: payment_xendit
-#. odoo-python
-#: code:addons/payment_xendit/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "La transaction n'est pas liée à un jeton."
 
 #. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
@@ -201,3 +179,22 @@ msgstr "AAAA"
 #: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
 msgid "john.smith@example.com"
 msgstr "john.smith@example.com"
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "Impossible d'établir la connexion à l'API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Aucune transaction ne correspond à la référence %s."
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "Données reçues avec référence manquante."
+
+#~ msgid ""
+#~ "The communication with the API failed. Xendit gave us the following "
+#~ "information: '%s'"
+#~ msgstr ""
+#~ "Échec de la communication avec l'API. Xendit nous a fourni les "
+#~ "informations suivantes : '%s'"
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "La transaction n'est pas liée à un jeton."

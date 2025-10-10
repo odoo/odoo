@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 04:47+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/event_crm/"
@@ -50,6 +50,21 @@ msgstr "<span class=\"o_stat_text\"> 영업 제안</span>"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
 msgid "Active"
 msgstr "활성화"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_question_view_form
+msgid "Add a rule"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "All Event templates"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "All Events"
+msgstr ""
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -114,6 +129,11 @@ msgid "Create a Lead Generation Rule"
 msgstr "영업제안 생성 규칙 만들기"
 
 #. module: event_crm
+#: model:ir.model,website_form_label:event_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
 msgstr "추가된 리드"
@@ -150,8 +170,12 @@ msgid "Default lead type when this rule is applied."
 msgstr "이 규칙이 적용될 경우의 기본 영업제안 유형입니다."
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_event__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_question_answer__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -178,6 +202,11 @@ msgid "Event Lead Rules"
 msgstr "행사 영업제안 규칙"
 
 #. module: event_crm
+#: model:ir.model,name:event_crm.model_event_question_answer
+msgid "Event Question Answer"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
 msgid "Event Registration"
 msgstr "행사 등록"
@@ -186,6 +215,11 @@ msgstr "행사 등록"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
 msgid "Event Templates"
 msgstr "행사 서식"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_lead_rule_answer_action
+msgid "Event lead Rule"
+msgstr ""
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
@@ -203,6 +237,16 @@ msgid "Event:"
 msgstr "행사:"
 
 #. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Execute Rule"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Execute this rule for all ongoing and future events."
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Filter the attendees that will or not generate leads."
 msgstr "참석자에 대해 영업제안 생성 여부를 필터로 생성합니다."
@@ -213,16 +257,17 @@ msgid ""
 "Filter the attendees to include those of this specific event category. If "
 "not set, no event category restriction will be applied."
 msgstr ""
-"이 특정 행사 카테고리에 속하는 참석자가 포함되도록 필터를 설정합니다. "
-"설정하지 않을 경우, 행사 카테고리 제한이 적용되지 않습니다."
+"이 특정 행사 카테고리에 속하는 참석자가 포함되도록 필터를 설정합니다. 설정하"
+"지 않을 경우, 행사 카테고리 제한이 적용되지 않습니다."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
 msgid ""
-"Filter the attendees to include those of this specific event. If not set, no"
-" event restriction will be applied."
-msgstr "해당 특정 행사에 대한 참석자를 분류하도록 필터를 설정합니다. 설정하지 않을 "
-"경우, 행사 제한이 적용되지 않습니다."
+"Filter the attendees to include those of this specific event. If not set, no "
+"event restriction will be applied."
+msgstr ""
+"해당 특정 행사에 대한 참석자를 분류하도록 필터를 설정합니다. 설정하지 않을 경"
+"우, 행사 제한이 적용되지 않습니다."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -230,7 +275,7 @@ msgid "For any of these Events"
 msgstr "이러한 행사에 대하여"
 
 #. module: event_crm
-#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+#: model:ir.actions.server,name:event_crm.action_generate_leads
 msgid "Generate Leads"
 msgstr "영업제안 생성"
 
@@ -241,8 +286,12 @@ msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr "알겠습니다, 요청을 확인했습니다. 곧 리드가 생성됩니다."
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:event_crm.field_event_event__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+#: model:ir.model.fields,field_description:event_crm.field_event_question_answer__id
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__id
 msgid "ID"
 msgstr "ID"
 
@@ -262,6 +311,7 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
 msgid "Lead"
 msgstr "영업제안"
@@ -293,14 +343,14 @@ msgid "Lead Generation Rules"
 msgstr "리드 생성 규칙"
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_lead_rule_ids
+msgid "Lead Rules"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
 msgstr "영업제안 유형"
-
-#. module: event_crm
-#: model:ir.model,name:event_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr ""
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
@@ -337,11 +387,6 @@ msgstr "리드를 찾을 수 없습니다"
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
 msgid "No registration found"
 msgstr "등록을 찾을 수 없습니다"
-
-#. module: event_crm
-#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
-msgid "Ongoing Generation Request"
-msgstr ""
 
 #. module: event_crm
 #. odoo-python
@@ -407,7 +452,8 @@ msgstr "해당 영업제안 생성 규칙을 작동시킨 등록"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
 msgid ""
-"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"Restrict the trigger of this rule to events belonging to a specific "
+"company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
 "이 규칙이 작동되는 경우는 특정 회사의 행사로 제한합니다.\n"
@@ -444,11 +490,6 @@ msgid "Search Lead Generation Rules"
 msgstr "영업제안 생성 규칙 검색"
 
 #. module: event_crm
-#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
-msgid "Set to True when a Lead Generation Request is currently running."
-msgstr ""
-
-#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
 msgid "Source Event"
 msgstr "기준 행사"
@@ -468,8 +509,9 @@ msgstr "태그"
 msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
-msgstr "마지막으로 처리된 이벤트 등록의 ID로, 재개할 위치를 결정하는 데 도움이 "
-"됩니다."
+msgstr ""
+"마지막으로 처리된 이벤트 등록의 ID로, 재개할 위치를 결정하는 데 도움이 됩니"
+"다."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -486,6 +528,11 @@ msgstr "트리거 유형"
 #: code:addons/event_crm/models/event_registration.py:0
 msgid "Updated registrations"
 msgstr "업데이트 반영된 등록"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger

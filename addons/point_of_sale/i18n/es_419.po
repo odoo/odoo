@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-10-09 02:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -8384,6 +8384,12 @@ msgid "Stock should be updated at closing"
 msgstr "Las existencias se deben actualizar al cierre"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Stock variation for %s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
@@ -8623,8 +8629,8 @@ msgstr "El valor \"Disponible después de\" debe estar entre 00:00 y 24:00"
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
-"El valor \"Disponible hasta\" debe ser mayor que el valor "
-"\"Disponible después de\"."
+"El valor \"Disponible hasta\" debe ser mayor que el valor \"Disponible "
+"después de\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8731,6 +8737,12 @@ msgid ""
 msgstr ""
 "La estrategia de redondeo de efectivo del punto de venta %(pos)s debe ser: "
 "\"%(value)s\""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "The company must have a fiscal country set."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9581,7 +9593,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
 "To enable invoice creation, please add a journal for it in the settings."
-msgstr "Agrega un diario en los ajustes para habilitar la creación de facturas."
+msgstr ""
+"Agrega un diario en los ajustes para habilitar la creación de facturas."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10569,7 +10582,6 @@ msgstr "Por ejemplo, 1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Cash"
 msgstr "por ejemplo, efectivo"
 
@@ -10582,6 +10594,11 @@ msgstr "Por ejemplo, hamburguesa de queso"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
 msgstr "por ejemplo, dirección de la empresa, sitio web"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "e.g. Dine in"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

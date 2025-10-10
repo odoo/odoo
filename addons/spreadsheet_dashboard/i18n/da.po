@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-25 13:30+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
@@ -25,6 +25,12 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 msgid "%s (copy)"
 msgstr "%s (kopi)"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "(no result)"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__access_token
@@ -55,9 +61,9 @@ msgid "Choose a dashboard...."
 msgstr "Vælg et kontrolpanel...."
 
 #. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_id
-msgid "Company"
-msgstr "Virksomhed"
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__company_ids
+msgid "Companies"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration
@@ -86,6 +92,7 @@ msgstr "Oprettet den"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
+#: model:res.groups.privilege,name:spreadsheet_dashboard.res_groups_privilege_dashboard
 msgid "Dashboard"
 msgstr "Kontrolpanel"
 
@@ -95,6 +102,9 @@ msgid "Dashboard Group"
 msgstr "Kontrolpanel grupper"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/assets/dashboard_action_loader.js:0
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.js:0
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_action_configuration_dashboards
 #: model:ir.actions.client,name:spreadsheet_dashboard.ir_actions_dashboard_action
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration_dashboards
@@ -120,6 +130,23 @@ msgstr "Vis navn"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__excel_export
 msgid "Excel Export"
 msgstr "Eksport af Excel"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_loader_service.js:0
+msgid "FAVORITES"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
+msgid "Favorite Users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
+msgid "Filter on this value"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_finance
@@ -149,6 +176,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
+msgid "Indicates whether the dashboard is favorited by the current user"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
+msgid "Is Favorite"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
 msgid "Is Published"
 msgstr "Er offentliggjort"
@@ -166,6 +203,12 @@ msgstr "Sidst opdateret af"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "Load more"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -197,16 +240,20 @@ msgstr "Navn"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "No"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 msgid "No available dashboard"
 msgstr "Ingen tilgængelige kontrolpaneler"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
-#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
-msgid ""
-"Only chart figures are displayed in small screens but this dashboard doesn't"
-" contain any"
+#: code:addons/spreadsheet_dashboard/static/src/bundle/list/clickable_cell.js:0
+msgid "Open record"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -215,9 +262,27 @@ msgid "Published Dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_facet/dashboard_facet.xml:0
+msgid "Remove"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
 msgid "Sales"
 msgstr "Salg"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.xml:0
+msgid "Search..."
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
+msgid "See records"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
@@ -265,14 +330,37 @@ msgid "Thumbnail"
 msgstr "Thumbnail"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
+msgid "Toggle favorite"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
 msgid "URL"
 msgstr "URL"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
+msgid "Users who have favorited this dashboard"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
+msgid "Visible to all"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website
 msgid "Website"
 msgstr "Hjemmeside"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "Yes"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-python
@@ -285,3 +373,12 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_share.py:0
 msgid "You don't have access to this dashboard. "
 msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
+msgid "for"
+msgstr ""
+
+#~ msgid "Company"
+#~ msgstr "Virksomhed"

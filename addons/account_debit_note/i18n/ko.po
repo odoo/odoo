@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 04:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -37,10 +37,11 @@ msgstr "취소"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
-msgstr "이 전표에서 생성된 청구서 및 직불 메모에 대해 동일한 순서를 공유하지 "
-"않으려면 이 확인란을 선택합니다."
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
+msgstr ""
+"이 전표에서 생성된 청구서 및 직불 메모에 대해 동일한 순서를 공유하지 않으려"
+"면 이 확인란을 선택합니다."
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -120,8 +121,9 @@ msgstr "비워둘 경우, 차변 분개할 전표를 사용합니다."
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "전체 항목을 수정해야 할 경우, 복사하면 간편하게 사용할 수 있습니다. "
-"차변전표에서 대변전표로는 복사할 수 없습니다. "
+msgstr ""
+"전체 항목을 수정해야 할 경우, 복사하면 간편하게 사용할 수 있습니다. 차변전표"
+"에서 대변전표로는 복사할 수 없습니다. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -192,7 +194,7 @@ msgstr "이 청구서에 대해 생성된 차변전표"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "이 차변전표는 다음에서 생성되었습니다: %s"
 
@@ -207,7 +209,8 @@ msgstr "특정 전표 사용"
 msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
-msgstr "차변표는 고객용 청구서/신용전표, 공급업체 청구서/신용전표에 대해서만 생성할 "
+msgstr ""
+"차변표는 고객용 청구서/신용전표, 공급업체 청구서/신용전표에 대해서만 생성할 "
 "수 있습니다."
 
 #. module: account_debit_note
@@ -220,9 +223,10 @@ msgstr "승인된 전표만 차변 입력할 수 있습니다."
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
-msgstr "차변전표를 생성할 수 없습니다. 이미 청구서에 차변전표가 연결되어 있습니다."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
+msgstr ""
+"차변전표를 생성할 수 없습니다. 이미 청구서에 차변전표가 연결되어 있습니다."
 
 #. module: account_debit_note
 #. odoo-python

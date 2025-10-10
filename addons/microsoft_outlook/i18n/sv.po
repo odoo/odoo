@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 21:33+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
@@ -38,34 +38,47 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible="
-"\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class="
-"\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible="
-"\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" "
-"class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__active
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__active
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__active
+msgid "Active"
+msgstr ""
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "An error occurred when fetching the access token. %s"
 msgstr "Ett fel uppstod vid hämtning av åtkomstpolletten. %s"
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "An error occurred: %s."
+msgstr ""
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -89,7 +102,9 @@ msgstr "Inställningar"
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
 "Anslut ditt Outlook-konto med OAuth-autentiseringsprocessen.  \n"
 "Som standard kommer endast en användare med en matchande e-postadress att "
@@ -108,11 +123,25 @@ msgstr ""
 "acceptera behörigheterna."
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
-msgid "Go back to your mail server"
-msgstr "Gå tillbaka till din e-postserver"
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
+msgid "Go back"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__id
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__id
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID"
 msgstr "ID"
@@ -131,18 +160,11 @@ msgstr "Inkommande e-postserver"
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
-"Incorrect Connection Security for Outlook mail server “%s”. Please set it to"
-" \"TLS (STARTTLS)\"."
+"Incorrect Connection Security for Outlook mail server “%s”. Please set it to "
+"\"TLS (STARTTLS)\"."
 msgstr ""
 "Felaktig anslutningssäkerhet för Outlook e-postserver “%s”. Ställ in den på "
 "\"TLS (STARTTLS)\"."
-
-#. module: microsoft_outlook
-#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
-#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
-#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
-msgid "Is Outlook Credential Configured"
-msgstr "Är Outlook-legitimationen konfigurerad"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -159,6 +181,30 @@ msgstr "Microsoft Outlook Mixin"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Only the administrator can link an Outlook mail server."
 msgstr "Endast administratören kan länka en Outlook-mailserver."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Oops, we could not authenticate you. Please try again later."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/controllers/main.py:0
+msgid ""
+"Oops, you're creating an authorization to send from %(email_login)s but your "
+"address is %(email_server)s. Make sure your addresses match!"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__outgoing_mail_server_type
+msgid "Outgoing Mail Server Type"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__res_users__outgoing_mail_server_type__outlook
+msgid "Outlook"
+msgstr ""
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
@@ -200,14 +246,26 @@ msgstr "Outlook Refresh Token"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
-msgid "Please configure your Outlook credentials."
-msgstr "Vänligen konfigurera dina Outlook-uppgifter."
+msgid "Outlook is not configured on IAP."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Please configure your outlook credentials."
+msgstr ""
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Please connect with your Outlook account before using it."
 msgstr "Anslut till ditt Outlook-konto innan du använder det."
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "Please enter a valid email address."
+msgstr ""
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -258,16 +316,6 @@ msgid "Server Type"
 msgstr "Servertyp"
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
-msgid ""
-"Setup your Outlook API credentials in the general settings to link a Outlook"
-" account."
-msgstr ""
-"Ställ in dina Outlook API-autentiseringsuppgifter i de allmänna "
-"inställningarna för att länka ett Outlook-konto."
-
-#. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
@@ -279,3 +327,30 @@ msgstr "URL:en för att generera auktoriseringskoden från Outlook"
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 msgid "Unknown error."
 msgstr "Okänt fel."
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+msgid "You don't have an active subscription."
+msgstr ""
+
+#~ msgid "Go back to your mail server"
+#~ msgstr "Gå tillbaka till din e-postserver"
+
+#~ msgid "Is Outlook Credential Configured"
+#~ msgstr "Är Outlook-legitimationen konfigurerad"
+
+#~ msgid "Please configure your Outlook credentials."
+#~ msgstr "Vänligen konfigurera dina Outlook-uppgifter."
+
+#~ msgid ""
+#~ "Setup your Outlook API credentials in the general settings to link a "
+#~ "Outlook account."
+#~ msgstr ""
+#~ "Ställ in dina Outlook API-autentiseringsuppgifter i de allmänna "
+#~ "inställningarna för att länka ett Outlook-konto."

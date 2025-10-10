@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 15:33+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -24,28 +24,118 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.empty_wishlist_svg
 msgid ""
-"<i class=\"fa fa-fw fa-heart\"/>\n"
-"            Wishlist"
+".heartBeat {\n"
+"                        animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                        animation-delay: 0.75s;\n"
+"                        transform-origin: 74.5px 25.5px;\n"
+"                    }\n"
+"                @keyframes heartBeat {\n"
+"                        0% {\n"
+"                        transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        14% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        28% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        42% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        70% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"                    }\n"
+"                .swing {\n"
+"                    animation: swing 1.3s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: top center\n"
+"                }\n"
+"                @keyframes swing {\n"
+"                    20% {\n"
+"                    transform: rotate(15deg)\n"
+"                }\n"
+"\n"
+"                40% {\n"
+"                    transform: rotate(-10deg)\n"
+"                }\n"
+"\n"
+"                60% {\n"
+"                    transform: rotate(5deg)\n"
+"                }\n"
+"\n"
+"                80% {\n"
+"                    transform: rotate(-5deg)\n"
+"                }\n"
+"\n"
+"                to {\n"
+"                    transform: rotate(0deg)\n"
+"                }\n"
+"                }"
 msgstr ""
-"<i class=\"fa fa-fw fa-heart\"/>\n"
-"            收藏夹"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
-msgid "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to wishlist\"/>Add to wishlist"
-msgstr "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to wishlist\"/>添加到收藏夹"
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "1 Column"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "2 Columns"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "3 Columns"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "4 Columns"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "5 Columns"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "6 Columns"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
-msgstr "<small><i class=\"fa fa-trash-o\"/> 移除</small>"
+msgid ""
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
+"                                                    <span class=\"o_label "
+"small ms-1\">Add to Cart</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+msgid "<span class=\"text-300\">|</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -53,24 +143,21 @@ msgid "Active"
 msgstr "有效"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr "加到<span class=\"d-none d-md-inline\">购物车</span>"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add product to my cart but keep it in my wishlist"
-msgstr "产品加入购物车后，仍保留在我的心愿单中"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/checkout_page_option.xml:0
 msgid "Add to Wishlist"
 msgstr "添加到心愿单"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to wishlist"
 msgstr "添加到心愿单"
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
+msgid "CSS class for wishlist page design"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -81,6 +168,11 @@ msgstr "联系人"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Contact Us"
 msgstr "联系我们"
+
+#. module: website_sale_wishlist
+#: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
@@ -98,7 +190,18 @@ msgid "Default Currency"
 msgstr "默认币别"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "Desktop"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_website__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -108,9 +211,53 @@ msgid "Duplicated wishlisted product for this partner."
 msgstr "此合作伙伴的愿望产品清单重复。"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+msgid "Fixed"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+msgid "Fixed - On Hover"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+msgid "Gap"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_gap
+msgid "Gap between products on the wishlist page"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "Handle your wishlist from the menu icon."
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_website__id
 msgid "ID"
 msgstr "ID"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "In your wishlist"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+msgid "Inline"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -123,9 +270,42 @@ msgid "Last Updated on"
 msgstr "上次更新日期"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "Layout"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "Mobile"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
 msgstr "我的收藏"
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_mobile_columns
+msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_grid_columns
+msgid "Number of columns to display on the wishlist page"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+msgid "On Hover"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Original price"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -169,9 +349,30 @@ msgid "Product Wishlist"
 msgstr "商品需求清单"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
+msgid "Products Design"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Product image"
-msgstr "产品图像"
+msgid "Remove from wishlist"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Sale price"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+msgid "Save for Later"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Shop"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -179,24 +380,89 @@ msgid "Shop Wishlist"
 msgstr "店铺收藏清单"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
-msgid "Show Empty Wishlist"
-msgstr "显示空白愿望清单"
-
-#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
 msgid "User"
 msgstr "用户"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_website
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
 msgstr "网站"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/product_page_option.xml:0
+#: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
+#: code:addons/website_sale_wishlist/static/src/website_builder/show_empty_option.xml:0
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
 msgid "Wishlist"
 msgstr "愿望单"
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_grid_columns
+msgid "Wishlist Grid Columns"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_gap
+msgid "Wishlist Grid Gap"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_mobile_columns
+msgid "Wishlist Mobile Columns"
+msgstr ""
+
+#. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option_plugin.js:0
+msgid "Wishlist Page"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
+msgid "Wishlist Page Design Class"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Your wishlist is empty!"
+msgstr ""
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-heart\"/>\n"
+#~ "            Wishlist"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-heart\"/>\n"
+#~ "            收藏夹"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+#~ "wishlist\"/>Add to wishlist"
+#~ msgstr ""
+#~ "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+#~ "wishlist\"/>添加到收藏夹"
+
+#~ msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
+#~ msgstr "<small><i class=\"fa fa-trash-o\"/> 移除</small>"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+
+#~ msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
+#~ msgstr "加到<span class=\"d-none d-md-inline\">购物车</span>"
+
+#~ msgid "Add product to my cart but keep it in my wishlist"
+#~ msgstr "产品加入购物车后，仍保留在我的心愿单中"
+
+#~ msgid "Product image"
+#~ msgstr "产品图像"
+
+#~ msgid "Show Empty Wishlist"
+#~ msgstr "显示空白愿望清单"

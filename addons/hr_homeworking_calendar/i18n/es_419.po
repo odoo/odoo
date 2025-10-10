@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-23 02:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -33,11 +33,6 @@ msgid "Are you sure you want to delete this location?"
 msgstr "¿Está seguro de que desea eliminar esta ubicación?"
 
 #. module: hr_homeworking_calendar
-#: model:ir.model,name:hr_homeworking_calendar.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "Empleado básico"
-
-#. module: hr_homeworking_calendar
 #. odoo-javascript
 #: code:addons/hr_homeworking_calendar/static/src/calendar/common/hr_homeworking_calendar_controller.js:0
 msgid "Confirmation"
@@ -52,6 +47,11 @@ msgstr "Contacto"
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__work_location_type
 msgid "Cover Image"
 msgstr "Imagen de portada"
+
+#. module: hr_homeworking_calendar
+#: model:ir.model,website_form_label:hr_homeworking_calendar.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__create_uid
@@ -75,10 +75,13 @@ msgstr "Cadena de día de la semana"
 
 #. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__display_name
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
 
 #. module: hr_homeworking_calendar
+#: model:ir.model,name:hr_homeworking_calendar.model_hr_employee
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__employee_id
 msgid "Employee"
 msgstr "Empleado"
@@ -90,6 +93,8 @@ msgstr "Nombre del empleado"
 
 #. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__id
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -104,6 +109,8 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: hr_homeworking_calendar
+#. odoo-javascript
+#: code:addons/hr_homeworking_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__work_location_id
 #: model_terms:ir.ui.view,arch_db:hr_homeworking_calendar.homework_location_wizard_view_form
 msgid "Location"
@@ -120,24 +127,29 @@ msgid "Repeat every"
 msgstr "Repetir cada"
 
 #. module: hr_homeworking_calendar
+#. odoo-javascript
+#: code:addons/hr_homeworking_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
+msgid "Set"
+msgstr ""
+
+#. module: hr_homeworking_calendar
 #: model:ir.model,name:hr_homeworking_calendar.model_homework_location_wizard
 msgid "Set Homework Location Wizard"
 msgstr "Asistente para establecer una ubicación de trabajo remoto"
 
 #. module: hr_homeworking_calendar
-#. odoo-javascript
-#: code:addons/hr_homeworking_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
 #: model:ir.actions.act_window,name:hr_homeworking_calendar.set_location_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_homeworking_calendar.homework_location_wizard_view_form
 msgid "Set Location"
 msgstr "Establecer ubicación"
 
 #. module: hr_homeworking_calendar
-#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__user_can_edit
-msgid "User Can Edit"
-msgstr "El usuario puede editar"
-
-#. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__weekly
 msgid "Weekly"
 msgstr "Semanal"
+
+#~ msgid "Basic Employee"
+#~ msgstr "Empleado básico"
+
+#~ msgid "User Can Edit"
+#~ msgstr "El usuario puede editar"
