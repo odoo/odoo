@@ -1,6 +1,7 @@
 import { App } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
 
@@ -122,6 +123,8 @@ export const mailPopoutService = {
                 }),
                 props,
                 getTemplate,
+                translatableAttributes: ["data-tooltip"],
+                translateFn: _t,
             });
             popout.app.mount(externalWindow.document.body);
             return externalWindow;
@@ -152,6 +155,8 @@ export const mailPopoutService = {
                 env,
                 props,
                 getTemplate,
+                translatableAttributes: ["data-tooltip"],
+                translateFn: _t,
             });
             popout.app.mount(externalWindow.document.body);
             return externalWindow;
