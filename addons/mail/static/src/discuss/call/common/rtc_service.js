@@ -636,11 +636,11 @@ export class Rtc extends Record {
     /**
      * Notifies the server and does the cleanup of the current call.
      */
-    async leaveCall(thread = this.state.channel.thread) {
+    async leaveCall(channel = this.state.channel) {
         this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
-        await this.rpcLeaveCall(thread);
-        this.endCall(thread);
+        await this.rpcLeaveCall(channel.thread);
+        this.endCall(channel.thread);
         this.state.hasPendingRequest = false;
     }
 
@@ -760,7 +760,7 @@ export class Rtc extends Record {
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
-            await this.leaveCall(this.state.channel.thread);
+            await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
             const joinCallOpts = { audio, camera };
@@ -1086,7 +1086,7 @@ export class Rtc extends Record {
                 if (!this.isHost) {
                     return;
                 }
-                await this.leaveCall(this.channel?.thread);
+                await this.leaveCall(this.channel);
                 return;
             }
             case CROSS_TAB_CLIENT_MESSAGE.UPDATE_VOLUME: {

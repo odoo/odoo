@@ -288,11 +288,11 @@ export const rejectAction = {
             ? _t("Reject")
             : undefined,
     name: _t("Reject"),
-    onSelected: ({ store, thread }) => {
+    onSelected: ({ channel, store }) => {
         if (store.rtc.state.hasPendingRequest) {
             return;
         }
-        store.rtc.leaveCall(thread);
+        store.rtc.leaveCall(channel);
     },
     sequence: 140,
     sequenceGroup: 300,
