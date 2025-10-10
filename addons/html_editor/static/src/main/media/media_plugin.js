@@ -212,10 +212,20 @@ export class MediaPlugin extends Plugin {
         return mediaDialogClosedPromise;
     }
 
+<<<<<<< 051ce0ad696387ccac9fa79b8189838289968428
     async savePendingImages(editableEl = this.editable) {
+||||||| bc22cf5a225a4e7d58548a8d6dedbcd84d771acb
+    async savePendingImages() {
+        const editableEl = this.editable;
+        const { resModel, resId } = this.recordInfo;
+=======
+    async savePendingImages(editableEl) {
+        const { resModel, resId } = this.recordInfo;
+>>>>>>> 2460d580a6d37e1ba00962ff3405b5e8e5661321
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
+<<<<<<< 051ce0ad696387ccac9fa79b8189838289968428
         const getClosestSavable = (el) => {
             for (const provider of this.getResource("closest_savable_providers")) {
                 const value = provider(el);
@@ -224,16 +234,60 @@ export class MediaPlugin extends Plugin {
                 }
             }
         };
+||||||| bc22cf5a225a4e7d58548a8d6dedbcd84d771acb
+=======
+        const oldSrcToNewSrcMap = new Map();
+>>>>>>> 2460d580a6d37e1ba00962ff3405b5e8e5661321
         const b64Proms = [...editableEl.querySelectorAll(".o_b64_image_to_save")].map(
             async (el) => {
+<<<<<<< 051ce0ad696387ccac9fa79b8189838289968428
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+||||||| bc22cf5a225a4e7d58548a8d6dedbcd84d771acb
+                const dirtyEditable = el.closest(".o_dirty");
+                if (dirtyEditable && dirtyEditable !== editableEl) {
+                    // Do nothing as there is an editable element closer to the
+                    // image that will perform the `saveB64Image()` call with
+                    // the correct "resModel" and "resId" parameters.
+                    return;
+                }
+=======
+                const dirtyEditable = el.closest(".o_dirty");
+                if (dirtyEditable && dirtyEditable !== editableEl) {
+                    // Do nothing as there is an editable element closer to the
+                    // image that will perform the `saveB64Image()` call with
+                    // the correct "resModel" and "resId" parameters.
+                    return;
+                }
+                const oldSrc = el.getAttribute("src");
+>>>>>>> 2460d580a6d37e1ba00962ff3405b5e8e5661321
                 await this.saveB64Image(el, resModel, resId);
+                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
         );
         const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
             async (el) => {
+<<<<<<< 051ce0ad696387ccac9fa79b8189838289968428
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+||||||| bc22cf5a225a4e7d58548a8d6dedbcd84d771acb
+                const dirtyEditable = el.closest(".o_dirty");
+                if (dirtyEditable && dirtyEditable !== editableEl) {
+                    // Do nothing as there is an editable element closer to the
+                    // image that will perform the `saveModifiedImage()` call
+                    // with the correct "resModel" and "resId" parameters.
+                    return;
+                }
+=======
+                const dirtyEditable = el.closest(".o_dirty");
+                if (dirtyEditable && dirtyEditable !== editableEl) {
+                    // Do nothing as there is an editable element closer to the
+                    // image that will perform the `saveModifiedImage()` call
+                    // with the correct "resModel" and "resId" parameters.
+                    return;
+                }
+                const oldSrc = el.getAttribute("src");
+>>>>>>> 2460d580a6d37e1ba00962ff3405b5e8e5661321
                 await this.saveModifiedImage(el, resModel, resId);
+                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
         );
         const proms = [...b64Proms, ...modifiedProms];
@@ -241,7 +295,7 @@ export class MediaPlugin extends Plugin {
         if (hasChange) {
             await Promise.all(proms);
         }
-        return hasChange;
+        return hasChange ? oldSrcToNewSrcMap : undefined;
     }
 
     createAttachment({ el, imageData, resModel, resId }) {
