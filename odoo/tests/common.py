@@ -2132,7 +2132,14 @@ def tagged(*tags):
         return obj
     return tags_decorator
 
-@tagged('post_install', '-at_install')
+
+def at_install(func):
+    """ Decorate a method or a class to tag it as 'at_install' and remove 'post_install' tag if any.
+        A test should be either at_install or post_install, not both.
+    """
+    return tagged('at_install', '-post_install')(func)
+
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
@@ -2637,13 +2644,6 @@ def can_import(module):
         return False
     else:
         return True
-
-
-def at_install(func):
-    """ Decorate a method or a class to tag it as 'at_install' and remove 'post_install' tag if any.
-        A test should be either at_install or post_install, not both.
-    """
-    return tagged('at_install', '-post_install')(func)
 
 
 class freeze_time:

@@ -10,6 +10,7 @@ from odoo.tests import tagged
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
 
 
+@tagged('at_install', '-post_install')
 class TransactionExpressionCase(TransactionCase):
 
     def _search(self, model, domain, init_domain=Domain.TRUE, test_complement=True):

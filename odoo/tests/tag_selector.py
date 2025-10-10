@@ -73,6 +73,21 @@ class TagsSelector(object):
                 if test.__class__ not in seen:
                     seen.add(test.__class__)
                     _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', test.__class__)
+                    # auto update the file to add @tagged('at_install', '-post_install') # LEGACY at_install
+                    filename = test.__class__.__module__.replace('.', '/') + '.py'
+                    decorator = "@tagged('at_install', '-post_install')\n"
+                    with open(filename, 'r') as f:
+                        content = f.read()
+                        if "tagged" in content:
+                            pass
+                        elif "common." in content:
+                            decorator = "@common.tagged('at_install', '-post_install')\n"
+                        elif "from odoo.tests import" in content:
+                            
+                            content = content.replace("from odoo.tests import", "from odoo.tests import tagged, ")
+
+                        
+
 
         test_module = test.test_module
         test_class = test.__class__.__name__
