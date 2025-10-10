@@ -23,7 +23,7 @@
                     <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-            <BuilderRow label.translate="Alignment">
+            <BuilderRow label.translate="Alignment" preview="false">
                 <BuilderButtonGroup dataAttributeAction="'alignment'">
                     <BuilderButton dataAttributeActionValue="'left'">
                         <i class="fa fa-fw fa-align-left"/>
@@ -36,7 +36,7 @@
                     </BuilderButton>
                 </BuilderButtonGroup>
             </BuilderRow>
-            <BuilderRow label.translate="Filters">
+            <BuilderRow label.translate="Filters" preview="false">
                 <BuilderSelect dataAttributeAction="'parentCategoryId'">
                     <BuilderSelectItem
                         dataAttributeActionValue=""
@@ -61,10 +61,11 @@
                 t-if="this.dynamicOptionParams.domState.parentCategoryId"
                 label.translate="Parent Category"
                 dataAttributeAction="'showParent'"
+                preview="false"
             >
                 <BuilderCheckbox dataAttributeActionValue="'true'"/>
             </BuilderRow>
-            <BuilderRow label.translate="Clickable items">
+            <BuilderRow label.translate="Clickable items" preview="false">
                 <BuilderCheckbox
                     id="'clickable_items_opt'"
                     action="'toggleClickable'"
@@ -92,7 +93,7 @@
                 />
             </BuilderRow>
             <BuilderRow label.translate="Button" t-if="!isActiveItem('clickable_items_opt')">
-                <BuilderTextInput dataAttributeAction="'button'"/>
+                <BuilderTextInput dataAttributeAction="'button'" preview="false"/>
             </BuilderRow>
             <BuilderContext>
                 <hr class="mx-3"/>
