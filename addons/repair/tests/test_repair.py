@@ -173,7 +173,6 @@ class TestRepair(TestRepairCommon):
         # draft -> confirmed (action_validate -> _action_repair_confirm)
             # PRE
                 # lines' qty >= 0 !-> UserError
-                # product's qty IS available !-> Warning w/ choice
             # POST
                 # state = confirmed
                 # move_ids in (partially reserved, fully reserved, waiting availability)
@@ -184,7 +183,7 @@ class TestRepair(TestRepairCommon):
         with self.assertRaises(UserError):
             repair.action_validate()
 
-        #  Line A with qty > 0 & not available, Line B with qty >= 0 & available --> Warning (stock.warn.insufficient.qty.repair)
+        #  Line A with qty > 0 & not available, Line B with qty >= 0 & available
         lineA.product_uom_qty = 2.0
         lineB = self._create_simple_part_move(repair.id, 2.0, self.product_storable_lot)
         repair.move_ids |= lineB
@@ -197,13 +196,6 @@ class TestRepair(TestRepairCommon):
 
         repair.product_id = self.product_storable_serial
         validate_action = repair.action_validate()
-        self.assertEqual(validate_action.get("res_model"), "stock.warn.insufficient.qty.repair")
-        # Warn qty Wizard only apply to "product TO repair"
-        warn_qty_wizard = Form(
-            self.env['stock.warn.insufficient.qty.repair']
-            .with_context(**validate_action['context'])
-            ).save()
-        warn_qty_wizard.action_done()
 
         self.assertEqual(repair.state, "confirmed", 'Repair order should be in "Confirmed" state.')
         self.assertEqual(lineA.state, "partially_available", 'Repair line #1 should be in "Partial Availability" state.')
@@ -818,8 +810,6 @@ class TestRepair(TestRepairCommon):
             'product_max_qty': 1,
             'trigger': 'auto'
         })
-        # The product to be repaired should be storable and out of stock
-        # to trigger the wizard indicating that the product has an insufficient quantity.
         self.product_product_3.is_storable = True
         repair_order = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
@@ -836,12 +826,6 @@ class TestRepair(TestRepairCommon):
             ],
         })
         validate_action = repair_order.action_validate()
-        self.assertEqual(validate_action.get("res_model"), "stock.warn.insufficient.qty.repair")
-        warn_qty_wizard = Form(
-            self.env['stock.warn.insufficient.qty.repair']
-            .with_context(**validate_action['context'])
-            ).save()
-        warn_qty_wizard.action_done()
         self.assertEqual(repair_order.state, "confirmed", 'Repair order should be in "Confirmed" state.')
         move = self.env['stock.move'].search([
             ('product_id', '=', self.product_storable_no.id),

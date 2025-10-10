@@ -35,7 +35,7 @@
                 <field name="parts_availability_state" column_invisible="True"/>
                 <field name="parts_availability"
                     invisible="state not in ['confirmed', 'under_repair']"
-                    optional="show"
+                    optional="hide"
                     decoration-success="parts_availability_state == 'available'"
                     decoration-warning="parts_availability_state == 'expected'"
                     decoration-danger="parts_availability_state == 'late'"/>
@@ -44,7 +44,7 @@
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="picking_id" optional="hide"/>
-                <field name="sale_order_id" optional="show"/>
+                <field name="sale_order_id" optional="hide"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 <field name="state" optional="show" widget='badge'
