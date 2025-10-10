@@ -736,7 +736,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * @override
      */
     _renderCustomXML: function (uiFragment) {
-        if (this.modelCantChange) {
+        if (this.modelCantChange || !this.activeForm) {
             return;
         }
         // Add Action select
@@ -1852,12 +1852,49 @@ options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
 
         const fieldName = this.$target[0]
             .querySelector("input.s_website_form_input").getAttribute("name");
-        const spanEl = document.createElement("span");
-        spanEl.innerText = _t("The field “%(field)s” is mandatory for the action “%(action)s”.", {
+        const message = _t("The field “%(field)s” is mandatory for the action “%(action)s”.", {
             field: fieldName,
             action: currentActionName,
         });
-        uiFragment.querySelector("we-alert").appendChild(spanEl);
+
+        if (message) {
+            let alertEl = document.createElement("we-alert");
+            alertEl.classList.add("mt-2");
+            uiFragment.appendChild(alertEl);
+            const span = document.createElement("span");
+            span.innerText = message;
+            alertEl.appendChild(span);
+        }
+    },
+});
+
+// Warn if the model of the form does not exist
+options.registry.WebsiteFormModelExist = DisableOverlayButtonOption.extend({
+    async _renderCustomXML(uiFragment) {
+        const formEl = this.$target[0].closest("form");
+        const modelName = formEl?.getAttribute("data-model_name");
+        if (!modelName) return;
+
+        let exists = true;
+        try {
+            exists = await this.orm.call("ir.model", "search_count", [[["model", "=", modelName]]]) > 0;
+        } catch {
+            exists = false;
+        }
+
+        if (!exists) {
+            let alertEl = uiFragment.querySelector("we-alert");
+            if (!alertEl) {
+                alertEl = document.createElement("we-alert");
+                alertEl.classList.add("mt-2");
+                uiFragment.appendChild(alertEl);
+            }
+            const span = document.createElement("span");
+            span.innerText = _t("The model “%(model)s” does not exist. Please update or remove your form.", {
+                model: modelName,
+            });
+            alertEl.appendChild(span);
+        }
     },
 });
 
