@@ -184,7 +184,10 @@ export class UseSuggestion {
     }
     insert(option) {
         let position = this.search.position + 1;
-        if ([":", "::"].includes(this.search.delimiter) || this.comp.composerService.htmlEnabled) {
+        if (
+            [":", "::"].includes(this.search.delimiter) ||
+            (this.comp.composerService.htmlEnabled && this.search.delimiter !== "/")
+        ) {
             position = this.search.position;
         }
         if (this.comp.composerService.htmlEnabled) {
