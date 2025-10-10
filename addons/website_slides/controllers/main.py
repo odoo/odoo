@@ -400,15 +400,21 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True, readonly=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
-        if slug_tags and slug_tags.count(',') > 0 and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
-            # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
-            # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
-            # This permanent redirect is placed to instruct the bots that this page is no longer valid
-            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
-            # Note: We allow a single tag to be GET, to keep crawlers & indexes on those pages
-            # What we really want to avoid is combinatorial explosions
-            return request.redirect('/slides/all', code=301)
-
+        # Checking referrer and search to see if the GET request is from
+        # a SEO bot, in which case every tag but one should be removed to
+        # avoid combinatorial explosion
+        if slug_tags and request.httprequest.method == 'GET' and request.env['ir.http'].is_a_bot():
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
+            tag_list = slug_tags.split(',')
+            if len(tag_list) > 1:
+                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_category=slide_category)()
+                # The vast majority of bots will follow the links in the
+                # client side, which are protected by the nofollow
+                # attribute of the tags links
+                # This redirect is used to stop combinatorial explosions
+                # from bots that send direct requests
+                return request.redirect(url, code=302)
         render_values = self.slides_channel_all_values(slide_category=slide_category, slug_tags=slug_tags, my=my, **post)
         return request.render('website_slides.courses_all', render_values)
 
