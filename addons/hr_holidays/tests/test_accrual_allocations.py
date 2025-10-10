@@ -1864,6 +1864,56 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 2)
 
+    def test_future_accural_time_with_taken_leave(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+        })
+        with freeze_time("2025-10-06"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'name': 'Accrual Plan For Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'start',
+                'carryover_date': 'year_start',
+                'level_ids': [(0, 0, {
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'weekly',
+                    'action_with_unused_accruals': 'lost',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 1,
+                    'week_day': 'mon',
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 1,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+            allocation._update_accrual()
+            leave = self.env['hr.leave'].create({
+                'name': 'Future Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2025-10-8',
+                'request_date_to': '2025-10-8',
+            })
+            allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2025, 10, 7))
+            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+            allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2025, 10, 9))
+            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 0)
+            allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2025, 10, 15))
+            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+
     def test_added_type_during_onchange(self):
         """
             The purpose is to test whether the value of the `added_value_type`
