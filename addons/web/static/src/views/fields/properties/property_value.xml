@@ -115,30 +115,9 @@
                             t-else=""
                             t-out="propertyValue and propertyValue.display_name || ''" />
                     </t>
-                    <Many2XAutocomplete
-                        t-else=""
-                        t-key="props.id + '_' + props.comodel + '_' + props.string"
-                        value="propertyValue.display_name || ''"
-                        id="props.id"
-                        resModel="props.comodel"
-                        autoSelect="true"
-                        fieldString="props.string"
-                        update.bind="onValueChange"
-                        context="props.context"
-                        getDomain.bind="() => propertyDomain"
-                        quickCreate.bind="onQuickCreate"
-                        activeActions="{ create: true, createEdit: true, write: true }"
-                    />
-                    <button
-                        t-if="!props.readonly and propertyValue and propertyValue.id and hasAccess"
-                        type="button"
-                        class="btn btn-secondary oi oi-arrow-right o_external_button o_properties_external_button py-0"
-                        tabindex="-1"
-                        draggable="false"
-                        aria-label="Internal link"
-                        data-tooltip="Internal link"
-                        t-on-click="onExternalLinkClick"
-                    />
+                    <t t-else="">
+                        <Many2One t-key="props.id + '_' + props.comodel + '_' + props.string" cssClass="'w-100'" id="this.props.id" value="this.propertyValue" relation="this.props.comodel" update.bind="this.onValueChange" string="this.props.string" context="this.props.context" domain="() => this.propertyDomain" canCreate="true" canCreateEdit="true" canWrite="true" canOpen="!this.props.readonly and this.hasAccess" openRecordAction.bind="this.onExternalLinkClick"/>
+                    </t>
                 </t>
             </div>
             <t t-elif="props.type === 'many2many'">
@@ -158,7 +137,7 @@
                         update.bind="onValueChange"
                         context="props.context"
                         getDomain.bind="() => propertyDomain"
-                        quickCreate.bind="onQuickCreate"
+                        quickCreate="(name) => this.onValueChange([{ display_name: name }])"
                         activeActions="{ create: true, createEdit: true, write: true }"
                         isToMany="true"
                     />

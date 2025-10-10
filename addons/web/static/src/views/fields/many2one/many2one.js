@@ -111,6 +111,7 @@ export class Many2One extends Component {
         domain: [],
         linkCssClass: "",
         nameCreateField: "name",
+        openActionContext: () => ({}),
         otherSources: [],
         placeholder: "",
         readonly: false,

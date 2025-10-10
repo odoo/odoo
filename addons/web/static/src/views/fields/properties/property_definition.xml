@@ -2,20 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinition">
         <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="propertyDefinition">
-            <div class="d-flex justify-content-between px-3 border-bottom">
-                <div t-if="!env.isSmall" class="border-end py-1">
-                    <button
-                        t-attf-class="btn btn-link ps-0 {{this.isFirst ? 'disabled' : ''}}"
-                        t-on-click="() => this.onPropertyMove('up')" title="Move this Property up">
-                        <i class="oi oi-chevron-up ms-2"/>
-                    </button>
-                    <button
-                        t-attf-class="btn btn-link pe-3 {{this.isLast ? 'disabled' : ''}}"
-                        t-on-click="() => this.onPropertyMove('down')" title="Move this Property down">
-                        <i class="oi oi-chevron-down ms-2"/>
-                    </button>
-                </div>
-                <button t-else="" class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
+            <div t-if="env.isSmall" class="d-flex justify-content-between px-3 border-bottom">
+                <button class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
                 <button
                     t-if="!props.readonly and props.canChangeDefinition"
                     class="btn pe-0 text-danger float-end o_field_property_definition_delete"
@@ -218,6 +206,15 @@
                         </label>
                     </div>
                 </div>
+            </div>
+            <div class="d-flex px-3 pb-1 mt-auto" t-if="!env.isSmall">
+                <button
+                    t-if="!props.readonly and props.canChangeDefinition"
+                    class="ms-auto btn btn-danger o_field_property_definition_delete"
+                    title="Remove Property"
+                    t-on-click="props.onDelete">
+                    <i class="fa fa-trash"/> Delete
+                </button>
             </div>
         </div>
     </t>

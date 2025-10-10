@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { getCurrency } from "@web/core/currency";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -16,15 +17,15 @@ import { _t } from "@web/core/l10n/translation";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
-import { formatInteger, formatMany2one, formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
+import { nbsp } from "@web/core/utils/strings";
+import { imageUrl } from "@web/core/utils/urls";
+import { formatInteger, formatMany2one, formatMonetary } from "@web/views/fields/formatters";
+import { Many2One } from "@web/views/fields/many2one/many2one";
 import { parseFloat, parseInteger, parseMonetary } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
 import { PropertyText } from "./property_text";
-import { imageUrl } from "@web/core/utils/urls";
-import { getCurrency } from "@web/core/currency";
-import { nbsp } from "@web/core/utils/strings";
 
 class PropertyValueTag extends Component {
     static template = "web.PropertyValueTag";
@@ -69,6 +70,7 @@ export class PropertyValue extends Component {
         DropdownItem,
         CheckBox,
         DateTimeInput,
+        Many2One,
         Many2XAutocomplete,
         PropertyTags,
         PropertyText,
@@ -291,13 +293,19 @@ export class PropertyValue extends Component {
                 newValue = 0;
             }
         } else if (["many2one", "many2many"].includes(this.props.type)) {
-            newValue = newValue[0];
+            newValue = this.props.type === "many2many" ? newValue[0] : newValue;
             if (newValue && newValue.id && newValue.display_name === undefined) {
                 // The "Search more" option in the Many2XAutocomplete component
                 // only return the record ID, and not the name. But we need to name
                 // in the component props to be able to display it.
                 // Make a RPC call to resolve the display name of the record.
                 newValue = await this._nameGet(newValue.id);
+            } else if (newValue && !newValue.id && newValue.display_name) {
+                const result = await this.orm.call(this.props.comodel, "name_create", [newValue.display_name], {
+                    context: this.props.context,
+                });
+                newValue.id = result[0];
+                newValue.display_name = result[1];
             }
 
             if (this.props.type === "many2many" && newValue) {
@@ -355,18 +363,6 @@ export class PropertyValue extends Component {
         const currentValue = JSON.parse(JSON.stringify(this.props.value || []));
         const newValue = currentValue.filter((value) => value[0] !== many2manyId);
         this.props.onChange(newValue);
-    }
-
-    /**
-     * Ask to create a record from a relational property.
-     *
-     * @param {string} name
-     */
-    async onQuickCreate(name) {
-        const result = await this.orm.call(this.props.comodel, "name_create", [name], {
-            context: this.props.context,
-        });
-        this.onValueChange([{ id: result[0], display_name: result[1] }]);
     }
 
     /* --------------------------------------------------------
