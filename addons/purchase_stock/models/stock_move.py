@@ -316,3 +316,13 @@ class StockMove(models.Model):
                 [move for move in current_move.move_orig_ids if move not in moves_to_check and move not in seen_moves]
             )
         return None, None
+
+    def _get_move_price_currency(self):
+        price_unit = super()._get_move_price_currency()
+        line = self.purchase_line_id
+        order = line.order_id
+        if order.currency_id != order.company_id.currency_id:
+            convert_date = self._get_currency_convert_date()
+            price_unit = order.currency_id._convert(
+                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
+        return price_unit

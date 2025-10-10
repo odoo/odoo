@@ -512,7 +512,8 @@ class StockMove(models.Model):
             if move.product_id.lot_valuated:
                 unit_cost = {lot: lot.standard_price for lot in move.lot_ids}
             else:
-                unit_cost = {self.env['stock.lot']: move.product_id.standard_price}
+                move_price_currency = move._get_move_price_currency()
+                unit_cost = {self.env['stock.lot']: move_price_currency}
             if move.product_id.cost_method != 'standard':
                 unit_cost = move._get_price_unit()  # May be negative (i.e. decrease an out move).
             if move.product_id.lot_valuated:
@@ -789,3 +790,9 @@ class StockMove(models.Model):
     def _get_layer_candidates(self):
         self.ensure_one()
         return self.stock_valuation_layer_ids
+
+    def _get_move_price_currency(self):
+        """ This method is overriden in purchase_stock to get the currency from the purchase order.
+        """
+        self.ensure_one()
+        return self.product_id.standard_price
