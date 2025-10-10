@@ -1,20 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, Command, _
 from odoo.tools import format_date
+from odoo.addons.hr.models.res_users import field_employee
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    leave_date_to = fields.Date(related='employee_id.leave_date_to')
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + [
-            'leave_date_to',
-        ]
+    leave_date_to = field_employee(fields.Date, 'leave_date_to')
 
     def _compute_im_status(self):
         super()._compute_im_status()
