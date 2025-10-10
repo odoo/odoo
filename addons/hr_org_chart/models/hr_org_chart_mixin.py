@@ -27,15 +27,17 @@ class HrEmployeeBase(models.AbstractModel):
         member of the RD department, managed by the CTO itself managed by the CEO).
         In that case, the manager in not counted as a subordinate if it's in the 'parents' set.
         """
-        if not parents:
-            parents = self.env[self._name]
-
-        indirect_subordinates = self.env[self._name]
-        parents |= self
-        direct_subordinates = self.child_ids - parents
-        child_subordinates = direct_subordinates._get_subordinates(parents=parents) if direct_subordinates else self.browse()
-        indirect_subordinates |= child_subordinates
-        return indirect_subordinates | direct_subordinates
+        self.ensure_one()
+        to_process = [self]
+        visited = set()
+        subordinates = self.env[self._name]
+        while to_process:
+            current = to_process.pop()
+            visited.add(current)
+            not_visited_children = current.child_ids.filtered(lambda e: e not in visited)
+            subordinates |= not_visited_children
+            to_process.extend(list(not_visited_children))
+        return subordinates
 
     @api.depends('child_ids', 'child_ids.child_all_count')
     def _compute_subordinates(self):
