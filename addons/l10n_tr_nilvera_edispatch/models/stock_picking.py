@@ -108,16 +108,21 @@ class StockPicking(models.Model):
 
     def _l10n_tr_validate_edispatch_on_done(self):
         partners = (
-            self.company_id.partner_id
-            | self.partner_id
-            | self.partner_id.commercial_partner_id
-            | self.l10n_tr_nilvera_carrier_id
+            self.partner_id
             | self.l10n_tr_nilvera_buyer_id
             | self.l10n_tr_nilvera_seller_supplier_id
             | self.l10n_tr_nilvera_buyer_originator_id
         )
+        partners_requiring_tax_office = (
+            self.company_id.partner_id
+            | self.partner_id.commercial_partner_id
+            | self.l10n_tr_nilvera_carrier_id
+        )
 
-        error_messages = partners._l10n_tr_nilvera_validate_partner_details()
+        error_messages = (
+            partners._l10n_tr_nilvera_validate_partner_details() |
+            partners_requiring_tax_office._l10n_tr_nilvera_validate_partner_details(tax_office_required=True)
+        )
 
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:

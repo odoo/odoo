@@ -10,7 +10,7 @@ class ResPartner(models.Model):
         size=5,
     )
 
-    def _l10n_tr_nilvera_validate_partner_details(self, is_delivery_partner=False):
+    def _l10n_tr_nilvera_validate_partner_details(self, is_delivery_partner=False, tax_office_required=False):
         error_messages = {}
 
         for record in self:
@@ -38,6 +38,9 @@ class ResPartner(models.Model):
                 or len(record.l10n_tr_nilvera_edispatch_customs_zip) != 5
             ):
                 msg.append(_("Customs ZIP of 5 characters must be present"))
+
+            if tax_office_required and country_code == 'TR' and not record.ref:
+                msg.append(_("Reference field must be set to the tax office name"))
 
             if msg:
                 # Instead of using name, display_name is used, since name is not required
