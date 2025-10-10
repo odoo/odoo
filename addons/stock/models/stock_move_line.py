@@ -1117,23 +1117,14 @@ class StockMoveLine(models.Model):
                 return action
         return package
 
-    def _to_pack(self, without_pack=True):
-        if len(self.picking_type_id) > 1:
-            raise UserError(_('You cannot pack products into the same package when they are from different transfers with different operation types'))
-        quantity_move_line_ids = self.filtered(
-            lambda ml: ml.product_uom_id.compare(ml.quantity, 0.0) > 0 and (without_pack != bool(ml.result_package_id))
-            and ml.state not in ('done', 'cancel')
-        )
-        move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
-        if not move_line_ids:
-            move_line_ids = quantity_move_line_ids
-        return move_line_ids
-
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
         move_lines = self
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])
-        move_lines_to_pack = move_lines._to_pack()
+        # From the 'Moves' button, we want to take all move lines, without caring for picked or with/without packages.
+        force_move_lines = bool(self.env.context.get('force_move_lines'))
+
+        move_lines_to_pack, packages_to_pack = move_lines._get_lines_and_packages_to_pack(picked_first=not force_move_lines)
         done_pack = False
         if move_lines_to_pack:
             action = move_lines_to_pack._pre_put_in_pack_hook(move_lines, package_id, package_type_id, package_name, self.env.context.get('from_package_wizard'))
@@ -1142,17 +1133,36 @@ class StockMoveLine(models.Model):
 
             package = move_lines_to_pack._put_in_pack(package_id, package_type_id, package_name)
             done_pack = move_lines_to_pack._post_put_in_pack_hook(package)
-        if done_pack and not self.env.context.get('force_move_lines'):
+        if done_pack and not force_move_lines:
             return done_pack
-        elif lines_with_pack_to_pack := move_lines._to_pack(without_pack=False):
-            packs_to_pack = lines_with_pack_to_pack.result_package_id.outermost_package_id
+        elif packages_to_pack:
             if done_pack:
-                packs_to_pack = packs_to_pack.filtered(lambda p: p.id != done_pack.id)
+                packages_to_pack -= done_pack
                 package_id = done_pack.id
-            if packs_to_pack:
-                return packs_to_pack.action_put_in_pack(package_id=package_id, package_type_id=package_type_id, package_name=package_name)
-        if not done_pack:
-            raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or moves are already done."))
+            if packages_to_pack:
+                return packages_to_pack.action_put_in_pack(package_id=package_id, package_type_id=package_type_id, package_name=package_name)
+
+    def _get_lines_and_packages_to_pack(self, picked_first=True):
+        """ Get all move lines & packages that need to be put in a pack.
+
+            :param picked_first: If enabled, will prioritize picked move lines over other move lines.
+            :return: move_lines_to_pack: All move lines without a pack that can be packed
+            :return: packages_to_pack: All packages that can be packed
+        """
+        if len(self.picking_type_id) > 1:
+            raise UserError(_('You cannot pack products into the same package when they are from different transfers with different operation types'))
+
+        quantity_move_lines = self.filtered(lambda ml: ml.state not in ('done', 'cancel') and ml.product_uom_id.compare(ml.quantity, 0.0) > 0)
+        if picked_first:
+            picked_move_lines = quantity_move_lines.filtered(lambda ml: ml.picked)
+            if picked_move_lines:
+                # As long as at least a single move line is picked, we ignore the unpicked ones.
+                quantity_move_lines = picked_move_lines
+
+        move_lines_to_pack = quantity_move_lines.filtered(lambda ml: not ml.result_package_id)
+        packages_to_pack = (quantity_move_lines - move_lines_to_pack).result_package_id.outermost_package_id
+
+        return move_lines_to_pack, packages_to_pack
 
     def _get_revert_inventory_move_values(self):
         self.ensure_one()
