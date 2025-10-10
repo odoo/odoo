@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageRepliesPanel">
+        <ActionPanel title.translate="Replies" minWidth="200" initialWidth="500" icon="'fa fa-reply-all'">
+            <t t-foreach="[props.message, ...orderedDescendants]" t-as="msg" t-key="msg.id">
+                <Message message="msg" thread="props.thread"/>
+                <div t-if="msg_first" class="d-flex align-items-center w-100 fw-bold z-1">
+                    <hr class="o-discuss-separator flex-grow-1"/>
+                        <span class="px-2 smaller text-muted opacity-50">Replies</span>
+                    <hr class="o-discuss-separator flex-grow-1"/>
+                </div>
+            </t>
+        </ActionPanel>
+    </t>
+</templates>

@@ -127,7 +127,10 @@ export class ThreadAction extends Action {
 
     /** Condition to display the action panel component of this action. */
     get actionPanelComponentCondition() {
-        return this.isActive && this.actionPanelComponent && this.condition && !this.popover;
+        return (
+            this.definition.actionPanelComponentCondition?.call(this, this.params) ??
+            (this.isActive && this.actionPanelComponent && this.condition && !this.popover)
+        );
     }
 
     /** Props to pass to the action panel component of this action. */

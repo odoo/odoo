@@ -505,6 +505,10 @@ export class Message extends Component {
     get shouldHideFromMessageListOnDelete() {
         return false;
     }
+
+    get showMessageInReply() {
+        return this.props.message.parent_id;
+    }
 }
 
 discussComponentRegistry.add("Message", Message);

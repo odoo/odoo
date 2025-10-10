@@ -1,9 +1,10 @@
-import { registerMessageAction } from "@mail/core/common/message_actions";
+import { messageActionsRegistry, registerMessageAction } from "@mail/core/common/message_actions";
 
 import { toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
 
 registerMessageAction("set-new-message-separator", {
     condition: ({ message, thread }) =>
@@ -28,4 +29,25 @@ registerMessageAction("set-new-message-separator", {
         });
     },
     sequence: 70,
+});
+registerMessageAction("view-replies", {
+    condition: ({ message, owner }) =>
+        owner.env.repliesMenu && !owner.env.repliesMenu.message && message.child_ids.length,
+    icon: "fa fa-reply-all",
+    name: _t("View Replies"),
+    onSelected: ({ message, owner }) => {
+        owner.env.repliesMenu.open(message);
+    },
+    sequence: 50,
+});
+
+const replyToAction = messageActionsRegistry.get("reply-to");
+
+patch(replyToAction, {
+    onSelected({ owner }) {
+        if (owner.env.inChatWindow && owner.env.repliesMenu?.message) {
+            owner.env.repliesMenu.close();
+        }
+        return super.onSelected(...arguments);
+    },
 });

@@ -220,3 +220,17 @@ class ChannelController(http.Controller):
         channel.parent_channel_id.message_post(body=body, subtype_xmlid="mail.mt_comment")
         # sudo: discuss.channel - skipping ACL for users who created the thread
         channel.sudo().unlink()
+
+    @http.route("/discuss/message/descendants", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_message_descendants(self, message_id):
+        message = request.env["mail.message"].search([("id", "=", message_id)])
+        if not message:
+            raise NotFound()
+
+        def get_descendants(message):
+            descendants = message.child_ids
+            for descendant in descendants:
+                descendants |= get_descendants(descendant)
+            return descendants
+
+        return Store().add(get_descendants(message)).get_result()

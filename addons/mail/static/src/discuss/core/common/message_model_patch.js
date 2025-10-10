@@ -7,6 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup();
+        this.child_ids = fields.Many("mail.message");
         this.hasEveryoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
@@ -52,6 +53,10 @@ const messagePatch = {
         return this.thread.membersThatCanSeen.filter(
             (m) => m.hasSeen(this) && m.persona.notEq(this.author)
         );
+    },
+    /** @returns {import("models").Message[]} */
+    get descendants() {
+        return this.child_ids.flatMap((c) => [c, ...c.descendants]);
     },
     /**
      * @override
