@@ -378,7 +378,7 @@ class HrEmployee(models.Model):
             ('company_id', 'in', self.env.companies.ids),
             '|',
             ('resource_calendar_id', '=', False),
-            ('resource_calendar_id', '=', self.resource_calendar_id.id),
+            ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
         ]
 
         if self.job_id:

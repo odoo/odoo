@@ -44,7 +44,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
         if self.allocation_mode == 'employee':
-            employees = self.employee_ids
+            employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
         elif self.allocation_mode == 'category':
             employees = self.category_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
         elif self.allocation_mode == 'company':
@@ -94,7 +94,10 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                 raise UserError(self.env_('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
             one_day_leaves = conflicting_leaves.filtered(lambda leave: leave.request_date_from == leave.request_date_to)
             one_day_leaves.action_refuse()
-            (conflicting_leaves - one_day_leaves)._split_leaves(self.date_from, self.date_to + timedelta(days=1))
+            if self.env.user.has_group('hr_holidays.group_hr_holidays_responsible'):
+                (conflicting_leaves - one_day_leaves).sudo()._split_leaves(self.date_from, self.date_to + timedelta(days=1))
+            else:
+                (conflicting_leaves - one_day_leaves)._split_leaves(self.date_from, self.date_to + timedelta(days=1))
 
         vals_list = self._prepare_employees_holiday_values(employees, date_from_tz, date_to_tz)
         leaves = self.env['hr.leave'].with_context(
