@@ -45,6 +45,7 @@ MODELS_TO_EXPOSE = [
     "res.groups.privilege",
     "mail.message.subtype",
     "mail.notification",
+    "mail.template",
     "res.lang",
     "res.partner",
 ]
