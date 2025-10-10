@@ -252,7 +252,10 @@ test("should insert a span zws when toggling a formatting command twice", () =>
         // todo: It would be better to remove the zws entirely so that
         // the P could have the "/" hint but that behavior might be
         // complex with the current implementation.
-        contentAfterEdit: `<p>${span(`[]\u200B`, "first")}</p>`,
+        contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">${span(
+            `[]\u200B`,
+            "first"
+        )}</p>`,
     }));
 
 // This test uses execCommand to reproduce as closely as possible the browser's
@@ -387,7 +390,12 @@ test("should not remove empty bold tag in an empty block when changing selection
 
     bold(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>abcd</p><p>${strong("[]\u200B", "first")}</p>`);
+    expect(getContent(el)).toBe(
+        `<p>abcd</p><p placeholder='Type "/" for commands' class="o-we-hint">${strong(
+            "[]\u200B",
+            "first"
+        )}</p>`
+    );
 
     await simulateArrowKeyPress(editor, "ArrowUp");
     await tick(); // await selectionchange
