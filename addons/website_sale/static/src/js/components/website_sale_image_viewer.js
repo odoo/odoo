@@ -124,7 +124,13 @@ export class ProductImageViewer extends Dialog {
         if (ev.target.tagName === "IMG") {
             // Only zoom if the image did not move
             if (this.dragStartPos.clientX === ev.clientX && this.dragStartPos.clientY === ev.clientY) {
-                this.zoomIn(ZOOM_STEP * 3);
+                if (this.state.imageScale === 1) {
+                    this.zoomIn(ZOOM_STEP * 3);
+                    this.imageContainerRef.el.classList.add("is-zoomed");
+                } else {
+                    this.zoomOut(this.state.imageScale - 1);
+                    this.imageContainerRef.el.classList.remove("is-zoomed");
+                }
             }
         }
         if (ev.target.classList.contains('o_wsale_image_viewer_void') && !this.isDragging) {
