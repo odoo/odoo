@@ -10,6 +10,7 @@ import { advanceTime, animationFrame, click, freezeTime, waitFor } from "@odoo/h
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 describe.current.tags("desktop");
 
@@ -26,10 +27,12 @@ test("should commit changes", async () => {
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
@@ -63,10 +66,12 @@ test("range input should step up or down with arrow keys", async () => {
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`;
+        }
+    );
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
@@ -116,10 +121,12 @@ test("keeping an arrow key pressed should commit only once", async () => {
             }
         },
     });
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`;
+        }
+    );
     freezeTime();
     await setupHTMLBuilder(`
         <div class="test-options-target">10</div>

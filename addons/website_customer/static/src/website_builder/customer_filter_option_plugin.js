@@ -7,13 +7,7 @@ export class CustomerFilterOptionPlugin extends Plugin {
     static id = "customerFilterOption";
 
     resources = {
-        builder_options: {
-            OptionComponent: CustomerFilterOption,
-            selector: "main:not(:has(#oe_structure_website_crm_partner_assign_layout_1)):has(.o_wcrm_filters_top)",
-            title: _t("Customers Page"),
-            groups: ["website.group_website_designer"],
-            editableOnly: false,
-        },
+        builder_options: CustomerFilterOption,
     };
 }
 

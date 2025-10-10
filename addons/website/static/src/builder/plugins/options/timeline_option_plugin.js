@@ -5,6 +5,7 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { after, before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const TIMELINE = before(WEBSITE_BACKGROUND_OPTIONS);
 export const DOT_LINES_COLOR = SNIPPET_SPECIFIC_END;
@@ -14,23 +15,28 @@ function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
 }
 
+export class TimelineOption extends BaseOptionComponent {
+    static template = "website.TimelineOption";
+    static selector = ".s_timeline";
+}
+
+export class DotLinesColorOption extends BaseOptionComponent {
+    static template = "website.DotLinesColorOption";
+    static selector = ".s_timeline";
+}
+
+export class DotColorOption extends BaseOptionComponent {
+    static template = "website.DotColorOption";
+    static selector = ".s_timeline .s_timeline_row";
+}
+
 class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
-    static dependencies = ["history"];
     resources = {
         builder_options: [
-            withSequence(TIMELINE, {
-                template: "website.TimelineOption",
-                selector: ".s_timeline",
-            }),
-            withSequence(DOT_LINES_COLOR, {
-                template: "website.DotLinesColorOption",
-                selector: ".s_timeline",
-            }),
-            withSequence(DOT_COLOR, {
-                template: "website.DotColorOption",
-                selector: ".s_timeline .s_timeline_row",
-            }),
+            withSequence(TIMELINE, TimelineOption),
+            withSequence(DOT_LINES_COLOR, DotLinesColorOption),
+            withSequence(DOT_COLOR, DotColorOption),
         ],
         dropzone_selector: {
             selector: ".s_timeline_row",

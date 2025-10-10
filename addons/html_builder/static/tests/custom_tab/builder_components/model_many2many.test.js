@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class Test extends models.Model {
     _name = "test";
@@ -37,10 +38,12 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<ModelMany2Many baseModel="'test.base'" m2oField="'rel'" recordId="1"/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<ModelMany2Many baseModel="'test.base'" m2oField="'rel'" recordId="1"/>`;
+        }
+    );
     const { getEditor } = await setupHTMLBuilder(
         `<div class="test-options-target" data-res-model="test.base" data-res-id="1">b</div>`
     );

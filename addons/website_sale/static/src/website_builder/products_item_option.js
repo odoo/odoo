@@ -1,21 +1,26 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { onWillStart, onMounted, useState, useRef } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class ProductsItemOption extends BaseOptionComponent {
     static template = "website_sale.ProductsItemOptionPlugin";
-    static props = {
-        loadInfo: Function,
-        itemSize: Object,
-    };
+    static dependencies = ["productsItemOptionPlugin"];
+    static selector = "#products_grid .oe_product";
+    static title = _t("Product");
+    static groups = ["website.group_website_designer"];
+    static editableOnly = false;
 
     setup() {
         super.setup();
         this.orm = useService("orm");
         this.tableRef = useRef("table");
 
+        const { loadInfo, getItemSize, getCount } = this.dependencies.productsItemOptionPlugin;
+
         this.state = useState({
-            itemSize: this.props.itemSize,
+            itemSize: getItemSize(),
+            count: getCount(),
         });
 
         this.productsGridTableEl = this.env.getEditingElement().closest(".o_wsale_products_grid_table");
@@ -35,7 +40,7 @@ export class ProductsItemOption extends BaseOptionComponent {
         });
 
         onWillStart(async () => {
-            this.defaultSort = await this.props.loadInfo();
+            this.defaultSort = await loadInfo();
 
             // need to display "re-order" option only if shop_default_sort is 'website_sequence asc'
             this.displayReOrder = this.defaultSort[0].shop_default_sort === "website_sequence asc";

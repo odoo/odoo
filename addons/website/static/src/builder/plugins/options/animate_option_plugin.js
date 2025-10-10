@@ -16,27 +16,8 @@ export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["history", "selection", "split"];
     static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
-    animateOptionProps = {
-        getDirectionsItems: this.getDirectionsItems.bind(this),
-        getEffectsItems: this.getEffectsItems.bind(this),
-        canHaveHoverEffect: async (el) => {
-            const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
-            const settledProms = await Promise.all(proms);
-            return settledProms.length && settledProms.every(Boolean);
-        },
-    };
     resources = {
-        builder_options: [
-            withSequence(ANIMATE, {
-                OptionComponent: AnimateOption,
-                selector: ".o_animable, section .row > div, img, .fa, .btn",
-                exclude:
-                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
-                props: this.animateOptionProps,
-                // todo: to implement
-                // textSelector: ".o_animated_text",
-            }),
-        ],
+        builder_options: [withSequence(ANIMATE, AnimateOption)],
         toolbar_items: [
             {
                 id: "animateText",
@@ -353,7 +334,7 @@ export class AnimateOptionPlugin extends Plugin {
 
 export class SetAnimationModeAction extends BuilderAction {
     static id = "setAnimationMode";
-    static dependencies = ["animateOption", "imageHover"];
+    static dependencies = ["animateOption"];
     setup() {
         this.animationWithFadein = ["onAppearance", "onScroll"];
         this.scrollingElement = getScrollingElement(this.document);
@@ -381,7 +362,10 @@ export class SetAnimationModeAction extends BuilderAction {
             delete editingElement.dataset.scrollZoneEnd;
         }
         if (effectName === "onHover") {
-            await this.dependencies.imageHover.removeHoverEffect(editingElement);
+            // Use getResource instead of this.dependencies as imageHover is not
+            // included in translation. This implementation is a hack and could
+            // be improved.
+            await this.getResource("remove_hover_effect_handlers")[0](editingElement);
         }
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
@@ -402,7 +386,10 @@ export class SetAnimationModeAction extends BuilderAction {
             editingElement.dataset.scrollZoneEnd = 100;
         }
         if (effectName === "onHover") {
-            await this.dependencies.imageHover.setHoverEffect(editingElement);
+            // Use getResource instead of this.dependencies as imageHover is not
+            // included in translation. This implementation is a hack and could
+            // be improved.
+            await this.getResource("set_hover_effect_handlers")[0](editingElement);
         }
         if (forceAnimation) {
             this.dependencies.animateOption.forceAnimation(editingElement);

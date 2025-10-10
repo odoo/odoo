@@ -1,20 +1,21 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { InputConfirmationDialog } from "@html_builder/snippets/input_confirmation_dialog";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+
+export class MailGroupOption extends BaseOptionComponent {
+    static template = "website_mail_group.MailGroupOption";
+    static selector = ".s_group";
+}
 
 class MailGroupOptionPlugin extends Plugin {
     static id = "mailGroupOption";
     static dependencies = ["builderActions"];
     static shared = ["createGroup"];
     resources = {
-        builder_options: [
-            {
-                template: "website_mail_group.MailGroupOption",
-                selector: ".s_group",
-            },
-        ],
+        builder_options: [MailGroupOption],
         dropzone_selector: {
             selector: ".s_group",
             dropNear: "p, h1, h2, h3, blockquote, .card",
@@ -94,7 +95,7 @@ export class MailGroupAction extends BuilderAction {
 export class CreateMailGroupAction extends BuilderAction {
     static id = "createMailGroup";
     static dependencies = ["builderActions", "mailGroupOption"];
-    load({ editingElement, value }) {
+    load({ value }) {
         return this.dependencies.mailGroupOption.createGroup(value);
     }
     apply({ editingElement, loadResult: id }) {
