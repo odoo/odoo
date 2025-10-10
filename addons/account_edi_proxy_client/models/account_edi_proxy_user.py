@@ -65,8 +65,19 @@ class AccountEdiProxyClientUser(models.Model):
         demo_state = self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.demo', False)
         return 'prod' if demo_state in ['prod', False] else 'test' if demo_state == 'test' else 'demo'
 
+    def _get_server_url_new(self, edi_format=None):
+
+        return self._get_server_url()
+
     def _get_server_url(self):
         return DEFAULT_TEST_SERVER_URL if self._get_demo_state() == 'test' else self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.edi_server_url', DEFAULT_SERVER_URL)
+
+    def _get_route(self, action, edi_format=None):
+        # I.e. in case we create a user we can not just use `self.edi_format` because the user is created after the request
+        return {
+            'create_user': '/iap/account_edi/1/create_user',
+            'renew_token': '/iap/account_edi/1/renew_token',
+        }[action]
 
     def _make_request(self, url, params=False):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
@@ -113,6 +124,12 @@ class AccountEdiProxyClientUser(models.Model):
 
         return response['result']
 
+    def _get_create_user_edi_params(self, company, edi_format, edi_identification):
+        return {
+            'edi_format_code': edi_format.code,
+            'edi_identification': edi_identification,
+        }
+
     def _register_proxy_user(self, company, edi_format, edi_identification):
         ''' Generate the public_key/private_key that will be used to encrypt the file, send a request to the proxy
         to register the user with the public key and create the user with the private key.
@@ -145,12 +162,11 @@ class AccountEdiProxyClientUser(models.Model):
         else:
             try:
                 # b64encode returns a bytestring, we need it as a string
-                response = self._make_request(self._get_server_url() + '/iap/account_edi/1/create_user', params={
+                response = self._make_request(self._get_server_url_new(edi_format=edi_format) + self._get_route('create_user', edi_format=edi_format), params={
                     'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
                     'company_id': company.id,
-                    'edi_format_code': edi_format.code,
-                    'edi_identification': edi_identification,
-                    'public_key': base64.b64encode(public_pem).decode()
+                    'public_key': base64.b64encode(public_pem).decode(),
+                    **self._get_create_user_edi_params(company, edi_format, edi_identification),
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
@@ -180,7 +196,7 @@ class AccountEdiProxyClientUser(models.Model):
             if e.pgcode == '55P03':
                 return
             raise e
-        response = self._make_request(self._get_server_url() + '/iap/account_edi/1/renew_token')
+        response = self._make_request(self._get_server_url_new() + self._get_route('renew_token'))
         if 'error' in response:
             # can happen if the database was duplicated and the refresh_token was refreshed by the other database.
             # we don't want two database to be able to query the proxy with the same user
