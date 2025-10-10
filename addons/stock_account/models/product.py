@@ -135,7 +135,7 @@ class ProductProduct(models.Model):
              "to the totaled value of the product's valuation layers")
 
     @api.depends_context('to_date', 'company')
-    @api.depends('cost_method', 'stock_move_ids.value')
+    @api.depends('cost_method', 'stock_move_ids.value', 'standard_price')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
@@ -321,16 +321,17 @@ class ProductProduct(models.Model):
         while quantity > 0 and fifo_stack:
             move = fifo_stack.pop(0)
             last_move = move
+            move_value = move.value
+            if at_date:
+                move_value = move._get_value(at_date=at_date)
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
-                in_value = move.value * in_qty / valued_qty
+                in_value = move_value * in_qty / valued_qty
                 qty_on_first_move = 0
             else:
                 in_qty = move._get_valued_qty()
-                in_value = move.value
-            if at_date and not external_location:
-                in_value = move._get_value(at_date=at_date)
+                in_value = move_value
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity
