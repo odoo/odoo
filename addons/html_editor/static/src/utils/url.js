@@ -57,6 +57,10 @@ export function getVideoUrl(platform, videoId, params) {
         case "youku":
             url = new URL(`https://player.youku.com/embed/${videoId}`);
             break;
+        case "facebook":
+            url = new URL(`https://www.facebook.com/plugins/video.php`);
+            params.href = `https://www.facebook.com/facebook/videos/${videoId}/`;
+            break;
         default:
             throw new Error(`Unsupported platform: ${platform}`);
     }
