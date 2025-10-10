@@ -302,7 +302,7 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
                             </t>
                         </div>
                     </div>
