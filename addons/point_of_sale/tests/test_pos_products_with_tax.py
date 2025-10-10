@@ -686,9 +686,32 @@ class TestPoSProductsWithTax(TestPoSCommon):
             []
         )
 
+        pos_user = self.env['res.users'].create({
+            'name': 'Joe Odoo',
+            'login': 'pos_user',
+            'password': 'pos_user',
+            'group_ids': [
+                (4, self.env.ref('base.group_user').id),
+                (4, self.env.ref('point_of_sale.group_pos_user').id),
+                (4, self.env.ref('stock.group_stock_user').id),
+            ],
+            'tz': 'America/New_York',
+            'company_id': branch_xx.id,
+            'company_ids': [Command.set([company.id, branch_x.id, branch_xx.id])],
+        })
+
         def get_taxes_name_popup(product):
             product = product.product_tmpl_id
-            return [tax['name'] for tax in product.get_product_info_pos(product_all_taxes.lst_price, 1, xx_config.id)['all_prices']['tax_details']]
+            # In order to simulate the state of the cache when we run this
+            # function over RPC, we need to fetch the below data first,
+            # invalidate our cache, and then enter `get_product_info_pos`
+            # with the arguments already loaded. This is necessary to test
+            # an access rights issue when trying to load product info.
+            branch_xx_id = branch_xx.id
+            xx_config_id = xx_config.id
+            product_all_taxes_lst_price = product_all_taxes.lst_price
+            self.env.invalidate_all()
+            return [tax['name'] for tax in product.with_user(pos_user).with_context(allowed_company_ids=[branch_xx_id]).get_product_info_pos(product_all_taxes_lst_price, 1, xx_config_id)['all_prices']['tax_details']]
 
         self.assertEqual(get_taxes_name_popup(product_all_taxes), ["Tax XX"])
         self.assertEqual(get_taxes_name_popup(product_no_xx_tax), ["Tax X"])
