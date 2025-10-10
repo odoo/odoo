@@ -236,7 +236,7 @@ class AccountPaymentRegister(models.TransientModel):
             partner_bank_account = move.partner_bank_id._origin
 
         return {
-            'partner_id': line.partner_id.id,
+            'partner_id': line.move_id.partner_id.id,
             'account_id': line.account_id.id,
             'currency_id': line.currency_id.id,
             'partner_bank_id': partner_bank_account.id,
