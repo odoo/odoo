@@ -90,6 +90,17 @@ class ProductPublicCategory(models.Model):
         help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option."
     )
 
+    not_in_shop = fields.Boolean(
+        string="Not in Shop",
+        compute='_compute_not_in_shop',
+        store=True,
+        readonly=False,
+        default=False,
+        recursive=True,
+    )
+
+    website_url = fields.Char(string="Website URL", compute='_compute_website_url')
+
     # === COMPUTE METHODS === #
 
     @api.depends('parent_path')
@@ -114,6 +125,17 @@ class ProductPublicCategory(models.Model):
                 any(p.is_published for p in category.product_tmpl_ids)
                 or any(c.has_published_products for c in category.child_id)
             )
+
+    @api.depends('parent_id.not_in_shop')
+    def _compute_not_in_shop(self):
+        for category in self:
+            if category.parent_id:
+                category.not_in_shop = category.parent_id.not_in_shop
+
+    def _compute_website_url(self):
+        for category in self:
+            if category.id:
+                category.website_url = '/shop/category/%s' % self.env['ir.http']._slug(category)
 
     # === SEARCH METHODS === #
 
@@ -193,3 +215,11 @@ class ProductPublicCategory(models.Model):
         if not self.env.user.has_group('website.group_website_designer'):
             domain &= Domain('has_published_products', '=', True)
         return domain
+
+    def open_website_url(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.website_url,
+            'target': 'self',
+        }
