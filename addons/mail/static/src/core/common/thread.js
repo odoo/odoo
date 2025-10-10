@@ -26,6 +26,7 @@ import { Transition } from "@web/core/transition";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
 /**
@@ -106,6 +107,7 @@ export class Thread extends Component {
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
         this.root = useRef("messages");
+        useHotkey(this.jumpPresentHotkey, () => this.jumpToPresent());
         this.visibleState = useVisible("messages", () => {
             this.updateShowJumpPresent();
         });
@@ -255,6 +257,10 @@ export class Thread extends Component {
                 toRaw(nextProps.thread).fetchNewMessages();
             }
         });
+    }
+
+    get jumpPresentHotkey() {
+        return this.props.order === "asc" ? "ArrowDown" : "ArrowUp";
     }
 
     computeJumpPresentPosition() {
