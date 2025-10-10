@@ -146,14 +146,6 @@ const threadPatch = {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
     },
-    /** @override */
-    openChannel() {
-        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-            this.setAsDiscussThread();
-            return true;
-        }
-        return super.openChannel();
-    },
     setAsDiscussThread() {
         super.setAsDiscussThread(...arguments);
         if (!this.displayToSelf && this.model === "discuss.channel") {
