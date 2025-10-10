@@ -116,7 +116,38 @@ class Test_Read_GroupTask(models.Model):
         'user_id',
         string="Collaborators",
     )
+    tag_ids = fields.Many2many(
+        'test_read_group.tag',
+        'test_read_group_task_tag_rel',
+        'task_id',
+        'tag_id',
+        string="Tags",
+    )
+    active_tag_ids = fields.Many2many(
+        'test_read_group.tag',
+        'test_read_group_task_tag_rel',
+        'task_id',
+        'tag_id',
+        string="Active Tags",
+        domain=[('active', '=', True)],
+    )
+    all_tag_ids = fields.Many2many(
+        'test_read_group.tag',
+        'test_read_group_task_tag_rel',
+        'task_id',
+        'tag_id',
+        string="All Tags",
+        context={'active_test': False},
+    )
     date = fields.Date()
+
+
+class Test_Read_GroupTag(models.Model):
+    _name = 'test_read_group.tag'
+    _description = "Project tag"
+
+    name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
 
 
 class ResPartner(models.Model):
