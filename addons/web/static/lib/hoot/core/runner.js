@@ -1400,7 +1400,7 @@ export class Runner {
         }
 
         /**
-         * @param  {...string} tagNames
+         * @param {...string} tagNames
          */
         const addTagsToCurrent = (...tagNames) => {
             const current = getCurrent();
