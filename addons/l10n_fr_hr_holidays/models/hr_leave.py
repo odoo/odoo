@@ -117,6 +117,19 @@ class HrLeave(models.Model):
             fr_leaves_by_company = fr_leaves.grouped('company_id')
             for company, leaves in fr_leaves_by_company.items():
                 company_cal = company.resource_calendar_id
+                holidays_days_list = []
+                public_holidays = self.env['resource.calendar.leaves'].search([
+                        ('resource_id', '=', False),
+                        ('date_from', '<', max(i.date_to for i in leaves)),
+                        ('date_to', '>', min(i.date_from for i in leaves)),
+                        ('calendar_id', 'in', [False, company_cal.id]),
+                        ('company_id', '=', company.id)
+                    ])
+                for holiday in public_holidays:
+                    current = holiday.date_from.date()
+                    while current < holiday.date_to.date():
+                        holidays_days_list.append(current)
+                        current += relativedelta(days=1)
                 for leave in leaves:
                     if leave.request_unit_half:
                         duration_by_leave_id.update(leave._get_durations(resource_calendar=company_cal))
@@ -134,6 +147,9 @@ class HrLeave(models.Model):
                     end_date = extended_date_end.date()
                     legal_days = 0.0
                     while current <= end_date:
+                        if current in holidays_days_list:
+                            current += relativedelta(days=1)
+                            continue
                         if company_cal._works_on_date(current):
                             legal_days += 1.0
                         current += relativedelta(days=1)
