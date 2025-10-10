@@ -1718,9 +1718,9 @@ class SaleOrder(models.Model):
                 if self._has_to_be_paid():
                     access_opt['title'] = _("View Quotation") if is_tx_pending else _("Sign & Pay Quotation")
                 else:
-                    access_opt['title'] = _("Accept & Sign Quotation")
+                    access_opt['title'] = _("Review & Sign Quotation")
             elif self._has_to_be_paid() and not is_tx_pending:
-                access_opt['title'] = _("Accept & Pay Quotation")
+                access_opt['title'] = _("Review & Pay Quotation")
             elif self.state in ('draft', 'sent'):
                 access_opt['title'] = _("View Quotation")
 
