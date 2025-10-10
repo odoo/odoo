@@ -391,11 +391,62 @@ class HTML_Editor(http.Controller):
         return attachment._get_media_info()
 
     @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None, alt_images=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
         """
+
+        def _prepare_attachment_url(_attachment):
+            # Don't keep url if modifying static attachment because static images
+            # are only served from disk and don't fallback to attachments.
+            if re.match(r'^/\w+/static/', _attachment.url):
+                _attachment.url = None
+            # Uniquify url by adding a path segment with the id before the name.
+            # This allows us to keep the unsplash url format so it still reacts
+            # to the unsplash beacon.
+            else:
+                url_fragments = _attachment.url.split('/')
+                url_fragments.insert(-1, str(_attachment.id))
+                _attachment.url = '/'.join(url_fragments)
+            return _attachment
+
+        def _get_attachment_src(_attachment):
+            if _attachment.public:
+                return _attachment.image_src
+
+            attachment.generate_access_token()
+            return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+
+        def _get_or_create_modified_attachment(_attachment, _fields):
+            if _fields['res_model'] == 'ir.ui.view':
+                _fields['res_id'] = 0
+            elif res_id:
+                _fields['res_id'] = res_id
+            if _fields['mimetype'] == 'image/webp':
+                _fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', _fields['name'], flags=re.I)
+
+            existing_attachment = get_existing_attachment(request.env['ir.attachment'], _fields)
+            if existing_attachment and not existing_attachment.url:
+                _attachment = existing_attachment
+            else:
+                # Restricted editors can handle attachments related to records to
+                # which they have access.
+                # Would user be able to read fields of original record?
+                if _attachment.res_model and _attachment.res_id:
+                    request.env[_attachment.res_model].browse(_attachment.res_id).check_access('read')
+
+                # Would user be able to write fields of target record?
+                # Rights check works with res_id=0 because browse(0) returns an
+                # empty record set.
+                request.env[_fields['res_model']].browse(_fields['res_id']).check_access('write')
+
+                # Sudo and SUPERUSER_ID because restricted editor will not be able
+                # to copy the record and the mimetype will be forced to plain text.
+                _attachment = _attachment.with_user(SUPERUSER_ID).sudo().copy(_fields)
+                _attachment = _attachment.with_user(request.env.user.id).sudo(False)
+            return _attachment
+
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
 
@@ -408,32 +459,7 @@ class HTML_Editor(http.Controller):
             'name': name or attachment.name,
             'res_id': 0,
         }
-        if fields['res_model'] == 'ir.ui.view':
-            fields['res_id'] = 0
-        elif res_id:
-            fields['res_id'] = res_id
-        if fields['mimetype'] == 'image/webp':
-            fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
-
-        existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
-        if existing_attachment and not existing_attachment.url:
-            attachment = existing_attachment
-        else:
-            # Restricted editors can handle attachments related to records to
-            # which they have access.
-            # Would user be able to read fields of original record?
-            if attachment.res_model and attachment.res_id:
-                request.env[attachment.res_model].browse(attachment.res_id).check_access('read')
-
-            # Would user be able to write fields of target record?
-            # Rights check works with res_id=0 because browse(0) returns an
-            # empty record set.
-            request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
-
-            # Sudo and SUPERUSER_ID because restricted editor will not be able
-            # to copy the record and the mimetype will be forced to plain text.
-            attachment = attachment.with_user(SUPERUSER_ID).sudo().copy(fields)
-            attachment = attachment.with_user(request.env.user.id).sudo(False)
+        attachment = _get_or_create_modified_attachment(attachment, fields)
 
         if alt_data:
             for size, per_type in alt_data.items():
@@ -459,23 +485,32 @@ class HTML_Editor(http.Controller):
                     }])
 
         if attachment.url:
-            # Don't keep url if modifying static attachment because static images
-            # are only served from disk and don't fallback to attachments.
-            if re.match(r'^/\w+/static/', attachment.url):
-                attachment.url = None
-            # Uniquify url by adding a path segment with the id before the name.
-            # This allows us to keep the unsplash url format so it still reacts
-            # to the unsplash beacon.
-            else:
-                url_fragments = attachment.url.split('/')
-                url_fragments.insert(-1, str(attachment.id))
-                attachment.url = '/'.join(url_fragments)
+            attachment = _prepare_attachment_url(attachment)
 
-        if attachment.public:
-            return attachment.image_src
+        if alt_images:
+            res = dict()
+            for size, per_type in alt_images.items():
+                for mimetype, data in per_type.items():
+                    new_attachment = request.env['ir.attachment'].browse(attachment.id)
+                    new_fields = {
+                        'original_id': new_attachment.id,
+                        'datas': data,
+                        'type': 'binary',
+                        'res_model': res_model or 'ir.ui.view',
+                        'mimetype': mimetype,
+                        'name': name or new_attachment.name,
+                        'res_id': 0,
+                    }
+                    new_attachment = _get_or_create_modified_attachment(new_attachment, new_fields)
 
-        attachment.generate_access_token()
-        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+                    if new_attachment.url:
+                        new_attachment = _prepare_attachment_url(new_attachment)
+
+                    res[size] = _get_attachment_src(new_attachment)
+
+            res['original'] = _get_attachment_src(attachment)
+            return res
+        return _get_attachment_src(attachment)
 
     @http.route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='jsonrpc', auth='user', methods=['POST'])
     def save_library_media(self, media):
