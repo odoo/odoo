@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+import re
 from collections import OrderedDict
 from werkzeug.urls import url_quote
 from markupsafe import Markup
@@ -54,6 +55,64 @@ class IrQwebFieldImage(models.AbstractModel):
 
         return src, src_zoom
 
+    def _get_srcset_sizes(self, record, options, field_name):
+        srcset = []
+        sizes = []
+        size_list = ("128", "256", "512", "1024", "1920")
+
+        if not field_name.endswith(size_list):
+            return None, None
+
+        if not field_name.startswith("image"):
+            return None, None
+
+        # Delete the number (size) at the end of the field name
+        tmp_field_name = re.sub(r'_\d+$', '', field_name)
+
+        # get maximum size of the image
+        max_size = "1920"
+        if 'preview_image' in options:
+            selected_preview_image = options['preview_image']
+            selected_preview_image = selected_preview_image.split('_')
+            max_size = selected_preview_image[-1]
+
+        if not max_size.isdigit():
+            max_size = "1920"
+        screen_image_size_ratio = 1920 / int(max_size)
+
+        use_raw_data = options.get('qweb_img_raw_data', False)
+
+        for s in size_list:
+            if int(s) > int(max_size):
+                break
+
+            preview_image = tmp_field_name + "_" + s
+
+            # Check if this size of the image exists
+            if not hasattr(record, preview_image):
+                continue
+            value = record[preview_image]
+            if not value:
+                continue
+
+            preview_options = dict(options, preview_image=preview_image)
+            if use_raw_data:
+                src = self._get_src_data_b64(value, preview_options)
+            else:
+                src = self._get_src_urls(record, field_name, preview_options)[0]
+
+            if int(s) < int(max_size):
+                srcset.append("%s %sw" % (src, s))
+                sizes.append("(max-width: %dpx) %spx" % (int(s) * screen_image_size_ratio, s))
+            elif int(s) == int(max_size):
+                srcset.append("%s %sw" % (src, s))
+                sizes.append("%spx" % (s))
+
+        srcset = ", ".join(srcset)
+        sizes = ", ".join(sizes)
+
+        return srcset, sizes
+
     @api.model
     def record_to_html(self, record, field_name, options):
         assert options['tagName'] != 'img',\
@@ -85,8 +144,13 @@ class IrQwebFieldImage(models.AbstractModel):
         if options.get('itemprop'):
             itemprop = options['itemprop']
 
+        srcset, sizes = self._get_srcset_sizes(record, options, field_name)
         atts = OrderedDict()
         atts["src"] = src
+        if srcset and sizes:
+            atts["srcset"] = srcset
+            atts["sizes"] = sizes
+
         atts["itemprop"] = itemprop
         atts["class"] = classes
         atts["style"] = options.get('style')

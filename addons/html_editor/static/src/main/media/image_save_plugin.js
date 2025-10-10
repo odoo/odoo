@@ -4,6 +4,7 @@ import {
     backgroundImagePartsToCss,
     getImageSrc,
 } from "@html_editor/utils/image";
+import { loadImage } from "@html_editor/utils/image_processing";
 import { rpc } from "@web/core/network/rpc";
 
 /**
@@ -14,6 +15,7 @@ import { rpc } from "@web/core/network/rpc";
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
     static shared = ["savePendingImages"];
+    static dependencies = ["imagePostProcess"];
 
     resources = {
         before_save_handlers: this.savePendingImages.bind(this),
@@ -130,13 +132,16 @@ export class ImageSavePlugin extends Plugin {
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
         let altData = undefined;
+        let altImages = undefined;
         const isImageField = !!el.closest("[data-oe-type=image]");
+
+        const image = document.createElement("img");
+        image.src = getImageSrc(el);
+        const loadedImgEl = await loadImage(image.src);
+        const maxSize = loadedImgEl.width;
         if (el.dataset.mimetype === "image/webp" && isImageField) {
             // Generate alternate sizes and format for reports.
             altData = {};
-            const image = document.createElement("img");
-            image.src = getImageSrc(el);
-            await new Promise((resolve) => image.addEventListener("load", resolve));
             const originalSize = Math.max(image.width, image.height);
             const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
             for (const size of [originalSize, ...smallerSizes]) {
@@ -167,6 +172,23 @@ export class ImageSavePlugin extends Plugin {
                         .split(",")[1];
                 }
             }
+        } else if (!isImageField) {
+            const smallerSizes = [128, 256, 512, 1024].filter((size) => size < maxSize);
+            if (smallerSizes.length) {
+                altImages = {};
+                for (const size of [...smallerSizes, maxSize]) {
+                    const updateImageSize = await this.dependencies.imagePostProcess.processImage({
+                        img: el,
+                        newDataset: { resizeWidth: size },
+                    });
+                    updateImageSize();
+                    if (size < maxSize && getImageSrc(el)) {
+                        altImages[size] = {
+                            [el.dataset.mimetype]: getImageSrc(el).split(",")[1],
+                        };
+                    }
+                }
+            }
         }
         const newAttachmentSrc = await rpc(
             `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
@@ -175,20 +197,54 @@ export class ImageSavePlugin extends Plugin {
                 res_id: parseInt(resId),
                 data: getImageSrc(el).split(",")[1],
                 alt_data: altData,
+                alt_images: altImages,
                 mimetype: isBackground
                     ? el.dataset.mimetype
                     : el.getAttribute("src").split(":")[1].split(";")[0],
                 name: el.dataset.fileName ? el.dataset.fileName : null,
             }
         );
-        el.classList.remove("o_modified_image_to_save");
-        if (isBackground) {
-            const parts = backgroundImageCssToParts(el.style["background-image"]);
-            parts.url = `url('${newAttachmentSrc}')`;
-            const combined = backgroundImagePartsToCss(parts);
-            el.style["background-image"] = combined;
+
+        let srcset = [];
+        let sizes = [];
+        if (altImages) {
+            const screenImageSizeRatio = 1920 / maxSize;
+            for (const size in altImages) {
+                if (size === maxSize) {
+                    continue;
+                }
+                if (newAttachmentSrc[size]) {
+                    srcset.push(`${newAttachmentSrc[size]} ${size}w`);
+                    sizes.push(
+                        `(max-width: ${Math.round(size * screenImageSizeRatio)}px) ${size}px`
+                    );
+                }
+            }
+            srcset.push(`${newAttachmentSrc["original"]} ${maxSize}w`);
+            sizes.push(`${maxSize}px`);
+            srcset = srcset.join(", ");
+            sizes = sizes.join(", ");
+            el.classList.remove("o_modified_image_to_save");
+            if (isBackground) {
+                const parts = backgroundImageCssToParts(el.style["background-image"]);
+                parts.url = `url('${newAttachmentSrc["original"]}')`;
+                const combined = backgroundImagePartsToCss(parts);
+                el.style["background-image"] = combined;
+            } else {
+                el.setAttribute("src", newAttachmentSrc["original"]);
+                el.setAttribute("srcset", srcset);
+                el.setAttribute("sizes", sizes);
+            }
         } else {
-            el.setAttribute("src", newAttachmentSrc);
+            el.classList.remove("o_modified_image_to_save");
+            if (isBackground) {
+                const parts = backgroundImageCssToParts(el.style["background-image"]);
+                parts.url = `url('${newAttachmentSrc}')`;
+                const combined = backgroundImagePartsToCss(parts);
+                el.style["background-image"] = combined;
+            } else {
+                el.setAttribute("src", newAttachmentSrc);
+            }
         }
     }
 
