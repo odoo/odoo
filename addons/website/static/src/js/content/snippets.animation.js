@@ -1108,30 +1108,12 @@ registry.anchorSlide = publicWidget.Widget.extend({
         hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
-        if (!$anchor.length || !scrollValue) {
+        // No need to scroll when target is _blank as it should open in new tab
+        if (!$anchor.length || !scrollValue || this.el.target === "_blank") {
             return;
         }
 
-        const offcanvasEl = this.el.closest('.offcanvas.o_navbar_mobile');
-        if (offcanvasEl && offcanvasEl.classList.contains('show')) {
-            // Special case for anchors in offcanvas in mobile: we can't just
-            // _scrollTo() after preventDefault because preventDefault would
-            // prevent the offcanvas to be closed. The choice is then to close
-            // it ourselves manually and once it's fully closed, then start our
-            // own smooth scrolling.
-            ev.preventDefault();
-            Offcanvas.getInstance(offcanvasEl).hide();
-            offcanvasEl.addEventListener('hidden.bs.offcanvas',
-                () => {
-                    this._manageScroll(hash, $anchor, scrollValue);
-                },
-                // the listener must be automatically removed when invoked
-                { once: true }
-            );
-        } else {
-            ev.preventDefault();
-            this._manageScroll(hash, $anchor, scrollValue);
-        }
+        this._manageScroll(hash, $anchor, scrollValue);
     },
     /**
      *
