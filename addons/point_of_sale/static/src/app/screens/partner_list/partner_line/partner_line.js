@@ -10,6 +10,7 @@ export class PartnerLine extends Component {
     static props = [
         "close",
         "partner",
+        "getPayload",
         "isSelected",
         "isBalanceDisplayed",
         "onClickEdit",
