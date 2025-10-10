@@ -643,6 +643,8 @@ class configmanager:
 
     def _postprocess_options(self):
         self._runtime_options.clear()
+        if self['init'] == ['account']:
+            self['init'] = ['test_l10n']
 
         # check for mutualy exclusive / dependant options
         if self.options['syslog'] and self.options['logfile']:
