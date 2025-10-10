@@ -1699,6 +1699,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             gross_price_unit_currency = gross_subtotal_currency / base_line['quantity']
             gross_price_unit = gross_subtotal / base_line['quantity']
 
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
+        gross_price_unit_currency = float_round(gross_price_unit_currency, product_price_dp)
+        gross_price_unit = float_round(gross_price_unit, product_price_dp)
+
         discount_amount_currency = gross_subtotal_currency - base_line['tax_details']['total_excluded_currency']
         discount_amount = gross_subtotal - base_line['tax_details']['total_excluded']
 
@@ -1831,14 +1835,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_document_line_price_nodes(self, line_node, vals):
         currency_suffix = vals['currency_suffix']
-        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
 
         line_node['cac:Price'] = {
             'cbc:PriceAmount': {
-                '_text': float_round(
-                    vals[f'gross_price_unit{currency_suffix}'],
-                    precision_digits=product_price_dp,
-                ),
+                '_text': vals[f'gross_price_unit{currency_suffix}'],
                 'currencyID': vals['currency_name'],
             },
         }

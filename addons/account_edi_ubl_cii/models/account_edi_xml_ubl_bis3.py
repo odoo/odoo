@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
+from odoo.tools import float_round
 from odoo.tools.misc import str2bool
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
@@ -695,6 +696,30 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # -------------------------------------------------------------------------
     # EXPORT: Templates for line nodes
     # -------------------------------------------------------------------------
+
+    def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
+        def _get_rounded_unit_price(gross_subtotal, quantity, min_dp, tolerance=0.02):
+            """ To make sure we pass the Peppol schematron (which specify a maximum tolerance
+            between the unit price * quantity and the net subtotal), we round the unit price
+            to a precision which is sufficient to pass the schematron.
+            """
+            # Rule PEPPOL-EN16931-R120: Invoice line net amount MUST equal
+            # (Invoiced quantity * (Item net price/item price base quantity)
+            # + Sum of invoice line charge amount - sum of invoice line allowance amount
+            # (to a tolerance of less than 0.02)
+            raw_unit_price = gross_subtotal / quantity
+            for dp in range(min_dp, min_dp + 3):
+                rounded_unit_price = float_round(raw_unit_price, dp)
+                rounded_unit_price_times_quantity = rounded_unit_price * quantity
+                if abs(rounded_unit_price_times_quantity - gross_subtotal) < tolerance:
+                    return rounded_unit_price
+            return raw_unit_price
+
+        super()._add_document_line_gross_subtotal_and_discount_vals(vals)
+        base_line = vals['base_line']
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
+        vals['gross_price_unit_currency'] = _get_rounded_unit_price(vals['gross_subtotal_currency'], base_line['quantity'], product_price_dp)
+        vals['gross_price_unit'] = _get_rounded_unit_price(vals['gross_subtotal'], base_line['quantity'], product_price_dp)
 
     def _add_document_line_amount_nodes(self, line_node, vals):
         super()._add_document_line_amount_nodes(line_node, vals)
