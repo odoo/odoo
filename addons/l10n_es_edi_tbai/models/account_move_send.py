@@ -50,7 +50,15 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
-        for invoice, invoice_data in invoices_data.items():
+        ordered_items = sorted(
+            invoices_data.items(),
+            key=lambda kv: (
+                kv[0].date or kv[0].invoice_date or kv[0].create_date,
+                kv[0].id,
+            ),
+        )
+
+        for invoice, invoice_data in ordered_items:
 
             if 'es_tbai' in invoice_data['extra_edis']:
                 error = invoice._l10n_es_tbai_post()
