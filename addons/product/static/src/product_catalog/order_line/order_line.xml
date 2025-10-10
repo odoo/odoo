@@ -7,12 +7,12 @@
             <span t-if="showPrice" t-out="price" class="o_product_catalog_price fw-bold me-4"/>
             <span t-if="props.code" t-out="props.code" class="text-muted"/>
         </t>
-        <div 
+        <div
             t-if="props.readOnly and props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
             <i class="fa fa-warning" t-att-title="props.warning"/>
-            <span 
-                class="px-1" 
+            <span
+                class="px-1"
                 t-att-title="props.warning"
                 t-out="props.warning"/>
         </div>
@@ -24,7 +24,7 @@
                     class="input-group o_product_catalog_quantity o_product_catalog_cancel_global_click w-50">
                 <div class="d-flex">
                     <button class="btn btn-primary border"
-                            t-on-click.stop="this.env.decreaseQuantity"
+                            t-on-click.stop="props.decreaseQuantity"
                             t-att-disabled="disableRemove"
                             t-att-data-tooltip="disabledButtonTooltip">
                         <i class="fa fa-minus center"/>
@@ -32,36 +32,36 @@
                     <div class="d-flex w-100">
                         <input class="o_input text-center text-bg-light rounded-0 border border-end-0"
                                 type="number"
-                                t-att-class="this.env.displayUoM ? 'w-50' : 'w-100'"
-                                t-att-value="quantity"
-                                t-on-change="this.env.setQuantity"
+                                t-att-class="props.displayUoM ? 'w-50' : 'w-100'"
+                                t-att-value="props.quantity"
+                                t-on-change="props.setQuantity"
                                 t-on-focus="_onFocus"/>
-                        <span class="fst-italic text-muted text-bg-light text-truncate w-50 border border-start-0 py-1" t-if="this.env.displayUoM" t-out="props.uomDisplayName"/>
+                        <span class="fst-italic text-muted text-bg-light text-truncate w-50 border border-start-0 py-1" t-if="props.displayUoM" t-out="props.uomDisplayName"/>
                     </div>
                     <button class="btn btn-primary border"
-                            t-on-click.stop="(ev) => this.env.increaseQuantity()">
+                            t-on-click.stop="(ev) => props.increaseQuantity()">
                         <i class="fa fa-plus"/>
                     </button>
                 </div>
             </div>
             <t t-elif="props.warning">
                 <i class="fa fa-warning text-warning" t-att-title="props.warning"/>
-                <span 
-                    class="text-truncate text-warning px-1" 
+                <span
+                    class="text-truncate text-warning px-1"
                     t-att-title="props.warning"
                     t-out="props.warning"/>
             </t>
-            <div 
+            <div
                 class="ms-auto o_product_catalog_buttons o_product_catalog_cancel_global_click"
                 style="min-width: max-content;">
                 <button t-if="!isInOrder()"
-                        t-on-click.stop="() => this.env.addProduct()"
+                        t-on-click.stop="() => props.addProduct()"
                         class="btn btn-secondary">
                     <i class="fa fa-shopping-cart"/>
                     Add
                 </button>
-                <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="this.disabledButtonTooltip">
-                    <button t-on-click.stop="this.env.removeProduct"
+                <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="props.disabledButtonTooltip">
+                    <button t-on-click.stop="props.removeProduct"
                             t-att-disabled="disableRemove"
                             class="btn btn-light border">
                         <i class="fa fa-trash"/>

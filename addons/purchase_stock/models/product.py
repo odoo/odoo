@@ -36,36 +36,40 @@ class ProductProduct(models.Model):
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines")  # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
-    suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
+    suggested_qty = fields.Integer(compute='_compute_suggested_quantity', search='_search_product_with_suggested_quantity')
     suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
 
     @api.depends("monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggested_quantity(self):
-        """ IMPROVE: computes too many time for one suggestion """
         ctx = self.env.context
-        for product in self:
-            if not ctx.get("suggest_based_on"):
-                product.suggested_qty = 0
-                continue
-            elif ctx.get("suggest_based_on") == "actual_demand":
+        self.suggested_qty = 0
+        if not ctx.get("suggest_based_on"):
+            return
+        elif ctx.get("suggest_based_on") == "actual_demand":
+            for product in self:
+                if product.virtual_available >= 0:
+                    continue
                 qty = - product.virtual_available * ctx.get("suggest_percent", 0) / 100
-            else:
+                product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+        else:
+            for product in self:
+                if product.monthly_demand <= 0:
+                    continue
                 monthly_ratio = ctx.get("suggest_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
                 qty = product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100
                 qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
-            product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+                product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
 
     @api.depends("monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggest_estimated_price(self):
-        """ IMPROVE: computes too many time for one suggestion """
         seller_args = {
             "partner_id": self.env['res.partner'].browse(self.env.context.get("partner_id")),
             "params": {'order_id': self.env['purchase.order'].browse(self.env.context.get("order_id"))}
         }
+        self.suggest_estimated_price = 0.0
         for product in self:
-            product.suggest_estimated_price = 0.0
             if product.suggested_qty <= 0:
                 continue
             # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
@@ -74,6 +78,17 @@ class ProductProduct(models.Model):
 
             price = seller.price_discounted if seller else product.standard_price
             product.suggest_estimated_price = price * product.suggested_qty
+
+    def _search_product_with_suggested_quantity(self, operator, value):
+        if operator in ["in", "not in"]:
+            return NotImplemented
+
+        search_domain = self.env.context.get("suggest_domain") or [('type', '=', 'consu')]
+        safe_search_domain = [c if c[0] != "suggested_qty" else [1, "=", 1] for c in search_domain]
+        products = self.search_fetch(safe_search_domain, ["suggested_qty"])
+        ids = products.filtered_domain([("suggested_qty", operator, value)]).ids
+
+        return [('id', 'in', ids)]
 
     @api.depends_context('suggest_days', 'suggest_based_on', 'warehouse_id')
     def _compute_quantities(self):
@@ -91,21 +106,17 @@ class ProductProduct(models.Model):
             to_date=to_date,
         )
 
-    @api.depends_context('suggest_based_on', 'warehouse_id')
+    @api.depends_context('monthly_demand_start', 'monthly_demand_limit', 'warehouse_id')
     def _compute_monthly_demand(self):
-        based_on = self.env.context.get("suggest_based_on", "30_days")
         warehouse_id = self.env.context.get('warehouse_id')
-        start_date, limit_date = self._get_monthly_demand_range(based_on)
+        start_date = fields.Datetime.to_datetime(self.env.context.get('monthly_demand_start')) or datetime.now() - relativedelta(days=30)
+        limit_date = fields.Datetime.to_datetime(self.env.context.get('monthly_demand_limit')) or datetime.now()
 
         move_domain = Domain([
             ('product_id', 'in', self.ids),
             ('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done']),
             ('date', '>=', start_date),
             ('date', '<', limit_date),
-        ])
-        move_domain = Domain.AND([
-            move_domain,
-            self._get_monthly_demand_moves_location_domain(),
         ])
         if warehouse_id:
             move_domain = Domain.AND([
@@ -115,25 +126,9 @@ class ProductProduct(models.Model):
         move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
 
-        factor = 1
-        if based_on == "one_year":
-            factor = 12
-        elif based_on == "three_months" or based_on == "last_year_quarter":
-            factor = 3
-        elif based_on == "one_week":
-            factor = 7 / (365.25 / 12)  # 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
+        factor = (limit_date - start_date).days / (365.25 / 12) or 1  # Convert demand to monthly demand (365.2 / 12 = 30.4... days)
         for product in self:
             product.monthly_demand = qty_by_product.get(product.id, 0) / factor
-
-    @api.model
-    def _get_monthly_demand_moves_location_domain(self):
-        return Domain.OR([
-            [('location_dest_usage', 'in', ['customer', 'production'])],
-            Domain.AND([
-                [('location_final_id.usage', '=', 'customer')],
-                [('move_dest_ids', '=', False)],
-            ])
-        ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         if not location_ids:
@@ -191,33 +186,6 @@ class ProductProduct(models.Model):
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
             ]))
         return rfq_domain & Domain.OR(domains or [Domain.TRUE])
-
-    def _get_monthly_demand_range(self, based_on):
-        start_date = limit_date = datetime.now()
-
-        if not based_on or based_on == 'actual_demand' or based_on == '30_days':
-            start_date = start_date - relativedelta(days=30)  # Default monthly demand
-        elif based_on == 'one_week':
-            start_date = start_date - relativedelta(weeks=1)
-        elif based_on == 'three_months':
-            start_date = start_date - relativedelta(months=3)
-        elif based_on == 'one_year':
-            start_date = start_date - relativedelta(years=1)
-        else:  # Relative period of time.
-            today = datetime.now()
-            start_date = datetime(year=today.year - 1, month=today.month, day=1)
-
-            if based_on == 'last_year_m_plus_1':
-                start_date += relativedelta(months=1)
-            elif based_on == 'last_year_m_plus_2':
-                start_date += relativedelta(months=2)
-
-            if based_on == 'last_year_quarter':
-                limit_date = start_date + relativedelta(months=3)
-            else:
-                limit_date = start_date + relativedelta(months=1)
-
-        return start_date, limit_date
 
 
 class ProductSupplierinfo(models.Model):

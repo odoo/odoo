@@ -3,6 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ProductCatalogOrderLine.prototype, {
     get showPrice() {
-        return super.showPrice && this.env.orderResModel !== "mrp.production";
-    }
+        return super.showPrice && this.props.orderResModel !== "mrp.production";
+    },
 });
