@@ -630,3 +630,17 @@ class TestProjectSubtasks(TestProjectCommon):
         self.env.invalidate_all()
         subtask_data = subtask.with_user(employee).read(parent_dependent_fields)
         self.assertTrue(subtask_data, "The employee should be able to read the subtask data.")
+
+    def test_subtask_visibility_resets_on_unarchive(self):
+        """
+            Check that `display_in_project` of a subtask is reset to `False` once the subtask is unarchived,
+        """
+        subtask = self.env['project.task'].create({
+            'name': 'Subtask',
+            'parent_id': self.task_1.id,
+            'project_id': self.project_pigs.id,
+        })
+        subtask.action_archive()
+        self.assertTrue(subtask.display_in_project)
+        subtask.action_unarchive()
+        self.assertFalse(subtask.display_in_project)

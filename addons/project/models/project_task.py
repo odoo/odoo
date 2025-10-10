@@ -2023,6 +2023,10 @@ class ProjectTask(models.Model):
         self.filtered(lambda t: not t.display_in_project and t.parent_id).display_in_project = True
         return super().action_archive()
 
+    def action_unarchive(self):
+        self.filtered(lambda t: t.parent_id and t.display_in_project).display_in_project = False
+        return super().action_unarchive()
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
