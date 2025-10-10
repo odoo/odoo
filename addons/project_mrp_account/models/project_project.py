@@ -30,11 +30,20 @@ class Project(models.Model):
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
         mrp_category = 'manufacturing_order'
-        mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
-            [('auto_account_id', 'in', self.account_id.ids), ('category', '=', mrp_category)],
-            ['currency_id'],
-            ['amount:sum'],
-        )
+        all_mo = self.env["mrp.production"].sudo().search([("project_id", "in", self.ids)])
+        child_mo_ids = set()
+        for mo in all_mo:
+            if mo.sudo()._get_sources() & all_mo:
+                child_mo_ids.add(mo.id)
+        child_mo_names = all_mo.filtered(lambda m: m.id in child_mo_ids).mapped('name')
+        mrp_aal_read_group = (self.env["account.analytic.line"].sudo()._read_group([
+                ("auto_account_id", "in", self.account_id.ids),
+                ("category", "=", mrp_category),
+                ("name", "not in", child_mo_names),
+            ],
+            ["currency_id"],
+            ["amount:sum"],
+        ))
         if mrp_aal_read_group:
             can_see_manufactoring_order = with_action and len(self) == 1 and self.env.user.has_group('mrp.group_mrp_user')
             total_amount = 0
