@@ -739,13 +739,12 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} thread
+     * @param {import("models").DiscussChannel} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(thread, { audio = true, camera } = {}) {
-        const channel = thread.channel;
+    async toggleCall(channel, { audio = true, camera } = {}) {
         if (channel.id === this._remotelyHostedChannelId) {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
             this.clear();
