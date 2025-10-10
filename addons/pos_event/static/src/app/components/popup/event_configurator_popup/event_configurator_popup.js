@@ -64,7 +64,7 @@ export class EventConfiguratorPopup extends Component {
 
                 if (!available) {
                     this.dialog.add(AlertDialog, {
-                        title: _t("Error"),
+                        title: _t("Oh snap !"),
                         body: _t(
                             "The selected ticket (%s) is not available. Please select a different ticket.",
                             [ticket.name]

@@ -92,7 +92,7 @@ patch(ControlButtons.prototype, {
                 if (result !== true) {
                     // Returned an error
                     this.dialog.add(AlertDialog, {
-                        title: _t("Error"),
+                        title: _t("Oh snap !"),
                         body: result,
                     });
                 }

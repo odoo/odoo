@@ -24,7 +24,7 @@ patch(OrderPaymentValidation.prototype, {
                 this.order.canBeSimplifiedInvoiced() && !this.order.to_invoice;
             if (!this.order.is_l10n_es_simplified_invoice && !this.order.to_invoice) {
                 this.pos.env.services.dialog.add(AlertDialog, {
-                    title: _t("Error"),
+                    title: _t("Oh snap !"),
                     body: _t(
                         "Order amount is too large for a simplified invoice, use an invoice instead."
                     ),

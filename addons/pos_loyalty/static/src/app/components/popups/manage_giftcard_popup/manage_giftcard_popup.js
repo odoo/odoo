@@ -72,7 +72,7 @@ export class ManageGiftCardPopup extends Component {
                 this.dialog.add(AlertDialog, {
                     title: _t("Invalid Gift Card Code"),
                     body: _t(
-                        "This code seems to be invalid, please check the Gift Card code and try again."
+                        "The code is invalid. Ensure that the spelling is right or if the gift card exists."
                     ),
                 });
                 this.state.error = true;

@@ -293,7 +293,7 @@ export class ClosePosPopup extends Component {
     }
     async handleClosingError(response) {
         this.dialog.add(ConfirmationDialog, {
-            title: response.title || "Error",
+            title: response.title || "Oh snap !",
             body: response.message,
             confirmLabel: _t("Review Orders"),
             cancelLabel: _t("Cancel Orders"),
