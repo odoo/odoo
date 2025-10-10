@@ -520,7 +520,7 @@ class AccountEdiFormat(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") + global_discount_amount),
+                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount")),
                 "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
@@ -536,7 +536,11 @@ class AccountEdiFormat(models.Model):
                 "RndOffAmt": self._l10n_in_round_value(
                     rounding_amount),
                 "TotInvVal": self._l10n_in_round_value(
-                    (tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount)),
+                    tax_details.get("base_amount")
+                    + tax_details.get("tax_amount")
+                    + rounding_amount
+                    - global_discount_amount
+                ),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:
