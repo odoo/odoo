@@ -312,18 +312,12 @@ class SurveyUserInput(models.Model):
         if not (isinstance(answers, list)):
             answers = [answers]
 
-        if not answers:
+        if not answers and not (comment and question.comment_count_as_answer):
             # add a False answer to force saving a skipped line
             # this will make this question correctly considered as skipped in statistics
             answers = [False]
 
-        vals_list = []
-
-        if question.question_type == 'simple_choice':
-            if not question.comment_count_as_answer or not question.comments_allowed or not comment:
-                vals_list = [self._get_line_answer_values(question, answer, 'suggestion') for answer in answers]
-        elif question.question_type == 'multiple_choice':
-            vals_list = [self._get_line_answer_values(question, answer, 'suggestion') for answer in answers]
+        vals_list = [self._get_line_answer_values(question, answer, 'suggestion') for answer in answers]
 
         if comment:
             vals_list.append(self._get_line_comment_values(question, comment))
