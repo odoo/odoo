@@ -80,7 +80,7 @@ function checkAndUpdateBackgroundColor({
         changeBackgroundColor(),
     ];
 
-    addCheck(steps, checkCC, checkNoCC, 'cc', true);
+    addCheck(steps, checkCC, checkNoCC, 'cc');
     addCheck(steps, checkBg, checkNoBg, 'bg');
     addCheck(steps, checkGradient, checkNoGradient, 'gradient');
 

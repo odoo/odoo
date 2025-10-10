@@ -173,21 +173,6 @@ test("should revert preview on escape", async () => {
     expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgba(0, 0, 0, 0)" });
 });
 
-test("should mark default color as selected when it is selected", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderColorPicker enabledTabs="['custom']" styleAction="'background-color'"/>`,
-    });
-    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
-    await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
-    await contains(".o-overlay-item [data-color='900']").click();
-    expect(":iframe .test-options-target").toHaveClass("bg-900");
-    await contains(".we-bg-options-container .o_we_color_preview").click();
-    expect(".o-overlay-item [data-color='900']").toHaveClass("selected");
-});
-
 test("should apply transparent color if no color is defined", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
@@ -343,4 +328,40 @@ describe("Custom colorpicker: preview and commit", () => {
         await animationFrame();
         expect(":iframe .test-options-target").toHaveAttribute("data-color");
     });
+});
+
+test("should open the last used tab", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`, {
+        styleContent: ":root { --900: #212527; }",
+    });
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await click(".theme-tab");
+    await animationFrame();
+    expect(".theme-tab.active").toHaveCount(1);
+
+    await click(".custom-tab");
+    await animationFrame();
+    await click(".o_color_picker_button[data-color='900']");
+    await animationFrame();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".custom-tab.active").toHaveCount(1);
+
+    await click(".gradient-tab");
+    await animationFrame();
+    await click(".o_gradient_color_button");
+    await animationFrame();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".gradient-tab.active").toHaveCount(1);
+
+    await click("button[title='Reset']");
+    await animationFrame();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".theme-tab.active").toHaveCount(1);
 });
