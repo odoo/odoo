@@ -12,7 +12,7 @@ import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { escape } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-import wUtils from '@website/js/utils';
+import wUtils, { toggleSubmitButton } from '@website/js/utils';
 
 let currentActionName;
 
@@ -920,6 +920,9 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                     targetEl.parentNode.insertBefore(this._renderField(_field), targetEl);
                 }
             });
+            toggleSubmitButton(this.$target, false);
+        } else {
+            toggleSubmitButton(this.$target, true);
         }
     },
     /**
@@ -1764,6 +1767,7 @@ options.registry.AddFieldForm = FormEditor.extend({
         this.trigger_up('activate_snippet', {
             $snippet: $(fieldEl),
         });
+        toggleSubmitButton(this.$target, false);
     },
 });
 
