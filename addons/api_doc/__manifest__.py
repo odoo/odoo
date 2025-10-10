@@ -16,6 +16,7 @@ the methods over HTTP, with examples in various programming languages.
     'data': [
         'security/res_groups.xml',
         'views/docclient.xml',
+        'data/doc_api_actions.xml',
     ],
     'assets': {
         'api_doc.assets': [
