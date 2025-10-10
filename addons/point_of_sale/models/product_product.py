@@ -30,9 +30,21 @@ class ProductProduct(models.Model):
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
 
+<<<<<<< 2dfa26ff85a80f1befa1b9a05e66b9f85f8d1439
     @api.model
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
+||||||| accf4accac7c4fb76f57f999a0319b753234d515
+    def _post_read_pos_data(self, data):
+        config = self.env['pos.config'].browse(self.env.context.get('config_id'))
+=======
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_special_product(self):
+        self.product_tmpl_id._check_is_special_product()
+
+    def _post_read_pos_data(self, data):
+        config = self.env['pos.config'].browse(self.env.context.get('config_id'))
+>>>>>>> e56bc3d322cae5bc8ac0249ec3c37dcf18213ef9
         different_currency = config.currency_id != self.env.company.currency_id
         if different_currency:
             for product in read_records:
@@ -48,4 +60,5 @@ class ProductProduct(models.Model):
 
     def action_archive(self):
         self.product_tmpl_id._ensure_unused_in_pos()
+        self.product_tmpl_id._check_is_special_product()
         return super().action_archive()
