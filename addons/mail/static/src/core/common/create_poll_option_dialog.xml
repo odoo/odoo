@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CreatePollOptionDialog">
+        <div class="o-mail-CreatePollOptionDialog d-flex gap-2 mb-3">
+            <div class=" input-group">
+                <button class="btn btn-outline-secondary" type="button" t-ref="picker"><i class="fa fa-lg fa-smile-o"/></button>
+                <input type="text" t-model="props.model.label" class="form-control rounded" placeholder="Type your option" t-ref="root"/>
+            </div>
+            <button t-if="props.deletable" class="btn btn-primary" title="Delete option" t-on-click="props.onClickRemove"><i class="fa fa-trash"/></button>
+        </div>
+    </t>
+</templates>

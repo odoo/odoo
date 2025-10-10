@@ -14,6 +14,8 @@ declare module "models" {
     import { MailActivityType as MailActivityTypeClass } from "@mail/core/common/mail_activity_type_model";
     import { MailGuest as MailGuestClass } from "@mail/core/common/mail_guest_model";
     import { MailMessageSubtype as MailMessageSubtypeClass } from "@mail/core/common/mail_message_subtype_model";
+    import { MailPollModel as MailPollModelClass } from "@mail/core/common/mail_poll_model";
+    import { MailPollOptionModel as MailPollOptionModelClass } from "@mail/core/common/mail_poll_option_model";
     import { MailTemplate as MailTemplateClass } from "@mail/core/common/mail_template_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
@@ -45,6 +47,8 @@ declare module "models" {
     export interface MailActivityType extends MailActivityTypeClass {}
     export interface MailGuest extends MailGuestClass {}
     export interface MailMessageSubtype extends MailMessageSubtypeClass {}
+    export interface MailPollModel extends MailPollModelClass {}
+    export interface MailPollOptionModel extends MailPollOptionModelClass {}
     export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
@@ -79,6 +83,8 @@ declare module "models" {
         "mail.message.link.preview": StaticMailRecord<MessageLinkPreview, typeof MessageLinkPreviewClass>;
         "mail.message.subtype": StaticMailRecord<MailMessageSubtype, typeof MailMessageSubtypeClass>;
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
+        "mail.poll": StaticMailRecord<MailPollModel, typeof MailPollModelClass>;
+        "mail.poll.option": StaticMailRecord<MailPollOptionModel, typeof MailPollOptionModelClass>;
         "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
         "mail.thread": StaticMailRecord<Thread, typeof ThreadClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
@@ -112,6 +118,8 @@ declare module "models" {
         "mail.message.link.preview": MessageLinkPreview;
         "mail.message.subtype": MailMessageSubtype;
         "mail.notification": Notification;
+        "mail.poll": MailPollModel;
+        "mail.poll.option": MailPollOptionModel;
         "mail.template": MailTemplate;
         "mail.thread": Thread;
         MessageReactions: MessageReactions;

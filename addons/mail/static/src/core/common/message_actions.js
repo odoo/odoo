@@ -10,6 +10,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 
@@ -142,7 +143,7 @@ registerMessageAction("edit", {
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 55),
 });
 registerMessageAction("delete", {
-    condition: ({ message }) => message.editable,
+    condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
     onSelected: async ({ message: msg, owner, store }) => {
@@ -207,6 +208,16 @@ registerMessageAction("copy-link", {
     name: _t("Copy Link"),
     onSelected: ({ message }) => message.copyLink(),
     sequence: 110,
+});
+registerMessageAction("end-poll", {
+    condition: ({ message }) =>
+        message.started_poll_ids?.[0] &&
+        !message.started_poll_ids[0].end_message_id &&
+        message.started_poll_ids[0].createdBySelf,
+    icon: " oi oi-view-cohort",
+    name: _t("End Poll"),
+    onSelected: ({ message }) => rpc("/mail/poll/end", { poll_id: message.started_poll_ids[0].id }),
+    sequence: 115,
 });
 
 export class MessageAction extends Action {
