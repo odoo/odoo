@@ -37,7 +37,7 @@ export class QuickReactionMenu extends Component {
         this.dropdown = useState(
             useDropdownState({
                 onClose: () => {
-                    const currentThread = this.env.getCurrentThread();
+                    const currentThread = this.env.getCurrentThread?.();
                     if (!currentThread || currentThread.notEq(this.props.message.thread)) {
                         return;
                     }
