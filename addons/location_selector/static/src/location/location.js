@@ -1,19 +1,17 @@
-import {
-    LocationSchedule
-} from '@delivery/js/location_selector/location_schedule/location_schedule';
-import { Component } from '@odoo/owl';
-import { _t } from '@web/core/l10n/translation';
+import { LocationSchedule } from "@location_selector/location_schedule/location_schedule";
+import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class Location extends Component {
     static components = { LocationSchedule };
-    static template = 'delivery.locationSelector.location';
+    static template = "location_selector.location";
     static props = {
         id: String,
         number: Number,
         name: String,
         street: String,
         city: String,
-        zipCode: String,
+        zip: String,
         openingHours: {
             type: Object,
             values: {
@@ -25,6 +23,10 @@ export class Location extends Component {
         additionalData: { type: Object, optional: true },
         isSelected: Boolean,
         setSelectedLocation: Function,
+        hiddenLocations: {
+            type: Array,
+            element: String,
+        },
     };
 
     /**
@@ -33,7 +35,7 @@ export class Location extends Component {
      * @return {Object} The city and the zip code.
      */
     getCityAndZipCode() {
-        return `${this.props.zipCode} ${this.props.city}`;
+        return `${this.props.zip} ${this.props.city}`;
     }
 
     get openingHoursLabel() {
