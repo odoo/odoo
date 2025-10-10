@@ -198,7 +198,7 @@ export function invoicePrinted() {
 }
 export function toRefundTextContains(text) {
     return inLeftSide({
-        trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
+        trigger: `.ticket-screen .qty .refund:contains("${text}")`,
     });
 }
 export function refundedNoteContains(text) {
