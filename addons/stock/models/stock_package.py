@@ -228,8 +228,12 @@ class StockPackage(models.Model):
         return [('id', 'in', all_package_ids)]
 
     def _search_move_line_ids(self, operator, value):
-        if operator != 'in':
+        if operator not in ('in', 'any'):
             return NotImplemented
+        if operator == 'any':
+            operator = 'in'
+            if isinstance(value, Domain):
+                value = self.env['stock.move.line']._search(value)
 
         domain = Domain('state', 'not in', ['done', 'cancel'])
         pack_operator = 'in'
