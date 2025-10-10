@@ -142,6 +142,19 @@ export class PosOrder extends Base {
             : false;
     }
 
+    get requiresCustomer() {
+        if (this.partner_id) {
+            return false;
+        }
+        const splitPayment = this.payment_ids.some(
+            (payment) => payment.payment_method_id.split_transactions
+        );
+        const invalidPartnerPreset =
+            (this.preset_id?.needsName && !this.floating_order_name) ||
+            this.preset_id?.needsPartner;
+        return invalidPartnerPreset || this.isToInvoice() || Boolean(splitPayment);
+    }
+
     get presetRequirementsFilled() {
         const invalidCustomer =
             (this.preset_id?.needsName && !(this.floating_order_name || this.partner_id)) ||
@@ -750,7 +763,6 @@ export class PosOrder extends Base {
         this.to_invoice = to_invoice;
     }
 
-    // FIXME remove this
     isToInvoice() {
         return this.to_invoice;
     }

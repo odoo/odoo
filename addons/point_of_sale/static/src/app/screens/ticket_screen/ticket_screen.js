@@ -654,6 +654,12 @@ export class TicketScreen extends Component {
         this.pos.setOrder(order);
         this.pos.navigateToOrderScreen(order);
     }
+
+    onClickNewOrder() {
+        const order = this.pos.addNewOrder();
+        this.pos.navigateToOrderScreen(order);
+    }
+
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });
