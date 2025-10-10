@@ -131,8 +131,8 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             has_zero_price = float_is_zero(
                 basic_product_information['price'], precision_rounding=currency.rounding
             )
-            basic_product_information['can_be_sold'] = not (
-                request.website.prevent_zero_price_sale and has_zero_price
+            basic_product_information['can_be_sold'] = not request.website._prevent_product_sale(
+                product_or_template, has_zero_price
             )
             # Don't compute the strikethrough price if there's a custom price (i.e. if `price_info`
             # is populated).

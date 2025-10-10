@@ -189,15 +189,22 @@
                 <t t-else="">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
+                         <t t-set="prevent_sale" t-value="website._prevent_product_sale(
+                            product, not template_price_vals['price_reduce']
+                        )"/>
                         <span
                             class="mb-0 fw-bold"
                             aria-label="Sale price"
-                            t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
+                            t-if="template_price_vals['price_reduce'] or not prevent_sale"
                             t-out="template_price_vals['price_reduce']"
                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                         />
                         <t
-                            t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
+                            t-if="(
+                                'base_price' in template_price_vals
+                                and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce'])
+                                and (template_price_vals['price_reduce'] or not prevent_sale)
+                            )"
                             name="product_base_price"
                         >
                             <del
@@ -229,8 +236,9 @@
 <template id="website_sale.shop_product_buttons" name="Products Actions">
     <t name="buttons_container">
         <div class="o_wsale_product_action_row">
+            <t t-set="combination_info" t-value="product._get_combination_info()"/>
             <t
-                t-if="product._website_show_quick_add()"
+                t-if="product._website_show_quick_add() and not combination_info['prevent_sale']"
                 t-call="website_sale.product_tile_element_visibility"
             >
                 <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_cta'"/>
@@ -248,6 +256,35 @@
                     <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>
                     <span class="o_label small ms-1">Add to Cart</span>
                 </button>
+            </t>
+
+            <!-- Show Contact Us button when restricted -->
+            <t
+                t-if="combination_info['prevent_sale']"
+                t-call="website_sale.product_tile_element_visibility"
+            >
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_cta'"/>
+                <a
+                    href="/contactus"
+                    class="o_wsale_product_btn_primary btn btn-outline-primary"
+                    aria-label="Contact us"
+                    title="Contact us for pricing"
+                >
+                    <i class="fa fa-fw fa-envelope o_not-animable" role="presentation"/>
+                    <span class="o_label small ms-1">Contact Us</span>
+                </a>
+            </t>
+            <t t-elif="prevent_sale" t-call="website_sale.product_tile_element_visibility">
+                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_cta'"/>
+                <a
+                    href="/contactus"
+                    class="o_wsale_product_btn_primary btn btn-outline-primary"
+                    aria-label="Contact us"
+                    title="Contact us for pricing"
+                >
+                    <i class="fa fa-fw fa-envelope o_not-animable" role="presentation"/>
+                    <span class="o_label small ms-1">Contact Us</span>
+                </a>
             </t>
         </div>
     </t>

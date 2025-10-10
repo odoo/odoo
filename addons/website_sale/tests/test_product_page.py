@@ -22,7 +22,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         - is hidden for other products
         - is not displayed at the same time as the "Add to Cart" button
         """
-        self.website.prevent_zero_price_sale = True
+        self.website.prevent_sale = True
 
         self.product_template_sofa.list_price = 0
         red_sofa, blue_sofa = self.product_template_sofa.product_variant_ids[:2]

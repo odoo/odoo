@@ -581,19 +581,17 @@ export class ProductPage extends Interaction {
         const contactUsButton = parent.closest('#product_details')
             ?.querySelector('#contact_us_wrapper');
         const quantity = parent.querySelector('.css_quantity');
-        const productUnavailable = parent.querySelector('#product_unavailable');
 
-        const preventSale = combination.prevent_zero_price_sale;
-        productPrice?.classList?.toggle('d-inline-block', !preventSale);
-        productPrice?.classList?.toggle('d-none', preventSale);
+        const preventSale = combination.prevent_sale;
+        const hidePrice = combination.hide_price;
+        productPrice?.classList.toggle('d-inline-block', !hidePrice);
+        productPrice?.classList.toggle('d-none', hidePrice);
         quantity?.classList?.toggle('d-inline-flex', !preventSale);
         quantity?.classList?.toggle('d-none', preventSale);
-        addToCart?.classList?.toggle('d-inline-flex', !preventSale);
-        addToCart?.classList?.toggle('d-none', preventSale);
+        addToCart?.classList.toggle('d-flex', !preventSale);
+        addToCart?.classList.toggle('d-none', preventSale);
         contactUsButton?.classList?.toggle('d-none', !preventSale);
         contactUsButton?.classList?.toggle('d-flex', preventSale);
-        productUnavailable?.classList?.toggle('d-none', !preventSale);
-        productUnavailable?.classList?.toggle('d-flex', preventSale);
 
         if (contactUsButton) {
             const contactUsButtonLink = contactUsButton.querySelector('a');

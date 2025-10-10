@@ -382,9 +382,9 @@ class Cart(PaymentPortal):
             if (
                 line_sudo.linked_line_id.product_type == 'combo'
                 or not line_sudo._is_sellable()
-                or (
-                    request.website.prevent_zero_price_sale
-                    and line_sudo.product_id._get_combination_info_variant()['price'] == 0
+                or request.website._prevent_product_sale(
+                    line_sudo.product_id,
+                    line_sudo.product_id._get_combination_info_variant()['price'] == 0
                 )
             ):
                 continue

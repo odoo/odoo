@@ -7,8 +7,8 @@ registry.category('web_tour.tours').add('website_sale.contact_us_button', {
             trigger: '.js_attribute_value:has([checked]):contains(red)',
         },
         {
-            content: "Zero-priced product should be unavailable",
-            trigger: '#product_unavailable',
+            content: "Zero-priced product should display `Contact us` button",
+            trigger: '#contact_us_wrapper',
         },
         {
             content: "Price should be hidden",

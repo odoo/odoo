@@ -11,7 +11,7 @@ export class ProductRow extends Component {
         image_url: String,
         price: Number,
         strikethrough_price: { type: Number, optional: true },
-        prevent_zero_price_sale: Boolean,
+        hide_price: Boolean,
         currency_id: Number,
     };
 

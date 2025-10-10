@@ -17,7 +17,7 @@
                t-value="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()"/>
             <!-- type="button" needed as default type in a `form` is "sumbit" -->
             <button
-                t-if="not combination_info['prevent_zero_price_sale']"
+                t-if="not combination_info['prevent_sale']"
                 id="add_to_cart_button"
                 type="button"
                 class="o_wsale_product_btn_primary btn btn-primary o_wish_add"
