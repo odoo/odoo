@@ -446,10 +446,20 @@ class AccountMove(models.Model):
                 tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
                 if tax.amount < 0.0:
                     invoice_values['TaxesWithheld'].append(tax_data)
-                    invoice_values['TotalTaxesWithheld'] += tax_data['TaxAmount']['TotalAmount']
+                    if self.env.company.tax_calculation_rounding_method == 'round_globally':
+                        invoice_values['TotalTaxesWithheld'] += values['raw_tax_amount']
+                    else:
+                        invoice_values['TotalTaxesWithheld'] += tax_data['TaxAmount']['TotalAmount']
                 else:
                     invoice_values['TaxOutputs'].append(tax_data)
-                    invoice_values['TotalTaxOutputs'] += tax_data['TaxAmount']['TotalAmount']
+                    if self.env.company.tax_calculation_rounding_method == 'round_globally':
+                        invoice_values['TotalTaxOutputs'] += values['raw_tax_amount']
+                    else:
+                        invoice_values['TotalTaxOutputs'] += tax_data['TaxAmount']['TotalAmount']
+
+        if self.env.company.tax_calculation_rounding_method == 'round_globally':
+            invoice_values['TotalTaxesWithheld'] = self.currency_id.round(invoice_values['TotalTaxesWithheld'])
+            invoice_values['TotalTaxOutputs'] = self.currency_id.round(invoice_values['TotalTaxOutputs'])
 
         invoice_values['TotalGrossAmountBeforeTaxes'] = (
             invoice_values['TotalGrossAmount']
