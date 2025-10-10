@@ -1490,8 +1490,6 @@ class HrEmployee(models.Model):
             version_vals['last_modified_uid'] = self.env.uid
             self.version_id.write(version_vals)
 
-            for employee in self:
-                employee._track_set_log_message(Markup("<b>Modified on the Version '%s'</b>") % employee.version_id.display_name)
         if res and 'resource_calendar_id' in vals:
             resources_per_calendar_id = defaultdict(lambda: self.env['resource.resource'])
             for employee in self:
@@ -1500,6 +1498,9 @@ class HrEmployee(models.Model):
             for calendar_id, resources in resources_per_calendar_id.items():
                 resources.write({'calendar_id': calendar_id})
         return res
+
+    def _track_prepare(self, fields_iter):
+        super()._track_prepare([field for field in fields_iter if not self._fields[field].inherited])
 
     def unlink(self):
         resources = self.mapped('resource_id')

@@ -38,21 +38,7 @@ export class Chatter extends Component {
         useChildSubEnv(this.childSubEnv);
 
         onMounted(this._onMounted);
-        onWillUpdateProps((nextProps) => {
-            this.state.disabled = !nextProps.threadId;
-            if (
-                this.props.threadId !== nextProps.threadId ||
-                this.props.threadModel !== nextProps.threadModel
-            ) {
-                this.changeThread(nextProps.threadModel, nextProps.threadId);
-            }
-            if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-                if (this.env.chatter) {
-                    this.env.chatter.fetchThreadData = false;
-                }
-                this.load(this.state.thread, this.requestList);
-            }
-        });
+        onWillUpdateProps(this._onWillUpdateProps);
     }
 
     get afterPostRequestList() {
@@ -107,6 +93,22 @@ export class Chatter extends Component {
 
     _onMounted() {
         this.changeThread(this.props.threadModel, this.props.threadId);
+        if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
+            if (this.env.chatter) {
+                this.env.chatter.fetchThreadData = false;
+            }
+            this.load(this.state.thread, this.requestList);
+        }
+    }
+
+    _onWillUpdateProps(nextProps) {
+        this.state.disabled = !nextProps.threadId;
+        if (
+            this.props.threadId !== nextProps.threadId ||
+            this.props.threadModel !== nextProps.threadModel
+        ) {
+            this.changeThread(nextProps.threadModel, nextProps.threadId);
+        }
         if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
             if (this.env.chatter) {
                 this.env.chatter.fetchThreadData = false;
