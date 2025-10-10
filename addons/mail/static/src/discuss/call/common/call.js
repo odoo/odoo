@@ -61,7 +61,7 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
-        this.callActions = useCallActions({ thread: () => this.channel });
+        this.callActions = useCallActions({ thread: () => this.channel?.thread });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             this.resizeObserver.observe(this.grid.el);
@@ -91,7 +91,7 @@ export class Call extends Component {
     }
 
     get isActiveCall() {
-        return Boolean(this.channel.channel?.eq(this.rtc.channel));
+        return Boolean(this.channel.eq(this.rtc.channel));
     }
 
     get minimized() {
@@ -105,7 +105,7 @@ export class Call extends Component {
     }
 
     get channel() {
-        return this.props.thread || this.rtc.channel?.thread;
+        return this.props.thread?.channel || this.rtc.channel;
     }
 
     /** @returns {CardData[]} */
