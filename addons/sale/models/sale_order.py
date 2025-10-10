@@ -246,6 +246,11 @@ class SaleOrder(models.Model):
         string="Invoice Status",
         compute='_compute_invoice_status',
         store=True)
+    is_manually_closed = fields.Boolean(
+        string="Manually Closed",
+        copy=False,
+        help="If enabled, the order is considered fully invoiced regardless of lines."
+    )
 
     sale_warning_text = fields.Text(
         "Sale Warning",
@@ -609,7 +614,7 @@ class SaleOrder(models.Model):
             ('move_id', operator, value),
         ])]
 
-    @api.depends('state', 'order_line.invoice_status')
+    @api.depends('state', 'order_line.invoice_status', 'is_manually_closed')
     def _compute_invoice_status(self):
         """
         Compute the invoice status of a SO. Possible statuses:
@@ -656,6 +661,10 @@ class SaleOrder(models.Model):
                 order.invoice_status = 'upselling'
             else:
                 order.invoice_status = 'no'
+
+        for order in self:
+            if order.is_manually_closed and order.state == 'sale':
+                order.invoice_status = 'invoiced'
 
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
@@ -1185,6 +1194,21 @@ class SaleOrder(models.Model):
             return _("Some order lines are missing a product, you need to correct them before going further.")
 
         return False
+
+    def action_close_invoicing(self):
+        for order in self:
+            if order.state != 'sale':
+                raise UserError(_("You can mark as closed only a confirmed sales order."))
+        self.write({'is_manually_closed': True})
+        for order in self:
+            order.message_post(body=_("Invoicing closed."))
+        return True
+
+    def action_reopen_order(self):
+        self.write({'is_manually_closed': False})
+        for order in self:
+            order.message_post(body=_("Invoicing reopened."))
+        return True
 
     def _prepare_confirmation_values(self):
         """ Prepare the sales order confirmation values.
