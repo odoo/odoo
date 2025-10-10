@@ -307,7 +307,7 @@
                 <search string="Search Journal Items">
                     <field name="name" string="Journal Item" filter_domain="[
                         '|', '|', '|',
-                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                        ('name', 'ilike', self), ('ref', 'ilike', self), ('search_account_id', 'ilike', self), ('search_partner_id', 'ilike', self)]"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="invoice_date"/>
@@ -430,7 +430,7 @@
                 <search string="Search Journal Items">
                     <field name="name" string="Journal Item" filter_domain="[
                         '|', '|', '|',
-                        ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                        ('name', 'ilike', self), ('ref', 'ilike', self), ('search_account_id', 'ilike', self), ('search_partner_id', 'ilike', self)]"/>
                     <field name="name"/>
                     <field name="move_id"/>
                     <field name="ref"/>
