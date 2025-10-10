@@ -630,15 +630,27 @@ QUnit.module('convert_inline', {}, function () {
     QUnit.test('convert Bootstrap classes to inline styles', async function (assert) {
         assert.expect(1);
 
+        const $styleSheet = $('<style type="text/css" title="test-stylesheet"/>');
+        document.head.appendChild($styleSheet[0])
+        const styleSheet = [...document.styleSheets].find(sheet => sheet.title === 'test-stylesheet');
+        const borderColor = `rgb(255, 0, 0)`
+
+        // border-color
+        styleSheet.insertRule(`
+            div {
+                border-color: ${borderColor} !important;
+            }
+        `, 0);
+
         const $editable = $(`<div><div class="container"><div class="row"><div class="col">Hello</div></div></div></div>`);
         $(document.body).append($editable); // editable needs to be in the DOM to compute its dynamic styles.
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         // Some positional properties (eg., padding-right, margin-left) are not
         // concatenated (eg., as padding, margin) because they were defined with
         // variables (var) or calculated (calc).
-        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-color: rgb(55, 65, 81); border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
-        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-color: rgb(55, 65, 81); border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
-        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-color: rgb(55, 65, 81); border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
+        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%; border-color: ${borderColor};`;
+        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px; border-color: ${borderColor};`;
+        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%; border-color: ${borderColor};`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +
@@ -646,6 +658,7 @@ QUnit.module('convert_inline', {}, function () {
             "should have converted the classes of a simple Bootstrap grid to inline styles"
         );
         $editable.remove();
+        $styleSheet.remove();
     });
     QUnit.test('simplify border/margin/padding styles', async function (assert) {
         assert.expect(12);
