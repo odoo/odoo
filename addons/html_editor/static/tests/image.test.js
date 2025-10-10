@@ -339,7 +339,6 @@ test("Image transformation disappears on backspace/delete", async () => {
     press("backspace");
     await expectElementCount(".transfo-container", 0);
     undo(editor);
-    click("img.test-image");
     await expectElementCount(".o-we-toolbar", 1);
     await contains(".o-we-toolbar div[name='image_transform'] button").click();
     await expectElementCount(".transfo-container", 1);
