@@ -4,6 +4,7 @@ import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
+import { shallowEqual } from "@web/core/utils/arrays";
 
 class SelectMany2XCreate extends Component {
     static template = "html_builder.SelectMany2XCreate";
@@ -54,6 +55,8 @@ export class SelectMany2X extends Component {
     setup() {
         this.orm = useService("orm");
         this.cachedModel = useCachedModel();
+        this.prevSelectedIds = undefined;
+        this.prevSearchValue = undefined;
         this.state = useState({
             nameToCreate: "",
             searchResults: [],
@@ -61,6 +64,8 @@ export class SelectMany2X extends Component {
         });
         onWillUpdateProps(async (newProps) => {
             if (this.searchInvalidationKey(this.props) !== this.searchInvalidationKey(newProps)) {
+                this.prevSelectedIds = undefined;
+                this.prevSearchValue = undefined;
                 this.state.searchResults = [];
             }
         });
@@ -94,16 +99,21 @@ export class SelectMany2X extends Component {
         this.search(searchValue);
     }
     async search(searchValue) {
+        const domain = Object.values(this.props.domain).filter((item) => item !== null);
+        const selectedIds = this.props.selected.map((e) => e.id);
+        if (selectedIds.length) {
+            domain.push(["id", "not in", selectedIds]);
+        }
         const tuples = await this.orm.call(this.props.model, "name_search", [], {
             name: searchValue,
-            domain: Object.values(this.props.domain).filter((item) => item !== null),
+            domain: domain,
             operator: "ilike",
             limit: this.state.limit + 1,
         });
         this.state.hasMore = tuples.length > this.state.limit;
         const results = await this.cachedModel.ormRead(
             this.props.model,
-            tuples.slice(0, this.state.limit).map(([id, _name]) => id),
+            tuples.map(([id, _name]) => id),
             [...new Set(this.props.fields).add("display_name").add("name")]
         );
         if (this.props.nullText && (!results.length || results[0].id)) {
@@ -117,7 +127,9 @@ export class SelectMany2X extends Component {
     }
     filteredSearchResult() {
         const selectedIds = new Set(this.props.selected.map((e) => e.id));
-        return this.state.searchResults.filter((entry) => !selectedIds.has(entry.id));
+        return this.state.searchResults
+            .filter((entry) => !selectedIds.has(entry.id))
+            .slice(0, this.state.limit);
     }
     async canCreate(name) {
         if (!this.props.create || !name.length) {
@@ -137,7 +149,18 @@ export class SelectMany2X extends Component {
         return !usedNames.includes(name);
     }
     async onInput(searchValue) {
-        this.search(searchValue);
+        const selectedIds = this.props.selected.map((e) => e.id);
+        // Avoid redundant search queries when the user toggles the dropdown
+        // without changing the search value or the selected options.
+        if (
+            searchValue === this.prevSearchValue &&
+            shallowEqual(selectedIds, this.prevSelectedIds)
+        ) {
+            return;
+        }
+        this.prevSearchValue = searchValue;
+        this.prevSelectedIds = selectedIds;
+        await this.search(searchValue);
         this.state.nameToCreate = (await this.canCreate(searchValue)) ? searchValue : "";
     }
 
