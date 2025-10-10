@@ -74,6 +74,13 @@ class AccountMove(models.Model):
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
+    @api.model
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if res.partner_id.incoterm_id:
+            res.invoice_incoterm_id = res.partner_id.incoterm_id
+        return res
+
     def action_post(self):
         # inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
