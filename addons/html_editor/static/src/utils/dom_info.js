@@ -46,7 +46,11 @@ export function isEmptyTextNode(node) {
  */
 export function isBold(node) {
     const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
-    return fontWeight > 500 || fontWeight > +getComputedStyle(closestBlock(node)).fontWeight;
+    const referenceElement = closestElement(node, (el) => {
+        const currentFontWight = +getComputedStyle(closestElement(el)).fontWeight;
+        return isBlock(el) || currentFontWight !== fontWeight;
+    });
+    return fontWeight > 500 || fontWeight > +getComputedStyle(referenceElement).fontWeight;
 }
 
 /**
