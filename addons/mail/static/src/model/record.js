@@ -200,6 +200,10 @@ export class Record {
                     recordByLocalId: Model._rawStore.recordByLocalId,
                 });
             }
+            // compute inherits fields in priority, as other fields might depend on them
+            for (const fieldName of Model._.inheritsFields) {
+                record._.compute?.(record, fieldName);
+            }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const fieldName of record.Model._.fields.keys()) {
                 record._.requestCompute?.(record, fieldName);
@@ -319,6 +323,13 @@ export class Record {
         }
         const store = record._rawStore;
         return store.MAKE_UPDATE(function recordDelete() {
+            // delete records inheriting the current record before deleting the current record
+            for (const fieldName of record.Model._.inheritsInverseFields) {
+                const dependentRecordProxy = record._proxyInternal[fieldName];
+                if (dependentRecordProxy) {
+                    store._.ADD_QUEUE("delete", toRaw(dependentRecordProxy)._raw);
+                }
+            }
             store._.ADD_QUEUE("delete", record);
         });
     }

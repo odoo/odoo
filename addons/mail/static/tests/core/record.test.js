@@ -1369,3 +1369,78 @@ test("Can delete record with chained onDelete: () => record.delete()", async () 
     thread.delete();
     expect(thread.exists()).toBe(false);
 });
+
+test("fields, getters and functions are inherited", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        channel = fields.One("Channel", {
+            compute() {
+                return this.id;
+            },
+            inverse: "thread",
+        });
+        name;
+        get displayName() {
+            return `Thread: ${this.name}`;
+        }
+        getName() {
+            return `Thread: ${this.name}`;
+        }
+    }).register(localRegistry);
+    (class Channel extends Record {
+        static id = "id";
+        static _inherits = { Thread: "thread" };
+        id;
+        thread = fields.One("Thread", { inverse: "channel" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({ id: 1, name: "General" });
+    expect(thread.name).toBe("General");
+    expect(thread.channel.name).toBe("General");
+    expect(thread.displayName).toBe("Thread: General");
+    expect(thread.channel.displayName).toBe("Thread: General");
+    expect(thread.getName()).toBe("Thread: General");
+    expect(thread.channel.getName()).toBe("Thread: General");
+});
+
+test("shadowed fields, getters and functions are not inherited", async () => {
+    (class Thread extends Record {
+        static id = "id";
+        id;
+        channel = fields.One("Channel", {
+            compute() {
+                return this.id;
+            },
+            inverse: "thread",
+        });
+        name;
+        get displayName() {
+            return `Thread: ${this.name}`;
+        }
+        getName() {
+            return `Thread: ${this.name}`;
+        }
+    }).register(localRegistry);
+    (class Channel extends Record {
+        static id = "id";
+        static _inherits = { Thread: "thread" };
+        id;
+        thread = fields.One("Thread", { inverse: "channel" });
+        name;
+        get displayName() {
+            return `Channel: ${this.name}`;
+        }
+        getName() {
+            return `Channel: ${this.name}`;
+        }
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({ id: 1, name: "General" });
+    expect(thread.name).toBe("General");
+    expect(thread.channel.name).toBeEmpty();
+    expect(thread.displayName).toBe("Thread: General");
+    expect(thread.channel.displayName).toBe("Channel: undefined");
+    expect(thread.getName()).toBe("Thread: General");
+    expect(thread.channel.getName()).toBe("Channel: undefined");
+});
