@@ -15,7 +15,7 @@ import {
 } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/store/opening_control_popup/opening_control_popup";
@@ -149,6 +149,9 @@ export class PosStore extends Reactive {
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
         this.syncingOrders = new Set();
+        this.syncQueue = [];
+        this.isQueueProcessing = false;
+        this.isQueuePaused = false;
         await this.initServerData();
         if (this.useProxy()) {
             await this.connectToProxy();
@@ -263,7 +266,7 @@ export class PosStore extends Reactive {
                 (order) => order.state === "paid" && order.id !== "number"
             );
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
-            await this.syncAllOrders({ throw: true });
+            await this.syncAllOrders({ throw: true }); // TODO PEBR
 
             this.dialog.add(AlertDialog, {
                 title: _t("Closing Session"),
@@ -1185,75 +1188,41 @@ export class PosStore extends Reactive {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
+        let orders = options.orders || [];
+        const allPendingOrders = [...orderToCreate, ...orderToUpdate].filter(
+            (order) => !orders.some((o) => o.uuid === order.uuid)
+        );
+        for (const order of allPendingOrders) {
+            if (order.isUnsyncedPaid) {
+                this.addToQueue(order);
+            } else {
+                orders.push(order);
+            }
+        }
 
         // Filter out orders that are already being synced
-        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        orders = orders.filter((order) => !this.syncingOrders.has(order.uuid));
+
+        // Allow us to force the sync of the orders In the case of
+        // pos_restaurant is usefull to get unsynced orders
+        // for a specific table
+        if (orders.length === 0) {
+            this.processQueue();
+            return;
+        }
+
+        // Pause queue processing during normal sync
+        this.isQueuePaused = true;
 
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
             if (orderIdsToDelete.length > 0) {
                 await this.deleteOrders([], orderIdsToDelete);
             }
-
-            const context = this.getSyncAllOrdersContext(orders, options);
-            await this.preSyncAllOrders(orders);
-
-            // Allow us to force the sync of the orders In the case of
-            // pos_restaurant is usefull to get unsynced orders
-            // for a specific table
-            if (orders.length === 0) {
-                return;
-            }
-
-            // Add order IDs to the syncing set
-            orders.forEach((order) => this.syncingOrders.add(order.id));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
-
-            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
-            const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
-                context,
-            });
-            const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords, [], false);
-
-            for (const line of newData["pos.order.line"]) {
-                const refundedOrderLine = line.refunded_orderline_id;
-
-                if (refundedOrderLine) {
-                    const order = refundedOrderLine.order_id;
-                    if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                    }
-                    refundedOrderLine.refunded_qty = refundedOrderLine.refund_orderline_ids.reduce(
-                        (sum, obj) => sum + Math.abs(obj.qty),
-                        0
-                    );
-                }
-            }
-
-            this.postSyncAllOrders(newData["pos.order"]);
-
-            if (data["pos.session"].length > 0) {
-                // Replace the original session by the rescue one. And the rescue one will have
-                // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
-                this.models["pos.order"]
-                    .getAll()
-                    .filter((order) => order.state === "draft")
-                    .forEach((order) => (order.session_id = this.session));
-            }
-
-            // Remove only synced orders from the pending orders
-            orders.forEach((o) => this.removePendingOrder(o));
-            orders.map((order) => order.clearCommands());
-            return newData["pos.order"];
+            const data = await this.syncOrders(orders, options);
+            return data["pos.order"];
         } catch (error) {
+            orders.forEach((order) => this.addPendingOrder([order.id]));
             if (options.throw) {
                 throw error;
             }
@@ -1264,12 +1233,122 @@ export class PosStore extends Reactive {
             } else {
                 this.deviceSync.readDataFromServer();
             }
-
             return error;
         } finally {
-            orders.forEach((order) => this.syncingOrders.delete(order.id));
+            orders.forEach((order) => this.syncingOrders.delete(order.uuid));
+            this.isQueuePaused = false;
+            if (this.syncQueue.length > 0) {
+                this.processQueue();
+            }
         }
     }
+
+    async syncOrders(orders, options = {}) {
+        const context = this.getSyncAllOrdersContext(orders, options);
+        await this.preSyncAllOrders(orders);
+
+        // Add order IDs to the syncing set
+        orders.forEach((order) => this.syncingOrders.add(order.uuid));
+
+        // Re-compute all taxes, prices and other information needed for the backend
+        for (const order of orders) {
+            order.recomputeOrderData();
+        }
+
+        const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
+        const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
+            context,
+        });
+        const missingRecords = await this.data.missingRecursive(data);
+        const newData = this.models.loadData(missingRecords, [], false);
+
+        for (const line of newData["pos.order.line"]) {
+            const refundedOrderLine = line.refunded_orderline_id;
+
+            if (refundedOrderLine) {
+                const order = refundedOrderLine.order_id;
+                if (order) {
+                    delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                }
+                refundedOrderLine.refunded_qty = refundedOrderLine.refund_orderline_ids.reduce(
+                    (sum, obj) => sum + Math.abs(obj.qty),
+                    0
+                );
+            }
+        }
+
+        this.postSyncAllOrders(newData["pos.order"]);
+
+        if (data["pos.session"].length > 0) {
+            // Replace the original session by the rescue one. And the rescue one will have
+            // a higher id than the original one since it's the last one created.
+            const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
+            session.delete();
+            this.models["pos.order"]
+                .getAll()
+                .filter((order) => order.state === "draft")
+                .forEach((order) => (order.session_id = this.session));
+        }
+
+        // Remove only synced orders from the pending orders
+        orders.forEach((o) => this.removePendingOrder(o));
+        orders.map((order) => order.clearCommands());
+        return newData;
+    }
+
+    addToQueue(order) {
+        if (
+            this.syncQueue.some((o) => o.uuid === order.uuid) ||
+            this.syncingOrders.has(order.uuid)
+        ) {
+            return;
+        }
+        this.syncQueue.push(order);
+    }
+
+    async processQueue() {
+        if (this.isQueueProcessing || this.isQueuePaused || this.syncQueue.length === 0) {
+            return;
+        }
+
+        this.isQueueProcessing = true;
+
+        while (this.syncQueue.length > 0 && !this.isQueuePaused) {
+            const order = this.syncQueue[0];
+
+            if (this.syncingOrders.has(order.uuid)) {
+                // Skip this order but remove it from queue
+                this.syncQueue.shift();
+                continue;
+            }
+
+            try {
+                await this.syncOrders([order], {});
+                this.syncQueue.shift();
+                await this.afterProcessQueue();
+            } catch (error) {
+                if (error instanceof RPCError) {
+                    this.syncQueue.shift();
+                    console.error(`Order ${order.id} sync failed with RPC error:`, error);
+                } else if (error instanceof ConnectionLostError) {
+                    console.warn("Connection lost during queue processing, pausing queue");
+                    this.isQueueProcessing = false;
+                    this.isQueuePaused = true;
+                    break;
+                } else {
+                    console.warn(`Order ${order.id} sync failed, retrying:`, error);
+                    this.syncQueue.shift(); // Remove from front
+                    this.syncQueue.push(order); // Add to end
+                }
+            } finally {
+                this.syncingOrders.delete(order.uuid);
+            }
+        }
+
+        this.isQueueProcessing = false;
+    }
+
+    async afterProcessQueue() {}
 
     push_single_order(order) {
         return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
@@ -1398,6 +1477,7 @@ export class PosStore extends Reactive {
     // If there is an error show a popup
     async push_orders_with_closing_popup(opts = {}) {
         try {
+            // TODO
             await this.syncAllOrders(opts);
             return true;
         } catch (error) {
