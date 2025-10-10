@@ -11,6 +11,7 @@ class SaleOrderLine(models.Model):
         string="Optional Line",
         copy=True,
         default=False,
+        help="On the portal, the customer will be able to choose the quantity to buy.",
     )  # Whether this section's lines are optional in the portal.
 
     # === COMPUTE METHODS === #

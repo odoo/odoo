@@ -69,6 +69,19 @@ class SaleOrderTemplateLine(models.Model):
         string="Optional Line",
         copy=True,
         default=False,
+        help="On the portal, the customer will be able to choose the quantity to buy.",
+    )
+    collapse_composition = fields.Boolean(
+        string="Collapse Composition",
+        copy=True,
+        default=False,
+        help="In the SO, the customer see the section like a SO line, all its content is hidden.",
+    )
+    collapse_prices = fields.Boolean(
+        string="Collapse Prices",
+        copy=True,
+        default=False,
+        help="The customer see the products, the quantities but only a globalized amount for the section on the invoice.",
     )
 
     #=== COMPUTE METHODS ===#
@@ -133,11 +146,13 @@ class SaleOrderTemplateLine(models.Model):
         """
         self.ensure_one()
         vals = {
+            'collapse_composition': self.collapse_composition,
+            'collapse_prices': self.collapse_prices,
             'display_type': self.display_type,
+            'is_optional': self.is_optional,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
             'product_uom_id': self.product_uom_id.id,
-            'is_optional': self.is_optional,
             'sequence': self.sequence,
         }
         if self.name:

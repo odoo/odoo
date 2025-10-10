@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account.SectionState">
+        <t t-if="['line_section', 'line_subsection'].includes(props.record.data.display_type)">
+            <i
+                class="ms-1 mt-1"
+                t-att-class="iconInfo.iconClass"
+                t-att-title="iconInfo.title"
+                aria-hidden="true"
+            />
+        </t>
+    </t>
+
+</templates>

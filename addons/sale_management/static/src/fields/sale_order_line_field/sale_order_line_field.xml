@@ -7,7 +7,7 @@
                 t-if="showOptionalButton"
                 onSelected="() => this.toggleIsOptional(record)"
             >
-                <i class="me-1 fa fa-fw fa-list"/>
+                <i class="me-1 fa fa-fw fa-dot-circle-o"/>
                 <span t-out="record.data.is_optional ? 'Unset Optional' : 'Set Optional'"/>
             </DropdownItem>
         </xpath>

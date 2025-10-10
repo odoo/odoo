@@ -331,11 +331,11 @@ class AccountMoveLine(models.Model):
     # section related fields
     collapse_composition = fields.Boolean(
         string="Hide Composition",
-        help="If checked, the lines below this section will not be displayed in reports and portal.",
+        help="In the invoice, the customer see the section like a invoice line, all its content is hidden.",
     )
     collapse_prices = fields.Boolean(
         string="Hide Prices",
-        help="If checked, the prices of the lines below this section will not be displayed in reports and portal.",
+        help="The customer see the products, the quantities but only a globalized amount for the section on the invoice.",
     )
     parent_id = fields.Many2one(
         'account.move.line',

@@ -133,6 +133,10 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return true;
     }
 
+    get sectionColumns() {
+        return [...this.props.aggregatedFields, "section_state"];
+    }
+
     async toggleCollapse(record, fieldName) {
         const changes = { [fieldName]: !record.data[fieldName] };
         await record.update(changes);
@@ -371,7 +375,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     getColumns(record) {
         const columns = super.getColumns(record);
         if (this.isSectionOrNote(record)) {
-            return this.getSectionColumns(columns, record);
+            return this.getSectionAndNoteColumns(columns, record);
         }
         return columns;
     }
@@ -391,12 +395,12 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return super.getFormattedValue(column, record);
     }
 
-    getSectionColumns(columns, record) {
+    getSectionAndNoteColumns(columns, record) {
         const sectionCols = columns.filter(
             (col) =>
                 col.widget === "handle"
                 || col.name === this.titleField
-                || (this.isSection(record) && this.props.aggregatedFields.includes(col.name))
+                || (this.isSection(record) && this.sectionColumns.includes(col.name))
         );
         return sectionCols.map((col) => {
             if (col.name === this.titleField) {
