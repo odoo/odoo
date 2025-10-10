@@ -723,7 +723,8 @@
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
                                         <!-- Desktop Search button -->
                                         <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}">
-                                            <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                            <t t-set="search_term">Search in</t>
+                                            <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                                             <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                         </div>
                                         <!-- Mobile Search button -->
@@ -912,7 +913,8 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-set="search_term">Search in</t>
+                                <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                             </t>
                         </div>
                     </div>
@@ -1331,7 +1333,8 @@
                 class="offcanvas-body flex-grow-0 overflow-visible"
             >
                 <t t-call="website_sale.search">
-                    <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                    <t t-set="search_term">Search in</t>
+                    <t t-if="category" t-set="placeholder" t-valuef="{{ search_term }} {{ category.name }}"/>
                     <t t-set="search" t-value="original_search or search"/>
                     <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
                 </t>
