@@ -46,7 +46,7 @@ class TestProjectProject(TransactionCase):
         )
 
     def test_create_projects_with_default_analytic_account(self):
-        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.analytic_plan_projects'))
+        project_plan_id = self.env['ir.config_parameter'].sudo().get_int('analytic.analytic_plan_projects')
         if not project_plan_id:
             project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
             project_plan_id = project_plan.id

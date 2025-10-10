@@ -801,8 +801,8 @@ class ResUsers(models.Model):
                 try:
                     base = user_agent_env['base_location']
                     ICP = env['ir.config_parameter']
-                    if not ICP.get_param('web.base.url.freeze'):
-                        ICP.set_param('web.base.url', base)
+                    if not ICP.get_bool('web.base.url.freeze'):
+                        ICP.set_str('web.base.url', base)
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return auth_info
@@ -1205,7 +1205,7 @@ class ResUsers(models.Model):
             # ``needs_update`` will indicate that the stored hash should be
             # replaced by a more recent algorithm.
             deprecated=['auto'],
-            pbkdf2_sha512__rounds=max(MIN_ROUNDS, int(cfg.get_param('password.hashing.rounds', 0))),
+            pbkdf2_sha512__rounds=max(MIN_ROUNDS, cfg.get_int('password.hashing.rounds')),
         )
 
     @contextlib.contextmanager
@@ -1296,11 +1296,11 @@ class ResUsers(models.Model):
         :rtype: bool
         """
         cfg = self.env['ir.config_parameter'].sudo()
-        min_failures = int(cfg.get_param('base.login_cooldown_after', 5))
+        min_failures = cfg.get_int('base.login_cooldown_after', 5)
         if min_failures == 0:
             return False
 
-        delay = int(cfg.get_param('base.login_cooldown_duration', 60))
+        delay = cfg.get_int('base.login_cooldown_duration') or 60
         return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
 
     def _register_hook(self):

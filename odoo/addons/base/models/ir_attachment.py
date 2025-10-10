@@ -73,7 +73,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def _storage(self):
-        return self.env['ir.config_parameter'].sudo().get_param('ir_attachment.location', 'file')
+        return self.env['ir.config_parameter'].sudo().get_str('ir_attachment.location') or 'file'
 
     @api.model
     def _filestore(self):
@@ -352,8 +352,8 @@ class IrAttachment(models.Model):
         return mimetype and mimetype.lower() or 'application/octet-stream'
 
     def _postprocess_contents(self, values):
-        ICP = self.env['ir.config_parameter'].sudo().get_param
-        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
+        ICP = self.env['ir.config_parameter'].sudo()
+        supported_subtype = (ICP.get_str('base.image_autoresize_extensions') or 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         _type, _match, _subtype = mimetype.partition('/')
@@ -362,7 +362,7 @@ class IrAttachment(models.Model):
             is_raw = values.get('raw')
 
             # Can be set to 0 to skip the resize
-            max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
+            max_resolution = ICP.get_str('base.image_autoresize_max_px') or '1920x1920'
             if str2bool(max_resolution, True):
                 try:
                     if is_raw:
@@ -378,7 +378,7 @@ class IrAttachment(models.Model):
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
                         img = img.resize(nw, nh)
-                        quality = int(ICP('base.image_autoresize_quality', 80))
+                        quality = ICP.get_int('base.image_autoresize_quality', 80)
                         image_data = img.image_quality(quality=quality)
                         if is_raw:
                             values['raw'] = image_data

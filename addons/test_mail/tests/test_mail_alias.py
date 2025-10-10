@@ -45,17 +45,17 @@ class TestMailAlias(TestMailAliasCommon):
         """ Check the validation of `mail.catchall.domain.allowed` system parameter"""
         for value in [',', ',,', ', ,']:
             with self.assertRaises(exceptions.ValidationError):
-                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
+                self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
 
         for value, expected in [
-            ('', False),
+            ('', ''),
             ('hello.com', 'hello.com'),
             ('hello.com,,', 'hello.com'),
             ('hello.com,bonjour.com', 'hello.com,bonjour.com'),
             ('hello.COM, BONJOUR.com', 'hello.com,bonjour.com'),
         ]:
-            self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
-            self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
+            self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', value)
+            self.assertEqual(self.env['ir.config_parameter'].get_str('mail.catchall.domain.allowed'), expected)
 
     @users('erp_manager')
     def test_alias_domain_company_check(self):

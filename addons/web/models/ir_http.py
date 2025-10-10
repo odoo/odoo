@@ -89,10 +89,10 @@ class IrHttp(models.AbstractModel):
             user_context = {}
 
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
-        max_file_upload_size = int(IrConfigSudo.get_param(
+        max_file_upload_size = IrConfigSudo.get_int(
             'web.max_file_upload_size',
-            default=DEFAULT_MAX_CONTENT_LENGTH,
-        ))
+            DEFAULT_MAX_CONTENT_LENGTH,
+        )
         is_internal_user = user._is_internal()
         session_info = {
             "uid": session_uid,
@@ -109,12 +109,12 @@ class IrHttp(models.AbstractModel):
             "support_url": "https://www.odoo.com/buy",
             "name": user.name,
             "username": user.login,
-            "quick_login": str2bool(IrConfigSudo.get_param('web.quick_login', default=True), True),
+            "quick_login": IrConfigSudo.get_bool('web.quick_login', True),
             "partner_write_date": fields.Datetime.to_string(user.partner_id.write_date),
             "partner_display_name": user.partner_id.display_name,
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
-            "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
-            "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
+            "web.base.url": IrConfigSudo.get_str('web.base.url'),
+            "active_ids_limit": IrConfigSudo.get_int('web.active_ids_limit') or 20000,
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),
             'profile_params': request.session.get('profile_params'),
@@ -182,9 +182,9 @@ class IrHttp(models.AbstractModel):
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),
             'profile_params': request.session.get('profile_params'),
-            'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
+            'show_effect': request.env['ir.config_parameter'].sudo().get_bool('base_setup.show_effect'),
             'currencies': self.env['res.currency'].get_all_currencies(),
-            'quick_login': str2bool(request.env['ir.config_parameter'].sudo().get_param('web.quick_login', default=True), True),
+            'quick_login': request.env['ir.config_parameter'].sudo().get_bool('web.quick_login', True),
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },

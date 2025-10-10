@@ -33,7 +33,7 @@ def _get_microsoft_client_secret(ICP_sudo, service):
     :return: The ICP value
     :rtype: str
     """
-    return ICP_sudo.get_param('microsoft_%s_client_secret' % service)
+    return ICP_sudo.get_str('microsoft_%s_client_secret' % service)
 
 
 class MicrosoftService(models.AbstractModel):
@@ -43,18 +43,18 @@ class MicrosoftService(models.AbstractModel):
     def _get_microsoft_client_id(self, service):
         # client id is not a secret, and can be leaked without risk. e.g. in clear in authorize uri.
         ICP = self.env['ir.config_parameter'].sudo()
-        return ICP.get_param('microsoft_%s_client_id' % service)
+        return ICP.get_str('microsoft_%s_client_id' % service)
 
     def _get_calendar_scope(self):
         return 'offline_access openid Calendars.ReadWrite'
 
     @api.model
     def _get_auth_endpoint(self):
-        return self.env["ir.config_parameter"].sudo().get_param('microsoft_account.auth_endpoint', DEFAULT_MICROSOFT_AUTH_ENDPOINT)
+        return self.env["ir.config_parameter"].sudo().get_str('microsoft_account.auth_endpoint') or DEFAULT_MICROSOFT_AUTH_ENDPOINT
 
     @api.model
     def _get_token_endpoint(self):
-        return self.env["ir.config_parameter"].sudo().get_param('microsoft_account.token_endpoint', DEFAULT_MICROSOFT_TOKEN_ENDPOINT)
+        return self.env["ir.config_parameter"].sudo().get_str('microsoft_account.token_endpoint') or DEFAULT_MICROSOFT_TOKEN_ENDPOINT
 
     @api.model
     def _refresh_microsoft_token(self, service, rtoken):
@@ -91,10 +91,8 @@ class MicrosoftService(models.AbstractModel):
             'd': self.env.cr.dbname,
             's': service,
             'f': from_url,
-            'u': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'u': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         }
-
-        get_param = self.env['ir.config_parameter'].sudo().get_param
 
         encoded_params = urls.url_encode({
             'response_type': 'code',

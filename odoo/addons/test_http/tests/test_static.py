@@ -692,13 +692,11 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
         }])
 
     def test_upload_small_file_without_icp(self):
-        self.env['ir.config_parameter'].sudo().set_param(
-            'web.max_file_upload_size', False,
-        )
+        self.env['ir.config_parameter'].sudo().search([('key', '=', 'web.max_file_upload_size')]).unlink()
         self._test_upload_small_file()
 
     def test_upload_small_file_with_icp(self):
-        self.env['ir.config_parameter'].sudo().set_param(
+        self.env['ir.config_parameter'].sudo().set_int(
             'web.max_file_upload_size', 16386,  # gizen.png is smaller
         )
         self._test_upload_small_file()
@@ -711,7 +709,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
              file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
             file_size = file.seek(0, 2)
             file.seek(0)
-            self.env['ir.config_parameter'].sudo().set_param(
+            self.env['ir.config_parameter'].sudo().set_int(
                 'web.max_file_upload_size', file_size - 1,
             )
             res = self.url_open(

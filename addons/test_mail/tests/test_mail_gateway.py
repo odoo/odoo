@@ -1035,7 +1035,7 @@ class TestMailgateway(MailGatewayCommon):
                 (test_domain, test_domain),
             ], [True, True, False, True]):
             with self.subTest(alias_right_part=alias_right_part, allowed_domain=allowed_domain):
-                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', allowed_domain)
+                self.env['ir.config_parameter'].set_str('mail.catchall.domain.allowed', allowed_domain)
 
                 subject = f'Test wigh {alias_right_part}-{allowed_domain}'
                 email_to = f'{self.alias.alias_name}@{self.alias_domain}, {new_alias_2.alias_name}@{alias_right_part}'
@@ -1942,8 +1942,8 @@ class TestMailGatewayLoops(MailGatewayCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
-        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
+        cls.env['ir.config_parameter'].sudo().set_int('mail.gateway.loop.minutes', 30)
+        cls.env['ir.config_parameter'].sudo().set_int('mail.gateway.loop.threshold', 5)
 
         cls.env['mail.gateway.allowed'].create([
             {'email': 'Bob@EXAMPLE.com'},

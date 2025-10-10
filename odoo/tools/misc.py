@@ -1762,7 +1762,7 @@ def hmac(env, scope, message, hash_function=hashlib.sha256):
     if not scope:
         raise ValueError('Non-empty scope required')
 
-    secret = env['ir.config_parameter'].get_param('database.secret')
+    secret = env['ir.config_parameter'].get_str('database.secret')
     message = repr((scope, message))
     return hmac_lib.new(
         secret.encode(),

@@ -1102,10 +1102,7 @@ class TestSinglePicking(TestStockCommon):
             'state': 'draft',
         })
         # Avoid to merge move3 and move4 for the test case
-        self.env['ir.config_parameter'].create({
-            'key': 'stock.merge_only_same_date',
-            'value': True
-        })
+        self.env['ir.config_parameter'].set_bool('stock.merge_only_same_date', True)
         move1 = self.MoveObj.create({
             'product_id': self.productA.id,
             'product_uom_qty': 4,

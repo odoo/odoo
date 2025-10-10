@@ -1166,11 +1166,11 @@ Please change the quantity done or the rounding precision in your settings.""",
             'product_uom', 'restrict_partner_id', 'origin_returned_move_id',
             'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
         ]
-        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
+        if self.env['ir.config_parameter'].sudo().get_bool('stock.merge_only_same_date'):
             fields.append('date')
         if self.env.context.get('merge_extra'):
             fields.pop(fields.index('procure_method'))
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.merge_ignore_date_deadline'):
+        if not self.env['ir.config_parameter'].sudo().get_bool('stock.merge_ignore_date_deadline'):
             fields.append('date_deadline')
         return fields
 
@@ -2013,7 +2013,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
         moves_to_cancel._do_unreserve()
-        cancel_moves_origin = self.env['ir.config_parameter'].sudo().get_param('stock.cancel_moves_origin')
+        cancel_moves_origin = self.env['ir.config_parameter'].sudo().get_bool('stock.cancel_moves_origin')
 
         moves_to_cancel.state = 'cancel'
 
@@ -2358,7 +2358,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """
-        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler'):
+        if not self or self.env['ir.config_parameter'].sudo().get_bool('stock.no_auto_scheduler'):
             return
 
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
@@ -2384,7 +2384,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Check for and trigger action_assign for confirmed/partially_available moves related to done moves.
             Disable auto reservation if user configured to do so.
         """
-        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
+        if not self or self.env['ir.config_parameter'].sudo().get_bool('stock.picking_no_auto_reserve'):
             return
 
         product_domains = Domain.OR(

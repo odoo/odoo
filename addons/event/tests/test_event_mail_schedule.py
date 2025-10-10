@@ -22,7 +22,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         super().setUpClass()
 
         # don't be annoyed by enrich cron for query counters (unmodular but hey)
-        cls.env['ir.config_parameter'].sudo().set_param('crm.iap.lead.enrich.setting', 'no')
+        cls.env['ir.config_parameter'].sudo().set_str('crm.iap.lead.enrich.setting', 'no')
 
         # give default values for all email aliases and domain
         cls._init_mail_gateway()
@@ -37,7 +37,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         # deactivate other schedulers to avoid messing with crons
         cls.env['event.mail'].search([]).unlink()
         # consider asynchronous sending as default sending
-        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
+        cls.env["ir.config_parameter"].set_bool("event.event_mail_async", False)
 
         # freeze some datetimes, and ensure more than 1D+1H before event starts
         # to ease time-based scheduler check
@@ -162,8 +162,8 @@ class TestMailSchedule(EventMailCommon):
 
         # check iterative work, update params to check call count
         batch_size, render_limit = 2, 10
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', render_limit)
 
         # create some registrations
         EventMailRegistration = type(self.env['event.mail.registration'])
@@ -282,8 +282,8 @@ class TestMailSchedule(EventMailCommon):
         # --------------------------------------------------
 
         # check default behavior, batch of 50 to run up to 1000 attendees
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', False)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', False)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', 0)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', False)
 
         # execute event reminder scheduler explicitly, before scheduled date -> should not do anything
         with self.mock_datetime_and_now(now), self.mock_mail_gateway():
@@ -626,8 +626,8 @@ class TestMailSchedule(EventMailCommon):
 
         # check iterative work, update params to check call count
         batch_size, render_limit = 2, 4
-        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', batch_size)
-        self.env['ir.config_parameter'].sudo().set_param('mail.render.cron.limit', render_limit)
+        self.env['ir.config_parameter'].sudo().set_int('mail.batch_size', batch_size)
+        self.env['ir.config_parameter'].sudo().set_int('mail.render.cron.limit', render_limit)
 
         # find slot-based schedulers, remove other to avoid noise
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
@@ -790,7 +790,7 @@ class TestMailSchedule(EventMailCommon):
         cron_mail = self.env.ref('mail.ir_cron_mail_scheduler_action')
         reference_now = self.reference_now
 
-        self.env['ir.config_parameter'].sudo().set_param('event.event_mail_async', True)
+        self.env['ir.config_parameter'].sudo().set_bool('event.event_mail_async', True)
         with self.capture_triggers(cron_event.id) as capt_event, \
              self.capture_triggers(cron_mail.id) as capt_mail, \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \

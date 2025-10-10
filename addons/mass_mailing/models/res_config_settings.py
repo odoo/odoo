@@ -20,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='mass_mailing.mail_server_id')
     show_blacklist_buttons = fields.Boolean(
         string="Blacklist Option when Unsubscribing",
+        default=True,
         config_parameter='mass_mailing.show_blacklist_buttons',
         help="""Allow the recipient to manage themselves their state in the blacklist via the unsubscription page.""")
     mass_mailing_reports = fields.Boolean(

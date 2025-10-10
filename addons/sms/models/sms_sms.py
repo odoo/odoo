@@ -161,7 +161,7 @@ class SmsSms(models.Model):
         self.env['ir.cron']._commit_progress(len(records), remaining=self.search_count(domain) if len(records) == batch_size else 0)
 
     def _get_send_batch_size(self):
-        return int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
+        return self.env['ir.config_parameter'].sudo().get_int('sms.session.batch.size') or 500
 
     def _get_sms_company(self):
         return self.mail_message_id.record_company_id or self.env.company

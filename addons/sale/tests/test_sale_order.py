@@ -182,7 +182,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_invoicing_terms(self):
         # Enable invoicing terms
-        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+        self.env['ir.config_parameter'].sudo().set_bool('account.use_invoice_terms', True)
 
         # Plain invoice terms
         self.env.company.terms_type = 'plain'
@@ -416,7 +416,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_order_status_email_is_sent_synchronously_if_not_configured(self):
         """ Test that the order status email is sent synchronously when nothing is configured. """
-        self.env['ir.config_parameter'].set_param('sale.async_emails', 'False')
+        self.env['ir.config_parameter'].set_bool('sale.async_emails', False)
 
         self.sale_order._send_order_notification_mail(self.confirmation_email_template)
         self.assertFalse(
@@ -426,7 +426,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_order_status_email_is_sent_asynchronously_if_configured(self):
         """ Test that the order status email is sent asynchronously when configured. """
-        self.env['ir.config_parameter'].set_param('sale.async_emails', 'True')
+        self.env['ir.config_parameter'].set_bool('sale.async_emails', True)
 
         self.sale_order._send_order_notification_mail(self.confirmation_email_template)
         self.assertTrue(
@@ -440,7 +440,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_async_emails_cron_does_not_trigger_itself(self):
         """ Test that the asynchronous email sending cron does not loop indefinitely. """
-        self.env['ir.config_parameter'].set_param('sale.async_emails', 'True')
+        self.env['ir.config_parameter'].set_bool('sale.async_emails', True)
         self.sale_order.pending_email_template_id = self.confirmation_email_template
 
         with self.enter_registry_test_mode():

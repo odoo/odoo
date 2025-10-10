@@ -46,7 +46,7 @@ class TestTranslationController(HttpCaseWithUserDemo):
         cls.env["res.lang"]._activate_lang("en_US")
         cls.env.ref("base.user_admin").write({"lang": "fr_FR"})
         cls.api_key = "VALIDKEY"
-        cls.env["ir.config_parameter"].set_param("mail.google_translate_api_key", cls.api_key)
+        cls.env["ir.config_parameter"].set_str("mail.google_translate_api_key", cls.api_key)
         cls.message = cls.env["mail.message"].create(
             {
                 "body": SAMPLE["text"],
@@ -109,7 +109,7 @@ class TestTranslationController(HttpCaseWithUserDemo):
         self.assertEqual(self.request_count, 3)
 
     def test_invalid_api_key(self):
-        self.env["ir.config_parameter"].set_param("mail.google_translate_api_key", "INVALIDKEY")
+        self.env["ir.config_parameter"].set_str("mail.google_translate_api_key", "INVALIDKEY")
         self.authenticate("demo", "demo")
         result = self._mock_translation_request({"message_id": self.message.id})
         self.assertNotIn("body", result)

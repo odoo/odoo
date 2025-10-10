@@ -89,7 +89,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
         self.user_portal = self.env['res.users'].search([('login', '=', 'portal')])
         self.partner_portal = self.user_portal.partner_id
         if not self.user_portal:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            self.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             self.partner_portal = self.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
@@ -140,7 +140,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
 
         WebsiteVisitor = self.env['website.visitor']
 
-        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
+        self.env['ir.config_parameter'].sudo().set_int('website.visitor.live.days', 7)
 
         # ensure we keep a single query by correct usage of "not in"
         # (+1 query to fetch the 'ir.config_parameter')

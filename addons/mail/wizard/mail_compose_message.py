@@ -598,7 +598,7 @@ class MailComposeMessage(models.TransientModel):
             elif composer.composition_mode == 'comment' or composer.res_domain:
                 composer.force_send = False
             else:
-                force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.force.send.limit', 100))
+                force_send_limit = self.env['ir.config_parameter'].sudo().get_int('mail.mail.force.send.limit', 100)
                 res_ids = composer._evaluate_res_ids()
                 composer.force_send = len(res_ids) <= force_send_limit
 
@@ -819,9 +819,7 @@ class MailComposeMessage(models.TransientModel):
         sudo as it is considered as a technical model. """
         mails_sudo = self.env['mail.mail'].sudo()
 
-        batch_size = int(
-            self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
-        ) or self._batch_size or 50  # be sure to not have 0, as otherwise no iteration is done
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or self._batch_size or 50  # be sure to not have 0, as otherwise no iteration is done
         counter_mails_done = 0
         for res_ids_iter in tools.split_every(batch_size, res_ids):
             prepared_mail_values_filtered = self._manage_mail_values(self._prepare_mail_values(res_ids_iter))

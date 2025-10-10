@@ -5,12 +5,15 @@ Store database-specific configuration parameters
 
 import uuid
 import logging
+from typing import Literal, TypeVar
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import config, ormcache, mute_logger
+from odoo.tools import config, ormcache, mute_logger, str2bool
 
 _logger = logging.getLogger(__name__)
+
+T = TypeVar('T')
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -34,7 +37,7 @@ class IrConfig_Parameter(models.Model):
     _allow_sudo_commands = False
 
     key = fields.Char(required=True)
-    value = fields.Text(required=True)
+    value = fields.Text()
 
     _key_uniq = models.Constraint(
         'unique (key)',
@@ -54,53 +57,114 @@ class IrConfig_Parameter(models.Model):
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
             if force or not params:
-                params.set_param(key, func())
+                params.set_str(key, str(func()))  # use set_str as a hack for all types
 
     @api.model
-    def get_param(self, key, default=False):
-        """Retrieve the value for a given key.
+    def set_bool(self, key, value):
+        return self._set(key, str2bool(value or False), 'bool')
 
-        :param string key: The key of the parameter value to retrieve.
-        :param string default: default value if parameter is missing.
-        :return: The value of the parameter, or ``default`` if it does not exist.
-        :rtype: string
-        """
+    @api.model
+    def set_int(self, key, value):
+        return self._set(key, None if value is None else int(value or 0), 'int')
+
+    @api.model
+    def set_float(self, key, value):
+        return self._set(key, None if value is None else float(value or 0.0), 'float')
+
+    @api.model
+    def set_str(self, key, value):
+        return self._set(key, None if value is None else str(value or ''), 'str')
+
+    def _set(self, key: str, value: bool | float | str | None, type_: Literal['bool', 'int', 'float', 'str']):
+        old_value, exists = self._get(key, type_)
+        value_ = False if value is None else str(value)
+        if not exists:
+            self.create({'key': key, 'value': value_})
+        elif old_value != value:
+            param = self.search([('key', '=', key)])
+            param.write({'value': value_})
+        if old_value is not None:
+            return old_value
+        if type_ == 'bool':
+            return False
+        if type_ in ['int', 'float']:
+            return 0
+        return ''
+
+    @api.model
+    def get_bool(self, key: str, default: T = False) -> bool | T:
         self.browse().check_access('read')
-        return self._get_param(key) or default
+        value = self._get(key, 'bool')[0]
+        if value is None:
+            return default
+        return value
 
     @api.model
-    @ormcache('key', cache='stable')
-    def _get_param(self, key):
-        # we bypass the ORM because get_param() is used in some field's depends,
-        # and must therefore work even when the ORM is not ready to work
+    def get_int(self, key: str, default: T = 0) -> int | T:
+        self.browse().check_access('read')
+        value = self._get(key, 'int')[0]
+        if value is None:
+            return default
+        return value
+
+    @api.model
+    def get_float(self, key: str, default: T = 0.0) -> float | T:
+        self.browse().check_access('read')
+        value = self._get(key, 'float')[0]
+        if value is None:
+            return default
+        return value
+
+    @api.model
+    def get_str(self, key: str, default: T = '') -> str | T:
+        self.browse().check_access('read')
+        value = self._get(key, 'str')[0]
+        if value is None:
+            return default
+        return value
+
+    @ormcache('key', 'type_', cache='stable')
+    def _get(self, key, type_='str'):
+        """
+        Returns the value of the config parameter and whether the record exists.
+        """
         self.flush_model(['key', 'value'])
         self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", [key])
         result = self.env.cr.fetchone()
-        return result and result[0]
+        if not result:
+            return None, False
+        value = result[0]
+        if value is None:
+            # ir_config_parameter.write({'value': False}) from UI can logically set the config to undefined
+            return None, True
+        try:
+            return self._convert_type(value, type_), True
+        except ValueError:
+            _logger.error("ir.config_parameter with key %s has invalid value %s for type %s", key, value, type_)
+            return None, True
+
+    def _convert_type(self, value: str, type_: Literal['bool', 'int', 'float', 'str']) -> bool | float | str:
+        if type_ == 'bool':
+            return str2bool(value)
+        if type_ == 'int':
+            return int(value)
+        if type_ == 'float':
+            return float(value)
+        if type_ == 'str':
+            return value
+        raise ValueError("Invalid type: %s" % type_)
+
+    @api.model
+    def get_param(self, key, default=False):
+        return self._get(key, 'str')[0] or default
 
     @api.model
     def set_param(self, key, value):
-        """Sets the value of a parameter.
-
-        :param string key: The key of the parameter value to set.
-        :param string value: The value to set.
-        :return: the previous value of the parameter or False if it did
-                 not exist.
-        :rtype: string
-        """
-        param = self.search([('key', '=', key)])
-        if param:
-            old = param.value
-            if value is not False and value is not None:
-                if str(value) != old:
-                    param.write({'value': value})
-            else:
-                param.unlink()
-            return old
+        if value is not False and value is not None:
+            value = str(value)
         else:
-            if value is not False and value is not None:
-                self.create({'key': key, 'value': value})
-            return False
+            value = None
+        self._set(key, value, 'str')
 
     @api.model_create_multi
     def create(self, vals_list):

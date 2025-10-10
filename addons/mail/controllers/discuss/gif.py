@@ -36,7 +36,7 @@ class DiscussGifController(Controller):
         query_string = werkzeug.urls.url_encode(
             {
                 "q": search_term,
-                "key": ir_config.get_param("discuss.tenor_api_key"),
+                "key": ir_config.get_str("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
                 "limit": TENOR_GIF_LIMIT,
                 "contentfilter": TENOR_CONTENT_FILTER,
@@ -56,7 +56,7 @@ class DiscussGifController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {
-                "key": ir_config.get_param("discuss.tenor_api_key"),
+                "key": ir_config.get_str("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
                 "limit": TENOR_GIF_LIMIT,
                 "contentfilter": TENOR_CONTENT_FILTER,
@@ -78,7 +78,7 @@ class DiscussGifController(Controller):
         query_string = werkzeug.urls.url_encode(
             {
                 "ids": ",".join(ids),
-                "key": ir_config.get_param("discuss.tenor_api_key"),
+                "key": ir_config.get_str("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
                 "media_filter": "tinygif",
             }

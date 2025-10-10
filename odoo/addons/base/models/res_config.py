@@ -135,7 +135,16 @@ class ResConfigSettings(models.TransientModel):
 
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
             ``execute``` will save its value in an ir.config.parameter (global setting for the
-            database).
+            database). Its default value will be used as the initial value when the config parameter
+            record doesn't exist. If the field also has 'use_default_if_falsy', its default value
+            will also be used when read when the config parameter has a falsy value.
+
+            The field declaration should be consistent with its config parameter's use case.
+            ``fields.Char(config_parameter='config_key', default='default')``
+            ``env['ir.config_parameter'].get_str('config_key', 'default')``
+
+            ``fields.Char(config_parameter='config_key', use_default_if_falsy=True, default='default')``
+            ``env['ir.config_parameter'].get_str('config_key') or 'default'``
 
         *   For the other fields, the method ``execute`` invokes `set_values`.
             Override it to implement the effect of those fields.
@@ -150,7 +159,7 @@ class ResConfigSettings(models.TransientModel):
 
     def _valid_field_parameter(self, field, name):
         return (
-            name in ('default_model', 'config_parameter')
+            name in ('default_model', 'config_parameter', 'use_default_if_falsy')
             or field.type in ('boolean', 'selection') and name in ('group', 'implied_group')
             or super()._valid_field_parameter(field, name)
         )
@@ -260,34 +269,28 @@ class ResConfigSettings(models.TransientModel):
             res[f'module_{module.name}'] = module.state in ('installed', 'to install', 'to upgrade')
 
         # config: get & convert stored ir.config_parameter (or default)
-        WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
         for name, icp in classified['config']:
             field = self._fields[name]
-            value = IrConfigParameter.get_param(icp, field.default(self) if field.default else False)
-            if value is not False:
-                if field.type == 'many2one':
-                    try:
-                        # Special case when value is the id of a deleted record, we do not want to
-                        # block the settings screen
-                        value = self.env[field.comodel_name].browse(int(value)).exists().id
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = False
-                elif field.type == 'integer':
-                    try:
-                        value = int(value)
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = 0
-                elif field.type == 'float':
-                    try:
-                        value = float(value)
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = 0.0
-                elif field.type == 'boolean':
-                    value = bool(value)
-            res[name] = value
+            match field.type:
+                case 'char' | 'datetime' | 'selection':
+                    value = IrConfigParameter.get_str(icp, field.default(self) if field.default else False)
+                case 'integer':
+                    value = IrConfigParameter.get_int(icp, field.default(self) if field.default else 0)
+                case 'many2one':
+                    value = IrConfigParameter.get_int(icp, field.default(self) if field.default else 0)
+                    if isinstance(value, models.BaseModel):
+                        value = value.id
+                    # Special case when value is the id of a deleted record, we do not want to
+                    # block the settings screen
+                    value = self.env[field.comodel_name].browse(value).exists().id
+                case 'float':
+                    value = IrConfigParameter.get_float(icp, field.default(self) if field.default else 0.0)
+                case 'boolean':
+                    value = IrConfigParameter.get_bool(icp, field.default(self) if field.default else False)
+                case _:
+                    raise ValueError(f"Invalid field type: {field.type}")
+            if value or not getattr(field, 'use_default_if_falsy', False):
+                res[name] = value
 
         res.update(self.get_values())
 
@@ -330,21 +333,29 @@ class ResConfigSettings(models.TransientModel):
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
-            current_value = IrConfigParameter.get_param(icp)
 
-            if field.type == 'char':
-                # storing developer keys as ir.config_parameter may lead to nasty
-                # bugs when users leave spaces around them
-                value = (value or "").strip() or False
-            elif field.type in ('integer', 'float'):
-                value = repr(value) if value else False
-            elif field.type == 'many2one':
-                # value is a (possibly empty) recordset
-                value = value.id
-
-            if current_value == str(value) or current_value == value:
-                continue
-            IrConfigParameter.set_param(icp, value)
+            match field.type:
+                case 'char' | 'datetime':
+                    # logically set the config as undefined when the value is False
+                    # storing developer keys as ir.config_parameter may lead to nasty
+                    # bugs when users leave spaces around them
+                    value = None if value is False else str(value).strip()
+                    IrConfigParameter.set_str(icp, value)
+                case 'selection':
+                    # False will be save as ''
+                    IrConfigParameter.set_str(icp, value)
+                case 'integer':
+                    IrConfigParameter.set_int(icp, value)
+                case 'many2one':
+                    value = value.id
+                    # empty record will save '0' in database
+                    IrConfigParameter.set_int(icp, value)
+                case 'float':
+                    IrConfigParameter.set_float(icp, value)
+                case 'boolean':
+                    IrConfigParameter.set_bool(icp, value)
+                case _:
+                    raise ValueError(f"Invalid field type: {field.type}")
 
     def execute(self):
         """
@@ -557,7 +568,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_open_template_user(self):
         action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
-        template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
+        template_user_id = self.env['ir.config_parameter'].sudo().get_int('base.template_portal_user_id')
         template_user = self.env['res.users'].browse(template_user_id)
         if not template_user.exists():
             raise UserError(_('Invalid template user. It seems it has been deleted.'))

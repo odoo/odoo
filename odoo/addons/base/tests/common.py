@@ -166,7 +166,7 @@ class TransactionCaseWithUserDemo(TransactionCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
@@ -191,7 +191,7 @@ class HttpCaseWithUserDemo(HttpCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
@@ -215,7 +215,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
@@ -340,7 +340,7 @@ class TransactionCaseWithUserPortal(TransactionCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
@@ -362,7 +362,7 @@ class HttpCaseWithUserPortal(HttpCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
@@ -529,7 +529,7 @@ class MockSmtplibCase:
     @classmethod
     def _init_mail_gateway(cls):
         cls.default_from_filter = False
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
+        cls.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', cls.default_from_filter)
 
     @classmethod
     def _init_mail_servers(cls):

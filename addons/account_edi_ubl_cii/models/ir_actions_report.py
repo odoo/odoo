@@ -11,7 +11,7 @@ class IrActionsReport(models.Model):
         collected_streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids)
 
         # allows to add factur-x.xml to custom PDF templates (comma separated list of template names)
-        custom_templates = self.env['ir.config_parameter'].sudo().get_param('account.custom_templates_facturx_list', '')
+        custom_templates = self.env['ir.config_parameter'].sudo().get_str('account.custom_templates_facturx_list')
         custom_templates = [report.strip() for report in custom_templates.split(',')]
 
         if (

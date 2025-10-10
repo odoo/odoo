@@ -16,7 +16,7 @@ class TestNemhandelParticipant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['ir.config_parameter'].sudo().set_param('l10n_dk.edi.mode', 'test')
+        cls.env['ir.config_parameter'].sudo().set_str('l10n_dk.edi.mode', 'test')
         cls.env.company.vat = 'DK12345674'
 
     @classmethod

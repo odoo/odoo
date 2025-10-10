@@ -797,7 +797,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     @api.model
     def _get_db_identifier(self):
-        database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        database_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         return _sha256(database_uuid)
 
     @api.model

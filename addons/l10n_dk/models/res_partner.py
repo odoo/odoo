@@ -148,7 +148,7 @@ class ResPartner(models.Model):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
         nemhandel_user = self.env.company.sudo().nemhandel_edi_user
-        edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_param('l10n_dk.edi.mode')
+        edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode')
         sml_zone = 'edel.sml-demo' if edi_mode == 'test' else 'edel.sml'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.dataudveksling.dk/{endpoint_participant}"
         try:
@@ -198,7 +198,7 @@ class ResPartner(models.Model):
             return False
         service_href = service_metadata.attrib.get('href', '')
         nemhandel_user = self.env.company.sudo().nemhandel_edi_user
-        edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_param('l10n_dk.edi.mode')
+        edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode')
         smp_nemhandel_url = 'http://smp-demo.nemhandel.dk' if edi_mode == 'test' else 'http://smp.nemhandel.dk'
 
         return edi_identification == participant_identifier and service_href.startswith(smp_nemhandel_url)

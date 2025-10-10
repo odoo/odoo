@@ -232,11 +232,7 @@ class CrmRevealRule(models.Model):
         created lead with given IP. So, we unlink crm.reveal.view with same IP
         as a already created lead.
         """
-        months_valid = self.env['ir.config_parameter'].sudo().get_param('reveal.lead_month_valid', DEFAULT_REVEAL_MONTH_VALID)
-        try:
-            months_valid = int(months_valid)
-        except ValueError:
-            months_valid = DEFAULT_REVEAL_MONTH_VALID
+        months_valid = self.env['ir.config_parameter'].sudo().get_int('reveal.lead_month_valid') or DEFAULT_REVEAL_MONTH_VALID
         domain = []
         domain.append(('reveal_ip', '!=', False))
         domain.append(('create_date', '>', fields.Datetime.to_string(datetime.date.today() - relativedelta(months=months_valid))))
@@ -346,11 +342,11 @@ class CrmRevealRule(models.Model):
             views.write({'reveal_state': 'not_found'})
             views.flush_recordset()
             # reset notified parameter to re-send credit notice if appears again
-            self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
+            self.env['ir.config_parameter'].sudo().set_bool('reveal.already_notified', False)
         return True
 
     def _iap_contact_reveal(self, params, timeout=300):
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
+        endpoint = (self.env['ir.config_parameter'].sudo().get_str('reveal.endpoint') or DEFAULT_ENDPOINT) + '/iap/clearbit/1/reveal'
         return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
 
     def _create_lead_from_response(self, result):

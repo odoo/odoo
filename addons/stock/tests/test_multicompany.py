@@ -658,7 +658,7 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(out_move.state, 'cancel')
 
         # Propagate cancel
-        self.env['ir.config_parameter'].sudo().set_param('stock.cancel_moves_origin', True)
+        self.env['ir.config_parameter'].sudo().set_bool('stock.cancel_moves_origin', True)
         orderpoint._procure_orderpoint_confirm()
         moves = self.env['stock.move'].search([('product_id', '=', product.id), ('state', '!=', 'cancel')])
         self.assertEqual(len(moves), 2)

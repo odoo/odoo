@@ -173,10 +173,10 @@ class TestMailUtils(MailCommon):
 
     def test_migrate_icp_to_domain(self):
         """ Test ICP to alias domain migration """
-        self.env["ir.config_parameter"].set_param("mail.catchall.domain", "test.migration.com")
-        self.env["ir.config_parameter"].set_param("mail.bounce.alias", "migrate+bounce")
-        self.env["ir.config_parameter"].set_param("mail.catchall.alias", "migrate+catchall")
-        self.env["ir.config_parameter"].set_param("mail.default.from", "migrate+default_from")
+        self.env["ir.config_parameter"].set_str("mail.catchall.domain", "test.migration.com")
+        self.env["ir.config_parameter"].set_str("mail.bounce.alias", "migrate+bounce")
+        self.env["ir.config_parameter"].set_str("mail.catchall.alias", "migrate+catchall")
+        self.env["ir.config_parameter"].set_str("mail.default.from", "migrate+default_from")
 
         existing = self.env["mail.alias.domain"].search([('name', '=', 'test.migration.com')])
         self.assertFalse(existing)

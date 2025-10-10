@@ -322,12 +322,6 @@ class ProductPricelist(models.Model):
 
         if remaining_partner_ids:
             IrConfigParameter = self.env['ir.config_parameter'].sudo()
-
-            def convert_to_int(string_value):
-                try:
-                    return int(string_value)
-                except (TypeError, ValueError, OverflowError):
-                    return None
             # get fallback pricelist when no pricelist for a given country
             pl_fallback = (
                 ProductPricelist.search(pl_domain + [('country_group_ids', '=', False)], limit=1) or
@@ -338,8 +332,8 @@ class ProductPricelist(models.Model):
                 # however if the property_product_pricelist is not specified
                 # the result of the previous line should have high priority
                 # when computing
-                ProductPricelist.browse(convert_to_int(IrConfigParameter.get_param(f'res.partner.property_product_pricelist_{company_id}'))) or
-                ProductPricelist.browse(convert_to_int(IrConfigParameter.get_param('res.partner.property_product_pricelist'))) or
+                ProductPricelist.browse(IrConfigParameter.get_int(f'res.partner.property_product_pricelist_{company_id}')) or
+                ProductPricelist.browse(IrConfigParameter.get_int('res.partner.property_product_pricelist')) or
                 ProductPricelist.search(pl_domain, limit=1)
             )
             # group partners by country, and find a pricelist for each country

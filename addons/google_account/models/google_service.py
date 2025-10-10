@@ -31,7 +31,7 @@ def _get_client_secret(ICP_sudo, service):
     :return: The ICP value
     :rtype: str
     """
-    return ICP_sudo.get_param('google_%s_client_secret' % service)
+    return ICP_sudo.get_str('google_%s_client_secret' % service)
 
 
 class GoogleService(models.AbstractModel):
@@ -41,7 +41,7 @@ class GoogleService(models.AbstractModel):
     def _get_client_id(self, service):
         # client id is not a secret, and can be leaked without risk. e.g. in clear in authorize uri.
         ICP = self.env['ir.config_parameter'].sudo()
-        return ICP.get_param('google_%s_client_id' % service)
+        return ICP.get_str('google_%s_client_id' % service)
 
     @api.model
     def _get_authorize_uri(self, service, scope, redirect_uri, state=None, approval_prompt=None, access_type=None):

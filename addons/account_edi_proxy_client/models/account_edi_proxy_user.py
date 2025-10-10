@@ -149,7 +149,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         edi_identification = self._get_proxy_identification(company, proxy_type)
 
         return {
-            'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
+            'dbuuid': company.env['ir.config_parameter'].get_str('database.uuid'),
             'company_id': company.id,
             'edi_identification': edi_identification,
             'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),

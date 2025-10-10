@@ -123,7 +123,7 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super().set_values()
         if self.default_invoice_policy != 'order':
-            self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
+            self.env['ir.config_parameter'].set_bool('sale.automatic_invoice', False)
 
     # === ACTION METHODS === #
 

@@ -26,8 +26,8 @@ class MailPush(models.Model):
             return
 
         ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
-        vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
-        vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
+        vapid_private_key = ir_parameter_sudo.get_str('mail.web_push_vapid_private_key')
+        vapid_public_key = ir_parameter_sudo.get_str('mail.web_push_vapid_public_key')
         if not vapid_private_key or not vapid_public_key:
             return
 
