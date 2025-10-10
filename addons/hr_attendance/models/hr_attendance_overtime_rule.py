@@ -144,10 +144,10 @@ class HrAttendanceOvertimeRule(models.Model):
                 and not rule.expected_hours_from_contract
                 and not rule.expected_hours
             ):
-                raise ValidationError(self.env._("Rule '%(name)s' is based off quantity, but the usual amount of work hours is not specified"), name=rule.name)
+                raise ValidationError(self.env._("Rule '%(name)s' is based off quantity, but the usual amount of work hours is not specified", name=rule.name))
 
             if rule.base_off == 'quantity' and not rule.quantity_period:
-                raise ValidationError(self.env._("Rule '%(name)s' is based off quantity, but the period is not specified"), name=rule.name)
+                raise ValidationError(self.env._("Rule '%(name)s' is based off quantity, but the period is not specified", name=rule.name))
 
     # Timing rule well defined
     @api.constrains('base_off', 'timing_type', 'resource_calendar_id')
