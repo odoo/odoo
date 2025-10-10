@@ -302,6 +302,9 @@ class Website(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
+        website = self.search_count([('id', 'not in', self.ids)])
+        if not website:
+            raise UserError(_('You must keep at least one website.'))
         default_website = self.env.ref('website.default_website', raise_if_not_found=False)
         if default_website and default_website in self:
             raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
