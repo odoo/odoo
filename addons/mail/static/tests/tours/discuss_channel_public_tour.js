@@ -180,7 +180,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
-            trigger: ".modal:contains(Confirmation) .btn:contains(Ok)",
+            trigger: ".modal:contains(Delete Attachment) .btn:contains(Delete Attachment)",
             run: "click",
         },
         {

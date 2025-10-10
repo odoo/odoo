@@ -45,7 +45,9 @@
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
                         <button name="action_assign"  type="object" string="Check availability"/>
-                        <button name="action_cancel" type="object" string="Cancel" confirm="Are you sure you want to cancel these manufacturing orders?"/>
+                        <button name="action_cancel" type="object" string="Cancel"
+                            confirm="Are you sure you want to cancel these manufacturing orders?&#10;This action cannot be undone."
+                            confirm-title="Cancel Manufacturing Orders" confirm-label="Cancel these Orders"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
@@ -201,9 +203,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
-                            confirm="Are you sure you want to cancel this manufacturing order?"
-                            confirm-label="Confirm"
-                            cancel-label="Discard"/>
+                            confirm="Are you sure you want to cancel this manufacturing order?&#10;This action cannot be undone."
+                            confirm-title="Cancel Manufacturing Order"
+                            confirm-label="Cancel this Order"/>
                     <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
                 </header>
                 <sheet>

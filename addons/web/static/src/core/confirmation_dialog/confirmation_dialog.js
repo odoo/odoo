@@ -35,7 +35,7 @@ export class ConfirmationDialog extends Component {
     };
     static defaultProps = {
         confirmLabel: _t("Ok"),
-        cancelLabel: _t("Cancel"),
+        cancelLabel: _t("Discard"),
         confirmClass: "btn-primary",
         title: _t("Confirmation"),
     };

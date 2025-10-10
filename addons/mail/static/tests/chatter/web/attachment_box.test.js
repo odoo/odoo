@@ -65,7 +65,7 @@ test("remove attachment should ask for confirmation", async () => {
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
     await click("button[title='Remove']");
-    await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
+    await contains(".modal-body", { text: 'Are you sure you want to delete "Blah.txt"?\nThis action cannot be undone.' });
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
