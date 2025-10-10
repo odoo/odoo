@@ -22,6 +22,7 @@ import { makeEnv, startServices } from "@web/env";
         env,
         getTemplate,
         dev: env.debug,
+        translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,
     });
     odoo.__WOWL_DEBUG__ = { root };
