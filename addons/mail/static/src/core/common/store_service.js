@@ -321,13 +321,13 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
-        const thread = await this.createGroupChat({
+        const channel = await this.createGroupChat({
             default_display_mode: "video_full_screen",
             partners_to: [this.self.id],
         });
         await this.store.chatHub.initPromise;
-        this.ChatWindow.get(thread)?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].toggleCall(thread.channel, { camera: true });
+        this.ChatWindow.get(channel.thread)?.update({ autofocus: 0 });
+        await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
         if (this.rtc.selfSession) {
             this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
         }
