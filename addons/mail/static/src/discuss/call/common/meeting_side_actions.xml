@@ -3,7 +3,7 @@
     <t t-name="mail.MeetingSideActions">
         <t t-set="dummy" t-value="computeActions()"/>
         <div class="o-mail-MeetingSideActions d-flex">
-            <ActionList actions="actions" inline="true" hasBtnBg="true" thread="store.rtc.channel" odooControlPanelSwitchStyle="true"/>
+            <ActionList actions="actions" inline="true" hasBtnBg="true" thread="store.rtc.channel?.thread" odooControlPanelSwitchStyle="true"/>
         </div>
     </t>
 </templates>

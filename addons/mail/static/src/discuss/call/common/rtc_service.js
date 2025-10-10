@@ -271,17 +271,12 @@ export class Rtc extends Record {
             );
         },
     });
-    channel = fields.One("mail.thread", {
+    channel = fields.One("discuss.channel", {
         compute() {
             if (this.state.channel) {
                 return this.state.channel;
             }
-            if (this._remotelyHostedChannelId) {
-                return this.store["mail.thread"].insert({
-                    model: "discuss.channel",
-                    id: this._remotelyHostedChannelId,
-                });
-            }
+            return this._remotelyHostedChannelId;
         },
         onUpdate() {
             if (!this.channel) {
@@ -641,18 +636,19 @@ export class Rtc extends Record {
     /**
      * Notifies the server and does the cleanup of the current call.
      */
-    async leaveCall(channel = this.state.channel) {
+    async leaveCall(thread = this.state.channel.thread) {
         this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
-        await this.rpcLeaveCall(channel);
-        this.endCall(channel);
+        await this.rpcLeaveCall(thread);
+        this.endCall(thread);
         this.state.hasPendingRequest = false;
     }
 
     /**
-     * @param {import("models").Thread} [channel]
+     * @param {import("models").Thread} [thread]
      */
-    endCall(channel = this.state.channel) {
+    endCall(thread = this.state.channel.thread) {
+        const channel = thread.channel;
         this._endHost();
         if (channel.self_member_id) {
             channel.self_member_id.rtc_inviting_session_id = undefined;
@@ -728,7 +724,7 @@ export class Rtc extends Record {
     /** @param {Object} props Properties to pass to the meeting component. */
     async enterFullscreen(props) {
         const Meeting = registry.category("discuss.call/components").get("Meeting");
-        this.store.fullscreenChannel = this.channel?.channel;
+        this.store.fullscreenChannel = this.channel;
         await this.fullscreen.enter(Meeting, {
             id: CALL_FULLSCREEN_ID,
             keepBrowserHeader: true,
@@ -743,12 +739,13 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} channel
+     * @param {import("models").Thread} thread
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { audio = true, camera } = {}) {
+    async toggleCall(thread, { audio = true, camera } = {}) {
+        const channel = thread.channel;
         if (channel.id === this._remotelyHostedChannelId) {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
             this.clear();
@@ -764,14 +761,14 @@ export class Rtc extends Record {
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
-            await this.leaveCall(this.state.channel);
+            await this.leaveCall(this.state.channel.thread);
         }
         if (!isActiveCall) {
             const joinCallOpts = { audio, camera };
             if (this.microphonePermission !== "granted") {
                 joinCallOpts.audio = false;
             }
-            await this.joinCall(channel, joinCallOpts);
+            await this.joinCall(channel.thread, joinCallOpts);
         }
     }
 
@@ -1090,7 +1087,7 @@ export class Rtc extends Record {
                 if (!this.isHost) {
                     return;
                 }
-                await this.leaveCall(this.channel);
+                await this.leaveCall(this.channel?.thread);
                 return;
             }
             case CROSS_TAB_CLIENT_MESSAGE.UPDATE_VOLUME: {
@@ -1288,7 +1285,7 @@ export class Rtc extends Record {
                     this.selfSession?.persona.main_user_id?.share !== false ||
                     this.serverInfo ||
                     this.state.fallbackMode ||
-                    !session?.channel.eq(this.state.channel)
+                    !session?.channel.channel?.eq(this.state.channel)
                 ) {
                     return;
                 }
@@ -1446,12 +1443,13 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} channel
+     * @param {import("models").Thread} thread
      * @param {object} [initialState]
      * @param {boolean} [initialState.audio] whether to request and use the user audio input (microphone) at start
      * @param {boolean} [initialState.camera] whether to request and use the user video input (camera) at start
      */
-    async joinCall(channel, { audio = true, camera = false } = {}) {
+    async joinCall(thread, { audio = true, camera = false } = {}) {
+        const channel = thread.channel;
         if (!IS_CLIENT_RTC_COMPATIBLE) {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
@@ -1519,7 +1517,7 @@ export class Rtc extends Record {
                 event.preventDefault();
             })
         );
-        this.channel?.focusAvailableVideo();
+        this.channel?.thread.focusAvailableVideo();
     }
 
     newLogs() {
