@@ -61,15 +61,19 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
                 this.dependencies.selection.getSelectionData();
             if (
                 !currentSelectionIsInEditable ||
-                // make it a resource for adding other cases?
-                editableSelection.commonAncestorContainer.nodeName === "FIGURE"
+                // edge case: when click the image, then ctrl+a the selection should stay on the image
+                editableSelection.commonAncestorContainer.nodeName === "FIGURE" ||
+                // edge case: when main body is empty, and click the footer outer blue container
+                // then ctrl+a, the selection is collapsed in editable but to the main body div,
+                // which causes options updating
+                (editableSelection.anchorNode.isContentEditable === false &&
+                    editableSelection.isCollapsed)
             ) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 return;
             }
             ev.preventDefault();
-            // make it a resource for adding other cases?
             const closestSpecialBlock = closestElement(
                 editableSelection.anchorNode,
                 this.special_block_with_text_in_non_div.join(",")
@@ -153,7 +157,6 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
             return;
         }
 
-        // make it a resource for adding other cases?
         const closestSpecialBlock = closestElement(
             editableSelection.anchorNode,
             this.special_block_with_text_in_non_div.join(",")
