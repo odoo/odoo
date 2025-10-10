@@ -68,12 +68,6 @@ const threadPatch = {
     get allowCalls() {
         return super.allowCalls && !this.parent_channel_id;
     },
-    delete() {
-        if (this.model === "discuss.channel") {
-            this.store.env.services.bus_service.deleteChannel(this.busChannel);
-        }
-        super.delete(...arguments);
-    },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel?.channel_type);
     },

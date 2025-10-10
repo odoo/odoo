@@ -68,7 +68,6 @@ const threadPatch = {
             compute() {
                 return this.model === "discuss.channel" ? this.id : undefined;
             },
-            onDelete: (r) => r?.delete(),
         });
         this.channel_member_ids = fields.Many("discuss.channel.member", {
             inverse: "channel_id",

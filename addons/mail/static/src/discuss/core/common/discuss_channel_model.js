@@ -5,13 +5,6 @@ export class DiscussChannel extends Record {
     static _inherits = { "mail.thread": "thread" };
     static id = "id";
 
-    static new() {
-        const channel = super.new(...arguments);
-        // ensure thread is set before reading/writing any other field
-        channel.thread = { id: channel.id, model: "discuss.channel" };
-        return channel;
-    }
-
     /** @type {number} */
     id = fields.Attr(undefined, {
         onUpdate() {
@@ -22,6 +15,9 @@ export class DiscussChannel extends Record {
         },
     });
     thread = fields.One("mail.thread", {
+        compute() {
+            return { id: this.id, model: "discuss.channel" };
+        },
         inverse: "channel",
         onDelete: (r) => r?.delete(),
     });
