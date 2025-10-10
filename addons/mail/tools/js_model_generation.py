@@ -37,6 +37,7 @@ MODELS_TO_EXPOSE = [
     "mail.activity",
     "mail.followers",
     "mail.guest",
+    "mail.link.preview",
     "mail.message",
     "mail.message.link.preview",
     "res.groups",
