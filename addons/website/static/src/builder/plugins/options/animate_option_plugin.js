@@ -24,6 +24,7 @@ export class AnimateOptionPlugin extends Plugin {
             const settledProms = await Promise.all(proms);
             return settledProms.length && settledProms.every(Boolean);
         },
+        isFloatingToolbar: false,
     };
     resources = {
         builder_options: [
@@ -48,7 +49,11 @@ export class AnimateOptionPlugin extends Plugin {
                     getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
                     isActive: this.isAnimatedTextActive.bind(this),
                     isDisabled: this.isAnimatedTextDisabled.bind(this),
-                    animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
+                    animateOptionProps: {
+                        ...this.animateOptionProps,
+                        requireAnimation: true,
+                        isFloatingToolbar: true,
+                    },
                 },
                 isAvailable: isHtmlContentSupported,
             },

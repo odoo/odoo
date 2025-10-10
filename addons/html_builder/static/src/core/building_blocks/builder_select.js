@@ -36,6 +36,7 @@ export class BuilderSelect extends Component {
                 fixedButton: { type: Object, optional: true },
             },
         },
+        isFloatingToolbar: { type: Boolean, optional: true },
     };
     static components = {
         Dropdown,
