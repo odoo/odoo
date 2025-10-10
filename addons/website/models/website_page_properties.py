@@ -64,7 +64,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
     @api.depends('url', 'website_id.homepage_url')
     def _compute_is_homepage(self):
         for record in self:
-            url = record.url
+            url = self.env['ir.http']._remove_lang_from_url(record.url)
             current_homepage_url = record.website_id.homepage_url or '/'
             # If the url field matches the website's homepage_url, we know this
             # is the homepage.
@@ -77,6 +77,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
         self.ensure_one()
         url = self.url
         if self.is_homepage:
+            url = self.env['ir.http']._remove_lang_from_url(url)
             if url and url != '/':
                 self.website_id.homepage_url = url
         else:
