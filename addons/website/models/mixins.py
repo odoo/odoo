@@ -1,18 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import re
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import escape_psql
+from odoo.tools import split_every
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.json import scriptsafe as json_safe
-
-logger = logging.getLogger(__name__)
 
 
 class WebsiteSeoMetadata(models.AbstractModel):
@@ -191,6 +189,12 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
     is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
+    publish_on = fields.Datetime(
+        "Auto publish on",
+        copy=False,
+        help="Automatically publish the page on the chosen date and time.",
+    )
+    published_date = fields.Datetime("Published date", copy=False)
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full relative URL to access the document through the website.')
     # The compute dependency (for get_base_url) must be added and get_base_url must be overridden if needed
@@ -212,10 +216,118 @@ class WebsitePublishedMixin(models.AbstractModel):
     def _default_is_published(self):
         return False
 
+    def action_unschedule(self):
+        self.write({'publish_on': False})
+
+    def _models_generator(self):
+        """Yield every stored model defining a ``publish_on`` field."""
+        field_records = (
+            self.env['ir.model.fields']
+            .sudo()
+            .search([
+                ('name', '=', 'publish_on'),
+                ('model_id.abstract', '=', False),
+                ('store', '=', True),
+                ('related', '=', False),
+            ])
+        )
+        seen = set()
+        for field in field_records:
+            model_name = field.model
+            if model_name in seen or model_name not in self.env:
+                continue
+            model = self.env[model_name]
+            if {'id', 'is_published'} <= set(model._fields):
+                seen.add(model_name)
+                yield model
+
+    def _cron_publish_scheduled_pages(self):
+        """Cron helper: publish every scheduled record whose deadline passed."""
+        publish_domain = [('publish_on', '!=', False), ('publish_on', '<=', 'now')]
+        models_to_process = []
+        total_to_process = 0
+
+        for model in self._models_generator():
+            model_sudo = model.sudo()
+            to_publish_count = model_sudo.search_count(publish_domain)
+            if to_publish_count:
+                models_to_process.append(model_sudo)
+                total_to_process += to_publish_count
+
+        if not total_to_process:
+            return
+
+        cron = self.env['ir.cron']
+        if not cron._commit_progress(remaining=total_to_process):
+            return
+
+        for model in models_to_process:
+            pages = model.search(publish_domain, order='publish_on asc, id asc')
+            for batch_ids in split_every(100, pages.ids):
+                batch = model.browse(batch_ids)
+                batch.write({'is_published': True, 'publish_on': False})
+                if not cron._commit_progress(processed=len(batch)):
+                    return
+
+    def _manage_next_scheduled_action(self):
+        scheduled_action = self.env.ref(
+            'website.ir_cron_publish_scheduled_pages',
+            raise_if_not_found=False,
+        )
+        if not scheduled_action:
+            raise UserError(
+                _(
+                    'The scheduled action "Website Publish Mixin: Publish scheduled website page" '
+                    "has been deleted. Please contact your administrator to restore it or reinstall the website module."
+                )
+            )
+
+        cron_trigger_env = self.env['ir.cron.trigger'].sudo()
+        next_trigger = cron_trigger_env.search(
+            [
+                ('cron_id', '=', scheduled_action.id),
+                ('call_at', '>=', fields.Datetime.now()),
+            ],
+            order='call_at asc',
+            limit=1,
+        )
+        next_trigger_datetime = next_trigger.call_at if next_trigger else False
+
+        scheduled_datetimes = []
+        for model in self._models_generator():
+            if model._name == 'website.published.mixin':
+                continue
+            record = model.sudo().search(
+                [('publish_on', '!=', False)],
+                order='publish_on asc',
+                limit=1,
+            )
+            if record:
+                scheduled_datetimes.append(record.publish_on)
+
+        if not scheduled_datetimes:
+            cron_trigger_env.search([
+                ('cron_id', '=', scheduled_action.id),
+                ('call_at', '>=', fields.Datetime.now()),
+            ]).unlink()
+            return False
+
+        scheduled_datetimes.sort()
+        earliest_datetime = scheduled_datetimes[0]
+
+        if not next_trigger_datetime or earliest_datetime < next_trigger_datetime:
+            cron_trigger_env.search([
+                ('cron_id', '=', scheduled_action.id),
+                ('call_at', '>=', fields.Datetime.now()),
+            ]).unlink()
+            scheduled_action._trigger(earliest_datetime)
+
+        return True
+
     def website_publish_button(self):
         self.ensure_one()
         value = not self.website_published
-        self.write({'website_published': value})
+        self.write({'website_published': value, 'publish_on': False})
         return value
 
     def open_website_url(self):
@@ -224,19 +336,140 @@ class WebsitePublishedMixin(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
-        if any(record.is_published and not record.can_publish for record in records):
-            raise AccessError(self._get_can_publish_error_message())
+        schedule_needed = False
+        for record in records:
+            if record.is_published and not record.can_publish:
+                raise AccessError(self._get_can_publish_error_message())
+            if 'active' in record._fields and not record.active and record.is_published:
+                record.is_published = False
+            if record.publish_on:
+                if record.is_published:
+                    record.is_published = False
+                schedule_needed = True
+
+        records._finalize_publication()
+
+        if schedule_needed:
+            self._manage_next_scheduled_action()
 
         return records
 
     def write(self, vals):
-        if 'is_published' in vals and any(not record.can_publish for record in self):
+        publish_keys = {'is_published', 'website_published'}
+        if publish_keys & set(vals) and any(not record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
-        return super().write(vals)
+        # Copy to avoid mutating caller provided dictionary in-place.
+        vals = dict(vals)
+
+        if vals.get('is_published') or vals.get('website_published'):
+            vals['publish_on'] = False
+
+        if 'active' in vals and vals['active'] is False:
+            vals['is_published'] = False
+            vals['publish_on'] = False
+
+        if vals.get('publish_on'):
+            vals.setdefault('is_published', False)
+
+        previously_published = {record.id: record.is_published for record in self}
+
+        res = super().write(vals)
+
+        if 'publish_on' in vals:
+            self._manage_next_scheduled_action()
+
+        if publish_keys & set(vals) and not self.env.context.get('skip_publish_post_process'):
+            newly_published = self.filtered(
+                lambda record: record.is_published
+                and not previously_published.get(record.id)
+                and not record.published_date
+            )
+            newly_published._finalize_publication()
+
+        return res
 
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
+
+    def _check_for_action_post_publish(self):
+        """Hook for subclasses to add side effects when publishing."""
+        return self.env['mail.message']
+
+    def _finalize_publication(self):
+        """Run publication side effects outside of write/create.
+
+        This centralises the logic that was previously in the ORM constraint so
+        that it can be reused by the cron and by manual writes without risking
+        long-lived transactions.  It is intentionally chatty: the early exits
+        avoid needless work while the notification plumbing mirrors what the
+        mail composer would have done during a user-facing publish.
+        """
+        if self.env.context.get('skip_publish_post_process'):
+            return
+
+        records = self.filtered(lambda record: record.is_published and not record.published_date)
+        if not records:
+            return
+
+        records.invalidate_recordset(['website_published'])
+
+        messages = self.env['mail.message']
+        pending_notifications = []
+        for record in records:
+            # `_check_for_action_post_publish` may return a message (e.g. blog
+            # posts) or an empty recordset.  Either way the record needs to be
+            # revisited first to avoid hitting stale `website_published` cache.
+            message = record.with_context(force_website_published=True)._check_for_action_post_publish()
+            if message:
+                messages |= message
+                pending_notifications.append(message)
+
+        if messages:
+            messages.invalidate_recordset(['notified_partner_ids'])
+
+        for message in pending_notifications:
+            target = self.env[message.model].browse(message.res_id).sudo()
+            message_sudo = message.sudo()
+            if not target:
+                continue
+            msg_vals = {
+                'partner_ids': message.partner_ids.ids,
+                'message_type': message.message_type,
+                'subtype_id': message.subtype_id.id,
+                'author_id': message.author_id.id,
+                'incoming_email_to': message.incoming_email_to,
+                'incoming_email_cc': message.incoming_email_cc,
+                'outgoing_email_to': message.outgoing_email_to,
+            }
+            recipients = target._notify_get_recipients(message_sudo, msg_vals=msg_vals)
+            if recipients:
+                # Mirror the normal path so that followers receive the exact
+                # same notifications they would have gotten if the message had
+                # been posted through the UI.
+                target._notify_thread(message_sudo, msg_vals=msg_vals, skip_existing=True)
+                message_sudo.invalidate_recordset(['notified_partner_ids', 'notification_ids'])
+                if not message_sudo.notification_ids:
+                    notif_vals = []
+                    for recipient in recipients:
+                        partner_id = recipient.get('id')
+                        if not partner_id:
+                            continue
+                        notif_vals.append({
+                            'author_id': message_sudo.author_id.id,
+                            'mail_message_id': message_sudo.id,
+                            'notification_status': 'sent',
+                            'notification_type': recipient.get('notif') or 'inbox',
+                            'res_partner_id': partner_id,
+                        })
+                    if notif_vals:
+                        self.env['mail.notification'].sudo().create(notif_vals)
+                        message_sudo.invalidate_recordset(['notified_partner_ids', 'notification_ids'])
+
+        records.with_context(skip_publish_post_process=True).write({
+            'published_date': fields.Datetime.now(),
+            'publish_on': False,
+        })
 
     @api.depends_context('uid')
     def _compute_can_publish(self):

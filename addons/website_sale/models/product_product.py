@@ -104,6 +104,10 @@ class ProductProduct(models.Model):
         res['url'] = self.website_url
         return res
 
+    def action_unschedule(self):
+        """Keep variants aligned with their template scheduling."""
+        return self.product_tmpl_id.action_unschedule()
+
     def _get_images(self):
         """Return a list of records implementing `image.mixin` to
         display on the carousel on the website for this variant.
