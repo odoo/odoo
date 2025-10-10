@@ -5,12 +5,11 @@ import contextlib
 import logging
 import requests
 from lxml import etree
-from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
-from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.tools.sql import column_exists, create_column
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -84,14 +83,11 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_participant_info(self, edi_identification):
-        hash_participant = md5(edi_identification.lower().encode()).hexdigest()
-        endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
-        edi_mode = self.env.company._get_peppol_edi_mode()
-        sml_zone = 'acc.edelivery' if edi_mode == 'test' else 'edelivery'
-        smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
-
+        peppol_mode = self.env.company._get_peppol_edi_mode()
+        endpoint = f'/api/peppol/1/get_partner_services/{edi_identification}'
+        url = f"{self.env['account_edi_proxy_client.user']._get_proxy_urls()['peppol'][peppol_mode]}{endpoint}"
         try:
-            response = requests.get(smp_url, timeout=TIMEOUT)
+            response = requests.get(url, timeout=TIMEOUT)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             _logger.debug(e)
