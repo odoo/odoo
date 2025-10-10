@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="google_calendar.GoogleCalendarComponent">
+<!--        <div t-if="state.googleHasCredentials and !state.googleIsSync and !state.googleIsPaused" id="google_calendar_sync" class="mx-1 d-inline-flex">-->
+        <div class="mx-1 d-inline-flex">
+            <button type="button" id="google_sync_pending" class="btn btn-primary text-nowrap" t-on-click="onGoogleSyncCalendar">
+                <b>Google</b>
+            </button>
+        </div>
+    </t>
+</templates>
