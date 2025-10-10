@@ -4,7 +4,7 @@
 from odoo.fields import Command
 from odoo.tests import Form
 from odoo.tests import common
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class TestMrpByProduct(common.TransactionCase):
@@ -428,7 +428,11 @@ class TestMrpByProduct(common.TransactionCase):
         mo = mo_form.save()
         mo.action_confirm()
 
+        with self.assertRaises(UserError):
+            mo.move_byproduct_ids.write({'product_id': self.product_c_id})
+        mo.move_byproduct_ids._action_cancel()
         mo.move_byproduct_ids.write({'product_id': self.product_c_id})
+        mo.move_byproduct_ids.state = 'assigned'
         mo.button_mark_done()
         self.assertEqual(mo.move_byproduct_ids.product_id, mo.move_byproduct_ids.move_line_ids.product_id)
 
@@ -450,7 +454,11 @@ class TestMrpByProduct(common.TransactionCase):
 
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)
 
+        with self.assertRaises(UserError):
+            mo.move_byproduct_ids.write({'product_id': self.product_c_id})
+        mo.move_byproduct_ids._action_cancel()
         mo.move_byproduct_ids.write({'product_id': self.product_c_id})
+        mo.move_byproduct_ids.state = 'assigned'
 
         mo.button_mark_done()
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
@@ -466,7 +474,11 @@ class TestMrpByProduct(common.TransactionCase):
         mo = mo_form.save()
         mo.action_confirm()
 
+        with self.assertRaises(UserError):
+            mo.move_byproduct_ids.write({'product_id': self.produced_serial.id})
+        mo.move_byproduct_ids._action_cancel()
         mo.move_byproduct_ids.write({'product_id': self.produced_serial.id})
+        mo.move_byproduct_ids.state = 'assigned'
 
         mo.move_byproduct_ids.lot_ids = [(4, self.sn_1.id)]
         mo.move_byproduct_ids.lot_ids = [(4, self.sn_2.id)]

@@ -787,7 +787,8 @@ class MrpProduction(models.Model):
 
         production_with_move_finished_ids_to_unlink = self.browse(production_with_move_finished_ids_to_unlink_ids)
 
-        # delete to remove existing moves from database and clear to remove new records
+        # reset to draft and delete to remove existing moves from database and clear to remove new records
+        production_with_move_finished_ids_to_unlink.move_finished_ids.write({'state': 'draft'})
         production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.delete(m) for m in production_with_move_finished_ids_to_unlink.move_finished_ids.ids]
         production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.clear()]
 
