@@ -35,6 +35,7 @@ MODELS_TO_INCLUDE = [
 MODELS_TO_EXPOSE = [
     "discuss.call.history",
     "discuss.channel.member",
+    "discuss.channel.rtc.session",
     "mail.activity",
     "mail.activity.type",
     "mail.canned.response",
