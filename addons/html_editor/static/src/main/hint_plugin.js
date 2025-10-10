@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
+import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 
 /**
@@ -75,7 +75,13 @@ export class HintPlugin extends Plugin {
             for (const provideTargets of this.getResource("hint_targets_providers")) {
                 for (const target of provideTargets(selectionData, this.editable)) {
                     const nodeHint = hints.find((h) => target.matches(h.selector))?.text;
-                    if (target && nodeHint && isEmptyBlock(target) && !isProtected(target)) {
+                    if (
+                        target &&
+                        nodeHint &&
+                        isEmptyBlock(target) &&
+                        !isProtected(target) &&
+                        !descendants(target).some(isEditorTab)
+                    ) {
                         this.makeHint(target, nodeHint);
                     }
                 }

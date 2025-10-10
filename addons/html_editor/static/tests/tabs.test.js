@@ -80,7 +80,7 @@ describe("insert tabulation", () => {
         await testTabulation({
             contentBefore: `<p><font style="background-color: rgb(255,255,0);">\u200B[]</font></p>`,
             stepFunction: keydownTab,
-            contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">${oeTab(
+            contentAfterEdit: `<p>${oeTab(
                 TAB_WIDTH,
                 false
             )}<font style="background-color: rgb(255,255,0);">\u200B[]</font></p>`,
