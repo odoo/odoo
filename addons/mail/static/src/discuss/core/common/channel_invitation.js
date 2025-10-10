@@ -193,7 +193,7 @@ export class ChannelInvitation extends Component {
     async onClickInvite() {
         if (this.props.thread.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
-            if (this.props.thread.correspondent) {
+            if (this.props.thread.correspondent?.partner_id) {
                 partnerIds.unshift(this.props.thread.correspondent.partner_id.id);
             }
             await this.store.startChat(partnerIds);
@@ -235,8 +235,10 @@ export class ChannelInvitation extends Component {
                     return _t("Invite");
                 }
                 if (this.selectedPartners.length === 1) {
-                    const alreadyChat = Object.values(this.store.Thread.records).some((thread) =>
-                        thread.correspondent?.partner_id.eq(this.selectedPartners[0])
+                    const alreadyChat = Object.values(this.store.Thread.records).some(
+                        (thread) =>
+                            thread.channel_type === "chat" &&
+                            thread.correspondent?.partner_id?.eq(this.selectedPartners[0])
                     );
                     if (alreadyChat) {
                         return _t("Go to conversation");
