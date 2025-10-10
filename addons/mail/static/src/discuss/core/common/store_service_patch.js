@@ -61,7 +61,9 @@ const storeServicePatch = {
      */
     getRecentChatPartnerIds() {
         return Object.values(this["discuss.channel"].records)
-            .filter((channel) => channel?.channel_type === "chat" && channel.correspondent)
+            .filter(
+                (channel) => channel?.channel_type === "chat" && channel.correspondent?.partner_id
+            )
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
             .map((channel) => channel.correspondent.partner_id.id);
     },
