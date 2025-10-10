@@ -20,7 +20,7 @@ class IrEmbeddedActions(models.Model):
     python_method = fields.Char(help="Python method returning an action")
 
     user_id = fields.Many2one('res.users', string="User", help="User specific embedded action. If empty, shared embedded action", ondelete="cascade")
-    is_deletable = fields.Boolean(compute="_compute_is_deletable")
+    is_deletable = fields.Boolean(default=lambda self: not self.env.context.get('install_mode'))
     default_view_mode = fields.Char(string="Default View", help="Default view (if none, default view of the action is taken)")
     filter_ids = fields.One2many("ir.filters", "embedded_action_id", help="Default filter of the embedded action (if none, no filters)")
     is_visible = fields.Boolean(string="Embedded visibility", help="Computed field to check if the record should be visible according to the domain", compute="_compute_is_visible")
@@ -53,15 +53,6 @@ class IrEmbeddedActions(models.Model):
                 else:  # remove python_method in the vals since the vals is falsy.
                     del vals["python_method"]
         return super().create(vals_list)
-
-    # The record is deletable if it hasn't been created from a xml record (i.e. is not a default embedded action)
-    def _compute_is_deletable(self):
-        external_ids = self._get_external_ids()
-        for record in self:
-            record_external_ids = external_ids[record.id]
-            record.is_deletable = all(
-                ex_id.startswith(("__export__", "__custom__")) for ex_id in record_external_ids
-            )
 
     # Compute if the record should be visible to the user based on the domain applied to the active id of the parent
     # model and based on the groups allowed to access the record.
