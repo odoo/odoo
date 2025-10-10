@@ -64,6 +64,14 @@ test("should not display hint in paragraph with media content", async () => {
     expect(getContent(el)).toBe(content);
 });
 
+test("should not display hint in paragraph with tab", async () => {
+    const content =
+        '<p><span class="oe-tabs" contenteditable="false" style="width: 40px;">\t</span>\u200b[]</p>';
+    const { el } = await setupEditor(content);
+    // Unchanged, no empty paragraph hint.
+    expect(getContent(el)).toBe(content);
+});
+
 test("should not lose track of temporary hints on split block", async () => {
     const { el, editor, plugins } = await setupEditor("<p>[]</p>", {});
     expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);

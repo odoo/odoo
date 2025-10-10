@@ -55,6 +55,13 @@ describe("visibility", () => {
         expect(".o_we_power_buttons").not.toBeVisible();
     });
 
+    test("should not show power buttons on block p tag with tab", async () => {
+        await setupEditor(
+            `<p><span class="oe-tabs" contenteditable="false" style="width: 40px;">\t</span>\u200b[]</p>`
+        );
+        expect(".o_we_power_buttons").not.toBeVisible();
+    });
+
     test("should not show power buttons on non empty block P tag", async () => {
         await setupEditor("<p>[]<br><br></p>");
         expect(".o_we_power_buttons").not.toBeVisible();
