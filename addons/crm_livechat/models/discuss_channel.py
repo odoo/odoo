@@ -38,10 +38,16 @@ class DiscussChannel(models.Model):
                 i_start=Markup("<i>"),
                 i_end=Markup("</i>"),
             )
+            self.env.user._bus_send_transient_message(self, msg)
         else:
             lead = self._convert_visitor_to_lead(self.env.user.partner_id, key)
-            msg = _("Created a new lead: %s", lead._get_html_link())
-        self.env.user._bus_send_transient_message(self, msg)
+            msg = _(
+                "%(span_start)sCreated a new lead: %(link)s%(span_end)s",
+                span_start=Markup("<span>"),
+                link=lead._get_html_link(),
+                span_end=Markup("</span>"),
+            )
+            self.message_post(body=msg)
 
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
