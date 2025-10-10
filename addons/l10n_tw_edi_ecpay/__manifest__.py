@@ -2,7 +2,7 @@
 {
     "name": "Taiwan - E-invoicing",
     "countries": ["tw"],
-    "version": "1.0",
+    "version": "1.1",
     'icon': '/account/static/description/l10n.png',
     "category": "Accounting/Localizations/EDI",
     "summary": """E-invoicing using ECpay""",
