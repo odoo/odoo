@@ -442,13 +442,17 @@ class AccountMove(models.Model):
             })
         return partner_details
 
-    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details):
+    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details, reduce_base=False):
         """
         Create the dictionary with line details
         """
         sign = self.is_inbound() and -1 or 1
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details['tax_details'])
         quantity = line.quantity
+        total_taxes_for_reduction = sum(
+            tax_details_by_code.get(f"{key}_amount", 0.00)
+            for key in ('igst', 'cgst', 'sgst', 'cess', 'state_cess_non_advol', 'cess_non_advol')
+        )
         if line.discount == 100.00 or float_is_zero(quantity, 3):
             # Full discount or zero quantity
             unit_price_in_inr = line.currency_id._convert(
@@ -458,7 +462,10 @@ class AccountMove(models.Model):
                 line.date or fields.Date.context_today(self)
             )
         else:
-            unit_price_in_inr = ((sign * line.balance) / (1 - (line.discount / 100))) / quantity
+            line_value_without_discount = (sign * line.balance) / (1 - (line.discount / 100))
+            if reduce_base:
+                line_value_without_discount -= total_taxes_for_reduction
+            unit_price_in_inr = (line_value_without_discount) / quantity
 
         if unit_price_in_inr < 0 and quantity < 0:
             # If unit price and quantity both is negative then
@@ -467,6 +474,7 @@ class AccountMove(models.Model):
             unit_price_in_inr = -unit_price_in_inr
             quantity = -quantity
         in_round = self._l10n_in_round_value
+        signed_balance = (sign * line.balance) - total_taxes_for_reduction if reduce_base else sign * line.balance
         line_details = {
             'SlNo': str(index),
             'IsServc': line.product_id.type == 'service' and 'Y' or 'N',
@@ -482,7 +490,7 @@ class AccountMove(models.Model):
             # total amount is before discount
             'TotAmt': in_round(unit_price_in_inr * quantity),
             'Discount': in_round((unit_price_in_inr * quantity) * (line.discount / 100)),
-            'AssAmt': in_round(sign * line.balance),
+            'AssAmt': in_round(signed_balance),
             'GstRt': in_round(
                 (tax_details_by_code.get('igst_rate', 0.00)
                 or (tax_details_by_code.get('cgst_rate', 0.00) + tax_details_by_code.get('sgst_rate', 0.00))),
@@ -502,7 +510,7 @@ class AccountMove(models.Model):
                 tax_details_by_code.get('state_cess_non_advol_amount', 0.00)
             ),
             'OthChrg': in_round(tax_details_by_code.get('other_amount', 0.00)),
-            'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
+            'TotItemVal': in_round(signed_balance + line_tax_details.get('tax_amount', 0.00)),
         }
         if line.name:
             line_details['PrdDesc'] = line.name.replace("\n", "")
@@ -593,6 +601,14 @@ class AccountMove(models.Model):
         rounding_amount = sum(line.balance for line in self.line_ids if line.display_type == 'rounding') * sign
         global_discount_amount = sum(line.balance for line in global_discount_line) * -sign
         in_round = self._l10n_in_round_value
+        supply_type = self._l10n_in_get_supply_type(tax_details_by_code.get('igst_amount'))
+        reduce_base = tax_details_by_code.get('is_reverse_charge') or supply_type == 'EXPWP' and self.company_id.account_price_include == 'tax_included'
+        base_amount = tax_details["base_amount"]
+        if reduce_base:
+            base_amount -= sum(
+                    tax_details_by_code.get(f"{key}_amount", 0.00)
+                    for key in ('igst', 'cgst', 'sgst', 'cess', 'state_cess_non_advol', 'cess_non_advol')
+                )
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -623,12 +639,13 @@ class AccountMove(models.Model):
                 self._get_l10n_in_edi_line_details(
                     index,
                     line,
-                    tax_details_per_record.get(line, {})
+                    tax_details_per_record.get(line, {}),
+                    reduce_base
                 )
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": in_round(tax_details['base_amount'] + global_discount_amount),
+                "AssVal": in_round(base_amount + global_discount_amount),
                 "CgstVal": in_round(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": in_round(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": in_round(tax_details_by_code.get("igst_amount", 0.00)),
@@ -643,7 +660,7 @@ class AccountMove(models.Model):
                 "Discount": in_round(global_discount_amount),
                 "RndOffAmt": in_round(rounding_amount),
                 "TotInvVal": in_round(
-                    (tax_details["base_amount"] + tax_details["tax_amount"] + rounding_amount)),
+                    (base_amount + tax_details["tax_amount"] + rounding_amount)),
             },
         }
         if self.company_currency_id != self.currency_id:
