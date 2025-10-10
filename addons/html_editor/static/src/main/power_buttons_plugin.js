@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { isEmptyBlock } from "@html_editor/utils/dom_info";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { isEditorTab, isEmptyBlock } from "@html_editor/utils/dom_info";
+import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
 
 /** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
@@ -122,6 +122,7 @@ export class PowerButtonsPlugin extends Plugin {
             block?.matches(baseContainerGlobalSelector) &&
             editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
+            !descendants(block).some(isEditorTab) &&
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&
             !block.style.textAlign &&
