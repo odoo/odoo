@@ -404,11 +404,7 @@
                                 <group>
                                     <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"
                                         readonly="departure_state == 'done'"/>
-                                    <label for="departure_date" string="Contract End Date"/>
-                                    <div invisible="not departure_reason_id">
-                                        <field name="departure_date" nolabel="1" class="oe_inline"
-                                            readonly="departure_state == 'done'"/>
-                                    </div>
+                                    <field name="departure_date" readonly="1"/>
                                 </group>
                                 <notebook name="departure_notebook">
                                     <page string="Planned Actions" name="planned_actions">

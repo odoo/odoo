@@ -26,6 +26,7 @@ class HrEmployeeDeparture(models.Model):
         'hr.employee', string='Employee', required=True,
         default=_get_default_employee_id,
         domain=lambda self: self._get_domain_employee_id(),
+        ondelete="cascade",
     )
     state = fields.Selection([
         ('draft', 'Draft'),

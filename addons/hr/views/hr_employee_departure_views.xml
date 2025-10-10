@@ -7,13 +7,10 @@
             <form>
                 <sheet>
                     <field name="employee_id" invisible="1"/> <!-- used in computes -->
-                    <group>
+                    <group name="header_group">
                         <field name="employee_id"/>
                         <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                        <label for="departure_date" string="Contract End Date"/>
-                        <div invisible="not departure_reason_id">
-                            <field name="departure_date" nolabel="1" class="oe_inline"/>
-                        </div>
+                        <field name="departure_date" class="oe_inline"/>
                     </group>
                     <notebook name="departure_notebook">
                         <page string="Planned Actions" name="planned_actions">

@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group>
+                        <group name="header_group">
                             <field name="employee_ids" widget="many2many_avatar_employee"/>
                             <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
                             <label for="departure_date" string="Contract End Date"/>
