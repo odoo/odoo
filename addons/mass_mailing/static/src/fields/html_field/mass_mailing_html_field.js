@@ -122,7 +122,7 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     get withBuilder() {
-        return !this.props.readonly && this.state.activeTheme !== "basic";
+        return this.state.activeTheme !== "basic";
     }
 
     resetIframe() {
@@ -194,7 +194,7 @@ export class MassMailingHtmlField extends HtmlField {
         } else if (this.withBuilder) {
             return this.getBuilderConfig();
         } else {
-            return this.getSimpleEditorConfig();
+            return this.getBasicEditorConfig();
         }
     }
 
@@ -221,7 +221,7 @@ export class MassMailingHtmlField extends HtmlField {
         };
     }
 
-    getSimpleEditorConfig() {
+    getBasicEditorConfig() {
         const config = super.getConfig();
         const codeViewCommand = [config.resources?.user_commands]
             .filter(Boolean)
@@ -247,7 +247,7 @@ export class MassMailingHtmlField extends HtmlField {
                 this.mutex.exec(() =>
                     // The inlineField can not be updated to its final value at
                     // this point since the editor is needed to process the
-                    // theme template. (i.e. applying the default style).
+                    // theme template (i.e. to insert the Design Tab style).
                     // It will be updated onEditorReady since it has become empty.
                     this.props.record
                         .update({
@@ -305,7 +305,7 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async updateValue(value) {
-        await this.lastIframeLoaded;
+        const { bundles } = await this.lastIframeLoaded;
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
         const processingEl = this.iframeRef.el.contentDocument.createElement("DIV");
@@ -314,6 +314,7 @@ export class MassMailingHtmlField extends HtmlField {
             ".o_mass_mailing_processing_container"
         );
 
+        this.toggleIframeAssetsForHtmlConversion(bundles, true);
         // TODO EGGMAIL: adapt usage, converter should be persistent
         const converter = new MailHtmlConverter(this.env.services);
         await converter.convertToEmailHtml({
@@ -322,6 +323,7 @@ export class MassMailingHtmlField extends HtmlField {
             Plugins: registry.category("mail-html-conversion-plugins").getAll(),
         });
         const inlineValue = processingEl.innerHTML;
+        this.toggleIframeAssetsForHtmlConversion(bundles, false);
 
         await this.props.record
             .update({
@@ -330,6 +332,12 @@ export class MassMailingHtmlField extends HtmlField {
             })
             .catch(() => (this.isDirty = true));
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
+    }
+
+    toggleIframeAssetsForHtmlConversion(bundles, enableConversion) {
+        bundles["mass_mailing.assets_inside_builder_iframe"][
+            enableConversion ? "disable" : "enable"
+        ]();
     }
 }
 
