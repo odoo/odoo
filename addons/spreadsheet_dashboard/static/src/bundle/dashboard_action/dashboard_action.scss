@@ -73,22 +73,8 @@
         min-width: 0;
     }
 
-    /* Not in mobile */
-    @media (min-width: 768px){
-        .o_control_panel_actions {
-            max-height: 200px;
-            /* Place the search bar before the navigation buttons */
-            order: 1 !important;
-        }
-    }
-
     /* In mobile */
     @media (max-width: 768px){
-        .o_control_panel_navigation {
-            /* DashboardMobileSearchPanel is added in navigation buttons in mobile, and should be aligned left*/
-            justify-content: start !important;
-        }
-
         .o_control_panel_main {
             /* We don't want a gap before the DashboardMobileSearchPanel */
             column-gap: 0px !important;
