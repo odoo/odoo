@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:43+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -65,6 +65,7 @@ msgid "Create a Customer"
 msgstr "고객 만들기"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_res_partner__display_name
@@ -72,6 +73,7 @@ msgid "Display Name"
 msgstr "표시명"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__id
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__id
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__id
 #: model:ir.model.fields,field_description:snailmail_account.field_res_partner__id
@@ -85,6 +87,11 @@ msgid "Invoice sending"
 msgstr "청구서 전송"
 
 #. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__send_by_post_stamps
 msgid "Send By Post Stamps"
 msgstr "우표로 우편 전송"
@@ -95,7 +102,8 @@ msgstr "우표로 우편 전송"
 msgid ""
 "The partners on the following invoices have no valid address, so those "
 "invoices will not be sent: %s"
-msgstr "다음 청구서에 있는 협력사의 주소가 유효하지 않습니다. 해당 청구서는 전송되지 "
+msgstr ""
+"다음 청구서에 있는 협력사의 주소가 유효하지 않습니다. 해당 청구서는 전송되지 "
 "않습니다: %s"
 
 #. module: snailmail_account

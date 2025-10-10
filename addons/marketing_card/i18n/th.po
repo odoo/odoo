@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:06+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:32+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -31,15 +31,17 @@ msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
 "title=\"Clicks\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"คลิก\" role=\"img\" title="
-"\"คลิก\"/>"
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"คลิก\" role=\"img\" "
+"title=\"คลิก\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-share\" aria-label=\"แชร์\" role=\"img\" title=\"แชร์\""
-"/>"
+"<i class=\"fa fa-fw fa-share\" aria-label=\"แชร์\" role=\"img\" title=\"แชร์\"/"
+">"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -220,6 +222,12 @@ msgid "Card Layout"
 msgstr ""
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Card Preview"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
 msgid "Card Requires Sync Count"
 msgstr "จำนวนการ์ดที่ต้องซิงก์"
@@ -316,6 +324,7 @@ msgstr "ออกแบบ"
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_utm_source__display_name
@@ -353,11 +362,6 @@ msgid "Email composition wizard"
 msgstr "ตัวช่วยการเขียนอีเมล"
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
-msgid "Filter By"
-msgstr "กรองตาม"
-
-#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
 msgid "Followers"
 msgstr "ผู้ติดตาม"
@@ -376,12 +380,6 @@ msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ย
 #: model:card.template,name:marketing_card.card_template_geometric
 msgid "Geometric"
 msgstr "เรขาคณิต"
-
-#. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
-msgid "Group By"
-msgstr "กลุ่มโดย"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__has_message
@@ -406,14 +404,27 @@ msgstr "เส้นทางส่วนหัว"
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Hello everyone"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Help us share the news"
 msgstr "ช่วยเราแชร์ข่าวสาร"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Here's the link to advertise your participation."
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__id
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__id
 #: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:marketing_card.field_utm_source__id
@@ -538,6 +549,12 @@ msgid "Mailing Count"
 msgstr "จำนวนการส่งจดหมาย"
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Many thanks"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
 #: model:ir.ui.menu,name:marketing_card.card_menu
 #: model:ir.ui.menu,name:marketing_card.marketing_card_menu_technical
@@ -596,8 +613,12 @@ msgstr "ชื่อโมเดล"
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid ""
 "Model of campaign %(campaign)s may not be changed as it already has cards"
+msgstr "รูปแบบของแคมเปญ %(campaign)s ไม่สามารถเปลี่ยนแปลงได้ เนื่องจากมีการ์ดอยู่แล้ว"
+
+#. module: marketing_card
+#: model:ir.model,name:marketing_card.model_ir_model
+msgid "Models"
 msgstr ""
-"รูปแบบของแคมเปญ %(campaign)s ไม่สามารถเปลี่ยนแปลงได้ เนื่องจากมีการ์ดอยู่แล้ว"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__my_activity_date_deadline
@@ -675,12 +696,10 @@ msgstr "Odoo"
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"email. If not set, the main partner's language will be used. This should "
+"usually be a placeholder expression that provides the appropriate language, "
+"e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ ระบบจะใช้เวอร์ชันภาษาอั"
-"งกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม เช่น {{ object.partner_id.lang }}"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
@@ -1024,13 +1043,18 @@ msgstr "แผนที่โลก"
 #: code:addons/marketing_card/models/mailing_mailing.py:0
 msgid ""
 "You should update all the cards for %(mailing)s before scheduling a mailing."
-msgstr ""
-"คุณควรอัปเดตบัตรทั้งหมดสำหรับ %(mailing)s ก่อนที่จะกำหนดเวลาการส่งจดหมาย"
+msgstr "คุณควรอัปเดตบัตรทั้งหมดสำหรับ %(mailing)s ก่อนที่จะกำหนดเวลาการส่งจดหมาย"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
 msgstr "หน้าแรกของคุณ"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Your help with this promotion would be greatly appreciated!"
+msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_2
@@ -1084,3 +1108,19 @@ msgstr "เช่น ตัวอย่างการสนทนา"
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Why people should share on their network?"
 msgstr "เช่น ทำไมผู้คนจึงควรแชร์บนเน็ตเวิร์กของพวกเขา?"
+
+#~ msgid "Filter By"
+#~ msgstr "กรองตาม"
+
+#~ msgid "Group By"
+#~ msgstr "กลุ่มโดย"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually "
+#~ "be a placeholder expression that provides the appropriate language, e.g. "
+#~ "{{ object.partner_id.lang }}."
+#~ msgstr ""
+#~ "ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ "
+#~ "ระบบจะใช้เวอร์ชันภาษาอังกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม เช่น "
+#~ "{{ object.partner_id.lang }}"

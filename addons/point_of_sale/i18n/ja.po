@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-10-09 02:30+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -316,28 +316,28 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value="
-"\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\""
-"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value="
-"\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\"> <t t-out=\"client_name\""
-">顧客名</t>様、</t>\n"
-"                        <t t-else=\"\""
-">平素はご愛顧いただきありがとうございます。</t>\n"
+"                        <t t-if=\"client_name\"> <t t-out=\"client_name\">顧"
+"客名</t>様、</t>\n"
+"                        <t t-else=\"\">平素はご愛顧いただきありがとうございま"
+"す。</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div><t t-out=\"store_name\""
-">店舗名</t>をご利用頂き誠にありがとうございます。</div>\n"
-"                    <div>領収書をお送りしますのでご査収ください。(ご購入日時:"
-" <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"                    <div><t t-out=\"store_name\">店舗名</t>をご利用頂き誠にあ"
+"りがとうございます。</div>\n"
+"                    <div>領収書をお送りしますのでご査収ください。(ご購入日"
+"時: <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
 "''\">日</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\""
-">時間</t>)</span>\n"
+"time_format='short',                          lang_code=lg)\">時間</t>)</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>宜しくお願い致します。</div>\n"
@@ -8275,6 +8275,12 @@ msgid "Stock should be updated at closing"
 msgstr "在庫は決算時に更新する必要があります"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Stock variation for %s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
@@ -8611,6 +8617,12 @@ msgstr "クレジットカードのブランド (Visa、AMEX等)"
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr "POS%(pos)sの丸め方針は以下である必要があります: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "The company must have a fiscal country set."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10380,7 +10392,6 @@ msgstr "例: 1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Cash"
 msgstr "例:現金"
 
@@ -10393,6 +10404,11 @@ msgstr "例: チーズバーガー"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
 msgstr "例:会社の住所、ウェブサイト"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "e.g. Dine in"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

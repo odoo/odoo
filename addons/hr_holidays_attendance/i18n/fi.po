@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:11+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 15:38+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -31,12 +31,42 @@ msgid "Accrual Plan Level"
 msgstr "Kertymissäännön taso"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Läsnäolo"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__active
+msgid "Active"
+msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_hours
+msgid "Approved Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Approved Time Offs"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Archived Employees"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_line
+msgid "Attendance Overtime Line"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Attendance Records"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_attendance_report
+msgid "Attendance and Leave Analysis Report"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__attendance_ids
 msgid "Attendances"
 msgstr ""
 
@@ -47,8 +77,14 @@ msgid "Available"
 msgstr "Saatavilla"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__calendar
-msgid "Calendar"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__compensable_as_leave
+msgid "Compensable as Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Date"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -60,31 +96,64 @@ msgstr "Päivää"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
 msgstr "Lisätuntien vähentäminen"
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Department"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
+msgid "Difference"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
 msgid "Discard"
 msgstr "Hylkää"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__display_name
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__display_name
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: hr_holidays_attendance
-#: model:hr.leave.type,name:hr_holidays_attendance.holiday_status_extra_hours
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
-msgid "Extra Hours"
-msgstr "Ylimääräisiä tunnit"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Duration"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Employee"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+msgid "Employee Overtime"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Employees"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__expected_hours
+msgid "Expected Hours"
+msgstr ""
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
@@ -93,8 +162,13 @@ msgid "Extra Hours Available"
 msgstr "Saatavilla olevat ylimääräiset tunnit"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
-msgid "Frequency Hourly Source"
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency
+msgid "Frequency"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__compensable_as_leave
+msgid "Give back as time off"
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -104,25 +178,47 @@ msgid "Hours"
 msgstr "Tunnit"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_line__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance_overtime_rule__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__id
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_ir_ui_menu__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__active
 msgid ""
-"If the source is set to \"Calendar\", the amount of worked hours will be "
-"computed based on the Employee's working schedule. Otherwise, the amount of "
-"worked hours will be based on Attendance records."
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__job_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Job Position"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Last 2 Months"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Missing Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
 msgstr "Uusi varauspyyntö"
@@ -130,8 +226,8 @@ msgstr "Uusi varauspyyntö"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
-"Once a time off of this type is approved, extra hours in attendances will be"
-" deducted."
+"Once a time off of this type is approved, extra hours in attendances will be "
+"deducted."
 msgstr "Kun vapaa on hyväksytty, ylimääräiset läsnäolotunnit vähennetään."
 
 #. module: hr_holidays_attendance
@@ -150,36 +246,19 @@ msgid "Overtime Deductible"
 msgstr "Ylityön vähennyskelpoisuus"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
-msgid "Request Overtime"
-msgstr "Ylityön pyytäminen"
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance_overtime_rule
+msgid "Overtime Rule"
+msgstr ""
 
 #. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
+msgid "Per Hour Worked"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
 msgid "Save"
 msgstr "Tallenna"
-
-#. module: hr_holidays_attendance
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
-msgid "Source"
-msgstr ""
-
-#. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"The employee does not have enough extra hours to extend this allocation."
-msgstr ""
-"Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän varauksen "
-"pidentämiseksi."
-
-#. module: hr_holidays_attendance
-#. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-msgid "The employee does not have enough extra hours to extend this leave."
-msgstr ""
-"Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän loman "
-"pidentämiseksi."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -192,9 +271,9 @@ msgstr ""
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
-msgid ""
-"The employee does not have enough overtime hours to request this leave."
-msgstr "Työntekijällä ei ole riittävästi ylityötunteja tämän loman pyytämiseen."
+msgid "The employee does not have enough overtime hours to request this leave."
+msgstr ""
+"Työntekijällä ei ole riittävästi ylityötunteja tämän loman pyytämiseen."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -207,23 +286,91 @@ msgid "Time Off Allocation"
 msgstr "Vapaiden ajankohta"
 
 #. module: hr_holidays_attendance
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_attendance_report_action
+#: model:ir.ui.menu,name:hr_holidays_attendance.hr_leave_attendance_report
+msgid "Time Off Ledger"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
 msgstr "Lomatyyppi"
 
 #. module: hr_holidays_attendance
-#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_type_names
+msgid "Time Off Types"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__leave_ids
+msgid "Time Offs"
+msgstr ""
+
+#. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
 msgstr "Ylityöt yhteensä"
 
 #. module: hr_holidays_attendance
-#: model:ir.model,name:hr_holidays_attendance.model_res_users
-msgid "User"
-msgstr "Käyttäjä"
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
+msgid "Worked Extra Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours
+msgid "Worked Hours"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_attendance_report__difference_hours
+msgid "Worked Hours - Expected Hours + Approved Time Off"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__schedule_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
+msgid "Working Schedule"
+msgstr ""
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_accrual_plan_level.py:0
+msgid ""
+"You can't base accrued time on hours worked, because time is accrued at the "
+"start of the period."
+msgstr ""
 
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 msgid "You do not have enough extra hours to request this leave"
 msgstr "Sinulla ei ole riittävästi ylimääräisiä tunteja tämän loman hakemiseen"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
+msgid "every worked hour."
+msgstr ""
+
+#~ msgid "Attendance"
+#~ msgstr "Läsnäolo"
+
+#~ msgid "Extra Hours"
+#~ msgstr "Ylimääräisiä tunnit"
+
+#~ msgid "Request Overtime"
+#~ msgstr "Ylityön pyytäminen"
+
+#~ msgid ""
+#~ "The employee does not have enough extra hours to extend this allocation."
+#~ msgstr ""
+#~ "Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän varauksen "
+#~ "pidentämiseksi."
+
+#~ msgid "The employee does not have enough extra hours to extend this leave."
+#~ msgstr ""
+#~ "Työntekijällä ei ole riittävästi ylimääräisiä tunteja tämän loman "
+#~ "pidentämiseksi."
+
+#~ msgid "User"
+#~ msgstr "Käyttäjä"

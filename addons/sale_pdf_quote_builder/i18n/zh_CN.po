@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 15:35+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -29,6 +29,11 @@ msgstr ""
 "'Order - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Link to the demo video"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span class=\"pe-2\">Templates:</span>"
 msgstr "<span class=\"pe-2\">模板：</span>"
@@ -42,16 +47,16 @@ msgstr "<span>文件类型：</span>"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in product documents can't be linked to a quotation"
-" document."
+"A form field set as used in product documents can't be linked to a quotation "
+"document."
 msgstr "产品文档中使用的表单字段集不能链接到报价文档。"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid ""
-"A form field set as used in quotation documents can't be linked to a product"
-" document."
+"A form field set as used in quotation documents can't be linked to a product "
+"document."
 msgstr "报价单文档中使用的表单字段集不能链接到产品文档。"
 
 #. module: sale_pdf_quote_builder
@@ -63,6 +68,12 @@ msgstr "访问令牌"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__active
 msgid "Active"
 msgstr "有效"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__add_by_default
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
+msgid "Add By Default"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
@@ -79,12 +90,17 @@ msgstr "全部已上传文件"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 "允许您在销售中与客户共享文档。\n"
 "如果不想与销售客户共享此文档，请将其留空。\n"
@@ -92,8 +108,8 @@ msgstr ""
 "例如，此选项可用于共享产品描述文件。\n"
 "订单确认时：文件将发送给客户，客户可随时访问。\n"
 "例如，此选项可用于共享用户手册或在电子商务中购买的数字内容。\n"
-"内部引用：文件将包含在报价单和销售订单的 PDF 文件中，位于标题页和报价表之间。"
-" "
+"内部引用：文件将包含在报价单和销售订单的 PDF 文件中，位于标题页和报价表之"
+"间。 "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -112,10 +128,14 @@ msgid "Attachment URL"
 msgstr "附件网址"
 
 #. module: sale_pdf_quote_builder
-#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
 msgid "Available Product Documents"
 msgstr "可用产品文件"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_quotation_document_ids
+msgid "Available Quotation Documents"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
@@ -187,7 +207,12 @@ msgid "Description"
 msgstr "描述"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__display_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -269,9 +294,9 @@ msgid "Form fields of inside quotation documents."
 msgstr "报价文件内部的表单字段。"
 
 #. module: sale_pdf_quote_builder
-#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
-msgid "Group By"
-msgstr "分组方式"
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__has_thumbnail
+msgid "Has Thumbnail"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -304,10 +329,21 @@ msgid "History"
 msgstr "历史"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__id
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__id
 msgid "ID"
 msgstr "ID"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__add_by_default
+msgid ""
+"If checked, this header or footer will be added by default on new quotes."
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__active
@@ -347,7 +383,8 @@ msgstr "报价单 PDF 内"
 msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
-msgstr "表单字段名称 %(field_name)s 无效。页首或页尾中的表单字段名称，不能以 sol_id_ "
+msgstr ""
+"表单字段名称 %(field_name)s 无效。页首或页尾中的表单字段名称，不能以 sol_id_ "
 "开头。"
 
 #. module: sale_pdf_quote_builder
@@ -382,8 +419,9 @@ msgstr "公共文件"
 msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
-msgstr "我们似乎无法处理引文中的 PDF "
-"文件。可能档案已加密，或使用了我们不支持的格式进行编码。"
+msgstr ""
+"我们似乎无法处理引文中的 PDF 文件。可能档案已加密，或使用了我们不支持的格式进"
+"行编码。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
@@ -483,17 +521,22 @@ msgstr "产品文件"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid ""
-"Provide header pages and footer pages to compose an attractive quotation with more information\n"
-"                        about your company, your products and you services. <br/>\n"
-"                        The pdf of your quotes will be built by putting together header pages, product descriptions,\n"
-"                        details of the quote and then the footer pages. <br/>\n"
-"                        If empty, it will use those define in the company settings. <br/>"
+"Provide header pages and footer pages to compose an attractive quotation "
+"with more information\n"
+"                        about your company, your products and you services. "
+"<br/>\n"
+"                        The pdf of your quotes will be built by putting "
+"together header pages, product descriptions,\n"
+"                        details of the quote and then the footer pages. <br/"
+">\n"
+"                        If empty, it will use those define in the company "
+"settings. <br/>"
 msgstr ""
 "提供页眉和页脚以组成一份具有吸引力的报价单，并提供更多关于您公司、产品和服务"
 "的信息。\n"
 "                         <br/>\n"
-"                        "
-"您的报价单PDF将通过组合页眉、产品描述、报价详情以及页脚来生成。\n"
+"                        您的报价单PDF将通过组合页眉、产品描述、报价详情以及页"
+"脚来生成。\n"
 "                         <br/>\n"
 "                       如果未填写，则会使用公司设置中定义的内容。 <br/>"
 
@@ -533,6 +576,11 @@ msgstr "报价单的页眉和页脚"
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Quote Builder"
 msgstr "报价生成器"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Quote Builder Demo Video"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
@@ -632,6 +680,11 @@ msgid "This document"
 msgstr "此文件"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__thumbnail
+msgid "Thumbnail"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
 msgid "Type"
 msgstr "类型"
@@ -645,6 +698,11 @@ msgstr "上传报价单的页眉和页脚"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
 msgid "Url"
 msgstr "网址"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__voice_ids
@@ -679,3 +737,6 @@ msgstr "您可以从您的电脑上传一个文件或者复制/粘贴一个互�
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "on"
 msgstr "在"
+
+#~ msgid "Group By"
+#~ msgstr "分组方式"

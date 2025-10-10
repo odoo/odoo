@@ -1,40 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_customer
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                        There are no matching customers found for the selected country. Displaying results across all countries instead."
+"                        There are no matching customers found for the "
+"selected country. Displaying results across all countries instead."
 msgstr ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                        沒有找到與所選國家/地區相符的客戶。現已顯示所有國家/地區的結果。"
+"                        沒有找到與所選國家/地區相符的客戶。現已顯示所有國家/"
+"地區的結果。"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid ""
 "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
 "title=\"Open map\"/>"
-msgstr "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"開啟地圖\" title=\"開啟地圖\"/>"
+msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"開啟地圖\" title=\"開"
+"啟地圖\"/>"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.details
@@ -111,7 +116,8 @@ msgid "Contact"
 msgstr "聯絡人"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Countries Filter"
 msgstr "國家/地區篩選器"
 
@@ -134,6 +140,18 @@ msgstr "建立人員"
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "建立於"
+
+#. module: website_customer
+#. odoo-python
+#: code:addons/website_customer/controllers/main.py:0
+msgid "Customers"
+msgstr ""
+
+#. module: website_customer
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option_plugin.js:0
+msgid "Customers Page"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.details
@@ -201,7 +219,8 @@ msgid "ID"
 msgstr "識別號"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Industry Filter"
 msgstr "行業篩選器"
 
@@ -262,11 +281,6 @@ msgid "References"
 msgstr "客戶成功案例"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
-msgid "References Page"
-msgstr "客戶推薦頁面"
-
-#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
 msgstr "搜尋"
@@ -292,12 +306,14 @@ msgid "See industries filters"
 msgstr "查看行業篩選器"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Show Map"
 msgstr "顯示地圖"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
+#. odoo-javascript
+#: code:addons/website_customer/static/src/website_builder/customer_filter_option.xml:0
 msgid "Tags Filter"
 msgstr "標籤篩選器"
 
@@ -349,3 +365,6 @@ msgstr "網站標籤"
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
 msgstr "世界地圖"
+
+#~ msgid "References Page"
+#~ msgstr "客戶推薦頁面"

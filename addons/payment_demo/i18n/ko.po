@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -29,7 +29,8 @@ msgid ""
 "                    <option value=\"pending\" title=\"Payment processing\">\n"
 "                        Pending\n"
 "                    </option>\n"
-"                    <option value=\"cancel\" title=\"Payment cancelled by customer\">\n"
+"                    <option value=\"cancel\" title=\"Payment cancelled by "
+"customer\">\n"
 "                        Cancelled\n"
 "                    </option>\n"
 "                    <option value=\"error\" title=\"Processing error\">\n"
@@ -38,16 +39,16 @@ msgid ""
 "                </select>"
 msgstr ""
 "<select id=\"simulated_payment_state\" class=\"form-select\">\n"
-"                        <option value=\"done\" title=\"Successful payment\">"
-"\n"
+"                        <option value=\"done\" title=\"Successful "
+"payment\">\n"
 "                            결제 성공\n"
 "                        </option>\n"
-"                        <option value=\"pending\" title="
-"\"Payment processing\">\n"
+"                        <option value=\"pending\" title=\"Payment "
+"processing\">\n"
 "                            대기 중\n"
 "                        </option>\n"
-"                        <option value=\"cancel\" title="
-"\"Payment cancelled by customer\">\n"
+"                        <option value=\"cancel\" title=\"Payment cancelled "
+"by customer\">\n"
 "                            취소됨\n"
 "                        </option>\n"
 "                        <option value=\"error\" title=\"Processing error\">\n"
@@ -104,6 +105,11 @@ msgstr "<small>도로명 2</small>"
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
 msgstr "승인"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "Belgium"
+msgstr ""
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -169,21 +175,29 @@ msgid "Demo providers should never be enabled."
 msgstr "데모 공급업체는 활성화해서는 안됩니다."
 
 #. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
 msgid "Error"
 msgstr "오류"
 
 #. module: payment_demo
-#. odoo-javascript
-#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
-msgid "No delivery method is available."
-msgstr "배송 방법을 선택할 수 없습니다."
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_demo
-#. odoo-python
-#: code:addons/payment_demo/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
+msgid "No delivery method is available."
+msgstr "배송 방법을 선택할 수 없습니다."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -212,7 +226,7 @@ msgstr "지불 거래"
 
 #. module: payment_demo
 #. odoo-javascript
-#: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
+#: code:addons/payment_demo/static/src/interactions/payment_demo_mixin.js:0
 msgid "Payment processing failed"
 msgstr "결제 프로세스 실패"
 
@@ -224,8 +238,8 @@ msgstr "이 결제 수단으로 결제한 내역은 <b>성공</b>적으로 처�
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will be automatically "
-"<b>cancelled</b>."
+"Payments made with this payment method will be automatically <b>cancelled</"
+"b>."
 msgstr "해당 결제 방법으로 결제한 경우 자동으로 <b>취소</b> 됩니다."
 
 #. module: payment_demo
@@ -236,8 +250,8 @@ msgstr "이 결제 수단으로 결제한 내역은 <b>보류</b> 상태로 유�
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid ""
-"Payments made with this payment method will simulate a processing "
-"<b>error</b>."
+"Payments made with this payment method will simulate a processing <b>error</"
+"b>."
 msgstr "이 결제 수단으로 결제한 내역에 대해 <b>오류</b>가 시뮬레이션됩니다."
 
 #. module: payment_demo
@@ -271,19 +285,13 @@ msgid "The technical code of this payment provider."
 msgstr "이 결제대행업체의 기술 코드입니다."
 
 #. module: payment_demo
-#. odoo-python
-#: code:addons/payment_demo/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "거래가 토큰에 연결되어 있지 않습니다."
-
-#. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Unpublished"
 msgstr "게시 안 함"
 
 #. module: payment_demo
 #. odoo-javascript
-#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
 msgid "Validation Error"
 msgstr "유효성 검사 오류"
 
@@ -297,3 +305,9 @@ msgstr "XXXX XXXX XXXX XXXX"
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
 msgstr "다음 데모 결제 상태를 선택했습니다: %s"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "거래가 토큰에 연결되어 있지 않습니다."

@@ -3,13 +3,14 @@
 # * pos_self_order
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:36+0000\n"
-"PO-Revision-Date: 2025-09-17 17:28+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-09 13:43+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "pos_self_order/it/>\n"
 "Language: it\n"
@@ -88,6 +89,46 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Ciao <t t-"
+"out=\"client_name\">nome cliente</t>,</t>\n"
+"                        <t t-else=\"\">Ciao,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>l'ordine <t t-out=\"object.tracking_number\">...</"
+"t> pari a <t t-out=\"object.amount_total\">$xx.xx</t> è stato confermato. "
+"<span t-if=\"object.preset_time or client.street\">Sarà pronto</span> <span "
+"t-if=\"object.preset_time\">alle <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 </t></span> <span t-if=\"client.street\">presso <t t-"
+"out=\"street\">indirizzo</t>, <t t-out=\"state\">provincia</t>, <t t-"
+"out=\"client.zip or ''\">CAP</t>, <t t-out=\"city\">città</t>, <t t-"
+"out=\"country\">Paese</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Grazie,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>In allegato, troverai la ricevuta di acquisto.</"
+"div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Nome negozio</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -120,6 +161,34 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Ciao <t t-"
+"out=\"client_name\">nome cliente</t>,</t>\n"
+"                        <t t-else=\"\">Ciao,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>L'ordine <t t-out=\"object.tracking_number\">...</"
+"t> pari a <t t-out=\"object.amount_total\">xx,xx €</t> è stato confermato. "
+"<span t-if=\"object.preset_time\">Sarà pronto alle <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 </t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Grazie,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>In allegato, troverai la ricevuta di acquisto.</"
+"div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Nome negozio</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -449,7 +518,7 @@ msgstr "Consegna"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr ""
+msgstr "Consegna: conferma ordine fai da te"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -537,12 +606,12 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
-msgstr ""
+msgstr "E-mail di conferma"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_mail_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Modelli e-mail"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1304,7 +1373,7 @@ msgstr "Nome brand immagine chiosco ordine fai da te"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
 msgid "Self Order Visible"
-msgstr ""
+msgstr "Ordine fai da te visibile"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1360,7 +1429,7 @@ msgstr "Ordine fai da te:"
 #: model:mail.template,description:pos_self_order.delivery_email_template
 #: model:mail.template,description:pos_self_order.takeout_email_template
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "E-mail inviata ai clienti con ricevuta in allegato"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1458,7 +1527,7 @@ msgstr "Tavolo:"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.takeout_email_template
 msgid "Takeout: Confirmation order for self"
-msgstr ""
+msgstr "Asporto: conferma ordine fai da te"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1666,7 +1735,7 @@ msgstr "Il tuo numero di ordine"
 #: model:mail.template,subject:pos_self_order.delivery_email_template
 #: model:mail.template,subject:pos_self_order.takeout_email_template
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "La tua ricevuta {{ object.config_id.name }}"
 
 #. module: pos_self_order
 #. odoo-javascript

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -25,13 +25,13 @@ msgstr ""
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "(recording keyboard)"
 msgstr "（正在錄取鍵盤按鍵）"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "(run:"
 msgstr "（運行："
 
@@ -47,7 +47,7 @@ msgstr "底部"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
+#: code:addons/web_tour/static/src/tour_utils.js:0
 msgid "Click the top left corner to navigate across apps."
 msgstr "按一下左上角，以在不同應用程式之間導航。"
 
@@ -75,13 +75,13 @@ msgstr "自訂"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.js:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.js:0
 msgid "Custom tour '%s' couldn't be saved!"
 msgstr "未能儲存自訂導覽「%s」。"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.js:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.js:0
 msgid "Custom tour '%s' has been added."
 msgstr "已加入自訂導覽「%s」。"
 
@@ -135,12 +135,13 @@ msgstr "名稱"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "Name:"
 msgstr "名稱:"
 
 #. module: web_tour
 #. odoo-javascript
+#: code:addons/web_tour/static/src/js/onboarding_item.xml:0
 #: code:addons/web_tour/static/src/widgets/tour_start.xml:0
 #: model:ir.model.fields,field_description:web_tour.field_res_users__tour_enabled
 msgid "Onboarding"
@@ -158,7 +159,7 @@ msgstr "彩虹小精靈訊息⋯"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 #: code:addons/web_tour/static/src/views/tour_controller.xml:0
 msgid "Record"
 msgstr "記錄"
@@ -181,31 +182,31 @@ msgstr "執行"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "Save"
 msgstr "儲存"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+#: code:addons/web_tour/static/src/js/tour_pointer/tour_pointer_state.js:0
 msgid "Scroll down to reach the next step."
 msgstr "向下捲動，以進入下一步驟。"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+#: code:addons/web_tour/static/src/js/tour_pointer/tour_pointer_state.js:0
 msgid "Scroll left to reach the next step."
 msgstr "向左捲動以到達下一步。"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+#: code:addons/web_tour/static/src/js/tour_pointer/tour_pointer_state.js:0
 msgid "Scroll right to reach the next step."
 msgstr "向右捲動以到達下一步。"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+#: code:addons/web_tour/static/src/js/tour_pointer/tour_pointer_state.js:0
 msgid "Scroll up to reach the next step."
 msgstr "向上捲動，以進入下一步驟。"
 
@@ -238,16 +239,22 @@ msgstr "跳號"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 #: model_terms:ir.ui.view,arch_db:web_tour.tour_form
 msgid "Steps"
 msgstr "步驟"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "Steps:"
 msgstr "步驟："
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/js/tour_pointer/tour_pointer.xml:0
+msgid "Stop Tour"
+msgstr ""
 
 #. module: web_tour
 #. odoo-javascript
@@ -300,7 +307,7 @@ msgstr "觸發"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "Url:"
 msgstr "網址："
 
@@ -326,12 +333,12 @@ msgstr "左"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "name_of_the_tour"
 msgstr "name_of_the_tour"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_recorder/tour_recorder.xml:0
+#: code:addons/web_tour/static/src/js/tour_recorder/tour_recorder.xml:0
 msgid "trigger"
 msgstr "觸發"

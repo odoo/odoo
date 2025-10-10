@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-14 08:07+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -36,10 +36,16 @@ msgid "Code"
 msgstr "Code"
 
 #. module: payment_mollie
-#. odoo-python
-#: code:addons/payment_mollie/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "Kan geen verbinding maken met de API."
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields.selection,name:payment_mollie.selection__payment_provider__code__mollie
@@ -50,12 +56,6 @@ msgstr "Mollie"
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__mollie_api_key
 msgid "Mollie API Key"
 msgstr "Mollie API Key"
-
-#. module: payment_mollie
-#. odoo-python
-#: code:addons/payment_mollie/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
 
 #. module: payment_mollie
 #: model:ir.model,name:payment_mollie.model_payment_provider
@@ -70,26 +70,32 @@ msgstr "Betalingstransactie"
 #. module: payment_mollie
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
-msgid "Received data with invalid payment status: %s"
-msgstr "Gegevens ontvangen met ongeldige betalingsstatus: %s"
+msgid "Received data with invalid payment status: %s."
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__mollie_api_key
-msgid ""
-"The Test or Live API Key depending on the configuration of the provider"
-msgstr "De Test of Live API Key afhankelijk van de configuratie van de provider"
-
-#. module: payment_mollie
-#. odoo-python
-#: code:addons/payment_mollie/models/payment_provider.py:0
-msgid ""
-"The communication with the API failed. Mollie gave us the following "
-"information: %s"
+msgid "The Test or Live API Key depending on the configuration of the provider"
 msgstr ""
-"De communicatie met de API is mislukt. Mollie gaf ons de volgende informatie:"
-" %s"
+"De Test of Live API Key afhankelijk van de configuratie van de provider"
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "De technische code van deze betaalprovider."
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "Kan geen verbinding maken met de API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+
+#~ msgid "Received data with invalid payment status: %s"
+#~ msgstr "Gegevens ontvangen met ongeldige betalingsstatus: %s"
+
+#~ msgid ""
+#~ "The communication with the API failed. Mollie gave us the following "
+#~ "information: %s"
+#~ msgstr ""
+#~ "De communicatie met de API is mislukt. Mollie gaf ons de volgende "
+#~ "informatie: %s"

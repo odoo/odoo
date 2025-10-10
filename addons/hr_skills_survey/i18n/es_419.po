@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-23 02:47+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -21,42 +21,32 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_skills_survey
+#. odoo-python
+#: code:addons/hr_skills_survey/models/hr_resume_line.py:0
+msgid "%s (copy)"
+msgstr ""
+
+#. module: hr_skills_survey
 #: model:hr.resume.line,name:hr_skills_survey.resume_line_valid
 msgid "AWS Cloud"
 msgstr "Nube de AWS"
 
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__survey_id
-#: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__display_type__certification
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Certification"
 msgstr "Certificación"
 
 #. module: hr_skills_survey
-#: model:ir.ui.menu,name:hr_skills_survey.hr_employee_certication_report_menu
-msgid "Certifications"
-msgstr "Certificaciones"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__department_id
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Department"
 msgstr "Departamento"
 
 #. module: hr_skills_survey
-#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_type
-msgid "Display Type"
-msgstr "Mostrar tipo"
-
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Employee"
-msgstr "Empleado"
-
-#. module: hr_skills_survey
-#: model:ir.actions.act_window,name:hr_skills_survey.hr_employee_certification_report_action
-msgid "Employee Certifications"
-msgstr "Certificaciones del empleado"
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__display_name
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__expiration_status
@@ -64,13 +54,7 @@ msgid "Expiration Status"
 msgstr "Estado de vencimiento"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Expiration date"
-msgstr "Fecha de vencimiento"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields.selection,name:hr_skills_survey.selection__hr_resume_line__expiration_status__expired
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
 msgid "Expired"
 msgstr "Vencido"
 
@@ -80,9 +64,11 @@ msgid "Expiring"
 msgstr "Próximo a vencer"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Expiring Soon"
-msgstr "Vence pronto"
+#: model:ir.model.fields,field_description:hr_skills_survey.field_hr_resume_line__id
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_skills_survey.field_survey_user_input__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_skills_survey
 #: model:hr.resume.line.type,name:hr_skills_survey.resume_type_certification
@@ -107,8 +93,8 @@ msgstr "Línea de currículum de un empleado"
 #. module: hr_skills_survey
 #: model:ir.model.fields,help:hr_skills_survey.field_survey_survey__certification_validity_months
 msgid ""
-"Specify the number of months the certification is valid after being awarded."
-" Enter 0 for certifications that never expire."
+"Specify the number of months the certification is valid after being awarded. "
+"Enter 0 for certifications that never expire."
 msgstr ""
 "Especifique el número de meses de validez de la certificación luego de "
 "obtenerla. Escriba 0 si no expira."
@@ -129,21 +115,33 @@ msgid "Valid"
 msgstr "Válido"
 
 #. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_resume_line_view_search
-msgid "Valid Until"
-msgstr "Válido hasta"
-
-#. module: hr_skills_survey
 #: model:ir.model.fields,field_description:hr_skills_survey.field_survey_survey__certification_validity_months
 msgid "Validity"
 msgstr "Validez"
 
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
-msgid "Validity End"
-msgstr "Finalización de la validez"
+#~ msgid "Certifications"
+#~ msgstr "Certificaciones"
 
-#. module: hr_skills_survey
-#: model_terms:ir.ui.view,arch_db:hr_skills_survey.hr_employee_certification_report_view_list
-msgid "Validity Start"
-msgstr "Inicio de la validez"
+#~ msgid "Display Type"
+#~ msgstr "Mostrar tipo"
+
+#~ msgid "Employee"
+#~ msgstr "Empleado"
+
+#~ msgid "Employee Certifications"
+#~ msgstr "Certificaciones del empleado"
+
+#~ msgid "Expiration date"
+#~ msgstr "Fecha de vencimiento"
+
+#~ msgid "Expiring Soon"
+#~ msgstr "Vence pronto"
+
+#~ msgid "Valid Until"
+#~ msgstr "Válido hasta"
+
+#~ msgid "Validity End"
+#~ msgstr "Finalización de la validez"
+
+#~ msgid "Validity Start"
+#~ msgstr "Inicio de la validez"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 23:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 15:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -29,8 +29,8 @@ msgstr "%(payment_method)s vaatii sekä etu- että sukunimen."
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (%(reason)s). Please"
-" try again."
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
 msgstr "Maksun käsittelyssä tapahtui virhe (%(reason)s). Yritä uudelleen."
 
 #. module: payment_nuvei
@@ -39,15 +39,21 @@ msgid "Code"
 msgstr "Koodi"
 
 #. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "Kauppiaan tunnus"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "No transaction found matching reference %(ref)s."
-msgstr "Viitettä %(ref)s vastaavaa tapahtumaa ei löytynyt."
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -88,14 +94,7 @@ msgstr "Vastaanotetut tiedot, joista puuttuu maksun tila."
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "Vastaanotetut tiedot, joista puuttuu viite."
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid ""
-"Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr "Saatu virheellinen tapahtuman tila %(status)s ja syy '%(reason)s'."
 
 #. module: payment_nuvei
@@ -128,3 +127,9 @@ msgstr "Sivustotunniste, joka on yhdistetty kauppiastiliin."
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Tämän maksupalveluntarjoajan tekninen koodi."
+
+#~ msgid "No transaction found matching reference %(ref)s."
+#~ msgstr "Viitettä %(ref)s vastaavaa tapahtumaa ei löytynyt."
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "Vastaanotetut tiedot, joista puuttuu viite."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 02:34+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -18,16 +18,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: crm_mail_plugin
 #. odoo-javascript
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
-msgid "%(expected_revenue)s + %(recurring_revenue)s %(recurring_plan)s at %(probability)s%"
-msgstr "%(expected_revenue)s + %(recurring_revenue)s %(recurring_plan)s на %(probability)s%"
+msgid ""
+"%(expected_revenue)s + %(recurring_revenue)s %(recurring_plan)s at %"
+"(probability)s%"
+msgstr ""
+"%(expected_revenue)s + %(recurring_revenue)s %(recurring_plan)s на %"
+"(probability)s%"
 
 #. module: crm_mail_plugin
 #. odoo-javascript
@@ -43,15 +47,30 @@ msgid "Could not create the lead"
 msgstr "Не удалось создать Лид"
 
 #. module: crm_mail_plugin
+#: model:ir.model,website_form_label:crm_mail_plugin.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: crm_mail_plugin
+#: model:ir.model.fields,field_description:crm_mail_plugin.field_crm_lead__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: crm_mail_plugin
 #. odoo-javascript
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 msgid "Email already logged on the lead"
 msgstr "Электронная почта уже зарегистрирована на лиде"
 
 #. module: crm_mail_plugin
+#: model:ir.model.fields,field_description:crm_mail_plugin.field_crm_lead__id
+msgid "ID"
+msgstr ""
+
+#. module: crm_mail_plugin
 #: model:ir.model,name:crm_mail_plugin.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Лид/Возможность"
+msgid "Lead"
+msgstr ""
 
 #. module: crm_mail_plugin
 #: model:ir.actions.act_window,name:crm_mail_plugin.crm_lead_action_form_edit
@@ -97,7 +116,9 @@ msgstr "Возможности (%s)"
 #. module: crm_mail_plugin
 #: model:ir.actions.server,name:crm_mail_plugin.lead_creation_prefilled_action
 msgid "Redirection to the lead creation form with prefilled info"
-msgstr "Перенаправление на форму создания лида с предварительно заполненной информацией"
+msgstr ""
+"Перенаправление на форму создания лида с предварительно заполненной "
+"информацией"
 
 #. module: crm_mail_plugin
 #. odoo-javascript
@@ -117,3 +138,6 @@ msgstr "Контакт должен существовать, чтобы соз�
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 msgid "You can only create opportunities for existing customers."
 msgstr "Вы можете создавать возможности только для существующих клиентов."
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Лид/Возможность"

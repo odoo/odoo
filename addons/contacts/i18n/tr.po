@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 02:31+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/contacts/"
@@ -43,14 +43,14 @@ msgid "Configuration"
 msgstr "Ayarlar"
 
 #. module: contacts
+#: model:ir.model,name:contacts.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
 msgstr "Kontak Etiketleri"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Kontak Ünvanları"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
@@ -75,9 +75,26 @@ msgid "Create a Contact in your address book"
 msgstr "Adres defterinizde bir Kişi oluşturun"
 
 #. module: contacts
+#: model:ir.model,website_form_label:contacts.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__display_name
+#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "İller/Eyaletler"
+
+#. module: contacts
+#: model:ir.model.fields,field_description:contacts.field_res_partner__id
+#: model:ir.model.fields,field_description:contacts.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
@@ -98,3 +115,6 @@ msgstr "Odoo, kişilerinizle ilgili tüm etkinlikleri izlemenize yardımcı olur
 #: model:ir.model,name:contacts.model_res_users
 msgid "User"
 msgstr "Kullanıcı"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Kontak Ünvanları"

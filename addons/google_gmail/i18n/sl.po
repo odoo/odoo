@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 21:35+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -39,7 +39,8 @@ msgstr ""
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
@@ -51,13 +52,13 @@ msgstr ""
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible="
-"\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class="
-"\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Veljaven žeton Gmail\n"
 "                    </span>"
 
@@ -76,10 +77,17 @@ msgid "Access Token Expiration Timestamp"
 msgstr "Časovni žig poteka dostopnega žetona"
 
 #. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__active
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__active
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__active
+msgid "Active"
+msgstr ""
+
+#. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
-msgid "An error occur during the authentication process."
-msgstr "Med postopkom preverjanja pristnosti je prišlo do napake."
+msgid "An error occurred during the authentication process."
+msgstr ""
 
 #. module: google_gmail
 #. odoo-python
@@ -88,16 +96,15 @@ msgid "An error occurred when fetching the access token."
 msgstr "Pri pridobivanju dostopnega žetona je prišlo do napake."
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "An error occurred: %s."
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
 msgstr "Preverjanje pristnosti z"
-
-#. module: google_gmail
-#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_authorization_code
-#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
-#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
-msgid "Authorization Code"
-msgstr "Koda za odobritev"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
@@ -109,7 +116,8 @@ msgstr "Uredi nastavitve"
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
-"You will be redirected to the Gmail login page where you will need to accept the permission."
+"You will be redirected to the Gmail login page where you will need to accept "
+"the permission."
 msgstr ""
 "Povežite svoj Gmail račun s postopkom overjanja OAuth. \n"
 "Preusmerjeni boste na prijavno stran Gmaila, kjer boste morali sprejeti "
@@ -120,12 +128,28 @@ msgstr ""
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
 "Povežite svoj Gmail račun s postopkom preverjanja pristnosti OAuth.  \n"
 "Privzeto bo ta strežnik lahko uporabljal le uporabnik z ustreznim e-poštnim "
 "naslovom. Če želite razširiti njegovo uporabo, morate nastaviti sistemski "
 "parameter »mail.default.from«."
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
+msgid "Gmail"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -144,11 +168,27 @@ msgid "Gmail OAuth Authentication"
 msgstr "Preverjanje pristnosti OAuth v Gmailu"
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Gmail is not configured on IAP."
+msgstr ""
+
+#. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.google_gmail_oauth_error
+msgid "Go back"
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
 msgstr "Google Gmail Mixin"
 
 #. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__id
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__id
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__id
+#: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__id
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID"
 msgstr "ID"
@@ -170,8 +210,8 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
-"Nepravilna varnost povezave za poštni strežnik Gmail “%s”. Nastavite jo na »"
-"TLS (STARTTLS)«."
+"Nepravilna varnost povezave za poštni strežnik Gmail “%s”. Nastavite jo na "
+"»TLS (STARTTLS)«."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
@@ -187,8 +227,33 @@ msgstr "Samo skrbnik lahko poveže poštni strežnik Gmail."
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Oops, we could not authenticate you. Please try again later."
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/controllers/main.py:0
+msgid ""
+"Oops, you're creating an authorization to send from %(email_login)s but your "
+"address is %(email_server)s. Make sure your addresses match!"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__outgoing_mail_server_type
+msgid "Outgoing Mail Server Type"
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Please configure your Gmail credentials."
 msgstr "Konfigurirajte svoje poverilnice za Gmail."
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Please enter a valid email address."
+msgstr ""
 
 #. module: google_gmail
 #. odoo-python
@@ -225,6 +290,12 @@ msgid "Refresh Token"
 msgstr "Osvežitev žetona"
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/fetchmail_server.py:0
+msgid "SSL is required for server “%s”."
+msgstr ""
+
+#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret"
 msgstr "Skrivnost"
@@ -240,16 +311,6 @@ msgid "Server Type"
 msgstr "Tip Strežnika"
 
 #. module: google_gmail
-#: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
-msgid ""
-"Setup your Gmail API credentials in the general settings to link a Gmail "
-"account."
-msgstr ""
-"V splošnih nastavitvah nastavite poverilnice za Gmail API, da povežete Gmail "
-"račun."
-
-#. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
@@ -262,3 +323,27 @@ msgstr "URL povezava za ustvarjanje kode za overitev"
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "URI"
 msgstr "URI"
+
+#. module: google_gmail
+#: model:ir.model,name:google_gmail.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "You don't have an active subscription."
+msgstr ""
+
+#~ msgid "An error occur during the authentication process."
+#~ msgstr "Med postopkom preverjanja pristnosti je prišlo do napake."
+
+#~ msgid "Authorization Code"
+#~ msgstr "Koda za odobritev"
+
+#~ msgid ""
+#~ "Setup your Gmail API credentials in the general settings to link a Gmail "
+#~ "account."
+#~ msgstr ""
+#~ "V splošnih nastavitvah nastavite poverilnice za Gmail API, da povežete "
+#~ "Gmail račun."

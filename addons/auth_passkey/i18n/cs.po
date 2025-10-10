@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:20+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
@@ -20,11 +20,21 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "<strong>Use your passkey to authenticate</strong>"
 msgstr ""
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Add Passkey"
 msgstr ""
@@ -83,19 +93,12 @@ msgid "Created on"
 msgstr "Vytvořeno dne"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid "Created:"
-msgstr ""
-
-#. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__credential_identifier
 msgid "Credential Identifier"
 msgstr ""
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Delete"
 msgstr "Smazat"
 
@@ -136,8 +139,7 @@ msgid "Last Updated on"
 msgstr "Naposledy upraveno dne"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Last used:"
 msgstr ""
 
@@ -165,13 +167,6 @@ msgid "Passkeys"
 msgstr "Hesla"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid ""
-"Passkeys are a replacement for your username and password, offering a more "
-"secure way of logging in."
-msgstr ""
-
-#. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users_identitycheck
 msgid "Password Check Wizard"
 msgstr "Průvodce kontrolou hesla"
@@ -182,7 +177,7 @@ msgid "Public Key"
 msgstr ""
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Rename"
 msgstr "Přejmenovat"
 

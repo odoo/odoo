@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-25 13:31+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
@@ -33,7 +33,8 @@ msgstr "Et forhandler-ID, som Pine Labs har udstedt direkte til forhandleren."
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "A security token issued directly to the merchant by Pine Labs."
-msgstr "Et sikkerhedstoken, som Pine Labs har udstedt direkte til forhandleren."
+msgstr ""
+"Et sikkerhedstoken, som Pine Labs har udstedt direkte til forhandleren."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
@@ -104,11 +105,6 @@ msgstr ""
 "betaling."
 
 #. module: pos_pine_labs
-#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
-msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr "PlutusTransactionReferenceID af Pine Labs"
-
-#. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "Pine Labs Security Token"
 msgstr "Pine Labs-sikkerhedstoken"
@@ -142,6 +138,11 @@ msgid "Pine Labs payment cancellation request failed"
 msgstr "Anmodning om betalingsannullering fra Pine Labs mislykkedes"
 
 #. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "PineLabs Transaction ID"
+msgstr ""
+
+#. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "POS-betalingsformer"
@@ -160,9 +161,9 @@ msgstr "Referencenummeret stemmer ikke overens"
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid ""
-"Required during the refund order process: "
-"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
-"request-for-Void-ICB-on-UPI-transaction"
+"Required during the refund order process: https://developer.pinelabs.com/in/"
+"instore/cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-"
+"transaction"
 msgstr ""
 "Påkrævet under refusionsprocessen: https://developer.pinelabs.com/in/instore/"
 "cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-transaction"
@@ -198,3 +199,6 @@ msgstr "Transaktionen mislykkedes på grund af inaktivitet"
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
 msgstr "Upi"
+
+#~ msgid "Pine Labs PlutusTransactionReferenceID"
+#~ msgstr "PlutusTransactionReferenceID af Pine Labs"

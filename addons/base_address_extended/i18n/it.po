@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-14 21:15+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
@@ -19,8 +19,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: base_address_extended
@@ -37,11 +37,16 @@ msgstr "<span> - </span>"
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Selezionare la casella per fare in modo che tutti gli indirizzi creati abbiano una \"Città\" scelta dall'elenco delle città della nazione."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Selezionare la casella per fare in modo che tutti gli indirizzi creati "
+"abbiano una \"Città\" scelta dall'elenco delle città della nazione."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
 msgstr "Città"
 
@@ -73,6 +78,11 @@ msgid "Country"
 msgstr "Nazione"
 
 #. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
 msgstr "Creato da"
@@ -84,6 +94,8 @@ msgstr "Data creazione"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
@@ -91,7 +103,8 @@ msgstr "Nome visualizzato"
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
-"                your partner records. Note that an option can be set on each country separately\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
 "Visualizza e gestisce l'elenco di tutte le città che possono essere "
@@ -132,6 +145,8 @@ msgstr "N° civico"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 

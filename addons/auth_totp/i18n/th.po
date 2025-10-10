@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:20+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/auth_totp/"
@@ -37,73 +37,37 @@ msgid "2-Factor authentication is now enabled."
 msgstr "เปิดใช้งานการตรวจสอบสิทธิ์แบบ 2 ปัจจัยแล้ว"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
-"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
+"<i class=\"fa fa-check text-success\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            Enabled\n"
+"                        </span>"
 msgstr ""
-"<span class=\"d-md-none d-block\">หรือติดตั้งแอปรับรองความถูกต้อง</span>\n"
-"                                        <span class=\"d-none d-md-block\""
-">ติดตั้งแอปตรวจสอบความถูกต้องบนอุปกรณ์มือถือของคุณ</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
-"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
-msgstr ""
-"<span class=\"d-none d-md-block\">เมื่อได้รับการร้องขอให้สแกนบาร์โค้ดด้านล่าง</span>\n"
-"                                    <span class=\"d-block d-md-none\""
-">เมื่อได้รับการร้องขอให้คัดลอกคีย์ด้านล่าง</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
-"or the Microsoft Authenticator.</span>"
-msgstr ""
-"<span class=\"text-muted\">รายการยอดนิยม ได้แก่ Authy, Google Authenticator หรือ "
-"Microsoft Authenticator</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
-"protected!</span>"
+"<i class=\"fa fa-remove text-danger\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            Disabled\n"
+"                        </span>"
 msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\""
-">บัญชีนี้ได้รับการป้องกันแล้ว!</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
-"protected!</span>"
-msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\""
-">บัญชีนี้ได้รับการป้องกันแล้ว!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Added On"
-msgstr "เพิ่มลงบน"
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Are you sure? The user may be asked to enter two-factor codes again on those"
-" devices"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Add this key in your Authenticator app"
 msgstr ""
-"คุณแน่ใจไหม? ผู้ใช้อาจถูกขอให้ป้อนรหัส two-factor อีกครั้งบนอุปกรณ์เหล่านั้น"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"Are you sure? You may be asked to enter two-factor codes again on those "
-"devices"
-msgstr ""
-"คุณแน่ใจไหม? คุณอาจถูกขอให้ป้อนรหัส two-factor อีกครั้งบนอุปกรณ์เหล่านั้น"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -116,13 +80,7 @@ msgid "Authentication Device"
 msgstr "อุปกรณ์ตรวจสอบสิทธิ์"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Authenticator App Setup"
-msgstr "การตั้งค่าแอป Authenticator"
-
-#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "ยกเลิก"
 
@@ -130,11 +88,6 @@ msgstr "ยกเลิก"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "ไม่สามารถสแกนได้?"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Click on this link to open your authenticator app"
-msgstr "คลิกที่ลิงก์นี้เพื่อเปิดแอปรับรองความถูกต้องของคุณ"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -166,19 +119,18 @@ msgstr "คำอธิบาย"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Device"
-msgstr "อุปกรณ์"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Disable 2FA"
-msgstr "ปิดการใช้งาน 2FA"
+msgid "Disable"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
 msgstr "ปิดใช้งานการรับรองความถูกต้องด้วย Two-factor"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Discard"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -203,11 +155,6 @@ msgstr "เปิดใช้งาน2FA"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable Two-Factor Authentication"
 msgstr ""
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Enter your six-digit code below"
-msgstr "ใส่รหัสหกหลักของคุณด้านล่าง"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
@@ -247,8 +194,6 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Learn More"
 msgstr "เรียนรู้เพิ่มเติม"
 
@@ -263,36 +208,14 @@ msgid "Log in"
 msgstr "เข้าสู่ระบบ"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Look for an \"Add an account\" button"
-msgstr "มองหาปุ่ม \"เพิ่มบัญชี\""
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "On Apple Store"
-msgstr "บน Apple Store"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "On Google Play"
-msgstr "บน Google Play"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
 msgstr "Qr โค้ด"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Revoke"
-msgstr "เพิกถอน"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Revoke All"
-msgstr "เพิกถอนทั้งหมด"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Scan this barcode in your Authenticator app"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -323,7 +246,8 @@ msgstr "รหัสยืนยันควรมีเฉพาะตัวเ
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid ""
-"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"To login, enter below the six-digit authentication code provided by your "
+"Authenticator app.\n"
 "                        <br/>"
 msgstr ""
 "ในการเข้าสู่ระบบ ให้ป้อนรหัสการตรวจสอบสิทธิ์หกหลักด้านล่างที่แอป Authenticator ให้มา\n"
@@ -341,8 +265,6 @@ msgstr "Totp Secret"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
 msgstr "อุปกรณ์ที่เชื่อถือได้"
 
@@ -358,20 +280,6 @@ msgstr "การเปิดใช้งานการรับรองคว
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
 msgstr "การรับรองความถูกต้องแบบ Two-factor"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
-msgstr ""
-"การตรวจสอบสิทธิ์แบบ Two-factor (\"2FA\") คือระบบการตรวจสอบสิทธิ์แบบสองชั้น\n"
-"                        อันแรกใช้รหัสผ่านของคุณและอันที่สองใช้รหัสที่คุณได้รับจากแอปมือถื"
-"อโดยเฉพาะ\n"
-"                        แอปยอดนิยม ได้แก่ Authy, Google Authenticator หรือ "
-"Microsoft Authenticator"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -398,8 +306,7 @@ msgstr "เปิดใช้งานการรับรองความถ
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr ""
-"การตรวจสอบสิทธิ์แบบ Two-factor สามารถเปิดใช้งานได้สำหรับตัวคุณเองเท่านั้น"
+msgstr "การตรวจสอบสิทธิ์แบบ Two-factor สามารถเปิดใช้งานได้สำหรับตัวคุณเองเท่านั้น"
 
 #. module: auth_totp
 #. odoo-python
@@ -422,9 +329,13 @@ msgstr "ผู้ใช้"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification Code"
 msgstr "โค้ดยืนยัน"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Verification code"
+msgstr ""
 
 #. module: auth_totp
 #. odoo-python
@@ -437,6 +348,11 @@ msgstr "การยืนยันล้มเหลว โปรดตรว�
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Verification failed, please use the latest 6-digit code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Write the code given by your app"
 msgstr ""
 
 #. module: auth_totp
@@ -457,6 +373,102 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "e.g. 123456"
 msgstr "เช่น 123456"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Install an authenticator app on your mobile device</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none d-block\">หรือติดตั้งแอปรับรองความถูกต้อง</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">ติดตั้งแอปตรวจสอบความถูกต้องบนอุปกรณ์มือถือของคุณ</span>"
+
+#~ msgid ""
+#~ "<span class=\"d-none d-md-block\">When requested to do so, scan the "
+#~ "barcode below</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">When requested to do so, copy the key below</span>"
+#~ msgstr ""
+#~ "<span class=\"d-none d-md-block\">เมื่อได้รับการร้องขอให้สแกนบาร์โค้ดด้านล่าง</"
+#~ "span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">เมื่อได้รับการร้องขอให้คัดลอกคีย์ด้านล่าง</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\">Popular ones include Authy, Google "
+#~ "Authenticator or the Microsoft Authenticator.</span>"
+#~ msgstr ""
+#~ "<span class=\"text-muted\">รายการยอดนิยม ได้แก่ Authy, Google Authenticator "
+#~ "หรือ Microsoft Authenticator</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
+#~ "protected!</span>"
+#~ msgstr ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-"
+#~ "muted\">บัญชีนี้ได้รับการป้องกันแล้ว!</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
+#~ "protected!</span>"
+#~ msgstr ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-"
+#~ "muted\">บัญชีนี้ได้รับการป้องกันแล้ว!</span>"
+
+#~ msgid "Added On"
+#~ msgstr "เพิ่มลงบน"
+
+#~ msgid ""
+#~ "Are you sure? The user may be asked to enter two-factor codes again on "
+#~ "those devices"
+#~ msgstr "คุณแน่ใจไหม? ผู้ใช้อาจถูกขอให้ป้อนรหัส two-factor อีกครั้งบนอุปกรณ์เหล่านั้น"
+
+#~ msgid ""
+#~ "Are you sure? You may be asked to enter two-factor codes again on those "
+#~ "devices"
+#~ msgstr "คุณแน่ใจไหม? คุณอาจถูกขอให้ป้อนรหัส two-factor อีกครั้งบนอุปกรณ์เหล่านั้น"
+
+#~ msgid "Authenticator App Setup"
+#~ msgstr "การตั้งค่าแอป Authenticator"
+
+#~ msgid "Click on this link to open your authenticator app"
+#~ msgstr "คลิกที่ลิงก์นี้เพื่อเปิดแอปรับรองความถูกต้องของคุณ"
+
+#~ msgid "Device"
+#~ msgstr "อุปกรณ์"
+
+#~ msgid "Disable 2FA"
+#~ msgstr "ปิดการใช้งาน 2FA"
+
+#~ msgid "Enter your six-digit code below"
+#~ msgstr "ใส่รหัสหกหลักของคุณด้านล่าง"
+
+#~ msgid "Look for an \"Add an account\" button"
+#~ msgstr "มองหาปุ่ม \"เพิ่มบัญชี\""
+
+#~ msgid "On Apple Store"
+#~ msgstr "บน Apple Store"
+
+#~ msgid "On Google Play"
+#~ msgstr "บน Google Play"
+
+#~ msgid "Revoke"
+#~ msgstr "เพิกถอน"
+
+#~ msgid "Revoke All"
+#~ msgstr "เพิกถอนทั้งหมด"
+
+#~ msgid ""
+#~ "Two-factor Authentication (\"2FA\") is a system of double "
+#~ "authentication.\n"
+#~ "                        The first one is done with your password and the "
+#~ "second one with a code you get from a dedicated mobile app.\n"
+#~ "                        Popular ones include Authy, Google Authenticator "
+#~ "or the Microsoft Authenticator."
+#~ msgstr ""
+#~ "การตรวจสอบสิทธิ์แบบ Two-factor (\"2FA\") คือระบบการตรวจสอบสิทธิ์แบบสองชั้น\n"
+#~ "                        อันแรกใช้รหัสผ่านของคุณและอันที่สองใช้รหัสที่คุณได้รับจากแอปมือถือโดยเฉพาะ\n"
+#~ "                        แอปยอดนิยม ได้แก่ Authy, Google Authenticator หรือ "
+#~ "Microsoft Authenticator"

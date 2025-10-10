@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2024-09-26 08:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -33,13 +34,13 @@ msgstr ""
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
+msgid "Could not generate a new access token."
 msgstr ""
 
 #. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "Could not generate a new access token."
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: payment_paypal
@@ -58,6 +59,12 @@ msgid "How to configure your paypal account?"
 msgstr ""
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/controllers/main.py:0
 msgid "Invalid response format, can't normalize."
@@ -67,12 +74,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_paypal
@@ -122,7 +123,7 @@ msgstr ""
 
 #. module: payment_paypal
 #. odoo-javascript
-#: code:addons/payment_paypal/static/src/js/payment_form.js:0
+#: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr ""
 
@@ -130,12 +131,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
-
-#. module: payment_paypal
-#. odoo-python
-#: code:addons/payment_paypal/models/payment_provider.py:0
-msgid "The communication with the API failed. Details: %s"
 msgstr ""
 
 #. module: payment_paypal
@@ -163,6 +158,12 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Unable to verify the payment data"
 msgstr ""
 
 #. module: payment_paypal

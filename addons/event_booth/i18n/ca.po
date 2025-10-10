@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 02:31+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -280,6 +280,8 @@ msgstr "Descripció"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_type__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__display_name
 msgid "Display Name"
 msgstr "Nom mostrat"
@@ -373,12 +375,6 @@ msgid "Gold Booth 3"
 msgstr "Estand gold 3"
 
 #. module: event_booth
-#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
-#: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_search
-msgid "Group By"
-msgstr "Agrupar per"
-
-#. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__has_message
 msgid "Has Message"
 msgstr "Té un missatge"
@@ -386,6 +382,8 @@ msgstr "Té un missatge"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__id
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__id
+#: model:ir.model.fields,field_description:event_booth.field_event_event__id
+#: model:ir.model.fields,field_description:event_booth.field_event_type__id
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__id
 msgid "ID"
 msgstr "ID"
@@ -403,7 +401,8 @@ msgstr "Icona que indica una activitat d'excepció."
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_error
@@ -707,3 +706,6 @@ msgstr "p.e. estand de primera línia 1"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
 msgid "e.g. Premium Booth"
 msgstr "p.e. Estand premium"
+
+#~ msgid "Group By"
+#~ msgstr "Agrupar per"

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-10-04 02:31+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-10-09 13:43+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/sale/ja/"
 ">\n"
@@ -43,8 +43,8 @@ msgstr ""
 "\n"
 "            お客様がOdoo 18 以上をご利用の場合、顧客情報および\n"
 "            販売オーダ明細が自動的に作成されます。\n"
-"            また、UBL-RequestForQuotation ファイルが添付された他の PDF "
-"でも動作します。\n"
+"            また、UBL-RequestForQuotation ファイルが添付された他の PDF でも動"
+"作します。\n"
 "        "
 
 #. module: sale
@@ -98,7 +98,8 @@ msgstr ""
 msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
-msgstr "100％無料です！きれいな見積書を作成し、販売を追跡する時間を節約できます。"
+msgstr ""
+"100％無料です！きれいな見積書を作成し、販売を追跡する時間を節約できます。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -196,33 +197,34 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value="
-"\"object.get_portal_last_transaction()\"/>\n"
+"        <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
 "        お世話になっております。\n"
 "        <br/><br/>\n"
 "        参照番号:\n"
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        金額\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        ご注文番号:\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\""
-">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
-"\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            は現在、保留中です。\n"
 "            <br/>\n"
-"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid +"
-" transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ("
-"'draft', 'sent')\">\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
+"+ transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+"('draft', 'sent')\">\n"
 "                お支払いが確認でき次第、ご注文が確定となります。\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                確定後\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"object.amount_total - object.amount_paid - transaction_sudo.amount, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "                をお支払いください。\n"
 "            </t>\n"
 "        </t>\n"
@@ -231,9 +233,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount("
-"object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                のお支払いが確認できておりません。\n"
 "            </t>\n"
 "        </t>\n"
@@ -243,8 +245,8 @@ msgstr ""
 "        ご不明な点がございましたら、お問合せ下さい。\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
 "Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
@@ -661,8 +663,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value="
-"\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+"('draft', 'sent') else 'order'\"/>\n"
 "        お世話になっております。\n"
 "        <br/><br/>\n"
 "        <t t-out=\"doc_name or ''\">見積書</t> <span style=\"font-weight: "
@@ -670,18 +672,17 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (参照番号: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        金額 <span style=\"font-weight: bold;\" t-out=\"format_amount("
-"object.amount_total, object.currency_id) or ''\">$ 10.00</span> "
-"の見積送状のご用意ができましたのでお知らせいたします。\n"
+"        金額 <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> の見積送状のご用意ができましたのでお知らせいたします。\n"
 "        <br/><br/>\n"
-"         "
-"ご不明な点がございましたら、お気軽にお問合せ下さい。宜しくお願いいたします。"
-"\n"
+"         ご不明な点がございましたら、お気軽にお問合せ下さい。宜しくお願いいた"
+"します。\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
 "quote-container=\"1\">\n"
-"                      <div data-o-mail-quote=\"1\">--<br data-o-mail-quote="
-"\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\""
-">Mitchell Admin</t></div>\n"
+"                      <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "   </p>\n"
 "</div>\n"
@@ -780,9 +781,9 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title="
-"\"This product is archived\" invisible="
-"\"state not in ['draft', 'sent'] or not is_product_archived\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title=\"This "
+"product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
+"is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -790,9 +791,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o p-2\" title="
-"\"Values set here are company-specific.\" groups=\"base.group_multi_company\""
-"/>"
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -813,7 +813,8 @@ msgstr "<span class=\"o_stat_text\">販売</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
-msgstr "<span id=\"o_sale_portal_use_amount_total\">支払いを行うことで、</span>"
+msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">支払いを行うことで、</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -821,8 +822,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class="
-"\"oe_inline\">% </span>"
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -867,7 +868,8 @@ msgstr "<span>税金</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: This quote contains archived product(s)</span>"
-msgstr "<span>警告:この見積もりには アーカイブプロダクトが含まれています。</span>"
+msgstr ""
+"<span>警告:この見積もりには アーカイブプロダクトが含まれています。</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -940,14 +942,16 @@ msgstr "通常上記のセクションまたはプロダクトに内容が適用
 msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
-msgstr "販売オーダ明細のコンボ項目は、リンクされた明細の使用可能なコンボ項目の1つでな"
+msgstr ""
+"販売オーダ明細のコンボ項目は、リンクされた明細の使用可能なコンボ項目の1つでな"
 "ければなりません。"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
-msgstr "販売オーダ明細のプロダクトは、そのコンボアイテムのプロダクトと一致する必要が"
+msgstr ""
+"販売オーダ明細のプロダクトは、そのコンボアイテムのプロダクトと一致する必要が"
 "あります。"
 
 #. module: sale
@@ -961,8 +965,9 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for "
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
-msgstr "請求ポリシー(オーダ数量または配送済数量に基づく)に従い、請求書発行の準備が整"
-"った全オーダ明細と標準請求書を発行します。"
+msgstr ""
+"請求ポリシー(オーダ数量または配送済数量に基づく)に従い、請求書発行の準備が"
+"整った全オーダ明細と標準請求書を発行します。"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1008,12 +1013,12 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されます："
-"\n"
+"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されま"
+"す：\n"
 "  - 手動：数量を明細上で手動で設定します\n"
 "  - 費用からの分析： 数量は計上された費用からの合計数量です\n"
-"  - タイムシート：数量は、"
-"この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - タイムシート：数量は、この売上明細にリンクされたタスクに記録された時間の"
+"合計です\n"
 "  - 在庫移動： 数量は確定したピッキングに由来します\n"
 
 #. module: sale
@@ -1086,8 +1091,8 @@ msgid ""
 "up\", ...)"
 msgstr ""
 "活動計画は、数回のクリックで活動リストを割当てます。\n"
-"                (例: \"配送スケジュール\"、 \"オーダ支払フォローアップ\"、 "
-"...)"
+"                (例: \"配送スケジュール\"、 \"オーダ支払フォローアップ"
+"\"、 ...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1194,9 +1199,8 @@ msgstr ""
 "見積時:ドキュメントは顧客に送信され、顧客はいつでもアクセスできます。\n"
 "例: このオプションは製品説明書などを共有するのに便利です。\n"
 "注文確定時: ドキュメントは顧客に送信され、アクセス可能になります。\n"
-"例: "
-"このオプションはユーザマニュアルやeコマースで購入したデジタルコンテンツを共有"
-"するのに適しています。\n"
+"例: このオプションはユーザマニュアルやeコマースで購入したデジタルコンテンツを"
+"共有するのに適しています。\n"
 "見積書内:ドキュメントは、見積書および販売注文書のPDFにおいて、ヘッダーページ"
 "と見積テーブルの間に挿入されます。 "
 
@@ -1288,7 +1292,8 @@ msgstr "適用"
 msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
-msgstr "販売オーダ明細に手動値引を適用するか、価格表から計算された値引を表示します(価"
+msgstr ""
+"販売オーダ明細に手動値引を適用するか、価格表から計算された値引を表示します(価"
 "格表構成で有効化するオプション)。"
 
 #. module: sale
@@ -1301,8 +1306,9 @@ msgstr "選択した項目を本当にキャンセルしますか?"
 msgid ""
 "Are you sure you want to cancel this order? This may affect related "
 "documents or processes."
-msgstr "このオーダを本当にキャンセルしますか？ "
-"関連ドキュメントや処理に影響が及ぶ可能性があります。"
+msgstr ""
+"このオーダを本当にキャンセルしますか？ 関連ドキュメントや処理に影響が及ぶ可能"
+"性があります。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1316,7 +1322,8 @@ msgstr "承認された取引を無効にしますか?このアクションは�
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
-msgstr "例えば、サービス時間を前払いで販売する場合、オーダされた時間がすべて消費され"
+msgstr ""
+"例えば、サービス時間を前払いで販売する場合、オーダされた時間がすべて消費され"
 "た時点で追加時間を販売することをOdooは推奨しています。"
 
 #. module: sale
@@ -1328,9 +1335,8 @@ msgid ""
 "you want to change it, please archive the product and create a new one."
 msgstr ""
 "このプロダクトでは、すでに例:%(problem_uom)sなど、他の測定単位(%(uom)sではな"
-"く) "
-"が使用されているため、測定単位の変更はできません。変更する場合は、プロダクト"
-"をアーカイブし、新しいプロダクトを作成して下さい。"
+"く) が使用されているため、測定単位の変更はできません。変更する場合は、プロダ"
+"クトをアーカイブし、新しいプロダクトを作成して下さい。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1395,7 +1401,8 @@ msgstr "魅力的な見積で競合他社に打ち勝ちましょう!"
 msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
-msgstr "オンライン決済やサイン、アップセル、優れた顧客ポータルで販売を促進します。"
+msgstr ""
+"オンライン決済やサイン、アップセル、優れた顧客ポータルで販売を促進します。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1406,9 +1413,9 @@ msgid ""
 "products."
 msgstr ""
 "クーポン、プロモーション、ギフトカード、ロイヤリティなど、様々なキャンペーン"
-"で売上を向上させます。特定な条件を設定できます "
-"(プロダクト、顧客、最低購入数、期間)。リワードとしては、値引 "
-"(%又は値引額)や無料プロダクトを提供できます。"
+"で売上を向上させます。特定な条件を設定できます (プロダクト、顧客、最低購入"
+"数、期間)。リワードとしては、値引 (%又は値引額)や無料プロダクトを提供できま"
+"す。"
 
 #. module: sale
 #. odoo-javascript
@@ -1496,12 +1503,10 @@ msgstr ""
 "- プロダクトの請求書発行ポリシーが正しく設定されている。\n"
 "\n"
 "代わりにオーダ数量に基づいて請求書を発行したい場合: \n"
-"- "
-"消耗品または保存可能なプロダクトの場合、プロダクトを開き、'一般情報'タブに移"
-"動し、'請求書発行ポリシー'を'納品済数量’から'オーダ済数量'に変更します。\n"
-"- "
-"サービス(およびその他のプロダクト)の場合は、'請求書発行方針'を'前払/固定価格'"
-"に変更します。\n"
+"- 消耗品または保存可能なプロダクトの場合、プロダクトを開き、'一般情報'タブに"
+"移動し、'請求書発行ポリシー'を'納品済数量’から'オーダ済数量'に変更します。\n"
+"- サービス(およびその他のプロダクト)の場合は、'請求書発行方針'を'前払/固定価"
+"格'に変更します。\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1530,7 +1535,8 @@ msgid ""
 "Changing the company of an existing quotation might need some manual "
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
-msgstr "既存の見積書の会社を変更するには、明細の詳細を手作業で調整する必要になる場合"
+msgstr ""
+"既存の見積書の会社を変更するには、明細の詳細を手作業で調整する必要になる場合"
 "があります。価格の更新を検討しましょう。"
 
 #. module: sale
@@ -1634,8 +1640,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "DHLで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1655,8 +1661,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "FedExで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1681,8 +1687,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "UPSで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1692,8 +1698,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "USPSで配送費用を計算し発送します<br/>\n"
-"                                    "
-"<strong>(ホーム&gt;アプリからインストールしてください)</strong>"
+"                                    <strong>(ホーム&gt;アプリからインストール"
+"してください)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1837,7 +1843,8 @@ msgstr "請求書を作成"
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr "請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したりし"
+msgstr ""
+"請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したりし"
 "ます。"
 
 #. module: sale
@@ -1850,7 +1857,8 @@ msgstr "オーダで作成"
 msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
-msgstr "同じ顧客、請求先住所、配送先住所に関連するすべてのオーダについて、1つの顧客請"
+msgstr ""
+"同じ顧客、請求先住所、配送先住所に関連するすべてのオーダについて、1つの顧客請"
 "求書を作成します。"
 
 #. module: sale
@@ -2012,7 +2020,8 @@ msgstr "デフォルト販売価格 含む"
 msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
-msgstr "この会社で使用されるプロダクトおよび顧客請求書に記載される販売価格に消費税が"
+msgstr ""
+"この会社で使用されるプロダクトおよび顧客請求書に記載される販売価格に消費税が"
 "含まれるかどうかのデフォルト設定。"
 
 #. module: sale
@@ -2020,7 +2029,8 @@ msgstr "この会社で使用されるプロダクトおよび顧客請求書に
 msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
-msgstr "見積が有効で、顧客が受諾可能なデフォルト期間。デフォルトはオーダまたはテンプ"
+msgstr ""
+"見積が有効で、顧客が受諾可能なデフォルト期間。デフォルトはオーダまたはテンプ"
 "レートごとに変更できます。"
 
 #. module: sale
@@ -2348,7 +2358,8 @@ msgstr "ドラフト請求書"
 msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
-msgstr "見積依頼のPDFファイルをOdooの見積一覧にドラッグ&ドロップします。自動処理をご"
+msgstr ""
+"見積依頼のPDFファイルをOdooの見積一覧にドラッグ&ドロップします。自動処理をご"
 "活用下さい!"
 
 #. module: sale
@@ -2450,7 +2461,8 @@ msgstr "会計ポジション"
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the customer."
-msgstr "会計ポジションは、特定の顧客、または特定の販売オーダ/請求書に、税金と勘定を調"
+msgstr ""
+"会計ポジションは、特定の顧客、または特定の販売オーダ/請求書に、税金と勘定を調"
 "整するために使用されます。デフォルト値は顧客から取得されます。"
 
 #. module: sale
@@ -2684,8 +2696,9 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
-msgstr "設定した場合には、販売オーダは、この仕訳帳に請求されます。 "
-"それ以外の場合は、最も低い順序の販売仕訳帳が使用されます。"
+msgstr ""
+"設定した場合には、販売オーダは、この仕訳帳に請求されます。 それ以外の場合は、"
+"最も低い順序の販売仕訳帳が使用されます。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3092,13 +3105,15 @@ msgstr "ロックされたオーダは修正できません。"
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
-msgstr "見積書にヘッダーページ、プロダクト説明、フッターページを追加して、魅力的な見"
+msgstr ""
+"見積書にヘッダーページ、プロダクト説明、フッターページを追加して、魅力的な見"
 "積書を作成しましょう"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
-msgstr "プロモーション、クーポン、ロイヤリティカード、ギフトカードや電子財布を管理し"
+msgstr ""
+"プロモーション、クーポン、ロイヤリティカード、ギフトカードや電子財布を管理し"
 "ます"
 
 #. module: sale
@@ -3400,7 +3415,8 @@ msgstr ""
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
-msgstr "見積が確定すると、販売オーダとなります。<br>請求書を作成し、支払いを回収する"
+msgstr ""
+"見積が確定すると、販売オーダとなります。<br>請求書を作成し、支払いを回収する"
 "ことができます"
 
 #. module: sale
@@ -3553,7 +3569,8 @@ msgstr "注文数量 %(old_qty)s -> %(new_qty)s"
 msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
-msgstr "オーダ数量:顧客がオーダした請求書の数量。配送済数量:顧客に納品された請求書の"
+msgstr ""
+"オーダ数量:顧客がオーダした請求書の数量。配送済数量:顧客に納品された請求書の"
 "数量。"
 
 #. module: sale
@@ -3609,7 +3626,7 @@ msgstr "見積送状"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.js:0
 msgid "Packaging"
-msgstr "梱包"
+msgstr "パッケージング"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
@@ -4157,7 +4174,8 @@ msgstr "オーダを確定するために、顧客にオンライン署名を依
 msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
-msgstr "オーダを確定するには、全額(100％)または一部の支払いを要求します。デフォルト値"
+msgstr ""
+"オーダを確定するには、全額(100％)または一部の支払いを要求します。デフォルト値"
 "はオーダまたはテンプレートごとに変更できます。"
 
 #. module: sale
@@ -4165,8 +4183,9 @@ msgstr "オーダを確定するには、全額(100％)または一部の支払�
 msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
-msgstr "オーダを有効にするために、顧客に見積に署名するよう依頼します。デフォルトはオ"
-"ーダまたはテンプレートごとに変更できます。"
+msgstr ""
+"オーダを有効にするために、顧客に見積に署名するよう依頼します。デフォルトは"
+"オーダまたはテンプレートごとに変更できます。"
 
 #. module: sale
 #. odoo-python
@@ -4444,7 +4463,8 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr "顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエン"
+msgstr ""
+"顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエン"
 "トリーを請求不可にするには、販売オーダ項目を削除して下さい。"
 
 #. module: sale
@@ -4544,7 +4564,8 @@ msgstr "異なる測定単位やパッケージングでプロダクトを販売
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "属性（サイズ、色など）を使用してプロダクトのバリエーションを販売できます"
+msgstr ""
+"属性（サイズ、色など）を使用してプロダクトのバリエーションを販売できます"
 
 #. module: sale
 #. odoo-python
@@ -4580,9 +4601,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
-"プロダクトに関する特定の情報や内容（取扱説明、規則、リンク、メディア等）をシ"
-"ェアしたい場合、メール配信が役立ちます。プロダクト詳細フォーム（会計タブ）か"
-"ら、Eメールテンプレートを作成してください。"
+"プロダクトに関する特定の情報や内容（取扱説明、規則、リンク、メディア等）を"
+"シェアしたい場合、メール配信が役立ちます。プロダクト詳細フォーム（会計タブ）"
+"から、Eメールテンプレートを作成してください。"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4723,7 +4744,8 @@ msgstr ""
 msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
-msgstr "一部のオーダ明細にプロダクトが欠落しています。先に進む前に修正してください。"
+msgstr ""
+"一部のオーダ明細にプロダクトが欠落しています。先に進む前に修正してください。"
 
 #. module: sale
 #. odoo-python
@@ -4826,8 +4848,9 @@ msgstr "税抜合計"
 msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
-msgstr "オンライン支払フォームを通じて行われた取引のうち、 '完了' または '認証済' "
-"の状態にあり、このオーダにリンクされている取引の合計。"
+msgstr ""
+"オンライン支払フォームを通じて行われた取引のうち、 '完了' または '認証済' の"
+"状態にあり、このオーダにリンクされている取引の合計。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
@@ -4900,10 +4923,9 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
-"%(team_name)sチームには "
-"%(sale_order_count)sのアクティブな販売オーダがあります。 "
-"それらをキャンセルするか、代わりにチームをアーカイブすることを検討して下さい"
-"。"
+"%(team_name)sチームには %(sale_order_count)sのアクティブな販売オーダがありま"
+"す。 それらをキャンセルするか、代わりにチームをアーカイブすることを検討して下"
+"さい。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -4960,9 +4982,9 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
-msgstr "再請求予定の販売オーダ %(order)s "
-"がキャンセルされました。キャンセル済販売オーダに経費を登録することはできませ"
-"ん。"
+msgstr ""
+"再請求予定の販売オーダ %(order)s がキャンセルされました。キャンセル済販売オー"
+"ダに経費を登録することはできません。"
 
 #. module: sale
 #. odoo-python
@@ -4970,9 +4992,9 @@ msgstr "再請求予定の販売オーダ %(order)s "
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
-msgstr "再請求予定の販売オーダ %(order)s "
-"は現在ロックされています。ロックされている販売オーダに経費を登録することはで"
-"きません。"
+msgstr ""
+"再請求予定の販売オーダ %(order)s は現在ロックされています。ロックされている販"
+"売オーダに経費を登録することはできません。"
 
 #. module: sale
 #. odoo-python
@@ -4980,8 +5002,9 @@ msgstr "再請求予定の販売オーダ %(order)s "
 msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
-msgstr "再請求予定の販売オーダ %(order)s "
-"は経費を登録する前に検証される必要があります。"
+msgstr ""
+"再請求予定の販売オーダ %(order)s は経費を登録する前に検証される必要がありま"
+"す。"
 
 #. module: sale
 #. odoo-python
@@ -5033,8 +5056,8 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
-"次の製品は、別の会社の見積または販売オーダですでに使用されているため、会社%(c"
-"ompany)sに制限することはできません。\n"
+"次の製品は、別の会社の見積または販売オーダですでに使用されているため、会社%"
+"(company)sに制限することはできません。\n"
 "%(used_products)s\n"
 "これらのプロダクトをアーカイブして、代わりに会社の制限付きで再作成するか、共"
 "有プロダクトのままにすることができます。"
@@ -5067,7 +5090,8 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
-msgstr "この販売オーダにリンクした請求書ドラフトから新しい請求書が控除されます。"
+msgstr ""
+"この販売オーダにリンクした請求書ドラフトから新しい請求書が控除されます。"
 
 #. module: sale
 #. odoo-python
@@ -5075,7 +5099,8 @@ msgstr "この販売オーダにリンクした請求書ドラフトから新し
 msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
-msgstr "選択されたコンボ項目の数は、利用可能なコンボ選択肢の数と一致しなければなりま"
+msgstr ""
+"選択されたコンボ項目の数は、利用可能なコンボ選択肢の数と一致しなければなりま"
 "せん。"
 
 #. module: sale
@@ -5115,13 +5140,15 @@ msgstr "事前に請求される金額の割合。"
 msgid ""
 "The percentage of the amount needed that must be paid by the customer to "
 "confirm the order."
-msgstr "オーダを確定するために顧客が支払わなければならない必要金額のパーセンテージ。"
+msgstr ""
+"オーダを確定するために顧客が支払わなければならない必要金額のパーセンテージ。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr "見積書を確定するために顧客が支払わなければならない必要金額のパーセンテージ。"
+msgstr ""
+"見積書を確定するために顧客が支払わなければならない必要金額のパーセンテージ。"
 
 #. module: sale
 #. odoo-python
@@ -5157,7 +5184,8 @@ msgid ""
 "There does not seem to be any discount product configured for this company "
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
-msgstr "この会社向けに設定された割引プロダクトはまだないようです。明細ごとの割引を利"
+msgstr ""
+"この会社向けに設定された割引プロダクトはまだないようです。明細ごとの割引を利"
 "用するか、または管理者に割引を付与するよう依頼して下さい。"
 
 #. module: sale
@@ -5192,8 +5220,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"これは、顧客に対して約束した納品予定日です。設定されている場合、配送オーダは"
-"、プロダクトのリードタイムではなく、この日付に基づいてスケジュールされます。"
+"これは、顧客に対して約束した納品予定日です。設定されている場合、配送オーダ"
+"は、プロダクトのリードタイムではなく、この日付に基づいてスケジュールされま"
+"す。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5209,7 +5238,8 @@ msgstr "これは、はがき、電子メール、バナー広告などの配信
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "これはリンクの参照元です。たとえば、検索エンジン、別のドメイン、またはメーリ"
+msgstr ""
+"これはリンクの参照元です。たとえば、検索エンジン、別のドメイン、またはメーリ"
 "ングリストの名前です。"
 
 #. module: sale
@@ -5236,11 +5266,11 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"このレポートは見積書と販売オーダの分析を行います。この分析では販売収益をチェ"
-"ックし、別のグループ基準 （販売担当、取引先、プロダクトなど） "
-"により並べ替えます。このレポートを使用して、まだ請求されていない販売を分析し"
-"ましょう。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レ"
-"ポートを使用する必要があります。"
+"このレポートは見積書と販売オーダの分析を行います。この分析では販売収益を"
+"チェックし、別のグループ基準 （販売担当、取引先、プロダクトなど） により並べ"
+"替えます。このレポートを使用して、まだ請求されていない販売を分析しましょう。"
+"総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使"
+"用する必要があります。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -5251,12 +5281,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"このレポートは見積書の分析を行います。 "
-"この分析では、販売収益をチェックし、様々なグループ基準（販売担当、取引先、プ"
-"ロダクトなど）によって並び替えます。このレポートを使用して、まだ請求されてい"
-"ない販売を分析しましょう。 "
-"総売上高を分析したい場合は、会計アプリケーションで請求書分析レポートを使用す"
-"る必要があります。"
+"このレポートは見積書の分析を行います。 この分析では、販売収益をチェックし、"
+"様々なグループ基準（販売担当、取引先、プロダクトなど）によって並び替えます。"
+"このレポートを使用して、まだ請求されていない販売を分析しましょう。 総売上高を"
+"分析したい場合は、会計アプリケーションで請求書分析レポートを使用する必要があ"
+"ります。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -5267,11 +5296,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"このレポートは、販売オーダの分析を行います。 "
-"この分析では、販売収益をチェックし、様々なグループ基準（販売担当、取引先、プ"
-"ロダクト）によって並び替えます。このレポートを使用して、まだ請求されていない"
-"販売を分析しましょう。売上高を分析したい場合は、会計アプリケーションで請求書"
-"分析レポートを使用する必要があります。"
+"このレポートは、販売オーダの分析を行います。 この分析では、販売収益をチェック"
+"し、様々なグループ基準（販売担当、取引先、プロダクト）によって並び替えます。"
+"このレポートを使用して、まだ請求されていない販売を分析しましょう。売上高を分"
+"析したい場合は、会計アプリケーションで請求書分析レポートを使用する必要があり"
+"ます。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5283,7 +5312,8 @@ msgstr "選択された会計ポジションに基づいて、すべての税が
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
-msgstr "これにより、すべてのプロダクトの単価が新しい価格表に基づいて更新されます。"
+msgstr ""
+"これにより、すべてのプロダクトの単価が新しい価格表に基づいて更新されます。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -5505,7 +5535,8 @@ msgstr "アップセリングの機会"
 msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
-msgstr "上記のREST URLを使用して、購買オーダの構造データをUBL形式で取得します。"
+msgstr ""
+"上記のREST URLを使用して、購買オーダの構造データをUBL形式で取得します。"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
@@ -5533,7 +5564,8 @@ msgstr "オーダを検証"
 msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
-msgstr "検証済経費と仕入先請求書、または在庫ピッキング(原価を追跡するよう設定)は、原"
+msgstr ""
+"検証済経費と仕入先請求書、または在庫ピッキング(原価を追跡するよう設定)は、原"
 "価または販売価格で顧客に再請求できます。"
 
 #. module: sale
@@ -5546,7 +5578,8 @@ msgstr "有効期間"
 msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
-msgstr "オーダの有効期限：有効期限を過ぎると、見積に署名することができなくなります。"
+msgstr ""
+"オーダの有効期限：有効期限を過ぎると、見積に署名することができなくなります。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5676,7 +5709,8 @@ msgstr "確認済オーダの価格表を変えることはできません！"
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
-msgstr "プロダクトの種類は、すでに販売オーダで使用されているため、変更することができ"
+msgstr ""
+"プロダクトの種類は、すでに販売オーダで使用されているため、変更することができ"
 "ません。"
 
 #. module: sale
@@ -5700,7 +5734,8 @@ msgstr "このオーダ明細のプロダクトを変更することはできま
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
-msgstr "デフォルトの見積有効期限に負の数を設定することはできません。見積の自動有効期"
+msgstr ""
+"デフォルトの見積有効期限に負の数を設定することはできません。見積の自動有効期"
 "限を無効にするには、空（または0）のままにします。"
 
 #. module: sale
@@ -5768,10 +5803,10 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"見積には会社%(product_company)sのプロダクトが含まれていますが、この見積は会社"
-"%(quote_company)sに属しています。\n"
-"見積の会社を変更するか、他の会社のプロダクトを削除してください(%(bad_products"
-")s)。"
+"見積には会社%(product_company)sのプロダクトが含まれていますが、この見積は会"
+"社%(quote_company)sに属しています。\n"
+"見積の会社を変更するか、他の会社のプロダクトを削除してください(%"
+"(bad_products)s)。"
 
 #. module: sale
 #. odoo-javascript
@@ -5803,7 +5838,8 @@ msgstr "日"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "e.g. This customer has reported recurring issues with previous orders."
-msgstr "例: この顧客は、以前のオーダで繰り返し問題が発生していると報告しています。"
+msgstr ""
+"例: この顧客は、以前のオーダで繰り返し問題が発生していると報告しています。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
@@ -5878,8 +5914,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' "
-"}})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-24 19:22+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -35,22 +35,10 @@ msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
 msgstr "<i class=\"fa fa-shopping-cart\"/> Adicionar ao carrinho"
 
 #. module: website_sale_slides
-#: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
-#: model:ir.model.fields,help:website_sale_slides.field_product_template__detailed_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"Um produto armazenável é um produto no qual você pode gerenciar o estoque. O aplicativo Inventário deve ser instalado.\n"
-"Um produto consumível é um produto para o qual o estoque não é gerenciado.\n"
-"Um serviço é um produto não material que você fornece."
-
-#. module: website_sale_slides
 #. odoo-python
 #: code:addons/website_sale_slides/models/product_product.py:0
-msgid "Access to: %s%s"
-msgstr "Acesso a: %s%s"
+msgid "Access to: %(new_line)s%(channel_list)s"
+msgstr ""
 
 #. module: website_sale_slides
 #: model:product.template,name:website_sale_slides.product_course_channel_5_product_template
@@ -58,7 +46,8 @@ msgid "Basics of Furniture Creation"
 msgstr "Noções básicas de criação de móveis"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/website_builder/course_page_option.xml:0
 msgid "Buy Now Button"
 msgstr "Botão 'compre agora'"
 
@@ -83,17 +72,18 @@ msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_slide_channel
-#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__detailed_type__course
 msgid "Course"
 msgstr "Curso"
 
 #. module: website_sale_slides
+#: model:ir.model.fields.selection,name:website_sale_slides.selection__product_template__service_tracking__course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
 msgstr "Acesso ao curso"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/website_builder/course_page_option_plugin.js:0
 msgid "Course Page"
 msgstr "Página do curso"
 
@@ -106,6 +96,12 @@ msgstr "Curso indisponível"
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
 msgid "Courses"
 msgstr "Cursos"
+
+#. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr ""
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__currency_id
@@ -123,6 +119,15 @@ msgid "Defines how people can enroll to your Course."
 msgstr "Define como as pessoas podem se inscrever no seu curso."
 
 #. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form_add_inherit_sale_slides
 msgid "Enroll Policy"
@@ -134,6 +139,21 @@ msgid "Free Preview"
 msgstr "Prévia gratuita"
 
 #. module: website_sale_slides
+#. odoo-python
+#: code:addons/website_sale_slides/models/product_template.py:0
+msgid "Grant access to the eLearning course linked to this product."
+msgstr ""
+
+#. module: website_sale_slides
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__id
+msgid "ID"
+msgstr ""
+
+#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "Join this Course"
 msgstr "Participe desse curso"
@@ -141,8 +161,12 @@ msgstr "Participe desse curso"
 #. module: website_sale_slides
 #. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
-msgid "Leaving the course and re-enrolling afterwards means that you'll be charged again."
-msgstr "Sair do curso e se inscrever novamente significa que você será cobrado novamente."
+msgid ""
+"Leaving the course and re-enrolling afterwards means that you'll be charged "
+"again."
+msgstr ""
+"Sair do curso e se inscrever novamente significa que você será cobrado "
+"novamente."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
@@ -162,7 +186,8 @@ msgstr "Em pagamento"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Once your order is paid &amp; confirmed, you will gain access to:"
-msgstr "Assim que seu pedido estiver pago e confirmado, você receberá acesso a:"
+msgstr ""
+"Assim que seu pedido estiver pago e confirmado, você receberá acesso a:"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
@@ -179,12 +204,6 @@ msgstr "Visualizar"
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_id
 msgid "Product"
 msgstr "Produto"
-
-#. module: website_sale_slides
-#: model:ir.model.fields,field_description:website_sale_slides.field_product_product__detailed_type
-#: model:ir.model.fields,field_description:website_sale_slides.field_product_template__detailed_type
-msgid "Product Type"
-msgstr "Tipo de Produto"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_product
@@ -211,6 +230,11 @@ msgstr "Vendas"
 #: model:ir.model,name:website_sale_slides.model_sale_order
 msgid "Sales Order"
 msgstr "Pedido de venda"
+
+#. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
 
 #. module: website_sale_slides
 #. odoo-javascript
@@ -266,17 +290,6 @@ msgid "Total revenues"
 msgstr "Total de receitas"
 
 #. module: website_sale_slides
-#: model:ir.model,name:website_sale_slides.model_website
-msgid "Website"
-msgstr "Website"
-
-#. module: website_sale_slides
-#. odoo-python
-#: code:addons/website_sale_slides/models/slide_channel.py:0
-msgid "You are not allowed to add members to this course. Please contact the course responsible or an administrator."
-msgstr ""
-
-#. module: website_sale_slides
 #. odoo-python
 #: code:addons/website_sale_slides/models/sale_order.py:0
 msgid "You can only add a course once in your cart."
@@ -316,3 +329,24 @@ msgstr "passos"
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "to access resources"
 msgstr "para acessar os recursos"
+
+#~ msgid ""
+#~ "A storable product is a product for which you manage stock. The Inventory "
+#~ "app has to be installed.\n"
+#~ "A consumable product is a product for which stock is not managed.\n"
+#~ "A service is a non-material product you provide."
+#~ msgstr ""
+#~ "Um produto armazenável é um produto no qual você pode gerenciar o "
+#~ "estoque. O aplicativo Inventário deve ser instalado.\n"
+#~ "Um produto consumível é um produto para o qual o estoque não é "
+#~ "gerenciado.\n"
+#~ "Um serviço é um produto não material que você fornece."
+
+#~ msgid "Access to: %s%s"
+#~ msgstr "Acesso a: %s%s"
+
+#~ msgid "Product Type"
+#~ msgstr "Tipo de Produto"
+
+#~ msgid "Website"
+#~ msgstr "Website"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -18,19 +18,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "<strong> - </strong>"
-msgstr "<strong> - </strong>"
-
-#. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "<strong>Coupons - </strong>"
-msgstr "<strong>Купоны - </strong>"
 
 #. module: website_sale_loyalty
 #. odoo-python
@@ -55,6 +45,16 @@ msgid "Available on Website"
 msgstr "Доступно на сайте"
 
 #. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/controllers/payment.py:0
+msgid ""
+"Cannot process payment: applied reward was changed or has expired.\n"
+"Please refresh the page and try again."
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-javascript
+#: code:addons/website_sale_loyalty/static/src/js/portal_loyalty_card.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Claim"
 msgstr "Заявка"
@@ -63,11 +63,6 @@ msgstr "Заявка"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Code:"
 msgstr "Код:"
-
-#. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "Costs"
-msgstr "Расходы"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.layout
@@ -80,9 +75,22 @@ msgid "Coupon"
 msgstr "Купон"
 
 #. module: website_sale_loyalty
+#. odoo-javascript
+#: code:addons/website_sale_loyalty/static/src/website_builder/coupon_option_plugin.js:0
+msgid "Coupon Snippet Options"
+msgstr ""
+
+#. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
+msgid "Coupons -"
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
-msgstr "Создавайте ссылки, которые применяют купон и перенаправляют на определенную страницу"
+msgstr ""
+"Создавайте ссылки, которые применяют купон и перенаправляют на определенную "
+"страницу"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__create_uid
@@ -105,6 +113,11 @@ msgid "Discount & Loyalty"
 msgstr "Скидки и лояльность"
 
 #. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.reduction_coupon_code
+msgid "Discount code or gift card"
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.cart_discount
 msgid "Discount:"
 msgstr "Скидка:"
@@ -116,6 +129,12 @@ msgstr "Дисконтированная сумма"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_card__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_rule__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -128,12 +147,6 @@ msgstr "Готово"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Expired Date:"
 msgstr "Дата истечения срока действия:"
-
-#. module: website_sale_loyalty
-#. odoo-javascript
-#: code:addons/website_sale_loyalty/static/src/js/website_sale_loyalty_delivery.js:0
-msgid "Free"
-msgstr "Бесплатно"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
@@ -152,6 +165,12 @@ msgstr "Подарочные карты и электронный кошелек
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_card__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_rule__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -196,9 +215,9 @@ msgid "Loyalty Rule"
 msgstr "Правило лояльности"
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "Pay with eWallet"
-msgstr "Оплата с помощью электронного кошелька"
+#: model:ir.model,name:website_sale_loyalty.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
@@ -230,8 +249,8 @@ msgstr "Перенаправление"
 #: model:ir.model.fields,help:website_sale_loyalty.field_coupon_share__program_website_id
 #: model:ir.model.fields,help:website_sale_loyalty.field_loyalty_program__website_id
 #: model:ir.model.fields,help:website_sale_loyalty.field_loyalty_rule__website_id
-msgid "Restrict publishing to this website."
-msgstr "Ограничьте публикацию на этом сайте."
+msgid "Restrict to a specific website."
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_sale_order
@@ -252,6 +271,12 @@ msgid "Share"
 msgstr "Поделиться"
 
 #. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/wizard/coupon_share.py:0
+msgid "Share %s"
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__share_link
 msgid "Share Link"
 msgstr "Поделиться ссылкой"
@@ -262,14 +287,21 @@ msgid "Share Loyalty Card"
 msgstr "Поделитесь картой лояльности"
 
 #. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_loyalty/static/src/website_builder/coupon_option.xml:0
 msgid "Show Discount in Subtotal"
 msgstr "Показать скидку в промежуточном итоге"
 
 #. module: website_sale_loyalty
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__show_non_published_product_warning
+msgid "Show Non Published Product Warning"
+msgstr ""
+
+#. module: website_sale_loyalty
 #. odoo-python
 #: code:addons/website_sale_loyalty/controllers/main.py:0
-msgid "The coupon will be automatically applied when you add something in your cart."
+msgid ""
+"The coupon will be automatically applied when you add something in your cart."
 msgstr "Купон будет автоматически применен, когда вы добавите товар в корзину."
 
 #. module: website_sale_loyalty
@@ -290,6 +322,19 @@ msgid "The shared website should correspond to the website of the program."
 msgstr "Общий сайт должен соответствовать сайту программы."
 
 #. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
+msgid ""
+"To be able to top up eWallet from the portal, eWallet products must be\n"
+"                     published."
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-javascript
+#: code:addons/website_sale_loyalty/static/src/js/portal_loyalty_card.xml:0
+msgid "Top Up"
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Use"
 msgstr "Использовать"
@@ -306,22 +351,38 @@ msgstr "Сайт"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid ""
 "You can share this promotion with your customers.\n"
-"                            It will be applied at checkout when the customer uses this link."
+"                            It will be applied at checkout when the customer "
+"uses this link."
 msgstr ""
 "Вы можете поделиться этой акцией со своими клиентами.\n"
-"                            Она будет применена при оформлении заказа, когда покупатель воспользуется этой ссылкой."
-
-#. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "You have"
-msgstr "У вас"
+"                            Она будет применена при оформлении заказа, когда "
+"покупатель воспользуется этой ссылкой."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "You have successfully applied the following code:"
 msgstr "Вы успешно применили следующий код:"
 
-#. module: website_sale_loyalty
-#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
-msgid "in your ewallet"
-msgstr "в вашем электронном кошельке"
+#~ msgid "<strong> - </strong>"
+#~ msgstr "<strong> - </strong>"
+
+#~ msgid "<strong>Coupons - </strong>"
+#~ msgstr "<strong>Купоны - </strong>"
+
+#~ msgid "Costs"
+#~ msgstr "Расходы"
+
+#~ msgid "Free"
+#~ msgstr "Бесплатно"
+
+#~ msgid "Pay with eWallet"
+#~ msgstr "Оплата с помощью электронного кошелька"
+
+#~ msgid "Restrict publishing to this website."
+#~ msgstr "Ограничьте публикацию на этом сайте."
+
+#~ msgid "You have"
+#~ msgstr "У вас"
+
+#~ msgid "in your ewallet"
+#~ msgstr "в вашем электронном кошельке"

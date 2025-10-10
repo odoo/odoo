@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 02:37+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -26,7 +26,7 @@ msgid "%(name)s (Estimated Cost: %(cost)s)"
 msgstr "%(name)s (Chi phí ước tính: %(cost)s)"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
+#: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
 msgid "(computed:"
 msgstr "(đã tính:"
 
@@ -47,8 +47,12 @@ msgid "<span>Shipping Weight: </span>"
 msgstr "<span>Khối lượng vận chuyển: </span>"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Carrier:</strong>"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Carrier</strong>"
 msgstr "<strong>Đơn vị vận chuyển</strong>"
 
@@ -88,7 +92,19 @@ msgstr "<strong>Khối lượng: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
-msgid "<strong>Weight</strong>"
+msgid ""
+"<strong>Weight:</strong>\n"
+"                <br/>"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
+msgid "Action while validating Delivery Orders"
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
+msgid "Allowed Carrier"
 msgstr ""
 
 #. module: stock_delivery
@@ -104,14 +120,14 @@ msgstr "Hủy"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "Bạn có thể không hoàn tác được việc huỷ một lệnh giao hàng. Bạn có chắc muốn "
 "tiếp tục không?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__package_carrier_type
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -124,30 +140,20 @@ msgid "Carrier Code"
 msgstr "Mã đơn vị vận chuyển"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
+msgid "Carrier Type"
+msgstr ""
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
 msgstr "Tên đơn vị vận chuyển"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
-msgid "Company"
-msgstr "Công ty"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
 msgstr "Chi phí: %(price).2f %(currency)s"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
-msgid "Created by"
-msgstr "Được tạo bởi"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
-msgid "Created on"
-msgstr "Được tạo vào"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
@@ -158,16 +164,6 @@ msgstr "Công cụ chọn đơn vị giao hàng"
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
 msgstr "Phương thức giao hàng"
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_choose_delivery_package
-msgid "Delivery Package Selection Wizard"
-msgstr "Công cụ chọn kiện giao hàng"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
-msgid "Delivery Package Type"
-msgstr "Loại kiện hàng giao hàng"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -181,12 +177,19 @@ msgid "Destination Country"
 msgstr "Quốc gia đích"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
-msgid "Discard"
-msgstr "Huỷ bỏ"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -198,8 +201,10 @@ msgstr "Hiển thị liên kết truy vết"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Phí dự tính: khách hàng sẽ nhận được hóa đơn phí giao hàng dự tính.\n"
 "Phí thực tế: khách hàng sẽ nhận được hóa đơn phí giao hàng thực tế, phí vận "
@@ -231,9 +236,26 @@ msgid "HS Code"
 msgstr "Mã HS"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr "ID"
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
+msgid "Integration Level"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
@@ -249,16 +271,6 @@ msgstr "Chính sách xuất hóa đơn"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
 msgstr "Là phiếu trả hàng"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
-msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
-msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
 
 #. module: stock_delivery
 #. odoo-python
@@ -283,31 +295,15 @@ msgid "Origin of Goods"
 msgstr "Xuất xứ hàng hoá"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
+#: model:ir.model,name:stock_delivery.model_stock_package
 msgid "Package"
 msgstr "Kiện hàng"
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
-msgid "Package Details"
-msgstr "Chi tiết kiện hàng"
-
-#. module: stock_delivery
-#. odoo-python
-#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+#: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
 msgid "Package too heavy!"
 msgstr "Kiện hàng quá nặng"
-
-#. module: stock_delivery
-#: model:ir.model,name:stock_delivery.model_stock_quant_package
-msgid "Packages"
-msgstr "Kiện hàng"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
-msgid "Picking"
-msgstr ""
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -329,6 +325,11 @@ msgstr "Điều chuyển sản phẩm (Dòng điều chuyển tồn kho)"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
 msgid "Provider"
 msgstr "Nhà cung cấp"
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_put_in_pack
+msgid "Put In Pack Wizard"
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -355,8 +356,10 @@ msgstr "Tuyến cung ứng"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
 "Quy tắc xuất xứ xác định nguồn gốc của hàng hóa, nghĩa là không phải nơi "
 "hàng hóa được vận chuyển đi mà là nơi hàng hóa được sản xuất hoặc chế tạo.\n"
@@ -379,11 +382,6 @@ msgid "Sales Order Line"
 msgstr "Dòng đơn bán hàng"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
-msgid "Save"
-msgstr "Lưu"
-
-#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
 msgstr "Gửi cho bưu tá"
@@ -392,8 +390,8 @@ msgstr "Gửi cho bưu tá"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 "Gói hàng được giao cho đơn vị vận chuyển %(carrier_name)s để vận chuyển có "
 "mã theo dõi là %(ref)s"
@@ -415,7 +413,7 @@ msgid "Shipping Methods"
 msgstr "Phương thức vận chuyển"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__shipping_weight
 msgid "Shipping Weight"
 msgstr "Khối lượng vận chuyển"
 
@@ -441,12 +439,12 @@ msgid "Stock package type"
 msgstr "Loại kiện hàng tồn kho"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
 msgstr "Trường kỹ thuật chỉ số chữ số thập phân của khối lượng"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
 "Trường kỹ thuật cho biết ĐVT khối lượng có phải là kg hay không (hay lb)"
@@ -479,7 +477,15 @@ msgstr "Phí vận chuyển sẽ được tính sau khi hoàn thành giao hàng.
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
+#: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"its package type. Please choose another package."
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/wizard/stock_put_in_pack.py:0
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
@@ -494,7 +500,7 @@ msgid "There is no matching delivery rule."
 msgstr "Không có quy định vận chuyển phù hợp."
 
 #. module: stock_delivery
-#: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
+#: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
 msgid "Total weight of all the products contained in the package."
 msgstr "Tổng khối lượng của tất cả sản phẩm trong kiện hàng."
 
@@ -541,8 +547,8 @@ msgstr "Lệnh chuyển hàng"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr "Khối lượng"
@@ -553,9 +559,9 @@ msgid "Weight for shipping"
 msgstr "Khối lượng vận chuyển"
 
 #. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
-#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr "Nhãn đơn vị tính khối lượng"
 
@@ -566,11 +572,11 @@ msgstr "Khối lượng:"
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
+#: code:addons/stock_delivery/models/stock_move.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "Bạn không thể đóng gói sản phẩm vào cùng một kiện hàng khi chúng được vận "
 "chuyển bởi các đơn vị vận chuyển khác nhau (nghĩa là hãy kiểm tra để đảm bảo "
@@ -613,6 +619,51 @@ msgid "^FO310,200"
 msgstr "^FO310,200"
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
+msgid "^FO35, 180 ^A0N,15^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
+msgid "^FO35, 220 ^A0N,15^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FS"
 msgstr "^FS"
+
+#~ msgid "Company"
+#~ msgstr "Công ty"
+
+#~ msgid "Created by"
+#~ msgstr "Được tạo bởi"
+
+#~ msgid "Created on"
+#~ msgstr "Được tạo vào"
+
+#~ msgid "Delivery Package Selection Wizard"
+#~ msgstr "Công cụ chọn kiện giao hàng"
+
+#~ msgid "Delivery Package Type"
+#~ msgstr "Loại kiện hàng giao hàng"
+
+#~ msgid "Discard"
+#~ msgstr "Huỷ bỏ"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Cập nhật lần cuối bởi"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Cập nhật lần cuối vào"
+
+#~ msgid "Package Details"
+#~ msgstr "Chi tiết kiện hàng"
+
+#~ msgid "Packages"
+#~ msgstr "Kiện hàng"
+
+#~ msgid "Save"
+#~ msgstr "Lưu"

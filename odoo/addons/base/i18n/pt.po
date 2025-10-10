@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-12 13:52+0000\n"
+"POT-Creation-Date: 2025-10-09 12:16+0000\n"
 "PO-Revision-Date: 2025-09-16 18:42+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/base/"
@@ -425,6 +425,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_imin
+msgid ""
+"\n"
+"\n"
+"Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
@@ -527,6 +535,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ar_reports_simple
+msgid ""
+"\n"
+"* Add export of IVA Simple Tax Report.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_ai_app
 msgid ""
 "\n"
@@ -570,6 +585,13 @@ msgid ""
 "- Register as a PEPPOL participant\n"
 "- Send and receive documents via PEPPOL network in Peppol BIS Billing 3.0 "
 "format\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_dk_nemhandel
+msgid ""
+"\n"
+"- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
 
 #. module: base
@@ -814,8 +836,8 @@ msgstr ""
 "aparecer no extrato bancário do beneficiário em relação ao pagamento.\n"
 "\n"
 "- As contas bancárias do fornecedor podem ser configuradas no mesmo local; "
-"no entanto, geralmente é mais fácil configurá-las no parceiro do fornecedor."
-"\n"
+"no entanto, geralmente é mais fácil configurá-las no parceiro do "
+"fornecedor.\n"
 "\n"
 "- *Accounting > Vendors > Vendors*\n"
 "\n"
@@ -1874,6 +1896,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_se_returns
+msgid ""
+"\n"
+"Accounting returns for Sweden\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
 msgid ""
 "\n"
@@ -2066,8 +2095,8 @@ msgstr ""
 "\n"
 "Adiciona a possibilidade de criar assinaturas a partir do módulo de "
 "documentos.\n"
-"O primeiro elemento da seleção (em DRM) será usado como anexo de assinatura."
-"\n"
+"O primeiro elemento da seleção (em DRM) será usado como anexo de "
+"assinatura.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice_stock_account
@@ -2342,8 +2371,7 @@ msgid ""
 msgstr ""
 "\n"
 "Permite o cálculo de algumas seções para a lucratividade do projeto\n"
-"=================================================================================================="
-"\n"
+"==================================================================================================\n"
 "Este módulo permite o cálculo das seções 'Faturas de fornecedor', 'Outros "
 "custos' e 'Outras receitas' para a lucratividade do projeto, na visualização "
 "de atualização do projeto.\n"
@@ -2764,6 +2792,66 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related "
 "password, if any.\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona_auto
+msgid ""
+"\n"
+"Automatic DIMONA declarations\n"
+"=============================\n"
+"\n"
+"Prerequisites:\n"
+"--------------\n"
+"\n"
+"- You need a Belgian Government Compliant Digital Certificate, delivered by "
+"Global\n"
+"  Sign. See: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Generate certificate files from your SSL certificate (.pfx file) that are "
+"needed to create\n"
+"  a technical user (.cer file) and to authenticate remotely to the ONSS "
+"(.pfx) file. On a UNIX\n"
+"  system, you may use the following commands:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys "
+"-clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"- Before you can use the social security REST web service, you must create "
+"an account\n"
+"  for yourself or for your client and configure the security. (The whole "
+"procedure is\n"
+"  available at https://www.socialsecurity.be/site_fr/employer/applics/dimona/"
+"introduction/webservice.htm)\n"
+"\n"
+"  - User account management: Follow the Procedure https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Create a technical user: Your client must now create a technical user in "
+"the Access management\n"
+"    online service. The follow this procedure: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activate a web service channel: Once the technical user has been "
+"created, your client must\n"
+"    activate the web service channel in Access Management. The following "
+"manual explains the\n"
+"    steps to follow to activate the channel: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - At the end of the procedure, you should receive a \"ONSS Expeditor "
+"Number\", you may\n"
+"    encode in in the payroll Settings, with the .pem file and the related "
+"password, if any.\n"
+"\n"
+"- Configuration note: The .pfx certificate should be set on the payroll "
+"configuration.\n"
 msgstr ""
 
 #. module: base
@@ -4867,8 +4955,8 @@ msgstr ""
 "que\n"
 "representam os requisitos mínimos para operar um negócio no Equador em "
 "conformidade\n"
-"com os órgãos reguladores locais, como a autoridade fiscal equatoriana -SRI -"
-" e a\n"
+"com os órgãos reguladores locais, como a autoridade fiscal equatoriana -SRI "
+"- e a\n"
 "Superintendência de Empresas -Super Intendencia de Compañías-\n"
 "\n"
 "Siga as próximas etapas de configuração:\n"
@@ -4937,8 +5025,8 @@ msgstr ""
 "\n"
 "Para conquistas não numéricas, **emblemas** podem ser concedidos aos "
 "usuários. De um simples \"obrigado\" a uma conquista excepcional, um emblema "
-"é uma maneira fácil de expressar gratidão a um usuário por seu bom trabalho."
-"\n"
+"é uma maneira fácil de expressar gratidão a um usuário por seu bom "
+"trabalho.\n"
 "\n"
 "Tanto as metas quanto os emblemas são flexíveis e podem ser adaptados a uma "
 "grande variedade de módulos e ações. Quando instalado, esse módulo cria "
@@ -5162,8 +5250,8 @@ msgstr ""
 "este servidor.\n"
 "\n"
 "Este módulo contém apenas a estrutura de habilitação. Os drivers dos "
-"dispositivos estão em outros módulos que devem ser instalados separadamente."
-"\n"
+"dispositivos estão em outros módulos que devem ser instalados "
+"separadamente.\n"
 "\n"
 
 #. module: base
@@ -5930,6 +6018,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_sale_mrp
+msgid ""
+"\n"
+"Manage the inventory of your Kit products and display their availability "
+"status in your eCommerce store.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
 msgid ""
 "\n"
@@ -5992,9 +6088,9 @@ msgstr ""
 "* Folgas por departamento\n"
 "* Análise de folgas\n"
 "\n"
-"Também é possível sincronizar com uma agenda interna (Reuniões do módulo CRM)"
-" para criar automaticamente uma reunião quando uma solicitação de folga for "
-"aceita, configurando um tipo de reunião do tipo 'folga'.\n"
+"Também é possível sincronizar com uma agenda interna (Reuniões do módulo "
+"CRM) para criar automaticamente uma reunião quando uma solicitação de folga "
+"for aceita, configurando um tipo de reunião do tipo 'folga'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -6330,8 +6426,7 @@ msgstr ""
 "\n"
 "Uma vez definido, você pode imprimir automaticamente os recalls todos os "
 "dias, simplesmente clicando no menu:\n"
-"------------------------------------------------------------------------------------------------------"
-"\n"
+"------------------------------------------------------------------------------------------------------\n"
 "Acompanhamento de pagamento/Enviar e-mail e cartas\n"
 "\n"
 "Ele gerará um PDF/enviará e-mails/definirá atividades de acordo com os "
@@ -6426,8 +6521,8 @@ msgstr ""
 "    * Apoio CODA v1.\n"
 "    * Apoio CODA v2.2.\n"
 "    * Apoio Moeda Estrangeira.\n"
-"    * Suporte para todos os tipos de registro de dados (0, 1, 2, 3, 4, 8, 9)."
-"\n"
+"    * Suporte para todos os tipos de registro de dados (0, 1, 2, 3, 4, 8, "
+"9).\n"
 "    * Análise de log e de todos os Códigos de Transação e formato "
 "estruturado\n"
 "      Comunicações.\n"
@@ -7326,8 +7421,8 @@ msgid ""
 "\n"
 "- Chart of Accounts\n"
 "- Taxes\n"
-"- Vat Filling Report\n"
-"- Withholding Tax Report\n"
+"- VAT Return\n"
+"- Withholding Return\n"
 "- Fiscal Positions\n"
 msgstr ""
 
@@ -7353,6 +7448,15 @@ msgid ""
 "- Unpaid leaves\n"
 "- WPS\n"
 "- Master Payroll Export\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_withholding_tax
+msgid ""
+"\n"
+"Saudi Arabia Withholding Tax Module\n"
+"\n"
+"Force the installation of the Withholding Tax on Payment module\n"
 msgstr ""
 
 #. module: base
@@ -7638,8 +7742,8 @@ msgstr ""
 "* personalizar aplicativo existente (editar menus, ações, vistas, "
 "traduções...)\n"
 "\n"
-"Nota: somente o usuário admin tem permissão para fazer essas personalizações."
-"\n"
+"Nota: somente o usuário admin tem permissão para fazer essas "
+"personalizações.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_studio
@@ -7746,8 +7850,7 @@ msgstr ""
 "\n"
 "Considere o cronograma de trabalho (atestados, meio período...) dos "
 "funcionários quando marcar compromissos\n"
-"--------------------------------------------------------------------------------------------------------------"
-"\n"
+"--------------------------------------------------------------------------------------------------------------\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tz_account
@@ -8019,8 +8122,7 @@ msgstr ""
 "286, I. 3° bis que estipula determinados critérios relativos à "
 "inalterabilidade, segurança, armazenamento e arquivamento de dados "
 "relacionados às vendas para pessoas físicas (B2C).\n"
-"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
 "\n"
 "Instale-o se você usar o aplicativo Ponto de Venda para vender para pessoas "
 "físicas.\n"
@@ -8337,8 +8439,8 @@ msgid ""
 "and the Lempira currency."
 msgstr ""
 "\n"
-"Este é o módulo básico para gerenciar a tabela de contabilidade de Honduras."
-"\n"
+"Este é o módulo básico para gerenciar a tabela de contabilidade de "
+"Honduras.\n"
 "====================================================================\n"
 "\n"
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
@@ -8423,8 +8525,8 @@ msgid ""
 "tax2csv.py\n"
 msgstr ""
 "\n"
-"Este é o módulo básico para gerenciar o plano de contabilidade de Luxemburgo."
-"\n"
+"Este é o módulo básico para gerenciar o plano de contabilidade de "
+"Luxemburgo.\n"
 "======================================================================\n"
 "\n"
 "* o Plano de Contas Oficial de Luxemburgo (lei de junho de 2009 + plano e "
@@ -8562,8 +8664,7 @@ msgstr ""
 "\n"
 "Esta é a mais recente localização do Odoo na Indonésia, necessária para "
 "executar a contabilidade do Odoo para PMEs com:\n"
-"================================================================================================="
-"\n"
+"=================================================================================================\n"
 "- plano de contas genérico da Indonésia\n"
 "- estrutura fiscal"
 
@@ -8582,8 +8683,7 @@ msgstr ""
 "\n"
 "Esta é a mais recente localização do Odoo para o Reino Unido necessária para "
 "executar a contabilidade Odoo para as PMEs do Reino Unido com:\n"
-"================================================================================================="
-"\n"
+"=================================================================================================\n"
 "    - um plano de contas pronto para CT600\n"
 "    - Estrutura tributária pronta para IVA100\n"
 "    - Lista de condados da InfoLogic UK\n"
@@ -8616,8 +8716,7 @@ msgstr ""
 "\n"
 "Esta é a mais recente localização básica sul-africana necessária para "
 "executar o Odoo em ZA:\n"
-"================================================================================"
-"\n"
+"================================================================================\n"
 "    - um plano genérico de contas\n"
 "    - Estrutura pronta para IVA SARS"
 
@@ -10148,8 +10247,8 @@ msgid ""
 "This module provides the link between quality steps and IoT devices. \n"
 msgstr ""
 "\n"
-"Este módulo fornece o link entre etapas de qualidade e dispositivos de IoT. "
-"\n"
+"Este módulo fornece o link entre etapas de qualidade e dispositivos de "
+"IoT. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mobile
@@ -11063,6 +11162,11 @@ msgid "360 Feedback"
 msgstr "Avaliação 360º"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_3pl_logistic_company
+msgid "3PL Logistic Company"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
 msgid "3rd Party Tax Calculation"
 msgstr ""
@@ -11214,8 +11318,8 @@ msgid ""
 "<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
 "title=\"Enterprise\"/>"
 msgstr ""
-"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" title="
-"\"Enterprise\"/>"
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -11223,13 +11327,14 @@ msgid ""
 "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" "
 "title=\"Invalid\"/>"
 msgstr ""
-"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title="
-"\"Invalid\"/>"
+"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" "
+"title=\"Invalid\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
-msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
+msgstr ""
+"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -11240,6 +11345,15 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Email\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form
+msgid ""
+"<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Login / Email\" "
+"invisible=\"login != email\"/>\n"
+"                                    <i class=\"fa fa-fw fa-key text-"
+"primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
 
 #. module: base
@@ -11295,8 +11409,8 @@ msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
-"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-label="
-"\"Info\" title=\"Info\"/>"
+"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11840,7 +11954,8 @@ msgstr "Um módulo para verificar o mecanismo do «Pacote de Ativos»"
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit_depends
 msgid "A module to verify the inheritance using _inherit across modules."
-msgstr "Um módulo para verificar a herança usando using _inherit pelos módulos."
+msgstr ""
+"Um módulo para verificar a herança usando using _inherit pelos módulos."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits_depends
@@ -11896,7 +12011,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_mercado_pago
 msgid "A payment provider covering several countries in Latin America."
-msgstr "Um provedor de pagamento que abrange diversos países da América Latina."
+msgstr ""
+"Um provedor de pagamento que abrange diversos países da América Latina."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_redsys
@@ -12860,7 +12976,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
 msgid "Add variants to Sales Order through a grid entry."
-msgstr "Adicione variantes ao pedido de venda por meio de uma entrada de grade."
+msgstr ""
+"Adicione variantes ao pedido de venda por meio de uma entrada de grade."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
@@ -13156,8 +13273,8 @@ msgstr ""
 "menu General Settings (Configurações gerais). Empresas diferentes podem ter "
 "servidores\n"
 "servidores LDAP diferentes, desde que tenham nomes de usuário exclusivos (os "
-"nomes de usuário precisam ser exclusivos no Odoo, mesmo em várias empresas)."
-"\n"
+"nomes de usuário precisam ser exclusivos no Odoo, mesmo em várias "
+"empresas).\n"
 "no Odoo, mesmo em várias empresas).\n"
 "\n"
 "A vinculação LDAP anônima também é suportada (para servidores LDAP que a "
@@ -13718,7 +13835,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
-msgstr "Permita a geração de tarefas de serviço de campo a partir de um chamado"
+msgstr ""
+"Permita a geração de tarefas de serviço de campo a partir de um chamado"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_timesheet
@@ -13827,8 +13945,8 @@ msgid ""
 "Allows to access the website profile of the users and see their statistics "
 "(karma, badges, etc..)"
 msgstr ""
-"Permite acessar o perfil do site dos usuários e ver suas estatísticas ("
-"karma, emblemas etc.)"
+"Permite acessar o perfil do site dos usuários e ver suas estatísticas "
+"(karma, emblemas etc.)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_forum
@@ -15251,6 +15369,11 @@ msgid "Argentinean - Stock"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ar_reports_simple
+msgid "Argentinean Accounting IVA Simple Export"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
 msgid "Argentinean Accounting Reports"
 msgstr "Argentina - Relatórios financeiros"
@@ -15848,8 +15971,8 @@ msgstr "Ponte entre Ativos e Frota"
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Assign tags to your contacts to organize, filter and track them."
 msgstr ""
-"Atribua marcadores aos seus contatos para organizá-los, filtrá-los e "
-"rastreá-los."
+"Atribua marcadores aos seus contatos para organizá-los, filtrá-los e rastreá-"
+"los."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_google_address_autocomplete
@@ -17004,6 +17127,11 @@ msgid "Belgium - Payroll - Dimona"
 msgstr "Belgium - Payroll - Dimona"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dimona_auto
+msgid "Belgium - Payroll - Dimona - Automation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_acerta
 msgid "Belgium - Payroll - Export to Acerta"
 msgstr ""
@@ -17550,8 +17678,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
 msgstr ""
-"Módulo ponte para oferecer suporte a recursos de quiz durante sessões "
-"\"ao vivo\". "
+"Módulo ponte para oferecer suporte a recursos de quiz durante sessões \"ao "
+"vivo\". "
 
 #. module: base
 #: model:res.country,name:base.io
@@ -18616,6 +18744,11 @@ msgid "CodaBox"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_codaclean
+msgid "Codaclean"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server_history__code
 #: model:ir.model.fields,field_description:base.field_res_country_group__code
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -18891,8 +19024,8 @@ msgid ""
 "Company %(company_name)s is not in the allowed companies for user %"
 "(user_name)s (%(company_allowed)s)."
 msgstr ""
-"A empresa %(company_name)s não está nas empresas autorizadas para o usuário "
-"%(user_name)s (%(company_allowed)s)."
+"A empresa %(company_name)s não está nas empresas autorizadas para o usuário %"
+"(user_name)s (%(company_allowed)s)."
 
 #. module: base
 #. odoo-python
@@ -19170,6 +19303,11 @@ msgid "Connect the Web Client to Hardware Peripherals"
 msgstr "Connect the Web Client to Hardware Peripherals"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_be_codaclean
+msgid "Connect to Codaclean and automatically import CODA statements."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_gr_edi
 msgid "Connect to myDATA API implementation for Greece"
 msgstr ""
@@ -19437,6 +19575,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
 msgid "Corporate, Services, Technology, Shapes, Illustrations"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_cosmetics_store
+msgid "Cosmetics Store"
 msgstr ""
 
 #. module: base
@@ -20214,6 +20357,11 @@ msgid "Custom Shortcuts"
 msgstr "Atalhos Personalizados"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_theme_test_custo
+msgid "Custom Theme (Testing suite)"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
 #: model:ir.model.fields,field_description:base.field_ir_cron__selection_value
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -20854,6 +21002,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_saft_import
 msgid "Denmark - SAF-T Import"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_dk_nemhandel
+msgid "Denmark EDI - Nemhandel"
 msgstr ""
 
 #. module: base
@@ -21509,8 +21662,8 @@ msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense (domain:%"
 "(domain)s)"
 msgstr ""
-"O domínio em campo não relacional \"%(name)s\" não faz sentido (domínio: "
-"%(domain)s)"
+"O domínio em campo não relacional \"%(name)s\" não faz sentido (domínio: %"
+"(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -24956,7 +25109,8 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Group-specific rules are combined together with a logical OR operator"
-msgstr "As regras específicas do grupo são combinadas com um operador lógico OR"
+msgstr ""
+"As regras específicas do grupo são combinadas com um operador lógico OR"
 
 #. module: base
 #. odoo-python
@@ -25534,6 +25688,11 @@ msgid "Hongkong"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_hospitaility
+msgid "Hospitaility"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
 msgid "Hospitality"
 msgstr ""
@@ -25851,6 +26010,11 @@ msgid "IT/Communication"
 msgstr "TI/Comunicação"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_ar_reports_simple
+msgid "IVA Simple Reporting for Argentinean Localization"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_extract
 msgid "Iap Extract"
 msgstr "Extração IAP"
@@ -25909,8 +26073,8 @@ msgid ""
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
 "Se marcado, todos os registros do modelo de destino serão incluídos em um "
-"resultado agrupado (por exemplo, filtros 'Agrupar por', colunas Kanban etc.)."
-"\n"
+"resultado agrupado (por exemplo, filtros 'Agrupar por', colunas Kanban "
+"etc.).\n"
 "Observe que isso pode reduzir significativamente o desempenho se o modelo de "
 "destino do campo contém muitos registros; geralmente usado em modelos com "
 "poucos registros (por exemplo, estágios, cargos, tipos de eventos etc.)."
@@ -27736,6 +27900,11 @@ msgid "Kiribati"
 msgstr "Kiribati"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_mrp
+msgid "Kit Availability"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_mrp_renting
 msgid "Kits rental"
 msgstr ""
@@ -28334,7 +28503,8 @@ msgstr ""
 #: model:ir.module.module,description:base.module_hr_referral
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
-msgstr "Permita que seus funcionários compartilhem vagas e indiquem seus amigos"
+msgstr ""
+"Permita que seus funcionários compartilhem vagas e indiquem seus amigos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_hr_referral
@@ -28374,6 +28544,11 @@ msgstr "Nivel"
 #: model:res.country,name:base.lr
 msgid "Liberia"
 msgstr "Libéria"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_library
+msgid "Library"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
@@ -28714,6 +28889,7 @@ msgstr "Registrando detalhes"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+#: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Login"
 msgstr "Início de Sessão"
 
@@ -29103,6 +29279,11 @@ msgid "Manage Job board integrations with website"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_mrp
+msgid "Manage Kit product inventory & availability"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_room
 msgid "Manage Meeting Rooms"
 msgstr ""
@@ -29186,8 +29367,8 @@ msgstr ""
 "automaticamente para a vaga certa.\n"
 "\n"
 "Se os candidatos entrarem em contato com você por e-mail ou usando um "
-"formulário online, você terá todos os dados indexados automaticamente ("
-"currículos, carta de apresentação) e poderá responder com apenas um clique, "
+"formulário online, você terá todos os dados indexados automaticamente "
+"(currículos, carta de apresentação) e poderá responder com apenas um clique, "
 "reutilizando modelos de respostas.\n"
 "\n"
 "Personalize seu processo de recrutamento\n"
@@ -29448,7 +29629,8 @@ msgstr "Gerencie suas atividades de estoque e logística"
 #: model:ir.module.module,summary:base.module_l10n_fr_hr_holidays
 #: model:ir.module.module,summary:base.module_l10n_fr_hr_work_entry_holidays
 msgid "Management of leaves for part-time workers in France"
-msgstr "Gerenciamento de licenças para trabalhadores em tempo parcial na França"
+msgstr ""
+"Gerenciamento de licenças para trabalhadores em tempo parcial na França"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.AZN
@@ -29689,11 +29871,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_room
 msgid "Meeting Rooms"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields.selection,name:base.selection__res_users__role__group_user
-msgid "Member"
 msgstr ""
 
 #. module: base
@@ -30839,6 +31016,11 @@ msgid "Nigeria - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_night_clubs
+msgid "Night Clubs"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nu
 msgid "Niue"
 msgstr "Niue"
@@ -30893,8 +31075,8 @@ msgid ""
 "create one: %(error_message)s"
 msgstr ""
 "Nenhum registro correspondente encontrado para %(field_type)s '%(value)s' no "
-"campo '%%(field)s' e o seguinte erro foi encontrado ao tentar criar um: "
-"%(error_message)s"
+"campo '%%(field)s' e o seguinte erro foi encontrado ao tentar criar um: %"
+"(error_message)s"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
@@ -30964,7 +31146,7 @@ msgstr "Nenhum(a)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
-msgid "Nonprofit Organization"
+msgid "Nonprofit organization"
 msgstr ""
 
 #. module: base
@@ -31487,14 +31669,14 @@ msgstr ""
 "Odoo Recursos Humanos\n"
 "--------------------\n"
 "\n"
-"Com o Odoo <a href=\"https://www.odoo.com/app/employees\">Recursos "
-"Humanos</a>,\n"
+"Com o Odoo <a href=\"https://www.odoo.com/app/employees\">Recursos Humanos</"
+"a>,\n"
 "gerencie o ativo mais importante de sua empresa: Pessoas\n"
 "\n"
 "Gerencie facilmente todas as suas operações de RH: compartilhamento de "
 "conhecimento, recrutamento,\n"
-"avaliações, planilhas de horas, contratos, presença, folha de pagamento etc."
-"\n"
+"avaliações, planilhas de horas, contratos, presença, folha de pagamento "
+"etc.\n"
 "\n"
 "Cada necessidade é fornecida por um aplicativo específico que você ativa sob "
 "demanda.\n"
@@ -31514,8 +31696,8 @@ msgstr ""
 "Agilize seu processo de recrutamento\n"
 "-----------------------------------\n"
 "\n"
-"Indexe currículos, acompanhe candidatos, pesquise perfis com <a href="
-"\"https://www.odoo.com/app/employees\">Odoo RH</a>.\n"
+"Indexe currículos, acompanhe candidatos, pesquise perfis com <a "
+"href=\"https://www.odoo.com/app/employees\">Odoo RH</a>.\n"
 "\n"
 "Publique vagas de emprego e mantenha o controle de cada candidatura "
 "recebida. Acompanhe os candidatos em seu processo de recrutamento com a "
@@ -31678,8 +31860,8 @@ msgstr ""
 "\n"
 "Gerencie listas de materiais, planeje ordens de produção, rastreie ordens de "
 "trabalho com o \n"
-"aplicativo Odoo de <a href=\"https://www.odoo.com/app/manufacturing\""
-">Fabricação de código aberto</a>.\n"
+"aplicativo Odoo de <a href=\"https://www.odoo.com/app/"
+"manufacturing\">Fabricação de código aberto</a>.\n"
 "\n"
 "Tenha todas as suas operações de montagem ou fabricação gerenciadas pelo "
 "Odoo. Programe ordens de produção e ordens de trabalho automaticamente. "
@@ -32235,11 +32417,11 @@ msgid ""
 "\n"
 msgstr ""
 "Cadeia de suprimentos Odoo ----------------- Automatize requisição a pagar, "
-"controle o faturamento com a <a href=\"https://www.odoo.com/app/purchase\""
-">cadeia de suprimentos de código aberto</a> Odoo. Automatize as propostas de "
-"aquisição, inicie a solicitação de cotação, rastreie os pedidos de compra, "
-"gerencie as informações dos fornecedores, controle o recebimento de produtos "
-"e verifique as faturas dos fornecedores. Propostas de aquisição "
+"controle o faturamento com a <a href=\"https://www.odoo.com/app/"
+"purchase\">cadeia de suprimentos de código aberto</a> Odoo. Automatize as "
+"propostas de aquisição, inicie a solicitação de cotação, rastreie os pedidos "
+"de compra, gerencie as informações dos fornecedores, controle o recebimento "
+"de produtos e verifique as faturas dos fornecedores. Propostas de aquisição "
 "automatizadas ----------------------------------- Reduza o nível de estoque "
 "com as regras de aquisição. Obtenha a proposta certa de compra no momento "
 "certo para reduzir seu nível de estoque. Melhore sua compra e o desempenho "
@@ -32746,8 +32928,8 @@ msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
 msgstr ""
-"Campos One2many não podem ser sincronizados como parte de `commercial_fields`"
-" ou `address fields`"
+"Campos One2many não podem ser sincronizados como parte de "
+"`commercial_fields` ou `address fields`"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
@@ -33615,6 +33797,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_imin
+msgid "POS iMin"
 msgstr ""
 
 #. module: base
@@ -36713,11 +36900,6 @@ msgid "Role / Administrator"
 msgstr ""
 
 #. module: base
-#: model:res.groups,name:base.group_user
-msgid "Role / Member"
-msgstr ""
-
-#. module: base
 #: model:res.groups,name:base.group_portal
 msgid "Role / Portal"
 msgstr ""
@@ -36725,6 +36907,11 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Role / Public"
+msgstr ""
+
+#. module: base
+#: model:res.groups,name:base.group_user
+msgid "Role / User"
 msgstr ""
 
 #. module: base
@@ -37010,8 +37197,8 @@ msgid ""
 "SQL expression for ordering records in the model; e.g. \"x_sequence asc, id "
 "desc\""
 msgstr ""
-"Expressão SQL para ordenar registros no modelo; ex: "
-"\"x_sequence asc, id desc\""
+"Expressão SQL para ordenar registros no modelo; ex: \"x_sequence asc, id "
+"desc\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_ssl_certificate
@@ -37505,6 +37692,11 @@ msgid "Saudi Arabia - Point of Sale"
 msgstr "Arábia Saudita - Ponto de Venda"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_withholding_tax
+msgid "Saudi Arabia - Withholding Tax"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
 msgid "Save as Attachment Prefix"
 msgstr "Guardar como Prefixo do Anexo"
@@ -37649,7 +37841,8 @@ msgstr "O marcador de busca pode conter apenas um painel de busca"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Searchpanel item with select multi cannot have a domain."
-msgstr "O item do painel de busca com seleção múltipla não pode ter um domínio."
+msgstr ""
+"O item do painel de busca com seleção múltipla não pode ter um domínio."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__secondary_color
@@ -37716,8 +37909,8 @@ msgstr ""
 "campos ,\n"
 "                            Odoo vai propor que você funda apenas aqueles "
 "que têm\n"
-"                            todos esses campos em comum. ( não um dos campos "
-") ."
+"                            todos esses campos em comum. ( não um dos "
+"campos ) ."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selectable
@@ -37904,7 +38097,8 @@ msgstr "Envie mensagens de texto como lembretes do evento"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr "Envie mensagens de texto quando atingir a movimentação de estoque final"
+msgstr ""
+"Envie mensagens de texto quando atingir a movimentação de estoque final"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sms
@@ -38797,6 +38991,11 @@ msgid "South Sudan"
 msgstr "Sudão do Sul"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_spa_resort
+msgid "Spa Resort"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Space"
@@ -39588,6 +39787,11 @@ msgid "Sweden - Accounting Reports"
 msgstr "Suécia - Relatórios de Contabilidade"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se_returns
+msgid "Sweden - Accounting Returns"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_sie4_export
 msgid "Sweden - SIE 4 Export"
 msgstr ""
@@ -40189,7 +40393,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_test_discuss_full
 msgid "Test of Discuss with all possible overrides installed."
-msgstr "Teste do app Mensagens com todas as possíveis substituições instaladas."
+msgstr ""
+"Teste do app Mensagens com todas as possíveis substituições instaladas."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
@@ -40254,6 +40459,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_whatsapp
 msgid "Text your Contacts on WhatsApp"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_textile_manufacturing
+msgid "Textile Manufacturing"
 msgstr ""
 
 #. module: base
@@ -40888,8 +41098,8 @@ msgstr ""
 "\n"
 "Como as precisões decimais afetam todo o sistema, isso pode causar problemas "
 "críticos.\n"
-"Por exemplo, a redução da precisão pode perturbar seu equilíbrio financeiro."
-"\n"
+"Por exemplo, a redução da precisão pode perturbar seu equilíbrio "
+"financeiro.\n"
 "\n"
 "Portanto, não é recomendável alterar as precisões decimais em uma base de "
 "dados em execução."
@@ -41000,8 +41210,8 @@ msgstr ""
 msgid ""
 "The server refused the sender address (%(email_from)s) with error %(repl)s"
 msgstr ""
-"O servidor recusou o endereço do remetente (%(email_from)s) com o erro "
-"%(repl)s"
+"O servidor recusou o endereço do remetente (%(email_from)s) com o erro %"
+"(repl)s"
 
 #. module: base
 #. odoo-python
@@ -41097,6 +41307,11 @@ msgstr ""
 #: model:ir.ui.menu,name:base.theme_store
 msgid "Theme Store"
 msgstr "Loja de Temas"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_themes
+msgid "Themes Testing Module"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -41701,6 +41916,11 @@ msgid "This module is used for Online bank synchronization."
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_dk_nemhandel
+msgid "This module is used to send/receive documents with Nemhandel"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account_peppol
 msgid "This module is used to send/receive documents with PEPPOL"
 msgstr ""
@@ -41723,6 +41943,17 @@ msgid ""
 msgstr ""
 "Este módulo permite que você use todo o poder das certificações em seus "
 "cursos."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_themes
+msgid ""
+"This module will help you to quickly test all the Odoo\n"
+"    themes without having to switch from one theme to another on your "
+"website.\n"
+"    It will simply create a new website for each Odoo theme and install "
+"every\n"
+"    theme on one website."
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -41762,6 +41993,11 @@ msgstr "Esses módulos não podem ser desinstalados: %s"
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Separador de Milhares"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_thrift_store
+msgid "Thrift Store"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__4
@@ -42850,8 +43086,8 @@ msgstr "Valor desconhecido '%s' para o campo booleano '%%(field)s'"
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
 msgstr ""
-"Extensão não reconhecida. Deve ser uma destas: .csv, .po, ou .tgz (recebeu "
-".%s)."
+"Extensão não reconhecida. Deve ser uma destas: .csv, .po, ou .tgz (recebeu ."
+"%s)."
 
 #. module: base
 #. odoo-python
@@ -43110,8 +43346,8 @@ msgstr ""
 msgid ""
 "Use the SMTP configuration set in the \"Command Line Interface\" arguments."
 msgstr ""
-"Use a configuração SMTP definida nos argumentos da "
-"\"Interface de linha de comando\"."
+"Use a configuração SMTP definida nos argumentos da \"Interface de linha de "
+"comando\"."
 
 #. module: base
 #. odoo-python
@@ -43173,8 +43409,8 @@ msgid ""
 "Used when the user only selects one language and is given the option to "
 "switch to it"
 msgstr ""
-"Usado quando o usuário seleciona apenas um idioma e é dado a opção de "
-"trocá-lo"
+"Usado quando o usuário seleciona apenas um idioma e é dado a opção de trocá-"
+"lo"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users
@@ -43188,6 +43424,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__user_id
 #: model:ir.model.fields,field_description:base.field_res_users_deletion__user_id
 #: model:ir.model.fields,field_description:base.field_res_users_settings__user_id
+#: model:ir.model.fields.selection,name:base.selection__res_users__role__group_user
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_default_search_view
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -43491,6 +43728,11 @@ msgid "Vertical bar"
 msgstr "Barra vertical"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_veterinary_clinic
+msgid "Veterinary Clinic"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.vn
 msgid "Vietnam"
 msgstr "Vietname"
@@ -43790,7 +44032,8 @@ msgstr "Testes de Gantt na Web"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_gantt
 msgid "Web Gantt Tests: Tests specific to the gantt view"
-msgstr "Testes de Gantt da Web: Testes específicos para a visualização de Gantt"
+msgstr ""
+"Testes de Gantt da Web: Testes específicos para a visualização de Gantt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_hierarchy
@@ -44440,8 +44683,8 @@ msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Você não tem permissão para acessar registros de '%(document_kind)s' "
-"(%(document_model)s)."
+"Você não tem permissão para acessar registros de '%(document_kind)s' (%"
+"(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -44450,8 +44693,8 @@ msgid ""
 "You are not allowed to create '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Você não tem permissões para criar registros de '%(document_kind)s' "
-"(%(document_model)s)."
+"Você não tem permissões para criar registros de '%(document_kind)s' (%"
+"(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -44460,8 +44703,8 @@ msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Você não tem permissão para excluir registros de '%(document_kind)s' "
-"(%(document_model)s)."
+"Você não tem permissão para excluir registros de '%(document_kind)s' (%"
+"(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -44470,8 +44713,8 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
-"Você não tem permissão para modificar registros de '%(document_kind)s' "
-"(%(document_model)s)."
+"Você não tem permissão para modificar registros de '%(document_kind)s' (%"
+"(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -45168,6 +45411,11 @@ msgid "eLearning"
 msgstr "e-Learning"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_elearning_platform
+msgid "eLearning Platform"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
 msgstr "despesas"
@@ -45236,6 +45484,11 @@ msgstr "html"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__html_value
 msgid "html_value"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_imin
+msgid "iMin ePOS Printers in PoS"
 msgstr ""
 
 #. module: base
@@ -45401,7 +45654,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
 msgid "predict the product from the expense description based on old ones"
-msgstr "Preveja o produto a partir da descrição da despesa com base nas antigas"
+msgstr ""
+"Preveja o produto a partir da descrição da despesa com base nas antigas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account

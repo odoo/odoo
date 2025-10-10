@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:36+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -31,6 +31,12 @@ msgid "Bank Accounts"
 msgstr "银行账户"
 
 #. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_proxy_keys
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__country_proxy_keys
+msgid "Country Proxy Keys"
+msgstr ""
+
+#. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -49,7 +55,7 @@ msgstr "EMV 商户出示二维码"
 
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
-msgid "EMV QR Configuration"
+msgid "EMV QR Settings"
 msgstr ""
 
 #. module: account_qr_code_emv
@@ -97,8 +103,8 @@ msgstr "未有代理值。"
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid ""
-"No EMV QR Code is available for the country of the account "
-"%(account_number)s."
+"No EMV QR Code is available for the country of the account %"
+"(account_number)s."
 msgstr "账户所在国家没有 EMV 二维码 %(account_number)s."
 
 #. module: account_qr_code_emv

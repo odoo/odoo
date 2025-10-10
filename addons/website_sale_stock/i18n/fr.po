@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-14 21:17+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -25,9 +25,32 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"%(product_name)s has not been added to your cart since it is not available."
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr "<span invisible=\"not show_availability\">Unité(s)</span>"
+msgid "<span invisible=\"not default_show_availability\">units</span>"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "All warehouses"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
+msgid "Assign"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -35,20 +58,22 @@ msgid "Back in stock Notifications"
 msgstr "Notifications de retour en stock"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Below"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
 msgstr "Paramètres de configuration"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Continue Selling"
 msgstr "Continuer la vente"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
 msgstr "Continuez à vendre en cas de rupture de stock"
 
@@ -68,9 +93,28 @@ msgstr ""
 "du produit."
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default visibility for custom messages."
-msgstr "Visibilité par défaut pour les messages personnalisés."
+#: model:ir.model.fields,help:website_sale_stock.field_product_ribbon__assign
+msgid ""
+"Defines how this ribbon is assigned to products:\n"
+"- Manually: You assign the ribbon manually to products.\n"
+"- Sale: Applied when the product is visibly on sale.\n"
+"- New: Applied based on the New period you will define.\n"
+"- Out Of Stock: Applied when the product is out of stock."
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -79,11 +123,18 @@ msgid "Get notified when back in stock"
 msgstr "Recevoir une notification quand le produit est à nouveau en stock"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "How to display products having low quantities (on hand - reserved)"
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_feed__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__id
+msgid "ID"
 msgstr ""
-"Comment afficher les produits ayant de faibles quantités (disponibles – "
-"réservés)"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -103,24 +154,24 @@ msgid "Inventory Defaults"
 msgstr "Valeurs par défaut de l'inventaire"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Only"
-msgstr "Uniquement"
-
-#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
 msgstr "Commander maintenant"
 
 #. module: website_sale_stock
 #. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
 msgstr "En rupture de stock"
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
 msgstr "En rupture de stock"
@@ -139,9 +190,24 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_combo
+msgid "Product Combo"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_feed
+msgid "Product Feed"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
 msgstr "Variante de produit"
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_ribbon
+msgid "Product ribbon"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -164,22 +230,32 @@ msgid "Sales Order Line"
 msgstr "Ligne de commande"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
+msgid "Sell when Out-of-Stock"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Qty"
 msgstr "Afficher la qté disponible"
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Show Available Quantity"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_available_threshold
 msgid "Show Threshold"
 msgstr "Afficher le seuil"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_show_availability
 msgid "Show availability Qty"
 msgstr "Afficher la qté disponible"
 
@@ -200,32 +276,14 @@ msgstr "Le produit suivant est à présent disponible."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
-msgid "The item has not been added to your cart since it is not available."
-msgstr ""
-"L'article n'a pas été ajouté à votre panier, car il n'est pas disponible."
-
-#. module: website_sale_stock
-#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
 msgstr "Le produit '%(product_name)s' est à présent disponible"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "This product is out of stock."
-msgstr "Ce produit est en rupture de stock."
-
-#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
 msgid "Transfer"
 msgstr "Transfert"
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
-msgid "Units"
-msgstr "unité(s)"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -237,8 +295,8 @@ msgstr "Entrepôt"
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "We'll notify you once the product is back in stock."
-msgstr "Nous vous informerons dès que le produit sera de nouveau en stock."
+msgid "We'll notify you once the product is back in stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -256,56 +314,105 @@ msgstr ""
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added"
-msgstr "Vous avez déjà ajouté"
+msgid "You already added all the available product in your cart"
+msgstr ""
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added all the available product in your cart."
-msgstr "Vous avez déjà ajouté tous les produits disponibles dans votre panier."
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You already have %s Units in your cart."
-msgstr "Vous avez déjà %s Unités dans votre panier."
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
-#: code:addons/website_sale_stock/models/sale_order_line.py:0
-msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+msgid ""
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr ""
-"Vous demandez %(desired_qty)s produits, mais seulement %(new_qty)s sont "
-"disponibles"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "Vous demandez %s Unités, mais seules %s sont disponibles."
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "in your cart."
-msgstr "dans votre panier."
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "left in stock."
-msgstr "disponible en stock."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "e.g. 'Will be back soon'"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in stock"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+msgid "in your cart)"
+msgstr ""
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
 msgstr "seulement si inférieur à"
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_ribbon__assign__out_of_stock
+msgid "when out of stock"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
 msgstr "votreemail@gmail.com"
+
+#~ msgid "<span invisible=\"not show_availability\">Units</span>"
+#~ msgstr "<span invisible=\"not show_availability\">Unité(s)</span>"
+
+#~ msgid "Default visibility for custom messages."
+#~ msgstr "Visibilité par défaut pour les messages personnalisés."
+
+#~ msgid "How to display products having low quantities (on hand - reserved)"
+#~ msgstr ""
+#~ "Comment afficher les produits ayant de faibles quantités (disponibles – "
+#~ "réservés)"
+
+#~ msgid "Only"
+#~ msgstr "Uniquement"
+
+#~ msgid "The item has not been added to your cart since it is not available."
+#~ msgstr ""
+#~ "L'article n'a pas été ajouté à votre panier, car il n'est pas disponible."
+
+#~ msgid "This product is out of stock."
+#~ msgstr "Ce produit est en rupture de stock."
+
+#~ msgid "Units"
+#~ msgstr "unité(s)"
+
+#~ msgid "We'll notify you once the product is back in stock."
+#~ msgstr "Nous vous informerons dès que le produit sera de nouveau en stock."
+
+#~ msgid "You already added"
+#~ msgstr "Vous avez déjà ajouté"
+
+#~ msgid "You already added all the available product in your cart."
+#~ msgstr ""
+#~ "Vous avez déjà ajouté tous les produits disponibles dans votre panier."
+
+#~ msgid "You already have %s Units in your cart."
+#~ msgstr "Vous avez déjà %s Unités dans votre panier."
+
+#~ msgid ""
+#~ "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+#~ msgstr ""
+#~ "Vous demandez %(desired_qty)s produits, mais seulement %(new_qty)s sont "
+#~ "disponibles"
+
+#~ msgid "You ask for %s Units but only %s are available."
+#~ msgstr "Vous demandez %s Unités, mais seules %s sont disponibles."
+
+#~ msgid "in your cart."
+#~ msgstr "dans votre panier."
+
+#~ msgid "left in stock."
+#~ msgstr "disponible en stock."

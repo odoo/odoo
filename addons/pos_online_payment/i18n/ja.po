@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-14 21:15+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -26,8 +26,7 @@ msgstr "<strong>エラー:</strong>通貨がないか、間違っています。
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-msgid ""
-"<strong>Error:</strong> There was a problem during the payment process."
+msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr "<strong>エラー:</strong>決済処理中に問題が発生しました。"
 
 #. module: pos_online_payment
@@ -45,8 +44,7 @@ msgstr "決済オプションを指定して下さい。"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-msgid ""
-"A validation payment cannot be used for a Point of Sale online payment."
+msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr "認証決済は、POSオンライン支払いに使用することはできません。"
 
 #. module: pos_online_payment
@@ -77,7 +75,7 @@ msgstr "金額"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Amount:"
 msgstr "金額:"
 
@@ -98,7 +96,8 @@ msgstr "会計決済がないとPOSオンライン決済を作成できません
 msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
-msgstr "オンラインでない決済方法とオンライン会計決済でPOS決済を作成できません。"
+msgstr ""
+"オンラインでない決済方法とオンライン会計決済でPOS決済を作成できません。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -117,25 +116,47 @@ msgstr ""
 "pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
 msgstr "オンライン決済プロバイダーがあるか"
 
 #. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invalid online payment"
 msgstr "無効なオンライン決済"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invalid online payments"
 msgstr "無効なオンライン決済"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invoice could not be generated"
 msgstr "請求書を作成できませんでした"
 
@@ -168,13 +189,13 @@ msgstr "オンライン会計支払"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Online payment unavailable"
 msgstr "オンライン決済利用不可"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
 msgstr "オンライン決済は負の金額を有することはできません (%s: %s)."
 
@@ -195,13 +216,13 @@ msgstr "オーダ参照"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
 msgstr "オーダ参照:"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Order saving issue"
 msgstr "オーダ保存の問題"
 
@@ -215,6 +236,16 @@ msgstr "オーダ保存の問題"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
 msgid "POS Order"
 msgstr "POSオーダ"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Payment"
+msgstr ""
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Payment Confirmation"
+msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -263,25 +294,25 @@ msgstr "以下によって処理済:"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
 msgstr "決済用QRコード"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan the QR code to pay"
 msgstr "支払うにはQRコードをスキャンして下さい。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
 msgstr "スキャンして払う"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Server error"
 msgstr "サーバーエラー"
 
@@ -297,8 +328,9 @@ msgstr "POSオンライン支払 (tx.id=%d)が正常に保存できませんで�
 msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
-msgstr "オンライン決済方法が見つからなかったため、POSオンライン決済 (tx.id=%d) "
-"が正常に保存できませんでした。"
+msgstr ""
+"オンライン決済方法が見つからなかったため、POSオンライン決済 (tx.id=%d) が正常"
+"に保存できませんでした。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -318,7 +350,7 @@ msgstr "この支払にリンクしたPOS販売オーダ"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The QR Code for paying could not be generated."
 msgstr "支払用QRコードを作成できませんでした"
 
@@ -336,7 +368,7 @@ msgstr "通貨が無効です。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The invoice could not be generated."
 msgstr "請求書を作成できませんでした"
 
@@ -348,7 +380,7 @@ msgstr "オーダがキャンセルされました。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The order has not been saved correctly on the server."
 msgstr "オーダがサーバ上に正常に保存されませんでした"
 
@@ -369,7 +401,8 @@ msgstr "決済プロバイダーが無効です。"
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr "支払いは直接か、リダイレクトか、トークンによるものである必要があります。"
+msgstr ""
+"支払いは直接か、リダイレクトか、トークンによるものである必要があります。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -397,40 +430,43 @@ msgstr "提供されてたpartner_idが想定と異なります。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The saved order could not be retrieved."
 msgstr "保存されたオーダを取得できませんでした。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
-msgstr "実行するオンライン支払の残額 (%s) がオーダの未払残額(%s)と一致しません。"
+msgstr ""
+"実行するオンライン支払の残額 (%s) がオーダの未払残額(%s)と一致しません。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "There are online payments that were missing in your view."
 msgstr "ビューで見当たらないオンライン決済があります。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
-msgstr "サーバに問題が発生しました。オーダオンライン決済ステータスが取得できません。"
+msgstr ""
+"サーバに問題が発生しました。オーダオンライン決済ステータスが取得できません。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
-msgstr "サーバに問題が発生しました。オーダのオンライン決済ステータスが取得できません"
-"。このオーダにオンライン決済がないのは確かですか？"
+msgstr ""
+"サーバに問題が発生しました。オーダのオンライン決済ステータスが取得できませ"
+"ん。このオーダにオンライン決済がないのは確かですか？"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -462,9 +498,8 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
-"POS コンフィグでオンライン決済方法を使用するには、その "
-"POSコンフィグの通貨をサポートする公開決済プロバイダが少なくとも 1 "
-"つ必要です。"
+"POS コンフィグでオンライン決済方法を使用するには、その POSコンフィグの通貨を"
+"サポートする公開決済プロバイダが少なくとも 1 つ必要です。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -489,7 +524,7 @@ msgstr "タイプ"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "更新されたオンライン決済"
 
@@ -498,13 +533,13 @@ msgstr "更新されたオンライン決済"
 msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
-msgstr "オンライン決済用 "
-"(オンライン決済プロバイダを利用したウェブページ上での支払い)にはこの決済方法"
-"を使用して下さい。"
+msgstr ""
+"オンライン決済用 (オンライン決済プロバイダを利用したウェブページ上での支払い)"
+"にはこの決済方法を使用して下さい。"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Yes"
 msgstr "はい"
 

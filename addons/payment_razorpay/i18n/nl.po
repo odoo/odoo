@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-14 08:07+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -20,6 +20,16 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Account ID"
+msgstr ""
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
+msgid "An error occurred"
+msgstr ""
+
+#. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid ""
@@ -29,20 +39,59 @@ msgstr ""
 "opnieuw."
 
 #. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
+msgid "An error occurred while linking your Razorpay account with Odoo."
+msgstr ""
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Are you sure you want to disconnect?"
+msgstr ""
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
+msgid "Back to the Razorpay provider"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
 msgid "Code"
 msgstr "Code"
 
 #. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Connect"
+msgstr ""
+
+#. module: payment_razorpay
 #. odoo-python
-#: code:addons/payment_razorpay/models/payment_provider.py:0
-msgid "Could not establish the connection to the API."
-msgstr "Kan geen verbinding maken met de API."
+#: code:addons/payment_razorpay/controllers/onboarding.py:0
+msgid "Could not find Razorpay provider with id %s"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Enable recurring payments on Razorpay"
 msgstr "Herhalende betalingen inschakelen op Razorpay"
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Generate your webhook"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_transaction__id
+msgid "ID"
+msgstr ""
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -56,9 +105,9 @@ msgstr "Sleutel geheim"
 
 #. module: payment_razorpay
 #. odoo-python
-#: code:addons/payment_razorpay/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid "Other Payment Providers"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model,name:payment_razorpay.model_payment_provider
@@ -77,7 +126,7 @@ msgstr "Betalingstransactie"
 
 #. module: payment_razorpay
 #. odoo-javascript
-#: code:addons/payment_razorpay/static/src/js/payment_form.js:0
+#: code:addons/payment_razorpay/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Betalingsverwerking mislukt"
 
@@ -85,6 +134,21 @@ msgstr "Betalingsverwerking mislukt"
 #: model:ir.model.fields.selection,name:payment_razorpay.selection__payment_provider__code__razorpay
 msgid "Razorpay"
 msgstr "Razorpay"
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_access_token
+msgid "Razorpay Access Token"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_access_token_expiry
+msgid "Razorpay Access Token Expiry"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_account_id
+msgid "Razorpay Account ID"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -97,6 +161,16 @@ msgid "Razorpay Key Secret"
 msgstr "Sleutel geheim Razorpay"
 
 #. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_public_token
+msgid "Razorpay Public Token"
+msgstr ""
+
+#. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_refresh_token
+msgid "Razorpay Refresh Token"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_webhook_secret
 msgid "Razorpay Webhook Secret"
 msgstr "Webhook geheim Razorpay"
@@ -104,8 +178,18 @@ msgstr "Webhook geheim Razorpay"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
-msgid "Razorpay gave us the following information: '%s'"
-msgstr "Razorpay gaf ons de volgende informatie: '%s'"
+msgid ""
+"Razorpay credentials are missing. Click the \"Connect\" button to set up "
+"your account."
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay is not available in your country; please use another payment "
+"provider."
+msgstr ""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -122,12 +206,6 @@ msgstr "Gegevens ontvangen met ontbrekend entiteitsid."
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "Gegevens ontvangen met ontbrekende referentie."
-
-#. module: payment_razorpay
-#. odoo-python
-#: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received data with missing status."
 msgstr "Gegevens ontvangen met ontbrekende status."
 
@@ -136,6 +214,11 @@ msgstr "Gegevens ontvangen met ontbrekende status."
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received incomplete refund data."
 msgstr "Onvolledige terugbetalingsgegevens ontvangen."
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Reset Your Razorpay Account"
+msgstr ""
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -162,10 +245,9 @@ msgid "The technical code of this payment provider."
 msgstr "De technische code van deze betaalprovider."
 
 #. module: payment_razorpay
-#. odoo-python
-#: code:addons/payment_razorpay/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "De transactie is niet gekoppeld aan een token."
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "This provider is linked with your Razorpay account."
+msgstr ""
 
 #. module: payment_razorpay
 #. odoo-python
@@ -181,11 +263,50 @@ msgid "Webhook Secret"
 msgstr "Webhook geheim"
 
 #. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid ""
+"You are currently connected to Razorpay through the credentials method, "
+"which is\n"
+"                    deprecated. Click the \"Connect\" button below to use "
+"the recommended OAuth\n"
+"                    method."
+msgstr ""
+
+#. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_token.py:0
 msgid ""
-"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
-" this payment method"
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
+"this payment method"
 msgstr ""
-"Je kunt geen bedragen betalen die hoger zijn dan %(currency_symbol)s "
-"%(max_amount)s met deze betaalmethode"
+"Je kunt geen bedragen betalen die hoger zijn dan %(currency_symbol)s %"
+"(max_amount)s met deze betaalmethode"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid "Your Razorpay webhook was successfully set up!"
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_transaction.py:0
+msgid ""
+"Your last payment %s will soon be processed. Please wait up to 24 hours "
+"before trying again, or use another payment method."
+msgstr ""
+
+#~ msgid "Could not establish the connection to the API."
+#~ msgstr "Kan geen verbinding maken met de API."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+
+#~ msgid "Razorpay gave us the following information: '%s'"
+#~ msgstr "Razorpay gaf ons de volgende informatie: '%s'"
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "Gegevens ontvangen met ontbrekende referentie."
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "De transactie is niet gekoppeld aan een token."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-14 08:07+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "<span>MB</span>"
+msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -34,11 +39,6 @@ msgstr "Cloudopslag"
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
 msgstr "Cloudopslagprovider voor nieuwe bijlagen"
-
-#. module: cloud_storage
-#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-msgid "Cloud Storage Settings"
-msgstr "Instellingen cloudopslag"
 
 #. module: cloud_storage
 #. odoo-python
@@ -64,9 +64,33 @@ msgid "Config Settings"
 msgstr "Configuratie-instellingen"
 
 #. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_http__display_name
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP routing"
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage.field_ir_http__id
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: cloud_storage
+#: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
+msgid "Minimum File Size"
+msgstr ""
+
+#. module: cloud_storage
+#: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size_mb
+msgid "Minimum File Size (MB)"
+msgstr ""
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
@@ -75,10 +99,8 @@ msgstr "Minimale bestandsgrootte (bytes)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
-msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
+msgid "Minimum size for attachments to be stored in the cloud storage"
 msgstr ""
-"Minimumgrootte (bytes) voor bijlagen die moeten worden opgeslagen in de "
-"cloudopslag"
 
 #. module: cloud_storage
 #. odoo-python
@@ -115,10 +137,20 @@ msgstr ""
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid ""
 "webclient can upload files larger than the minimum file size\n"
-"        (in bytes) as url attachments to the server and then upload the file to\n"
+"        (in bytes) as url attachments to the server and then upload the file "
+"to\n"
 "        the cloud storage."
 msgstr ""
 "De webklant kan bestanden die groter zijn dan de minimale bestandsgrootte\n"
 "        (in bytes) als url-bijlage uploaden naar de server en het bestand "
 "vervolgens uploaden naar\n"
 "        de cloudopslag."
+
+#~ msgid "Cloud Storage Settings"
+#~ msgstr "Instellingen cloudopslag"
+
+#~ msgid ""
+#~ "Minimum size(bytes) for attachments to be stored in the cloud storage"
+#~ msgstr ""
+#~ "Minimumgrootte (bytes) voor bijlagen die moeten worden opgeslagen in de "
+#~ "cloudopslag"

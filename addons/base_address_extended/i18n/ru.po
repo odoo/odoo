@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 04:38+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -18,8 +18,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: base_address_extended
@@ -36,8 +36,12 @@ msgstr "<span> - </span>"
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Установите этот флажок, чтобы каждый адрес, созданный в этой стране, имел «Город», выбранный в списке городов страны."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Установите этот флажок, чтобы каждый адрес, созданный в этой стране, имел "
+"«Город», выбранный в списке городов страны."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
@@ -73,6 +77,11 @@ msgid "Country"
 msgstr "Страна"
 
 #. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
 msgstr "Создано:"
@@ -84,6 +93,8 @@ msgstr "Дата создания:"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -91,12 +102,15 @@ msgstr "Отображаемое имя"
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
-"                your partner records. Note that an option can be set on each country separately\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
 "Отображение и управление списком всех городов, которые могут быть назначены\n"
-"                 для ваших партнерских записей. Обратите внимание, что опция может быть установлена в каждой стране отдельно\n"
-"                 для принудительного использования любого его адреса, чтобы иметь город в этом списке."
+"                 для ваших партнерских записей. Обратите внимание, что опция "
+"может быть установлена в каждой стране отдельно\n"
+"                 для принудительного использования любого его адреса, чтобы "
+"иметь город в этом списке."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -129,6 +143,8 @@ msgstr "Дом #"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 

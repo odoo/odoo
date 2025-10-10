@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-23 02:31+0000\n"
 "Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/"
@@ -75,8 +75,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 
 #. module: hr_expense
@@ -151,15 +150,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
 msgstr ""
 
 #. module: hr_expense
@@ -364,7 +354,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_view_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
 msgstr ""
@@ -471,6 +460,13 @@ msgid "Create new expenses to get statistics."
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"Create prepaid virtual and physical cards for both one-time and recurring "
+"expenses, integrated into Odoo through Stripe Issuing."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_post_wizard__create_uid
@@ -530,11 +526,6 @@ msgid "Default accounting journal for expenses paid by employees."
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by company."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -573,7 +564,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:hr_expense.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -651,8 +641,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 
 #. module: hr_expense
@@ -669,7 +658,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_expense.selection__account_analytic_applicability__business_domain__expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_view_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_users_view_form_preferences
 msgid "Expense"
 msgstr ""
 
@@ -691,9 +679,13 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_users__expense_manager_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_search_view
 msgid "Expense Approver"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Card"
 msgstr ""
 
 #. module: hr_expense
@@ -717,11 +709,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Expense Outstanding Account"
 msgstr ""
 
 #. module: hr_expense
@@ -929,18 +916,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "Go to employees"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid "Go to settings"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
-msgid "Group By"
+msgid "Go to Account"
 msgstr ""
 
 #. module: hr_expense
@@ -984,7 +960,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__id
-#: model:ir.model.fields,field_description:hr_expense.field_res_users__id
 msgid "ID"
 msgstr ""
 
@@ -1255,12 +1230,6 @@ msgid "Name"
 msgstr ""
 
 #. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/kanban.xml:0
-msgid "New"
-msgstr ""
-
-#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "New expense entries"
@@ -1378,7 +1347,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
@@ -1442,12 +1412,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Original expense from a split."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_outstanding_account_id
-#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_outstanding_account_id
-msgid "Outstanding Account"
 msgstr ""
 
 #. module: hr_expense
@@ -1717,6 +1681,11 @@ msgid "Same Receipt Expense"
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
@@ -1731,10 +1700,10 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
-#: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 
 #. module: hr_expense
@@ -1909,17 +1878,15 @@ msgid "Team Approver"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
-#: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_outstanding_account_id
-msgid ""
-"The account used to record the outstanding amount of the company expenses."
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 
 #. module: hr_expense
@@ -1931,8 +1898,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 
 #. module: hr_expense
@@ -1962,13 +1929,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"The work email of some employees is missing. Please add it on their form."
 msgstr ""
 
 #. module: hr_expense
@@ -2075,7 +2035,8 @@ msgstr ""
 msgid ""
 "Uh-oh! You can’t edit this expense.\n"
 "\n"
-"Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+"Reach out to the administrators, flash your best smile, and see if they'll "
+"grant you the magical access you seek."
 msgstr ""
 
 #. module: hr_expense
@@ -2118,11 +2079,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Use the breadcrumbs to go back to the list of expenses."
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_res_users
-msgid "User"
 msgstr ""
 
 #. module: hr_expense
@@ -2177,14 +2133,14 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
 
 #. module: hr_expense
@@ -2310,8 +2266,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 
 #. module: hr_expense

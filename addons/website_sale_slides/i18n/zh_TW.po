@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -39,7 +39,13 @@ msgid "Access to: %(new_line)s%(channel_list)s"
 msgstr "可存取：%(new_line)s%(channel_list)s"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+#: model:product.template,name:website_sale_slides.product_course_channel_5_product_template
+msgid "Basics of Furniture Creation"
+msgstr ""
+
+#. module: website_sale_slides
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/website_builder/course_page_option.xml:0
 msgid "Buy Now Button"
 msgstr "即買按鈕"
 
@@ -72,7 +78,8 @@ msgid "Course Access"
 msgstr "課程存取"
 
 #. module: website_sale_slides
-#: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
+#. odoo-javascript
+#: code:addons/website_sale_slides/static/src/website_builder/course_page_option_plugin.js:0
 msgid "Course Page"
 msgstr "課程頁"
 
@@ -98,6 +105,11 @@ msgid "Currency"
 msgstr "貨幣"
 
 #. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
+msgid "DIY Furniture Course"
+msgstr ""
+
+#. module: website_sale_slides
 #: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
 msgid "Defines how people can enroll to your Course."
 msgstr "設定人們如何註冊你的課程。"
@@ -106,6 +118,7 @@ msgstr "設定人們如何註冊你的課程。"
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__display_name
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_slides.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
@@ -131,6 +144,7 @@ msgstr "授予此產品連結的電子學習課程存取權限。"
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__id
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_slides.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_slides.field_sale_order_line__id
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__id
 msgid "ID"
 msgstr "識別號"
@@ -211,6 +225,11 @@ msgid "Sales Order"
 msgstr "銷售訂單"
 
 #. module: website_sale_slides
+#: model:ir.model,name:website_sale_slides.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: website_sale_slides
 #. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 msgid "Sign in"
@@ -231,6 +250,11 @@ msgstr "註冊"
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Start Learning"
 msgstr "開始學習"
+
+#. module: website_sale_slides
+#: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
+msgid "Taking care of Trees Course"
+msgstr ""
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
@@ -257,14 +281,6 @@ msgstr "總收入"
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
 msgstr "總收入"
-
-#. module: website_sale_slides
-#. odoo-python
-#: code:addons/website_sale_slides/models/slide_channel.py:0
-msgid ""
-"You are not allowed to add members to this course. Please contact the course"
-" responsible or an administrator."
-msgstr "你不可將新成員加入至此課程。請聯絡課程負責人或系統管理員。"
 
 #. module: website_sale_slides
 #. odoo-python
@@ -306,3 +322,8 @@ msgstr "步驟"
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "to access resources"
 msgstr "以存取學習資源"
+
+#~ msgid ""
+#~ "You are not allowed to add members to this course. Please contact the "
+#~ "course responsible or an administrator."
+#~ msgstr "你不可將新成員加入至此課程。請聯絡課程負責人或系統管理員。"

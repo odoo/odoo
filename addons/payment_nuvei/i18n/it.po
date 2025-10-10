@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 23:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-17 17:19+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
@@ -29,8 +29,8 @@ msgstr "%(payment_method)s richiede nome e cognome."
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (%(reason)s). Please"
-" try again."
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
 msgstr ""
 "Si è verificato un errore durante l'elaborazione del pagamento (%(reason)s). "
 "Riprova più tardi."
@@ -41,15 +41,21 @@ msgid "Code"
 msgstr "Codice"
 
 #. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "Identificativo commerciante"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "No transaction found matching reference %(ref)s."
-msgstr "Nessuna transazione trovata corrispondente al riferimento %(ref)s."
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -90,14 +96,7 @@ msgstr "Dati ricevuti con stato di pagamento mancante."
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "Dati ricevuti privi di riferimento,"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid ""
-"Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr ""
 "Stato transazione %(status)s e ragione '%(reason)s' ricevuti non validi."
 
@@ -132,3 +131,9 @@ msgstr "Il codice identificativo del sito associato al conto del commerciante."
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Codice tecnico del fornitore di pagamenti."
+
+#~ msgid "No transaction found matching reference %(ref)s."
+#~ msgstr "Nessuna transazione trovata corrispondente al riferimento %(ref)s."
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "Dati ricevuti privi di riferimento,"

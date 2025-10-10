@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:44+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -24,18 +24,17 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<i class=\"fa fa-ban me-2\"/>\n"
-"                                            Unpublished"
+msgid "<b>End</b>"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid ""
-"<small class=\"o_wevent_participating text-bg-success\">\n"
-"                                            <i class=\"fa fa-check me-2\"/>\n"
-"                                            Registered\n"
-"                                        </small>"
+msgid "<b>Start</b>"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
 msgstr ""
 
 #. module: website_event_sale
@@ -50,14 +49,22 @@ msgstr ""
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
-msgid "A pricelist item with a positive min. quantity cannot be applied to this event tickets product."
-msgstr "Một dòng bảng giá với một số lượng tối thiểu dương không thể được áp dụng cho sản phẩm vé sự kiện này."
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"Một dòng bảng giá với một số lượng tối thiểu dương không thể được áp dụng "
+"cho sản phẩm vé sự kiện này."
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
-msgid "A pricelist item with a positive min. quantity will not be applied to the event tickets products."
-msgstr "Một dòng bảng giá với một số lượng tối thiểu dương sẽ không được áp dụng cho sản phẩm vé sự kiện này."
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"Một dòng bảng giá với một số lượng tối thiểu dương sẽ không được áp dụng cho "
+"sản phẩm vé sự kiện này."
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -65,9 +72,24 @@ msgid "Confirm Registration"
 msgstr "Xác nhận Đăng ký"
 
 #. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
 msgid "Event Sales Report"
 msgstr "Báo cáo doanh số sự kiện"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Subtitle"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -75,19 +97,19 @@ msgid "Event Tickets"
 msgstr "Vé Sự kiện"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Title"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "Free"
 msgstr "Miễn phí"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "From"
 msgstr "Từ"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "Go to Event"
-msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
@@ -95,9 +117,24 @@ msgid "Go to Payment"
 msgstr "Đi đến thanh toán"
 
 #. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
 msgstr "Quy tắc bảng giá"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -129,14 +166,22 @@ msgstr "Rất tiếc, Vé %(ticket)s cho sự kiện %(event)s đã được bá
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
-msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
-msgstr "Rất tiếc, chỉ còn %(remaining_seats)d chỗ còn khả dụng cho vé %(ticket)s đối với sự kiện %(event)s."
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
+"ticket for the %(event)s event%(slot)s."
+msgstr ""
 
 #. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid "The provided ticket doesn't exist"
 msgstr "Vé đã cung cấp không tồn tại"
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "The provided ticket slot doesn't exist"
+msgstr ""
 
 #. module: website_event_sale
 #. odoo-python
@@ -151,16 +196,6 @@ msgid "Warning"
 msgstr "Cảnh báo"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "We are looking forward to meeting you at the following"
-msgstr ""
-
-#. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_website
-msgid "Website"
-msgstr "Trang web"
-
-#. module: website_event_sale
 #. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 msgid "You cannot raise manually the event ticket quantity in your cart"
@@ -169,16 +204,16 @@ msgstr ""
 "công"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "event"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
-msgid "events"
-msgstr ""
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
 msgid "to"
 msgstr "đến"
+
+#~ msgid ""
+#~ "Sorry, only %(remaining_seats)d seats are still available for the %"
+#~ "(ticket)s ticket for the %(event)s event."
+#~ msgstr ""
+#~ "Rất tiếc, chỉ còn %(remaining_seats)d chỗ còn khả dụng cho vé %(ticket)s "
+#~ "đối với sự kiện %(event)s."
+
+#~ msgid "Website"
+#~ msgstr "Trang web"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 21:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-29 19:47+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -24,14 +24,13 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "'219999830019' (should be 12 digits)"
-msgstr "'219999830019' (deben ser 12 dígitos)"
+msgid "1-01-85004-3 or 101850043"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr "10XXXXXXXXY o 20XXXXXXXXY o 15XXXXXXXXY o 16XXXXXXXXY o 17XXXXXXXXY"
 
 #. module: base_vat
@@ -49,16 +48,10 @@ msgstr "1792060346001 o 1792060346"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "3101012009"
-msgstr "3101012009"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
-"310175397400003 "
-"[quince dígitos, de los cuales el primero y el último deben ser \"3\"]"
+"310175397400003 [quince dígitos, de los cuales el primero y el último deben "
+"ser \"3\"]"
 
 #. module: base_vat
 #. odoo-python
@@ -69,20 +62,8 @@ msgstr "49-098-576 o 49098576"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "AR200-5536168-2 or 20055361682"
-msgstr "AR200-5536168-2 o 20055361682"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 msgstr "CHE-123.456.788 TVA o CHE-123.456.788 MWST o CHE-123.456.788 IVA"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "CO213123432-1 or CO213.123.432-1"
-msgstr "CO213123432-1 o CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -110,16 +91,30 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: base_vat
+#: model:ir.model,name:base_vat.model_res_country
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
+#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
+msgid "Country"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
 msgstr "DE123456788 o 12/345/67890"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "DO1-01-85004-3 or 101850043"
-msgstr "DO1-01-85004-3 o 101850043"
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -132,17 +127,11 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-#, python-format
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
 "Por ejemplo: \"219999830019\" (formato: 12 dígitos, todos los números, "
 "dígito de control válido)"
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "Posición fiscal"
 
 #. module: base_vat
 #. odoo-python
@@ -153,8 +142,27 @@ msgstr "GB123456782 o XI123456782"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "GODE561231GR8"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
 msgstr "HU12345676 o 12345678-1-11 o 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
+msgid "Has Foreign Fiscal Position"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_country__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -174,8 +182,8 @@ msgstr "Válido dentro de la Comunidad Europea"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr "MXGODE561231GR8 o GODE561231GR8"
+msgid "Note: the expected format is %(expected_format)s"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -184,6 +192,8 @@ msgid "Perform Vies Validation"
 msgstr "Realizar validación VIES"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "Número de identificación fiscal"
@@ -192,22 +202,26 @@ msgstr "Número de identificación fiscal"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
-"Parece que el número %(vat_label)s [%(wrong_vat)s] no es válido. \n"
-"Nota: El formato esperado es %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. %(expected_note)s"
 msgstr ""
-"Parece que el número %(vat_label)s [%(wrong_vat)s] de %(record_label)sno es "
-"válido. \n"
-"Nota: El formato esperado es %(expected_format)s"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -217,34 +231,19 @@ msgstr "El número de IVA %s no pudo ser interpretado por el servidor VIES."
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
+#: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The country detected for this foreign VAT number does not match any of the "
-"countries composing the country group set on this fiscal position."
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
 msgstr ""
-"El país detectado para este número de identificación fiscal extranjero no "
-"coincide con ninguno de los países que forman parte del grupo de países "
-"configurado en esta posición fiscal."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
-msgstr ""
-"No pudimos detectar el país del número de identificación fiscal extranjero. "
-"Asigna un país a la posición fiscal o configura un grupo de países."
+"La solicitud de validación del número fiscal no ha sido procesada. El "
+"servicio VIES respondió con el siguiente error: %s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
+msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
 msgstr ""
-"La solicitud de validación del número fiscal no ha sido procesada. El "
-"servicio VIES respondió con el siguiente error: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -264,12 +263,6 @@ msgid "Verify VAT numbers using the European VIES service"
 msgstr "Verificar números tributarios con el servicio europeo VIES"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
-msgid "Vies Vat To Check"
-msgstr "Número de IVA a verificar en VIES"
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
@@ -285,12 +278,65 @@ msgstr "ya sea 11 dígitos para CPF o 14 dígitos para CNPJ"
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "fiscal position [%s]"
-msgstr "posición fiscal [%s]"
-
-#. module: base_vat
-#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "contacto [%s]"
+
+#~ msgid "'219999830019' (should be 12 digits)"
+#~ msgstr "'219999830019' (deben ser 12 dígitos)"
+
+#~ msgid "3101012009"
+#~ msgstr "3101012009"
+
+#~ msgid "AR200-5536168-2 or 20055361682"
+#~ msgstr "AR200-5536168-2 o 20055361682"
+
+#~ msgid "CO213123432-1 or CO213.123.432-1"
+#~ msgstr "CO213123432-1 o CO213.123.432-1"
+
+#~ msgid "DO1-01-85004-3 or 101850043"
+#~ msgstr "DO1-01-85004-3 o 101850043"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Posición fiscal"
+
+#~ msgid "MXGODE561231GR8 or GODE561231GR8"
+#~ msgstr "MXGODE561231GR8 o GODE561231GR8"
+
+#~ msgid ""
+#~ "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
+#~ "Note: the expected format is %(expected_format)s"
+#~ msgstr ""
+#~ "Parece que el número %(vat_label)s [%(wrong_vat)s] no es válido. \n"
+#~ "Nota: El formato esperado es %(expected_format)s"
+
+#~ msgid ""
+#~ "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not "
+#~ "seem to be valid. \n"
+#~ "Note: the expected format is %(expected_format)s"
+#~ msgstr ""
+#~ "Parece que el número %(vat_label)s [%(wrong_vat)s] de %(record_label)sno "
+#~ "es válido. \n"
+#~ "Nota: El formato esperado es %(expected_format)s"
+
+#~ msgid ""
+#~ "The country detected for this foreign VAT number does not match any of "
+#~ "the countries composing the country group set on this fiscal position."
+#~ msgstr ""
+#~ "El país detectado para este número de identificación fiscal extranjero no "
+#~ "coincide con ninguno de los países que forman parte del grupo de países "
+#~ "configurado en esta posición fiscal."
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position or set a country group"
+#~ msgstr ""
+#~ "No pudimos detectar el país del número de identificación fiscal "
+#~ "extranjero. Asigna un país a la posición fiscal o configura un grupo de "
+#~ "países."
+
+#~ msgid "Vies Vat To Check"
+#~ msgstr "Número de IVA a verificar en VIES"
+
+#~ msgid "fiscal position [%s]"
+#~ msgstr "posición fiscal [%s]"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 18:35+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-14 21:13+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -8415,6 +8415,12 @@ msgid "Stock should be updated at closing"
 msgstr "Le stock devrait être mis à jour à la fermeture"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Stock variation for %s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
@@ -8756,6 +8762,12 @@ msgid ""
 msgstr ""
 "La stratégie d'arrondi des paiements en espèces du Point de Vente %(pos)s "
 "doit être : '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "The company must have a fiscal country set."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10612,7 +10624,6 @@ msgstr "par ex. 1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Cash"
 msgstr "par ex. Espèces"
 
@@ -10625,6 +10636,11 @@ msgstr "par ex. Cheeseburger"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
 msgstr "par ex. adresse de l'entreprise, site web"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "e.g. Dine in"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-25 17:34+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -20,12 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
-msgid "Additional info"
-msgstr "Información adicional"
 
 #. module: partner_autocomplete
 #: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
@@ -45,20 +39,6 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
-"Empresa completada en automático por el servicio de autocompletado de Odoo"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
-msgid "Company database ID"
-msgstr "ID de la base de datos de la empresa"
-
-#. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
@@ -69,17 +49,16 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_uid
-msgid "Created by"
-msgstr "Creado por"
+#: model:ir.model,website_form_label:partner_autocomplete.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
-msgid "Created on"
-msgstr "Creado el"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
 
@@ -110,7 +89,11 @@ msgid "IAP Partner Autocomplete API"
 msgstr "API de autocompletado del contacto de compras dentro de la aplicación"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -118,21 +101,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
 msgstr "Crédito insuficiente"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
-msgid "Is synched"
-msgstr "Está sincronizado"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
-msgid "Last Updated by"
-msgstr "Última actualización por"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_date
-msgid "Last Updated on"
-msgstr "Última actualización el"
 
 #. module: partner_autocomplete
 #. odoo-python
@@ -147,31 +115,10 @@ msgid "Not enough credits for Partner Autocomplete"
 msgstr "No hay suficientes créditos para autocompletar el contacto"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
-msgid "Partner"
-msgstr "Contacto"
-
-#. module: partner_autocomplete
-#: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
-msgid "Partner Autocomplete Sync"
-msgstr "Sincronización para autocompletar un contacto"
-
-#. module: partner_autocomplete
-#: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
-msgid "Partner Autocomplete: Sync with remote DB"
-msgstr "Autocompletar contacto: Sincronizar con una base de datos remota"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Contacto creado por el servicio de autocompletado de contactos de Odoo"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-msgid "Placeholder"
-msgstr "Marcador de posición"
+msgid "Search Worldwide 🌎"
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -191,3 +138,50 @@ msgstr "Configure el token de su cuenta"
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "Test mode"
 msgstr "Modo de prueba"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr ""
+
+#~ msgid "Additional info"
+#~ msgstr "Información adicional"
+
+#~ msgid "Company auto-completed by Odoo Partner Autocomplete Service"
+#~ msgstr ""
+#~ "Empresa completada en automático por el servicio de autocompletado de Odoo"
+
+#~ msgid "Company database ID"
+#~ msgstr "ID de la base de datos de la empresa"
+
+#~ msgid "Created by"
+#~ msgstr "Creado por"
+
+#~ msgid "Created on"
+#~ msgstr "Creado el"
+
+#~ msgid "Is synched"
+#~ msgstr "Está sincronizado"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Última actualización por"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Última actualización el"
+
+#~ msgid "Partner"
+#~ msgstr "Contacto"
+
+#~ msgid "Partner Autocomplete Sync"
+#~ msgstr "Sincronización para autocompletar un contacto"
+
+#~ msgid "Partner Autocomplete: Sync with remote DB"
+#~ msgstr "Autocompletar contacto: Sincronizar con una base de datos remota"
+
+#~ msgid "Partner created by Odoo Partner Autocomplete Service"
+#~ msgstr ""
+#~ "Contacto creado por el servicio de autocompletado de contactos de Odoo"
+
+#~ msgid "Placeholder"
+#~ msgstr "Marcador de posición"

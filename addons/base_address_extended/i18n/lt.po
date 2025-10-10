@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-27 02:30+0000\n"
-"Last-Translator: Vytenis Viruišis <vytenis@users.noreply.translate.odoo.com>"
-"\n"
+"Last-Translator: Vytenis Viruišis "
+"<vytenis@users.noreply.translate.odoo.com>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "base_address_extended/lt/>\n"
 "Language: lt\n"
@@ -27,8 +27,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 :"
-" n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: base_address_extended
@@ -45,11 +45,16 @@ msgstr ""
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Pažymėkite šį laukelį, kad užtikrintumėte, jog kiekvienas tos šalies adresas turėtų pasirinktą miestą iš šalies miestų sąrašo."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Pažymėkite šį laukelį, kad užtikrintumėte, jog kiekvienas tos šalies adresas "
+"turėtų pasirinktą miestą iš šalies miestų sąrašo."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
 msgstr "Miestai"
 
@@ -81,6 +86,11 @@ msgid "Country"
 msgstr "Valstybė"
 
 #. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
@@ -92,6 +102,8 @@ msgstr "Sukurta"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -99,12 +111,15 @@ msgstr "Rodomas pavadinimas"
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
-"                your partner records. Note that an option can be set on each country separately\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
 "Rodyti ir valdyti visų miestų, kurie gali būti priskirti jūsų\n"
-"partnerių įrašams, sąrašą. Atkreipkite dėmesį, kad šis pasirinkimas gali būti nustatytas kiekvienai\n"
-"šaliai atskirai, kad būtų forsuojamas privalomas miesto iš šio sąrašo turėjimas."
+"partnerių įrašams, sąrašą. Atkreipkite dėmesį, kad šis pasirinkimas gali "
+"būti nustatytas kiekvienai\n"
+"šaliai atskirai, kad būtų forsuojamas privalomas miesto iš šio sąrašo "
+"turėjimas."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -137,6 +152,8 @@ msgstr ""
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 

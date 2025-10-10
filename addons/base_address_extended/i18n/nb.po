@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 18:28+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
@@ -37,11 +37,16 @@ msgstr ""
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr "Kryss av denne boksen for å forsikre deg om at alle adresser opprettet for det landet har en 'By' valgt i listen over landets byer."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Kryss av denne boksen for å forsikre deg om at alle adresser opprettet for "
+"det landet har en 'By' valgt i listen over landets byer."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
 msgstr "Byer"
 
@@ -73,6 +78,11 @@ msgid "Country"
 msgstr "Land"
 
 #. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
 msgstr "Opprettet av"
@@ -84,6 +94,8 @@ msgstr "Opprettet den"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
 
@@ -91,11 +103,14 @@ msgstr "Visningsnavn"
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
-"                your partner records. Note that an option can be set on each country separately\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
-"Vis og administrer listen over alle byer som kan knyttes til dine partnere. \n"
-"Merk at du for hvert land, kan spesifisere om adresser må inneholde en by fra denne listen."
+"Vis og administrer listen over alle byer som kan knyttes til dine "
+"partnere. \n"
+"Merk at du for hvert land, kan spesifisere om adresser må inneholde en by "
+"fra denne listen."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -128,6 +143,8 @@ msgstr ""
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 

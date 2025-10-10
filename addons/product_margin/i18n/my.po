@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-23 02:47+0000\n"
 "Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/"
@@ -86,6 +86,7 @@ msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
+#: model:ir.model.fields,field_description:product_margin.field_product_product__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -137,6 +138,7 @@ msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__id
+#: model:ir.model.fields,field_description:product_margin.field_product_product__id
 msgid "ID"
 msgstr ""
 
@@ -207,11 +209,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_graph
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Product Margins"
+msgstr ""
+
+#. module: product_margin
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+msgid "Product Margins…"
 msgstr ""
 
 #. module: product_margin
@@ -269,8 +275,7 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
 
 #. module: product_margin

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 08:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -28,7 +28,8 @@ msgstr ""
 msgid ""
 ".\n"
 "                        <br/>\n"
-"                        We appreciate your support for our organization as such.\n"
+"                        We appreciate your support for our organization as "
+"such.\n"
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
@@ -79,8 +80,22 @@ msgid ""
 "<small class=\"text-danger d-none\" id=\"warning_message_id\">Please enter "
 "the amount to donate.</small>"
 msgstr ""
-"<small class=\"text-danger d-none\" "
-"id=\"warning_message_id\">請輸入捐款金額。</small>"
+"<small class=\"text-danger d-none\" id=\"warning_message_id\">請輸入捐款金"
+"額。</small>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"<span class=\"oe_inline pe-0\">\n"
+"                            Enable a payment provider to accept online "
+"payments.\n"
+"                        </span>"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "<span class=\"oe_inline px-0\">or</span>"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -108,6 +123,16 @@ msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
 msgstr "<span class=\"s_donation_currency pe-1\">$</span>50"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "<span>Enable a payment provider to accept online payments.</span>"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "<span>or</span>"
+msgstr ""
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
 msgstr "<strong>警告:</strong>貨別未填或不正確。"
@@ -125,8 +150,8 @@ msgstr "文化覺醒的一年。"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Activate Payments"
-msgstr "啟動付款功能"
+msgid "Activate"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -135,19 +160,20 @@ msgstr "啟用 Stripe"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
+msgid "Add"
+msgstr ""
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
+#: code:addons/website_payment/static/src/website_builder/donation_option_plugin.js:0
 msgid "Add a description here"
 msgstr "在這兒增加說明"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.js:0
-msgid "Add new pre-filled option"
-msgstr "加入新的預填選項"
-
-#. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Amount"
 msgstr "金額"
@@ -174,7 +200,7 @@ msgstr "照顧初生嬰兒 1 個月。"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Choose Your Amount"
 msgstr "選擇您的金額"
 
@@ -184,14 +210,18 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: website_payment
-#. odoo-python
-#: code:addons/website_payment/models/res_config_settings.py:0
-msgid "Configure %s"
-msgstr "%s 配置"
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Configure"
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Configure Payment Methods"
+msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
+#: code:addons/website_payment/static/src/interactions/payment_form.js:0
 msgid "Country"
 msgstr "國家"
 
@@ -212,9 +242,8 @@ msgstr "必須填寫國家。"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Custom Amount"
 msgstr "自訂金額"
 
@@ -224,12 +253,14 @@ msgid "Dear"
 msgstr "親愛的"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Default Amount"
 msgstr "預設金額"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Descriptions"
 msgstr "說明"
 
@@ -242,7 +273,8 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Display Options"
 msgstr "顯示選項"
 
@@ -260,6 +292,7 @@ msgstr "馬上捐款"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation"
 msgstr "捐款"
@@ -268,6 +301,12 @@ msgstr "捐款"
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation Button"
 msgstr "捐款按鈕"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/controllers/portal.py:0
+msgid "Donation Payment"
+msgstr ""
 
 #. module: website_payment
 #. odoo-python
@@ -288,7 +327,7 @@ msgstr "捐贈通知"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
+#: code:addons/website_payment/static/src/interactions/payment_form.js:0
 msgid "Email"
 msgstr "電郵"
 
@@ -302,12 +341,6 @@ msgstr ""
 "                    <span class=\"s_website_form_mark\"> *（必填）</span>"
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
-msgid "Email is invalid"
-msgstr "電郵地址無效"
-
-#. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Email is required."
@@ -319,15 +352,20 @@ msgid "Enter a valid number!"
 msgstr "請輸入有效的數字。"
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
-msgid "Field '%s' is mandatory"
-msgstr "欄位“%s”必須填入"
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Find a Payment Provider"
+msgstr ""
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
-msgid "First Provider Label"
-msgstr "首名服務商標籤"
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Find another provider"
+msgstr ""
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/supported_payment_methods_option.xml:0
+msgid "Height"
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_payment__id
@@ -338,7 +376,8 @@ msgid "ID"
 msgstr "識別號"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Input"
 msgstr "流入"
 
@@ -348,14 +387,15 @@ msgid "Is Donation"
 msgstr "為捐贈"
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
-msgid "Is Stripe Supported Country"
-msgstr "是支援 Stripe 國家/地區"
-
-#. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
 msgid "Is donation"
 msgstr "為捐贈"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/supported_payment_methods_option.xml:0
+msgid "Limit"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
@@ -363,18 +403,20 @@ msgid "Make a Donation"
 msgstr "建立一筆捐贈"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Maximum"
 msgstr "最高數量"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Minimum"
 msgstr "最低"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
+#: code:addons/website_payment/static/src/interactions/payment_form.js:0
 msgid "Name"
 msgstr "名稱"
 
@@ -394,8 +436,14 @@ msgid "Name is required."
 msgstr "必須填入名稱"
 
 #. module: website_payment
-#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__none
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
+msgid "No published payment methods"
+msgstr ""
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "None"
 msgstr "無"
 
@@ -408,11 +456,6 @@ msgstr "一年在小學。"
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "One year in high school."
 msgstr "一年在高中。"
-
-#. module: website_payment
-#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
-msgid "Other than Paypal"
-msgstr "除 PayPal 以外"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
@@ -430,12 +473,6 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: website_payment
-#. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "付款處理失敗"
-
-#. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/models/payment_transaction.py:0
 msgid "Payment received from donation with following details:"
@@ -443,13 +480,24 @@ msgstr "收到的捐贈款項，詳情如下："
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Payments"
 msgstr "付款"
 
 #. module: website_payment
-#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
-msgid "Paypal Only"
-msgstr "只用 PayPal"
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Please enter a valid email address."
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Please provide a name."
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_information
+msgid "Please select a country."
+msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
@@ -458,27 +506,20 @@ msgid "Please select or enter an amount"
 msgstr "請選擇或輸入金額"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Pre-filled Options"
 msgstr "預填選項"
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
-msgid "Providers State"
-msgstr "服務商狀態"
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Recipient Email"
 msgstr "受款人電郵地址"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "Shop - Payment"
-msgstr "網店 － 付款"
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#. odoo-javascript
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Slider"
 msgstr "滑動選擇器"
 
@@ -489,12 +530,7 @@ msgstr "無論金額大小，我們都萬分感謝您的協助。"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/js/payment_form.js:0
-msgid "Some information is missing to process your payment."
-msgstr "還缺了一些資訊來處理您的付款。"
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+#: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 msgid "Step"
 msgstr "步驟"
 
@@ -506,11 +542,9 @@ msgid ""
 msgstr "你所在的國家/地區未有 Stripe Connect 服務。請使用其他付款服務商。"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid ""
-"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
-"Pay, etc. as well as recurring charges."
-msgstr "支援大多數付款方法； Visa、Mastercard、Maestro、Google Pay、Apple Pay 等，以及經常性費用。"
+#: model_terms:ir.ui.view,arch_db:website_payment.snippets
+msgid "Supported Payment Methods"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -534,14 +568,17 @@ msgid "There is nothing to pay."
 msgstr "沒有須付款項目。"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "View Alternatives"
-msgstr "查看替代方案"
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
+msgid "View providers"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
-msgid "View other providers"
-msgstr "查看其他服務商"
+msgid ""
+"Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring "
+"charges."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
@@ -562,3 +599,55 @@ msgstr "你的回應"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
 msgstr "獲得於"
+
+#~ msgid "Activate Payments"
+#~ msgstr "啟動付款功能"
+
+#~ msgid "Add new pre-filled option"
+#~ msgstr "加入新的預填選項"
+
+#~ msgid "Configure %s"
+#~ msgstr "%s 配置"
+
+#~ msgid "Email is invalid"
+#~ msgstr "電郵地址無效"
+
+#~ msgid "Field '%s' is mandatory"
+#~ msgstr "欄位“%s”必須填入"
+
+#~ msgid "First Provider Label"
+#~ msgstr "首名服務商標籤"
+
+#~ msgid "Is Stripe Supported Country"
+#~ msgstr "是支援 Stripe 國家/地區"
+
+#~ msgid "Other than Paypal"
+#~ msgstr "除 PayPal 以外"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "付款處理失敗"
+
+#~ msgid "Paypal Only"
+#~ msgstr "只用 PayPal"
+
+#~ msgid "Providers State"
+#~ msgstr "服務商狀態"
+
+#~ msgid "Shop - Payment"
+#~ msgstr "網店 － 付款"
+
+#~ msgid "Some information is missing to process your payment."
+#~ msgstr "還缺了一些資訊來處理您的付款。"
+
+#~ msgid ""
+#~ "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, "
+#~ "Apple Pay, etc. as well as recurring charges."
+#~ msgstr ""
+#~ "支援大多數付款方法； Visa、Mastercard、Maestro、Google Pay、Apple Pay 等，"
+#~ "以及經常性費用。"
+
+#~ msgid "View Alternatives"
+#~ msgstr "查看替代方案"
+
+#~ msgid "View other providers"
+#~ msgstr "查看其他服務商"

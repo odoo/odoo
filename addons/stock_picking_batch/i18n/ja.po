@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:02+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-14 21:08+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -46,8 +46,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
 "style=\"white-space: nowrap;\">Wave Grouping</span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" style"
-"=\"white-space: nowrap;\">ウェーブグループ化</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">ウェーブグループ化</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -55,8 +55,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
 "Grouping</span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\""
-">一括グループ化</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">一括グルー"
+"プ化</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -110,8 +110,8 @@ msgid ""
 "number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"この明細数を超えるバッチに転送が追加されても、転送は自動的に追加されません。"
-"\n"
+"この明細数を超えるバッチに転送が追加されても、転送は自動的に追加されませ"
+"ん。\n"
 "明細数制限がない場合は、この値を '0' のままにしておきます。"
 
 #. module: stock_picking_batch
@@ -564,7 +564,8 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
-msgstr "自動バッチ機能が有効な場合、少なくとも1つの'グループごと'オプションを選択する"
+msgstr ""
+"自動バッチ機能が有効な場合、少なくとも1つの'グループごと'オプションを選択する"
 "必要があります。"
 
 #. module: stock_picking_batch
@@ -617,8 +618,9 @@ msgstr "遅れた活動"
 msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
-msgstr "通路またはエリアごとにピッキングオーダを出し、梱包ゾーンで再グループ化します"
-"。大規模な倉庫に適しています。"
+msgstr ""
+"通路またはエリアごとにピッキングオーダを出し、梱包ゾーンで再グループ化しま"
+"す。大規模な倉庫に適しています。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -784,7 +786,8 @@ msgstr ""
 msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
 "reduces packing time and is ideal for small products."
-msgstr "一度に複数のオーダを選択し、ピッキングしながらオーダを準備します。梱包時間を"
+msgstr ""
+"一度に複数のオーダを選択し、ピッキングしながらオーダを準備します。梱包時間を"
 "短縮でき、小型のプロダクトに適しています。"
 
 #. module: stock_picking_batch
@@ -801,7 +804,8 @@ msgstr "ピッキングタイプ"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Please select at least two batch/wave transfers to merge."
-msgstr "マージ対象の少なくとも 2 件以上のバッチ/ウェーブ転送を選択してください。"
+msgstr ""
+"マージ対象の少なくとも 2 件以上のバッチ/ウェーブ転送を選択してください。"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -927,14 +931,12 @@ msgid ""
 "batch."
 msgstr ""
 "処理される転送の予定日\n"
-"　　　　- "
-"手動で設定した場合、バッチ内のすべての予定日が自動的にこの日付に更新されます"
-"。\n"
-"　　　　- "
-"手動で変更されず、転送が追加/削除/更新された場合、この日が最も早い予定日とな"
-"ります。\n"
-"　　　　"
-"しかし、この予定日はバッチ内のすべての振込に設定されるわけではありません。"
+"　　　　- 手動で設定した場合、バッチ内のすべての予定日が自動的にこの日付に更"
+"新されます。\n"
+"　　　　- 手動で変更されず、転送が追加/削除/更新された場合、この日が最も早い"
+"予定日となります。\n"
+"　　　　しかし、この予定日はバッチ内のすべての振込に設定されるわけではありま"
+"せん。"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -986,22 +988,25 @@ msgstr "移動元ロケーション"
 msgid ""
 "Split transfers by defined locations, then group transfers with the same "
 "location."
-msgstr "転送を定義したロケーションで分割し、同じロケーションの転送をグループ化します"
-"。"
+msgstr ""
+"転送を定義したロケーションで分割し、同じロケーションの転送をグループ化しま"
+"す。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
 "Split transfers by product category, then group transfers that have the same "
 "product category."
-msgstr "プロダクトカテゴリ別に転送を分割し、同じプロダクトカテゴリの転送をグループ化"
+msgstr ""
+"プロダクトカテゴリ別に転送を分割し、同じプロダクトカテゴリの転送をグループ化"
 "します。"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
-msgstr "プロダクト別に転送を分割し、同じプロダクトを持つ転送をグループ化します。"
+msgstr ""
+"プロダクト別に転送を分割し、同じプロダクトを持つ転送をグループ化します。"
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -1080,9 +1085,8 @@ msgid ""
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"以下の運送は、一括転送 "
-"%(batch)sに追加することができません。ステータスとオペレーションタイプを確認し"
-"て下さい。\n"
+"以下の運送は、一括転送 %(batch)sに追加することができません。ステータスとオペ"
+"レーションタイプを確認して下さい。\n"
 "\n"
 "非互換性: %(incompatible_transfers)s"
 

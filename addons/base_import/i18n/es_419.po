@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-10-07 23:38+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -86,8 +86,8 @@ msgstr "Permitir emparejamiento con subcampos"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
 "Se produjo un problema desconocido durante la importación (posiblemente "
@@ -159,11 +159,11 @@ msgstr "La columna %(column)s contiene valores incorrectos (valor: %(value)s)"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: "
-"%(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
 msgstr ""
-"La columna %(column)s contiene valores incorrectos. Error en la línea "
-"%(line)d: %(error)s"
+"La columna %(column)s contiene valores incorrectos. Error en la línea %"
+"(line)d: %(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -186,11 +186,10 @@ msgstr "Comentarios"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
-"No se pudo recuperar la URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"No se pudo recuperar la URL: %(url)s [%(field_name)s: L%(line_number)d]: %"
+"(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -256,6 +255,7 @@ msgstr "Retraso después de cada lote"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
 
@@ -310,8 +310,8 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has "
-"%(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "Error al importar registros: todas las filas deben ser del mismo tamaño, "
 "pero la fila de título tiene %(title_row_entries)d entradas mientras que la "
@@ -341,6 +341,12 @@ msgstr "Se recomiendan los archivos de Excel ya que el formato es automático."
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "ID externo"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Field '%(field)s' does not accept date/time values."
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -408,8 +414,8 @@ msgstr "Formato"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
 "Se encontraron datos de imagen no válidos, las imágenes deben importarse "
 "como URL o datos codificados en base64."
@@ -435,6 +441,7 @@ msgstr "Este es el inicio del archivo que no se pudo importar:"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -514,6 +521,12 @@ msgstr "Importar registros"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Imported records"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
 msgstr "Importando"
 
@@ -524,9 +537,9 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"Formato de celda no válido en la fila %(row)s, columna %(col)s: %(cell_value)"
-"s, con el formato %(cell_format)s. El formato (%(format_type)s) no es "
-"compatible."
+"Formato de celda no válido en la fila %(row)s, columna %(col)s: %"
+"(cell_value)s, con el formato %(cell_format)s. El formato (%(format_type)s) "
+"no es compatible."
 
 #. module: base_import
 #. odoo-python
@@ -836,7 +849,8 @@ msgstr "Registrar historial durante la importación"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "No es posible subir el archivo \"{extension}\": requiere el módulo de Python "
 "\"{modname}\""
@@ -873,8 +887,8 @@ msgstr "Sube tus archivos"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
-"system. You can use a custom format in addition to the suggestions provided."
-" Leave empty to let Odoo guess the format (recommended)"
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
 "Use HH para las horas en un sistema horario de 24 horas o use II con una "
 "\"p\" para el sistema de 12 horas. Puede utilizar un formato personalizado "
@@ -885,10 +899,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
-"Use YYYY to represent the year, MM for the month and DD for the day. Include"
-" separators such as a dot, forward slash or dash. You can use a custom "
-"format in addition to the suggestions provided. Leave empty to let Odoo "
-"guess the format (recommended)"
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
 "Utilice YYYY para representar el año, MM para el mes y DD para el día. "
 "Incluya separadores como un punto, barra diagonal o guion. Puede utilizar un "
@@ -926,11 +940,9 @@ msgstr "Cuando un valor no puede coincidir:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"You can not import images via URL, check with your administrator or support "
+"You can not import file via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
-"No puedes importar imágenes por URL, consulta a tu administrador o equipo de "
-"soporte para conocer el motivo."
 
 #. module: base_import
 #. odoo-javascript
@@ -993,3 +1005,10 @@ msgstr "segundos"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "código de error desconocido %s"
+
+#~ msgid ""
+#~ "You can not import images via URL, check with your administrator or "
+#~ "support for the reason."
+#~ msgstr ""
+#~ "No puedes importar imágenes por URL, consulta a tu administrador o equipo "
+#~ "de soporte para conocer el motivo."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-14 21:20+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -20,11 +20,21 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+
+#. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "<strong>Use your passkey to authenticate</strong>"
 msgstr "<strong>認証にはパスキーを使用します</strong>"
 
 #. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Add Passkey"
 msgstr "パスキーを追加"
@@ -83,19 +93,12 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid "Created:"
-msgstr "作成済:"
-
-#. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__credential_identifier
 msgid "Credential Identifier"
 msgstr "認証識別子"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Delete"
 msgstr "削除"
 
@@ -121,7 +124,8 @@ msgstr "ID"
 msgid ""
 "Incorrect Passkey. Please provide a valid passkey or use a different "
 "authentication method."
-msgstr "パスキーが正しくありません。検証済のパスキーを入力するか、別の認証方法を使用"
+msgstr ""
+"パスキーが正しくありません。検証済のパスキーを入力するか、別の認証方法を使用"
 "して下さい。"
 
 #. module: auth_passkey
@@ -137,8 +141,7 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Last used:"
 msgstr "最終使用:"
 
@@ -166,14 +169,6 @@ msgid "Passkeys"
 msgstr "パスキー"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-msgid ""
-"Passkeys are a replacement for your username and password, offering a more "
-"secure way of logging in."
-msgstr "パスキーはユーザ名とパスワードの代わりとなるもので、より安全なログイン方法を"
-"提供します。"
-
-#. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_res_users_identitycheck
 msgid "Password Check Wizard"
 msgstr "パスワードチェックウィザード"
@@ -184,7 +179,7 @@ msgid "Public Key"
 msgstr "公開キー"
 
 #. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
 msgid "Rename"
 msgstr "名前の変更"
 
@@ -240,3 +235,13 @@ msgstr "パスワードを使用"
 #: model:ir.model,name:auth_passkey.model_res_users
 msgid "User"
 msgstr "ユーザ"
+
+#~ msgid "Created:"
+#~ msgstr "作成済:"
+
+#~ msgid ""
+#~ "Passkeys are a replacement for your username and password, offering a "
+#~ "more secure way of logging in."
+#~ msgstr ""
+#~ "パスキーはユーザ名とパスワードの代わりとなるもので、より安全なログイン方法"
+#~ "を提供します。"

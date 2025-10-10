@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 15:33+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -25,21 +25,63 @@ msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " clicks"
-msgstr "点击"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid " countries"
-msgstr "国家"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "# of clicks"
 msgstr "# 点击"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid ""
+"<a class=\"copy-to-clipboard btn btn-sm btn-primary o_translate_inline\" t-"
+"att-data-clipboard-text=\"short_url\"><i class=\"fa fa-copy me-2\"/>Copy</a>"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"<a class=\"copy-to-clipboard btn btn-success text-nowrap "
+"o_translate_inline\"><i class=\"fa fa-copy me-2\"/>Copy</a>"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<i class=\"fa fa-copy me-2\"/>Copy"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid ""
+"<span class=\"o_website_links_edit_tools\">\n"
+"                                        <a role=\"button\" "
+"class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
+"href=\"#\">ok</a> or\n"
+"                                        <a "
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">cancel</"
+"a>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"<span class=\"o_website_links_short_url d-flex align-items-center text-"
+"nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
+"class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
+"                                        <span "
+"class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;\">\n"
+"                                            <a role=\"button\" "
+"class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
+"href=\"#\">ok</a> or\n"
+"                                            <a "
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">cancel</"
+"a>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "<span class=\"text-muted me-1\">Sort By:</span>"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -50,6 +92,11 @@ msgstr "<strong>活动</strong>"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
 msgstr "<strong>中等</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Name</strong>"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -78,53 +125,56 @@ msgstr "一直"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+msgid "Campaign"
 msgstr ""
-"营销<i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Copied"
-msgstr "已复制"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "Copy"
 msgstr "复制"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create a Link tracker"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Create another Tracker"
+msgstr ""
+
+#. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
+#: code:addons/website_links/static/src/xml/website_links_tags_wrapper.xml:0
+msgid "Create option \""
+msgstr ""
+
+#. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
 msgstr "编辑代码"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Generating link..."
-msgstr "生成链接..."
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Generate Link Tracker"
+msgstr ""
+
+#. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__id
+msgid "ID"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Get tracked link"
-msgstr "获取跟踪链"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Icon"
-msgstr "图标"
+msgid "Last Clicks"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -137,30 +187,28 @@ msgid "Last Week"
 msgstr "上周"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
+msgid "Link Copied!"
+msgstr ""
+
+#. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
 #: model:ir.ui.menu,name:website_links.menu_link_tracker
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
 msgstr "链接追踪器"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+msgid "Medium"
 msgstr ""
-"媒介<i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Most Clicked"
-msgstr "点击最多"
+msgid "Name"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -168,15 +216,14 @@ msgid "Newest"
 msgstr "最新"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid "No data"
-msgstr "无数据"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Number of Clicks"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "Recently Used"
-msgstr "最近使用"
+msgid "Read More"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -188,16 +235,8 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+msgid "Source"
 msgstr ""
-"来源<i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -206,28 +245,25 @@ msgid "Statistics"
 msgstr "统计信息"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-msgid "Stats"
-msgstr "统计数据"
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "Target Link"
+msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
 msgid "The code cannot be left empty"
 msgstr "密码不能为空"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "There is no data to show"
 msgstr "没有数据显示"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
 msgid "This code is already taken"
 msgstr "该密码已被使用"
 
@@ -242,20 +278,20 @@ msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "URL"
-msgstr "网址"
+msgid "Tracked Link"
+msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Unable to get recent links"
-msgstr "无法获取最近链接"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "Undefined"
 msgstr "未定义的"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
+msgid "Visit Link"
+msgstr ""
 
 #. module: website_links
 #. odoo-python
@@ -264,49 +300,43 @@ msgid "Visit Webpage Statistics"
 msgstr "访问网页统计"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "You don't have any recent links."
-msgstr "您没有任何最近的链接。"
-
-#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
 msgstr "您跟踪的链接"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "cancel"
-msgstr "取消"
-
-#. module: website_links
-#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "clicks"
 msgstr "点击"
 
 #. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "copy"
-msgstr "复制"
+#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
+msgid "countries"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
 msgstr "例如：InMails、广告、社交......"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
 msgstr "例如：六月特卖会、巴黎路演......"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
 msgstr "例如： LinkedIn、Facebook、Leads..."
 
@@ -315,16 +345,86 @@ msgstr "例如： LinkedIn、Facebook、Leads..."
 msgid "e.g. https://www.odoo.com/contactus"
 msgstr "e.g. https://www.odoo.com/contactus"
 
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "ok"
-msgstr "确定"
+#~ msgid " clicks"
+#~ msgstr "点击"
 
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/xml/recent_link.xml:0
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "or"
-msgstr "或"
+#~ msgid " countries"
+#~ msgstr "国家"
+
+#~ msgid ""
+#~ "Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-"
+#~ "bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" "
+#~ "title=\"Defines the context of your link. It might be an event you want "
+#~ "to promote or a special promotion.\"/>"
+#~ msgstr ""
+#~ "营销<i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+#~ "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" "
+#~ "title=\"Defines the context of your link. It might be an event you want "
+#~ "to promote or a special promotion.\"/>"
+
+#~ msgid "Copied"
+#~ msgstr "已复制"
+
+#~ msgid "Generating link..."
+#~ msgstr "生成链接..."
+
+#~ msgid "Get tracked link"
+#~ msgstr "获取跟踪链"
+
+#~ msgid "Icon"
+#~ msgstr "图标"
+
+#~ msgid ""
+#~ "Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+#~ "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" "
+#~ "title=\"Defines the medium used to share your link. It might be an email, "
+#~ "or a Facebook Ads for instance.\"/>"
+#~ msgstr ""
+#~ "媒介<i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+#~ "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" "
+#~ "title=\"Defines the medium used to share your link. It might be an email, "
+#~ "or a Facebook Ads for instance.\"/>"
+
+#~ msgid "Most Clicked"
+#~ msgstr "点击最多"
+
+#~ msgid "No data"
+#~ msgstr "无数据"
+
+#~ msgid "Recently Used"
+#~ msgstr "最近使用"
+
+#~ msgid ""
+#~ "Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+#~ "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" "
+#~ "title=\"Defines the source from which your traffic will come from, "
+#~ "Facebook or Twitter for instance.\"/>"
+#~ msgstr ""
+#~ "来源<i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+#~ "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" "
+#~ "title=\"Defines the source from which your traffic will come from, "
+#~ "Facebook or Twitter for instance.\"/>"
+
+#~ msgid "Stats"
+#~ msgstr "统计数据"
+
+#~ msgid "URL"
+#~ msgstr "网址"
+
+#~ msgid "Unable to get recent links"
+#~ msgstr "无法获取最近链接"
+
+#~ msgid "You don't have any recent links."
+#~ msgstr "您没有任何最近的链接。"
+
+#~ msgid "cancel"
+#~ msgstr "取消"
+
+#~ msgid "copy"
+#~ msgstr "复制"
+
+#~ msgid "ok"
+#~ msgstr "确定"
+
+#~ msgid "or"
+#~ msgstr "或"

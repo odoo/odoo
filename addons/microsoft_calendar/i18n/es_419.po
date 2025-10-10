@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-29 19:48+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -71,8 +71,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 msgid ""
-"An error occurred while generating the token. Your authorization code may be"
-" invalid or has already expired [%s]. You should check your Client ID and "
+"An error occurred while generating the token. Your authorization code may be "
+"invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
@@ -160,7 +160,15 @@ msgid "Discard"
 msgstr "Descartar"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__display_name
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
 
@@ -178,8 +186,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
-"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in "
+"Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
 "Debido a una limitación del calendario de Outlook, las actualizaciones de "
 "recurrencia deben realizarse desde allí.\n"
@@ -197,6 +207,11 @@ msgstr ""
 "recurrentes desde el calendario de Outlook."
 
 #. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "Regla de recurrencia de evento"
@@ -205,7 +220,10 @@ msgstr "Regla de recurrencia de evento"
 #. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 msgid ""
-"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"For a correct synchronization between Odoo and Outlook Calendar, all "
+"attendees must have an email address. However, some events do not respect "
+"this condition. As long as the events are incorrect, the calendars will not "
+"be synchronized.\n"
 "Either update the events/attendees or archive these events %(details)s:\n"
 "%(invalid_events)s"
 msgstr ""
@@ -228,7 +246,15 @@ msgstr ""
 "Outlook."
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__id
+#: model:ir.model.fields,field_description:microsoft_calendar.field_res_users_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -424,18 +450,11 @@ msgstr "Sincronizar solo los eventos nuevos"
 #. odoo-javascript
 #: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 msgid ""
-"The Outlook Synchronization needs to be configured before you can use it, do"
-" you want to do it now?"
+"The Outlook Synchronization needs to be configured before you can use it, do "
+"you want to do it now?"
 msgstr ""
-"Se necesita configurar la sincronización de Outlook antes de poder usarla, ¿"
-"quiere hacerlo ahora?"
-
-#. module: microsoft_calendar
-#. odoo-python
-#: code:addons/microsoft_calendar/models/res_users.py:0
-msgid "The account for the Outlook Calendar service is not configured."
-msgstr ""
-"La cuenta para el servicio del calendario de Outlook no está configurada."
+"Se necesita configurar la sincronización de Outlook antes de poder usarla, "
+"¿quiere hacerlo ahora?"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -474,3 +493,7 @@ msgstr "Token de usuario"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
 msgstr "Eventos existentes del usuario"
+
+#~ msgid "The account for the Outlook Calendar service is not configured."
+#~ msgstr ""
+#~ "La cuenta para el servicio del calendario de Outlook no está configurada."

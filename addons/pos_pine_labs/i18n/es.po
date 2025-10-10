@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-17 17:24+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -103,11 +103,6 @@ msgstr ""
 "cobrar el pago."
 
 #. module: pos_pine_labs
-#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
-msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr "PlutusTransactionReferenceID de Pine Labs"
-
-#. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "Pine Labs Security Token"
 msgstr "Token de seguridad de Pine Labs"
@@ -144,6 +139,11 @@ msgstr ""
 "Se ha producido un error con la solicitud de cancelación de pago de Pine Labs"
 
 #. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "PineLabs Transaction ID"
+msgstr ""
+
+#. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "Métodos de pago en el punto de venta"
@@ -162,9 +162,9 @@ msgstr "El número de referencia no coincide"
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid ""
-"Required during the refund order process: "
-"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
-"request-for-Void-ICB-on-UPI-transaction"
+"Required during the refund order process: https://developer.pinelabs.com/in/"
+"instore/cloud-integration#Example-JSON-request-for-Void-ICB-on-UPI-"
+"transaction"
 msgstr ""
 "Se necesita durante el proceso de reembolso del pedido: https://"
 "developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-request-for-"
@@ -201,3 +201,6 @@ msgstr "Ocurrió un error con la transacción debido a inactividad"
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
 msgstr "UPI"
+
+#~ msgid "Pine Labs PlutusTransactionReferenceID"
+#~ msgstr "PlutusTransactionReferenceID de Pine Labs"

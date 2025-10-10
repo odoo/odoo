@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-17 07:45+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -22,18 +22,21 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
-"                        <option value=\"checking\">Personal Checking</option>\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Personal Checking</"
+"option>\n"
 "                        <option value=\"savings\">Personal Savings</option>\n"
-"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                        <option value=\"businessChecking\">Business "
+"Checking</option>\n"
 "                    </select>"
 msgstr ""
-"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">"
-"\n"
-"                        <option value=\"checking\">Cheques "
-"personales</option>\n"
-"                        <option value=\"savings\">Ahorros personales</option>"
-"\n"
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-"
+"select\">\n"
+"                        <option value=\"checking\">Cheques personales</"
+"option>\n"
+"                        <option value=\"savings\">Ahorros personales</"
+"option>\n"
 "                        <option value=\"businessChecking\">Cheques de la "
 "empresa</option>\n"
 "                    </select>"
@@ -120,8 +123,15 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"No fue posible obtener los detalles de la transacción. (Código de error: "
-"%(error_code)s; detalles del error: %(error_message)s)"
+"No fue posible obtener los detalles de la transacción. (Código de error: %"
+"(error_code)s; detalles del error: %(error_message)s)"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -149,6 +159,13 @@ msgid "How to get paid with Authorize.Net"
 msgstr "Cómo recibir pagos con Authorize.Net"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
 msgstr "MM"
@@ -157,12 +174,6 @@ msgstr "MM"
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
 msgstr "Nombre en la cuenta"
-
-#. module: payment_authorize
-#. odoo-python
-#: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "No se encontró ninguna transacción que coincida con la referencia %s."
 
 #. module: payment_authorize
 #. odoo-python
@@ -187,17 +198,16 @@ msgstr "Transacción de pago"
 
 #. module: payment_authorize
 #. odoo-javascript
-#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Error al procesar el pago"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgid ""
+"Received data with status code \"%(status)s\" and error code \"%(error)s\"."
 msgstr ""
-"Se recibió información con el código de estado \"%(status)s\" y código de "
-"error \"%(error)s\""
 
 #. module: payment_authorize
 #. odoo-python
@@ -236,14 +246,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"La transacción no está en un estado en el que se pueda reembolsar. (Estado: "
-"%(status)s, detalles: %(message)s)"
-
-#. module: payment_authorize
-#. odoo-python
-#: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
-msgstr "La transacción no está vinculada a un token."
+"La transacción no está en un estado en el que se pueda reembolsar. (Estado: %"
+"(status)s, detalles: %(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -264,3 +268,16 @@ msgstr "Esta acción no se puede realizar si el proveedor está deshabilitado."
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
 msgstr "YY"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr ""
+#~ "No se encontró ninguna transacción que coincida con la referencia %s."
+
+#~ msgid ""
+#~ "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+#~ msgstr ""
+#~ "Se recibió información con el código de estado \"%(status)s\" y código de "
+#~ "error \"%(error)s\""
+
+#~ msgid "The transaction is not linked to a token."
+#~ msgstr "La transacción no está vinculada a un token."

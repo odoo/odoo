@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 23:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 04:47+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -29,9 +29,10 @@ msgstr "%(payment_method)s 항목에는 성과 이름을 모두 입력해야 합
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (%(reason)s). Please"
-" try again."
-msgstr "결제를 처리하는 동안 오류가 발생했습니다 (%(reason)s). 다시 시도해 주세요."
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
+msgstr ""
+"결제를 처리하는 동안 오류가 발생했습니다 (%(reason)s). 다시 시도해 주세요."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
@@ -39,15 +40,21 @@ msgid "Code"
 msgstr "코드"
 
 #. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "판매자 식별 기호"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "No transaction found matching reference %(ref)s."
-msgstr "%(ref)s 참조와 일치하는 거래 항목이 없습니다."
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -88,14 +95,7 @@ msgstr "결제 상태가 누락된 데이터가 수신되었습니다."
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "참조가 누락된 데이터가 수신되었습니다."
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid ""
-"Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr "잘못된 거래 상태 %(status)s와 사유 '%(reason)s'가 수신되었습니다."
 
 #. module: payment_nuvei
@@ -128,3 +128,9 @@ msgstr "판매자 계정과 연결된 사이트 식별 코드입니다."
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "이 결제대행업체의 기술 코드입니다."
+
+#~ msgid "No transaction found matching reference %(ref)s."
+#~ msgstr "%(ref)s 참조와 일치하는 거래 항목이 없습니다."
+
+#~ msgid "Received data with missing reference."
+#~ msgstr "참조가 누락된 데이터가 수신되었습니다."

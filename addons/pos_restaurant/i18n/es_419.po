@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-10-08 18:36+0000\n"
 "PO-Revision-Date: 2025-10-09 02:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -67,7 +67,8 @@ msgstr "<strong>Puntos de venta:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
 "El piso de un restaurante representa el lugar donde se da servicio a los "
@@ -151,7 +152,7 @@ msgid "Allows to print the Bill before payment."
 msgstr "Permite imprimir la cuenta antes de pagar"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_anchovy
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
 msgid "Anchovy"
 msgstr "Anchoas"
 
@@ -205,7 +206,7 @@ msgid "Bacon Burger"
 msgstr "Hamburguesa con tocino"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_fries
 msgid "Belgian fresh homemade fries"
 msgstr "Papas fritas caseras frescas de Bélgica"
 
@@ -228,7 +229,7 @@ msgid "Bill Splitting"
 msgstr "Dividir la cuenta"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_black_olives
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_black_olives
 msgid "Black olives"
 msgstr "Aceitunas negras"
 
@@ -424,7 +425,7 @@ msgstr "Venta directa"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
 msgid "Discard"
 msgstr "Descartar"
 
@@ -495,14 +496,12 @@ msgid "Espresso"
 msgstr "Espresso"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese_pasta
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_extra_cheese
 msgid "Extra cheese"
 msgstr "Queso extra"
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.product_extra_pasta
-#: model:product.attribute,name:pos_restaurant.product_extra_pizza
+#: model:product.attribute,name:pos_restaurant.pa_extras_pizza
 msgid "Extras"
 msgstr "Extras"
 
@@ -626,7 +625,7 @@ msgid "Green Tea"
 msgstr "Té verde"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_grilled_vegetables
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_grilled_vegetables
 msgid "Grilled vegetables"
 msgstr "Verduras a la plancha"
 
@@ -674,15 +673,15 @@ msgstr "Té helado"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 "Si es falso, la mesa se desactivará y ya no estará disponible en el punto de "
 "venta"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "It seems that the order has not been sent. Would you like to send it to "
 "preparation?"
@@ -795,8 +794,7 @@ msgid "Mozzarella Sandwich"
 msgstr "Sándwich de mozzarella"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom_pasta
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_mushroom
 msgid "Mushroom"
 msgstr "Champiñones"
 
@@ -878,9 +876,9 @@ msgstr "Opciones"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
 msgid "Order"
 msgstr "Ordenar"
 
@@ -934,7 +932,7 @@ msgid "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
 msgstr "Pimienta, mozzarella, gorgonzola dulce, taleggio y parmesano."
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_peperoni
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_pepperoni
 msgid "Pepperoni"
 msgstr "Pepperoni"
 
@@ -970,7 +968,8 @@ msgstr "Plan"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
 "Cierre y valide la siguiente sesión abierta del PdV antes de modificar este "
@@ -1023,7 +1022,7 @@ msgid "Pos Set Tip After Payment"
 msgstr "Establecer propina después del pago en PdV"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_potato_thyme
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_potato_thyme
 msgid "Potatoes with thyme"
 msgstr "Papas con tomillo"
 
@@ -1204,7 +1203,7 @@ msgid "Shape"
 msgstr "Forma"
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.product_sides_buns_pizza
+#: model:product.attribute,name:pos_restaurant.pa_sides
 msgid "Sides"
 msgstr "Guarniciones"
 
@@ -1215,7 +1214,7 @@ msgid "Signature"
 msgstr "Firma"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_smashed_sweet_potatoes
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_smashed_sweet_potato
 msgid "Smashed sweet potatoes"
 msgstr "Puré de camote"
 
@@ -1269,7 +1268,7 @@ msgid "Sushi Lunch Combo"
 msgstr "Combo de sushi para almuerzo"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_sweet_potato
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
 msgid "Sweet potato fries"
 msgstr "Papas de camote"
 
@@ -1282,6 +1281,7 @@ msgstr "Cambiar a vista de piso"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
 msgstr "Mesa"
@@ -1360,8 +1360,7 @@ msgstr "La mesa donde se sirvió esta comanda"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "El color de la mesa, expresado como un valor de 'fondo' con propiedad CSS "
 "válido"
@@ -1374,8 +1373,8 @@ msgstr "Altura de la mesa en pixeles"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "La posición horizontal de la mesa desde el lado izquierdo del centro de la "
 "mesa, en pixeles"
@@ -1504,7 +1503,7 @@ msgstr "Vodka 42 Below, jugo de limón, azúcar y cerveza de jengibre."
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
 msgid "Warning !"
 msgstr "¡Advertencia!"
 
@@ -1537,6 +1536,12 @@ msgstr "Ron blanco, azúcar fina, jugo de limón, agua mineral y hierbabuena."
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
 msgid "Width"
 msgstr "Ancho"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1593,6 +1598,12 @@ msgid ""
 msgstr ""
 "No puede eliminar una mesa utilizada en una sesión de PdV, primero cierre "
 "esa sesión."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

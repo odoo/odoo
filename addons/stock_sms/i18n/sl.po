@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2025-09-16 21:37+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -24,7 +24,12 @@ msgstr ""
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': We are glad to inform you "
+"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
+"else object.company_id.name + ': We are glad to inform you that your order "
+"has been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 
@@ -75,6 +80,9 @@ msgstr ""
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_stock_picking__display_name
 msgid "Display Name"
 msgstr "Prikazani naziv"
 
@@ -85,6 +93,9 @@ msgstr ""
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock_sms.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
 
@@ -111,22 +122,10 @@ msgid "SMS"
 msgstr "SMS"
 
 #. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
-#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
-msgid "SMS Confirmation"
-msgstr "Potrditev SMS"
-
-#. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
-#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Template"
 msgstr "SMS predloga"
-
-#. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
-msgid "SMS Validation with stock move"
-msgstr ""
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
@@ -143,5 +142,9 @@ msgstr "Prenos"
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+"                This feature can easily be disabled from the Settings of "
+"Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+
+#~ msgid "SMS Confirmation"
+#~ msgstr "Potrditev SMS"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -24,10 +24,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
-msgid "Additional info"
-msgstr "Lisainfo"
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -41,19 +40,6 @@ msgid "Companies"
 msgstr "Ettevõtted"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "Ettevõte andmed on automaatselt täidetud Odoo teenuse poolt. "
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
-msgid "Company database ID"
-msgstr "Ettevõtte andmebaasi ID"
-
-#. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
 msgstr "Seadistused"
@@ -64,17 +50,16 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_uid
-msgid "Created by"
-msgstr "Loonud"
+#: model:ir.model,website_form_label:partner_autocomplete.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
-msgid "Created on"
-msgstr "Loomise kuupäev"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
 
@@ -82,6 +67,11 @@ msgstr "Näidatav nimi"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__iap_enrich_auto_done
 msgid "Enrich Done"
 msgstr "Täiendus tehtud"
+
+#. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr ""
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
@@ -100,7 +90,11 @@ msgid "IAP Partner Autocomplete API"
 msgstr "IAP partneri automaatse täitmise API"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -108,21 +102,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
 msgstr "Ebapiisav krediit"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
-msgid "Is synched"
-msgstr "On sünkroniseeritud"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
-msgid "Last Updated by"
-msgstr "Viimati uuendas"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_date
-msgid "Last Updated on"
-msgstr "Viimati uuendatud"
 
 #. module: partner_autocomplete
 #. odoo-python
@@ -134,34 +113,14 @@ msgstr "Konto token puudub"
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 msgid "Not enough credits for Partner Autocomplete"
-msgstr "Pole piisavalt palju punkte, et täiendada partneri andmeid automaatselt"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
-msgid "Partner"
-msgstr "Partner"
-
-#. module: partner_autocomplete
-#: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
-msgid "Partner Autocomplete Sync"
-msgstr "Partneri automaatse täienduse sünkroniseerimine"
-
-#. module: partner_autocomplete
-#: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
-msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Parter on loodud Odoo teenuste abiga"
+"Pole piisavalt palju punkte, et täiendada partneri andmeid automaatselt"
 
 #. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-msgid "Placeholder"
-msgstr "Kohatäitja"
+msgid "Search Worldwide 🌎"
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -181,3 +140,45 @@ msgstr "Määra oma konto märgis"
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "Test mode"
 msgstr "Testrežiim "
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr ""
+
+#~ msgid "Additional info"
+#~ msgstr "Lisainfo"
+
+#~ msgid "Company auto-completed by Odoo Partner Autocomplete Service"
+#~ msgstr "Ettevõte andmed on automaatselt täidetud Odoo teenuse poolt. "
+
+#~ msgid "Company database ID"
+#~ msgstr "Ettevõtte andmebaasi ID"
+
+#~ msgid "Created by"
+#~ msgstr "Loonud"
+
+#~ msgid "Created on"
+#~ msgstr "Loomise kuupäev"
+
+#~ msgid "Is synched"
+#~ msgstr "On sünkroniseeritud"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Viimati uuendas"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Viimati uuendatud"
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid "Partner Autocomplete Sync"
+#~ msgstr "Partneri automaatse täienduse sünkroniseerimine"
+
+#~ msgid "Partner created by Odoo Partner Autocomplete Service"
+#~ msgstr "Parter on loodud Odoo teenuste abiga"
+
+#~ msgid "Placeholder"
+#~ msgstr "Kohatäitja"

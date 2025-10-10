@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-27 02:30+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -22,7 +22,8 @@ msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-users\" aria-label=\"Número de usuarios activos\"/>"
 
@@ -32,15 +33,16 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
 "                                        Active User\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
+"                                    <span class=\"o_form_label\" "
+"invisible=\"active_user_count &lt;= 1\">\n"
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
 "                                        Usuario activo\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible="
-"\"active_user_count &lt;= 1\">\n"
+"                                    <span class=\"o_form_label\" "
+"invisible=\"active_user_count &lt;= 1\">\n"
 "                                        Usuarios activos\n"
 "                                    </span>"
 
@@ -50,7 +52,8 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Company\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
+"                                    <span class=\"o_form_label\" "
+"invisible=\"company_count &lt;= 1\">\n"
 "                                        Companies\n"
 "                                    </span>\n"
 "                                    <br/>"
@@ -58,8 +61,8 @@ msgstr ""
 "<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Empresa\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible="
-"\"company_count &lt;= 1\">\n"
+"                                    <span class=\"o_form_label\" "
+"invisible=\"company_count &lt;= 1\">\n"
 "                                        Empresas\n"
 "                                    </span>\n"
 "                                    <br/>"
@@ -70,7 +73,8 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
 "                                            Language\n"
 "                                        </span>\n"
-"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
+"                                        <span class=\"o_form_label\" "
+"invisible=\"language_count &lt;= 1\">\n"
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
@@ -103,7 +107,13 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<strong>Save</strong> this page and come back here to set up reCaptcha."
+"<strong>Save</strong> this page and come back here to set up Google Places "
+"API key"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
 "<strong>Guardar</strong> esta página y regresar para configurar reCaptcha."
 
@@ -179,16 +189,14 @@ msgstr "Permita trabajar en un entorno multimoneda"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automatically enrich your contact base with company data"
+msgid "Autocomplete partner addresses with Google Places"
 msgstr ""
-"Enriquezca su base de contactos de forma automática con datos de la empresa"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automatically generate counterpart documents in recipient companies"
+msgid "Automatically enrich your contact base with company data"
 msgstr ""
-"Genera documentos de contrapartida de manera automática en las empresas "
-"receptoras"
+"Enriquezca su base de contactos de forma automática con datos de la empresa"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -261,12 +269,23 @@ msgid "Contacts"
 msgstr "Contactos"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_group_codes
+msgid "Country Group Codes"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"Create corresponding in/out orders and bills when you sell/buy between your "
+"companies"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
 msgstr "Pie de página personalizado del reporte"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
 msgstr "Permisos de acceso predeterminados"
@@ -274,8 +293,16 @@ msgstr "Permisos de acceso predeterminados"
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
-msgid "Default User Template not found."
-msgstr "No se encontró la plantilla de usuario predeterminada."
+msgid "Default access for new users"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:base_setup.field_kpi_provider__display_name
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_setup.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -291,6 +318,12 @@ msgstr "Plantilla del documento"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
 msgstr "Editar diseño"
+
+#. module: base_setup
+#. odoo-python
+#: code:addons/base_setup/models/res_config_settings.py:0
+msgid "Edit new user default group"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -335,14 +368,22 @@ msgid "Geolocation"
 msgstr "Geolocalización"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
-msgid "Get product pictures using barcode"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_address_autocomplete
+msgid "Google Address Autocomplete"
 msgstr ""
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
 msgid "HTTP Routing"
 msgstr "Enrutamiento HTTP"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http__id
+#: model:ir.model.fields,field_description:base_setup.field_kpi_provider__id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_setup.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -368,6 +409,11 @@ msgstr "Transacciones entre empresas"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
 msgstr "Es la empresa principal"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_kpi_provider
+msgid "KPI Provider"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -461,6 +507,11 @@ msgid "Permissions"
 msgstr "Permisos"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
+msgid "Phone"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
 msgstr "Visualizar documento"
@@ -484,6 +535,12 @@ msgstr "Proteja sus formularios de spam y abusos."
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
 msgstr "Proteja sus formularios con Cloudflare Turnstile."
+
+#. module: base_setup
+#. odoo-javascript
+#: code:addons/base_setup/static/src/views/module_views.xml:0
+msgid "Reset Updating States"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
@@ -575,11 +632,6 @@ msgid "VAT"
 msgstr "Número de identificación fiscal"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
-msgid "VoIP"
-msgstr "VoIP"
-
-#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "When populating your address book, Odoo provides a list of matching "
@@ -600,3 +652,14 @@ msgstr "Debe instalar la aplicación Conversaciones para usar esta función."
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
 msgstr "reCAPTCHA"
+
+#~ msgid "Automatically generate counterpart documents in recipient companies"
+#~ msgstr ""
+#~ "Genera documentos de contrapartida de manera automática en las empresas "
+#~ "receptoras"
+
+#~ msgid "Default User Template not found."
+#~ msgstr "No se encontró la plantilla de usuario predeterminada."
+
+#~ msgid "VoIP"
+#~ msgstr "VoIP"

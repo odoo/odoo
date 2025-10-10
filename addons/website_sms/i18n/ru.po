@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2024-01-30 15:14+0400\n"
 "Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -15,7 +15,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: website_sms
+#: model:ir.model.fields,field_description:website_sms.field_website_visitor__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_sms
+#: model:ir.model.fields,field_description:website_sms.field_website_visitor__id
+msgid "ID"
+msgstr ""
 
 #. module: website_sms
 #: model_terms:ir.ui.view,arch_db:website_sms.website_visitor_view_kanban
@@ -24,6 +36,8 @@ msgid "SMS"
 msgstr "СМС"
 
 #. module: website_sms
+#. odoo-python
+#: code:addons/website_sms/models/website_visitor.py:0
 #: model_terms:ir.ui.view,arch_db:website_sms.website_visitor_view_form
 msgid "Send SMS"
 msgstr "Отправить SMS"
@@ -31,16 +45,16 @@ msgstr "Отправить SMS"
 #. module: website_sms
 #. odoo-python
 #: code:addons/website_sms/models/website_visitor.py:0
-msgid "Send SMS Text Message"
-msgstr "Отправить текстовое сообщение SMS"
-
-#. module: website_sms
-#. odoo-python
-#: code:addons/website_sms/models/website_visitor.py:0
-msgid "There are no contact and/or no phone or mobile numbers linked to this visitor."
-msgstr "У этого посетителя нет контактных и/или телефонных или мобильных номеров."
+msgid ""
+"There are no contact and/or no phone or mobile numbers linked to this "
+"visitor."
+msgstr ""
+"У этого посетителя нет контактных и/или телефонных или мобильных номеров."
 
 #. module: website_sms
 #: model:ir.model,name:website_sms.model_website_visitor
 msgid "Website Visitor"
 msgstr "Посетитель сайта"
+
+#~ msgid "Send SMS Text Message"
+#~ msgstr "Отправить текстовое сообщение SMS"

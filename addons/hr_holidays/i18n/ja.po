@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-10-04 02:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -44,8 +44,8 @@ msgstr ""
 "                    まだ残日数がありません!\n"
 "                </p>\n"
 "                <p>\n"
-"                    まずは <a type=\"action\" class=\"text-link\" name=\"%d\""
-">休暇を割当</a> してみましょう\n"
+"                    まずは <a type=\"action\" class=\"text-link\" "
+"name=\"%d\">休暇を割当</a> してみましょう\n"
 "                </p>\n"
 "            "
 
@@ -281,8 +281,9 @@ msgid ""
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
 "'confirm'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\" invisible=\"allocation_type == 'accrual' or state != 'confirm'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"allocation_type == 'accrual' or state != "
+"'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -291,8 +292,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
-"\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" invisible=\"allocation_type == 'accrual'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
@@ -307,8 +308,8 @@ msgid ""
 "'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">日</span>\n"
-"                            <span class=\"ml8\" invisible="
-"\"request_unit != 'hour'\">時間</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">時間</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -318,8 +319,8 @@ msgid ""
 "invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">日</span>\n"
-"                                <span class=\"ml8\" invisible="
-"\"type_request_unit != 'hour'\">時間</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">時間</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -415,7 +416,8 @@ msgstr ""
 msgid ""
 "<span>The allocated days cannot be used, because the allocation is set to "
 "finish in the past.</span>"
-msgstr "<span>割当てられた休暇が使用できません。割当てが過去に終了するように設定され"
+msgstr ""
+"<span>割当てられた休暇が使用できません。割当てが過去に終了するように設定され"
 "ているためです。</span>"
 
 #. module: hr_holidays
@@ -479,8 +481,8 @@ msgid ""
 "Versions:\n"
 "%(versions)s"
 msgstr ""
-"異なる勤務スケジュールのバージョンをまたいで休暇を設定することはできません。"
-"\n"
+"異なる勤務スケジュールのバージョンをまたいで休暇を設定することはできませ"
+"ん。\n"
 "\n"
 "各バージョン期間ごとに、個別の休暇を作成してください。\n"
 "\n"
@@ -551,9 +553,9 @@ msgid ""
 "this period, but %(nb_days)s days will be used because this leave %"
 "(leave_type_name)s can only be taken by days."
 msgstr ""
-"勤務予定表によると、あなたはこの期間に%(days)s日勤務することになっていますが"
-"、この休暇%(nb_days)sは日単位でしか取得できないため、%(leave_type_name)s日が"
-"使用されます。"
+"勤務予定表によると、あなたはこの期間に%(days)s日勤務することになっています"
+"が、この休暇%(nb_days)sは日単位でしか取得できないため、%(leave_type_name)s日"
+"が使用されます。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -888,7 +890,8 @@ msgstr "以下での割当"
 msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
-msgstr "休暇割当申請を拒否するには、申請が「確定済」、「二次承認」または「最終確定」"
+msgstr ""
+"休暇割当申請を拒否するには、申請が「確定済」、「二次承認」または「最終確定」"
 "されている必要があります。"
 
 #. module: hr_holidays
@@ -1368,7 +1371,8 @@ msgstr "この累積休暇の制限を選択"
 msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
-msgstr "割当または休暇申請を承認するために通知される休暇担当者を選択します。空白の場"
+msgstr ""
+"割当または休暇申請を承認するために通知される休暇担当者を選択します。空白の場"
 "合、誰にも通知されません。"
 
 #. module: hr_holidays
@@ -1682,7 +1686,8 @@ msgstr "年次上限を設定しますか?"
 msgid ""
 "Define the maximum level of negative days this kind of time off can reach. "
 "Value must be at least 1."
-msgstr "この種の休暇のマイナス日数の最大レベルを定義します。値は少なくとも1である必要"
+msgstr ""
+"この種の休暇のマイナス日数の最大レベルを定義します。値は少なくとも1である必要"
 "があります。"
 
 #. module: hr_holidays
@@ -1824,7 +1829,8 @@ msgstr "このマイルストンを編集する前に、休暇累積プランへ
 msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
-msgstr "全体休暇の変更により、あなたの割当てから追加の休暇%sが取得されました。変更が"
+msgstr ""
+"全体休暇の変更により、あなたの割当てから追加の休暇%sが取得されました。変更が"
 "必要な場合は、この休暇を見直して下さい。"
 
 #. module: hr_holidays
@@ -1834,7 +1840,8 @@ msgid ""
 "Due to a change in global time offs, this leave no longer has the required "
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
-msgstr "全体休暇の変更により、この休暇は必要な割当がなくなり却下に設定されました。こ"
+msgstr ""
+"全体休暇の変更により、この休暇は必要な割当がなくなり却下に設定されました。こ"
 "の休暇を見直して下さい。"
 
 #. module: hr_holidays
@@ -1970,7 +1977,8 @@ msgstr "終了日"
 msgid ""
 "End date has been updated because the employee will leave the company on %"
 "(departure_date)s."
-msgstr "従業員が%(departure_date)sに会社を退職するため、終了日が更新されました。"
+msgstr ""
+"従業員が%(departure_date)sに会社を退職するため、終了日が更新されました。"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_european
@@ -2422,7 +2430,8 @@ msgstr ""
 msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
-msgstr "チェックが入っていると、ユーザの申請が割当てられた日数を超えてしまい、残高が"
+msgstr ""
+"チェックが入っていると、ユーザの申請が割当てられた日数を超えてしまい、残高が"
 "負になる可能性があります。"
 
 #. module: hr_holidays
@@ -2930,7 +2939,8 @@ msgstr "新規割当申請"
 msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of %"
 "(allocation_type)s"
-msgstr "%(user)sによって作成された新しい割当申請：%(count)s%(allocation_type)sの日数"
+msgstr ""
+"%(user)sによって作成された新しい割当申請：%(count)s%(allocation_type)sの日数"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
@@ -3063,7 +3073,8 @@ msgstr "通知対象はいません"
 msgid ""
 "Non-visible allocations can still be selected when taking a leave, but will "
 "simply not be displayed on the leave dashboard."
-msgstr "表示されない割当は、休暇取得時に選択できますが、休暇ダッシュボードには表示さ"
+msgstr ""
+"表示されない割当は、休暇取得時に選択できますが、休暇ダッシュボードには表示さ"
 "れません。"
 
 #. module: hr_holidays
@@ -3077,7 +3088,8 @@ msgstr "承認不要"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Not possible state. State Approve is only used for leave needed 2 approvals"
-msgstr "無効な状態です。「承認」ステータスは2段階承認が必要な休暇にのみ使用されます。"
+msgstr ""
+"無効な状態です。「承認」ステータスは2段階承認が必要な休暇にのみ使用されます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
@@ -3616,8 +3628,8 @@ msgid ""
 msgstr ""
 "従業員からの申請の場合に必要な承認レベルを選択します。\n"
 "            #     - 検証の必要なし: 従業員の申請は自動的に承認されます。\n"
-"            #     - 休暇担当による承認: "
-"従業員の申請を手動で承認する必要があります。\n"
+"            #     - 休暇担当による承認: 従業員の申請を手動で承認する必要があ"
+"ります。\n"
 "            #      休暇担当、従業員の承認者、またはその両方によるもの。"
 
 #. module: hr_holidays
@@ -3732,7 +3744,8 @@ msgstr "一部の休暇は、どの割当にもリンクできません。それ
 msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
-msgstr "削除しようとしている休暇累積プランの中には、既存の割当にリンクされているもの"
+msgstr ""
+"削除しようとしている休暇累積プランの中には、既存の割当にリンクされているもの"
 "があります。まず、それらを削除またはキャンセルして下さい。"
 
 #. module: hr_holidays
@@ -3901,7 +3914,8 @@ msgid ""
 "The accrual starts after a defined period from the allocation start date. "
 "This field defines the number of days, months or years after which accrual "
 "is used."
-msgstr "累積は、割当開始日から定義された期間後に開始します。このフィールドは、累積が"
+msgstr ""
+"累積は、割当開始日から定義された期間後に開始します。このフィールドは、累積が"
 "使用される日数、月数、または年数を定義します。"
 
 #. module: hr_holidays
@@ -3910,7 +3924,8 @@ msgstr "累積は、割当開始日から定義された期間後に開始しま
 msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
-msgstr "休暇タイプの割当要件は、そのタイプの休暇を取得した後は変更できません。代わり"
+msgstr ""
+"休暇タイプの割当要件は、そのタイプの休暇を取得した後は変更できません。代わり"
 "に新しい休暇タイプを作成して下さい。"
 
 #. module: hr_holidays
@@ -3930,8 +3945,9 @@ msgstr "繰越された日数は、次の期間に有効となります:"
 msgid ""
 "The distinction between working time (ex. Attendance) and absence (ex. "
 "Training) will be used in the computation of Accrual's plan rate."
-msgstr "勤務時間(例: 出勤)と欠勤(例: "
-"研修)の区別は、累積プラン率の計算に使用されます。"
+msgstr ""
+"勤務時間(例: 出勤)と欠勤(例: 研修)の区別は、累積プラン率の計算に使用されま"
+"す。"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -3974,7 +3990,8 @@ msgstr ""
 msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
-msgstr "最大超過額は0より大きい値にする必要があります。0を設定したい場合は、代わりに"
+msgstr ""
+"最大超過額は0より大きい値にする必要があります。0を設定したい場合は、代わりに"
 "負の限度を無効にして下さい。"
 
 #. module: hr_holidays
@@ -4040,7 +4057,8 @@ msgstr "シーケンスが最小のタイプは、休暇申請のデフォルト
 msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
-msgstr "休暇に従業員が設定されていません。正しい会社にログインしていることを確認して"
+msgstr ""
+"休暇に従業員が設定されていません。正しい会社にログインしていることを確認して"
 "下さい。"
 
 #. module: hr_holidays
@@ -4071,8 +4089,9 @@ msgstr "この欄は、休暇を最終確定したユーザによって自動的
 msgid ""
 "This area is automatically filled by the user who validate the time off with "
 "second level (If time off type need second validation)"
-msgstr "この欄は、(休暇タイプに二次承認が必要な場合)二次レベルで休暇を最終確定したユ"
-"ーザーによって自動的に入力されます。"
+msgstr ""
+"この欄は、(休暇タイプに二次承認が必要な場合)二次レベルで休暇を最終確定した"
+"ユーザーによって自動的に入力されます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
@@ -4085,7 +4104,8 @@ msgstr "この欄は、休暇割当を最終確定したユーザーによって
 msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
-msgstr "この欄は、（休暇タイプに二次承認が必要な場合）二次レベルで休暇割当をを最終確"
+msgstr ""
+"この欄は、（休暇タイプに二次承認が必要な場合）二次レベルで休暇割当をを最終確"
 "定したユーザーによって自動的に入力されます。"
 
 #. module: hr_holidays
@@ -4362,7 +4382,8 @@ msgstr "あなたがマネージャーである人々の休暇"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed or validated in order to refuse it."
-msgstr "休暇申請を却下するには、申請が「確定」または「最終確定」されている必要があり"
+msgstr ""
+"休暇申請を却下するには、申請が「確定」または「最終確定」されている必要があり"
 "ます。"
 
 #. module: hr_holidays
@@ -4455,7 +4476,8 @@ msgstr "研修休暇"
 msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
-msgstr "レコードを追加するか、検索バーに有効なフィルタが設定されていないことを確認し"
+msgstr ""
+"レコードを追加するか、検索バーに有効なフィルタが設定されていないことを確認し"
 "て下さい。"
 
 #. module: hr_holidays
@@ -4578,7 +4600,8 @@ msgstr "以下まで："
 msgid ""
 "Use accrual plans to give determined amount of time following the rules you "
 "define"
-msgstr "あなたが定義した規則に従って、決められた時間を与えるために休暇累積プランを使"
+msgstr ""
+"あなたが定義した規則に従って、決められた時間を与えるために休暇累積プランを使"
 "用します。"
 
 #. module: hr_holidays
@@ -4666,7 +4689,8 @@ msgstr "検証タイプ"
 msgid ""
 "Validity End date has been updated because the employee will leave the "
 "company on %(departure_date)s."
-msgstr "従業員が%(departure_date)sに会社を退職するため、有効期限終了日が更新されまし"
+msgstr ""
+"従業員が%(departure_date)sに会社を退職するため、有効期限終了日が更新されまし"
 "た。"
 
 #. module: hr_holidays
@@ -4768,7 +4792,8 @@ msgstr ""
 msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
-msgstr "休暇累積プランを使用して、このフィールドがチェックされている場合、割当の残日"
+msgstr ""
+"休暇累積プランを使用して、このフィールドがチェックされている場合、割当の残日"
 "数が指定された日数を超えることはありません。"
 
 #. module: hr_holidays
@@ -4776,8 +4801,9 @@ msgstr "休暇累積プランを使用して、このフィールドがチェッ
 msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
-msgstr "このフィールドを選択すると、年間累計休暇数合計が指定された制限に制限されます"
-"。"
+msgstr ""
+"このフィールドを選択すると、年間累計休暇数合計が指定された制限に制限されま"
+"す。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4857,8 +4883,9 @@ msgstr "強制日に休暇申請することはできません"
 msgid ""
 "You can create a new allocation or follow the approval status of the current "
 "ones."
-msgstr "新しい休暇割当を作成したり、現在の休暇割当の承認状況を確認することができます"
-"。"
+msgstr ""
+"新しい休暇割当を作成したり、現在の休暇割当の承認状況を確認することができま"
+"す。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
@@ -4882,14 +4909,16 @@ msgstr "過去に遡って累積を開始することはできません。"
 msgid ""
 "You can only cancel your own leave. You can cancel a leave only if this "
 "leave is approved, validated or refused."
-msgstr "自分自身の休暇申請のみキャンセルできます。また、休暇が「承認済」「最終確定済"
-"」または「却下済」の状態である場合に限り、キャンセルが可能です。"
+msgstr ""
+"自分自身の休暇申請のみキャンセルできます。また、休暇が「承認済」「最終確定"
+"済」または「却下済」の状態である場合に限り、キャンセルが可能です。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can only validate a leave with validation by Time Off Manager."
-msgstr "休暇申請を最終確定できるのは、休暇管理者による承認がある場合に限ります。"
+msgstr ""
+"休暇申請を最終確定できるのは、休暇管理者による承認がある場合に限ります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4957,7 +4986,8 @@ msgstr "休暇管理者によって最終確定された休暇割当を却下す
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't reset a leave. Cancel/delete this one and create an other"
-msgstr "休暇をリセットすることはできません。この休暇をキャンセル/削除し、別の休暇を作"
+msgstr ""
+"休暇をリセットすることはできません。この休暇をキャンセル/削除し、別の休暇を作"
 "成してください。"
 
 #. module: hr_holidays
@@ -4965,7 +4995,8 @@ msgstr "休暇をリセットすることはできません。この休暇をキ
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
-msgstr "休暇割当をリセットすることはできません。この休暇割当をキャンセル/削除し、別の"
+msgstr ""
+"休暇割当をリセットすることはできません。この休暇割当をキャンセル/削除し、別の"
 "休暇を作成してください。"
 
 #. module: hr_holidays
@@ -5059,8 +5090,9 @@ msgstr "従業員が既に取得した休暇の期間より短くすることは
 msgid ""
 "You cannot refuse this allocation request since the employee has already "
 "taken leaves for it. Please refuse or delete those leaves first."
-msgstr "従業員がすでに休暇を取得しているため、この割当申請を却下することはできません"
-"。まず、これらの休暇を却下または削除して下さい。"
+msgstr ""
+"従業員がすでに休暇を取得しているため、この割当申請を却下することはできませ"
+"ん。まず、これらの休暇を却下または削除して下さい。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5131,8 +5163,9 @@ msgid ""
 "Your frequency selection is not correct: please choose a frequency between "
 "theses options:Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year "
 "and Yearly."
-msgstr "選択した頻度が正しくありません。次のいずれかの頻度を選択してください: "
-"毎時、毎日、毎週、月2回、毎月、年2回、毎年"
+msgstr ""
+"選択した頻度が正しくありません。次のいずれかの頻度を選択してください: 毎時、"
+"毎日、毎週、月2回、毎月、年2回、毎年"
 
 #. module: hr_holidays
 #. odoo-python

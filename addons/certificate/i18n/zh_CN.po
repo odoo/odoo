@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:35+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -218,6 +218,12 @@ msgid "Make sure to use a private key to sign documents."
 msgstr "确保使用私钥对文档进行签名。"
 
 #. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a public key to verify the signature of documents."
+msgstr ""
+
+#. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
 msgstr "管理您的证书"
@@ -338,21 +344,13 @@ msgid "The certificate and public key are not compatible."
 msgstr "证书和公钥不兼容。"
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
-msgid "The date on which the certificate expires (UTC)"
+msgid "The date on which the certificate expires"
 msgstr ""
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
-msgid "The date on which the certificate starts to be valid (UTC)"
+msgid "The date on which the certificate starts to be valid"
 msgstr ""
 
 #. module: certificate
@@ -432,15 +430,25 @@ msgstr "不支持的非对称加密算法 ''%s\"。目前支持签名方式：EC
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: ED25519, EC and RSA."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
 msgstr "不支持的非对称加密算法 ''%s\"。目前支持：EC，RSA。"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 "用于设置公钥，以防证书中自包含的公钥错误。\n"

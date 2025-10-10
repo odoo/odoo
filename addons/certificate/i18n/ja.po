@@ -3,13 +3,14 @@
 # * certificate
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-09-14 21:14+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-09 13:43+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "certificate/ja/>\n"
 "Language: ja\n"
@@ -218,6 +219,12 @@ msgid "Make sure to use a private key to sign documents."
 msgstr "ドキュメントに署名する際は、必ず秘密鍵を使用して下さい。"
 
 #. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a public key to verify the signature of documents."
+msgstr ""
+
+#. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
 msgstr "証明書を管理する"
@@ -238,7 +245,8 @@ msgstr "名称"
 #: code:addons/certificate/models/certificate.py:0
 msgid ""
 "No private key linked to the certificate, it is required to sign documents."
-msgstr "証明書にリンクされた秘密鍵はなく、ドキュメントに署名する必要があります。"
+msgstr ""
+"証明書にリンクされた秘密鍵はなく、ドキュメントに署名する必要があります。"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
@@ -283,7 +291,7 @@ msgstr "秘密鍵パスワード"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
 msgid "Public"
-msgstr "パブリック"
+msgstr "公開"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__public_key_id
@@ -338,21 +346,13 @@ msgid "The certificate and public key are not compatible."
 msgstr "証明書と公開鍵が互換性がありません。"
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
-msgid "The date on which the certificate expires (UTC)"
+msgid "The date on which the certificate expires"
 msgstr ""
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
-msgid "The date on which the certificate starts to be valid (UTC)"
+msgid "The date on which the certificate starts to be valid"
 msgstr ""
 
 #. module: certificate
@@ -396,7 +396,8 @@ msgstr "電子ドキュメントに追加するシリアル番号"
 msgid ""
 "This certificate could not be loaded. Either the content or the password is "
 "erroneous."
-msgstr "この証明書を読み込むことができませんでした。コンテンツまたはパスワードが誤っ"
+msgstr ""
+"この証明書を読み込むことができませんでした。コンテンツまたはパスワードが誤っ"
 "ています。"
 
 #. module: certificate
@@ -411,7 +412,8 @@ msgstr "この証明書は無効です。有効期限が切れています。"
 msgid ""
 "This key could not be loaded. Either its content or its password is "
 "erroneous."
-msgstr "この鍵を読み込むことができませんでした。鍵の内容またはパスワードが誤っていま"
+msgstr ""
+"この鍵を読み込むことができませんでした。鍵の内容またはパスワードが誤っていま"
 "す。"
 
 #. module: certificate
@@ -420,8 +422,9 @@ msgstr "この鍵を読み込むことができませんでした。鍵の内容
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "decryption: RSA."
-msgstr "サポートされていない非対称暗号化アルゴリズム "
-"'%s'。現在復号化にサポートされているのはRSAです。"
+msgstr ""
+"サポートされていない非対称暗号化アルゴリズム '%s'。現在復号化にサポートされて"
+"いるのはRSAです。"
 
 #. module: certificate
 #. odoo-python
@@ -429,29 +432,41 @@ msgstr "サポートされていない非対称暗号化アルゴリズム "
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "signature: EC and RSA."
-msgstr "サポートされていない非対称暗号化アルゴリズム "
-"'%s'。現在サポートされている署名はECとRSAです。"
+msgstr ""
+"サポートされていない非対称暗号化アルゴリズム '%s'。現在サポートされている署名"
+"はECとRSAです。"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
-msgstr "サポートされていない非対称暗号化アルゴリズム "
-"'%s'。現在サポートされているのは、EC、RSAです。"
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: ED25519, EC and RSA."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
+msgstr ""
+"サポートされていない非対称暗号化アルゴリズム '%s'。現在サポートされているの"
+"は、EC、RSAです。"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
-"証明書に含まれる公開鍵が誤っている場合に、公開鍵を設定するために使用されます"
-"。\n"
-"                "
-"公開鍵がこのように設定されると、証明書内の公開鍵の代わりに使用されます。\n"
+"証明書に含まれる公開鍵が誤っている場合に、公開鍵を設定するために使用されま"
+"す。\n"
+"                公開鍵がこのように設定されると、証明書内の公開鍵の代わりに使"
+"用されます。\n"
 "             "
 
 #. module: certificate

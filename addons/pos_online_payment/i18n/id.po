@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
 "PO-Revision-Date: 2025-09-16 04:49+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
@@ -26,8 +26,7 @@ msgstr "<strong>Error:</strong> Mata uang tidak ada atau tidak valid."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-msgid ""
-"<strong>Error:</strong> There was a problem during the payment process."
+msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr "<strong>Error:</strong> Terjadi masalah pada proses pembayaran"
 
 #. module: pos_online_payment
@@ -47,8 +46,7 @@ msgstr "Opsi pembayaran harus ditentukan."
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-msgid ""
-"A validation payment cannot be used for a Point of Sale online payment."
+msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr "Pembayaran validasi tidak dapat digunakan untuk pembayaran online POS."
 
 #. module: pos_online_payment
@@ -81,7 +79,7 @@ msgstr "Jumlah"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Amount:"
 msgstr "Jumlah:"
 
@@ -123,25 +121,47 @@ msgstr ""
 "pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
 msgstr "Memiliki Penyedia Pembayaran Online"
 
 #. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invalid online payment"
 msgstr "Payment online tidak valid"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invalid online payments"
 msgstr "Pembayaran online tidak valid"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Invoice could not be generated"
 msgstr "Faktur tidak dapat dibuat"
 
@@ -174,13 +194,13 @@ msgstr "Pembayaran akuntansi online"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Online payment unavailable"
 msgstr "Pembayaran online tidak tersedia"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
 msgstr "Pembayaran online tidak boleh memiliki jumlah negatif (%s: %s)."
 
@@ -201,13 +221,13 @@ msgstr "Referensi Order"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
 msgstr "Referensi order:"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Order saving issue"
 msgstr "Masalah penyimpanan order"
 
@@ -221,6 +241,16 @@ msgstr "Masalah penyimpanan order"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
 msgid "POS Order"
 msgstr "Order POS"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+msgid "Payment"
+msgstr ""
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+msgid "Payment Confirmation"
+msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -269,25 +299,25 @@ msgstr "Diproses oleh"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
 msgstr "Kode QR untuk dibayar"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan the QR code to pay"
 msgstr "Scan kode QR untuk membayar"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
 msgstr "Scan untuk membayar"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Server error"
 msgstr "Error server"
 
@@ -325,7 +355,7 @@ msgstr "Order POS yang terhubung ke pembayaran ini"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The QR Code for paying could not be generated."
 msgstr "Kode QR untuk membayar tidak dapat dibuat."
 
@@ -343,7 +373,7 @@ msgstr "Mata uang tidak valid."
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The invoice could not be generated."
 msgstr "Faktur tidak dapat dibuat."
 
@@ -355,7 +385,7 @@ msgstr "Pesanan telah dibatalkan."
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The order has not been saved correctly on the server."
 msgstr "Order tidak disimpan dengan benar pada server."
 
@@ -404,13 +434,13 @@ msgstr "partner_id yang disediakan berbeda dari yang diharapkan."
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The saved order could not be retrieved."
 msgstr "Order yang disimpan tidak dapat diambil."
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
@@ -420,13 +450,13 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "There are online payments that were missing in your view."
 msgstr "Terdapat pembayaran online yang tidak tampak di tampilan Anda."
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
@@ -436,7 +466,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
@@ -502,7 +532,7 @@ msgstr "Jenis"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Updated online payments"
 msgstr "Pembayaran online yang diupdate"
 
@@ -517,7 +547,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Yes"
 msgstr "Ya"
 

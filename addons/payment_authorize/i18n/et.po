@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
 "Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -111,8 +111,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"Could not retrieve the transaction details. (error code: %s; error_details: "
-"%s)"
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: payment_authorize
@@ -139,6 +146,13 @@ msgid "How to get paid with Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
 msgstr ""
@@ -146,12 +160,6 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
-
-#. module: payment_authorize
-#. odoo-python
-#: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_authorize
@@ -177,7 +185,7 @@ msgstr "Maksetehing"
 
 #. module: payment_authorize
 #. odoo-javascript
-#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr ""
 
@@ -185,7 +193,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"Received data with status code \"%(status)s\" and error code \"%(error)s\""
+"Received data with status code \"%(status)s\" and error code \"%(error)s\"."
 msgstr ""
 
 #. module: payment_authorize
@@ -220,13 +228,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"The transaction is not in a status to be refunded. (status: %s, details: %s)"
-msgstr ""
-
-#. module: payment_authorize
-#. odoo-python
-#: code:addons/payment_authorize/models/payment_transaction.py:0
-msgid "The transaction is not linked to a token."
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
 msgstr ""
 
 #. module: payment_authorize

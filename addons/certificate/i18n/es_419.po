@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-29 19:47+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -219,6 +219,12 @@ msgid "Make sure to use a private key to sign documents."
 msgstr "Asegúrate de utilizar una clave privada para firmar los documentos."
 
 #. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a public key to verify the signature of documents."
+msgstr ""
+
+#. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
 msgstr "Gestiona tus certificados"
@@ -341,24 +347,14 @@ msgid "The certificate and public key are not compatible."
 msgstr "El certificado y la clave pública no son compatibles."
 
 #. module: certificate
-#. odoo-python
-#: code:addons/certificate/models/certificate.py:0
-msgid ""
-"The certificate subject field contains invalid characters. Make sure all "
-"characters are unicode valid."
-msgstr ""
-"El campo de asunto del certificado contiene caracteres que no son válidos. "
-"Asegúrate de que todos sean válidos en Unicode."
-
-#. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
-msgid "The date on which the certificate expires (UTC)"
-msgstr "La fecha en que vence el certificado (UTC)"
+msgid "The date on which the certificate expires"
+msgstr ""
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
-msgid "The date on which the certificate starts to be valid (UTC)"
-msgstr "La fecha en que el certificado empieza a ser válido (UTC)"
+msgid "The date on which the certificate starts to be valid"
+msgstr ""
 
 #. module: certificate
 #. odoo-python
@@ -446,8 +442,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid ""
-"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
-" RSA."
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: ED25519, EC and RSA."
+msgstr ""
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC, "
+"RSA."
 msgstr ""
 "El algoritmo de criptografía asimétrica \"%s\" no es compatible, puedes usar "
 "EC y RSA"
@@ -455,8 +459,10 @@ msgstr ""
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
 msgid ""
-"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
-"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"Used to set a public key in case the one self-contained in the certificate "
+"is erroneus.\n"
+"                When a public key is set this way, it will be used instead "
+"of the one in the certificate.\n"
 "             "
 msgstr ""
 "Se utiliza para establecer una clave pública en caso de que la que está "
@@ -516,3 +522,16 @@ msgstr "lista de la clave"
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
 msgid "key search"
 msgstr "búsqueda de la clave"
+
+#~ msgid ""
+#~ "The certificate subject field contains invalid characters. Make sure all "
+#~ "characters are unicode valid."
+#~ msgstr ""
+#~ "El campo de asunto del certificado contiene caracteres que no son "
+#~ "válidos. Asegúrate de que todos sean válidos en Unicode."
+
+#~ msgid "The date on which the certificate expires (UTC)"
+#~ msgstr "La fecha en que vence el certificado (UTC)"
+
+#~ msgid "The date on which the certificate starts to be valid (UTC)"
+#~ msgstr "La fecha en que el certificado empieza a ser válido (UTC)"

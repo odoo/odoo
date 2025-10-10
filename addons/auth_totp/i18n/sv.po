@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 21:33+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
@@ -37,77 +37,37 @@ msgid "2-Factor authentication is now enabled."
 msgstr "2-faktorautentisering är nu aktiverad."
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
-"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
+"<i class=\"fa fa-check text-success\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            Enabled\n"
+"                        </span>"
 msgstr ""
-"<span class=\"d-md-none d-block\">Eller installera en "
-"autentiseringsapp</span>.\n"
-"                                        <span class=\"d-none d-md-block\""
-">Installera en autentiseringsapp på din mobila enhet</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
-"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
-msgstr ""
-"<span class=\"d-none d-md-block\">Skanna streckkoden nedan när du blir "
-"ombedd att göra det</span>\n"
-"                                    <span class=\"d-block d-md-none\""
-">Kopiera nyckeln nedan när du blir ombedd att göra det</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
-"or the Microsoft Authenticator.</span>"
-msgstr ""
-"<span class=\"text-muted\">Populära sådana inkluderar Authy, Google "
-"Authenticator eller Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
-"protected!</span>"
+"<i class=\"fa fa-remove text-danger\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            Disabled\n"
+"                        </span>"
 msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Detta konto är "
-"skyddat!</span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
-"protected!</span>"
-msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Ditt konto är "
-"skyddat!</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Added On"
-msgstr "Tillagt den"
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Are you sure? The user may be asked to enter two-factor codes again on those"
-" devices"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Add this key in your Authenticator app"
 msgstr ""
-"Är du säker på det? Användaren kan bli ombedd att ange tvåfaktorkoder igen "
-"på dessa enheter"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"Are you sure? You may be asked to enter two-factor codes again on those "
-"devices"
-msgstr ""
-"Är du säker på det? Du kan bli ombedd att ange tvåfaktorkoder igen på dessa "
-"enheter"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -120,13 +80,7 @@ msgid "Authentication Device"
 msgstr "Autentiseringsenhet"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Authenticator App Setup"
-msgstr "Inställning av autentiseringsapp"
-
-#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -134,11 +88,6 @@ msgstr "Avbryt"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
 msgstr "Går det inte att skanna den?"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Click on this link to open your authenticator app"
-msgstr "Klicka på den här länken för att öppna din autentiseringsapp"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
@@ -170,19 +119,18 @@ msgstr "Beskrivning"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Device"
-msgstr "Enhet"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Disable 2FA"
-msgstr "Avaktivera 2FA"
+msgid "Disable"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
 msgstr "Inaktivera tvåfaktorsautentisering"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Discard"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -207,11 +155,6 @@ msgstr "Aktivera 2FA"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable Two-Factor Authentication"
 msgstr ""
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Enter your six-digit code below"
-msgstr "Ange din sexsiffriga kod nedan"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
@@ -251,8 +194,6 @@ msgstr "Senast uppdaterad den"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Learn More"
 msgstr "Läs mer"
 
@@ -267,36 +208,14 @@ msgid "Log in"
 msgstr "Logga in"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Look for an \"Add an account\" button"
-msgstr "Leta efter en \"Lägg till ett konto\"-knapp"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "On Apple Store"
-msgstr "I Apple Store"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "On Google Play"
-msgstr "I Google Play"
-
-#. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
 msgstr "Qrkod"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Revoke"
-msgstr "Återkalla"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid "Revoke All"
-msgstr "Återkalla alla"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Scan this barcode in your Authenticator app"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
@@ -327,7 +246,8 @@ msgstr "Verifieringskoden bör endast innehålla siffror"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid ""
-"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"To login, enter below the six-digit authentication code provided by your "
+"Authenticator app.\n"
 "                        <br/>"
 msgstr ""
 "För att logga in, ange nedan den sexsiffriga autentiseringskoden som "
@@ -346,8 +266,6 @@ msgstr "Totp Hemlig"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
 msgstr "Betrodda enheter"
 
@@ -363,20 +281,6 @@ msgstr "Tvåfaktorsautentisering Aktivering"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
 msgstr "Tvåfaktorsautentisering"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
-msgstr ""
-"Tvåfaktorsautentisering (\"2FA\") är ett system med dubbel autentisering.\n"
-"                        Den första görs med ditt lösenord och den andra med "
-"en kod som du får från en särskild mobilapp.\n"
-"                        Populära sådana är Authy, Google Authenticator eller "
-"Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -426,21 +330,31 @@ msgstr "Användare"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification Code"
 msgstr "Verifieringskod"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Verification code"
+msgstr ""
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "Verifieringen misslyckades, var vänlig dubbelkolla den 6-siffriga koden"
+msgstr ""
+"Verifieringen misslyckades, var vänlig dubbelkolla den 6-siffriga koden"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Verification failed, please use the latest 6-digit code"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Write the code given by your app"
 msgstr ""
 
 #. module: auth_totp
@@ -461,6 +375,109 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "e.g. 123456"
 msgstr "t.ex. 123456"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Install an authenticator app on your mobile device</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none d-block\">Eller installera en autentiseringsapp</"
+#~ "span>.\n"
+#~ "                                        <span class=\"d-none d-md-"
+#~ "block\">Installera en autentiseringsapp på din mobila enhet</span>"
+
+#~ msgid ""
+#~ "<span class=\"d-none d-md-block\">When requested to do so, scan the "
+#~ "barcode below</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">When requested to do so, copy the key below</span>"
+#~ msgstr ""
+#~ "<span class=\"d-none d-md-block\">Skanna streckkoden nedan när du blir "
+#~ "ombedd att göra det</span>\n"
+#~ "                                    <span class=\"d-block d-md-"
+#~ "none\">Kopiera nyckeln nedan när du blir ombedd att göra det</span>"
+
+#~ msgid ""
+#~ "<span class=\"text-muted\">Popular ones include Authy, Google "
+#~ "Authenticator or the Microsoft Authenticator.</span>"
+#~ msgstr ""
+#~ "<span class=\"text-muted\">Populära sådana inkluderar Authy, Google "
+#~ "Authenticator eller Microsoft Authenticator.</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
+#~ "protected!</span>"
+#~ msgstr ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Detta konto är "
+#~ "skyddat!</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Your account is "
+#~ "protected!</span>"
+#~ msgstr ""
+#~ "<span invisible=\"not totp_enabled\" class=\"text-muted\">Ditt konto är "
+#~ "skyddat!</span>"
+
+#~ msgid "Added On"
+#~ msgstr "Tillagt den"
+
+#~ msgid ""
+#~ "Are you sure? The user may be asked to enter two-factor codes again on "
+#~ "those devices"
+#~ msgstr ""
+#~ "Är du säker på det? Användaren kan bli ombedd att ange tvåfaktorkoder "
+#~ "igen på dessa enheter"
+
+#~ msgid ""
+#~ "Are you sure? You may be asked to enter two-factor codes again on those "
+#~ "devices"
+#~ msgstr ""
+#~ "Är du säker på det? Du kan bli ombedd att ange tvåfaktorkoder igen på "
+#~ "dessa enheter"
+
+#~ msgid "Authenticator App Setup"
+#~ msgstr "Inställning av autentiseringsapp"
+
+#~ msgid "Click on this link to open your authenticator app"
+#~ msgstr "Klicka på den här länken för att öppna din autentiseringsapp"
+
+#~ msgid "Device"
+#~ msgstr "Enhet"
+
+#~ msgid "Disable 2FA"
+#~ msgstr "Avaktivera 2FA"
+
+#~ msgid "Enter your six-digit code below"
+#~ msgstr "Ange din sexsiffriga kod nedan"
+
+#~ msgid "Look for an \"Add an account\" button"
+#~ msgstr "Leta efter en \"Lägg till ett konto\"-knapp"
+
+#~ msgid "On Apple Store"
+#~ msgstr "I Apple Store"
+
+#~ msgid "On Google Play"
+#~ msgstr "I Google Play"
+
+#~ msgid "Revoke"
+#~ msgstr "Återkalla"
+
+#~ msgid "Revoke All"
+#~ msgstr "Återkalla alla"
+
+#~ msgid ""
+#~ "Two-factor Authentication (\"2FA\") is a system of double "
+#~ "authentication.\n"
+#~ "                        The first one is done with your password and the "
+#~ "second one with a code you get from a dedicated mobile app.\n"
+#~ "                        Popular ones include Authy, Google Authenticator "
+#~ "or the Microsoft Authenticator."
+#~ msgstr ""
+#~ "Tvåfaktorsautentisering (\"2FA\") är ett system med dubbel "
+#~ "autentisering.\n"
+#~ "                        Den första görs med ditt lösenord och den andra "
+#~ "med en kod som du får från en särskild mobilapp.\n"
+#~ "                        Populära sådana är Authy, Google Authenticator "
+#~ "eller Microsoft Authenticator."
