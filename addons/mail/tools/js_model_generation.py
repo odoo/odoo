@@ -42,6 +42,7 @@ MODELS_TO_EXPOSE = [
     "mail.link.preview",
     "mail.message",
     "mail.message.link.preview",
+    "res.country",
     "res.groups",
     "res.groups.privilege",
     "mail.message.subtype",
