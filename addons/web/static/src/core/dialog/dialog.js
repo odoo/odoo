@@ -70,7 +70,7 @@ export class Dialog extends Component {
 
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
-        useActiveElement("modalRef");
+        useActiveElement("modalRef", ".modal-body");
         this.data = useState(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
         useHotkey(

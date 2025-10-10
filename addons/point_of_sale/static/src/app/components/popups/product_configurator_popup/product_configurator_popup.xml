@@ -226,12 +226,12 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
                     <button
-                            class="btn btn-primary btn-lg lh-lg w-50 o-default-button"
+                            class="btn btn-primary btn-lg lh-lg w-50"
                             t-att-class="{'disabled': isArchivedCombination() or !this.isValidCombination()}"
                             t-on-click="confirm">
                             Add
                         </button>
-                    <button class="btn btn-secondary btn-lg lh-lg w-50 o-default-button" t-on-click="props.close">Discard</button>
+                    <button class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="props.close">Discard</button>
                 </div>
             </t>
         </Dialog>
