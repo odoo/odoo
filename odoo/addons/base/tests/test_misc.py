@@ -342,7 +342,7 @@ class TestAddonsFileAccess(BaseCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDictTools(BaseCase):
     def test_readonly_dict(self):
-        d = misc.ReadonlyDict({'foo': 'bar'})
+        d = misc.frozendict({'foo': 'bar'})
         with self.assertRaises(TypeError):
             d['baz'] = 'xyz'
         with self.assertRaises(AttributeError):

@@ -637,8 +637,14 @@ class QwebContent:
 
 
 class QwebJSON(json.JSON):
+
+    def default(self, obj):
+        if isinstance(obj, Mapping):
+            return dict(obj)
+        return obj
+
     def dumps(self, *args, **kwargs):
-        prev_default = kwargs.pop('default', lambda obj: obj)
+        prev_default = kwargs.pop('default', self.default)
         return super().dumps(*args, **kwargs, default=(
             lambda obj: prev_default(str(obj) if isinstance(obj, QwebContent) else obj)
         ))

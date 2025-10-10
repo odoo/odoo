@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 from collections import defaultdict
 
-from odoo.tools.misc import ReadonlyDict, SENTINEL, Sentinel, merge_sequences
+from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
 from odoo.tools.sql import pg_varchar
 
 from .fields import Field, _logger, determine, resolve_mro
