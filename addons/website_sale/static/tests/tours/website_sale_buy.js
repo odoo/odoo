@@ -16,3 +16,13 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         ...tourUtils.payWithTransfer({ redirect: true }),
     ]
 });
+
+registry.category("web_tour.tours").add('shop_repair_product', {
+    url: '/shop',
+    steps: () => [
+        ...tourUtils.searchProduct("Repair Services", { select: true }),
+        {
+            trigger: '#product_detail',
+        }
+    ]
+});
