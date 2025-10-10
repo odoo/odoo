@@ -31,8 +31,8 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
         this.selectionCorrected = false;
 
         this.addDomListener(this.editable, "keydown", this.onKeydown);
-        this.addDomListener(this.editable, "mouseup", this.restrictSelectionInClosestDiv);
-        this.addDomListener(this.editable, "touchend", this.restrictSelectionInClosestDiv);
+        this.addDomListener(this.document, "mouseup", this.restrictSelectionInClosestDiv);
+        this.addDomListener(this.document, "touchend", this.restrictSelectionInClosestDiv);
 
         // doing this manually instead of using addDomListener. This is because
         // addDomListener will ignore all events from protected targets. But in
