@@ -16,10 +16,11 @@ export class RecruitmentKanbanRenderer extends KanbanRenderer {
     async archiveRecord(record, active) {
         if (active && record.data.application_count > 0) {
             this.dialog.add(ConfirmationDialog, {
+                title: _t("Archive job position"),
                 body: _t(
-                    "This job position and all related applicants will be archived. Are you sure?"
+                    "If you archive this job position, all its applicants will be archived too. Do you want to continue?"
                 ),
-                confirmLabel: _t("Archive"),
+                confirmLabel: _t("Archive all"),
                 confirm: () => {
                     record.archive();
                     this.props.list.load();
