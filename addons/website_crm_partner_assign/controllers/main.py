@@ -10,7 +10,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
-from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.addons.website_partnership.controllers.main import WebsitePartnership
 from odoo.fields import Domain
 
 from odoo.tools.translate import _, LazyTranslate
@@ -185,7 +185,7 @@ class WebsiteAccount(CustomerPortal):
             })
 
 
-class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
+class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
     _references_per_page = 40
 
     def _get_gmap_domains(self, **kw):
@@ -212,7 +212,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         slug = env['ir.http']._slug
         base_partner_domain = [
-            ('is_company', '=', True),
             ('grade_id', '!=', False),
             ('website_published', '=', True),
             ('grade_id.website_published', '=', True),
@@ -241,7 +240,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
+        base_partner_domain = [('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
@@ -369,7 +368,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True, list_as_website_content=_lt("Partners"))
+    ], type='http', sitemap=sitemap_partners)
     def partners(self, country=None, grade=None, page=0, **post):
         values = self._get_partners_values(
             country=country,
@@ -378,7 +377,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             references_per_page=self._references_per_page,
             **post
         )
-        return request.render("website_crm_partner_assign.index", values, status=values.get('partners') and 200 or 404)
+        return request.render("website_crm_partner_assign.index_layout", values, status=values.get('partners') and 200 or 404)
 
     # Do not use semantic controller due to sudo()
     @http.route()
@@ -405,5 +404,5 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
                     'current_grade': current_grade,
                     'current_country': current_country
                 }
-                return request.render("website_crm_partner_assign.partner", values)
+                return request.render("website_crm_partner_assign.partner_page", values)
         raise request.not_found()
