@@ -175,7 +175,7 @@ const ThreadPatch = {
             : "camera";
     },
     open(options) {
-        if (this.store.fullscreenChannel?.notEq(this)) {
+        if (this.store.fullscreenChannel?.notEq(this.channel)) {
             this.store.rtc.exitFullscreen();
         }
         super.open(...arguments);

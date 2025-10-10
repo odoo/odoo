@@ -728,7 +728,7 @@ export class Rtc extends Record {
     /** @param {Object} props Properties to pass to the meeting component. */
     async enterFullscreen(props) {
         const Meeting = registry.category("discuss.call/components").get("Meeting");
-        this.store.fullscreenChannel = this.channel;
+        this.store.fullscreenChannel = this.channel?.channel;
         await this.fullscreen.enter(Meeting, {
             id: CALL_FULLSCREEN_ID,
             keepBrowserHeader: true,
