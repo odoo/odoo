@@ -137,7 +137,7 @@ const ThreadPatch = {
             compute() {
                 if (
                     this.channel?.channel_type === "chat" &&
-                    this.store.rtc.selfSession?.channel?.eq(this)
+                    this.store.rtc.selfSession?.channel?.eq(this.channel)
                 ) {
                     return this.store.rtc.selfSession.is_camera_on;
                 }
@@ -175,7 +175,7 @@ const ThreadPatch = {
             : "camera";
     },
     open(options) {
-        if (this.store.fullscreenChannel?.notEq(this)) {
+        if (this.store.fullscreenChannel?.notEq(this.channel)) {
             this.store.rtc.exitFullscreen();
         }
         super.open(...arguments);
@@ -185,7 +185,7 @@ const ThreadPatch = {
      */
     updateCallFocusStack(session) {
         if (
-            this.notEq(this.store.rtc?.channel) ||
+            this.channel?.notEq(this.store.rtc?.channel) ||
             session.eq(this.store.rtc.selfSession) ||
             !this.activeRtcSession ||
             !this.store.settings.useCallAutoFocus ||

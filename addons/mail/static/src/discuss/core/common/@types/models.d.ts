@@ -44,6 +44,7 @@ declare module "models" {
         name: string;
         offlineMembers: ChannelMember[];
         onlineMembers: ChannelMember[];
+        openChannel: () => boolean;
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
         self_member_id: ChannelMember;
@@ -72,7 +73,7 @@ declare module "models" {
     export interface Store {
         channel_types_with_seen_infos: string[];
         channelIdsFetchingDeferred: Map<number, Deferred>;
-        createGroupChat: (param0: { default_display_mode: string, partners_to: number[], name: string }) => Promise<Thread>;
+        createGroupChat: (param0: { default_display_mode: string, partners_to: number[], name: string }) => Promise<DiscussChannel>;
         "discuss.channel": StaticMailRecord<DiscussChannel, typeof DiscussChannelClass>;
         "discuss.channel.member": StaticMailRecord<ChannelMember, typeof ChannelMemberClass>;
         fetchChannel: (channelId: number) => Promise<void>;
@@ -131,7 +132,6 @@ declare module "models" {
         notifyDescriptionToServer: (description: unknown) => Promise<unknown>;
         offlineMembers: ChannelMember[];
         onlineMembers: ChannelMember[];
-        openChannel: () => boolean;
         otherTypingMembers: ChannelMember[];
         rename: (name: string) => Promise<void>;
         scrollUnread: boolean;

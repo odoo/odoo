@@ -271,17 +271,12 @@ export class Rtc extends Record {
             );
         },
     });
-    channel = fields.One("mail.thread", {
+    channel = fields.One("discuss.channel", {
         compute() {
             if (this.state.channel) {
                 return this.state.channel;
             }
-            if (this._remotelyHostedChannelId) {
-                return this.store["mail.thread"].insert({
-                    model: "discuss.channel",
-                    id: this._remotelyHostedChannelId,
-                });
-            }
+            return this._remotelyHostedChannelId;
         },
         onUpdate() {
             if (!this.channel) {
@@ -644,13 +639,13 @@ export class Rtc extends Record {
     async leaveCall(channel = this.state.channel) {
         this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
-        await this.rpcLeaveCall(channel);
+        await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
         this.endCall(channel);
         this.state.hasPendingRequest = false;
     }
 
     /**
-     * @param {import("models").Thread} [channel]
+     * @param {import("models").DiscussChannel} [channel]
      */
     endCall(channel = this.state.channel) {
         this._endHost();
@@ -743,7 +738,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} channel
+     * @param {import("models").DiscussChannel} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
      * @param {boolean} [initialState.camera]
@@ -1446,7 +1441,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("models").Thread} channel
+     * @param {import("models").DiscussChannel} channel
      * @param {object} [initialState]
      * @param {boolean} [initialState.audio] whether to request and use the user audio input (microphone) at start
      * @param {boolean} [initialState.camera] whether to request and use the user video input (camera) at start
@@ -1519,7 +1514,7 @@ export class Rtc extends Record {
                 event.preventDefault();
             })
         );
-        this.channel?.focusAvailableVideo();
+        this.channel?.thread.focusAvailableVideo();
     }
 
     newLogs() {
@@ -1616,16 +1611,6 @@ export class Rtc extends Record {
             name: SW_MESSAGE_TYPE.POST_RTC_LOGS,
             logs: [this.buildSnapshot()],
         });
-    }
-
-    async rpcLeaveCall(channel) {
-        await rpc(
-            "/mail/rtc/channel/leave_call",
-            {
-                channel_id: channel.id,
-            },
-            { silent: true }
-        );
     }
 
     async ping() {
@@ -2343,7 +2328,7 @@ export const rtcService = {
         onChange(rtc.pipService.state, "active", () => {
             const isPipMode = rtc.pipService.state.active;
             if (!isPipMode) {
-                rtc.channel?.openChatWindow();
+                rtc.channel?.thread.openChatWindow();
             }
             rtc.state.isPipMode = isPipMode;
             rtc._postToTabs({
