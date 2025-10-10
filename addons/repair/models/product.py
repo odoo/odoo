@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -56,3 +56,7 @@ class ProductTemplate(models.Model):
 
     service_tracking = fields.Selection(selection_add=[('repair', 'Repair Order')],
                                         ondelete={'repair': 'set default'})
+
+    @api.model
+    def _get_saleable_tracking_types(self):
+        return super()._get_saleable_tracking_types() + ['repair']
