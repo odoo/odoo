@@ -821,41 +821,23 @@ class AccountTax(models.Model):
         # Group them per batch.
         batch = self.env['account.tax']
         is_base_affected = False
-        include_base_amount = False
-        is_first_batch = True
         for tax in reversed(results['sorted_taxes']):
-            same_batch = False
             if batch:
                 same_batch = (
                     tax.amount_type == batch[0].amount_type
                     and (special_mode or tax.price_include == batch[0].price_include)
+                    and tax.include_base_amount == batch[0].include_base_amount
+                    and (
+                        (tax.include_base_amount and not is_base_affected)
+                        or not tax.include_base_amount
+                    )
                 )
-                if same_batch:
-                    same_batch = False
-                    if is_first_batch and tax.include_base_amount != include_base_amount:
-                        include_base_amount = tax.include_base_amount
-                    if not include_base_amount and not tax.include_base_amount:
-                        # No tax affecting another one.
-                        same_batch = True
-                    elif (
-                        include_base_amount
-                        and tax.include_base_amount
-                        and not is_base_affected
-                        and tax.is_base_affected
-                    ):
-                        # Tax affecting the following taxes but in batch using 'is_base_affected'.
-                        is_base_affected = tax.is_base_affected
-                        same_batch = True
-
                 if not same_batch:
                     for batch_tax in batch:
                         results['batch_per_tax'][batch_tax.id] = batch
                     batch = self.env['account.tax']
-                    is_first_batch = False
 
-            if not same_batch:
-                is_base_affected = tax.is_base_affected
-                include_base_amount = tax.include_base_amount
+            is_base_affected = tax.is_base_affected
             batch |= tax
 
         if batch:
