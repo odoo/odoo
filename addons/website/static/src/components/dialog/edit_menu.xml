@@ -15,7 +15,7 @@
                 Url or Email
             </label>
             <div class="col-md-9">
-                <input id="url_input" t-ref="url-input" type="text" t-model="url.input.value" class="form-control" t-att-class="{ 'is-invalid': url.input.hasError }"/>
+                <input id="url_input" t-ref="url-input" type="text" t-model="url.input.value" class="form-control" t-att-class="{ 'is-invalid': url.input.hasError }" t-on-input="_updateInputValue"/>
                 <small class="form-text">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
             </div>
         </div>
