@@ -1,34 +1,6 @@
 import { assert } from "@stock/../tests/tours/tour_helper";
 
 /**
- * Clicks on the "Catalog" button below the purchase order lines
- */
-export function goToCatalogFromPO() {
-    return [
-        {
-            content: "Go to product catalog",
-            trigger: 'button[name="action_add_from_catalog"]',
-            run: "click",
-        },
-        { trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view" },
-    ];
-}
-
-/**
- * Clicks on the "Back to Order" button from the Catalog view
- */
-export function goToPOFromCatalog() {
-    return [
-        {
-            content: "Go back to the PO",
-            trigger: "button.o-kanban-button-back",
-            run: "click",
-        },
-        { trigger: ".o_form_view.o_purchase_order" },
-    ];
-}
-
-/**
  * Sets the Suggest UI parameters
  * @param {string} basedOn The label value of the "Replenish based on" select options (eg. "Last 3 months")
  * @param {number} nbDays The value of the "Replenish for" input (eg. 90)

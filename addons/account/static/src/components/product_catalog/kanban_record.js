@@ -23,7 +23,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
     _getUpdateQuantityAndGetPriceParams() {
         return {
             ...super._getUpdateQuantityAndGetPriceParams(),
-            section_id: this.env.selectedSectionId,
+            section_id: this.env.searchModel.selectedSection.sectionId || false,
         };
     },
 
