@@ -114,7 +114,11 @@ class MrpProduction(models.Model):
                 continue
 
             desc = _('%s - Labour', mo.name)
-            account = self.env['account.account'].browse(mo.move_finished_ids[0]._get_src_account(product_accounts))
+            if mo.move_finished_ids:
+                src_account_id = mo.move_finished_ids[0]._get_src_account(product_accounts)
+            else:
+                src_account_id = (product_accounts.get('production') or product_accounts.get('stock_input')).id
+            account = self.env['account.account'].browse(src_account_id)
             labour_amounts[account] -= workcenter_cost
             account_move = self.env['account.move'].sudo().create({
                 'journal_id': product_accounts['stock_journal'].id,
