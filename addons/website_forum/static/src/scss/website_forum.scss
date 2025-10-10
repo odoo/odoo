@@ -26,8 +26,21 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
     --o-post-header-height: var(--o-avatar-height);
 
     .o_wforum_content_wrapper {
-        .o_searchbar_form {
-            min-width: 200px;
+        #o_wforum_nav {
+            .breadcrumb-item {
+                padding-top: calc(#{$btn-padding-y} + #{$btn-border-width});
+                padding-bottom: calc(#{$btn-padding-y} + #{$btn-border-width});
+                font-size: $btn-font-size;
+                line-height: $btn-line-height;
+
+                h1 {
+                    font-family: var(--body-font-family);
+                }
+            }
+
+            .o_searchbar_form {
+                min-width: 200px;
+            }
         }
     }
 

@@ -34,9 +34,7 @@
                 <li class="breadcrumb-item text-nowrap">
                     <a t-attf-href="/slides/#{slug(forum.slide_channel_id)}#{'/' + slug(category) if category else ''}" t-out="forum.name"/>
                 </li>
-                <li class="breadcrumb-item text-nowrap">
-                    <strong>Forum</strong>
-                </li>
+                <li class="breadcrumb-item text-nowrap active">Forum</li>
             </ol>
         </xpath>
     </template>
