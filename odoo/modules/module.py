@@ -74,6 +74,7 @@ _DEFAULT_MANIFEST = {
     'depends': [],
     'description': '',  # defaults to README file
     'external_dependencies': {},
+    'iap_paid_service': False,
     'init_xml': [],
     'installable': True,
     'images': [],  # website
