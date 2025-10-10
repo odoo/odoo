@@ -9,6 +9,7 @@ class SaleOrder(models.Model):
 
     margin = fields.Monetary("Margin", compute='_compute_margin', store=True)
     margin_percent = fields.Float("Margin (%)", compute='_compute_margin', store=True, aggregator="avg")
+    margin_percent_display_text = fields.Char(compute='_compute_margin_margin_percent_display_text')
 
     @api.depends('order_line.margin', 'amount_untaxed')
     def _compute_margin(self):
@@ -29,3 +30,8 @@ class SaleOrder(models.Model):
             for order in self:
                 order.margin = mapped_data.get(order.id, 0.0)
                 order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed
+
+    @api.depends('margin_percent')
+    def _compute_margin_margin_percent_display_text(self):
+        for order in self:
+            order.margin_percent_display_text = f"({order.margin_percent * 100:.2f}%)"
