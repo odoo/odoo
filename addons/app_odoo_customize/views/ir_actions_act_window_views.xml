@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- search-->
+    <record id="app_view_window_action_search" model="ir.ui.view">
+        <field name="name">app.ir.actions.windows.search</field>
+        <field name="model">ir.actions.act_window</field>
+        <field name="inherit_id" ref="base.view_window_action_search"/>
+        <field name="arch" type="xml">
+<!--            res_model 原生已有-->
+            <field name="name" position="after">
+                <field name="binding_model_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

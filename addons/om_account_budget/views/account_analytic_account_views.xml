@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_analytic_account_form_inherit_budget" model="ir.ui.view">
+        <field name="name">account.analytic.account.form.inherit.budget</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="priority" eval="50"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main']" position='after'>
+                <notebook groups="account.group_account_user">
+                    <page string="Budget Items">
+                        <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1"
+                               mode="list">
+                            <list string="Budget Items" editable="top">
+                                <field name="crossovered_budget_id"/>
+                                <field name="general_budget_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="paid_date"/>
+                                <field name="planned_amount" widget="monetary"/>
+                                <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                <field name="theoritical_amount" sum="Theoritical Amount" widget="monetary"/>
+                                <field name="percentage"/>
+                            </list>
+                            <form string="Budget Items">
+                                <field name="crossovered_budget_id"/>
+                                <field name="general_budget_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="paid_date"/>
+                                <field name="planned_amount" widget="monetary"/>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

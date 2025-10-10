@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_cashbook">
+        <t t-call="web.html_container">
+            <t t-set="data_report_margin_top" t-value="12"/>
+            <t t-set="data_report_header_spacing" t-value="9"/>
+            <t t-set="data_report_dpi" t-value="110"/>
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h2>Account Cash Book</h2>
+                </div>
+                <div class="row mt32">
+                    <div class="col-4">
+                        <strong>Journals:</strong>
+                        <p t-esc="', '.join([ lt or '' for lt in print_journal ])"/>
+                    </div>
+
+                    <div class="col-2">
+                        <strong>Start Date:</strong>
+                        <p t-esc="data['date_from']"/>
+                    </div>
+                    <div class="col-2">
+
+                        <strong>End Date:</strong>
+                        <p t-esc="data['date_to']"/>
+                    </div>
+                    <div class="col-2">
+                        <div style="width:70%;">
+                            <strong>Sorted By:</strong>
+                            <p t-if="data['sortby'] == 'sort_date'">Date</p>
+                            <p t-if="data['sortby'] == 'sort_journal_partner'">Journal and Partner</p>
+                        </div>
+
+
+                    </div>
+                    <div class="col-2">
+                        <strong>Target Moves:</strong>
+                        <p t-if="data['target_move'] == 'all'">All Entries</p>
+                        <p t-if="data['target_move'] == 'posted'">Posted Entries</p>
+                    </div>
+                </div>
+                <br/>
+
+                <table class="table table-sm table-reports">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Date</th>
+                            <th>JRNL</th>
+                            <th>Partner</th>
+                            <th>Ref</th>
+                            <th>Move</th>
+                            <th>Entry Label</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                            <th groups="base.group_multi_currency">Currency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="Accounts" t-as="account">
+                            <tr style="font-weight: bold;">
+                                <td colspan="6">
+                                    <span style="color: white;" t-esc="'..'"/>
+                                    <span t-esc="account['code']"/>
+                                    <span t-esc="account['name']"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="account['debit']"
+                                          t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="account['credit']"
+                                          t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="account['balance']"
+                                          t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                </td>
+                                <td groups="base.group_multi_currency"/>
+                            </tr>
+                            <tr t-foreach="account['move_lines']" t-as="line">
+                                <td>
+                                    <span t-esc="line['ldate']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['lcode']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['partner_name']"/>
+                                </td>
+                                <td>
+                                    <span t-if="line['lref']" t-esc="line['lref']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['move_name']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['lname']"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="line['debit']"
+                                          t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="line['credit']"
+                                          t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="line['balance']"
+                                          t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                </td>
+                                <td t-if="line['amount_currency']" class="text-end"
+                                    groups="base.group_multi_currency">
+                                    <span t-esc="line['amount_currency'] if line['amount_currency'] > 0.00 else ''"/>
+                                    <span t-esc="line['currency_code'] if line['amount_currency'] > 0.00 else ''"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+
+                </table>
+
+            </t>
+        </t>
+    </template>
+
+</odoo>
