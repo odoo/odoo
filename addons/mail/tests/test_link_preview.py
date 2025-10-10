@@ -8,11 +8,12 @@ import requests
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools import link_preview
+from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
 @tagged("mail_link_preview", "mail_message", "post_install", "-at_install")
-class TestLinkPreview(MailCommon):
+class TestLinkPreview(MailCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -231,3 +232,21 @@ class TestLinkPreview(MailCommon):
                         [("message_id", "=", message.id)]
                     )
                     self.assertEqual(link_preview_count, counter)
+
+    def test_edit_message_remove_preview_tour(self):
+        with patch.object(requests.Session, "get", self._patch_with_og_properties), patch.object(
+            requests.Session, "head", self._patch_head_html
+        ):
+            chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
+            message = chat.message_post(
+                body=Markup('<a href="%s">Test link</a>') % self.source_url,
+                message_type="comment"
+            )
+            self.env["mail.link.preview"]._create_from_message_and_notify(message)
+            self.assertTrue(message.link_preview_ids)
+            self.start_tour(
+                f"/odoo/discuss?active_id=discuss.channel_{chat.id}",
+                "mail_message_edit_remove_preview_tour",
+                login="admin",
+            )
+            self.assertFalse(message.link_preview_ids)
