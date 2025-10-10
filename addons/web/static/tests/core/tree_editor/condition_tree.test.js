@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/_framework/domain_contains";
 
-import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { condition, expression } from "@web/core/tree_editor/condition_tree";
 import { constructDomainFromTree } from "@web/core/tree_editor/construct_domain_from_tree";
@@ -539,7 +539,7 @@ test("evaluation . expressionFromTree = contains . domainFromTree", () => {
     ];
     for (const tree of toTest) {
         expect(evaluateBooleanExpr(expressionFromTree(tree, options), record)).toBe(
-            new Domain(domainFromTree(tree)).contains(record)
+            contains(domainFromTree(tree), record)
         );
     }
 });

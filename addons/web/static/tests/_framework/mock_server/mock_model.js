@@ -9,6 +9,7 @@ import {
 } from "@web/core/l10n/dates";
 import { ensureArray, intersection, isIterable, unique } from "@web/core/utils/arrays";
 import { deepCopy, isObject, pick } from "@web/core/utils/objects";
+import { contains } from "../domain_contains";
 import * as fields from "./mock_fields";
 import { MockServer } from "./mock_server";
 import {
@@ -2139,7 +2140,7 @@ export class Model extends Array {
         /** @type {[number, string][]} */
         const result = [];
         for (const record of this) {
-            const isInDomain = actualDomain.contains(record);
+            const isInDomain = contains(actualDomain, record);
             if (isInDomain && (!name || record.display_name?.includes(name))) {
                 result.push(toIdDisplayName(record));
             }
@@ -3275,7 +3276,7 @@ export class Model extends Array {
         });
 
         const filterDomain = new Domain(domain);
-        return this.filter((record) => filterDomain.contains(record));
+        return this.filter((record) => contains(filterDomain, record));
     }
 
     /**

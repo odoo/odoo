@@ -243,7 +243,7 @@
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies">
-                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}" readonly="1"
+                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" link="False" readonly="1"
                                 context="{
                                     'depend_on_count': depend_on_count,
                                     'list_view_ref': 'project.open_view_blocked_by_list_view',

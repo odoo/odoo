@@ -12,20 +12,16 @@ describe.current.tags("headless");
 
 describe("Basic Properties", () => {
     test("empty", () => {
-        expect(new Domain([]).contains({})).toBe(true);
         expect(new Domain([]).toString()).toBe("[]");
         expect(new Domain([]).toList()).toEqual([]);
     });
 
     test("undefined domain", () => {
-        expect(new Domain(undefined).contains({})).toBe(true);
         expect(new Domain(undefined).toString()).toBe("[]");
         expect(new Domain(undefined).toList()).toEqual([]);
     });
 
     test("simple condition", () => {
-        expect(new Domain([["a", "=", 3]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", "=", 3]]).contains({ a: 5 })).toBe(false);
         expect(new Domain([["a", "=", 3]]).toString()).toBe(`[("a", "=", 3)]`);
         expect(new Domain([["a", "=", 3]]).toList()).toEqual([["a", "=", 3]]);
     });
@@ -33,127 +29,6 @@ describe("Basic Properties", () => {
     test("can be created from domain", () => {
         const domain = new Domain([["a", "=", 3]]);
         expect(new Domain(domain).toString()).toBe(`[("a", "=", 3)]`);
-    });
-
-    test("basic", () => {
-        const record = {
-            a: 3,
-            group_method: "line",
-            select1: "day",
-            rrule_type: "monthly",
-        };
-        expect(new Domain([["a", "=", 3]]).contains(record)).toBe(true);
-        expect(new Domain([["a", "=", 5]]).contains(record)).toBe(false);
-        expect(new Domain([["group_method", "!=", "count"]]).contains(record)).toBe(true);
-        expect(
-            new Domain([
-                ["select1", "=", "day"],
-                ["rrule_type", "=", "monthly"],
-            ]).contains(record)
-        ).toBe(true);
-    });
-
-    test("support of '=?' operator", () => {
-        const record = { a: 3 };
-        expect(new Domain([["a", "=?", null]]).contains(record)).toBe(true);
-        expect(new Domain([["a", "=?", false]]).contains(record)).toBe(true);
-        expect(new Domain(["!", ["a", "=?", false]]).contains(record)).toBe(false);
-        expect(new Domain([["a", "=?", 1]]).contains(record)).toBe(false);
-        expect(new Domain([["a", "=?", 3]]).contains(record)).toBe(true);
-        expect(new Domain(["!", ["a", "=?", 3]]).contains(record)).toBe(false);
-    });
-
-    test("or", () => {
-        const currentDomain = [
-            "|",
-            ["section_id", "=", 42],
-            "|",
-            ["user_id", "=", 3],
-            ["member_ids", "in", [3]],
-        ];
-        const record = {
-            section_id: null,
-            user_id: null,
-            member_ids: null,
-        };
-        expect(new Domain(currentDomain).contains({ ...record, section_id: 42 })).toBe(true);
-        expect(new Domain(currentDomain).contains({ ...record, user_id: 3 })).toBe(true);
-        expect(new Domain(currentDomain).contains({ ...record, member_ids: 3 })).toBe(true);
-    });
-
-    test("and", () => {
-        const domain = new Domain(["&", "&", ["a", "=", 1], ["b", "=", 2], ["c", "=", 3]]);
-
-        expect(domain.contains({ a: 1, b: 2, c: 3 })).toBe(true);
-        expect(domain.contains({ a: -1, b: 2, c: 3 })).toBe(false);
-        expect(domain.contains({ a: 1, b: -1, c: 3 })).toBe(false);
-        expect(domain.contains({ a: 1, b: 2, c: -1 })).toBe(false);
-    });
-
-    test("not", () => {
-        const record = {
-            a: 5,
-            group_method: "line",
-        };
-        expect(new Domain(["!", ["a", "=", 3]]).contains(record)).toBe(true);
-        expect(new Domain(["!", ["group_method", "=", "count"]]).contains(record)).toBe(true);
-    });
-
-    test("like, =like, ilike, =ilike and not likes", () => {
-        expect.assertions(34);
-
-        expect(new Domain([["a", "like", "value"]]).contains({ a: "value" })).toBe(true);
-        expect(new Domain([["a", "like", "value"]]).contains({ a: "some value" })).toBe(true);
-        expect(new Domain([["a", "like", "value"]]).contains({ a: "Some Value" })).not.toBe(true);
-        expect(new Domain([["a", "like", "value"]]).contains({ a: false })).toBe(false);
-
-        expect(new Domain([["a", "=like", "%value"]]).contains({ a: "value" })).toBe(true);
-        expect(new Domain([["a", "=like", "%value"]]).contains({ a: "some value" })).toBe(true);
-        expect(new Domain([["a", "=like", "%value"]]).contains({ a: "Some Value" })).not.toBe(true);
-        expect(new Domain([["a", "=like", "%value"]]).contains({ a: false })).toBe(false);
-
-        expect(new Domain([["a", "ilike", "value"]]).contains({ a: "value" })).toBe(true);
-        expect(new Domain([["a", "ilike", "value"]]).contains({ a: "some value" })).toBe(true);
-        expect(new Domain([["a", "ilike", "value"]]).contains({ a: "Some Value" })).toBe(true);
-        expect(new Domain([["a", "ilike", "value"]]).contains({ a: false })).toBe(false);
-
-        expect(new Domain([["a", "=ilike", "%value"]]).contains({ a: "value" })).toBe(true);
-        expect(new Domain([["a", "=ilike", "%value"]]).contains({ a: "some value" })).toBe(true);
-        expect(new Domain([["a", "=ilike", "%value"]]).contains({ a: "Some Value" })).toBe(true);
-        expect(new Domain([["a", "=ilike", "%value"]]).contains({ a: false })).toBe(false);
-
-        expect(new Domain([["a", "not like", "value"]]).contains({ a: "value" })).not.toBe(true);
-        expect(new Domain([["a", "not like", "value"]]).contains({ a: "some value" })).not.toBe(
-            true
-        );
-        expect(new Domain([["a", "not like", "value"]]).contains({ a: "Some Value" })).toBe(true);
-        expect(new Domain([["a", "not like", "value"]]).contains({ a: "something" })).toBe(true);
-        expect(new Domain([["a", "not like", "value"]]).contains({ a: "Something" })).toBe(true);
-        expect(new Domain([["a", "not like", "value"]]).contains({ a: false })).toBe(true);
-
-        expect(new Domain([["a", "not ilike", "value"]]).contains({ a: "value" })).not.toBe(true);
-        expect(new Domain([["a", "not ilike", "value"]]).contains({ a: "some value" })).toBe(false);
-        expect(new Domain([["a", "not ilike", "value"]]).contains({ a: "Some Value" })).toBe(false);
-        expect(new Domain([["a", "not ilike", "value"]]).contains({ a: "something" })).toBe(true);
-        expect(new Domain([["a", "not ilike", "value"]]).contains({ a: "Something" })).toBe(true);
-        expect(new Domain([["a", "not ilike", "value"]]).contains({ a: false })).toBe(true);
-
-        expect(new Domain([["a", "not =like", "%value"]]).contains({ a: "some value" })).toBe(false);
-        expect(new Domain([["a", "not =like", "%value"]]).contains({ a: "Some Value" })).not.toBe(false);
-
-        expect(new Domain([["a", "not =ilike", "%value"]]).contains({ a: "value" })).toBe(false);
-        expect(new Domain([["a", "not =ilike", "%value"]]).contains({ a: "some value" })).toBe(false);
-        expect(new Domain([["a", "not =ilike", "%value"]]).contains({ a: "Some Value" })).toBe(false);
-        expect(new Domain([["a", "not =ilike", "%value"]]).contains({ a: false })).toBe(true);
-    });
-
-    test("complex domain", () => {
-        const domain = new Domain(["&", "!", ["a", "=", 1], "|", ["a", "=", 2], ["a", "=", 3]]);
-
-        expect(domain.contains({ a: 1 })).toBe(false);
-        expect(domain.contains({ a: 2 })).toBe(true);
-        expect(domain.contains({ a: 3 })).toBe(true);
-        expect(domain.contains({ a: 4 })).toBe(false);
     });
 
     test("toList", () => {
@@ -218,73 +93,19 @@ describe("Basic Properties", () => {
         );
     });
 
-    test("implicit &", () => {
-        const domain = new Domain([
-            ["a", "=", 3],
-            ["b", "=", 4],
-        ]);
-        expect(domain.contains({})).toBe(false);
-        expect(domain.contains({ a: 3, b: 4 })).toBe(true);
-        expect(domain.contains({ a: 3, b: 5 })).toBe(false);
-    });
-
     test("comparison operators", () => {
-        expect(new Domain([["a", "=", 3]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", "=", 3]]).contains({ a: 4 })).toBe(false);
         expect(new Domain([["a", "=", 3]]).toString()).toBe(`[("a", "=", 3)]`);
-        expect(new Domain([["a", "==", 3]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", "==", 3]]).contains({ a: 4 })).toBe(false);
         expect(new Domain([["a", "==", 3]]).toString()).toBe(`[("a", "==", 3)]`);
-        expect(new Domain([["a", "!=", 3]]).contains({ a: 3 })).toBe(false);
-        expect(new Domain([["a", "!=", 3]]).contains({ a: 4 })).toBe(true);
         expect(new Domain([["a", "!=", 3]]).toString()).toBe(`[("a", "!=", 3)]`);
-        expect(new Domain([["a", "<>", 3]]).contains({ a: 3 })).toBe(false);
-        expect(new Domain([["a", "<>", 3]]).contains({ a: 4 })).toBe(true);
         expect(new Domain([["a", "<>", 3]]).toString()).toBe(`[("a", "<>", 3)]`);
-        expect(new Domain([["a", "<", 3]]).contains({ a: 5 })).toBe(false);
-        expect(new Domain([["a", "<", 3]]).contains({ a: 3 })).toBe(false);
-        expect(new Domain([["a", "<", 3]]).contains({ a: 2 })).toBe(true);
         expect(new Domain([["a", "<", 3]]).toString()).toBe(`[("a", "<", 3)]`);
-        expect(new Domain([["a", "<=", 3]]).contains({ a: 5 })).toBe(false);
-        expect(new Domain([["a", "<=", 3]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", "<=", 3]]).contains({ a: 2 })).toBe(true);
         expect(new Domain([["a", "<=", 3]]).toString()).toBe(`[("a", "<=", 3)]`);
-        expect(new Domain([["a", ">", 3]]).contains({ a: 5 })).toBe(true);
-        expect(new Domain([["a", ">", 3]]).contains({ a: 3 })).toBe(false);
-        expect(new Domain([["a", ">", 3]]).contains({ a: 2 })).toBe(false);
         expect(new Domain([["a", ">", 3]]).toString()).toBe(`[("a", ">", 3)]`);
-        expect(new Domain([["a", ">=", 3]]).contains({ a: 5 })).toBe(true);
-        expect(new Domain([["a", ">=", 3]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", ">=", 3]]).contains({ a: 2 })).toBe(false);
         expect(new Domain([["a", ">=", 3]]).toString()).toBe(`[("a", ">=", 3)]`);
-    });
-
-    test("other operators", () => {
-        expect(new Domain([["a", "in", 3]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: 3 })).toBe(true);
-        expect(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: [3] })).toBe(true);
-        expect(new Domain([["a", "in", 3]]).contains({ a: 5 })).toBe(false);
-        expect(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: 5 })).toBe(false);
-        expect(new Domain([["a", "in", [1, 2, 3]]]).contains({ a: [5] })).toBe(false);
-        expect(new Domain([["a", "not in", 3]]).contains({ a: 3 })).toBe(false);
-        expect(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: 3 })).toBe(false);
-        expect(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: [3] })).toBe(false);
-        expect(new Domain([["a", "not in", 3]]).contains({ a: 5 })).toBe(true);
-        expect(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: 5 })).toBe(true);
-        expect(new Domain([["a", "not in", [1, 2, 3]]]).contains({ a: [5] })).toBe(true);
-        expect(new Domain([["a", "like", "abc"]]).contains({ a: "abc" })).toBe(true);
-        expect(new Domain([["a", "like", "abc"]]).contains({ a: "def" })).toBe(false);
-        expect(new Domain([["a", "=like", "abc"]]).contains({ a: "abc" })).toBe(true);
-        expect(new Domain([["a", "=like", "abc"]]).contains({ a: "def" })).toBe(false);
-        expect(new Domain([["a", "ilike", "abc"]]).contains({ a: "abc" })).toBe(true);
-        expect(new Domain([["a", "ilike", "abc"]]).contains({ a: "def" })).toBe(false);
-        expect(new Domain([["a", "=ilike", "abc"]]).contains({ a: "abc" })).toBe(true);
-        expect(new Domain([["a", "=ilike", "abc"]]).contains({ a: "def" })).toBe(false);
     });
 
     test("creating a domain with a string expression", () => {
         expect(new Domain(`[('a', '>=', 3)]`).toString()).toBe(`[("a", ">=", 3)]`);
-        expect(new Domain(`[('a', '>=', 3)]`).contains({ a: 5 })).toBe(true);
     });
 
     test("can evaluate a python expression", () => {
@@ -292,8 +113,6 @@ describe("Basic Properties", () => {
         expect(new Domain(`[('date', '!=', False)]`).toList()).toEqual([["date", "!=", false]]);
         expect(new Domain(`[('date', '!=', 1 + 2)]`).toString()).toBe(`[("date", "!=", 1 + 2)]`);
         expect(new Domain(`[('date', '!=', 1 + 2)]`).toList()).toEqual([["date", "!=", 3]]);
-        expect(new Domain(`[('a', '==', 1 + 2)]`).contains({ a: 3 })).toBe(true);
-        expect(new Domain(`[('a', '==', 1 + 2)]`).contains({ a: 2 })).toBe(false);
     });
 
     test("some expression with date stuff", () => {
@@ -336,18 +155,6 @@ describe("Basic Properties", () => {
         expect(domain1.toString()).not.toBe(domain2.toString());
     });
 
-    test("TRUE and FALSE Domain", () => {
-        expect(Domain.TRUE.contains({})).toBe(true);
-        expect(Domain.FALSE.contains({})).toBe(false);
-
-        expect(Domain.and([Domain.TRUE, new Domain([["a", "=", 3]])]).contains({ a: 3 })).toBe(
-            true
-        );
-        expect(Domain.and([Domain.FALSE, new Domain([["a", "=", 3]])]).contains({ a: 3 })).toBe(
-            false
-        );
-    });
-
     test("invalid domains should not succeed", () => {
         expect(() => new Domain(["|", ["hr_presence_state", "=", "absent"]])).toThrow(
             /invalid domain .* \(missing 1 segment/
@@ -378,36 +185,6 @@ describe("Basic Properties", () => {
         expect(() => new Domain(`[(+, "=", 1)]`)).toThrow(/Invalid domain representation/);
         expect(() => new Domain([{}])).toThrow(/Invalid domain representation/);
         expect(() => new Domain([1])).toThrow(/Invalid domain representation/);
-    });
-
-    test("follow relations", () => {
-        expect(
-            new Domain([["partner.city", "ilike", "Bru"]]).contains({
-                name: "Lucas",
-                partner: {
-                    city: "Bruxelles",
-                },
-            })
-        ).toBe(true);
-        expect(
-            new Domain([["partner.city.name", "ilike", "Bru"]]).contains({
-                name: "Lucas",
-                partner: {
-                    city: {
-                        name: "Bruxelles",
-                    },
-                },
-            })
-        ).toBe(true);
-    });
-
-    test("Arrays comparison", () => {
-        const domain = new Domain(["&", ["a", "==", []], ["b", "!=", []]]);
-
-        expect(domain.contains({ a: [] })).toBe(true);
-        expect(domain.contains({ a: [], b: [4] })).toBe(true);
-        expect(domain.contains({ a: [1] })).toBe(false);
-        expect(domain.contains({ b: [] })).toBe(false);
     });
 });
 
@@ -442,7 +219,6 @@ describe("Combining domains", () => {
     test("combining zero domain", () => {
         expect(Domain.combine([], "AND").toString()).toBe("[]");
         expect(Domain.combine([], "OR").toString()).toBe("[]");
-        expect(Domain.combine([], "AND").contains({ a: 1, b: 2 })).toBe(true);
     });
 
     test("combining one domain", () => {

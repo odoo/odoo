@@ -7,6 +7,7 @@ import { Domain, InvalidDomainError } from "@web/core/domain";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
 import { serializeDate } from "@web/core/l10n/dates";
+import { contains } from "./domain_contains";
 
 let nextId = -1;
 const mutex = new Mutex();
@@ -611,7 +612,7 @@ patch(PosStore.prototype, {
             const existingProduct = reward.all_discount_product_ids;
             reward.all_discount_product_ids = [
                 ...existingProduct,
-                ...products.filter((p) => domain.contains(p.raw)),
+                ...products.filter((p) => contains(domain, p.raw)),
             ];
         } catch (error) {
             if (!(error instanceof InvalidDomainError || error instanceof TypeError)) {
