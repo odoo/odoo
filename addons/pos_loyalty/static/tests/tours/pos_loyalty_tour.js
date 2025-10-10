@@ -651,6 +651,7 @@ registry.category("web_tour.tours").add("test_discount_after_unknown_scan", {
             ProductScreen.totalAmountIs("4.50"),
         ].flat(),
 });
+<<<<<<< 10188f025ee04da57eb9b555b231b65b589be966
 
 registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer", {
     steps: () =>
@@ -661,3 +662,21 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
             ProductScreen.customerIsSelected("AAA Test Partner"),
         ].flat(),
 });
+||||||| b0203ae02d472bd7522bc21971f0e659766eaffe
+=======
+
+registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AA Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.claimReward("Free Product"),
+            PosLoyalty.pointsTotalIs("90"),
+            PosLoyalty.orderTotalIs("0.0"),
+            PosLoyalty.finalizeOrder("Cash", "0.0"),
+        ].flat(),
+});
+>>>>>>> 35ef18acb751d2d05472b5f43ce05e184dd0dcf9

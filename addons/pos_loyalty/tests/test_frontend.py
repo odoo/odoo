@@ -3271,6 +3271,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_multiple_reward_line_free_product",
             login="pos_user",
         )
+<<<<<<< 10188f025ee04da57eb9b555b231b65b589be966
 
     def test_scan_loyalty_card_select_customer(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -3302,3 +3303,41 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_scan_loyalty_card_select_customer",
             login="pos_user",
         )
+||||||| b0203ae02d472bd7522bc21971f0e659766eaffe
+=======
+
+    def test_min_qty_points_awarded(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        aa_partner = self.env['res.partner'].create({'name': 'AA Partner'})
+        program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 10,
+                'reward_point_mode': 'money',
+                'minimum_qty': 5,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.product_variant_id.id,
+                'reward_product_qty': 1,
+                'required_points': 5,
+            })],
+        })
+
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': program.id,
+            'partner_id': aa_partner.id,
+            'points': 100,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_min_qty_points_awarded",
+            login="pos_user",
+        )
+        self.assertEqual(loyalty_card.points, 90)
+>>>>>>> 35ef18acb751d2d05472b5f43ce05e184dd0dcf9
