@@ -113,28 +113,27 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return this.record.data.collapse_prices;
     }
 
-    get hideCompositions() {
+    get hideComposition() {
         return this.record.data.collapse_composition;
     }
 
-    get showPricesButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.collapse_prices && !parentRecord?.data?.collapse_composition;
-        }
-        return true;
+    get disablePricesButton() {
+        return this.shouldCollapse(this.record, 'collapse_prices') || this.disableCompositionButton;
     }
 
-    get showCompositionButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.collapse_composition;
-        }
-        return true;
+    get disableCompositionButton() {
+        return this.shouldCollapse(this.record, 'collapse_composition');
     }
 
     async toggleCollapse(record, fieldName) {
         const changes = { [fieldName]: !record.data[fieldName] };
+        const reverseFieldName = fieldName === 'collapse_composition' ? 'collapse_prices' : 'collapse_composition';
+
+        // Sections can't have collapse_composition and collapse_prices true at the same time
+        if (!record.data[fieldName]) {
+            changes[reverseFieldName] = false;
+        }
+
         await record.update(changes);
     }
 
@@ -448,6 +447,42 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             }));
         }
         await this.props.list.applyCommands(commands, { sort: true });
+    }
+
+    /**
+     * @override
+     * This override basically resets the values of `collapse_` fields of subsection if it is dragged
+     * under hidden section.
+     */
+    async sortDrop(dataRowId, dataGroupId, options) {
+        await super.sortDrop(dataRowId, dataGroupId, options);
+
+        const record = this.props.list.records.find(r => r.id === dataRowId);
+        const parentSection = getParentSectionRecord(this.props.list, record);
+        const commands = [];
+
+        if (this.resetOnResequence(record, parentSection)) {
+            commands.push(x2ManyCommands.update(record.resId || record._virtualId, {
+                ...this.fieldsToReset(),
+            }));
+        }
+
+        await this.props.list.applyCommands(commands);
+    }
+
+    resetOnResequence(record, parentSection) {
+        return (
+            this.isSubSection(record)
+            && (record.data.collapse_composition || record.data.collapse_prices)
+            && parentSection?.data.collapse_composition
+        );
+    }
+
+    fieldsToReset() {
+        return {
+            ...(this.props.hideComposition && { collapse_composition: false }),
+            ...(this.props.hidePrices && { collapse_prices: false }),
+        };
     }
 }
 

@@ -16,12 +16,8 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         this.copyFields.push('is_optional');
     }
 
-    get showOptionalButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.is_optional;
-        }
-        return true;
+    get disableOptionalButton() {
+        return this.shouldCollapse(this.record, 'is_optional');
     }
 
     getRowClass(record) {
@@ -38,14 +34,57 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         }))];
 
         for (const sectionRecord of getSectionRecords(this.props.list, record)) {
+            let changes = {};
+
+            if (!sectionRecord.data.display_type) {
+                changes = !record.data.is_optional
+                    ? { product_uom_qty: 0 }
+                    : { product_uom_qty: sectionRecord.data.product_uom_qty || 1 };
+            }
+
             commands.push(
-                x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
-                    ...(!record.data.is_optional ? { product_uom_qty: 0 } : {}),
-                })
+                x2ManyCommands.update(
+                    sectionRecord.resId || sectionRecord._virtualId,
+                    changes
+                )
             );
         }
 
         await this.props.list.applyCommands(commands, { sort: true });
+    }
+
+    /**
+     * @override
+     * Handles product line quantity adjustments when a record is dragged and dropped.
+     *
+     * Behavior:
+     * - If a product line is moved under an optional section, its quantity is set to `0`.
+     * - If a product line is dragged out of an optional section and had `0` quantity,
+     *   its quantity is reset to `1`.
+     * - Non-product lines (`display_type` set) are ignored.
+     * 
+     */
+    async sortDrop(dataRowId, dataGroupId, options) {
+        const record = this.props.list.records.find(r => r.id === dataRowId);
+        const oldParent = getParentSectionRecord(this.props.list, record);
+        const wasOptional = this.shouldCollapse(record, 'is_optional');
+
+        await super.sortDrop(dataRowId, dataGroupId, options);
+
+        const newParent = getParentSectionRecord(this.props.list, record);
+        if (oldParent === newParent) return;
+
+        let newProductQty = null;
+
+        if (this.shouldCollapse(record, 'is_optional')) {
+            newProductQty = 0;
+        } else if (wasOptional && !record.data.product_uom_qty) {
+            newProductQty = 1;
+        }
+
+        if (newProductQty !== null && !record.data.display_type) {
+            await record.update({ product_uom_qty: newProductQty });
+        }
     }
 
 }
