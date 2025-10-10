@@ -34,7 +34,7 @@ export class CallInvitation extends Component {
     }
 
     joinCall() {
-        this.rtc.toggleCall(this.props.thread, {
+        this.rtc.toggleCall(this.props.thread.channel, {
             audio: this.state.hasMicrophone,
             camera: this.state.hasCamera,
         });
