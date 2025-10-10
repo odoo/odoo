@@ -30,8 +30,9 @@ export class BoardController extends Component {
                 ref: mainRef,
                 elements: ".o-dashboard-action",
                 handle: ".o-dashboard-action-header",
-                cursor: "move",
+                cursor: "grabbing",
                 groups: ".o-dashboard-column",
+                placeholderClasses: ["visible", "opacity-50"],
                 connectGroups: true,
                 onDrop: ({ element, previous, parent }) => {
                     const fromColIdx = parseInt(element.parentElement.dataset.idx, 10);
@@ -82,6 +83,21 @@ export class BoardController extends Component {
                 lastVisibleCol.actions.push(...cols[i].actions);
                 cols[i].actions = [];
             }
+        }
+        if(currentColNbr === 1 && nextColNbr > currentColNbr) {
+            const cols = this.board.columns;
+            const actionsNbr = cols[0].actions.length;
+
+            // Distribute cols[0] actions across all available columns
+            for (let i = 0; i < actionsNbr; i++) {
+                const targetColIdx = i % nextColNbr;
+                if (targetColIdx !== 0) {
+                    cols[targetColIdx].actions.push(cols[0].actions[i]);
+                }
+            }
+
+            // Keep only the actions that should remain in cols[0]
+            cols[0].actions = cols[0].actions.filter((_, idx) => idx % nextColNbr === 0);
         }
         this.board.layout = layout;
         this.board.colNumber = nextColNbr;

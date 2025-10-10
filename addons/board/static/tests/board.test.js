@@ -139,11 +139,11 @@ describe("board_desktop", () => {
 
         expect(".o-dashboard-action .o_list_view").toHaveCount(1);
 
-        await contains("h3 i.fa-window-minimize").click();
+        await contains("h3 i.oi-chevron-down").click();
 
         expect(".o-dashboard-action .o_list_view").toHaveCount(0);
 
-        await contains("h3 i.fa-window-maximize").click();
+        await contains("h3 i.oi-chevron-right").click();
 
         // content is visible again
         expect(".o-dashboard-action .o_list_view").toHaveCount(1);

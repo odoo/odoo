@@ -10,10 +10,10 @@
     grid-template-columns: 1fr;
 }
 .o-dashboard-layout-1-1 {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
 }
 .o-dashboard-layout-1-1-1 {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
 }
 .o-dashboard-layout-2-1 {
     grid-template-columns: 2fr 1fr;
@@ -53,6 +53,6 @@
     }
 }
 
-.o-dashboard-action > h3 > span > i {
-    font-size: 12px;
+.o-dashboard-action-header {
+    cursor: grab;
 }
