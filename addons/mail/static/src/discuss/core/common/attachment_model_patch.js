@@ -5,8 +5,8 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("models").Attachment} */
 const attachmentPatch = {
     get isDeletable() {
-        if (this.message && this.thread?.model === "discuss.channel") {
-            return this.message.editable;
+        if (this.thread?.model === "discuss.channel") {
+            return this.ownership_token;
         }
         return super.isDeletable;
     },

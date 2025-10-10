@@ -69,6 +69,9 @@
                             <button t-if="showDelete" class="o-mail-Attachment-unlink btn bg-500 w-100 h-100 o-p-1_5 d-flex ms-2 justify-content-center align-items-center shadow-sm" t-att-class="{ 'o-inComposer': env.inComposer }" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
                                 <i class="fa fa-trash o-text-white" role="img" aria-label="Remove"/>
                             </button>
+                            <button t-if="showShowInConversation" class="btn bg-500 w-100 h-100 o-p-1_5 d-flex ms-2 justify-content-center align-items-center shadow-sm" t-on-click.stop="() => this.onClickShowInConversation(attachment)" title="Show in conversation">
+                                <i class="fa fa-eye o-text-white" role="img" aria-label="Show in conversation"/>
+                            </button>
                         </div>
                     </div>
                     <!-- dropdown (for mobile view only) -->

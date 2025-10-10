@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockUserAgent } from "@odoo/hoot-mock";
-import { asyncStep, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { download } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
@@ -431,7 +431,9 @@ test("download url of non-viewable binary file", async () => {
 
     patchWithCleanup(download, {
         _download: (options) => {
-            expect(options.url).toBe(`${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`);
+            expect(options.url).toBe(
+                `${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`
+            );
         },
     });
     await click(".fa-download");
@@ -461,4 +463,31 @@ test("check actions in mobile view", async () => {
     await click(".o-mail-AttachmentContainer [title='Actions']");
     await contains(".dropdown-item", { text: "Remove" });
     await contains(".dropdown-item", { text: "Download" });
+});
+
+test("'Show in conversation' action highlights message related to attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            Command.create({
+                name: "elijah.png",
+                mimetype: "image/png",
+                res_id: channelId,
+                res_model: "discuss.channel",
+            }),
+        ],
+        body: "<p>Look at my dog!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-DiscussContent-header button[title='Attachments']");
+    await click(".o-mail-AttachmentButtons button[title='Show in conversation']");
+    await contains(".o-mail-Message.o-highlighted", { text: "Look at my dog!" });
 });
