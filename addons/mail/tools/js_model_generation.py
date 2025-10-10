@@ -41,6 +41,7 @@ MODELS_TO_EXPOSE = [
     "mail.message.link.preview",
     "res.groups",
     "res.groups.privilege",
+    "mail.message.subtype",
     "res.lang",
     "res.partner",
 ]
