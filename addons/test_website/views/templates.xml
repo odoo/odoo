@@ -85,4 +85,20 @@
         </t>
     </template>
 
+    <template name="Drag Image Preview Test" id="s_drag_image_preview_test">
+            <section class="s_drag_image_preview_test s_hr">
+                <h1 class="display-1" style="text-align: center;">
+                    Drag Image Preview Test
+                </h1>
+            </section>
+    </template>
+
+    <template id="snippets" inherit_id="website.snippets">
+        <xpath expr="//snippets[@id='snippet_content']" position="inside">
+            <t t-snippet="test_website.s_drag_image_preview_test" string="Drag Image Preview Test"
+               t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_preview.svg"
+                t-drag-image-preview="/website/static/src/img/snippets_previews/s_instagram_preview.webp"/>
+        </xpath>
+    </template>
+
 </odoo>
