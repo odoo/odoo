@@ -225,6 +225,15 @@ class PosSelfOrderController(http.Controller):
         preset = pos_config.env['pos.preset'].browse(preset_id)
         return preset.get_available_slots()
 
+    @http.route('/pos-self-order/order-can-be-cancelled', auth='public', type='jsonrpc', website=True)
+    def order_can_be_cancelled(self, access_token, order_id):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if pos_order.exists():
+            return pos_order.can_be_cancelled()
+        return True
+
     def _get_order_prices(self, lines):
         amount_untaxed = sum(lines.mapped('price_subtotal'))
         amount_total = sum(lines.mapped('price_subtotal_incl'))
