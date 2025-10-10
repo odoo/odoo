@@ -105,12 +105,23 @@ class SaleOrder(models.Model):
         """
         items_payload = []
         for gelato_line in self.order_line.filtered(lambda l: l.product_id.gelato_product_uid):
+
+            image_placements = gelato_line.product_id.gelato_variant_image_placement
+            if any(image_placement.ir_attachment_id.image_src for image_placement in image_placements):
+                placement_list = image_placements.filtered(
+                    lambda l: l.ir_attachment_id.image_src is not False
+                )
+                placement_list += gelato_line.product_id.product_tmpl_id.gelato_image_ids.filtered(
+                    lambda l: l.name not in placement_list.display_name
+                )
+            else:
+                placement_list = gelato_line.product_id.product_tmpl_id.gelato_image_ids
+
             item_data = {
                 'itemReferenceId': gelato_line.product_id.id,
                 'productUid': gelato_line.product_id.gelato_product_uid,
                 'files': [
-                    image._gelato_prepare_file_payload()
-                    for image in gelato_line.product_id.product_tmpl_id.gelato_image_ids
+                    image._gelato_prepare_file_payload() for image in placement_list
                 ],
                 'quantity': int(gelato_line.product_uom_qty),
             }
