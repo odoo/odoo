@@ -114,8 +114,12 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
     trigger: ':iframe input[type="file"]',
     run: "click",
 }, {
+    content: 'Open the "New Content" dropdown',
+    trigger: 'div[data-container-title="Field"] button:contains("+ New")',
+    run: "click",
+}, {
     content: 'Add a new field',
-    trigger: 'div[data-container-title="Field"] button.o_we_bg_brand_primary',
+    trigger: '.o_popover [role="menuitem"]:contains("Field")',
     run: "click",
 },
 ...clickOnSave(),

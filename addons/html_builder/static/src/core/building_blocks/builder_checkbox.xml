@@ -13,7 +13,8 @@
             t-att-data-attribute-action="info.attributeAction"
             t-att-data-attribute-action-value="info.attributeActionValue"
             t-on-pointerenter="() => this.onPointerEnter(props.id)"
-            t-on-pointerleave="() => this.onPointerLeave(props.id)">
+            t-on-pointerleave="() => this.onPointerLeave(props.id)"
+            data-prevent-closing-overlay="true">
             <CheckBox className="getClassName()" onChange="onChange" value="state.isActive"/>
         </div>
     </BuilderComponent>
