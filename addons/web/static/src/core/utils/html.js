@@ -55,7 +55,7 @@ export function highlightText(query, text, classes) {
     let result = text;
     for (const match of matches) {
         const regex = new RegExp(
-            `(${escapeRegExp(htmlEscape(match))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`,
+            `(${escapeRegExp(htmlEscape(match))})(?=(?:[^>]*<[^<]*>)*[^<>]*$)`,
             "ig"
         );
         result = htmlReplace(result, regex, (_, match) => {
