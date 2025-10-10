@@ -249,7 +249,7 @@ class StockMove(models.Model):
                 continue
 
             if move.product_id.cost_method == 'fifo':
-                move.value = move.product_id._run_fifo(move.quantity)
+                move.value = move.product_id._run_fifo(move._get_valued_qty())
             else:
                 move.value = move.product_id.standard_price * move.quantity
 
@@ -330,9 +330,9 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self.is_in:
+        if self._is_in():
             return sum(self._get_in_move_lines(lot).mapped('quantity'))
-        if self.is_out:
+        if self._is_out():
             return sum(self._get_out_move_lines(lot).mapped('quantity'))
         if self.is_dropship:
             if lot:
