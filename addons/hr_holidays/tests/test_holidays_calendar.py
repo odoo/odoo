@@ -39,3 +39,67 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         self.assertEqual(last_leave.date_from.weekday(), 3, "It should be Thursday")
         self.assertEqual(last_leave.date_from.hour, expected_leave_start, "Wrong start of the day")
         self.assertEqual(last_leave.date_to.hour, expected_leave_end, "Wrong end of the day")
+
+    @users('bastien')
+    def test_time_off_calendar_drag_and_resize_update_requests(self):
+        """
+        Test the drag&drop and resize of leaves in the calendar view.
+        """
+        self.employee_hrmanager.tz = 'UTC'
+        self.env.user.tz = 'UTC'
+        full_day_leave_type, half_day_leave_type, hours_leave_type = self.env['hr.leave.type'].create([
+            {'name': 'Full Day Leave', 'requires_allocation': False, 'request_unit': 'day'},
+            {'name': 'Half Day Leave', 'requires_allocation': False, 'request_unit': 'half_day'},
+            {'name': 'Hours Leave', 'requires_allocation': False, 'request_unit': 'hour'},
+        ])
+        today = date.today()
+        monday = today - timedelta(days=today.weekday())
+        sunday = monday - timedelta(days=1)
+        tuesday = sunday + timedelta(days=2)
+        thursday = sunday + timedelta(days=4)
+
+        hourly_leave, full_day_leave, half_day_leave = self.env['hr.leave'].create([
+            {
+                'name': 'Hourly Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'holiday_status_id': hours_leave_type.id,
+                'request_date_from': sunday,
+                'request_date_to': sunday,
+                'request_hour_from': 8,
+                'request_hour_to': 12,
+            },
+            {
+                'name': 'Full Day Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'holiday_status_id': full_day_leave_type.id,
+                'request_date_from': tuesday,
+                'request_date_to': tuesday,
+            },
+            {
+                'name': 'Half Day Leave',
+                'employee_id': self.employee_hrmanager.id,
+                'holiday_status_id': half_day_leave_type.id,
+                'request_date_from': thursday,
+                'request_date_to': thursday,
+                'request_date_from_period': 'am',
+                'request_date_to_period': 'am',
+            }
+        ])
+
+        # Resize tour will increase the duration of the hourly leave(on sunday) by 2 hours
+        self.start_tour('/', 'timeoff_calendar_resize_tour', login='bastien')
+
+        assert hourly_leave.request_date_from == sunday
+        assert hourly_leave.request_date_to == sunday
+        assert hourly_leave.request_hour_from == 8
+        assert hourly_leave.request_hour_to == 14
+
+        # Drag&drop tour will move all leaves to the next day
+        self.start_tour('/', 'timeoff_calendar_drag_drop_tour', login='bastien')
+
+        assert hourly_leave.request_date_from == sunday + timedelta(days=1)
+        assert hourly_leave.request_date_to == sunday + timedelta(days=1)
+        assert full_day_leave.request_date_from == tuesday + timedelta(days=1)
+        assert full_day_leave.request_date_to == tuesday + timedelta(days=1)
+        assert half_day_leave.request_date_from == thursday + timedelta(days=1)
+        assert half_day_leave.request_date_to == thursday + timedelta(days=1)

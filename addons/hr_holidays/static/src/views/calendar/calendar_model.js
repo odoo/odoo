@@ -6,6 +6,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
+import { parseFloatTime } from "@web/views/fields/parsers";
 const { DateTime } = luxon;
 
 export class TimeOffCalendarModel extends CalendarModel {
@@ -21,6 +22,49 @@ export class TimeOffCalendarModel extends CalendarModel {
             (data) => this.fetchMandatoryDays(data),
             (data) => `${serializeDateTime(data.range.start)},${serializeDateTime(data.range.end)}`
         );
+    }
+
+    /**
+     * @override
+     */
+    get canEdit() {
+        return this.meta.canEdit;
+    }
+
+    /**
+     * @override
+     */
+    async updateRecord(record, options = {}) {
+        const leaveRecord = this.data.records[record.id]?.rawRecord;
+        const rawRecord = this.buildRawRecord(record, options);
+
+        try {
+            const [employee] = await this.orm.searchRead(
+                "hr.employee",
+                [["id", "=", leaveRecord.employee_id[0]]],
+                ["tz"]
+            );
+            const tz = employee?.tz || this.env.user.tz || "UTC";
+            const dateFrom = deserializeDateTime(rawRecord.date_from, { tz });
+            const dateTo = deserializeDateTime(rawRecord.date_to, { tz });
+
+            if(leaveRecord?.request_unit_hours){
+                await this.orm.write(this.meta.resModel, [record.id], {
+                    request_date_from: dateFrom.toISODate(),
+                    request_date_to: dateTo.toISODate(),
+                    request_hour_from: parseFloatTime(dateFrom.toFormat("HH:mm")),
+                    request_hour_to: parseFloatTime(dateTo.toFormat("HH:mm")),
+                }, { context: this.meta.context });
+            }
+            else {
+                await this.orm.write(this.meta.resModel, [record.id], {
+                    request_date_from: dateFrom.toISODate(),
+                    request_date_to: dateTo.toISODate(),
+                }, { context: this.meta.context } );
+            }
+        } finally {
+            await this.load();
+        }
     }
 
     /**
@@ -129,7 +173,7 @@ export class TimeOffCalendarModel extends CalendarModel {
         if (!this.employeeId) {
             context["short_name"] = 1;
         }
-        const fieldNamesToAdd = resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period", "request_date_to_period", "request_unit_hours"] : [];
+        const fieldNamesToAdd = resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period", "request_date_to_period", "request_unit_hours", "employee_id"] : [];
         return this.orm.searchRead(resModel, this.computeDomain(data), [...fieldNames, ...fieldNamesToAdd], { context });
     }
 
