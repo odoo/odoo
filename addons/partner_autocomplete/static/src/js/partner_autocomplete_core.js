@@ -3,11 +3,9 @@
 
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
-import { getDataURLFromFile } from "@web/core/utils/urls";
 import { onWillStart } from "@odoo/owl";
 
 /**
@@ -96,125 +94,29 @@ export function usePartnerAutocomplete() {
      * @returns {Promise}
      */
     function getCreateData(company, fieldsToKeep) {
-        return new Promise((resolve) => {
+        return enrichCompany(company).then((companyData) => {
             // Fetch additional company info via Autocomplete Enrichment API
-            const enrichPromise = enrichCompany(company);
 
-            // Get logo
-            const logoPromise = company.logoUrl ? getCompanyLogo(company.logoUrl) : false;
-            whenAll([enrichPromise, logoPromise]).then(([companyData, logoData]) => {
-
-                if (companyData.error) {
-                    if (companyData.error_message === 'Insufficient Credit') {
-                        notifyNoCredits();
-                    }
-                    else if (companyData.error_message === 'No Account Token') {
-                        notifyAccountToken();
-                    }
-                    else {
-                        notification.add(companyData.error_message);
-                    }
-                    companyData = {
-                        ...company,
-                        ...companyData,
-                    };
+            if (companyData.error) {
+                if (companyData.error_message === 'Insufficient Credit') {
+                    notifyNoCredits();
                 }
-
-                resolve({
-                    company: companyData,
-                    logo: logoData
-                });
-            })
-        });
-    }
-
-    async function fetchNoCaching(url) {
-        try {
-            const response = await browser.fetch(
-                url,
-                {
-                    method: 'GET',
-                    cache: 'no-cache',
+                else if (companyData.error_message === 'No Account Token') {
+                    notifyAccountToken();
                 }
-            );
-            return await response.json();
-        } catch {
-            return {}
-        }
-    }
-
-    /**
-     * Use Clearbit API to get the company logo if there is a match with the company name or domain
-     *
-     * @param {string} value
-     * @returns {Promise}
-     * @private
-     */
-    async function getClearbitLogoUrl(company) {
-        let clearbitData = await fetchNoCaching(encodeURI(`https://autocomplete.clearbit.com/v1/companies/suggest?query=${company.name}`));
-        if (!clearbitData.length) {
-            if (company.domain) {
-                clearbitData = await fetchNoCaching(encodeURI(`https://autocomplete.clearbit.com/v1/companies/suggest?query=${company.domain}`));
+                else {
+                    notification.add(companyData.error_message);
+                }
+                companyData = {
+                    ...company,
+                    ...companyData,
+                };
             }
-            if (!clearbitData.length) {
-                return '';
-            }
-        }
-        const firstResult = clearbitData[0];
-        if (
-            firstResult.name.toLowerCase() === company.name.toLowerCase()
-            ||
-            (
-                company.domain !== undefined
-                &&
-                firstResult.domain === company.domain
-            )
-        ){
-            return firstResult.logo;
-        }
-        return '';
-    }
-
-    /**
-     * Get the company logo as Base 64 image from url
-     *
-     * @param {string} url
-     * @returns {Promise}
-     * @private
-     */
-    async function getCompanyLogo(logoUrl) {
-        try {
-            if (!logoUrl) {
-                return false;
-            }
-            const base64Image = await getBase64Image(logoUrl);
-            // base64Image equals "data:" if image not available on given url
-            return base64Image ? base64Image.replace(/^data:image[^;]*;base64,?/, '') : false;
-        }
-        catch {
-            return false;
-        }
-    }
-
-    /**
-     * Returns a promise which will be resolved with the base64 data of the
-     * image fetched from the given url.
-     *
-     * @private
-     * @param {string} url : the url where to find the image to fetch
-     * @returns {Promise}
-     */
-    function getBase64Image(url) {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                getDataURLFromFile(xhr.response).then(resolve);
+            return {
+                company: companyData,
+                logo: companyData.logo || false,
             };
-            xhr.open('GET', url);
-            xhr.responseType = 'blob';
-            xhr.onerror = reject;
-            xhr.send();
-        });
+        })
     }
 
     /**
@@ -237,7 +139,6 @@ export function usePartnerAutocomplete() {
         const suggestions = await keepLastOdoo.add(prom);
         await Promise.all(suggestions.map(async (suggestion) => {
             suggestion.query = value;  // Save queried value (name, VAT) for later
-            suggestion.logoUrl = await getClearbitLogoUrl(suggestion);
             suggestion.description = '';
             if (suggestion.city){
                 suggestion.description += suggestion.city;
@@ -249,21 +150,6 @@ export function usePartnerAutocomplete() {
             return suggestion;
         }));
         return suggestions;
-    }
-
-    /**
-     * Utility to wait for multiple promises
-     * Promise.all will reject all promises whenever a promise is rejected
-     * This utility will continue
-     *
-     * @param {Promise[]} promises
-     * @returns {Promise}
-     * @private
-     */
-    function whenAll(promises) {
-        return Promise.all(promises.map((p) => {
-            return Promise.resolve(p);
-        }));
     }
 
     /**
