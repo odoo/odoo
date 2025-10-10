@@ -647,7 +647,14 @@ export class PaymentScreen extends Component {
         }
     }
     async sendForceDone(line) {
+<<<<<<< ee7abc96af5437e3903f15b217070c528e78bfe0
         line.setPaymentStatus("done");
+||||||| 9a66d0676eedde5d3d9bed6518d4dde921cd9d91
+        line.set_payment_status("done");
+=======
+        line.set_payment_status("done");
+        this.pos.paymentTerminalInProgress = false;
+>>>>>>> 34d2417f9ca9bf6c762d08ce839dff7a6b2bb89b
         const config = this.pos.config;
         const currency = this.pos.currency;
         const currentOrder = line.pos_order_id;
