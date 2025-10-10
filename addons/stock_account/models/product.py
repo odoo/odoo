@@ -143,7 +143,7 @@ class ProductProduct(models.Model):
 
         for product in self:
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
-            qty_available = product.sudo(False).with_context(at_date=at_date).qty_available
+            qty_available = product.sudo(False)._with_valuation_context().with_context(at_date=at_date).qty_available
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
             elif product.cost_method == 'standard':
@@ -211,6 +211,10 @@ class ProductProduct(models.Model):
         ])
         return sum(lots.mapped('total_value'))
 
+    def _with_valuation_context(self):
+        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        return self.with_context(location=valued_locations.ids)
+
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
@@ -267,7 +271,7 @@ class ProductProduct(models.Model):
 
         # If the last value was defined by the user just return it
         if product_values and moves_in and product_values[-1].date > moves_in[-1].date:
-            quantity = self.with_context(to_date=at_date).qty_available
+            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
             if lot:
                 quantity = lot.product_qty
             avco_value = product_values[-1].value
@@ -355,7 +359,7 @@ class ProductProduct(models.Model):
         if lot:
             fifo_stack_size = lot.product_qty
         else:
-            fifo_stack_size = int(self.with_context(to_date=at_date).qty_available)
+            fifo_stack_size = int(self._with_valuation_context().with_context(to_date=at_date).qty_available)
         if fifo_stack_size <= 0:
             return fifo_stack, 0
 
