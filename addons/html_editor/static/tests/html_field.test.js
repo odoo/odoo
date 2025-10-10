@@ -28,6 +28,7 @@ import {
 import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
+import { delay } from "@web/core/utils/concurrency";
 import { FormController } from "@web/views/form/form_controller";
 import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
@@ -2202,6 +2203,68 @@ describe("save image", () => {
         expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=12345");
         expect(img).not.toHaveClass("o_b64_image_to_save");
         expect.verifySteps(["add_data: partner 1", "generate_access_token: 123"]);
+    });
+
+    test("Ensure a traceback is not raised when hiding an HtmlField with unsaved images", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p class='test_target'><br></p>",
+            },
+        ];
+
+        onRpc("/html_editor/attachment/add_data", async (request) => {
+            const { params } = await request.json();
+            const { res_id, res_model } = params;
+            expect.step(`add_data-start: ${res_model} ${res_id}`);
+            // add a delay to emulate saving a big image.
+            await delay(50);
+            expect.step(`add_data-end: ${res_model} ${res_id}`);
+            return {
+                image_src: "/test_image_url.png",
+                access_token: "1234",
+                public: false,
+            };
+        });
+
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+            <form>
+                <notebook>
+                    <page string="html" name="html">
+                        <field name="txt" widget="html"/>
+                    </page>
+                    <page string="empty" name="empty"/>
+                </notebook>
+            </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+
+        // Paste image.
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await waitFor("img");
+        const b64img = htmlEditor.editable.querySelector("img");
+        expect(b64img.src.startsWith("data:image/png;base64,")).toBe(true);
+        expect(b64img).toHaveClass("o_b64_image_to_save");
+
+        // Switch tab, this should trigger the image save.
+        await contains(".o_notebook_headers .nav-link:not(.active)").click();
+        await delay(50);
+        // reswitch tab, and check the image was saved properly.
+        await contains(".o_notebook_headers .nav-link:not(.active)").click();
+        const savedImg = htmlEditor.editable.querySelector("img");
+        expect(savedImg.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
+        expect(savedImg).not.toHaveClass("o_b64_image_to_save");
+
+        expect.verifySteps(["add_data-start: partner 1", "add_data-end: partner 1"]);
     });
 });
 
