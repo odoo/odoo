@@ -640,15 +640,14 @@ export class Rtc extends Record {
         this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
         await this.rpcLeaveCall(channel.thread);
-        this.endCall(channel.thread);
+        this.endCall(channel);
         this.state.hasPendingRequest = false;
     }
 
     /**
-     * @param {import("models").Thread} [thread]
+     * @param {import("models").DiscussChannel} [channel]
      */
-    endCall(thread = this.state.channel.thread) {
-        const channel = thread.channel;
+    endCall(channel = this.state.channel) {
         this._endHost();
         if (channel.self_member_id) {
             channel.self_member_id.rtc_inviting_session_id = undefined;
