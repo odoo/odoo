@@ -264,7 +264,7 @@ class ResPartner(models.Model):
             "avatar_128",
             "im_status",
             "is_company",
-            Store.One("main_user_id", ["share"]),
+            Store.One("main_user_id", ["share"], sudo=True),
             "name",
         ]
         if target.is_internal(self.env):
