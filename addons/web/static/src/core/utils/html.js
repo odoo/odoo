@@ -214,10 +214,12 @@ export function isHtmlEmpty(content = "") {
 }
 
 /**
- * Format the text as follow:
+ * Format the text as follows:
  *      \*\*text\*\* => Put the text in bold.
  *      --text-- => Put the text in muted.
+ *      \`text#n\` => Put the text in a colored rounded badge (with the color n between 0 and 11).
  *      \`text\` => Put the text in a rounded badge (bg-primary).
+ *          Caution: If \`text\` can be confused with the previous format (\`text#n\`), then write \`text#0\`
  *      \n => Insert a breakline.
  *      \t => Insert 4 spaces.
  *
@@ -253,15 +255,16 @@ export function odoomark(text) {
             },
         ],
         [
-            /&#x60;(.+?)&#x60;/g,
-            (_, tag) => {
+            /&#x60;(.+?)(?:#([0-9]|1[01]))?&#x60;/g,
+            (_, tag, color) => {
                 /**
                  * markup: text is a Markup object (either escaped inside htmlReplace or
                  * flagged safe), `tag` is directly coming from this value,
                  * and the regex doesn't do anything crazy to unescape it.
                  */
                 tag = markup(tag);
-                return markup`<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">${tag}</span>`;
+                if (!color) color = 0;
+                return markup`<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_${color}">${tag}</span>`;
             },
         ],
     ];
