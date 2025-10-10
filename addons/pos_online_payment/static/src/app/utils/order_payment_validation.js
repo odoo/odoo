@@ -2,7 +2,7 @@ import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_valid
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { OnlinePaymentPopup } from "@pos_online_payment/app/components/popups/online_payment_popup/online_payment_popup";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { qrCodeSrc } from "@point_of_sale/utils";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
@@ -19,7 +19,7 @@ patch(OrderPaymentValidation.prototype, {
         for (const line of remainingLines) {
             amount = line.getAmount();
             if (amount <= 0) {
-                this.pos.dialog.add(AlertDialog, {
+                this.pos.dialog.add(PosAlertDialog, {
                     title: _t("Invalid online payment"),
                     body: _t(
                         "Online payments cannot have a negative amount (%s: %s).",
@@ -32,7 +32,7 @@ patch(OrderPaymentValidation.prototype, {
             remainingAmount += amount;
         }
         if (!this.pos.currency.isZero(unpaidAmount - remainingAmount)) {
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Invalid online payments"),
                 body: _t(
                     "The total amount of remaining online payments to execute (%s) doesn't correspond to the remaining unpaid amount of the order (%s).",
@@ -63,9 +63,9 @@ patch(OrderPaymentValidation.prototype, {
         if (onlinePaymentLines.length > 0) {
             if (!this.order.id) {
                 this.cancelOnlinePayment(this.order);
-                this.pos.dialog.add(AlertDialog, {
+                this.pos.dialog.add(PosAlertDialog, {
                     title: _t("Online payment unavailable"),
-                    body: _t("The QR Code for paying could not be generated."),
+                    body: _t("The QR code payment could not be generated."),
                 });
                 return false;
             }
@@ -79,7 +79,7 @@ patch(OrderPaymentValidation.prototype, {
                     onlinePaymentLineAmount
                 );
                 if (!lastOrderServerOPData) {
-                    this.pos.dialog.add(AlertDialog, {
+                    this.pos.dialog.add(PosAlertDialog, {
                         title: _t("Online payment unavailable"),
                         body: _t(
                             "There is a problem with the server. The order online payment status cannot be retrieved."
@@ -90,7 +90,7 @@ patch(OrderPaymentValidation.prototype, {
                 if (!lastOrderServerOPData.isPaid) {
                     if (lastOrderServerOPData.modified_payment_lines) {
                         this.cancelOnlinePayment(this.order);
-                        this.pos.dialog.add(AlertDialog, {
+                        this.pos.dialog.add(PosAlertDialog, {
                             title: _t("Updated online payments"),
                             body: _t("There are online payments that were missing in your view."),
                         });
@@ -171,7 +171,7 @@ patch(OrderPaymentValidation.prototype, {
                 return false; // Cancel normal flow because the current order is already saved on the server.
             }
             if (orderServerOPData.modified_payment_lines) {
-                this.pos.dialog.add(AlertDialog, {
+                this.pos.dialog.add(PosAlertDialog, {
                     title: _t("Updated online payments"),
                     body: _t("There are online payments that were missing in your view."),
                 });
@@ -187,7 +187,7 @@ patch(OrderPaymentValidation.prototype, {
     },
     async afterPaidOrderSavedOnServer(orderJSON) {
         if (!orderJSON) {
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Server error"),
                 body: _t("The saved order could not be retrieved."),
             });
@@ -203,7 +203,7 @@ patch(OrderPaymentValidation.prototype, {
         // be invalid.
         const isInvoiceRequested = this.order.isToInvoice();
         if (!orderJSON[0] || this.order.id !== orderJSON[0].id) {
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Order saving issue"),
                 body: _t("The order has not been saved correctly on the server."),
             });
@@ -222,7 +222,7 @@ patch(OrderPaymentValidation.prototype, {
 
         if (isInvoiceRequested) {
             if (!orderJSON[0].account_move) {
-                this.pos.dialog.add(AlertDialog, {
+                this.pos.dialog.add(PosAlertDialog, {
                     title: _t("Invoice could not be generated"),
                     body: _t("The invoice could not be generated."),
                 });

@@ -1,4 +1,4 @@
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { kanbanView } from "@web/views/kanban/kanban_view";
@@ -86,11 +86,9 @@ export class PosKanbanRenderer extends KanbanRenderer {
             ]);
 
             if (!(isPosManager && isAdmin)) {
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("Access Denied"),
-                    body: _t(
-                        "It seems like you don't have enough rights to create point of sale configurations."
-                    ),
+                    body: _t("It seems like you do not have enough rights to create a shop."),
                 });
                 return;
             }

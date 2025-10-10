@@ -5,7 +5,7 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { debounce } from "@bus/workers/bus_worker_utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
@@ -69,10 +69,10 @@ export class ManageGiftCardPopup extends Component {
             ]);
 
             if (!result.status) {
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("Invalid Gift Card Code"),
                     body: _t(
-                        "This code seems to be invalid, please check the Gift Card code and try again."
+                        "The code is invalid. Ensure that the spelling is right or if the gift card exists."
                     ),
                 });
                 this.state.error = true;

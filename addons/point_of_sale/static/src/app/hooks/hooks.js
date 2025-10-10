@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import {
     useEnv,
@@ -50,7 +51,7 @@ export function useErrorHandlers() {
             });
         } else {
             // ???
-            await dialog.add(AlertDialog, {
+            await dialog.add(PosAlertDialog, {
                 title: _t("Unknown Error"),
                 body: _t("The order could not be sent to the server due to an unknown error"),
             });

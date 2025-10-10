@@ -4,7 +4,7 @@ import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/hooks
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { DatePickerPopup } from "@point_of_sale/app/components/popups/date_picker_popup/date_picker_popup";
@@ -99,7 +99,7 @@ export class PaymentScreen extends Component {
     }
 
     showMaxValueError() {
-        this.dialog.add(AlertDialog, {
+        this.dialog.add(PosAlertDialog, {
             title: _t("Maximum value reached"),
             body: _t(
                 "The amount cannot be higher than the due amount if you don't have a cash payment method configured."
@@ -147,8 +147,8 @@ export class PaymentScreen extends Component {
             );
         }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+            this.dialog.add(PosAlertDialog, {
+                title: _t("Oh snap !"),
                 body: _t("There is already an electronic payment in progress."),
             });
             return;
@@ -171,8 +171,8 @@ export class PaymentScreen extends Component {
             }
             return true;
         } else {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+            this.dialog.add(PosAlertDialog, {
+                title: _t("Oh snap !"),
                 body: _t("There is already an electronic payment in progress."),
             });
             return false;

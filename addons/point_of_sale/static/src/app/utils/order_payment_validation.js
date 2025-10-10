@@ -1,4 +1,5 @@
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
@@ -167,10 +168,10 @@ export default class OrderPaymentValidation {
                         this.order.raw.account_move
                     );
                 } else {
-                    this.pos.dialog.add(AlertDialog, {
+                    this.pos.dialog.add(PosAlertDialog, {
                         title: _t("Backend Invoice"),
                         body: _t(
-                            "An error occurred while generating an invoice. You can try again from the order list."
+                            "An error occurred while trying to generate an invoice. Try again from the order tab or generate the invoice from the backend."
                         ),
                     });
                 }
@@ -191,7 +192,7 @@ export default class OrderPaymentValidation {
     async postPushOrderResolve(ordersServerId) {
         const postPushResult = await this.beforePostPushOrderResolve(this.order, ordersServerId);
         if (!postPushResult) {
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Error: no internet connection."),
                 body: _t("Some, if not all, post-processing after syncing order failed."),
             });
@@ -254,7 +255,7 @@ export default class OrderPaymentValidation {
                 continue;
             }
 
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Rounding error in payment lines"),
                 body: _t(
                     "The amount of your payment lines must be rounded to validate the transaction.\n" +
@@ -279,7 +280,7 @@ export default class OrderPaymentValidation {
         }
 
         if (this.order.getOrderlines().length === 0 && this.order.isToInvoice()) {
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Empty Order"),
                 body: _t(
                     "There must be at least one product in your order before it can be validated and invoiced."
@@ -309,7 +310,7 @@ export default class OrderPaymentValidation {
             this.order.getShippingDate() &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: _t("Incorrect address for shipping"),
                 body: _t("The selected customer needs an address."),
             });
@@ -318,7 +319,7 @@ export default class OrderPaymentValidation {
 
         if (!this.order.presetRequirementsFilled) {
             const { field, message } = this.order.uiState.requiredPartnerDetails || {};
-            this.pos.dialog.add(AlertDialog, {
+            this.pos.dialog.add(PosAlertDialog, {
                 title: field ? _t("%s required", field) : _t("Missing required"),
                 body: message || _t("Some required information is missing."),
             });
@@ -346,10 +347,10 @@ export default class OrderPaymentValidation {
             ) > 0.00001
         ) {
             if (!this.pos.models["pos.payment.method"].some((pm) => pm.is_cash_count)) {
-                this.pos.dialog.add(AlertDialog, {
+                this.pos.dialog.add(PosAlertDialog, {
                     title: _t("Cannot return change without a cash payment method"),
                     body: _t(
-                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration"
+                        "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale settings."
                     ),
                 });
                 return false;

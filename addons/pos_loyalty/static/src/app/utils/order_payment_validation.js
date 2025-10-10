@@ -1,7 +1,7 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { omit } from "@web/core/utils/objects";
 
 patch(OrderPaymentValidation.prototype, {
@@ -53,7 +53,7 @@ patch(OrderPaymentValidation.prototype, {
                     }
                 }
                 if (!successful) {
-                    this.pos.dialog.add(AlertDialog, {
+                    this.pos.dialog.add(PosAlertDialog, {
                         title: _t("Error validating rewards"),
                         body: payload.message,
                     });

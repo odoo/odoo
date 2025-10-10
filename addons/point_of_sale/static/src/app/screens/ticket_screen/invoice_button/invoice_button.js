@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -52,7 +52,7 @@ export class InvoiceButton extends Component {
                 throw error;
             } else {
                 // NOTE: error here is most probably undefined
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("Network Error"),
                     body: _t("Unable to download invoice."),
                 });

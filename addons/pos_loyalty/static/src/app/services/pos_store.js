@@ -2,7 +2,7 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
@@ -619,7 +619,7 @@ patch(PosStore.prototype, {
             }
             const index = this.models["loyalty.reward"].indexOf(reward);
             if (index != -1) {
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("A reward could not be loaded"),
                     body: _t(
                         'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client',

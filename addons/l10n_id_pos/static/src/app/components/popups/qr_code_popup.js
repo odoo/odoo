@@ -1,6 +1,6 @@
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { patch } from "@web/core/utils/patch";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
@@ -24,7 +24,7 @@ patch(QRPopup.prototype, {
                 pm_line.pos_order_id.uuid,
             ]);
         } catch {
-            this.env.services.dialog.add(AlertDialog, {
+            this.env.services.dialog.add(PosAlertDialog, {
                 title: _t("Failure"),
                 body: _t("Failure to verify QRIS payment status"),
             });
@@ -33,7 +33,7 @@ patch(QRPopup.prototype, {
         }
 
         if (!result) {
-            this.env.services.dialog.add(AlertDialog, {
+            this.env.services.dialog.add(PosAlertDialog, {
                 title: _t("Payment Status Update"),
                 body: _t("Payment Status returns unpaid"),
             });

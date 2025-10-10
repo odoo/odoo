@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { registry } from "@web/core/registry";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const { DateTime } = luxon;
@@ -352,7 +352,7 @@ export class PaymentAdyen extends PaymentInterface {
         if (!title) {
             title = _t("Adyen Error");
         }
-        this.env.services.dialog.add(AlertDialog, {
+        this.env.services.dialog.add(PosAlertDialog, {
             title: title,
             body: msg,
         });

@@ -6,7 +6,7 @@ import { ProductCard } from "@point_of_sale/app/components/product_card/product_
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 
 const { DateTime } = luxon;
 
@@ -63,8 +63,8 @@ export class EventConfiguratorPopup extends Component {
                 const available = this.ticketIsAvailable(ticket);
 
                 if (!available) {
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Error"),
+                    this.dialog.add(PosAlertDialog, {
+                        title: _t("Oh snap !"),
                         body: _t(
                             "The selected ticket (%s) is not available. Please select a different ticket.",
                             [ticket.name]

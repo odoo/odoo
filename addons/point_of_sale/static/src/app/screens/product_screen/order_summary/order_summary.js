@@ -2,7 +2,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
@@ -71,7 +71,7 @@ export class OrderSummary extends Component {
             );
             const prep = JSON.parse(preparation_data.last_order_preparation_change || "{}");
             if (prep.lines && Object.keys(prep.lines).some((l) => l === orderline.uuid)) {
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("Cannot edit orderline"),
                     body: _t(
                         "This orderline has already been sent to the kitchen and cannot be edited."
@@ -172,7 +172,7 @@ export class OrderSummary extends Component {
             if (key === "Backspace") {
                 this._setValue("remove");
             } else {
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("Cannot modify a tip"),
                     body: _t("Customer tips, cannot be modified directly"),
                 });
@@ -245,7 +245,7 @@ export class OrderSummary extends Component {
                         line.setQuantity(val, true);
                     }
                     if (result !== true) {
-                        this.dialog.add(AlertDialog, result);
+                        this.dialog.add(PosAlertDialog, result);
                         this.numberBuffer.reset();
                     }
                 }

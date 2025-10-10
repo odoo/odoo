@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 export const posPrinterService = {
@@ -31,7 +31,7 @@ export class PosPrinterService extends PrinterService {
         try {
             return super.printWeb(...arguments);
         } catch {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Printing is not supported on some browsers"),
                 body: _t("It is possible to print your tickets by making use of an IoT Box."),
             });

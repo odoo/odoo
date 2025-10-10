@@ -4,7 +4,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw, reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import {
     deduceUrl,
     random5Chars,
@@ -359,15 +359,15 @@ export class PosStore extends WithLazyGetterTrap {
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
 
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Closing Session"),
                 body: _t("The session is being closed by another user. The page will be reloaded."),
             });
         } catch {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+            this.dialog.add(PosAlertDialog, {
+                title: _t("Oh snap !"),
                 body: _t(
-                    "An error occurred while closing the session. Unsynced orders will be available in the next session. The page will be reloaded."
+                    "An error occurred while closing the session. But don't worry, unsynced orders will be available in the next session.\nThe page will now, be reloaded."
                 ),
             });
         } finally {
@@ -828,7 +828,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         // Handle refund constraints
         if (order.isSaleDisallowed(values, options)) {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Oops.."),
                 body: _t("Ensure you validate the refund before taking another order."),
             });
@@ -1774,7 +1774,7 @@ export class PosStore extends WithLazyGetterTrap {
         ).toUTC();
 
         if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Order Outdated"),
                 body: _t(
                     "The order has been modified on another device. If you have modified existing " +
@@ -2140,7 +2140,7 @@ export class PosStore extends WithLazyGetterTrap {
         ]);
 
         if (!(isPosManager && isAdmin)) {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Access Denied"),
                 body: _t("It seems like you don't have enough rights to load data."),
             });
@@ -2293,7 +2293,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
         const currentPartner = currentOrder.getPartner();
         if (currentPartner && currentOrder.getHasRefundLines()) {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Can't change customer"),
                 body: _t(
                     "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer.",
@@ -2322,7 +2322,7 @@ export class PosStore extends WithLazyGetterTrap {
                 product.id,
             ]);
             if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
-                this.dialog.add(AlertDialog, {
+                this.dialog.add(PosAlertDialog, {
                     title: _t("No existing serial/lot number"),
                     body: _t(
                         "There is no serial/lot number for the selected product, and their creation is not allowed from the Point of Sale app."
@@ -2521,7 +2521,7 @@ export class PosStore extends WithLazyGetterTrap {
                 } else {
                     message = error.data.message;
                 }
-                this.env.services.dialog.add(AlertDialog, {
+                this.env.services.dialog.add(PosAlertDialog, {
                     title: _t("Failure to generate Payment QR Code"),
                     body: message,
                 });
