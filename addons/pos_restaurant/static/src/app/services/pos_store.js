@@ -198,7 +198,7 @@ patch(PosStore.prototype, {
         }
 
         await this.deleteOrders([sourceOrder], [], true);
-        this.syncAllOrders({ orders: [destOrder] });
+        await this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
     mergeCourses(sourceOrder, destOrder) {
@@ -784,6 +784,7 @@ patch(PosStore.prototype, {
         }
 
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
+        const sourceOrderId = sourceOrder.id;
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
@@ -792,8 +793,11 @@ patch(PosStore.prototype, {
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         }
-        await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
+        await this.mergeOrders(sourceOrder, destinationOrder);
         if (destinationTable) {
+            if (typeof sourceOrderId === "number") {
+                this.data.write("pos.order", [sourceOrderId], { table_id: destinationTable.id });
+            }
             await this.setTable(destinationTable);
         }
     },
@@ -807,7 +811,9 @@ patch(PosStore.prototype, {
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
-        await this.setTable(destinationTable);
+
+        const rootParentTable = destinationTable.getParent();
+        await this.setTable(rootParentTable);
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
