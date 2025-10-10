@@ -175,9 +175,10 @@ class Cart(PaymentPortal):
                     # Return empty notification since cart update is considered as failed
                     return {
                         'cart_quantity': order_sudo.cart_quantity,
-                        'notification_info': {
-                            'warning': product_values.get('warning', ''),
-                        },
+                        'notifications': [{
+                            'type': 'warning',
+                            'warningMessage': product_values.get('warning', ''),
+                        }],
                         'quantity': 0,
                         'tracking_info': [],
                     }
@@ -206,14 +207,22 @@ class Cart(PaymentPortal):
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
 
+        notifications = [{
+            'type': 'itemAdded',
+            **self._get_cart_notification_information(
+                order_sudo, added_qty_per_line
+            ),
+        }]
+
+        if warning:
+            notifications.append({
+            'type': 'warning',
+            'warningMessage': warning,
+        })
+
         return {
             'cart_quantity': order_sudo.cart_quantity,
-            'notification_info': {
-                **self._get_cart_notification_information(
-                    order_sudo, added_qty_per_line
-                ),
-                'warning': warning,
-            },
+            'notifications': notifications,
             'quantity': values.pop('quantity', 0),
             'tracking_info': self._get_tracking_information(order_sudo, line_ids.values()),
         }
@@ -424,14 +433,14 @@ class Cart(PaymentPortal):
         :rtype: dict
         :return: A dict with the following structure:
             {
-                'currency_id': int
+                'currencyId': int
                 'lines': [{
                     'id': int
-                    'image_url': int
+                    'imageSrc': int
                     'quantity': float
                     'name': str
                     'description': str
-                    'added_qty_price_total': float
+                    'priceTotal': float
                 }],
             }
         """
@@ -440,16 +449,16 @@ class Cart(PaymentPortal):
             return {}
 
         return {
-            'currency_id': order.currency_id.id,
+            'currencyId': order.currency_id.id,
             'lines': [
-                { # For the cart_notification
+                {
                     'id': line.id,
-                    'image_url': order.website_id.image_url(line.product_id, 'image_128'),
+                    'imageSrc': order.website_id.image_url(line.product_id, 'image_128'),
                     'quantity': added_qty_per_line[line.id],
                     'name': line._get_line_header(),
-                    'combination_name': line._get_combination_name(),
+                    'combinationName': line._get_combination_name(),
                     'description': line._get_sale_order_line_multiline_description_variants(),
-                    'price_total': line.price_unit * added_qty_per_line[line.id],
+                    'priceTotal': line.price_unit * added_qty_per_line[line.id],
                     **self._get_additional_cart_notification_information(line),
                 } for line in lines
             ],
@@ -493,7 +502,7 @@ class Cart(PaymentPortal):
         infos = {}
         # Only set the linked line id for combo items, not for optional products.
         if combo_item := line.combo_item_id:
-            infos['linked_line_id'] = line.linked_line_id.id
+            infos['linkedLineId'] = line.linked_line_id.id
             # To sell a product type 'combo', one doesn't need to publish all combo choices. This
             # causes an issue when public users access the image of each choice via the /web/image
             # route. To bypass this access check, we send the raw image URL if the product is
@@ -502,9 +511,9 @@ class Cart(PaymentPortal):
                 not combo_item.product_id.sudo(False).has_access('read')
                 and combo_item.product_id.image_128
             ):
-                infos['image_url'] = image_data_uri(combo_item.product_id.image_128)
+                infos['imageSrc'] = image_data_uri(combo_item.product_id.image_128)
 
         if line.product_template_id._has_multiple_uoms():
-            infos['uom_name'] = line.product_uom_id.name
+            infos['uomName'] = line.product_uom_id.name
 
         return infos
