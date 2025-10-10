@@ -274,9 +274,10 @@ export class SurveyForm extends Interaction {
 
         // Update survey button to "continue" if the current page/question is the last (without accounting for
         // its own conditional questions) but a selected answer is triggering a conditional question on a next page.
-        const surveyLastTriggeringAnswers = this.el.querySelector(".o_survey_form_content_data")
-            .dataset.surveyLastTriggeringAnswers;
-        if (surveyLastTriggeringAnswers) {
+        const surveyLastTriggeringAnswers = JSON.parse(
+            this.el.querySelector(".o_survey_form_content_data").dataset.surveyLastTriggeringAnswers || "[]"
+        );
+        if (surveyLastTriggeringAnswers.length) {
             const currentSelectedAnswers = Array.from(
                 this.el.querySelectorAll(`
                 .o_survey_form_choice[data-question-type='simple_choice_radio'] input:checked,
@@ -284,6 +285,9 @@ export class SurveyForm extends Interaction {
             `)
             ).map((input) => parseInt(input.value));
             const submitButton = this.el.querySelector("button[type=submit]");
+            const navSubmitButton = document.querySelector(
+                '.o_survey_navigation_submit[value="next"], .o_survey_navigation_submit[value="finish"]'
+            );
             if (
                 currentSelectedAnswers.some((answerId) =>
                     surveyLastTriggeringAnswers.includes(answerId)
@@ -293,11 +297,19 @@ export class SurveyForm extends Interaction {
                 submitButton.value = "next";
                 submitButton.textContent = _t("Continue");
                 submitButton.classList.replace("btn-secondary", "btn-primary");
+                if (navSubmitButton) {
+                    navSubmitButton.value = "next";
+                    navSubmitButton.replaceChildren(navSubmitButton.querySelector("i"));
+                }
             } else {
                 // change to submit
                 submitButton.value = "finish";
                 submitButton.textContent = _t("Submit");
                 submitButton.classList.replace("btn-primary", "btn-secondary");
+                if (navSubmitButton) {
+                    navSubmitButton.value = "finish";
+                    navSubmitButton.replaceChildren(document.createTextNode(_t("Submit")), navSubmitButton.querySelector("i"));
+                }
             }
         }
         this.applyCommentAreaVisibility(questionEl);
