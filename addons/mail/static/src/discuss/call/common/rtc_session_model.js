@@ -54,7 +54,17 @@ export class RtcSession extends Record {
     /** @type {boolean} */
     is_camera_on;
     /** @type {boolean} */
-    is_screen_sharing_on;
+    is_screen_sharing_on = fields.Attr(undefined, {
+        onUpdate() {
+            if (
+                this.eq(this.channel?.activeRtcSession) &&
+                this.mainVideoStreamType === "screen" &&
+                !this.is_screen_sharing_on
+            ) {
+                this.channel.activeRtcSession = undefined;
+            }
+        },
+    });
     /** @type {number} */
     id;
     /** @type {boolean} */
