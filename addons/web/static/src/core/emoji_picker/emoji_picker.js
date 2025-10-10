@@ -571,6 +571,8 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     env: component.env,
                     props: pickerMobileProps,
                     getTemplate,
+                    translatableAttributes: ["data-tooltip"],
+                    translateFn: _t,
                 });
                 app.mount(ref.el);
                 remove = () => {
