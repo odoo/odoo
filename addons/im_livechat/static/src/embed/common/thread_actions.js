@@ -19,9 +19,9 @@ registerThreadAction("restart", {
 
 const callSettingsAction = threadActionsRegistry.get("call-settings");
 patch(callSettingsAction, {
-    condition({ store, thread }) {
-        return thread?.channel?.channel_type === "livechat"
-            ? store.rtc.state.channel?.eq(thread)
+    condition({ channel, store }) {
+        return channel?.channel_type === "livechat"
+            ? store.rtc.state.channel?.eq(channel.thread)
             : super.condition(...arguments);
     },
 });

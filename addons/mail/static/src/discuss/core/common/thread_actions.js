@@ -24,10 +24,8 @@ class ChannelActionDialog extends Component {
 
 registerThreadAction("notification-settings", {
     actionPanelComponent: NotificationSettings,
-    condition: ({ owner, store, thread }) =>
-        thread?.model === "discuss.channel" &&
-        store.self_partner &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+    condition: ({ channel, owner, store }) =>
+        channel && store.self_partner && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     setup({ owner }) {
         if (!owner.props.chatWindow) {
             this.popover = usePopover(NotificationSettings, {
@@ -53,8 +51,8 @@ registerThreadAction("notification-settings", {
         }
     },
     close: ({ action }) => action.popover?.close(),
-    icon: ({ thread }) =>
-        thread.self_member_id?.mute_until_dt
+    icon: ({ channel }) =>
+        channel.self_member_id?.mute_until_dt
             ? "fa fa-fw text-danger fa-bell-slash"
             : "fa fa-fw fa-bell",
     name: _t("Notification Settings"),
@@ -79,9 +77,8 @@ registerThreadAction("invite-people", {
     actionPanelComponent: ChannelInvitation,
     actionPanelComponentProps: ({ action }) => ({ close: () => action.close() }),
     close: ({ action }) => action.popover?.close(),
-    condition: ({ owner, thread }) =>
-        thread?.model === "discuss.channel" &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+    condition: ({ channel, owner }) =>
+        channel && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     panelOuterClass: ({ owner }) =>
         `o-discuss-ChannelInvitation ${
             owner.props.chatWindow ? "bg-inherit" : ""
@@ -149,10 +146,10 @@ registerThreadAction("member-list", {
     toggle: true,
 });
 registerThreadAction("mark-read", {
-    condition: ({ owner, thread }) =>
-        thread?.self_member_id &&
-        thread.self_member_id.message_unread_counter > 0 &&
-        !thread.self_member_id.mute_until_dt &&
+    condition: ({ channel, owner }) =>
+        channel?.self_member_id &&
+        channel.self_member_id.message_unread_counter > 0 &&
+        !channel.self_member_id.mute_until_dt &&
         owner.isDiscussSidebarChannelActions,
     open: ({ owner }) => owner.thread.markAsRead(),
     icon: "fa fa-fw fa-check",
@@ -178,7 +175,7 @@ registerThreadAction("delete-thread", {
     name: _t("Delete Thread"),
     close: ({ action }) => action.popover?.close(),
     toggle: true,
-    open: ({ action, owner, store, thread }) => {
+    open: ({ owner, store, thread }) => {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
                 title: thread.name,

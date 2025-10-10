@@ -7,8 +7,8 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,
-    condition: ({ owner, thread }) =>
-        thread?.model === "discuss.channel" &&
+    condition: ({ channel, owner }) =>
+        channel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
