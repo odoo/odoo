@@ -86,10 +86,12 @@ FIELD_TRANSLATE = {
 }
 
 
-def is_translatable_attrib(key):
+def is_translatable_attrib(key, node):
     if not key:
         return False
-    return key in TRANSLATED_ATTRS or key.endswith('.translate')
+    if 't-call' not in node.attrib and key in TRANSLATED_ATTRS:
+        return True
+    return key.endswith('.translate')
 
 def is_translatable_attrib_value(node):
     # check if the value attribute of a node must be translated
@@ -176,7 +178,7 @@ def translate_xml_node(node, callback, parse, serialize):
                 and (
                     any(  # attribute to translate
                         val and (
-                            is_translatable_attrib(key) or
+                            is_translatable_attrib(key, node) or
                             (key == 'value' and is_translatable_attrib_value(node[pos])) or
                             (key == 'text' and is_translatable_attrib_text(node[pos]))
                         )
@@ -196,7 +198,7 @@ def translate_xml_node(node, callback, parse, serialize):
             isinstance(node, SKIPPED_ELEMENT_TYPES)
             or node.tag in SKIPPED_ELEMENTS
             or node.get('t-translation', "").strip() == "off"
-            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'))
+            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'), node)
             or node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
             return
@@ -246,7 +248,7 @@ def translate_xml_node(node, callback, parse, serialize):
         for key, val in node.attrib.items():
             if nonspace(val):
                 if (
-                    is_translatable_attrib(key) or
+                    is_translatable_attrib(key, node) or
                     (key == 'value' and is_translatable_attrib_value(node)) or
                     (key == 'text' and is_translatable_attrib_text(node))
                 ):
@@ -1069,7 +1071,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name')))
+                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name'), el))
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
