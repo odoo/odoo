@@ -3,7 +3,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 from odoo.tools.float_utils import float_repr
-from odoo.tools import groupby
+from odoo.tools import json_default, groupby
 
 from collections import defaultdict
 from markupsafe import Markup, escape
@@ -365,9 +365,9 @@ class AccountAutomaticEntryWizard(models.TransientModel):
                 if any(line.account_id.account_type != record.move_line_ids[0].account_id.account_type for line in record.move_line_ids):
                     raise UserError(_('All accounts on the lines must be of the same type.'))
             if record.action == 'change_period':
-                record.move_data = json.dumps(record._get_move_dict_vals_change_period())
+                record.move_data = json.dumps(record._get_move_dict_vals_change_period(), default=json_default)
             elif record.action == 'change_account':
-                record.move_data = json.dumps(record._get_move_dict_vals_change_account())
+                record.move_data = json.dumps(record._get_move_dict_vals_change_account(), default=json_default)
 
     @api.depends('move_data')
     def _compute_preview_move_data(self):
