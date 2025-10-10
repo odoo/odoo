@@ -91,7 +91,7 @@ export class Call extends Component {
     }
 
     get isActiveCall() {
-        return Boolean(this.channel.eq(this.rtc.channel));
+        return Boolean(this.channel.channel?.eq(this.rtc.channel));
     }
 
     get minimized() {
@@ -105,7 +105,7 @@ export class Call extends Component {
     }
 
     get channel() {
-        return this.props.thread || this.rtc.channel;
+        return this.props.thread || this.rtc.channel?.thread;
     }
 
     /** @returns {CardData[]} */

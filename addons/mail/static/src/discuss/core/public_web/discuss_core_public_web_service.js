@@ -14,7 +14,6 @@ export class DiscussCorePublicWeb {
         this.store = services["mail.store"];
         this.busService = services.bus_service;
         this.notificationService = services.notification;
-        this.rtcService = services["discuss.rtc"];
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
                 "discuss_core_public_web.sidebar_categories"
@@ -50,18 +49,19 @@ export class DiscussCorePublicWeb {
             "message",
             async ({ data: { action, data } }) => {
                 if (action === "OPEN_CHANNEL") {
-                    const channel = await this.store["mail.thread"].getOrFetch({
+                    const thread = await this.store["mail.thread"].getOrFetch({
                         model: "discuss.channel",
                         id: data.id,
                     });
+                    const channel = thread?.channel;
                     channel?.open({ focus: true });
-                    if (!data.joinCall || !channel || this.rtcService.state.channel?.eq(channel)) {
+                    if (!data.joinCall || !channel || this.store.rtc.state.channel?.eq(channel)) {
                         return;
                     }
-                    if (this.rtcService.state.channel) {
-                        await this.rtcService.leaveCall();
+                    if (this.store.rtc.state.channel) {
+                        await this.store.rtc.leaveCall();
                     }
-                    this.rtcService.joinCall(channel);
+                    this.store.rtc.joinCall(channel.thread);
                 } else if (action === "POST_RTC_LOGS") {
                     const logs = data || {};
                     logs.odooInfo = odoo.info;

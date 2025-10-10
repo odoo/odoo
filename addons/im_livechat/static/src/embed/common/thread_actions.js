@@ -21,7 +21,7 @@ const callSettingsAction = threadActionsRegistry.get("call-settings");
 patch(callSettingsAction, {
     condition({ channel, store }) {
         return channel?.channel_type === "livechat"
-            ? store.rtc.state.channel?.eq(channel.thread)
+            ? store.rtc.state.channel?.eq(channel)
             : super.condition(...arguments);
     },
 });
