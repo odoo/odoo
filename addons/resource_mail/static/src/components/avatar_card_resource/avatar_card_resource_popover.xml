@@ -11,7 +11,7 @@
                 <i t-elif="record.im_status === 'busy'" class="fa fa-fw fa-minus-circle text-danger" title="Busy" role="img" aria-label="User is busy"/>
                 <i t-elif="record.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
                 <i t-elif="record.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
-                <i t-elif="!record.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+                <i t-elif="record.im_status === 'archived' or !record.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
             </span>
         </xpath>
         <xpath expr="//div[hasclass('o_avatar_card_buttons')]/button" position="attributes">
