@@ -89,6 +89,7 @@ class RegistrationEditorLine(models.TransientModel):
             'name': self.name or self.editor_id.sale_order_id.partner_id.name,
             'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone or self.editor_id.sale_order_id.partner_id.mobile,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
+            'state': 'open',
         }
         if include_event_values:
             registration_data.update({

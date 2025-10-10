@@ -36,6 +36,10 @@ class SaleOrderLine(models.Model):
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id,
                 }
+                # When confirming in backend a single order, keep registrations in draft
+                # to allow to enter attendee details before the confirmation and possible emails
+                if len(self.order_id) == 1:
+                    values['state'] = 'draft'
                 registrations_vals.append(values)
 
         if registrations_vals:
