@@ -228,6 +228,17 @@ class TestStructure(TransactionCase):
         with self.assertRaisesRegex(ValidationError, msg):
             test_partner.write({'vat': '152-0000706-99'})
 
+    def test_vat_notEU_with_EU_vat(self):
+        test_partner = self.env["res.partner"].create({"name": "CN Company", "country_id": self.env.ref("base.cn").id})
+        # Valid Chinese or French (European Vat)
+        test_partner.write({"vat": "123456789012345678"})
+        test_partner.write({"vat": "FR17698800935"})
+        # Test australian VAT (should raise a ValidationError)
+        with self.assertRaises(ValidationError):
+            test_partner.write({"vat": "83914571673"})
+        test_partner.write({"vat": "BE0477.47.27.01"})
+        self.assertEqual(test_partner.vat, 'BE0477472701')
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
