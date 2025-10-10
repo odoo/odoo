@@ -18,6 +18,10 @@
                     <field name="l10n_sa_edi_additional_identification_scheme" invisible="country_code != 'SA'"/>
                     <field name="l10n_sa_edi_additional_identification_number" invisible="country_code != 'SA' or l10n_sa_edi_additional_identification_scheme == 'TIN'"/>
                 </xpath>
+                <xpath expr="//field[@name='street2']" position="replace">
+                    <field name="street2" placeholder="District" class="o_address_street" invisible="country_code != 'SA'"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street" invisible="country_code == 'SA'"/>
+                </xpath>
             </field>
         </record>
     </data>
