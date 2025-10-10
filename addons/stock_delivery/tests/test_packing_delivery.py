@@ -256,14 +256,14 @@ class TestPacking(TestPackingCommon):
         ml_1.copy({'picking_id': delivery_2.id, 'quantity': 1})
         # recreate the `action_put_in_pack`` steps so we don't have to add test to new module for batch pickings
         # to use batch version of method (which bypass the ensure_one() check in the stock_picking action)
-        move_lines_to_pack = (delivery_1 | delivery_2).move_line_ids._to_pack()
+        move_lines_to_pack, __ = (delivery_1 | delivery_2).move_line_ids._get_lines_and_packages_to_pack()
         self.assertEqual(len(move_lines_to_pack), 2, 'There should be move lines that can be "put in pack"')
         with self.assertRaises(UserError):
             move_lines_to_pack._pre_put_in_pack_hook()
 
         # Test that same carrier + put in pack = OK!
         delivery_2.carrier_id = delivery_1.carrier_id
-        move_lines_to_pack = (delivery_1 | delivery_2).move_line_ids._to_pack()
+        move_lines_to_pack, __ = (delivery_1 | delivery_2).move_line_ids._get_lines_and_packages_to_pack()
         self.assertEqual(len(move_lines_to_pack), 2, 'There should be move lines that can be "put in pack"')
         move_lines_to_pack._pre_put_in_pack_hook()
         package = move_lines_to_pack._put_in_pack()
