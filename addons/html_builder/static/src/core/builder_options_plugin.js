@@ -191,12 +191,14 @@ export class BuilderOptionsPlugin extends Plugin {
         const mapElementsToOptions = (options) => {
             const map = new Map();
             for (const option of options) {
-                const { selector, exclude, editableOnly } = option;
+                const { selector, exclude, editableOnly, isTranslationOption } = option;
                 let elements = getClosestElements(target, selector);
                 if (!elements.length) {
                     continue;
                 }
-                elements = elements.filter((el) => checkElement(el, { exclude, editableOnly }));
+                elements = elements.filter((el) =>
+                    checkElement(el, { exclude, editableOnly, isTranslationOption })
+                );
 
                 for (const element of elements) {
                     if (map.has(element)) {
@@ -474,9 +476,12 @@ function getClosestElements(element, selector) {
  * @param {String} exclude
  * @returns {Boolean}
  */
-export function checkElement(el, { editableOnly = true, exclude = "" }) {
+export function checkElement(
+    el,
+    { editableOnly = true, exclude = "", isTranslationOption = false }
+) {
     // Unless specified otherwise, the element should be in an editable.
-    if (editableOnly && !el.closest(".o_editable")) {
+    if (editableOnly && !el.closest(".o_editable") && !isTranslationOption) {
         return false;
     }
     // Check that the element is not to be excluded.

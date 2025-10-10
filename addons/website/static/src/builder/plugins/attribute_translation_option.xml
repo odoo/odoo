@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TranslateAttributeOption">
+    <t t-foreach="state.availableAttributes" t-as="attribute" t-key="attribute_index">
+        <BuilderRow label="attribute.name"
+                    tooltip="attribute.tooltip">
+            <BuilderTextInput
+                action="'translateAttribute'"
+                actionParam="attribute.attribute"
+                placeholder="attribute.placeholder"/>
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

@@ -20,7 +20,7 @@ export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
     "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
 
-class ImageToolOptionPlugin extends Plugin {
+export class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
         "history",

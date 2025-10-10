@@ -1,5 +1,4 @@
 import { Builder } from "@html_builder/builder";
-import { BuilderOptionsTranslationPlugin } from "@html_builder/core/builder_options_plugin_translate";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugin_translation";
 import { OperationPlugin } from "@html_builder/core/operation_plugin";
@@ -26,24 +25,20 @@ import { BuilderComponentPlugin } from "@html_builder/core/builder_component_plu
 import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
 import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
 import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
-import { OverlayButtonsPlugin } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
-import { DropZonePlugin } from "@html_builder/core/drop_zone_plugin";
-import { DropZoneSelectorPlugin } from "@html_builder/core/dropzone_selector_plugin";
-import { CustomizeTabPlugin } from "@html_builder/core/customize_tab_plugin";
-import { BuilderOverlayPlugin } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
 import { WebsiteSetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { TranslateTableOfContentOptionPlugin } from "./plugins/options/table_of_content_option_plugin_translate";
 import { FieldChangeReplicationPlugin } from "@html_builder/core/field_change_replication_plugin";
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
+import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
+import { ImageShapeOptionPlugin } from "@html_builder/plugins/image/image_shape_option_plugin";
+import { ImageToolOptionPlugin } from "@html_builder/plugins/image/image_tool_option_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
-import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
-import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 
 const TRANSLATION_PLUGINS = [
-    BuilderOptionsTranslationPlugin,
+    BuilderOptionsPlugin,
     BuilderActionsPlugin,
     BuilderComponentPlugin,
     CoreBuilderActionPlugin,
@@ -68,7 +63,8 @@ const TRANSLATION_PLUGINS = [
     ImageFieldPlugin,
     MonetaryFieldPlugin,
     Many2OneOptionPlugin,
-    CustomizeTranslationTabPlugin,
+    ImageShapeOptionPlugin,
+    ImageToolOptionPlugin,
 ];
 
 export class WebsiteBuilder extends Component {
@@ -152,7 +148,7 @@ export class WebsiteBuilder extends Component {
     get builderProps() {
         const builderProps = Object.assign({}, this.props.builderProps);
         const websitePlugins = this.props.translation
-            ? TRANSLATION_PLUGINS
+            ? [...TRANSLATION_PLUGINS, ...registry.category("translation-plugins").getAll()]
             : [
                   ...registry.category("builder-plugins").getAll(),
                   ...registry.category("website-plugins").getAll(),
@@ -175,16 +171,7 @@ export class WebsiteBuilder extends Component {
             ? [...builderPluginsToRemove, ...pluginsBlockedInTranslationMode]
             : builderPluginsToRemove;
         const coreBuilderPlugins = removePlugins(
-            this.props.translation
-                ? [
-                      ...MAIN_PLUGINS,
-                      BuilderOverlayPlugin,
-                      OverlayButtonsPlugin,
-                      DropZonePlugin,
-                      DropZoneSelectorPlugin,
-                      CustomizeTabPlugin,
-                  ]
-                : CORE_PLUGINS,
+            this.props.translation ? MAIN_PLUGINS : CORE_PLUGINS,
             pluginsToRemove
         );
         const Plugins = [...coreBuilderPlugins, ...(websitePlugins || [])];
@@ -210,7 +197,6 @@ export class WebsiteBuilder extends Component {
             };
         };
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
-        builderProps.getCustomizeTranslationTab = () => CustomizeTranslationTab;
         const installSnippetModule = builderProps.installSnippetModule;
         builderProps.installSnippetModule = (snippet) =>
             installSnippetModule(snippet, this.save.bind(this));
