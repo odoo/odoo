@@ -536,11 +536,13 @@
                                     />
                                 </h6>
                                 <button
-                                    class="js_add_suggested_products btn btn-primary text-nowrap"
+                                    name="add_to_cart"
+                                    class="btn btn-primary text-nowrap"
+                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                     t-att-data-product-id="product.id"
                                     t-att-data-product-template-id="product.product_tmpl_id.id"
                                     t-att-data-product-type="product.type"
-                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                    data-action="buy_now"
                                 >
                                     <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
                                     <span class="d-none d-md-inline">Add to cart</span>

@@ -215,7 +215,7 @@
             <t t-set="additional_title">Shop Comparator</t>
             <div id="wrap" class="js_sale o_wsale_comparison_page">
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
-                <div t-attf-class="oe_website_sale o_wsale_comparison_page pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
+                <div t-attf-class="oe_website_sale pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                     <h1 class="h4 mt-4 mb-3">Compare Products</h1>
 
                     <!-- Mini sticky product overview (initially hidden) -->
@@ -365,11 +365,13 @@
                                             </a>
                                             <button
                                                 t-else=""
-                                                name="comparison_add_to_cart"
+                                                name="add_to_cart"
                                                 class="btn btn-primary"
-                                                t-att-data-product-product-id="product.id"
-                                                t-att-data-product-template-id="product.product_tmpl_id.id"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                t-att-data-product-id="product.id"
+                                                t-att-data-product-template-id="product.product_tmpl_id.id"
+                                                t-att-data-product-type="product.product_tmpl_id.type"
+                                                t-att-data-ptav-ids="json.dumps(product.product_template_attribute_value_ids.ids)"
                                             >
                                                 <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>Add to Cart
                                             </button>

@@ -25,8 +25,6 @@
                     t-att-aria-label="product.display_name"
                     t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
                 >
-                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
-
                     <!-- Image -->
                     <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
                         <a
@@ -101,14 +99,14 @@
                                 <div class="o_wsale_product_action_row">
                                     <t t-if="product._website_show_quick_add()">
                                         <button
-                                            type="button"
-                                            class="o_wsale_product_btn_primary btn js_add_cart"
+                                            name="add_to_cart"
+                                            class="o_wsale_product_btn_primary btn"
                                             title="Add to Cart"
+                                            t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                             t-att-data-product-id="product.id if product.is_product_variant else product.product_variant_id.id"
                                             t-att-data-product-selected="product.is_product_variant"
                                             t-att-data-product-template-id="product.id if not product.is_product_variant else product.product_tmpl_id.id"
                                             t-att-data-product-type="product.type"
-                                            t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                         >
                                             <!-- Avoid whitespaces undesired gaps -->
                                             <i class="fa fa-shopping-cart fa-fw" role="presentation"/><span class="o_label small ms-1">Add to Cart</span>

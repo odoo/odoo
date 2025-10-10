@@ -3,27 +3,28 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { redirect } from '@web/core/utils/urls';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
 import {
     ProductComparisonBottomBar
 } from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
-export class ProductComparison extends Interaction {
-    static selector = '.js_sale:not(.o_wsale_comparison_page)';
-
+export class AddToComparison extends Interaction {
+    static selector = '.o_add_compare, .o_add_compare_dyn';
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _productEl: () => document.querySelector('.js_product'),
+    };
     dynamicContent = {
-        '.o_add_compare, .o_add_compare_dyn': { 't-on-click': this.addProduct },
-        'input.product_id': { 't-on-change': this.onChangeVariant },
-        '.o_comparelist_remove': { 't-on-click': this.removeProduct },
+        _root: { 't-on-click': this.addProduct },
+        _productEl: { 't-on-product_changed': this.onProductChanged },
     };
 
     setup() {
         this.bus = new EventBus();
         // Mount the ProductComparisonBottomBar on pages with comparison functionality
         this.mountComponent(
-            this.el,
+            document.querySelector('.js_sale:not(.o_wsale_comparison_page)'),
             ProductComparisonBottomBar,
             {
                 bus: this.bus,
@@ -41,11 +42,11 @@ export class ProductComparison extends Interaction {
 
         const el = ev.currentTarget;
         let productId = parseInt(el.dataset.productProductId);
-        const form = wSaleUtils.getClosestProductForm(el);
         if (!productId) {
+            const productEl = el.closest('.js_product');
             productId = await this.waitFor(rpc('/sale/create_product_variant', {
                 product_template_id: parseInt(el.dataset.productTemplateId),
-                product_template_attribute_value_ids: wSaleUtils.getSelectedAttributeValues(form),
+                product_template_attribute_value_ids: wSaleUtils.getSelectedAttributeValues(productEl),
             }));
         }
         if (!productId || this._checkProductAlreadyInComparison(productId)) {
@@ -60,13 +61,13 @@ export class ProductComparison extends Interaction {
     /**
      * Enable/disable the "add to comparison" button based on the selected variant.
      *
-     * @param {Event} ev
+     * @param {CustomEvent} event
      */
-    onChangeVariant(ev) {
-        const input = ev.target;
-        const productId = input.value;
+    onProductChanged(event) {
+        const input = event.target;
         const button = input.closest('.js_product')?.querySelector('[data-action="o_comparelist"]');
         if (button) {
+        const { productId } = event.detail;
             const isDisabled = comparisonUtils.getComparisonProductIds().includes(
                 parseInt(productId)
             );
@@ -75,25 +76,9 @@ export class ProductComparison extends Interaction {
         }
     }
 
-    /**
-     * Remove a product from the comparison.
-     *
-     * @param {Event} ev
-     */
-    removeProduct(ev) {
-        const productId = parseInt(ev.currentTarget.dataset.productProductId);
-        comparisonUtils.removeComparisonProduct(productId, this.bus);
-
-        const productIds = comparisonUtils.getComparisonProductIds();
-        const comparisonUrl = `/shop/compare?products=${encodeURIComponent(productIds.join(','))}`;
-        redirect(productIds.length ? comparisonUrl : '/shop');
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-
 
     /**
      * Check whether the maximum number of products in the comparison has been reached, and if so,
@@ -139,4 +124,4 @@ export class ProductComparison extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_comparison.product_comparison', ProductComparison);
+    .add('website_sale_comparison.add_to_comparison', AddToComparison);

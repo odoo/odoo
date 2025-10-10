@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add("invited_on_payment_course_public", {
             trigger: ".o_wslides_identification_banner a:contains(Log in)",
         },
         {
-            trigger: ".o_wslides_js_course_join:not(:has(#add_to_cart)) a:contains(Log in)",
+            trigger: ".o_wslides_js_course_join:not(:has(button[name='add_to_cart'])) a:contains(Log in)",
         },
         {
             trigger:

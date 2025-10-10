@@ -30,8 +30,7 @@ patch(ProductPage.prototype, {
     },
 
     onClickSubmitProductStockNotificationForm(ev) {
-        const formEl = ev.currentTarget.closest('#stock_notification_form');
-        const productId = parseInt(formEl.querySelector('input[name="product_id"]').value);
+        const productId = parseInt(ev.currentTarget.dataset.productId);
         this._handleClickSubmitStockNotificationForm(ev, productId);
     },
 
