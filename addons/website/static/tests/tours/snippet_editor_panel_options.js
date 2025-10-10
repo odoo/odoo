@@ -36,8 +36,8 @@ registerWebsitePreviewTour('snippet_editor_panel_options', {
     groupName: "Content",
 }),
 // Test keeping the text selection when using the width option.
-selectFullText("first paragraph", ".s_text_image p"),
-checkIfParagraphSelected(":iframe .s_text_image p"),
+selectFullText("first paragraph", ".s_text_image p:not([data-selection-placeholder])"),
+checkIfParagraphSelected(":iframe .s_text_image p:not([data-selection-placeholder])"),
 checkIfTextToolbarVisible,
 {
     content: "Click on the width option.",
@@ -47,7 +47,7 @@ checkIfTextToolbarVisible,
     content: "The snippet should have the correct class.",
     trigger: ':iframe .s_text_image > .o_container_small',
 },
-checkIfParagraphSelected(":iframe .s_text_image p"),
+checkIfParagraphSelected(":iframe .s_text_image p:not([data-selection-placeholder])"),
 // Test the anchor option.
 {
     content: "Click on the anchor option",
@@ -88,40 +88,40 @@ goBackToBlocks(),
     name: 'Text',
     groupName: "Text",
 }),
-selectFullText("first paragraph", ".s_text_block p"),
-checkIfParagraphSelected(":iframe .s_text_block p"),
+selectFullText("first paragraph", ".s_text_block p:not([data-selection-placeholder])"),
+checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
 checkIfTextToolbarVisible,
 ...changeOptionInPopover("Text", "Layout", "[data-action-value='3']"),
 {
     content: "The snippet should have the correct number of columns.",
     trigger: ':iframe .s_text_block .container > .row .col-lg-4:eq(3)',
     run() {
-        if (this.anchor.childElementCount !== 3) {
+        if ([...this.anchor.children].filter(child => !child.hasAttribute("data-selection-placeholder")).length !== 3) {
             console.error("The snippet does not have the correct number of columns");
         }
     },
 },
-checkIfParagraphSelected(":iframe .s_text_block p"),
+checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
 // Test keeping the text selection when removing all columns of a snippet.
 ...changeOptionInPopover("Text", "Layout", "[data-action-value='0']"),
 {
     content: "The snippet should have the correct number of columns.",
     trigger: ':iframe .s_text_block .container:not(:has(.row))',
 },
-checkIfParagraphSelected(":iframe .s_text_block p"),
+checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
 // Test keeping the text selection when toggling the grid mode.
 changeOption("Text", "[data-action-id='setGridLayout']"),
 {
     content: "The snippet row should have the grid mode class.",
     trigger: ":iframe .s_text_block .row.o_grid_mode",
 },
-checkIfParagraphSelected(":iframe .s_text_block p"),
+checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
 // Test keeping the text selection when toggling back the column mode.
 changeOption("Text", "[data-action-id='setColumnLayout']"),
 {
     content: "The snippet row should not have the grid mode class anymore.",
     trigger: ":iframe .s_text_block .row:not(.o_grid_mode)",
 },
-checkIfParagraphSelected(":iframe .s_text_block p"),
+checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
 ...clickOnSave(),
 ]);

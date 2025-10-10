@@ -3,9 +3,9 @@ import { press } from "@odoo/hoot-dom";
 import { setupEditor } from "../_helpers/editor";
 import { insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
-import { unformat } from "../_helpers/format";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 test("typing '1. ' should create number list", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
@@ -94,8 +94,8 @@ test("creating list directly inside table column (td)", async () => {
     await press("Backspace");
     await insertText(editor, "A. ");
     expect(getContent(el)).toBe(
-        unformat(`
-            <table class="table table-bordered o_table">
+        wrapInPlaceholders(
+            `<table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td><ol style="list-style: upper-alpha;"><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol></td>
@@ -113,8 +113,9 @@ test("creating list directly inside table column (td)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>
-            <p><br></p>`)
+            </table>`,
+            { doUnformat: true }
+        )
     );
 });
 

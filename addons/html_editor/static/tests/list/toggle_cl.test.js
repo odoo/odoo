@@ -5,6 +5,7 @@ import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { insertText, toggleCheckList } from "../_helpers/user_actions";
 import { dispatchNormalize } from "../_helpers/dispatch";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 describe("Range collapsed", () => {
     describe("Insert", () => {
@@ -200,8 +201,8 @@ describe("Range collapsed", () => {
                     </table>
                 `),
                 stepFunction: toggleCheckList,
-                contentAfterEdit: unformat(`
-                    <table class="table table-bordered o_selected_table">
+                contentAfterEdit: wrapInPlaceholders(
+                    `<table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td"><ul class="o_checklist"><li>[<br></li></ul></td>
@@ -214,8 +215,9 @@ describe("Range collapsed", () => {
                                 <td class="o_selected_td"><ul class="o_checklist"><li>]<br></li></ul></td>
                             </tr>
                         </tbody>
-                    </table>
-                `),
+                    </table>`,
+                    { doUnformat: true }
+                ),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
                         <tbody>
@@ -365,8 +367,8 @@ describe("Range collapsed", () => {
                     </table>
                 `),
                 stepFunction: toggleCheckList,
-                contentAfterEdit: unformat(`
-                    <table class="table table-bordered o_selected_table">
+                contentAfterEdit: wrapInPlaceholders(
+                    `<table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td">[<p><br></p></td>
@@ -379,8 +381,9 @@ describe("Range collapsed", () => {
                                 <td class="o_selected_td"><p><br></p>]</td>
                             </tr>
                         </tbody>
-                    </table>
-                `),
+                    </table>`,
+                    { doUnformat: true }
+                ),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
                         <tbody>

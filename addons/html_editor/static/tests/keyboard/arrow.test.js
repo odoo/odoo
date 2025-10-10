@@ -5,10 +5,12 @@ import { press } from "@odoo/hoot-dom";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
+import { PLACEHOLDER, wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 const keyPress = (keys) => async (editor) => {
     await simulateArrowKeyPress(editor, keys);
     // Allow onselectionchange handler to run.
+    await tick();
     await tick();
 };
 
@@ -428,27 +430,39 @@ describe("Around icons", () => {
 });
 
 describe("Selection correction when it lands at the editable root", () => {
-    test("should place cursor in the table below", async () => {
+    test("should place cursor between two tables (1)", async () => {
         await testEditor({
             contentBefore:
                 "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>" +
                 "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>",
             stepFunction: keyPress("ArrowRight"),
+            contentAfterEdit: wrapInPlaceholders(
+                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
+                    PLACEHOLDER({ selected: true }) +
+                    "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>"
+            ),
             contentAfter:
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
-                "<table><tbody><tr><td><p>[]c</p><p>d</p></td></tr></tbody></table>",
+                "[]" +
+                "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>",
         });
     });
 
     test.tags("focus required");
-    test("should place cursor in the table above", async () => {
+    test("should place cursor between two tables (2)", async () => {
         await testEditor({
             contentBefore:
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
                 "<table><tbody><tr><td><p>[]c</p><p>d</p></td></tr></tbody></table>",
             stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: wrapInPlaceholders(
+                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
+                    PLACEHOLDER({ selected: true }) +
+                    "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>"
+            ),
             contentAfter:
-                "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>" +
+                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
+                "[]" +
                 "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>",
         });
     });
@@ -477,28 +491,42 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
-    test("should keep cursor at the same position (avoid reaching the editable root) (1)", async () => {
+    test("should move cursor to safe space (avoid reaching the editable root) (1)", async () => {
         await testEditor({
             contentBefore: "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>",
             stepFunction: keyPress("ArrowRight"),
-            contentAfter: "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>",
+            contentAfterEdit:
+                PLACEHOLDER() +
+                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
         });
     });
-    test("should keep cursor at the same position (avoid reaching the editable root) (2)", async () => {
+    test("should move cursor to safe space (avoid reaching the editable root) (2)", async () => {
         await testEditor({
             contentBefore: "<table><tbody><tr><td><p>[]a</p><p>b</p></td></tr></tbody></table>",
             stepFunction: keyPress("ArrowLeft"),
-            contentAfter: "<table><tbody><tr><td><p>[]a</p><p>b</p></td></tr></tbody></table>",
+            contentAfterEdit:
+                PLACEHOLDER({ selected: true }) +
+                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
+                PLACEHOLDER(),
         });
     });
 
     test("should place cursor after the second separator", async () => {
         await testEditor({
             contentBefore:
-                '<p>[]<br></p><hr contenteditable="false">' +
-                '<hr contenteditable="false"><p><br></p>',
+                "<p>[]<br></p>" +
+                '<hr contenteditable="false">' +
+                '<hr contenteditable="false">' +
+                "<p><br></p>",
             stepFunction: keyPress("ArrowRight"),
-            contentAfter: "<p><br></p><hr>" + "<hr><p>[]<br></p>",
+            contentAfterEdit:
+                "<p><br></p>" +
+                '<hr contenteditable="false">' +
+                PLACEHOLDER({ selected: true }) +
+                '<hr contenteditable="false">' +
+                "<p><br></p>",
+            contentAfter: "<p><br></p><hr>[]<hr><p><br></p>",
         });
     });
 
@@ -506,10 +534,18 @@ describe("Selection correction when it lands at the editable root", () => {
     test("should place cursor before the first separator", async () => {
         await testEditor({
             contentBefore:
-                '<p><br></p><hr contenteditable="false">' +
-                '<hr contenteditable="false"><p>[]<br></p>',
+                "<p><br></p>" +
+                '<hr contenteditable="false">' +
+                '<hr contenteditable="false">' +
+                "<p>[]<br></p>",
             stepFunction: keyPress("ArrowLeft"),
-            contentAfter: "<p>[]<br></p><hr>" + "<hr><p><br></p>",
+            contentAfterEdit:
+                "<p><br></p>" +
+                '<hr contenteditable="false">' +
+                PLACEHOLDER({ selected: true }) +
+                '<hr contenteditable="false">' +
+                "<p><br></p>",
+            contentAfter: "<p><br></p><hr>[]<hr><p><br></p>",
         });
     });
 });

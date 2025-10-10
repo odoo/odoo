@@ -8,6 +8,7 @@ import { unformat } from "./_helpers/format";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 describe.current.tags("desktop");
 
@@ -117,7 +118,7 @@ describe("drag", () => {
         expect(".oe-dropzone-box-side").toHaveCount(8);
         await drop(".oe-dropzone-box-side:eq(2)");
         expect(getContent(el)).toBe(
-            `<div class="oe_unbreakable"><br></div><p>a[]</p><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+            `${PLACEHOLDER()}<div class="oe_unbreakable"><br></div><p>a[]</p><div class="o-paragraph">d</div><p>b</p><p>c</p>`
         );
     });
     test("should drop after the next baseContainer", async () => {
@@ -136,7 +137,7 @@ describe("drag", () => {
         expect(".oe-dropzone-box-side").toHaveCount(8);
         await drop(".oe-dropzone-box-side:eq(3)");
         expect(getContent(el)).toBe(
-            `<div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>a[]</p><p>b</p><p>c</p>`
+            `${PLACEHOLDER()}<div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>a[]</p><p>b</p><p>c</p>`
         );
     });
     test("should drop LI at correct position within list", async () => {
@@ -314,6 +315,7 @@ describe("click", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER()}
                 <table class="o_selected_table">
                     <tbody>
                         <tr>

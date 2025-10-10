@@ -2,6 +2,7 @@ import { describe, test } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { deleteBackward } from "../_helpers/user_actions";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 describe("Adjust base container on delete", () => {
     test("should remove empty o-paragraph block", async () => {
@@ -28,11 +29,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div>
+            contentAfterEdit: wrapInPlaceholders(
+                `<div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
             config: { cleanEmptyStructuralContainers: false },
         });
     });
@@ -78,9 +80,9 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div><div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div></div>
-            `),
+            contentAfterEdit: wrapInPlaceholders(
+                `<div><div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div></div>`
+            ),
         });
     });
 
@@ -107,9 +109,7 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div class="oe_unremovable">[]<br></div>
-            `),
+            contentAfterEdit: wrapInPlaceholders(`<div class="oe_unremovable">[]<br></div>`),
         });
     });
 
@@ -122,11 +122,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div class="oe_unremovable">
+            contentAfterEdit: wrapInPlaceholders(
+                `<div class="oe_unremovable">
                     <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -140,13 +141,14 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             // The P is added by the deletion, not by `cleanEmptyStructuralContainers`.
-            contentAfterEdit: unformat(`
-                <div contenteditable="false">
+            contentAfterEdit: wrapInPlaceholders(
+                `<div contenteditable="false">
                     <div contenteditable="true">
                         <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -161,13 +163,14 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div contenteditable="false">
+            contentAfterEdit: wrapInPlaceholders(
+                `<div contenteditable="false">
                     <div contenteditable="true">
                         <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                     </div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -182,11 +185,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div>
+            contentAfterEdit: wrapInPlaceholders(
+                `<div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]</div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -200,11 +204,14 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
+            contentAfterEdit: wrapInPlaceholders(
+                `
                 <div>
                     <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                 </div>
-            `),
+            `,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -217,11 +224,12 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div>
+            contentAfterEdit: wrapInPlaceholders(
+                `<div>
                     <div class="o-paragraph">[]text</div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 
@@ -252,13 +260,14 @@ describe("Adjust base container on delete", () => {
             stepFunction: async (editor) => {
                 deleteBackward(editor);
             },
-            contentAfterEdit: unformat(`
-                <div contenteditable="false">
+            contentAfterEdit: wrapInPlaceholders(
+                `<div contenteditable="false">
                     <div contenteditable="true">
                         <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                     </div>
-                </div>
-            `),
+                </div>`,
+                { doUnformat: true }
+            ),
         });
     });
 });

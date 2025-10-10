@@ -15,6 +15,7 @@ import {
     tripleClick,
     undo,
 } from "../_helpers/user_actions";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -69,7 +70,9 @@ test("should make qweb tag bold and create a step even with partial selection in
     );
     bold(editor);
     expect(getContent(el)).toBe(
-        `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
+        wrapInPlaceholders(
+            `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
+        )
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
     const historySteps = editor.shared.history.getHistorySteps();
@@ -212,8 +215,8 @@ test("should make a few characters bold inside table (bold)", async () => {
                 </tbody>
             </table>`),
         stepFunction: bold,
-        contentAfterEdit: unformat(`
-            <table class="table table-bordered o_table o_selected_table">
+        contentAfterEdit: wrapInPlaceholders(
+            `<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><p>${strong(`[abc`)}</p></td>
@@ -231,7 +234,9 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
             </tbody>
-            </table>`),
+            </table>`,
+            { doUnformat: true }
+        ),
     });
 });
 

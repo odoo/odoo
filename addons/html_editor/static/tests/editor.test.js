@@ -7,6 +7,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 beforeEach(() => {
     patchWithCleanup(Editor.prototype, {
@@ -131,7 +132,9 @@ test("Convert self closing t elements to opening/closing tags", async () => {
         </div>
     `);
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>`
+        PLACEHOLDER() +
+            `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>` +
+            PLACEHOLDER()
     );
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
         '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'

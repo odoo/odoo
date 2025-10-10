@@ -28,6 +28,7 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { SelectionPlaceholderPlugin } from "@html_editor/main/selection_placeholder_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-steps"];
 
@@ -231,6 +232,7 @@ export class HtmlField extends Component {
                 ...(this.props.embeddedComponents
                     ? EMBEDDED_COMPONENT_PLUGINS
                     : NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS),
+                SelectionPlaceholderPlugin,
             ],
             classList: this.classList,
             onChange: this.onChange.bind(this),

@@ -14,6 +14,7 @@ import {
     undo,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 test("should make a few characters underline", async () => {
     await testEditor({
@@ -198,8 +199,8 @@ test("should make a few characters underline inside table (underline)", async ()
                 </tbody>
             </table>`),
         stepFunction: underline,
-        contentAfterEdit: unformat(`
-            <table class="table table-bordered o_table o_selected_table">
+        contentAfterEdit: wrapInPlaceholders(
+            `<table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><p>${u(`[abc`)}</p></td>
@@ -217,7 +218,9 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`),
+            </table>`,
+            { doUnformat: true }
+        ),
     });
 });
 

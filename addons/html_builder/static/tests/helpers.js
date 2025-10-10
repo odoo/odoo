@@ -305,10 +305,13 @@ export async function setupHTMLBuilder(
     comp.state.isEditing = true;
     await prom;
     await animationFrame();
+    const contentEl = [...comp.iframeRef.el.contentDocument.body.firstChild.childNodes].find(
+        (node) => !node.hasAttribute?.("data-selection-placeholder")
+    );
     return {
         getEditor: () => attachedEditor,
         getEditableContent: () => editableContent,
-        contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
+        contentEl,
         builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
         waitDomUpdated,
     };

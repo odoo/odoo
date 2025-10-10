@@ -25,6 +25,8 @@ export class DropZonePlugin extends Plugin {
             }
             return true;
         },
+        is_safe_for_selection_placeholder_predicates: (blocker) =>
+            !blocker.parentElement.classList.contains("oe_structure"),
     };
 
     setup() {
@@ -437,13 +439,14 @@ export class DropZonePlugin extends Plugin {
         { toInsertInline, isContentInIframe = true } = {}
     ) {
         const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
-        const hookEls = [];
+        let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
             hookEls.push(...validChildrenEls);
             parentEl.prepend(this.createDropzone(parentEl));
         }
         hookEls.push(...selectorSiblings);
+        hookEls = hookEls.filter((el) => !el.hasAttribute?.("data-selection-placeholder"));
 
         // Inserting the normal dropzones.
         for (const hookEl of hookEls) {

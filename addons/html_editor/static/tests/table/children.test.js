@@ -5,6 +5,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { undo } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
+import { wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 function addRow(position) {
     return (editor) => {
@@ -413,6 +414,16 @@ describe("row", () => {
                         </tbody>
                     </table>
                 `),
+                contentBeforeEdit: wrapInPlaceholders(
+                    `<table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>`,
+                    { doUnformat: true }
+                ),
                 stepFunction: removeRow(),
                 contentAfter: "<p>[]<br></p>",
             });
@@ -702,6 +713,15 @@ describe("column", () => {
                         </tbody>
                     </table>
                 `),
+                contentBeforeEdit: wrapInPlaceholders(
+                    `<table>
+                        <tbody>
+                            <tr> <td>[]ab</td> </tr>
+                            <tr> <td>cd</td> </tr>
+                        </tbody>
+                    </table>`,
+                    { doUnformat: true }
+                ),
                 stepFunction: removeColumn(),
                 contentAfter: "<p>[]<br></p>",
             });
@@ -723,8 +743,8 @@ describe("tab", () => {
 
         await press("Tab");
 
-        const expectedContent = unformat(`
-            <table><tbody>
+        const expectedContent = wrapInPlaceholders(
+            `<table><tbody>
                 <tr style="height: 20px;">
                     <td style="width: 20px;">ab</td>
                     <td>cd</td>
@@ -735,13 +755,15 @@ describe("tab", () => {
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>
-            </tbody></table>`);
+            </tbody></table>`,
+            { doUnformat: true }
+        );
 
         expect(getContent(el)).toBe(expectedContent);
 
         // Check that it was registed as a history step.
         undo(editor);
-        expect(getContent(el)).toBe(contentBefore);
+        expect(getContent(el)).toBe(wrapInPlaceholders(contentBefore));
     });
 
     test("should not select whole text of the next cell", async () => {

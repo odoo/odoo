@@ -7,6 +7,7 @@ import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
 import { unformat } from "../_helpers/format";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { PLACEHOLDER, wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -968,21 +969,79 @@ describe("Toolbar", () => {
 
     test("Should remove background color of text within a fully selected table", async () => {
         const { el } = await setupEditor(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p><font style="background-color: rgb(255, 0, 0);">[abc</font></p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
+            unformat(
+                `<table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td">
+                                <p>
+                                    <font style="background-color: rgb(255, 0, 0);">[abc</font>
+                                </p>
+                            </td>
+                            <td class="o_selected_td">
+                                <p><br></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>]<br></p>`
+            )
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+            unformat(
+                `${PLACEHOLDER()}
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td">
+                                <p>[abc</p>
+                            </td>
+                            <td class="o_selected_td">
+                                <p>\u200b</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>]\u200b</p>`
+            )
         );
     });
 
     test("Should remove background color of a table cell", async () => {
         const { el } = await setupEditor(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="background-color: rgb(255, 0, 0);" class="o_selected_td"><p>[<br></p></td><td style="background-color: rgb(255, 0, 0);" class="o_selected_td"><p>]<br></p></td></tr></tbody></table>`
+            unformat(
+                `<table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td style="background-color: rgb(255, 0, 0);" class="o_selected_td">
+                                <p>[<br></p>
+                            </td>
+                            <td style="background-color: rgb(255, 0, 0);" class="o_selected_td">
+                                <p>]<br></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>`
+            )
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+            wrapInPlaceholders(
+                `<table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td style="" class="o_selected_td">
+                                <p>[\u200b</p>
+                            </td>
+                            <td style="" class="o_selected_td">
+                                <p>]\u200b</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>`,
+                { doUnformat: true }
+            )
         );
     });
 
@@ -1005,8 +1064,8 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            unformat(`
-                <table class="table table-bordered o_table o_selected_table">
+            wrapInPlaceholders(
+                `<table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr style="height: 100px;">
                             <td>1</td>
@@ -1017,8 +1076,9 @@ describe("Toolbar", () => {
                             <td style="" class="o_selected_td">4]</td>
                         </tr>
                     </tbody>
-                </table>
-            `)
+                </table>`,
+                { doUnformat: true }
+            )
         );
     });
 

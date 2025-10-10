@@ -6,6 +6,7 @@ import { insertText } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { press, waitFor, queryOne } from "@odoo/hoot-dom";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { PLACEHOLDER } from "../_helpers/selection_placeholder";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -58,7 +59,7 @@ test("can add a table using the powerbox and keyboard", async () => {
                 </tr>
             </tbody>
         </table>
-        <p><br></p>`
+        ${PLACEHOLDER()}`
     );
 });
 
@@ -195,7 +196,6 @@ test("add table inside empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
-                <br>
             </li>
         </ul>`
     );
@@ -248,7 +248,6 @@ test("add table inside non-empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
-                <br>
             </li>
         </ul>`
     );

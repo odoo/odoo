@@ -8,6 +8,7 @@ import {
     mountView,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 const VERSIONS = htmlEditorVersions();
 const CURRENT_VERSION = VERSIONS.at(-1);
@@ -81,7 +82,8 @@ describe("test the migration process", () => {
                     <div class="w-100 px-3 o_editor_banner_content o-contenteditable-true" contenteditable="true">
                         <p>content</p>
                     </div>
-                </div>`
+                </div>
+                ${PLACEHOLDER({ tag: "div" })}`
             );
             expect(htmlFieldComponent.editor.getContent()).toBe(
                 `<p data-oe-version="${CURRENT_VERSION}">test</p>

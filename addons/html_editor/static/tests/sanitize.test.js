@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { PLACEHOLDER } from "./_helpers/selection_placeholder";
 
 const Markup = markup().constructor;
 
@@ -32,7 +33,7 @@ test("sanitize should leave t-field, t-out, t-esc as is", async () => {
 test("sanitize plugin should handle contenteditable attribute with o-contenteditable-[true/false] class", async () => {
     await testEditor({
         contentBefore: `<p class="o-contenteditable-true">a[]</p><p class="o-contenteditable-false">b</p>`,
-        contentAfterEdit: `<p class="o-contenteditable-true" contenteditable="true">a[]</p><p class="o-contenteditable-false" contenteditable="false">b</p>`,
+        contentAfterEdit: `<p class="o-contenteditable-true" contenteditable="true">a[]</p><p class="o-contenteditable-false" contenteditable="false">b</p>${PLACEHOLDER()}`,
         contentAfter: `<p class="o-contenteditable-true">a[]</p><p class="o-contenteditable-false">b</p>`,
     });
 });

@@ -10,6 +10,7 @@ import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
 import { queryOne } from "@odoo/hoot-dom";
+import { PLACEHOLDER, wrapInPlaceholders } from "../_helpers/selection_placeholder";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -300,15 +301,18 @@ describe("wrapInlinesInBlocks", () => {
         // (which would be wrapped inside a div, not in the paragraph-related
         // element).
         expect(getContent(el)).toBe(
-            unformat(`
+            wrapInPlaceholders(
+                `
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                ${PLACEHOLDER()}
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
-            `)
+            `,
+                { doUnformat: true }
+            )
         );
     });
     test("wrap a mix of inline elements in div", async () => {
@@ -335,12 +339,13 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                ${PLACEHOLDER()}
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
                     <span class="a">span</span>
                 </div>
+                ${PLACEHOLDER()}
             `)
         );
     });
@@ -391,10 +396,14 @@ describe("wrapInlinesInBlocks", () => {
 describe("fillEmpty", () => {
     test("should not add fill a shrunk protected block, nor add a ZWS to it", async () => {
         const { el } = await setupEditor('<div data-oe-protected="true"></div>');
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            wrapInPlaceholders(`<div data-oe-protected="true" contenteditable="false"></div>`)
+        );
         const div = el.firstChild;
         fillEmpty(div);
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            wrapInPlaceholders(`<div data-oe-protected="true" contenteditable="false"></div>`)
+        );
     });
     test("should not fill a block containing a canvas", async () => {
         const { el } = await setupEditor("<div><canvas></canvas></div>");

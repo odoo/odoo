@@ -41,6 +41,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { cleanHints, dispatchCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { PLACEHOLDER, wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 function getConfig(components) {
     return {
@@ -384,17 +385,19 @@ describe("Mount and Destroy embedded components", () => {
         await animationFrame();
         expect.verifySteps(["mount 1", "mount 2", "mount 3"]);
         expect(getContent(el)).toBe(
-            unformat(`
-                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
-                    <div>
+            wrapInPlaceholders(
+                `<div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
+                    []<div>
                         <div class="click count-2">Count:2</div>
                         <div class="innerEditable-2">
                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
+                                ${PLACEHOLDER()}
                                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
                                     <div>
                                         <div class="click count-1">Count:1</div>
                                         <div class="innerEditable-1">
                                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
+                                                ${PLACEHOLDER()}
                                                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
                                                     <div>
                                                         <div class="click count-3">Count:3</div>
@@ -405,16 +408,18 @@ describe("Mount and Destroy embedded components", () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                ${PLACEHOLDER()}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                ${PLACEHOLDER()}
                             </div>
                         </div>
                     </div>
-                </div>
-                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
-            `)
+                </div>`,
+                { doUnformat: true }
+            )
         );
         for (const index of indexOrder) {
             const host = orderedMountInfos[index][0];
@@ -437,10 +442,9 @@ describe("Mount and Destroy embedded components", () => {
         // so after the full operation, nothing should be left except the
         // outermost host.
         expect(getContent(el)).toBe(
-            unformat(`
-                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
-                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
-            `)
+            wrapInPlaceholders(
+                `<div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">[]</div>`
+            )
         );
         // Verify that there is no potential host outside of the editable,
         // because removed hosts are put back in the DOM and destroyed next to
@@ -578,9 +582,9 @@ describe("Selection after embedded component insertion", () => {
         await animationFrame();
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            unformat(`
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
-                <p>[]<br></p>`)
+            wrapInPlaceholders(
+                `<div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>`
+            )
         );
     });
     test("block at the end of paragraph", async () => {
@@ -594,8 +598,8 @@ describe("Selection after embedded component insertion", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
-                <p>[]<br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
+                ${PLACEHOLDER()}`)
         );
     });
     test("block at the start of paragraph", async () => {
@@ -608,6 +612,7 @@ describe("Selection after embedded component insertion", () => {
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER()}
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
                 <p>[]a</p>`)
         );
@@ -838,7 +843,9 @@ describe("Mount processing", () => {
         // "unknown" data-embedded should be considered once during the first
         // mounting wave.
         expect.verifySteps(["unknown handled"]);
-        expect(getContent(el)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
+        expect(getContent(el)).toBe(
+            wrapInPlaceholders(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`)
+        );
     });
     test("Mount a component with a plugin that modifies the Component's env", async () => {
         let setSelection;
@@ -896,7 +903,9 @@ describe("In-editor manipulations", () => {
         await animationFrame();
         await expectElementCount(".o-we-toolbar", 1);
         expect(getContent(el)).toBe(
-            `<div><p>[a]</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span></div>`
+            wrapInPlaceholders(
+                `<div><p>[a]</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span></div>`
+            )
         );
 
         const node = queryFirst(".counter", {}).firstChild;
@@ -904,7 +913,9 @@ describe("In-editor manipulations", () => {
         await tick();
         await animationFrame();
         expect(getContent(el)).toBe(
-            `<div><p>a</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">C[ou]nter:0</span></span></div>`
+            wrapInPlaceholders(
+                `<div><p>a</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">C[ou]nter:0</span></span></div>`
+            )
         );
         await expectElementCount(".o-we-toolbar", 0);
     });
@@ -923,14 +934,30 @@ describe("In-editor manipulations", () => {
 
     test("should not remove embedded elements children during clean (not a clone)", async () => {
         const { el, editor } = await setupEditor(
-            '<div><p>a</p></div><div data-embedded="counter"><p>a</p></div>',
+            unformat(
+                `<div>
+                    <p>a</p>
+                </div>
+                <div data-embedded="counter">
+                    <p>a</p>
+                </div>`
+            ),
             {
                 config: getConfig([embedding("counter", Counter)]),
             }
         );
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>`
+            wrapInPlaceholders(
+                `<div>
+                    <p>a</p>
+                </div>
+                ${PLACEHOLDER()}
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">
+                    <span class="counter">Counter:0</span>
+                </div>`,
+                { doUnformat: true }
+            )
         );
     });
 
@@ -944,7 +971,11 @@ describe("In-editor manipulations", () => {
         const historyPlugin = plugins.get("history");
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
-            `<div><p>a</p></div><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>`
+            wrapInPlaceholders(
+                "<div><p>a</p></div>" +
+                    PLACEHOLDER() +
+                    `<div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>`
+            )
         );
     });
 
@@ -964,7 +995,9 @@ describe("In-editor manipulations", () => {
         );
         const historyPlugin = plugins.get("history");
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
-        expect(getContent(node)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
+        expect(getContent(node)).toBe(
+            wrapInPlaceholders(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`)
+        );
     });
 
     test("Don't remove empty inline-block data-embedded elements during initElementForEdition, but wrap them in div instead", async () => {
@@ -973,7 +1006,9 @@ describe("In-editor manipulations", () => {
             { config: getConfig([embedding("counter", Counter)]) }
         );
         expect(getContent(el, { sortAttrs: true })).toBe(
-            `<div><div contenteditable="false" data-embedded="counter" data-oe-protected="true" style="display:inline-block;"><span class="counter">Counter:0</span></div></div>`
+            wrapInPlaceholders(
+                `<div><div contenteditable="false" data-embedded="counter" data-oe-protected="true" style="display:inline-block;"><span class="counter">Counter:0</span></div></div>`
+            )
         );
     });
 });
@@ -1000,8 +1035,8 @@ describe("editable descendants", () => {
             }
         );
         expect(getContent(el)).toBe(
-            unformat(`
-                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+            wrapInPlaceholders(
+                `<div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="shallow">
                         <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
                             <p>shallow</p>
@@ -1014,8 +1049,9 @@ describe("editable descendants", () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            `)
+                </div>`,
+                { doUnformat: true }
+            )
         );
     });
 
@@ -1048,9 +1084,11 @@ describe("editable descendants", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER()}
                 <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="deep">
                         <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                            ${PLACEHOLDER()}
                             <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
@@ -1058,6 +1096,7 @@ describe("editable descendants", () => {
                                     </div>
                                 </div>
                             </div>
+                            ${PLACEHOLDER()}
                         </div>
                     </div>
                 </div>
@@ -1104,8 +1143,8 @@ describe("editable descendants", () => {
         await animationFrame();
         expect.verifySteps(["patched"]);
         expect(getContent(el)).toBe(
-            unformat(`
-                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+            wrapInPlaceholders(
+                `<div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="shallow">
                         <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
                             <p>shallow</p>
@@ -1120,8 +1159,9 @@ describe("editable descendants", () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            `)
+                </div>`,
+                { doUnformat: true }
+            )
         );
         // No mutation should be added to the next step
         editor.shared.history.addStep();
@@ -1190,16 +1230,17 @@ describe("editable descendants", () => {
         const historyPlugin = plugins.get("history");
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
-            unformat(`
-                <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
+            wrapInPlaceholders(
+                `<div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
                     <div contenteditable="true" data-embedded-editable="shallow" data-oe-protected="false">
                         <p>shallow</p>
                     </div>
                     <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
                         <p>deep</p>
                     </div>
-                </div>
-            `)
+                </div>`,
+                { doUnformat: true }
+            )
         );
     });
 
@@ -1232,10 +1273,11 @@ describe("editable descendants", () => {
             }
         );
         expect(getContent(el)).toBe(
-            unformat(`
-                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+            wrapInPlaceholders(
+                `<div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="shallow">
                         <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
+                            ${PLACEHOLDER()}
                             <div data-embedded="simpleWrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
@@ -1243,6 +1285,7 @@ describe("editable descendants", () => {
                                     </div>
                                 </div>
                             </div>
+                            ${PLACEHOLDER()}
                         </div>
                     </div>
                     <div>
@@ -1252,8 +1295,9 @@ describe("editable descendants", () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            `)
+                </div>`,
+                { doUnformat: true }
+            )
         );
         const wrapper = el.querySelector(`[data-embedded="wrapper"]`);
         const simple = el.querySelector(`[data-embedded="simpleWrapper"]`);

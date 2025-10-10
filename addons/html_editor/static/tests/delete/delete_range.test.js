@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 import { getContent, setSelection } from "../_helpers/selection";
+import { PLACEHOLDER } from "../_helpers/selection_placeholder";
 
 async function testCoreEditor(testConfig) {
     return testEditor({ ...testConfig, config: { Plugins: CORE_PLUGINS } });
@@ -245,7 +246,8 @@ describe("deleteRange method", () => {
                 `[<table><tbody>
                     <tr><td><br></td><td><br></td></tr>
                     <tr><td>]<br></td><td><br></td></tr>
-                </tbody></table>`
+                </tbody></table>
+                ${PLACEHOLDER()}`
             );
             expect(getContent(el)).toBe(contentAfter);
         });
@@ -254,7 +256,7 @@ describe("deleteRange method", () => {
         test("should not fill a HR with BR", async () => {
             const { editor, el } = await setupEditor("<hr><p>abc[</p><p>]def</p>");
             deleteRange(editor);
-            const hr = el.firstElementChild;
+            const hr = el.querySelector("hr");
             expect(hr.childNodes.length).toBe(0);
         });
     });
@@ -263,7 +265,8 @@ describe("deleteRange method", () => {
             await testEditor({
                 contentBefore: `[<div class="container o_text_columns"><div class="row"><div class="col-4"><p>a</p></div><div class="col-4"><p>b</p></div><div class="col-4"><p>c</p></div></div></div>]`,
                 stepFunction: deleteRange,
-                contentAfter: `[]<p><br></p>`,
+                // TODO: should an empty editable be allowed without allowInlineAtRoot?
+                contentAfter: `[]`,
             });
         });
         test("should delete columns when all selected along with text from an outer node", async () => {
@@ -408,7 +411,8 @@ describe("deleteSelection", () => {
                     ),
                     stepFunction: deleteSelection,
                     contentAfterEdit: unformat(
-                        `<div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                        `${PLACEHOLDER()}
+                        <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
                             <div class="row">
                                 <div class="col-6 o-contenteditable-true" contenteditable="true">a[]</div>
                                 <div class="col-6 o-contenteditable-true" contenteditable="true"><p o-we-hint-text="Empty column" class="o-we-hint"><br></p></div>

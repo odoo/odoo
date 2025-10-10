@@ -1168,6 +1168,13 @@ export class DeletePlugin extends Plugin {
     }
 
     shouldSkip(leaf, blockSwitch) {
+        if (
+            this.getResource("should_skip_node_predicates").some((predicate) =>
+                predicate(leaf, blockSwitch)
+            )
+        ) {
+            return true;
+        }
         if (leaf.nodeType === Node.TEXT_NODE) {
             return false;
         }

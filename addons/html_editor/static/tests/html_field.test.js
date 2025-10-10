@@ -45,6 +45,7 @@ import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/use
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { PLACEHOLDER, wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -468,7 +469,8 @@ test("edit and save a html field containing JSON as some attribute values should
     pasteOdooEditorHtml(htmlEditor, `<div data-value=${value}><p>content</p></div>`);
     const txtField = queryOne('.o_field_html[name="txt"] .odoo-editor-editable');
     expect(txtField).toHaveInnerHTML(
-        `<div data-value="{&quot;myString&quot;:&quot;myString&quot;}"><p>content</p></div><p>first</p>`
+        PLACEHOLDER({ tag: "div" }) +
+            `<div data-value="{&quot;myString&quot;:&quot;myString&quot;}"><p>content</p></div><p>first</p>`
     );
     expect.verifySteps(["Setup Wysiwyg"]);
 
@@ -639,10 +641,14 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
             </form>`,
     });
     expect.verifySteps(["setup_wysiwyg"]);
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("inside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        wrapInPlaceholders(getTxtValue("inside", true), { tag: "div" })
+    );
     setSelectionInHtmlField();
     pasteOdooEditorHtml(htmlEditor, "addon");
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("addoninside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        wrapInPlaceholders(getTxtValue("addoninside", true), { tag: "div" })
+    );
     await clickSave();
     expect.verifySteps(["update_value", "web_save"]);
 });
@@ -920,9 +926,7 @@ test("Embed video by pasting video URL", async () => {
     await press("Enter");
     await animationFrame();
     const videoIframe = queryOne("div.media_iframe_video");
-    expect(videoIframe.nextElementSibling).toHaveOuterHTML(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p>`
-    );
+    expect(videoIframe.nextElementSibling).toHaveOuterHTML(PLACEHOLDER({ tag: "div" }));
     expect(
         `div.media_iframe_video iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
     ).toHaveCount(1);
@@ -2503,7 +2507,7 @@ describe("codeview enabled", () => {
     });
 });
 
-test("should never insert Table of Contents as the first child of the editable", async () => {
+test("should always have a block before a Table of Contents", async () => {
     Partner._records = [
         {
             id: 1,
@@ -2527,5 +2531,5 @@ test("should never insert Table of Contents as the first child of the editable",
     await animationFrame();
     const firstChild = htmlEditor.editable.firstChild;
     expect(firstChild.getAttribute("data-embedded")).not.toBe("tableOfContent");
-    expect(firstChild).toHaveOuterHTML('<div class="o-paragraph"><br></div>');
+    expect(firstChild).toHaveOuterHTML(PLACEHOLDER({ tag: "div" }));
 });

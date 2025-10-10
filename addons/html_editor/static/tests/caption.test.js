@@ -19,6 +19,7 @@ import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actio
 import { cleanHints } from "./_helpers/dispatch";
 import { getContent } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { PLACEHOLDER, wrapInPlaceholders } from "./_helpers/selection_placeholder";
 
 class CaptionPluginWithPredictableId extends CaptionPlugin {
     getCaptionId() {
@@ -120,15 +121,14 @@ test("add a caption to an image and focus it", async () => {
             selection.removeAllRanges();
             cleanHints(editor);
         },
-        contentAfterEdit: unformat(
-            `<p><br></p>
-            <figure contenteditable="false">
+        contentAfterEdit: wrapInPlaceholders(
+            `<figure contenteditable="false">
                 <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="">
                 <figcaption ${getFigcaptionAttributes(captionId, "", true)}>
                     <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
-            </figure>
-            <p><br></p>`
+            </figure>`,
+            { doUnformat: true }
         ),
     });
 });
@@ -174,38 +174,33 @@ test("saving an image with a caption replaces the input with plain text", async 
                 <figcaption>${caption}</figcaption>
             </figure>`
         ),
-        contentBeforeEdit: unformat(
-            // Paragraphs get added to ensure we can write before/after the figure.
-            `<p><br></p>
-            <figure contenteditable="false">
+        contentBeforeEdit: wrapInPlaceholders(
+            `<figure contenteditable="false">
                 <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
                 <figcaption ${getFigcaptionAttributes(captionId, caption)}>
                     <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
-            </figure>
-            <p><br></p>`
+            </figure>`,
+            { doUnformat: true }
         ),
         // Unchanged.
-        contentAfterEdit: unformat(
-            `<p><br></p>
-            <figure contenteditable="false">
+        contentAfterEdit: wrapInPlaceholders(
+            `<figure contenteditable="false">
                 <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
                 <figcaption ${getFigcaptionAttributes(captionId, caption)}>
                     <input ${CAPTION_INPUT_ATTRIBUTES}>
                 </figcaption>
-            </figure>
-            <p><br></p>`
+            </figure>`,
+            { doUnformat: true }
         ),
         // Cleaned up for screen readers.
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 <img class="img-fluid test-image" src="${base64Img}">
                 <figcaption>
                     ${caption}
                 </figcaption>
-            </figure>
-            <p><br></p>`
+            </figure>`
         ),
     });
 });
@@ -244,15 +239,11 @@ test("clicking the caption button on an image with a caption removes the caption
             await expectElementCount(".o-we-toolbar", 1);
         },
         contentAfterEdit: unformat(
-            `<p><br></p>
-            <p>[<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]</p>
-            <p><br></p>`
+            `<p>[<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]</p>`
         ),
         // Unchanged
         contentAfter: unformat(
-            `<p><br></p>
-            <p>[<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]</p>
-            <p><br></p>`
+            `<p>[<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]</p>`
         ),
     });
 });
@@ -281,7 +272,7 @@ test("leaving the caption persists its value", async () => {
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfterEdit: unformat(
-            `<p><br></p>
+            `${PLACEHOLDER()}
             <figure contenteditable="false">
                 <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption="${caption}ab" data-caption-id="${captionId}">
                 <figcaption ${getFigcaptionAttributes(captionId, caption + "ab", true)}>
@@ -291,8 +282,7 @@ test("leaving the caption persists its value", async () => {
             <h1>[]Heading</h1>`
         ),
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 <img class="img-fluid test-image" src="${base64Img}">
                 <figcaption>
                     ${caption}ab
@@ -321,8 +311,7 @@ test("can't use the powerbox in a caption", async () => {
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 <img class="img-fluid test-image" src="${base64Img}">
                 <figcaption>
                     /
@@ -356,8 +345,7 @@ test("can't use the toolbar in a caption", async () => {
             editor.shared.selection.setCursorStart(queryOne("h1"));
         },
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 <img class="img-fluid test-image" src="${base64Img}">
                 <figcaption>a</figcaption>
             </figure>
@@ -488,10 +476,7 @@ test("remove an image with a caption", async () => {
             await waitFor(".o-we-toolbar button[name='image_delete']");
             await click(".o-we-toolbar button[name='image_delete']");
         },
-        contentAfter: unformat(
-            `<p><br></p>
-            <h1>[]Heading</h1>`
-        ),
+        contentAfter: "<h1>[]Heading</h1>",
     });
 });
 
@@ -511,7 +496,7 @@ const getDeleteImageTestData = () => {
             // Check that we indeed have a proper figure structure.
             expect(getContent(editor.editable).replace("[]", "")).toBe(
                 unformat(
-                    `<p><br></p>
+                    `${PLACEHOLDER()}
                             <figure contenteditable="false">
                             <img class="img-fluid test-image o_editable_media" data-caption="${caption}" src="${base64Img}" data-caption-id="${captionId}">
                             <figcaption ${getFigcaptionAttributes(
@@ -530,10 +515,7 @@ const getDeleteImageTestData = () => {
             await click("h1");
             await click("img");
         },
-        contentAfter: unformat(
-            `<p><br></p>
-            <h1>[]Heading</h1>`
-        ),
+        contentAfter: "<h1>[]Heading</h1>",
     };
 };
 
@@ -599,8 +581,7 @@ test("replace an image with a caption", async () => {
         },
         // TODO: fix the weird final selection
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 <img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image">
                 <figcaption>Hello</figcaption>
             </figure>
@@ -650,8 +631,7 @@ test("edit caption after replacing image", async () => {
             await animationFrame();
         },
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 [<img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image">]
                 <figcaption>abc</figcaption>
             </figure>
@@ -697,8 +677,7 @@ test("after replacing a captioned image, undo should revert to the original imag
             expect("img[src='/web/static/img/logo2.png']").toHaveCount(0);
         },
         contentAfter: unformat(
-            `<p><br></p>
-            <figure>
+            `<figure>
                 [<img src="/web/static/img/logo.png" class="img-fluid test-image">]
                 <figcaption></figcaption>
             </figure>
@@ -723,8 +702,7 @@ test("add a link to an image with a caption", async () => {
             await expectElementCount(".o-we-toolbar", 1);
         },
         contentAfter: unformat(
-            `<p><br></p>
-            <p>
+            `<p>
                 <a href="https://odoo.com">
                     <figure>
                         [<img class="img-fluid test-image" src="${base64Img}">]
@@ -758,8 +736,7 @@ test("add a caption to an image with a link", async () => {
             selection.removeAllRanges();
         },
         contentAfter: unformat(
-            `<p><br></p>
-            <div>
+            `<div>
                 <a href="https://odoo.com">
                     <figure>
                         <img class="img-fluid test-image" src="${base64Img}">
@@ -983,16 +960,14 @@ test("should properly parse figure without fig caption", async () => {
                 <img class="img-fluid test-image" src="${base64Img}">
             </figure>`
         ),
-        contentBeforeEdit: unformat(
-            `<p><br></p>
-            <figure contenteditable="false">
+        contentBeforeEdit: wrapInPlaceholders(
+            `<figure contenteditable="false">
                 <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="1" data-caption="">
                 <figcaption data-embedded="caption" data-oe-protected="true" contenteditable="false" class="mt-2" data-embedded-props='{"id":"1","focusInput":false}'>
                 <input type="text" maxlength="100" class="border-0 p-0" placeholder="Write your caption here">
                 </figcaption>
-            </figure>
-            <p><br></p>
-            `
+            </figure>`,
+            { doUnformat: true }
         ),
     });
 });
