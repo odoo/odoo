@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="hr_employee_view_form" model="ir.ui.view">
+    <field name="name">hr.employee.view.form</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr.view_employee_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='job_title']" position="before">
+        <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_employee_filter" model="ir.ui.view">
+    <field name="name">hr.employee.search</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr.view_employee_filter"/>
+    <field name="arch" type="xml">
+      <xpath expr="//filter[@name='group_job']" position="replace">
+      <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

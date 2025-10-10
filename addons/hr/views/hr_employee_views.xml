@@ -69,7 +69,7 @@
                     <group>
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_title'}"/>
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday'}"/>
@@ -177,7 +177,6 @@
                                         <group string="work">
                                             <field name="company_id" groups="base.group_multi_company" domain="[('id', 'in', allowed_company_ids)]"/>
                                             <field name="department_id"/>
-                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
                                             <field name="job_title"/>
                                             <field name="parent_id" widget="many2one_avatar_employee"/>
                                         </group>

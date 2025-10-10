@@ -44,6 +44,7 @@
         'wizard/talent_pool_add_applicants_views.xml',
         'wizard/job_add_applicants_views.xml',
         'views/menuitems.xml',
+        'views/hr_employee_views.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
