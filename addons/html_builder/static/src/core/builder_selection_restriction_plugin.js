@@ -6,25 +6,21 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 // we probably need to move these special blocks to a resource in different plugins
 const SPECIAL_BLOCK_WITH_TEXT_IN_NON_DIV = ["BLOCKQUOTE"];
-const UNCROSSABLE_ELEMENTS = ["BLOCKQUOTE", "FORM", "SECTION", "DIV"];
-const UNCROSSABLE_ELEMENT_CLASSES = ["alert", "row"];
+const UNCROSSABLE_ELEMENT_SELECTOR = ["blockquote", "form", "div", "section", ".alert", ".row"];
 
 export class BuilderSelectionRestrictionPlugin extends Plugin {
     static id = "builderSelectionRestriction";
     static dependencies = ["history", "selection", "operation", "builderOptions"];
 
     resources = {
-        uncrossable_elements: UNCROSSABLE_ELEMENTS,
-        uncrossable_element_classes: UNCROSSABLE_ELEMENT_CLASSES,
+        uncrossable_element_selector: UNCROSSABLE_ELEMENT_SELECTOR,
         special_block_with_text_in_non_div: SPECIAL_BLOCK_WITH_TEXT_IN_NON_DIV,
     };
 
     setup() {
-        Window.selection = this.dependencies.selection;
-        this.uncrossable_elements = [...new Set(this.getResource("uncrossable_elements"))];
-        this.uncrossable_element_classes = [
-            ...new Set(this.getResource("uncrossable_element_classes")),
-        ];
+        this.uncrossable_element_selector = [
+            ...new Set(this.getResource("uncrossable_element_selector")),
+        ].join(",");
         this.special_block_with_text_in_non_div = [
             ...new Set(this.getResource("special_block_with_text_in_non_div")),
         ];
@@ -173,15 +169,8 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
 
     isNodeSelectionUncrossable(node, selectedNodes) {
         return (
-            this.uncrossable_elements.includes(node.nodeName) ||
-            this.uncrossable_elements.some((tagName) =>
-                selectedNodes.includes(closestElement(node, tagName))
-            ) ||
-            this.uncrossable_element_classes.some(
-                (className) =>
-                    node.classList?.contains(className) ||
-                    selectedNodes.includes(closestElement(node, `.${className}`))
-            )
+            node.matches(this.uncrossable_element_selector) ||
+            selectedNodes.includes(closestElement(node, this.uncrossable_element_selector))
         );
     }
 
