@@ -14,6 +14,7 @@ from . import test_sale_combo_configurator
 from . import test_sale_flow
 from . import test_sale_order
 from . import test_sale_order_product_catalog
+from . import test_sale_order_ui
 from . import test_sale_prices
 from . import test_sale_product_attribute_value_config
 from . import test_sale_product_template
