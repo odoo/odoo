@@ -2204,6 +2204,35 @@ export class PosStore extends WithLazyGetterTrap {
 
         return payload;
     }
+    async editLotsRefund(line) {
+        const product = line.getProduct();
+        const packLotLinesToEdit = line.pack_lot_ids.map((p) => p.lot_name);
+
+        const payload = await makeAwaitable(this.dialog, EditListPopup, {
+            title: _t("Lot/Serial number(s) required for"),
+            name: product.display_name,
+            isSingleItem: product.isAllowOnlyOneLot(),
+            array: packLotLinesToEdit,
+            options: line.refunded_orderline_id.pack_lot_ids.map((p) => p.lot_name),
+            customInput: false,
+            uniqueValues: product.tracking === "serial",
+            isLotNameUsed: () => false,
+        });
+        if (payload) {
+            // Segregate the old and new packlot lines
+            const modifiedPackLotLines = Object.fromEntries(
+                payload.filter((item) => item.id).map((item) => [item.id, item.text])
+            );
+            const newPackLotLines = payload
+                .filter((item) => !item.id)
+                .map((item) => ({ lot_name: item.text }));
+
+            return { modifiedPackLotLines, newPackLotLines };
+        } else {
+            return null;
+        }
+    }
+
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;

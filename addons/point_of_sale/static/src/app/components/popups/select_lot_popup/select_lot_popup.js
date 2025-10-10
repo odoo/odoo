@@ -122,6 +122,7 @@ export class EditListPopup extends Component {
         );
     }
     hasValidValue(itemId, text) {
+        debugger;
         return (
             this.isValidValue(text) &&
             (!this.props.uniqueValues ||
