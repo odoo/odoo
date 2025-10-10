@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onMounted } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { AttributeSelectionHelper } from "./attribute_selection_helper";
 
@@ -9,6 +9,13 @@ export class AttributeSelection extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.envSelectedValues = useState(this.env.selectedValues);
+
+        onMounted(() => {
+            const inputs = document.querySelectorAll("input");
+            if (this.selfOrder.kioskMode && inputs.length) {
+                window.KioskBoard.run("input");
+            }
+        });
     }
 
     get selectedValues() {
