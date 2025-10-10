@@ -1,12 +1,43 @@
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { serializeDate } from "@web/core/l10n/dates";
 
+const { DateTime } = luxon;
+
 /**
  * Slots are created differently depending on the screen size.
- * Desktop: Using the multi create feature.
- * Mobile: Using the calendar quick create dialog.
+ * Desktop: "New" button or multi create feature.
+ * Mobile: "New" button or quick create dialog.
  */
 export class EventSlotCalendarModel extends CalendarModel {
+
+    setup(params, services) {
+        super.setup(...arguments);
+        this.orm = services.orm;
+    }
+
+    /**
+     * @override
+     * Saves the event's time range and timezone to the model data.
+     * The time range is converted to the event's timezone.
+     * Fetches from db instead of using context to always ensure up-to-date values.
+     */
+    async load(params = {}) {
+        const res = await super.load(...arguments);
+        if (params.context?.default_event_id) {
+            const [{ date_begin: start, date_end: end, date_tz: tz }] = await this.orm.read(
+                "event.event",
+                [params.context.default_event_id],
+                ["date_begin", "date_end", "date_tz"],
+            );
+            const serverDatetimeFormat = 'yyyy-MM-dd HH:mm:ss'
+            this.data.event = {
+                start: DateTime.fromFormat(start, serverDatetimeFormat, { zone: 'utc' }).setZone(tz).toFormat(serverDatetimeFormat),
+                end: DateTime.fromFormat(end, serverDatetimeFormat, { zone: 'utc' }).setZone(tz).toFormat(serverDatetimeFormat),
+                tz,
+            };
+        }
+        return res;
+    }
 
     /**
      * @override
