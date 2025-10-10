@@ -211,7 +211,7 @@ class Task(models.Model):
         help="The current user's personal task stage.", domain="[('user_id', '=', uid)]")
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
-        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+        check_company=True)
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
@@ -313,7 +313,7 @@ class Task(models.Model):
     def _ensure_company_consistency_with_partner(self):
         """ Ensures that the company of the task is valid for the partner. """
         for task in self:
-            if task.partner_id and task.partner_id.company_id and task.company_id and task.company_id != task.partner_id.company_id:
+            if task.partner_id and task.partner_id.company_id and task.company_id and task.company_id not in (task.partner_id.company_id | task.partner_id.company_id.child_ids):
                 raise ValidationError(_('The task and the associated partner must be linked to the same company.'))
 
     @api.constrains('child_ids', 'project_id')
