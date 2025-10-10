@@ -211,6 +211,10 @@ class ProductProduct(models.Model):
         ])
         return sum(lots.mapped('total_value'))
 
+    def _with_valuation_context(self):
+        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        return self.with_context(location=valued_locations.ids)
+
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
@@ -355,7 +359,7 @@ class ProductProduct(models.Model):
         if lot:
             fifo_stack_size = lot.product_qty
         else:
-            fifo_stack_size = int(self.with_context(to_date=at_date).qty_available)
+            fifo_stack_size = int(self._with_valuation_context().with_context(to_date=at_date).qty_available)
         if fifo_stack_size <= 0:
             return fifo_stack, 0
 
