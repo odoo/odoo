@@ -639,7 +639,7 @@ export class Rtc extends Record {
     async leaveCall(channel = this.state.channel) {
         this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
-        await this.rpcLeaveCall(channel.thread);
+        await rpc("/mail/rtc/channel/leave_call", { channel_id: channel.id }, { silent: true });
         this.endCall(channel);
         this.state.hasPendingRequest = false;
     }
@@ -1611,16 +1611,6 @@ export class Rtc extends Record {
             name: SW_MESSAGE_TYPE.POST_RTC_LOGS,
             logs: [this.buildSnapshot()],
         });
-    }
-
-    async rpcLeaveCall(channel) {
-        await rpc(
-            "/mail/rtc/channel/leave_call",
-            {
-                channel_id: channel.id,
-            },
-            { silent: true }
-        );
     }
 
     async ping() {
