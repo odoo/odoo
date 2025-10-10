@@ -23,7 +23,13 @@ function getComboRecords(listRecords, record) {
 
         while (index < listRecords.length) {
             const r = listRecords[index];
-            if (!r.data.combo_item_id?.id || r.data.linked_line_id?.id !== record.resId) {
+            if (
+                !r.data.combo_item_id?.id
+                || (
+                    r.data.linked_line_id?.id !== record.resId
+                    && r.data.linked_virtual_id !== record.data.virtual_id
+                )
+            ) {
                 break;
             }
             comboRecords.push(r);
@@ -38,7 +44,13 @@ function getComboRecords(listRecords, record) {
             const r = listRecords[index];
             comboRecords.unshift(r);
 
-            if (r.data.product_type === 'combo' && r.resId === record.data.linked_line_id?.id) {
+            if (
+                r.data.product_type === 'combo'
+                && (
+                    r.resId === record.data.linked_line_id?.id
+                    || r.data.virtual_id === record.data.linked_virtual_id
+                )
+            ) {
                 break;
             }
             index--;
