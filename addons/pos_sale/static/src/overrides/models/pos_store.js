@@ -176,6 +176,7 @@ patch(PosStore.prototype, {
                         ...newLineValues,
                     });
                     splitted_line.set_quantity(converted_line.lot_qty_by_name[lot] || 0, true);
+                    splitted_line.set_discount(line.discount);
                     splitted_line.setPackLotLines({
                         modifiedPackLotLines: [],
                         newPackLotLines: [{ lot_name: lot }],
