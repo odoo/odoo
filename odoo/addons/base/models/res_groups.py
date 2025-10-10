@@ -36,8 +36,6 @@ class ResGroups(models.Model):
     privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
     view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
 
-    _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
-        'The name of the group must be unique within a group privilege!')
     _check_api_key_duration = models.Constraint(
         'CHECK(api_key_duration >= 0)',
         'The api key duration cannot be a negative value.',
