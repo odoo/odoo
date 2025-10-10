@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { registry } from "@web/core/registry";
 
 export class PaymentMercadoPago extends PaymentInterface {
@@ -184,7 +184,7 @@ export class PaymentMercadoPago extends PaymentInterface {
 
     // private methods
     _showMsg(msg, title) {
-        this.env.services.dialog.add(AlertDialog, {
+        this.env.services.dialog.add(PosAlertDialog, {
             title: "Mercado Pago " + title,
             body: msg,
         });

@@ -1,6 +1,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
@@ -258,7 +259,7 @@ export class ClosePosPopup extends Component {
     }
     async handleClosingControlError() {
         this.dialog.add(
-            AlertDialog,
+            PosAlertDialog,
             {
                 title: _t("Closing session error"),
                 body: _t(
@@ -293,7 +294,7 @@ export class ClosePosPopup extends Component {
     }
     async handleClosingError(response) {
         this.dialog.add(ConfirmationDialog, {
-            title: response.title || "Error",
+            title: response.title || "Oh snap !",
             body: response.message,
             confirmLabel: _t("Review Orders"),
             cancelLabel: _t("Cancel Orders"),

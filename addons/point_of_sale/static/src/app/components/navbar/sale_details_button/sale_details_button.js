@@ -1,6 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
@@ -20,7 +20,7 @@ export async function handleSaleDetails(pos, hardwareProxy, dialog) {
     );
     const { successful, message } = await hardwareProxy.printer.printReceipt(report);
     if (!successful) {
-        dialog.add(AlertDialog, {
+        dialog.add(PosAlertDialog, {
             title: message.title,
             body: message.body,
         });

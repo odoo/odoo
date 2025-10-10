@@ -12,7 +12,7 @@ import {
 } from "@pos_glory_cash/utils/constants";
 import { SocketIoService } from "@pos_glory_cash/utils/socket_io";
 import { reactive } from "@odoo/owl";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { browser } from "@web/core/browser/browser";
@@ -414,7 +414,7 @@ export class GloryService extends PaymentInterface {
         if (!title) {
             title = _t("Cash Machine Error");
         }
-        this.dialog.add(AlertDialog, {
+        this.dialog.add(PosAlertDialog, {
             title: title,
             body: msg,
         });

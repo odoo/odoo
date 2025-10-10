@@ -3,7 +3,8 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 import { patch } from "@web/core/utils/patch";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { ManageGiftCardPopup } from "@pos_loyalty/app/components/popups/manage_giftcard_popup/manage_giftcard_popup";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
@@ -15,9 +16,9 @@ patch(OrderSummary.prototype, {
     async updateSelectedOrderline({ buffer, key }) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         if (selectedLine?.gift_code && key !== "Backspace" && key !== "Delete") {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("Gift Card"),
-                body: _t("You cannot change the quantity or price of a physical gift card."),
+                body: _t("You cannot change the quantity or the price of a physical gift card."),
             });
             return;
         }

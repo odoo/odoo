@@ -83,6 +83,7 @@
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
+            'point_of_sale/static/src/app/components/alert_dialog/*',
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
@@ -126,6 +127,7 @@
             "web/static/src/views/fields/formatters.js",
             "web/static/lib/odoo_ui_icons/*",
             "point_of_sale/static/src/utils.js",
+            'point_of_sale/static/src/app/components/alert_dialog/*',
             'bus/static/src/services/bus_service.js',
             'bus/static/src/services/worker_service.js',
             'bus/static/src/bus_parameters_service.js',

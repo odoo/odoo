@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { registry } from "@web/core/registry";
 
 import { QFPay, QFPayError } from "./qfpay";
@@ -158,7 +158,7 @@ export class PaymentQFpay extends PaymentInterface {
     }
 
     _showError(error) {
-        this.dialog.add(AlertDialog, {
+        this.dialog.add(PosAlertDialog, {
             title: _t("QFPay Error"),
             body: error.message,
         });

@@ -1,7 +1,7 @@
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 
 patch(OrderPaymentValidation.prototype, {
     shouldDownloadInvoice() {
@@ -23,8 +23,8 @@ patch(OrderPaymentValidation.prototype, {
             this.order.is_l10n_es_simplified_invoice =
                 this.order.canBeSimplifiedInvoiced() && !this.order.to_invoice;
             if (!this.order.is_l10n_es_simplified_invoice && !this.order.to_invoice) {
-                this.pos.env.services.dialog.add(AlertDialog, {
-                    title: _t("Error"),
+                this.pos.env.services.dialog.add(PosAlertDialog, {
+                    title: _t("Oh snap !"),
                     body: _t(
                         "Order amount is too large for a simplified invoice, use an invoice instead."
                     ),

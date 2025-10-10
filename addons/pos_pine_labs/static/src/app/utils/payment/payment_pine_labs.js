@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { offlineErrorHandler, handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { registry } from "@web/core/registry";
@@ -252,7 +252,7 @@ export class PaymentPineLabs extends PaymentInterface {
     }
 
     _showError(error_msg) {
-        this.env.services.dialog.add(AlertDialog, {
+        this.env.services.dialog.add(PosAlertDialog, {
             title: _t("Pine Labs Error"),
             body: error_msg,
         });

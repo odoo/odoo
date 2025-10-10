@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 patch(TicketScreen.prototype, {
@@ -29,8 +29,8 @@ patch(TicketScreen.prototype, {
             (line) => line.id == selectedOrderlineId
         );
         if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
-            return this.dialog.add(AlertDialog, {
-                title: _t("Error"),
+            return this.dialog.add(PosAlertDialog, {
+                title: _t("Oh snap !"),
                 body: _t("You cannot edit a discount line."),
             });
         }

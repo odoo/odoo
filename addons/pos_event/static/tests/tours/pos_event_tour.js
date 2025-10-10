@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
             EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
             Dialog.confirm(),
-            Dialog.is({ title: "Error" }),
+            Dialog.is({ title: "Oh snap !" }),
             Dialog.confirm("Ok"),
             EventTourUtils.answerGlobalSelectQuestion("Question3", "Q3-Answer1"),
             Dialog.confirm(),

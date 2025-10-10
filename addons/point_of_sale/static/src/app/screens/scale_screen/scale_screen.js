@@ -1,5 +1,5 @@
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -27,7 +27,7 @@ export class ScaleScreen extends Component {
     onError(message) {
         this.props.getPayload(null);
         this.dialog.add(
-            AlertDialog,
+            PosAlertDialog,
             {
                 title: _t("Scale error"),
                 body: message,

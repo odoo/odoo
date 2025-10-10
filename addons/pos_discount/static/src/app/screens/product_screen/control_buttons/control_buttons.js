@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { PosAlertDialog } from "@point_of_sale/app/components/alert_dialog/pos_alert_dialog";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { patch } from "@web/core/utils/patch";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
@@ -26,7 +26,7 @@ patch(ControlButtons.prototype, {
         const product = this.pos.config.discount_product_id;
 
         if (product === undefined) {
-            this.dialog.add(AlertDialog, {
+            this.dialog.add(PosAlertDialog, {
                 title: _t("No discount product found"),
                 body: _t(
                     "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."
