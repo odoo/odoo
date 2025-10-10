@@ -364,6 +364,10 @@ var VariantMixin = {
      * @param {Array} combination
      */
     _onChangeCombination: function (ev, $parent, combination) {
+        // Update archived combination alert
+        const $alert = $parent.find('.o_archived_combination_alert');
+        $alert.toggleClass('d-none', combination.is_combination_possible);
+
         const isCombinationPossible = !!combination.is_combination_possible;
         const $pricePerUom = $parent.find(".o_base_unit_price:first .oe_currency_value");
         if ($pricePerUom.length) {
