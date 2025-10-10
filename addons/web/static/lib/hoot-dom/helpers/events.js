@@ -666,7 +666,7 @@ function getStringSelection(target) {
 
 /**
  * @param {Node} node
- * @param  {...string} tagNames
+ * @param {...string} tagNames
  */
 function hasTagName(node, ...tagNames) {
     return tagNames.includes(getTag(node));
@@ -2746,8 +2746,8 @@ export async function scroll(target, position, options) {
 }
 
 /**
- * Performs a selection event sequence current **active element**. This helper is
- * intended for `<select>` elements only.
+ * Performs a selection event sequence on the current **active element**. This helper
+ * is intended for `<select>` elements only.
  *
  * The event sequence is as follows:
  *  - `change`
@@ -2902,7 +2902,7 @@ export async function uncheck(target, options) {
 }
 
 /**
- * Triggers a "beforeunload" event the current **window**.
+ * Triggers a "beforeunload" event on the current **window**.
  *
  * @param {EventOptions} [options]
  * @returns {Promise<EventList>}
