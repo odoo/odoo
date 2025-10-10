@@ -97,7 +97,7 @@
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
-                <form string="Users">
+                <form string="Users" class="o_res_users_form_view_full">
                     <header>
                     </header>
                     <sheet>
@@ -132,17 +132,18 @@
                                 <h1 class="mb-0 w-sm-75">
                                     <field name="name" placeholder="e.g. John Doe" required="1"/>
                                 </h1>
-                                <h5 name="h5_login" class="d-flex align-items-baseline mb-0">
-                                    <i class="fa fa-fw fa-envelope text-primary" title="Login / Email" invisible="login != email"/>
-                                    <i class="fa fa-fw fa-key text-primary" title="Login" invisible="login == email"/>
-                                    <field name="login" placeholder="Login" class="w-75"/>
-                                </h5>
-                                <h5 name="h5_email" class="d-flex align-items-baseline mb-0" invisible="login == email">
-                                    <i class="fa fa-fw fa-envelope text-primary" title="Email"/>
-                                    <field name="email" placeholder="Email" class="w-75"/>
+                                <h5 name="h5_email" class="d-flex flex-wrap align-items-baseline mb-0">
+                                    <div class="w-100">
+                                        <i class="fa fa-fw fa-envelope me-1 text-primary" title="Login / Email" invisible="login != email"/>
+                                        <i class="fa fa-fw fa-key me-1 text-primary" title="Login" invisible="login == email"/>
+                                        <field name="login" placeholder="Login" class="w-75"/>
+                                    </div>
+
+                                    <i class="fa fa-fw fa-envelope me-1 text-primary" title="Email" invisible="login == email"/>
+                                    <field name="email" placeholder="Email" class="w-75"  invisible="login == email"/>
                                 </h5>
                                 <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
-                                    <i class="fa fa-fw fa-phone text-primary" title="Email"/>
+                                    <i class="fa fa-fw fa-phone me-1 text-primary" title="Email"/>
                                     <field name="phone" placeholder="Phone" class="w-75"/>
                                 </h5>
                             </div>
