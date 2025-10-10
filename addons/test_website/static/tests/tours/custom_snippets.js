@@ -97,7 +97,7 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Confirm delete",
-        trigger: ".modal-dialog button:contains('Yes')",
+        trigger: ".modal-dialog button:contains('Delete Block')",
         run: "click",
     },
     {

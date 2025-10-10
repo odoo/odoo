@@ -256,10 +256,11 @@ export class SnippetModel extends Reactive {
 
     async deleteCustomSnippet(snippet) {
         return new Promise((resolve) => {
-            const message = _t("Are you sure you want to delete the block %s?", snippet.title);
+            const message = _t("Are you sure you want to delete the block %s?\nOnce gone, it will be too late.", snippet.title);
             this.dialog.add(
                 ConfirmationDialog,
                 {
+                    title: _t("Delete Custom Block"),
                     body: message,
                     confirm: async () => {
                         const isInnerContent =
@@ -277,8 +278,8 @@ export class SnippetModel extends Reactive {
                         });
                     },
                     cancel: () => {},
-                    confirmLabel: _t("Yes"),
-                    cancelLabel: _t("No"),
+                    confirmLabel: _t("Delete Block"),
+                    cancelLabel: _t("Keep it"),
                 },
                 {
                     onClose: resolve,

@@ -12,9 +12,11 @@ export class FleetFormController extends FormController {
         const menuItems = super.getStaticActionMenuItems();
         menuItems.archive.callback = () => {
             const dialogProps = {
+                title: _t("Archive Vehicle"),
                 body: _t(
-                    "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+                    "All services and contracts linked to this vehicle will also be archived.\nAre you sure you want to proceed?"
                 ),
+                confirmLabel: _t("Archive Vehicle & Contracts"),
                 confirm: () => this.model.root.archive(),
                 cancel: () => {},
             };
