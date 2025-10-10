@@ -1,10 +1,9 @@
 /** @odoo-module */
 
-import { after, describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test, watchListeners } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { EventBus } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
-import { watchListeners } from "@odoo/hoot-mock";
 
 describe(parseUrl(import.meta.url), () => {
     class TestBus extends EventBus {

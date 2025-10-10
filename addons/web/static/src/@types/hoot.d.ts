@@ -5,7 +5,3 @@ declare module "@odoo/hoot" {
 declare module "@odoo/hoot-dom" {
     export * from "@web/../lib/hoot-dom/hoot-dom";
 }
-
-declare module "@odoo/hoot-mock" {
-    export * from "@web/../lib/hoot/hoot-mock";
-}
