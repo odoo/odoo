@@ -52,7 +52,8 @@ class WebsiteHrRecruitment(WebsiteForm):
             )
             if not all_fields or (
                 country_filter and not (
-                    job.address_id and job.address_id.country_id == country
+                    not job.address_id or
+                    (job.address_id and job.address_id.country_id == country)
                 )
             ):
                 return False
