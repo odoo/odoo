@@ -583,7 +583,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         # Days between the target date and the expiration date (accrual_plan's carryover date)
         remaining_days_before_expiration = (allocation._get_carryover_date(target_date) - target_date).days
         working_days_equivalent_needed = remaining_days_before_expiration * 24 / self.flex_40h_calendar.hours_per_day
-    
+
         # Assert the closest allocation duration (number of working days equivalent (8 hours/day) remaining before the allocation expires)
         self.assertEqual(round(allocation_data[logged_in_emp][0][1]['closest_allocation_duration']), working_days_equivalent_needed,
                             "The closest allocation duration should be the number of working days equivalent (8 hours/day) remaining before the allocation expires")
@@ -593,7 +593,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         """
         /!\\ Fully Flexible Resource should not take leaves. However the test aims to verify that the expiration date
         is correctly calculated for the fully flexible resource.
-        
+
         The accrual plan:
             - Accrue at the end of period.
             - Carryover date : 31/12 (end of the year).
