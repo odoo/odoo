@@ -10,11 +10,9 @@
 
     <template id="account_terms_conditions_page" name="Terms &amp; Conditions">
         <t t-call="web.frontend_layout">
-            <t t-set="o_portal_fullwidth_alert" groups="account.group_account_manager">
-                <t t-call="account.account_terms_conditions_setting_banner">
-                    <t t-set="backend_url" t-value="'/odoo/action-account.action_open_settings'"/>
-                </t>
-            </t>
+             <div class="alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden" groups="account.group_account_manager">
+                <t t-call="account.account_terms_conditions_setting_banner" backend_url ="'/odoo/action-account.action_open_settings'"/>
+            </div>
             <div class="oe_structure" id="oe_structure_terms_conditions"/>
                 <div class="container oe_website_terms_conditions">
                     <div id="o_terms_conditions">
