@@ -107,6 +107,16 @@ class DiscussChannelRtcSession(models.Model):
         """ Updates the session and notifies all members of the channel
             of the change.
         """
+        if 'is_transcribing' in values:
+            is_transcribing = values.pop('is_transcribing')
+            if self.channel_id.is_transcribing != is_transcribing:
+                self.channel_id.is_transcribing = is_transcribing
+                self.channel_id._bus_send(
+                    'discuss.channel/transcription_state', {
+                        'id': self.channel_id.id,
+                        'is_transcribing': self.channel_id.is_transcribing,
+                    }
+                )
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
         store = Store().add(self, extra_fields=self._get_store_extra_fields())

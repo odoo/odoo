@@ -129,6 +129,7 @@ class DiscussChannel(models.Model):
         "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
         'Group authorization and group auto-subscription are only supported on channels.',
     )
+    is_transcribing = fields.Boolean(string='Is Currently Transcribing', default=False, copy=False)
 
     # CONSTRAINTS
     @api.constrains("from_message_id")
