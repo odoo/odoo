@@ -27,6 +27,7 @@ import {
     getCellValue,
     getEvaluatedCell,
     getFormattedValueGrid,
+    getEvaluatedGrid,
 } from "@spreadsheet/../tests/helpers/getters";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
@@ -2289,4 +2290,28 @@ test("date are between two years are correctly grouped by weeks and days", async
             B4: "Foo",          C4: "Foo",          D4: "Foo",         E4: "Foo",
             B5: "11",           C5: "12",           D5: "13",          E5: "14",
         })
+});
+
+test("Pivot headers day of week are still correct after updating the locale's week start day", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="day_of_week" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+    });
+    patchWithCleanup(localization, { weekStart: 1 /* Monday */ });
+    model.dispatch("UPDATE_LOCALE", {
+        locale: { ...model.getters.getLocale(), weekStart: 1 /* Monday */ },
+    });
+    await waitForDataLoaded(model);
+
+    setCellContent(model, "A20", "=PIVOT(1)");
+    expect(getEvaluatedGrid(model, "A22:A24")).toEqual([["Sunday"], ["Wednesday"], ["Thursday"]]);
+
+    model.dispatch("UPDATE_LOCALE", {
+        locale: { ...model.getters.getLocale(), weekStart: 7 /* Sunday */ },
+    });
+    await waitForDataLoaded(model);
+    expect(getEvaluatedGrid(model, "A22:A24")).toEqual([["Sunday"], ["Wednesday"], ["Thursday"]]);
 });
