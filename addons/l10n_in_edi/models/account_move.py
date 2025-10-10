@@ -628,7 +628,7 @@ class AccountMove(models.Model):
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": in_round(tax_details['base_amount'] + global_discount_amount),
+                "AssVal": in_round(tax_details['base_amount']),
                 "CgstVal": in_round(tax_details_by_code.get("cgst_amount", 0.00)),
                 "SgstVal": in_round(tax_details_by_code.get("sgst_amount", 0.00)),
                 "IgstVal": in_round(tax_details_by_code.get("igst_amount", 0.00)),
@@ -643,7 +643,11 @@ class AccountMove(models.Model):
                 "Discount": in_round(global_discount_amount),
                 "RndOffAmt": in_round(rounding_amount),
                 "TotInvVal": in_round(
-                    (tax_details["base_amount"] + tax_details["tax_amount"] + rounding_amount)),
+                    tax_details["base_amount"]
+                    + tax_details["tax_amount"]
+                    + rounding_amount
+                    - global_discount_amount
+                ),
             },
         }
         if self.company_currency_id != self.currency_id:
