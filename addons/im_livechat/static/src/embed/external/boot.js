@@ -26,6 +26,7 @@ import { session } from "@web/session";
     await mount(MainComponentsContainer, target, {
         env,
         getTemplate,
+        translatableAttributes: ["data-tooltip"],
         translateFn: _t,
         dev: env.debug,
     });
