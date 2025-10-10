@@ -18,6 +18,7 @@ export class GenerateDialog extends Component {
         close: { type: Function },
     };
     setup() {
+        this.serialPrefix = this.props.move.data.serial_prefix.length > 0 ? true : false;
         this.size = 'md';
         if (this.props.mode === 'generate') {
             this.title = this.props.move.data.has_tracking === 'lot'
@@ -36,11 +37,14 @@ export class GenerateDialog extends Component {
         onWillStart(async () => {
             this.displayUOM = await user.hasGroup("uom.group_uom");
         });
-        onMounted(() => {
+        onMounted(async () => {
             if (this.props.mode === 'generate') {
                 this.nextSerialCount.el.value = this.props.move.data.product_uom_qty || 2;
                 if (this.props.move.data.has_tracking === 'lot') {
                     this.totalReceived.el.value = this.props.move.data.quantity;
+                }
+                if(this.serialPrefix){
+                    await this._onGenerateCustomSerial();
                 }
             }
         });
