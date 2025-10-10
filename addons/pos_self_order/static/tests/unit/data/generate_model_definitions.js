@@ -3,9 +3,8 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { hootPosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { PosSelfOrderCustomLink } from "./pos_self_order_custom_link.data";
 
-export const hootPosSelfModels = [...hootPosModels, PosSelfOrderCustomLink];
-
 export const definePosSelfModels = () => {
+    const hootPosSelfModels = [...hootPosModels, PosSelfOrderCustomLink];
     const posModelNames = hootPosSelfModels.map(
         (modelClass) => modelClass.prototype.constructor._name
     );
