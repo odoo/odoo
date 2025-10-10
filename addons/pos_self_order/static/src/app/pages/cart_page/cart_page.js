@@ -52,6 +52,15 @@ export class CartPage extends Component {
         return lines.filter((line) => !line.combo_parent_id);
     }
 
+    get totalPriceAndTax() {
+        const order = this.selfOrder.currentOrder;
+        const { priceWithTax, tax } = this.selfOrder.orderLineNotSend;
+        return {
+            priceWithTax: priceWithTax || order.getTotalWithTax(),
+            tax: tax || order.getTotalTax(),
+        };
+    }
+
     get optionalProducts() {
         const optionalProducts =
             this.selfOrder.currentOrder.lines.flatMap(

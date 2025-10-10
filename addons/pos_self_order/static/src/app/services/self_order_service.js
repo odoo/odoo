@@ -891,6 +891,25 @@ export class SelfOrder extends Reactive {
         return this.config.use_presets && this.models["pos.preset"].length > 1;
     }
 
+    get orderLineNotSend() {
+        return Object.entries(this.currentOrder.changes).reduce(
+            (acc, [key, value]) => {
+                if (value.qty > 0) {
+                    const line = this.models["pos.order.line"].getBy("uuid", key);
+                    if (!line.combo_parent_id) {
+                        acc.count += value.qty;
+                    }
+                    const { priceWithTax, priceWithoutTax, tax } = line.getAllPrices(value.qty);
+                    acc.priceWithTax += priceWithTax;
+                    acc.priceWithoutTax += priceWithoutTax;
+                    acc.tax += tax;
+                }
+                return acc;
+            },
+            { priceWithTax: 0, priceWithoutTax: 0, count: 0, tax: 0 }
+        );
+    }
+
     get kioskBackgroundImage() {
         const bgImage = this.config._self_ordering_image_background_ids[0];
         if (bgImage) {
