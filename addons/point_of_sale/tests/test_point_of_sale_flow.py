@@ -1273,7 +1273,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         refund_action = order.refund()
         refund = self.env['pos.order'].browse(refund_action['res_id'])
         self.assertEqual(order.lines[0].refunded_qty, 1)
-        refund.action_pos_order_cancel()
+        refund.cancel_order_from_pos()
         self.assertEqual(order.lines[0].refunded_qty, 0)
 
     def test_pos_order_refund_ship_delay_totalcost(self):
@@ -1438,7 +1438,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'preset_id': preset_takeaway.id,
             'preset_time': fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=-2)),
         })
-        order.action_pos_order_cancel()
+        order.cancel_order_from_pos()
         self.assertEqual(order.state, 'cancel')
 
     def test_sum_only_pos_locations(self):

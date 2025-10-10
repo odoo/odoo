@@ -59,8 +59,8 @@ class PosOrder(models.Model):
         self._send_notification(order_ids)
         return result
 
-    def action_pos_order_cancel(self):
-        orders = super().action_pos_order_cancel()
+    def cancel_order_from_pos(self):
+        orders = super().cancel_order_from_pos()
         success_orders_ids = [o['id'] for o in orders['pos.order'] if o['state'] == 'cancel']
         orders_ids = self.browse(success_orders_ids)
         self._send_notification(orders_ids)
