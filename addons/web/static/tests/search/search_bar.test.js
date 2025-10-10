@@ -1965,3 +1965,21 @@ test("no crash when search component is destroyed with input", async () => {
     await runAllTimers();
     expect(".o_form_view").toHaveCount(1);
 });
+
+test("search on full query without waiting for display synchronisation", async () => {
+    /* Typically a barcode scan where the dropdown display doesn't have the time to update */
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+
+    await editSearch("01234");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await press("5");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await press("6");
+    expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
+    await keyDown("Enter");
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "0123456"]]);
+});
