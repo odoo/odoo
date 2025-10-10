@@ -1060,10 +1060,16 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.partner_id
 
+        if invoice.is_purchase_document():
+            supplier, customer = customer, supplier
+
         vals.update({
             'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
                 else 'credit_note' if invoice.move_type == 'out_refund'
                 else 'invoice',
+
+            'company': invoice.company_id,
+            'journal': invoice.journal_id,
 
             'supplier': supplier,
             'customer': customer,
@@ -1354,12 +1360,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], non_fixed_total_grouping_function)
         aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
         for currency_suffix in ['', '_currency']:
-            vals[f'tax_inclusive_amount{currency_suffix}'] = vals[f'tax_exclusive_amount{currency_suffix}'] \
-                + sum(
+            vals[f'total_tax_amount{currency_suffix}'] = sum(
                     tax_details[f'tax_amount{currency_suffix}']
                     for grouping_key, tax_details in aggregated_tax_details.items()
                     if grouping_key
                 )
+            vals[f'tax_inclusive_amount{currency_suffix}'] = vals[f'tax_exclusive_amount{currency_suffix}'] + vals[f'total_tax_amount{currency_suffix}']
 
         # Cash rounding for 'add_invoice_line' cash rounding strategy
         # (For the 'biggest_tax' strategy the amounts are directly included in the tax amounts.)
