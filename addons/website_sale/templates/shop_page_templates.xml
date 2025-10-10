@@ -385,7 +385,7 @@
                                             <div
                                                 class="o_wsale_products_header_search_form_container d-none d-sm-inline-block flex-grow-1 mw-xxl-25 me-auto"
                                             >
-                                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
                                                 <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                             </div>
                                             <!-- Mobile Search button -->
@@ -579,7 +579,7 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
                             </t>
                         </div>
                     </div>
@@ -998,7 +998,7 @@
                 class="offcanvas-body flex-grow-0 overflow-visible"
             >
                 <t t-call="website_sale.search">
-                    <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
+                    <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
                     <t t-set="search" t-value="original_search or search"/>
                     <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
                 </t>
