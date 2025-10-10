@@ -184,6 +184,11 @@
             'account/static/src/services/account_move_service.js',
 
             'mail/static/src/core/common/sound_effects_service.js',
+            'mail/static/src/views/web/fields/many2one_avatar_user_field/*',
+            'mail/static/src/views/web/fields/assign_user_command_hook.js',
+            'mail/static/src/views/web/fields/avatar/avatar.js',
+            'mail/static/src/discuss/web/avatar_card/avatar_card_popover.js',
+            'mail/static/src/core/web/open_chat_hook.js',
             "web/static/src/core/browser/router.js",
             "web/static/src/core/debug/**/*",
             'web/static/src/model/**/*',
