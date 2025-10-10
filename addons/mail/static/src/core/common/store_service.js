@@ -327,7 +327,7 @@ export class Store extends BaseStore {
         });
         await this.store.chatHub.initPromise;
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
+        await this.env.services["discuss.rtc"].toggleCall(thread.channel, { camera: true });
         if (this.rtc.selfSession) {
             this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
         }
