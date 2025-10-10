@@ -52,12 +52,13 @@ class DiscussChannel(models.Model):
         # anonymous user whatever the participants. Otherwise keep only share
         # partners (no user or portal user) to link to the lead.
         customers = self.env['res.partner']
-        for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
-            if customer.is_public:
-                customers = self.env['res.partner']
-                break
-            else:
-                customers |= customer
+        if self.channel_type == "livechat":
+            for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and not p.is_public):
+                if customer.is_public:
+                    customers = self.env['res.partner']
+                    break
+                else:
+                    customers |= customer
 
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
         return self.env['crm.lead'].create({
