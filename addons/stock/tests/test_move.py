@@ -6502,3 +6502,28 @@ class TestStockMove(TestStockCommon):
             {'quantity': 149.97, 'quantity_product_uom': 5.29},
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
+
+    def test_move_is_picked_when_quantity_set_after_empty_pick(self):
+        """
+        Verify that a stock move remains marked as picked when the quantity
+        is manually set after initially picking with zero stock.
+        """
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 5,
+                    'product_uom': self.product.uom_id.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.ref('stock.stock_location_customers'),
+                }),
+            ],
+        })
+        delivery.action_confirm()
+        self.assertRecordValues(delivery.move_ids, [{'quantity': 0.0, 'picked': False}])
+        delivery.move_ids.picked = True
+        delivery.move_ids.quantity = 5
+        self.assertTrue(delivery.move_ids.picked)

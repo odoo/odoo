@@ -278,7 +278,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'done' or any(ml.picked for ml in move.move_line_ids):
                 move.picked = True
-            elif move.move_line_ids:
+            else:
                 move.picked = False
 
     def _inverse_picked(self):
@@ -1701,6 +1701,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'location_dest_id': self.location_dest_id.id,
             'picking_id': self.picking_id.id,
             'company_id': self.company_id.id,
+            'picked': self.picked,
         }
         if quantity:
             # TODO could be also move in create/write
