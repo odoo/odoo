@@ -21,6 +21,7 @@ class ResPartner(models.Model):
         help='International Commercial Terms are a series of predefined commercial'
              ' terms used in international transactions.',
     )
+    incoterm_location = fields.Char(string='Incoterm Location')
 
     @api.model
     def _get_sale_order_domain_count(self):

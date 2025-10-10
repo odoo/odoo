@@ -69,8 +69,9 @@
             <field name="property_supplier_payment_term_id" position="attributes">
                 <attribute name="groups">account.group_account_invoice,sales_team.group_sale_salesman</attribute>
             </field>
-            <group name="fiscal_information" position="inside">
+            <group name="sale" position="inside">
                 <field name="incoterm_id"/>
+                <field name="incoterm_location"/>
             </group>
         </field>
     </record>
@@ -80,7 +81,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
-            <field name="vat" position="after">
+            <field name="country_id" position="after">
                 <field name="property_product_pricelist" optional="hide"/>
             </field>
         </field>
