@@ -527,22 +527,9 @@ export class TablePlugin extends Plugin {
             if (selection.rangeCount > 1) {
                 // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
                 // This behavior can cause the original selection (where the selection started) to be lost.
-                // To solve the issue we merge the ranges of the selection together the first time we find
-                // selection.rangeCount > 1.
-                const [anchorNode, anchorOffset] = getDeepestPosition(
-                    selection.getRangeAt(0).startContainer,
-                    selection.getRangeAt(0).startOffset
-                );
-                const [focusNode, focusOffset] = getDeepestPosition(
-                    selection.getRangeAt(selection.rangeCount - 1).startContainer,
-                    selection.getRangeAt(selection.rangeCount - 1).startOffset
-                );
-                this.dependencies.selection.setSelection({
-                    anchorNode,
-                    anchorOffset,
-                    focusNode,
-                    focusOffset,
-                });
+                // To address this, we reset the selection to the previousActiveSelection, ensuring that
+                // even when multiple ranges are selected, the original selection remains accessible.
+                this.dependencies.selection.resetActiveSelection();
                 return true;
             } else if (
                 ev &&
