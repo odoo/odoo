@@ -9,7 +9,7 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round, float_repr, date_utils, SQL
+from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
@@ -275,7 +275,6 @@ class AccountMove(models.Model):
         :return: A tuple containing the Face items, the taxes and the invoice totals data.
         """
         self.ensure_one()
-        extended_dp = self.env['decimal.precision'].precision_get('Product Price')
         invoice_ref = self.ref and self.ref[:20]
         line = base_line['record']
         tax_details = base_line['tax_details']
@@ -296,35 +295,33 @@ class AccountMove(models.Model):
             'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
             'DiscountsAndRebates': [],
             'Charges': [],
-            'GrossAmount': line.price_subtotal,
+            'GrossAmount': float_round(tax_details['raw_total_excluded_currency'], precision_digits=8),
         }
 
         if line.discount == 100.0:
             raw_total_cost = line.price_unit * line.quantity
         else:
-            raw_total_cost = tax_details['total_excluded_currency'] / (1 - (line.discount / 100.0))
-        xml_values['TotalCost'] = line.currency_id.round(raw_total_cost)
+            raw_total_cost = tax_details['raw_total_excluded_currency'] / (1 - (line.discount / 100.0))
+        xml_values['TotalCost'] = float_round(raw_total_cost, precision_digits=8)
 
         if line.quantity:
-            xml_values['UnitPriceWithoutTax'] = float_round(raw_total_cost / line.quantity, precision_digits=extended_dp)
+            xml_values['UnitPriceWithoutTax'] = float_round(raw_total_cost / line.quantity, precision_digits=8)
         else:
             xml_values['UnitPriceWithoutTax'] = 0.0
 
-        raw_discount_amount = xml_values['TotalCost'] - line.price_subtotal
-        discount_amount = max(raw_discount_amount, 0.0)
-        if discount_amount:
+        discount_amount = xml_values['TotalCost'] - xml_values['GrossAmount']
+        if float_compare(discount_amount, 0.0, precision_digits=8) > 0:
             xml_values['DiscountsAndRebates'].append({
                 'DiscountReason': '/',
                 'DiscountRate': f'{line.discount:.2f}',
                 'DiscountAmount': discount_amount,
             })
 
-        surcharge_amount = -min(0.0, raw_discount_amount)
-        if surcharge_amount:
+        if float_compare(discount_amount, 0.0, precision_digits=8) < 0:
             xml_values['Charges'].append({
                 'ChargeReason': '/',
                 'ChargeRate': f'{-line.discount:.2f}',
-                'ChargeAmount': surcharge_amount,
+                'ChargeAmount': discount_amount,
             })
 
         xml_values['TaxesOutputs'] = [
@@ -421,12 +418,7 @@ class AccountMove(models.Model):
 
         # Taxes.
         AccountTax = self.env['account.tax']
-        base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
-        base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
-        tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
 
         def grouping_function(base_line, tax_data):
             return tax_data['tax'] if tax_data else None
@@ -437,18 +429,15 @@ class AccountMove(models.Model):
             invoice_values['TotalGrossAmount'] += invoice_line_values['GrossAmount']
             invoice_values['Items'].append(invoice_line_values)
 
-            for values in aggregated_values.values():
-                tax = values['grouping_key']
-                if not tax:
-                    continue
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for tax, values in values_per_grouping_key.items():
+            if not tax:
+                continue
 
-                tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
-                if tax.amount < 0.0:
-                    invoice_values['TaxesWithheld'].append(tax_data)
-                    invoice_values['TotalTaxesWithheld'] += tax_data['TaxAmount']['TotalAmount']
-                else:
-                    invoice_values['TaxOutputs'].append(tax_data)
-                    invoice_values['TotalTaxOutputs'] += tax_data['TaxAmount']['TotalAmount']
+            is_withholding = tax.amount < 0.0
+            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
+            invoice_values['TaxesWithheld' if is_withholding else 'TaxOutputs'].append(tax_data)
+            invoice_values['TotalTaxesWithheld' if is_withholding else 'TotalTaxOutputs'] += values['tax_amount_currency']
 
         invoice_values['TotalGrossAmountBeforeTaxes'] = (
             invoice_values['TotalGrossAmount']
@@ -470,7 +459,6 @@ class AccountMove(models.Model):
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
-            'unit_price_decimals': self.env['decimal.precision'].precision_get('Product Price'),
             'eur': eur_curr,
             'conversion_needed': conversion_needed,
             'refund_multiplier': refund_multiplier,
@@ -492,8 +480,8 @@ class AccountMove(models.Model):
             },
             'InvoiceCurrencyCode': inv_curr.name,
             'Invoices': [invoice_values],
-            'TotalTaxOutputs': float_repr(refund_multiplier * abs(self.amount_tax), inv_curr.decimal_places),
         }
+
         if self.l10n_es_invoicing_period_start_date and self.l10n_es_invoicing_period_end_date:
             template_values['Invoices'][0]['InvoiceIssueData']['InvoicingPeriod'] = {
                 'StartDate': self.l10n_es_invoicing_period_start_date,

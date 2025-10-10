@@ -232,6 +232,8 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
     def test_out_invoice_decimals(self):
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        decimal_precision.digits = 4
         with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', return_value=4):
             with freeze_time(self.frozen_today):
                 invoice = self.create_invoice(
