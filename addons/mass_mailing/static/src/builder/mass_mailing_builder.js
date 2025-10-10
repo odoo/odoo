@@ -18,6 +18,7 @@ export class MassMailingBuilder extends Component {
         const builderProps = Object.assign({}, this.props.builderProps);
         const massMailingPlugins = [
             ...registry.category("builder-plugins").getAll(),
+            ...registry.category("mail-core-plugins").getAll(),
             ...registry.category("mass_mailing-plugins").getAll(),
         ];
         const pluginsToRemove = [
