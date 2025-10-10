@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
+from odoo.models import BaseModel
 from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.tools.float_utils import float_round
 
@@ -128,6 +129,15 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'nb_days': 0,
                 }),
             ],
+        })
+        cls.pay_term_epd_mixed = cls.env['account.payment.term'].create({
+            'name': "2/7 Net 30",
+            'note': "Payment terms: 30 Days, 2% Early Payment Discount under 7 days",
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 7,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
         })
 
         # ==== Partners ====
@@ -289,9 +299,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     def _use_chart_template(cls, company, chart_template_ref=None):
         chart_template_ref = chart_template_ref or cls.env['account.chart.template']._guess_chart_template(company.country_id)
         template_vals = cls.env['account.chart.template']._get_chart_template_mapping()[chart_template_ref]
-        template_module = cls.env['ir.module.module']._get(template_vals['module'])
-        if template_module.state != 'installed':
-            raise SkipTest(f"Module required for the test is not installed ({template_module.name})")
+        cls.ensure_installed(template_vals['module'])
 
         # Install the chart template
         cls.env['account.chart.template'].try_loading(chart_template_ref, company=company, install_demo=False)
@@ -387,6 +395,15 @@ class AccountTestInvoicingCommon(ProductCommon):
             else:
                 return account.copy(default={'code': new_code, 'name': account.name, **(default or {})})
 
+    @classmethod
+    def ensure_installed(cls, module_name: str):
+        if cls.env['ir.module.module']._get(module_name).state != 'installed':
+            raise SkipTest(f"Module required for the test is not installed ({module_name})")
+
+    # -------------------------------------------------------------------------
+    # Helper: Generation of Tax / Invoice / Sale Order / etc.
+    # -------------------------------------------------------------------------
+
     def group_of_taxes(self, taxes, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
@@ -424,10 +441,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
     def python_tax(self, formula, **kwargs):
-        account_tax_python = self.env['ir.module.module']._get('account_tax_python')
-        if account_tax_python.state != 'installed':
-            raise SkipTest("Module 'account_tax_python' is not installed!")
-
+        self.ensure_installed('account_tax_python')
         self.tax_number += 1
         return self.env['account.tax'].create({
             **kwargs,
@@ -522,6 +536,7 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False, currency=None, journal=None):
+        """ :rtype: account.move """
         products = [] if products is None else products
         amounts = [] if amounts is None else amounts
         move_form = Form(cls.env['account.move'] \
@@ -616,23 +631,215 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         return line
 
-    def _create_invoice(self, **invoice_args):
-        return self.env['account.move'].create({
+    @classmethod
+    def _create_line_list_vals(cls, line_values: list[dict]):
+        line_list_vals = [
+            {
+                'name': f"line_{line_idx}",
+                **({'price_unit': line_idx * 10} if 'product_id' not in values else {}),
+                **values,
+            }
+            for line_idx, values in enumerate(line_values, start=1)
+        ]
+
+        for vals in line_list_vals:
+            if isinstance(vals.get('product_id'), BaseModel):
+                vals['product_id'] = vals['product_id'].id
+            if isinstance(vals.get('tax_ids'), BaseModel):
+                vals['tax_ids'] = [Command.set(vals['tax_ids'].ids)]
+
+            empty_keys = [key for key, val in vals.items() if val is None]
+            for key in empty_keys:
+                del vals[key]
+
+        line_list_vals = [Command.create(vals) for vals in line_list_vals]
+        return line_list_vals
+
+    @classmethod
+    def _create_invoice(cls, amounts=None, products=None, taxes=None, post=False, **invoice_args):
+        today = fields.Date.today()
+        invoice_line_ids = [
+            Command.create({'product_id': cls.product_a.id}),
+            Command.create({'product_id': cls.product_b.id}),
+        ]
+
+        # QoL: fill invoice lines quickly with `amounts` and/or `products` list.
+        # Example usage: self._create_invoice(amounts=[10, 15, 20])
+        # That will create 3 invoice lines with listed amounts as the price units.
+        if amounts or products:
+            line_idx = 1
+            invoice_line_ids = []
+            tax_values = {'tax_ids': [Command.set(taxes.ids)]} if taxes else {}
+            for amount in (amounts or []):
+                invoice_line_ids.append(
+                    Command.create({
+                        'name': f"line_{line_idx}",
+                        'price_unit': amount,
+                        **tax_values,
+                    })
+                )
+                line_idx += 1
+            for product in (products or []):
+                invoice_line_ids.append(
+                    Command.create({
+                        'name': f"line_{line_idx}",
+                        'product_id': product.id,
+                        **tax_values,
+                    })
+                )
+                line_idx += 1
+
+        # QoL: allow passing record immediately instead of getting the id everytime
+        for key, val in invoice_args.items():
+            if key.endswith('_id') and isinstance(val, BaseModel):
+                invoice_args[key] = val.id
+
+        # QoL: delete all key with None from invoice_args
+        none_keys = [key for key, val in invoice_args.items() if val is None]
+        for key in none_keys:
+            del invoice_args[key]
+
+        invoice = cls.env['account.move'].create([{
             'move_type': 'out_invoice',
-            'partner_id': self.partner.id,
-            'invoice_date': '2024-10-10',
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'quantity': 10,
-                }),
-                Command.create({
-                    'product_id': self.product_b.id,
-                    'quantity': 5,
-                }),
-            ],
+            'partner_id': cls.partner_a.id,
+            'date': today,
+            'invoice_date': today,
+            'invoice_line_ids': invoice_line_ids,
             **invoice_args,
-        })
+        }])
+
+        if post:
+            invoice.action_post()
+
+        return invoice
+
+    @classmethod
+    def _reverse_invoice(cls, invoice, post=False):
+        reverse_action_values = (
+            cls.env['account.move.reversal']
+            .with_context(active_model='account.move', active_ids=invoice.ids)
+            .create({'journal_id': invoice.journal_id.id})
+            .reverse_moves()
+        )
+        credit_note = cls.env['account.move'].browse(reverse_action_values['res_id'])
+
+        if post:
+            credit_note.action_post()
+
+        return credit_note
+
+    @classmethod
+    def _create_invoice_payment(cls, invoices, **kwargs):
+        return (
+            cls.env['account.payment.register']
+            .with_context(
+                active_model='account.move',
+                active_ids=invoices.ids,
+            )
+            .create({
+                'group_payment': True,
+                **kwargs,
+            })
+            ._create_payments()
+        )
+
+    @classmethod
+    def _create_sale_order(cls, confirm=True, **values):
+        cls.ensure_installed('sale')
+
+        sale_order = cls.env['sale.order'].create([{
+            'partner_id': cls.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': cls.product_a.id}),
+                Command.create({'product_id': cls.product_b.id}),
+            ],
+            **values,
+        }])
+
+        if confirm:
+            sale_order.action_confirm()
+
+        return sale_order
+
+    @classmethod
+    def _create_down_payment_invoice(cls, sale_order, amount_type: str, amount: float, post=False):
+        """
+        :param sale_order:      The SO as a sale.order record.
+        :param amount_type:     The type of the global discount: ('percent'/'percentage'), 'fixed', or 'delivered'.
+        :param amount:          The amount to consider.
+                                For 'percent', it should be a percentage [0-100].
+                                For 'fixed', any amount.
+                                For 'delivered', this value is not used.
+        """
+        cls.ensure_installed('sale')
+
+        if amount_type in ('percent', 'percentage'):
+            create_values = {
+                'advance_payment_method': 'percentage',
+                'amount': amount,
+            }
+        elif amount_type == 'fixed':
+            create_values = {
+                'advance_payment_method': 'fixed',
+                'fixed_amount': amount,
+            }
+        else:  # amount_type == 'delivered'
+            create_values = {
+                'advance_payment_method': 'delivered',
+            }
+
+        down_payment_wizard = (
+            cls.env['sale.advance.payment.inv']
+            .with_context({'active_model': sale_order._name, 'active_ids': sale_order.ids})
+            .create(create_values)
+        )
+        action_values = down_payment_wizard.create_invoices()
+        dp_invoice = cls.env['account.move'].browse(action_values['res_id'])
+
+        if post:
+            dp_invoice.action_post()
+
+        return dp_invoice
+
+    @classmethod
+    def _create_final_invoice(cls, sale_order, post=False):
+        return cls._create_down_payment_invoice(sale_order, 'delivered', 0, post=post)
+
+    @classmethod
+    def _apply_sale_order_discount(cls, sale_order, amount_type: str, amount: float):
+        """
+        :param sale_order:      The SO as a sale.order record.
+        :param amount_type:     The type of the global discount: 'percent' or 'fixed'.
+        :param amount:          The amount to consider.
+                                For 'percent', it should be a percentage [0-100].
+                                For 'fixed', any amount.
+        """
+        cls.ensure_installed('sale')
+
+        if amount_type == 'percent':
+            discount_type = 'so_discount'
+            discount_percentage = amount / 100.0
+            discount_amount = None
+        else:  # amount_type == 'fixed'
+            discount_type = 'amount'
+            discount_percentage = None
+            discount_amount = amount
+
+        discount_wizard = (
+            cls.env['sale.order.discount']
+            .with_context({'active_model': sale_order._name, 'active_id': sale_order.id})
+            .create({
+                'discount_type': discount_type,
+                'discount_percentage': discount_percentage,
+                'discount_amount': discount_amount,
+            })
+        )
+        discount_wizard.action_apply_discount()
+        return discount_wizard
+
+    # -------------------------------------------------------------------------
+    # Assertions
+    # -------------------------------------------------------------------------
 
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):

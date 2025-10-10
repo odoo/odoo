@@ -46,11 +46,11 @@ class TestSwissQR(AccountTestInvoicingCommon):
         self.product = self.env['product.product'].create({
             'name': 'Customizable Desk',
         })
-        self.invoice1 = self.create_invoice('base.CHF')
+        self.invoice1 = self._create_invoice('base.CHF')
         sale_journal = self.env['account.journal'].search([("type", "=", "sale")])
         sale_journal.invoice_reference_model = "ch"
 
-    def create_invoice(self, currency_to_use='base.CHF'):
+    def _create_invoice(self, currency_to_use='base.CHF'):
         """ Generates a test invoice """
 
         account = self.env['account.account'].search(
@@ -187,13 +187,9 @@ class TestSwissQR(AccountTestInvoicingCommon):
         Test that the order reference is correctly generated for QR-Code
         We summon the skipTest if Sale is not installed (instead of creating a whole module for one test)
         """
-        if 'sale.order' not in self.env:
-            self.skipTest('`sale` is not installed')
+        self.ensure_installed('payment_custom')
+        self.ensure_installed('sale')
         self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
-
-        payment_custom = self.env['ir.module.module']._get('payment_custom')
-        if payment_custom.state != 'installed':
-            self.skipTest("payment_custom module is not installed")
 
         provider = self.env['payment.provider'].create({
             'name': 'Test',

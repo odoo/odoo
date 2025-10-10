@@ -52,16 +52,6 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     def _set_lock_date(self, lock_date):
         self.env.company.fiscalyear_lock_date = fields.Date.from_string(lock_date)
 
-    def _reverse_invoice(self, invoice):
-        move_reversal = self.env['account.move.reversal']\
-            .with_context(active_model="account.move", active_ids=invoice.ids)\
-            .create({
-                'journal_id': invoice.journal_id.id,
-                'reason': "no reason",
-            })
-        reversal = move_reversal.refund_moves()
-        return self.env['account.move'].browse(reversal['res_id'])
-
     # -------------------------------------------------------------------------
     # TESTS
     # -------------------------------------------------------------------------

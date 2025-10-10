@@ -81,7 +81,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
 
         cls.branch_a, cls.branch_b, cls.branch_c = cls.env.company.child_ids
 
-    def create_invoice(self, move_type=None, partner=None, invoice_date=None, amounts=None, taxes=[], company=None, accounts=[], quantities=[]):
+    def _create_invoice(self, move_type=None, partner=None, invoice_date=None, amounts=None, taxes=[], company=None, accounts=[], quantities=[]):
         invoice = self.init_invoice(
             move_type=move_type or 'in_invoice',
             partner=partner,
@@ -125,7 +125,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test that if any of the limit is not exceeded.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-06-05',
             amounts=[29000],
@@ -141,7 +141,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test that if the per transaction limit is exceeded.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-06-05',
             amounts=[31000],
@@ -150,7 +150,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-06-05',
             amounts=[31000],
@@ -159,7 +159,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_1.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
 
-        self.create_invoice(
+        self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-06-05',
             amounts=[31000],
@@ -167,7 +167,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             quantities=[1]
         )
 
-        move_3 = self.create_invoice(
+        move_3 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-06-05',
             amounts=[31000],
@@ -182,7 +182,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         message should be set accordingly.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-06-05',
             amounts=[30000],
@@ -191,7 +191,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning, False)
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-07-06',
             amounts=[20000],
@@ -200,7 +200,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_1.l10n_in_warning, False)
 
-        move_2 = self.create_invoice(
+        move_2 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-07-16',
             amounts=[31000],
@@ -209,7 +209,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194IB on this transaction.")
 
-        move_3 = self.create_invoice(
+        move_3 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-09-06',
             amounts=[50000],
@@ -218,7 +218,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_3.l10n_in_warning, False)
 
-        move_4 = self.create_invoice(
+        move_4 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-09-16',
             amounts=[50000],
@@ -233,7 +233,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         pan number and having pan number.
         '''
         # no pan number
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_foreign,
             invoice_date='2024-06-05',
             amounts=[30000],
@@ -242,7 +242,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning, False)
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_foreign_2,
             invoice_date='2024-06-05',
             amounts=[30000],
@@ -252,7 +252,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         self.assertEqual(move_1.l10n_in_warning, False)
 
         # same pan number
-        move_2 = self.create_invoice(
+        move_2 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-06-05',
             amounts=[30000],
@@ -261,7 +261,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_2.l10n_in_warning, False)
 
-        move_3 = self.create_invoice(
+        move_3 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-06-05',
             amounts=[30000],
@@ -275,7 +275,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test that if the aggregate limit is exceeded.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-06-05',
             amounts=[20000],
@@ -283,7 +283,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning, False)
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-07-06',
             amounts=[20000],
@@ -291,7 +291,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_1.l10n_in_warning, False)
 
-        move_2 = self.create_invoice(
+        move_2 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-08-06',
             amounts=[31000],
@@ -299,7 +299,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_2.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
 
-        move_3 = self.create_invoice(
+        move_3 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-09-06',
             amounts=[5000],
@@ -307,7 +307,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_3.l10n_in_warning, False)
 
-        move_4 = self.create_invoice(
+        move_4 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-10-07',
             amounts=[20000],
@@ -315,7 +315,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_4.l10n_in_warning, False)
 
-        move_5 = self.create_invoice(
+        move_5 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-11-08',
             amounts=[25000],
@@ -328,7 +328,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test that the aggregate limit in case of debit/credit note.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-09-01',
             amounts=[2000],
@@ -337,7 +337,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning, False)
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-09-01',
             amounts=[3000],
@@ -348,7 +348,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
 
         self.assertEqual(move_1.l10n_in_warning, False)
 
-        move_2 = self.create_invoice(
+        move_2 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-09-01',
             amounts=[2000],
@@ -363,7 +363,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         as the account.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             move_type='out_invoice',
             invoice_date='2022-12-12',
@@ -380,7 +380,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         have different accounts which have the different tax group as the account.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             move_type='in_invoice',
             invoice_date='2022-12-12',
@@ -391,7 +391,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertTrue(move.l10n_in_warning)
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_a,
             move_type='in_invoice',
             invoice_date='2022-12-12',
@@ -408,7 +408,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         '''
         Test when any invoice line has Zero
         '''
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[101000, 0],
@@ -416,7 +416,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[0],
@@ -428,7 +428,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         '''
         Test when tds entry created and warning will removed
         '''
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[1000, 6000],
@@ -447,21 +447,21 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         of the company,the warning message should be set accordingly.
         '''
 
-        self.create_invoice(
+        self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-05-14',
             amounts=[25000],
             company=self.branch_a,
         )
 
-        self.create_invoice(
+        self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-05-14',
             amounts=[25000],
             company=self.branch_b,
         )
 
-        self.create_invoice(
+        self._create_invoice(
             partner=self.partner_b,
             invoice_date='2024-05-14',
             amounts=[25000],
@@ -469,7 +469,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
             quantities=[25]
         )
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-05-14',
             amounts=[28000],
@@ -483,7 +483,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test when tcs section is used in the bill creation.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2024-05-29',
             amounts=[1100000],
@@ -497,7 +497,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test when tcs section is used in the bill creation.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             move_type='out_invoice',
             partner=self.partner_a,
             invoice_date='2024-05-29',
@@ -512,7 +512,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         have different accounts which have the same tax group as the account.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[17000, 14000],
@@ -521,7 +521,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to deduct TDS u/s 194C on this transaction.")
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[17000, 13000],
@@ -530,7 +530,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_1.l10n_in_warning, False)
 
-        move_2 = self.create_invoice(
+        move_2 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[30000],
@@ -539,7 +539,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_2.l10n_in_warning, False)
 
-        move_3 = self.create_invoice(
+        move_3 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[10000],
@@ -553,7 +553,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         total calculation.
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[16000],
@@ -563,7 +563,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         move.button_cancel()
         self.assertEqual(move.l10n_in_warning, False)
 
-        move_1 = self.create_invoice(
+        move_1 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[25000],
@@ -572,7 +572,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
         self.assertEqual(move_1.l10n_in_warning, False)
 
-        move_2 = self.create_invoice(
+        move_2 = self._create_invoice(
             partner=self.partner_a,
             invoice_date='2022-12-12',
             amounts=[85000],
@@ -586,7 +586,7 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         Test when a tax is added to the some of the move line
         '''
 
-        move = self.create_invoice(
+        move = self._create_invoice(
             partner=self.partner_a,
             move_type='out_invoice',
             invoice_date='2022-12-12',
