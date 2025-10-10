@@ -3,7 +3,7 @@
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="onKeydown">
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
-                <div t-if="state.isImage" class="col p-2" style="max-width: 270px;">
+                <div t-if="state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
                         <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="onKeydownEnter"/>
@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div t-else="" class="d-flex">
-                    <div class="col p-2" style="max-width: 270px;">
+                    <div class="col p-2 o_link_popover_container">
                         <div class="input-group mb-1" t-att-class="{'d-none': !state.showLabel}">
                             <input t-ref="label"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
@@ -34,14 +34,45 @@
                             </span>
 
                         </div>
-                        <div class="input-group">
-                            <select name="link_type" class="form-select form-select-sm border-dark-subtle w-100 mb-1" t-model="state.type" t-on-change="onChange">
-                                <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
-                                    <t t-if="props.allowCustomStyle or colorData.type !== 'custom'">
-                                        <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview">
-                                            <span t-esc="colorData.label"/>
-                                        </option>
-                                    </t>
+                        <div class="input-group mb-1">
+                            <Dropdown menuClass="'o-we-link-type-dropdown'">
+                                <button name="link_type" class="form-select form-select-sm border-dark-subtle text-start">
+                                    <t t-set="selectedItem" t-value="colorsData.find(colorData => colorData.type === state.type)" />
+                                    <span t-att-class="selectedItem.className"
+                                        t-att-style="selectedItem.style"
+                                        t-out="selectedItem.label"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <div data-prevent-closing-overlay="true">
+                                        <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                            <t t-if="props.allowCustomStyle or colorData.type !== 'custom'">
+                                                <DropdownItem
+                                                    onSelected="() => this.onSelectedLinkType(colorData.type)"
+                                                    t-on-pointerdown.stop.prevent="() => {}"
+                                                >
+                                                    <span t-att-class="colorData.className"
+                                                        t-att-style="colorData.style"
+                                                        t-out="colorData.label"/>
+                                                </DropdownItem>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </t>
+                            </Dropdown>
+                        </div>
+                        <div t-if="state.type !== 'link'" class="input-group mb-1">
+                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model="state.buttonSize" t-on-change="onChange">
+                                <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
+                                    <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
+                                        <span t-out="buttonSizesData.label"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model="state.buttonShape" t-on-change="onChange">
+                                <t t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape">
+                                    <option t-att-value="buttonShapeData.shape" t-att-selected="state.buttonShape === buttonShapeData.shape">
+                                        <span t-out="buttonShapeData.label"/>
+                                    </option>
                                 </t>
                             </select>
                         </div>
@@ -70,27 +101,7 @@
                                 <select name="link_style_border" class="form-select form-select-sm custom-border-style" t-model="state.customBorderStyle" t-on-change="onChange">
                                     <t t-foreach="this.borderData" t-as="borderData" t-key="borderData.style">
                                         <option t-att-value="borderData.style" t-att-selected="state.customBorderStyle === borderData.style">
-                                            <span t-esc="borderData.label"/>
-                                        </option>
-                                    </t>
-                                </select>
-                            </div>
-                            <div class="input-group mb-1">
-                                <label>Size</label>
-                                <select name="link_style_size" class="form-select form-select-sm link-style" t-model="state.buttonSize" t-on-change="onChange">
-                                    <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
-                                        <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
-                                            <span t-esc="buttonSizesData.label"/>
-                                        </option>
-                                    </t>
-                                </select>
-                            </div>
-                            <div class="input-group mb-1">
-                                <label>Shape</label>
-                                <select name="link_style_shape" class="form-select form-select-sm link-style" t-model="state.buttonShape" t-on-change="onChange">
-                                    <t t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape">
-                                        <option t-att-value="buttonShapeData.shape" t-att-selected="state.buttonShape === buttonShapeData.shape">
-                                            <span t-out="buttonShapeData.label"/>
+                                            <span t-out="borderData.label"/>
                                         </option>
                                     </t>
                                 </select>
@@ -122,9 +133,12 @@
                                 Autoconvert to relative link
                             </CheckBox>
                         </t>
-                        <div class="mt-3">
+                        <div class="mt-3 d-flex align-items-center">
                             <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
-                            <button class="o_we_discard_link btn btn-sm btn-dark ms-1" t-on-click="props.onDiscard">Discard</button>
+                            <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
+                            <a t-if="props.canRemove" href="#" class="o_we_remove_link text-dark ms-auto" t-on-click.prevent="onClickRemove" title="Remove Link">
+                                <i class="fa fa-chain-broken"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -150,16 +164,8 @@
                                     >
                                         <i class="fa fa-magic"></i>
                                     </a>
-                                    <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
-                                        <i class="fa fa-clipboard"></i>
-                                    </a>
                                     <t t-if="props.canEdit">
-                                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a href="#" t-if="props.canRemove" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
-                                            <i class="fa fa-chain-broken"></i>
-                                        </a>
+                                        <a href="#" class="o_we_edit_link btn btn-sm btn-secondary" t-on-click="onClickEdit" title="Edit Link">Edit</a>
                                     </t>
                                 </div>
                             </div>

@@ -1,8 +1,12 @@
 import { areCssValuesEqual } from "@html_builder/utils/utils_css";
+import { rgbToHex } from "@web/core/utils/colors";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
+    goBackToBlocks,
     goToTheme,
+    insertSnippet,
+    openLinkPopup,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -11,6 +15,16 @@ const TARGET_BODY_BG_COLOR = '#00FF00';
 const TARGET_BODY_BG_COLOR_V2 = 'rgb(0, 255, 0)';
 const TARGET_BODY_COLOR = '#FF00FF';
 const TARGET_BODY_COLOR_V2 = 'rgb(255, 0, 255)';
+const TARGET_OCC = {
+    occ1_primary: "#FF0000",
+    occ1_primary_border: "#CE0000",
+    occ1_secondary: "#FF9C00",
+    occ1_secondary_border: "#BD9400",
+    occ2_primary: "#00FFFF",
+    occ2_primary_border: "#085294",
+    occ2_secondary: "#9C00FF",
+    occ2_secondary_border: "#6BADDE",
+};
 
 const checkFontSize = function () {
     const style = document.defaultView.getComputedStyle(this.anchor);
@@ -29,6 +43,79 @@ const checkBodyColor = function () {
     if (!areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, "color", style)) {
         console.error(`Expected the color to be equal to ${TARGET_BODY_COLOR} but found ${style.color} instead`);
     }
+};
+const checkPopoverStyling = function (selector, toCheck, checkWith, isBorder) {
+    return {
+        trigger: `.o_popover .o-dropdown-item .btn:contains(${selector}), .o_popover .o-dropdown-item span:contains(${selector})`,
+        run(helper) {
+            let rgbColor = "";
+            if (isBorder) {
+                // Fetch rgb value from border styling
+                const regex = /rgb\(\d+,\s*\d+,\s*\d+\)/;
+                rgbColor = helper.anchor.style[toCheck].match(regex)[0];
+            } else {
+                rgbColor = helper.anchor.style[toCheck];
+            }
+            const hexColor = rgbToHex(rgbColor).toUpperCase();
+            if (hexColor !== checkWith) {
+                console.error(
+                    `Expected the color to be equal to ${checkWith} but found ${hexColor} instead`
+                );
+            }
+        },
+    };
+};
+const changeThemeColor = function (presetNumber = 1, datalabel, value, colorPickerIndex = 1) {
+    return [
+        {
+            content: "Open the color combinations area",
+            trigger: "div[data-label='Color Presets'] button",
+            run(helper) {
+                if (!helper.anchor.classList.contains("active")) {
+                    helper.click();
+                }
+            },
+        },
+        {
+            content: "Open a color combination",
+            trigger: `div[id^='builder_collapse_content'] .hb-row:nth-child(${presetNumber}) button.o_hb_collapse_toggler`,
+            run: "click",
+        },
+        {
+            content: `Edit the color of that color ${datalabel}`,
+            trigger: `div[id^='builder_collapse_content'] .hb-row[data-label='${datalabel}'] .hb-row-content .o_we_color_preview:nth-child(${colorPickerIndex})`,
+            run: "click",
+        },
+        {
+            content: "Choose a color",
+            trigger: `.o_font_color_selector .o_color_button[data-color="${value}"]`,
+            run: "click",
+        },
+        {
+            content: "Close the color combination",
+            trigger: `div[id^='builder_collapse_content'] .hb-row:nth-child(${presetNumber}) button.o_hb_collapse_toggler`,
+            run: "click",
+        },
+    ];
+};
+const setThemePreset = function (selector, optionContainerTitle, presetNumber) {
+    return [
+        {
+            content: `Set preset value of ${optionContainerTitle}`,
+            trigger: `:iframe ${selector}`,
+            run: "click",
+        },
+        {
+            content: "Open color picker",
+            trigger: `[data-container-title='${optionContainerTitle}'] .we-bg-options-container .o_we_color_preview`,
+            run: "click",
+        },
+        {
+            content: `Select ${presetNumber} preset`,
+            trigger: `button.o_cc${presetNumber}`,
+            run: "click",
+        },
+    ];
 };
 
 registerWebsitePreviewTour("website_style_edition", {
@@ -124,3 +211,89 @@ registerWebsitePreviewTour("website_style_edition", {
     content: "The media dialog should open",
     trigger: '.o_select_media_dialog',
 }]);
+
+registerWebsitePreviewTour(
+    "website_link_popover_preview",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...goToTheme(),
+        ...changeThemeColor(1, "Primary Buttons", TARGET_OCC.occ1_primary),
+        ...changeThemeColor(1, "Primary Buttons", TARGET_OCC.occ1_primary_border, 2),
+        ...changeThemeColor(1, "Secondary Buttons", TARGET_OCC.occ1_secondary),
+        ...changeThemeColor(1, "Secondary Buttons", TARGET_OCC.occ1_secondary_border, 2),
+        ...changeThemeColor(2, "Primary Buttons", TARGET_OCC.occ2_primary),
+        ...changeThemeColor(2, "Primary Buttons", TARGET_OCC.occ2_primary_border, 2),
+        ...changeThemeColor(2, "Secondary Buttons", TARGET_OCC.occ2_secondary),
+        ...changeThemeColor(2, "Secondary Buttons", TARGET_OCC.occ2_secondary_border, 2),
+        goBackToBlocks(),
+        // Verify preset values on s_text_cover snippet when the parent element
+        // has a higher cc value than its child
+        ...insertSnippet({
+            id: "s_text_cover",
+            name: "Text Cover",
+            groupName: "Intro",
+        }),
+        ...setThemePreset(".s_text_cover .o_grid_mode", "Text Cover", "2"),
+        ...setThemePreset(".s_text_cover .o_grid_mode > .o_grid_item", "Column", "1"),
+        ...openLinkPopup(
+            ":iframe .s_text_cover a.btn:contains('Contact Us')",
+            "Contact Us",
+            1,
+            true
+        ),
+        {
+            trigger: ".o_we_edit_link",
+            run: "click",
+        },
+        {
+            trigger: "button[name=link_type]",
+            run: "click",
+        },
+        checkPopoverStyling("Button Primary", "backgroundColor", TARGET_OCC.occ2_primary),
+        checkPopoverStyling("Button Primary", "border", TARGET_OCC.occ2_primary_border, true),
+        checkPopoverStyling("Button Secondary", "backgroundColor", TARGET_OCC.occ2_secondary),
+        checkPopoverStyling("Button Secondary", "border", TARGET_OCC.occ2_secondary_border, true),
+        // Verify preset values on footer snippet when the parent element
+        // has a hight cc value than its child
+        ...setThemePreset("footer", "Footer", "2"),
+        ...setThemePreset("footer #connect", "Column", "1"),
+        ...openLinkPopup(":iframe footer #connect a:contains('Contact Us')", "Contact Us", 1, true),
+        {
+            trigger: ".o_we_edit_link",
+            run: "click",
+        },
+        {
+            trigger: "button[name=link_type]",
+            run: "click",
+        },
+        checkPopoverStyling("Button Primary", "backgroundColor", TARGET_OCC.occ2_primary),
+        checkPopoverStyling("Button Primary", "border", TARGET_OCC.occ2_primary_border, true),
+        checkPopoverStyling("Button Secondary", "backgroundColor", TARGET_OCC.occ2_secondary),
+        checkPopoverStyling("Button Secondary", "border", TARGET_OCC.occ2_secondary_border, true),
+        // Verify preset values on s_text_cover snippet when the parent element
+        // has a lower cc value than its child
+        ...setThemePreset(".s_text_cover .o_grid_mode", "Text Cover", "1"),
+        ...setThemePreset(".s_text_cover .o_grid_mode > .o_grid_item", "Column", "2"),
+        ...openLinkPopup(
+            ":iframe .s_text_cover a.btn:contains('Contact Us')",
+            "Contact Us",
+            1,
+            true
+        ),
+        {
+            trigger: ".o_we_edit_link",
+            run: "click",
+        },
+        {
+            trigger: "button[name=link_type]",
+            run: "click",
+        },
+        checkPopoverStyling("Button Primary", "backgroundColor", TARGET_OCC.occ2_primary),
+        checkPopoverStyling("Button Primary", "border", TARGET_OCC.occ2_primary_border, true),
+        checkPopoverStyling("Button Secondary", "backgroundColor", TARGET_OCC.occ2_secondary),
+        checkPopoverStyling("Button Secondary", "border", TARGET_OCC.occ2_secondary_border, true),
+    ]
+);

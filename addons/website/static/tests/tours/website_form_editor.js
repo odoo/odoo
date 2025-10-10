@@ -504,11 +504,6 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         run: "click",
     },
     {
-        content: "Change button's style",
-        trigger: ".o-we-linkpopover select[name='link_type']",
-        run: "select custom",
-    },
-    {
         trigger: ".o-we-linkpopover select[name=link_style_shape]",
         run: "select rounded-circle",
     },
@@ -520,7 +515,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         run: "click",
     }, {
         content: "Check the resulting button",
-        trigger: ":iframe .s_website_form_send.btn.btn-sm.btn-custom.rounded-circle",
+        trigger: ":iframe .s_website_form_send.btn.btn-sm.rounded-circle",
     },
     // Add a default value to a auto-fillable field.
     ...selectFieldByLabel("Your Name"),
