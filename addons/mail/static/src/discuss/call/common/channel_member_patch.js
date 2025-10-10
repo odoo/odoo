@@ -18,7 +18,7 @@ const ChannelMemberPatch = {
                 this.channel_id.rtc_session_ids.add(r);
                 this.store.ringingThreads.add(this.channel_id);
                 this.channel_id.cancelRtcInvitationTimeout = browser.setTimeout(() => {
-                    this.store.env.services["discuss.rtc"].leaveCall(this.channel_id);
+                    this.store.env.services["discuss.rtc"].leaveCall(this.channel_id.channel);
                 }, ChannelMember.CANCEL_CALL_INVITE_DELAY);
             },
             /** @this {import("models").ChannelMember} */
