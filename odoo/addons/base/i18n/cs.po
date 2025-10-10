@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
-# 
+# * base
+#
 # Translators:
 # Tomáš Píšek, 2024
 # Tereza Mokrá, 2024
@@ -13,20 +13,22 @@
 # Denis Gobin, 2025
 # Petr Vojta <petvoj@gmail.com>, 2025
 # Marta Wacławek, 2025
-# 
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-13 15:13+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-10-10 22:20+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/base/cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -20549,8 +20551,8 @@ msgstr ""
 "Kód pro výpočet hodnoty pole.\n"
 "Iterujte na sadu záznamů  'self'  a přiřaďte hodnotu pole:\n"
 "\n"
-"pro záznam self:\n"
-"record ['size'] = len(record.name)\n"
+"    for record in self:\n"
+"        record ['size'] = len(record.name)\n"
 "\n"
 "K dispozici jsou moduly time, datetime, dateutil."
 
@@ -46822,8 +46824,8 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
-"for record in self: \n"
-"record['size'] = len(record.name)"
+"for record in self:\n"
+"        record['size'] = len(record.name)"
 
 #. module: base
 #. odoo-python
