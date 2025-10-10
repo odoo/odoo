@@ -2028,22 +2028,7 @@ class BaseModel(metaclass=MetaModel):
             if field.type != 'many2one':
                 raise ValueError(f"Only many2one path is accepted for the {groupby_spec!r} groupby spec")
 
-            comodel = self.env[field.comodel_name]
-            coquery = comodel.with_context(active_test=False)._search([])
-            if self.env.su or not coquery.where_clause:
-                coalias = query.make_alias(alias, fname)
-            else:
-                coalias = query.make_alias(alias, f"{fname}__{self.env.uid}")
-            condition = SQL(
-                "%s = %s",
-                self._field_to_sql(alias, fname, query),
-                SQL.identifier(coalias, 'id'),
-            )
-            if coquery.where_clause:
-                subselect_arg = SQL('%s.*', SQL.identifier(comodel._table))
-                query.add_join('LEFT JOIN', coalias, coquery.subselect(subselect_arg), condition)
-            else:
-                query.add_join('LEFT JOIN', coalias, comodel._table, condition)
+            comodel, coalias = field.join(self, alias, query)
             return comodel._read_group_groupby(coalias, f"{seq_fnames}:{granularity}" if granularity else seq_fnames, query)
 
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
@@ -2310,6 +2295,7 @@ class BaseModel(metaclass=MetaModel):
         """Extend the group to include all target records by default."""
         return groups.search([])
 
+    @typing.final
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -3248,7 +3234,7 @@ class BaseModel(metaclass=MetaModel):
         for field in fields:
             if field.name == 'id':
                 continue
-            assert field.store
+            assert field.store or field.compute_sql
             (column_fields if field.column_type else other_fields).add(field)
 
         context = self.env.context
@@ -4631,7 +4617,9 @@ class BaseModel(metaclass=MetaModel):
                 terms.append(SQL("%s IS NULL", sql_field))
 
             # LEFT JOIN the comodel table, in order to include NULL values, too
-            _comodel, coalias = field.join(self, alias, query)
+            # Run as sudo because we can order by inaccessible models as we can
+            # only order by the default order or the id.
+            _comodel, coalias = field.join(self.sudo(), alias, query)
 
             # delegate the order to the comodel
             reverse = direction.code == 'DESC'
