@@ -203,6 +203,10 @@ class AccountJournal(models.Model):
                 journal.has_unhashed_entries = False
 
     def _compute_has_entries(self):
+        if not self.ids:
+            self.has_posted_entries = False
+            self.has_entries = False
+            return
         sql_query = SQL(
             """
                        SELECT j.id,
