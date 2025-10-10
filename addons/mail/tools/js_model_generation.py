@@ -34,6 +34,7 @@ MODELS_TO_INCLUDE = [
 # so new models can be progressively exposed without fetching everything.
 MODELS_TO_EXPOSE = [
     "discuss.call.history",
+    "discuss.channel.member",
     "mail.activity",
     "mail.activity.type",
     "mail.canned.response",
