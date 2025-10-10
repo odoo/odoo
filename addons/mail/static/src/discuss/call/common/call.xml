@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': rtc.state.isFullscreen, 'ps-2 pb-2': !rtc.state.isFullscreen }">
-                    <span class="text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': rtc.state.isFullscreen, 'p-2': !rtc.state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
+                    <span class="o-discuss-Call-notification text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': rtc.state.isFullscreen, 'p-2': !rtc.state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
                 </div>
                 <div class="o-discuss-Call-layoutActions position-absolute bottom-0 end-0">
                     <ActionList actions="layoutActions" inline="true"/>

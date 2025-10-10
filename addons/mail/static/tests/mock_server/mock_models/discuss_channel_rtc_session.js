@@ -55,6 +55,39 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         return sessionIds;
     }
 
+    unlink(ids) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        const sessions = this.browse(ids);
+        for (const session of sessions) {
+            const [partner] = ResPartner.search_read([["id", "=", session.partner_id]]);
+            BusBus._sendmany([
+                [
+                    partner,
+                    "discuss.channel.rtc.session/ended",
+                    {
+                        sessionId: session.id,
+                    },
+                ],
+                [
+                    partner,
+                    "mail.record/insert",
+                    new mailDataHelpers.Store(DiscussChannel.browse(Number(session.channel_id)), {
+                        rtc_session_ids: mailDataHelpers.Store.many(
+                            sessions,
+                            makeKwArgs({ only_id: true, mode: "DELETE" })
+                        ),
+                    }).get_result(),
+                ],
+            ]);
+        }
+        super.unlink(...arguments);
+    }
+
     /**
      * @param {number} id
      * @param {{ extra?; boolean }} options
