@@ -453,7 +453,7 @@ const threadPatch = {
             if (!this.self_member_id) {
                 this.store.env.services["bus_service"].addChannel(this.busChannel);
             }
-            const res = this.openChannel();
+            const res = this.channel.openChannel();
             if (res) {
                 return res;
             }
@@ -461,12 +461,6 @@ const threadPatch = {
             return true;
         }
         return super.open(...arguments);
-    },
-    /**
-     * @returns {boolean} true if the channel was opened, false otherwise
-     */
-    openChannel() {
-        return false;
     },
     /** @param {string} body */
     async post(body) {

@@ -44,6 +44,7 @@ declare module "models" {
         name: string;
         offlineMembers: ChannelMember[];
         onlineMembers: ChannelMember[];
+        openChannel: () => boolean;
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
         self_member_id: ChannelMember;
@@ -131,7 +132,6 @@ declare module "models" {
         notifyDescriptionToServer: (description: unknown) => Promise<unknown>;
         offlineMembers: ChannelMember[];
         onlineMembers: ChannelMember[];
-        openChannel: () => boolean;
         otherTypingMembers: ChannelMember[];
         rename: (name: string) => Promise<void>;
         scrollUnread: boolean;
