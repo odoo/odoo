@@ -131,7 +131,7 @@
             </div>
         </div>
     </div>
-    <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
+    <NavigableList t-if="suggestion and !composerService.htmlEnabled" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
 
 <t t-name="mail.Composer.sendButton">
@@ -184,17 +184,18 @@
 </t>
 
     <t t-name="mail.Composer.suggestionSpecial">
+        <t t-set="special" t-value="command || option"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.displayName"/>
+            <t t-esc="special.displayName"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.description"/>
+            <t t-esc="special.description"/>
         </em>
     </t>
 
     <t t-name="mail.Composer.suggestionPartner">
-        <t t-set="partner" t-value="option.partner"/>
-        <ImStatus t-if="partner" persona="partner"/>
+        <t t-set="partner" t-value="command?.partner || option?.partner"/>
+        <ImStatus t-if="option?.partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
         </strong>
@@ -202,21 +203,24 @@
     </t>
 
     <t t-name="mail.Composer.suggestionRole">
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-esc="option.label"/>
+        <t t-set="role" t-value="command?.role || option?.role"/>
+        <t t-set="thread" t-value="command?.thread || option?.thread"/>
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-esc="role.name"/>
         <em class="text-600 text-truncate align-self-center">
-            <t t-if="option.thread?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
+            <t t-if="thread?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
             <t t-else="">Notify users with this role</t>
         </em>
     </t>
 
     <t t-name="mail.Composer.suggestionThread">
+        <t t-set="thread" t-value="command?.thread || option?.thread"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <i t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
-            <t t-if="option.thread.parent_channel_id">
-                <t t-esc="option.thread.parent_channel_id.displayName"/>
+            <i t-attf-class="fa #{thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
+            <t t-if="thread.parent_channel_id">
+                <t t-esc="thread.parent_channel_id.displayName"/>
                 <i class="oi oi-chevron-right o-xsmaller mx-1"/>
             </t>
-            <t t-esc="option.thread.displayName"/>
+            <t t-esc="thread.displayName"/>
         </strong>
     </t>
 
@@ -230,19 +234,21 @@
     </t>
 
     <t t-name="mail.Composer.suggestionCannedResponse">
+        <t t-set="cannedResponse" t-value="command || option"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-1 text-truncate">
-            <t t-esc="option.source"/>
+            <t t-esc="cannedResponse.source"/>
         </strong>
         <span class="text-600 text-truncate align-self-center" style="flex-basis: 20%;">
-            <t t-esc="option.label"/>
+            <t t-esc="cannedResponse.label"/>
         </span>
     </t>
     <t t-name="mail.Composer.suggestionEmoji">
+        <t t-set="emoji" t-value="command?.emoji || option?.emoji"/>
         <strong class="px-2 align-self-center flex-shrink-1 fs-3">
-            <t t-esc="option.emoji.codepoints"/>
+            <t t-esc="emoji.codepoints"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.emoji.shortcodes.join(' ')"/>
+            <t t-esc="emoji.shortcodes.join(' ')"/>
         </em>
     </t>
 </templates>
