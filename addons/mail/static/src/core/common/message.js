@@ -72,14 +72,12 @@ export class Message extends Component {
     };
     static defaultProps = {
         hasActions: true,
-        isInChatWindow: false,
         showDates: true,
     };
     static props = [
         "asCard?",
         "registerMessageRef?",
         "hasActions?",
-        "isInChatWindow?",
         "onParentMessageClick?",
         "message",
         "previousMessage?",
@@ -268,7 +266,7 @@ export class Message extends Component {
                 this.props.thread &&
                 !this.env.messageCard &&
                 !this.props.asCard,
-            "px-1": this.props.isInChatWindow,
+            "px-1": this.env.inChatWindow,
             "opacity-50": this.props.thread?.composer?.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
