@@ -46,6 +46,19 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_in_edi_attachment_id
 
+    def _hook_invoice_validation_errors(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._hook_invoice_validation_errors(invoice, invoice_data)
+        if 'in_edi_send' in invoice_data['extra_edis']:
+            partners = set(invoice._get_l10n_in_seller_buyer_party().values())
+            if error := invoice._l10n_in_edi_partner_field_validation(partners):
+                invoice_data['error'] = {
+                    'error_title': self.env._(
+                        "Error while validating the e-invoice:"
+                    ),
+                    'errors': [error] if not isinstance(error, list) else error,
+                }
+
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)

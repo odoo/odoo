@@ -12,3 +12,11 @@ class AccountMoveSendWizard(models.TransientModel):
             if warning_moves := self._get_l10n_ke_edi_tremol_warning_moves(self.move_id):
                 raise UserError(self._get_l10n_ke_edi_tremol_warning_message(warning_moves))
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
+
+    def action_schedule_message(self, allow_fallback_pdf=False):
+        # EXTENDS account - prevent scheduling the Send & Print if KE invoices aren't validated and no fallback is allowed.
+        self.ensure_one()
+        if not allow_fallback_pdf:
+            if warning_moves := self._get_l10n_ke_edi_tremol_warning_moves(self.move_id):
+                raise UserError(self._get_l10n_ke_edi_tremol_warning_message(warning_moves))
+        return super().action_schedule_message(allow_fallback_pdf)

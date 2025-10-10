@@ -39,6 +39,17 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHODS
     # -------------------------------------------------------------------------
 
+    def _hook_invoice_validation_errors(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._hook_invoice_validation_errors(invoice, invoice_data)
+        if 'gr_edi' in invoice_data['extra_edis']:
+            if errors := invoice._l10n_gr_edi_get_pre_error_dict():
+                for error in errors.values():
+                    invoice_data['error'] = {
+                        'error_title': _("Error while validating invoice for myDATA"),
+                        'errors': [error.get('message', '')],
+                    }
+
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)

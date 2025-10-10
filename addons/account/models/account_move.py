@@ -5862,6 +5862,12 @@ class AccountMove(models.Model):
         self._check_draftable()
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
+        # We delete scheduled messages from account_move_send_wizard related to the sending of this invoice
+        self.env['mail.scheduled.message'].search([
+            ('model', '=', 'account.move'),
+            ('res_id', 'in', self.ids),
+            ('from_account_move_send', '=', True),
+        ]).unlink()
         self.state = 'draft'
         self.sending_data = False
 

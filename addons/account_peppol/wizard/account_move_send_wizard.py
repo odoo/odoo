@@ -48,9 +48,8 @@ class AccountMoveSendWizard(models.TransientModel):
                         }
                     }
 
-    def action_send_and_print(self, allow_fallback_pdf=False):
-        # EXTENDS 'account'
-        self.ensure_one()
+    def _pre_process_peppol_sending(self):
+        """ Check Peppol conditions before sending/scheduling the invoice. """
         if self.sending_methods and 'peppol' in self.sending_methods:
             if self.move_id.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
                 raise UserError(_("Partner doesn't have a valid Peppol configuration."))
@@ -59,4 +58,15 @@ class AccountMoveSendWizard(models.TransientModel):
                                     self.move_id.company_id.peppol_parent_company_id.sudo().name))  # sudo needed because the current user does not have access
             if registration_action := self._do_peppol_pre_send(self.move_id):
                 return registration_action
+
+    def action_send_and_print(self, allow_fallback_pdf=False):
+        # EXTENDS 'account'
+        self.ensure_one()
+        self._pre_process_peppol_sending()
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
+
+    def action_schedule_message(self, allow_fallback_pdf=False):
+        # EXTENDS 'account'
+        self.ensure_one()
+        self._pre_process_peppol_sending()
+        return super().action_schedule_message(allow_fallback_pdf=allow_fallback_pdf)

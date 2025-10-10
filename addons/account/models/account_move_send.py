@@ -369,6 +369,14 @@ class AccountMoveSend(models.AbstractModel):
         return True
 
     @api.model
+    def _hook_invoice_validation_errors(self, invoice, invoices_data):
+        """ TO OVERRIDE - Hook allowing to add validation errors for the invoice.
+        :param invoice:         An account.move record.
+        :param invoices_data:   The collected data for invoices so far.
+        """
+        return
+
+    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         """ Hook allowing to add some extra data for the invoice passed as parameter before the rendering of the pdf
         report.
@@ -386,6 +394,7 @@ class AccountMoveSend(models.AbstractModel):
 
         company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
+        is_send_wizard = self._name == 'account.move.send.wizard'
         for invoice, invoice_data in invoices_data.items():
             grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
 
@@ -398,13 +407,23 @@ class AccountMoveSend(models.AbstractModel):
                 raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
 
             for invoice, invoice_data in group_invoices_data.items():
+                # For the scheduled messages to have an invoice report attached to them then we need to link the attachment to
+                # the mail.compose.message temporarily, as how it's done for the generic mail.scheduled.message.
+                if is_send_wizard and self.scheduled_date:
+                    attachment_res_model = 'mail.compose.message'
+                    attachment_res_id = 0
+                    res_field = False
+                else:
+                    attachment_res_model = invoice._name
+                    attachment_res_id = invoice.id
+                    res_field = 'invoice_pdf_report_file'
                 invoice_data['pdf_attachment_values'] = {
                     'name': invoice._get_invoice_report_filename(report=pdf_report),
                     'raw': content_by_id[invoice.id],
                     'mimetype': 'application/pdf',
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
-                    'res_field': 'invoice_pdf_report_file',  # Binary field
+                    'res_model': attachment_res_model,
+                    'res_id': attachment_res_id,
+                    'res_field': res_field,  # Binary field
                 }
 
     @api.model
@@ -544,7 +563,8 @@ class AccountMoveSend(models.AbstractModel):
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
         mail_attachments_widget = move_data.get('mail_attachments_widget')
-        seen_attachment_ids = set()
+        generated_attachment_ids = set()
+        manual_attachment_ids = set()
         to_exclude = {x['name'] for x in mail_attachments_widget if x.get('skip')}
         for attachment_data in self._get_invoice_extra_attachments_data(move) + mail_attachments_widget:
             if attachment_data['name'] in to_exclude and not attachment_data.get('manual'):
@@ -555,19 +575,24 @@ class AccountMoveSend(models.AbstractModel):
             except ValueError:
                 continue
 
-            seen_attachment_ids.add(attachment_id)
+            if attachment_data.get('manual'):
+                manual_attachment_ids.add(attachment_id)
+                continue
+            generated_attachment_ids.add(attachment_id)
 
-        mail_attachments = [
+        generated_attachments_data = [
             (attachment.name, attachment.raw)
-            for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
+            for attachment in self.env['ir.attachment'].browse(list(generated_attachment_ids)).exists()
         ]
+        manual_attachments = self.env['ir.attachment'].browse(list(manual_attachment_ids)).exists()
 
         return {
             'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'],
-            'attachments': mail_attachments,
+            'attachments': generated_attachments_data,
+            'attachment_ids': manual_attachments.ids,
         }
 
     @api.model
@@ -673,10 +698,8 @@ class AccountMoveSend(models.AbstractModel):
                                     proforma PDF report instead.
         """
         for invoice, invoice_data in invoices_data.items():
-            self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-            invoice_data['blocking_error'] = invoice_data.get('error') \
-                                             and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
-            invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
+            if not invoice_data.get('error'):
+                self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         invoices_data_web_service = {
             invoice: invoice_data
@@ -782,11 +805,25 @@ class AccountMoveSend(models.AbstractModel):
             for move in moves
         }
 
+        # Collect validation errors first.
+        for move, move_data in moves_data.items():
+            self._hook_invoice_validation_errors(move, move_data)
+            move_data['blocking_error'] = move_data.get('error') \
+                                          and not (allow_fallback_pdf and move_data.get('error_but_continue'))
+            move_data['error_but_continue'] = allow_fallback_pdf and move_data.get('error_but_continue')
+
+        # Manage collected validation errors.
+        validation_errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+        if validation_errors:
+            self._hook_if_errors(validation_errors, allow_raising=not from_cron and not allow_fallback_pdf and allow_raising)
+
         # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
 
-        # Manage errors.
-        errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+        # Manage errors from invoice documents generation, except the validation errors which are already handled before.
+        validation_error_list = [move_data.get('error') for move, move_data in validation_errors.items()]
+        errors = {move: move_data for move, move_data in moves_data.items() \
+                 if move_data.get('error') and move_data.get('error') not in validation_error_list}
         if errors:
             self._hook_if_errors(errors, allow_raising=not from_cron and not allow_fallback_pdf and allow_raising)
 

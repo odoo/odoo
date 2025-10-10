@@ -65,6 +65,16 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHODS
     # -------------------------------------------------------------------------
 
+    def _hook_invoice_validation_errors(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._hook_invoice_validation_errors(invoice, invoice_data)
+        if 'jo_edi' in invoice_data['extra_edis']:
+            if error_message := invoice._l10n_jo_validate_config() or invoice._l10n_jo_validate_fields():
+                invoice_data["error"] = {
+                    "error_title": _("Errors while validating the JoFotara e-invoice:"),
+                    "errors": [error_message],
+                }
+
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)

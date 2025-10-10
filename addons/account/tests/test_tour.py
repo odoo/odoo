@@ -1,13 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+from unittest.mock import patch
 
 import odoo.tests
 from odoo import Command
+from odoo.fields import Datetime as FieldDatetime
 
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUi(AccountTestInvoicingHttpCommon):
+class TestUi(AccountTestInvoicingHttpCommon, TestAccountMoveSendCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -115,3 +119,42 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'test_add_section_from_product_catalog_on_invoice',
             login='admin',
         )
+
+    def test_account_log_cancellation(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        def get_default_extra_edis(self, move):
+            return {'edi1'}
+
+        def get_all_extra_edis(self):
+            return {
+                'edi1': {'label': 'EDI 1'},
+            }
+
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', get_default_extra_edis),
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis)
+        ):
+            wizard = self.create_send_and_print(
+                invoice,
+                scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+            )
+            # Process.
+            with self.mock_datetime_and_now(self.reference_now):
+                wizard.action_schedule_message()
+            self.assertEqual(len(self._get_mail_scheduled_message(invoice, limit=None)), 1)
+
+            # Tour: Go to the invoice and cancel the scheduled message for invoice sending.
+            self.start_tour(
+                f'/odoo/customer-invoices/{invoice.id}',
+                'test_account_log_cancellation',
+                login='accountman',
+            )
+
+        self.assertFalse(self._get_mail_scheduled_message(invoice, limit=None))
+        log_note_on_cancel = self.env['mail.message'].search([
+            ('model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('body', 'ilike', '<p>The scheduled request for <strong>EDI 1</strong> is cancelled by Because I am accountman!.</p>'),
+        ])
+        self.assertEqual(len(log_note_on_cancel), 1)

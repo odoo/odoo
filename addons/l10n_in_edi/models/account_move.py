@@ -170,6 +170,12 @@ class AccountMove(models.Model):
         except LockError:
             raise UserError(_('This electronic document is being processed already.')) from None
 
+    def _l10n_in_edi_partner_field_validation(self, partners):
+        for partner in partners:
+            if partner_validation := partner._l10n_in_edi_strict_error_validation():
+                self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
+                return {'messages': partner_validation}
+
     def _l10n_in_edi_optional_field_validation(self, partner):
         """
         Validates optional partner fields (e.g., email, phone, street2) for e-invoicing,
@@ -200,10 +206,6 @@ class AccountMove(models.Model):
                 "Retrying to send your E-Invoice to government portal."
             ))
         partners = set(self._get_l10n_in_seller_buyer_party().values())
-        for partner in partners:
-            if partner_validation := partner._l10n_in_edi_strict_error_validation():
-                self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
-                return {'messages': partner_validation}
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
         response = self._l10n_in_edi_connect_to_server(
