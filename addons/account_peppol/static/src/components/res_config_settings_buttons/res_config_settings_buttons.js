@@ -38,7 +38,8 @@ class PeppolSettingsButtons extends Component {
     }
 
     get ediMode() {
-        return this.props.record.data.edi_mode || this.props.record.data.account_peppol_edi_mode;
+        const demo_if_demo_identifier = this.props.record.data.peppol_eas === 'odemo' ? "demo": false
+        return demo_if_demo_identifier || this.props.record.data.edi_mode || this.props.record.data.account_peppol_edi_mode;
     }
 
     get modeConstraint() {

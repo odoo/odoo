@@ -37,18 +37,25 @@ export class ImageCropPlugin extends Plugin {
         };
     }
 
+    /**
+     * @deprecated
+     */
     getSelectedImage() {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        return selectedNodes.find((node) => node.tagName === "IMG");
+        return this.getTargetedImage();
+    }
+
+    getTargetedImage() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        return targetedNodes.find((node) => node.tagName === "IMG");
     }
 
     async openCropImage() {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
 
-        this.imageCropProps.media = selectedImg;
+        this.imageCropProps.media = targetedImg;
 
         const onClose = () => {
             registry.category("main_components").remove("ImageCropping");

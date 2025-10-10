@@ -40,6 +40,7 @@ export class ImageTransformation extends Component {
     };
 
     setup() {
+        this.isCurrentlyTransforming = false;
         this.document = this.props.document;
         this.image = this.props.image;
         this.transfoContainer = useRef("transfoContainer");
@@ -62,7 +63,11 @@ export class ImageTransformation extends Component {
             }
         });
         useHotkey("escape", () => this.props.destroy());
-        usePositionHook({ el: this.props.editable }, this.document, this.resetHandlers);
+        usePositionHook({ el: this.props.editable }, this.document, () => {
+            if (!this.isCurrentlyTransforming) {
+                this.resetHandlers();
+            }
+        });
     }
 
     mouseMove(ev) {
@@ -173,17 +178,19 @@ export class ImageTransformation extends Component {
         settings.scalex = Math.round(settings.scalex * 100) / 100;
         settings.scaley = Math.round(settings.scaley * 100) / 100;
         this.positionTransfoContainer();
-        this.props.onChange();
     }
 
     mouseUp() {
+        this.isCurrentlyTransforming = false;
         this.transfo.active = null;
+        this.props.onChange();
     }
 
     mouseDown(ev) {
         if (this.transfo.active) {
             return;
         }
+        this.isCurrentlyTransforming = true;
         let type = "position";
         const target = ev.target.closest("div");
 

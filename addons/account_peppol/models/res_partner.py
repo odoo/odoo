@@ -23,6 +23,7 @@ class ResPartner(models.Model):
     invoice_sending_method = fields.Selection(
         selection_add=[('peppol', 'by Peppol')],
     )
+    peppol_eas = fields.Selection(selection_add=[('odemo', 'Odoo Demo ID')])  # Not a real EAS, used for demonstration.
     available_peppol_sending_methods = fields.Json(compute='_compute_available_peppol_sending_methods')
     available_peppol_edi_formats = fields.Json(compute='_compute_available_peppol_edi_formats')
     peppol_verification_state = fields.Selection(
@@ -56,6 +57,14 @@ class ResPartner(models.Model):
                 partner.available_peppol_edi_formats = self._get_peppol_formats()
             else:
                 partner.available_peppol_edi_formats = list(dict(self._fields['invoice_edi_format'].selection))
+
+    def _compute_available_peppol_eas(self):
+        # EXTENDS 'account_edi_ubl_cii'
+        super()._compute_available_peppol_eas()
+        eas_codes = set(self[:1].available_peppol_eas)
+        if self.env.company._get_peppol_edi_mode() != 'demo' and 'odemo' in eas_codes:
+            eas_codes.remove('odemo')
+            self.available_peppol_eas = list(eas_codes)
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -199,6 +208,8 @@ class ResPartner(models.Model):
             company = self.env.company
 
         self_partner = self.with_company(company)
+        if not self_partner.peppol_eas or not self_partner.peppol_endpoint:
+            return False
         old_value = self_partner.peppol_verification_state
         self_partner.peppol_verification_state = self._get_peppol_verification_state(
             self.peppol_endpoint,
@@ -207,6 +218,18 @@ class ResPartner(models.Model):
         )
         if self_partner.peppol_verification_state == 'valid' and not self_partner.invoice_sending_method:
             self_partner.invoice_sending_method = 'peppol'
+
+        if (
+                self_partner.peppol_verification_state != 'valid'
+                and self.peppol_eas in ('0208', '9925')
+        ):
+            # checks the inverse `eas:endpoint` if the belgian user was not found on Peppol in the first try
+            inverse_eas = '9925' if self_partner.peppol_eas == '0208' else '0208'
+            inverse_endpoint = f'BE{self_partner.peppol_endpoint}' if self_partner.peppol_eas == '0208' else self_partner.peppol_endpoint[2:]
+            if (peppol_state := self._get_peppol_verification_state(inverse_endpoint, inverse_eas, self_partner._get_peppol_edi_format())) == 'valid':
+                self_partner.peppol_eas = inverse_eas
+                self_partner.peppol_endpoint = inverse_endpoint
+                self_partner.peppol_verification_state = peppol_state
 
         self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
         return False

@@ -87,7 +87,7 @@ class LunchOrder(models.Model):
             if user_new_orders:
                 user_new_orders = user_new_orders.filtered(lambda lunch_order: lunch_order.date == order.date)
                 price = sum(order.price for order in user_new_orders)
-            wallet_amount = self.env['lunch.cashmove'].get_wallet_balance(order.user_id, False) - price
+            wallet_amount = self.env['lunch.cashmove'].get_wallet_balance(order.user_id) - price
             order.display_add_button = wallet_amount >= order.price
 
     @api.depends_context('show_reorder_button')

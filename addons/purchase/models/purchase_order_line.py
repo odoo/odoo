@@ -469,6 +469,7 @@ class PurchaseOrderLine(models.Model):
             partner_id=self.order_id.partner_id,
             quantity=None,
             date=self.order_id.date_order and self.order_id.date_order.date() or fields.Date.context_today(self),
+            ordered_by='min_qty',
             params=self._get_select_sellers_params(),
         )
         if seller_min_qty:
@@ -561,7 +562,7 @@ class PurchaseOrderLine(models.Model):
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
-            'quantity': self.qty_to_invoice,
+            'quantity': -self.qty_to_invoice if move and move.move_type == 'in_refund' else self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.taxes_id.ids)],

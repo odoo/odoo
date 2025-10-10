@@ -6,6 +6,7 @@
 # Larisa Pop, 2024
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "%(product)s: %(quantity)s already out"
-msgstr ""
+msgstr "%(product)s: %(quantity)s deja ieșit"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
@@ -180,7 +181,7 @@ msgstr "Creați costuri adiționale"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr "Creațti un nou cost adițional"
+msgstr "Creați un nou cost adițional"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -226,6 +227,7 @@ msgstr "Metodă de divizare implicită"
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
 msgstr ""
+"Metoda de împărțire implicită când este folosită pentru costuri adiționale"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -267,6 +269,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Egal: Costul va fi împărțit în mod egal.\n"
+"După cantitate: Costul va fi împărțit în funcție de cantitatea produsului.\n"
+"După costul curent: Costul va fi împărțit în funcție de costul curent al produsului.\n"
+"După masă: Costul va fi împărțit în funcție de greutatea produsului.\n"
+"După volum: Costul va fi împărțit în funcție de volumul produsului."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -281,7 +288,7 @@ msgstr "Urmăritori (Parteneri)"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Pictogramă Font awesome, de ex. fa-sarcini"
+msgstr "Pictogramă Font awesome, de ex. fa-tasks"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -294,6 +301,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Bunurile sunt materiale tangibile și mărfuri pe care le furnizați.\n"
+"Un serviciu este un produs nematerial pe care îl furnizați."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -320,18 +329,18 @@ msgstr "Pictogramă"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Pictograma care indică o activitate de excepție."
+msgstr "Pictogramă care indică o activitate de excepție."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Dacă este bifat, mesaje noi necesită atenția dumneavoastră."
+msgstr "Dacă este bifat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Dacă este bifată, există mesaje cu eroare de livrare."
+msgstr "Dacă este bifat, unele mesaje au o eroare de livrare."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
@@ -340,6 +349,8 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"Indică dacă produsul este un cost adițional: când primiți o factură de la "
+"furnizor, puteți aloca acest cost pe recepțiile anterioare."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -349,7 +360,7 @@ msgstr "Este urmăritor"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "Este linie de cost adițional"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -371,7 +382,7 @@ msgstr "Jurnal"
 #: model:ir.model,name:stock_landed_costs.model_account_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
 msgid "Journal Entry"
-msgstr "Înregistrare de jurnal "
+msgstr "Înregistrare de jurnal"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move_line
@@ -403,7 +414,7 @@ msgstr "Costuri adiționale"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr ""
+msgstr "Costuri adiționale vizibile"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -416,6 +427,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Costurile adiționale vă permit să includeți costuri suplimentare (transport,"
+" asigurare, taxe vamale etc.) în costul produsului."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -573,7 +586,7 @@ msgstr "Cantitate"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr "Ratings"
+msgstr "Evaluări"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
@@ -616,7 +629,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data activitații este deja trecută\n"
+"Întârziată: data scadentă a trecut deja\n"
 "Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
@@ -628,7 +641,7 @@ msgstr "Costuri Adiționale Stoc"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Linie Cost Adițional Stoc"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -675,19 +688,19 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Costurile de adiționale validate nu pot fi anulate, dar puteți crea costuri "
+"Costurile adiționale validate nu pot fi anulate, dar puteți crea costuri "
 "adiționale negative pentru a le inversa"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Linii de ajustare evaluare"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr "Cont evaluare stoc"
+msgstr "Ajustări evaluare"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
@@ -721,6 +734,9 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
+"Nu puteți aplica costuri adiționale pe %s-urile selectate. Costurile "
+"adiționale pot fi aplicate doar pentru produse cu metoda de cost FIFO sau "
+"medie."
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -729,3 +745,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Nu puteți schimba tipul produsului sau dezactiva opțiunea de cost adițional "
+"deoarece produsul este folosit într-o linie de mișcare contabilă."

@@ -1276,10 +1276,10 @@ test("Update channel data via bus notification", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: env1 });
-    await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
+    await contains(`${env1.selector} .o-mail-DiscussSidebarChannel`, { text: "Sales" });
+    await insertText(`${env1.selector} .o-mail-Discuss-threadName`, "test");
     await triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel`, { text: "Salestest" });
 });
 
 test("sidebar: show loading on initial opening", async () => {

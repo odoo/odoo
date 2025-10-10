@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* product
-# 
+# * product
+#
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2025
-# 
+#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 20:47+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"PO-Revision-Date: 2025-10-08 15:46+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/product/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: product
 #. odoo-python
@@ -685,7 +689,7 @@ msgstr "Valor del atributo"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_value_list
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Valores de atributo"
+msgstr "Valores del atributo"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -984,7 +988,7 @@ msgstr "Contacto"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Contact Us"
-msgstr "Contáctenos"
+msgstr "Contáctanos"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
@@ -1739,8 +1743,7 @@ msgstr "Icono que indica una actividad de excepción."
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
+msgstr "Si está seleccionado, hay nuevos mensajes que requieren tu atención."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__message_has_error
@@ -1748,7 +1751,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
+msgstr "Si está seleccionado, algunos mensajes tienen error de envío."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -2061,7 +2064,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "Administrar el embalaje del producto"
+msgstr "Gestionar el embalaje del producto"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -2838,7 +2841,7 @@ msgstr "Exclusión de atributos del modelo del producto"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Linea de atributo de la plantilla de producto"
+msgstr "Línea del atributo de la plantilla del producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -3474,9 +3477,9 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"La cantidad a comprar de este proveedor para beneficiarse del precio, "
-"expresado en la unidad de medida del producto del proveedor, si no existe, "
-"en la unidad de medida predeterminada del producto."
+"La cantidad a comprar a este proveedor para beneficiarse del precio, "
+"expresada en la unidad de medida del producto del proveedor si existe o en "
+"la unidad de medida predeterminada del producto en caso contrario."
 
 #. module: product
 #. odoo-python
@@ -3557,8 +3560,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Se utilizará esta lista de precios con este contacto en lugar de la lista de"
-" precios predeterminada"
+"Se utilizará esta lista de precios en lugar de la predeterminada al vender "
+"al contacto actual"
 
 #. module: product
 #. odoo-python
@@ -3577,9 +3580,10 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
-" La precisión de redondeo es más alta que la precisión decimal (%(digits)s dígitos).\n"
-"Esto puede hacer que los cálculos no sean consistentes.\n"
-"Indique una precisión entre %(min_precision)s y 1."
+"Esta precisión de redondeo es mayor que la precisión decimal (%(digits)s "
+"dígitos).\n"
+"Esto puede causar inconsistencias en los cálculos.\n"
+"Configura una precisión entre %(min_precision)s y 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3663,7 +3667,7 @@ msgstr "Unidad de medida"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr "Nombre de unidad de medida"
+msgstr "Nombre de la unidad de medida"
 
 #. module: product
 #. odoo-javascript
@@ -4059,10 +4063,11 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
-"La precisión decimal que está indicando es menos exacta que la unidad de medida:\n"
+"Estás configurando una precisión decimal menos exacta que la de las UdM:\n"
 "%s\n"
-"Esto puede hacer que los cálculos no sean consistentes.\n"
-"Aumente el redondeo de esas unidades de medida o los dígitos de esta precisión decimal."
+"Esto puede causar inconsistencias en los cálculos.\n"
+"Aumenta el redondeo de esas unidades de medida o los dígitos de esta "
+"precisión decimal."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
@@ -4178,8 +4183,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
-"No puede definir una precisión decimal de las cuentas que sea mayor que el "
-"factor de redondeo de la moneda actual de la empresa."
+"No puedes definir la precisión decimal de las cuentas como mayor que el "
+"factor de redondeo de la moneda principal de la empresa."
 
 #. module: product
 #. odoo-python
@@ -4199,7 +4204,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 msgid "You cannot delete the %s product category."
-msgstr "No puede eliminar la categoría de producto %s."
+msgstr "No puedes eliminar la categoría de productos %s."
 
 #. module: product
 #. odoo-python
@@ -4227,8 +4232,8 @@ msgstr ""
 msgid ""
 "You cannot delete this product category, it is the default generic category."
 msgstr ""
-"No puede eliminar esta categoría de producto, es la categoría predeterminada"
-" general."
+"No puedes eliminar esta categoría de productos, es la categoría genérica "
+"predeterminada."
 
 #. module: product
 #. odoo-python

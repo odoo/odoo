@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +23,17 @@ msgstr ""
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "<span class=\"o_stat_text\">Visit Page</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Obišči stran</span>"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
 msgid "Absolute URL"
-msgstr ""
+msgstr "Absolutni URL"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
@@ -48,7 +49,7 @@ msgstr "Kampanja"
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_click_action_statistics
 msgid "Click Statistics"
-msgstr ""
+msgstr "Statistika klikov"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
@@ -77,6 +78,9 @@ msgid ""
 "The following combinations are already used: \n"
 "- %(error_lines)s"
 msgstr ""
+"Kombinacije vrednosti sledilnika povezav (URL, kampanja, medij, vir in oznaka) morajo biti edinstvene.\n"
+"Naslednje kombinacije so že uporabljene:\n"
+"-%(error_lines)s"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
@@ -88,7 +92,7 @@ msgstr "Država"
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
 msgid "Create a link tracker"
-msgstr ""
+msgstr "Ustvarite sledilnik povezav"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__create_uid
@@ -108,7 +112,7 @@ msgstr "Ustvarjeno"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "Creating a Link Tracker without URL is not possible"
-msgstr ""
+msgstr "Ustvarjanje sledilnika povezav brez URL-ja ni mogoče"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
@@ -138,7 +142,7 @@ msgstr "ID"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
-msgstr ""
+msgstr "Internetni protokol"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_uid
@@ -164,12 +168,12 @@ msgstr "Povezava"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_form
 msgid "Link Click"
-msgstr ""
+msgstr "Klik na povezavo"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_graph
 msgid "Link Clicks"
-msgstr ""
+msgstr "Kliki na povezave"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_action
@@ -181,12 +185,12 @@ msgstr "Sledilnik povezavam"
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
 msgid "Link Tracker Click"
-msgstr ""
+msgstr "Klik sledilnika povezav"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "Link Tracker Code"
-msgstr ""
+msgstr "Koda za sledenje povezav"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -198,12 +202,12 @@ msgstr "Povezave"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_tree
 msgid "Links Clicks"
-msgstr ""
+msgstr "Kliki na povezave"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "Mešanica za upodabljanje pošte"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
@@ -244,7 +248,7 @@ msgstr "Kratka koda URL"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__code
 msgid "Short URL code"
-msgstr ""
+msgstr "Kratka koda URL-ja"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
@@ -294,7 +298,7 @@ msgstr "Naziv in URL"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Tracked URL"
-msgstr ""
+msgstr "Sledeni URL"
 
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
@@ -303,6 +307,8 @@ msgid ""
 "Trackers are used to collect count stat about click on links and generate "
 "short URLs."
 msgstr ""
+"Sledilniki se uporabljajo za zbiranje statističnih podatkov o številu klikov"
+" na povezave in ustvarjanje kratkih URL-jev."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
@@ -312,7 +318,7 @@ msgstr "URL"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "UTM"
-msgstr ""
+msgstr "UTM - Modul za sledenje Urchin"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_utm_campaign
@@ -330,7 +336,7 @@ msgstr "Obiščite stran"
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "Visit Webpage"
-msgstr ""
+msgstr "Obišči spletno stran"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
@@ -342,3 +348,4 @@ msgstr "Website Link"
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "“%s” is not a valid link, links cannot redirect to the current page."
 msgstr ""
+"“%s” ni veljavna povezava, povezave ne morejo preusmeriti na trenutno stran."

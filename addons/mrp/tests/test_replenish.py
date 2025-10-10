@@ -237,3 +237,57 @@ class TestMrpReplenish(TestMrpCommon):
 
         self.assertEqual(len(mo_final), 1, "Expected one MO for the final product.")
         self.assertEqual(len(mo_component), 1, "Expected one MO for the manufactured BOM component.")
+
+    def test_orderpoint_onchange_reordering_rule(self):
+        """ Ensure onchange logic works properly when editing a reordering rule
+            linked to a confirmed MO, which is started but not finished by the
+            end of the stock forecast.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+
+        self.product_4.route_ids = [Command.set([route_manufacture.id])]
+        self.product_4.bom_ids.produce_delay = 2
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_4.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+
+        orderpoint.action_replenish()
+
+        prod = self.env['mrp.production'].search([('origin', '=', orderpoint.name)])
+        # Error is triggered for date_start <= lead_days_date < date_finished
+        prod.date_start = fields.Date.today() + timedelta(days=1)
+
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 3
+        self.assertEqual(orderpoint.qty_to_order, 1)
+
+        orderpoint.trigger = 'manual'
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 10
+            self.assertEqual(form.qty_to_order, 0)
+        self.assertEqual(form.qty_to_order, 8)
+        self.assertEqual(orderpoint.qty_to_order, 8)
+
+    def test_manuf_lead_time_without_bom(self):
+        """
+        Test that the manufacturing lead time is correctly applied to a product
+        without a Bill of Materials (BoM).
+        """
+        self.env.company.write({'manufacturing_lead': 3.0})
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': route_manufacture.ids,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        self.assertEqual(orderpoint.lead_days_date, fields.Date.today() + timedelta(days=3))

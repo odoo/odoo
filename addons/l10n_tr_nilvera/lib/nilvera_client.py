@@ -2,7 +2,6 @@ import logging
 import requests
 from datetime import datetime
 from json import JSONDecodeError
-from pprint import pformat
 
 from odoo.exceptions import UserError
 
@@ -59,15 +58,12 @@ class NilveraClient:
 
     def _log_request(self, method, start, end, url, params, json, response):
         _logger.info(
-            "%(method)s\nstart=%(start)s\nend=%(end)s\nurl=%(url)s\nparams=%(params)s\njson=%(json)s\nresponse=%(response)s",
+            '"%(method)s %(url)s" %(status)s %(duration).3f',
             {
-                "method": method,
-                "start": start,
-                "end": end,
-                "url": pformat(url),
-                "params": pformat(params),
-                "json": pformat(json),
-                "response": pformat(response),
+                'method': method,
+                'url': url,
+                'status': response.status_code,
+                'duration': (end - start).total_seconds(),
             },
         )
 
@@ -75,7 +71,7 @@ class NilveraClient:
         if response.status_code in {401, 403}:
             raise UserError("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera.")
         elif 403 < response.status_code < 600:
-            raise UserError("Odoo could not perform this action at the moment, try again later.\n%s - %s" % (response.reason, response.code))
+            raise UserError("Odoo could not perform this action at the moment, try again later.\n%s - %s" % (response.reason, response.status_code))
 
         try:
             return response.json()

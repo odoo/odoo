@@ -5,6 +5,7 @@
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,14 +34,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s at %(time_start)s To\n"
-" %(date_end)s at %(time_end)s (%(timezone)s)"
+"%(date_start)s la %(time_start)s până la\n"
+" %(date_end)s la %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
+msgstr "%(day)s la (%(start)s până la %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
@@ -468,22 +469,24 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Meetings\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Întâlniri\" role=\"img\" "
+"title=\"Întâlniri\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"fa fa-plus\"/> <span>Odoo meeting</span>"
-msgstr "<span class=\"fa fa-plus\"/> <span>Întâlnire</span>"
+msgstr "<span class=\"fa fa-plus\"/> <span>Întâlnire Odoo</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
-msgstr "<span class=\"fa fa-plus\"/><span> Întâlnire</span> "
+msgstr "<span class=\"fa fa-plus\"/><span> Întâlnire Odoo</span> "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"fa fa-times\"/><span> Clear meeting</span>"
-msgstr "<span class=\"fa fa-times\"/><span> Ștergeți întâlnirea</span>"
+msgstr "<span class=\"fa fa-times\"/><span> Șterge întâlnirea</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -492,6 +495,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Repetă în</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -509,12 +515,11 @@ msgstr "<span class=\"me-1 o_form_label\">Calendar Outlook</span>"
 msgid "<span class=\"oi oi-arrow-right\"/><span> Join video call</span>"
 msgstr ""
 "<span class=\"oi oi-arrow-right\"/><span> Participați la apelul video</span>"
-" "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> sau </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -532,7 +537,7 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
 "<strong>Salvați</strong> această pagină și reveniți aici pentru a configura "
-"proprietate."
+"funcționalitatea."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -547,7 +552,7 @@ msgstr "Acceptă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr "Numărul de acceptări"
+msgstr "Număr de acceptări"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -566,8 +571,8 @@ msgid ""
 "automatically mark as done when a document is uploaded"
 msgstr ""
 "Acțiunile pot declanșa un comportament specific, cum ar fi deschiderea "
-"vizualizării calendarului sau marcarea automată, așa cum se face la "
-"încărcarea unui document"
+"vizualizării calendarului sau marcarea automată ca finalizată la încărcarea "
+"unui document"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -588,7 +593,7 @@ msgstr "Activitate"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr "Activitate Mixin"
+msgstr "Mixin activitate"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -598,7 +603,7 @@ msgstr "Tip activitate"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr "Expert pentru programul de activități"
+msgstr "Expert programare activitate"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -608,12 +613,12 @@ msgstr "Adăugați participanți..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add description"
-msgstr "Adăugați descrierea"
+msgstr "Adăugați descriere"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Add title"
-msgstr "Adăugați titlul"
+msgstr "Adăugați titlu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
@@ -624,7 +629,7 @@ msgstr "Mesaj suplimentar"
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr "Mesaj suplimentar care ar fi trimis cu notificarea pentru memento "
+msgstr "Mesaj suplimentar care va fi trimis cu notificarea pentru memento"
 
 #. module: calendar
 #. odoo-javascript
@@ -671,7 +676,7 @@ msgstr "Participanți"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr "Număr de participanți"
+msgstr "Număr participanți"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -692,7 +697,7 @@ msgstr "Disponibil/Ocupat"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr "Numărul de participanți în așteptare"
+msgstr "Număr în așteptare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -740,7 +745,7 @@ msgstr "Alarmă calendar"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Informații despre participanții din calendar"
+msgstr "Informații participant calendar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
@@ -748,14 +753,14 @@ msgstr "Informații despre participanții din calendar"
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Confidențialitate implicită calendar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__record
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 msgid "Calendar Event"
-msgstr "Eveniment Calendar"
+msgstr "Eveniment calendar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -765,22 +770,22 @@ msgstr "Filtre calendar"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr "Invitație Calendar"
+msgstr "Invitație calendar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
-msgstr "Întâlnire"
+msgstr "Întâlnire calendar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
 msgid "Calendar Popover Delete Wizard"
-msgstr ""
+msgstr "Expert ștergere popover calendar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_provider_config
 msgid "Calendar Provider Configuration Wizard"
-msgstr "Asistent configurare furnizor calendar"
+msgstr "Expert configurare furnizor calendar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -790,7 +795,7 @@ msgstr "Setări calendar"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr "Calendar: Data actualizată"
+msgstr "Calendar: Dată actualizată"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -824,8 +829,8 @@ msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
-"Verificați dacă organizatorul este singurul în eveniment, adică dacă organizatorul este singurul care nu a refuzat\n"
-"        evenimentul (numai dacă organizatorul nu este singurul participant)"
+"Verificați dacă organizatorul este singur la eveniment, adică dacă organizatorul este singurul care nu a refuzat\n"
+"        evenimentul (doar dacă organizatorul nu este singurul participant)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
@@ -843,18 +848,18 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Alegeți ce să faceți cu alte evenimente din recurență. Actualizarea tuturor "
-"evenimentelor nu este permisă atunci când datele sau ora sunt modificate"
+"Alegeți ce să faceți cu celelalte evenimente din recurență. Actualizarea "
+"tuturor evenimentelor nu este permisă când datele sau ora sunt modificate"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client ID"
-msgstr "ID Client"
+msgstr "ID client"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client Secret"
-msgstr "Secret Client"
+msgstr "Secret client"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -892,7 +897,7 @@ msgstr "Conectați-vă calendarul"
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Contact"
-msgstr "Contactați"
+msgstr "Contact"
 
 #. module: calendar
 #. odoo-python
@@ -927,12 +932,12 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
-msgstr "Participant actual"
+msgstr "Participant curent"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -989,7 +994,7 @@ msgstr "Refuză"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
 msgid "Declined Count"
-msgstr "Numărul de refuzuri"
+msgstr "Număr refuzuri"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -999,12 +1004,14 @@ msgstr "Implicit"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Confidențialitate implicită"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
 msgstr ""
+"Setarea implicită de confidențialitate pentru cine va vedea evenimentele din"
+" calendar."
 
 #. module: calendar
 #. odoo-javascript
@@ -1017,7 +1024,7 @@ msgstr "Șterge"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 msgid "Delete Event"
-msgstr "Ștergeți evenimentul "
+msgstr "Ștergeți evenimentul"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
@@ -1032,12 +1039,12 @@ msgstr "Ștergeți acest eveniment și următoarele"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
 msgid "Delete this event"
-msgstr "Ștergeți acest eveniment "
+msgstr "Ștergeți acest eveniment"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Describe your meeting"
-msgstr "Descrieți-vă întâlnirea"
+msgstr "Descrieți întâlnirea"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1054,12 +1061,12 @@ msgstr "Detalii"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__discuss
 msgid "Discuss"
-msgstr "Mesagerie"
+msgstr "Discuție"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
 msgid "Discuss Channel"
-msgstr "Canal de mesagerie"
+msgstr "Canal de discuții"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -1081,7 +1088,7 @@ msgstr "Nume afișat"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr "Document ID"
+msgstr "ID document"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
@@ -1118,12 +1125,12 @@ msgstr "EMAIL"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
-msgstr "Editați evenimentul recurent"
+msgstr "Editează evenimentul recurent"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr "Editați evenimentul recurent"
+msgstr "Editează evenimentul recurent"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -1139,12 +1146,12 @@ msgstr "E-mail - 3 ore"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr "Email - 6 Ore"
+msgstr "E-mail - 6 ore"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
 msgid "Email Template"
-msgstr "Șablon email"
+msgstr "Șablon e-mail"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_id
@@ -1160,7 +1167,7 @@ msgstr "Dată sfârșit"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr "Tip Final"
+msgstr "Tip sfârșit"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1176,17 +1183,17 @@ msgstr "Alarmă eveniment"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Manager eveniment alarmă"
+msgstr "Manager alarmă eveniment"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Tip Întâlnire Eveniment"
+msgstr "Tip întâlnire eveniment"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr "Regula de reapariție a evenimentelor"
+msgstr "Regulă recurență eveniment"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -1197,43 +1204,44 @@ msgstr "Oră eveniment"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "La fiecare %(interval)s zile"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "La fiecare %(interval)s zile pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s zile până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "La fiecare %(interval)s luni, ziua %(day)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
 msgstr ""
+"La fiecare %(interval)s luni, ziua %(day)s pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s luni, ziua %(day)s până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "La fiecare %(interval)s luni, în %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1242,6 +1250,8 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
+"La fiecare %(interval)s luni, în %(position)s %(weekday)s pentru %(count)s "
+"evenimente"
 
 #. module: calendar
 #. odoo-python
@@ -1249,42 +1259,44 @@ msgstr ""
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
 msgstr ""
+"La fiecare %(interval)s luni, în %(position)s %(weekday)s până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "La fiecare %(interval)s săptămâni în %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
 msgstr ""
+"La fiecare %(interval)s săptămâni în %(days)s pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s săptămâni în %(days)s până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "La fiecare %(interval)s ani"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "La fiecare %(interval)s ani pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s ani până la %(until)s"
 
 #. module: calendar
 #. odoo-python
@@ -1302,12 +1314,12 @@ msgstr "Primul/a"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "First you have to specify the date of the invitation."
-msgstr "Mai întâi trebuie specificată data invitației."
+msgstr "Mai întâi trebuie să specificați data invitației."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr "Urmați Recurența"
+msgstr "Urmează recurența"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -1317,7 +1329,7 @@ msgstr "Urmăritori"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Urmăritori (Parteneri)"
+msgstr "Urmăritori (parteneri)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -1329,12 +1341,12 @@ msgstr "Pentru totdeauna"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__4
 msgid "Fourth"
-msgstr "Al patrulea (a patra)"
+msgstr "Al patrulea/a patra"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Free"
-msgstr "Disponibil"
+msgstr "Liber"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fri
@@ -1378,7 +1390,7 @@ msgstr "Google Client_key"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
 msgid "Google Synchronization Paused"
-msgstr "Sincronizarea Google a fost întreruptă"
+msgstr "Sincronizarea Google întreruptă"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1415,12 +1427,12 @@ msgstr "ID"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Dacă este bifat, mesaje noi necesită atenția dumneavoastră."
+msgstr "Dacă este bifat, mesajele noi necesită atenția dvs."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Dacă este bifată, există mesaje cu eroare de livrare."
+msgstr "Dacă este bifat, unele mesaje au eroare de livrare."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -1428,8 +1440,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Dacă câmpul nu este setat, vă permite să ascundeți evenimentul fără să-l "
-"eliminați."
+"Dacă câmpul activ este setat pe fals, vă permite să ascundeți informațiile "
+"despre alarma evenimentului fără a le șterge."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1437,6 +1449,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
+"Dacă timpul este afișat ca 'ocupat', acest eveniment va fi vizibil pentru alte persoane fie cu toate informațiile, fie doar cu mențiunea 'ocupat', în funcție de confidențialitate. Folosiți această opțiune pentru a anunța că nu sunteți disponibil în acea perioadă.\n"
+"Dacă evenimentul este afișat ca 'liber', ceilalți utilizatori știu că sunteți disponibil în acea perioadă."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1457,7 +1471,7 @@ msgstr "Invitație"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__access_token
 msgid "Invitation Token"
-msgstr "Token Invitație"
+msgstr "Token invitație"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1467,7 +1481,7 @@ msgstr "Detalii invitație"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr "Invitație prin e-mail pentru noi participanți"
+msgstr "E-mail de invitație pentru noi participanți"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1522,7 +1536,7 @@ msgstr "Ultimul/a"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
@@ -1534,19 +1548,19 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Ultima notificare marcată ca citit in Calendarul de bază"
+msgstr "Ultima notificare marcată ca citită din Calendarul de bază"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type_ui
 msgid "Let the event automatically repeat at that interval"
-msgstr "Permite repetarea automată a evenimentului în acel interval"
+msgstr "Permite evenimentului să se repete automat la acel interval"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
@@ -1557,19 +1571,19 @@ msgstr "Locație"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Logo"
-msgstr "Sigla"
+msgstr "Siglă"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
-msgstr "Mail TZ"
+msgstr "Fus orar e-mail"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 msgid "Maybe"
-msgstr "Probabil"
+msgstr "Poate"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -1592,17 +1606,17 @@ msgstr "Subiect întâlnire"
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr "Tipuri de întâliniri"
+msgstr "Tipuri de întâlniri"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr "Întâlnire URL"
+msgstr "URL întâlnire"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
 msgid "Meeting linked"
-msgstr "Întâlniri conectate"
+msgstr "Întâlnire asociată"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -1619,7 +1633,7 @@ msgstr "Întâlniri"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "Eroare de livrare a mesajului"
+msgstr "Eroare la livrarea mesajului"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -1629,7 +1643,7 @@ msgstr "Mesaje"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Microsoft Outlook icon"
-msgstr "Microsoft Outlook icon"
+msgstr "Pictogramă Microsoft Outlook"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
@@ -1656,7 +1670,7 @@ msgstr "Luni"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
 msgid "Month By"
-msgstr "Luna de"
+msgstr "Lună după"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
@@ -1703,7 +1717,7 @@ msgstr "Nou"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Următoarea activitate din calendar"
+msgstr "Următorul eveniment calendaristic de activitate"
 
 #. module: calendar
 #. odoo-javascript
@@ -1731,7 +1745,7 @@ msgstr "Nu s-au găsit întâlniri. Hai să programăm una!"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "No, keep it"
-msgstr "Nu, o păstrez."
+msgstr "Nu, păstreaz-o"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1777,7 +1791,7 @@ msgstr "Număr de acțiuni"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Number of Repetitions"
-msgstr "Numărul de repetări"
+msgstr "Număr de repetări"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -1787,12 +1801,12 @@ msgstr "Număr de erori"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Numărul de mesaje care necesită acțiune"
+msgstr "Număr de mesaje care necesită acțiune"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Numărul de mesaje cu eroare de livrare"
+msgstr "Număr de mesaje cu eroare de livrare"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
@@ -1827,7 +1841,7 @@ msgstr "Doar utilizatori interni"
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr "Deschideți Calendarul"
+msgstr "Deschide Calendarul"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1865,7 +1879,7 @@ msgstr "Secret Client Outlook"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
 msgid "Outlook Synchronization Paused"
-msgstr "Sincronizarea Outlook a fost întreruptă"
+msgstr "Sincronizare Outlook întreruptă"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -1875,12 +1889,12 @@ msgstr "Participant"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datele utilizatorului legate de partener"
+msgstr "Date despre partener asociate utilizatorului"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr "Persoanele cărora acest eveniment va fi vizibil."
+msgstr "Persoane cărora acest eveniment le va fi vizibil."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -1898,7 +1912,7 @@ msgstr "Confidențialitate"
 #: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
-msgstr "Personal"
+msgstr "Privat"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -1917,12 +1931,12 @@ msgstr "Recurență"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr "Regula de recurență"
+msgstr "Regulă de recurență"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr "Încheiere recurență"
+msgstr "Terminare recurență"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
@@ -1943,7 +1957,7 @@ msgstr "Regulă recurentă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
-msgstr "Amintește-te înainte"
+msgstr "Amintește înainte"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1959,7 +1973,7 @@ msgstr "Repetă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat On"
-msgstr "Repetați pe"
+msgstr "Repetă la"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -1974,7 +1988,7 @@ msgstr "Repetă la fiecare"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Repetă la fiecare (Zile/Săptămână/Lună/An)"
+msgstr "Repetă la fiecare (Zi/Săptămână/Lună/An)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
@@ -1985,7 +1999,7 @@ msgstr "Repetă de x ori"
 #. odoo-javascript
 #: code:addons/calendar/static/src/activity/activity_patch.xml:0
 msgid "Reschedule"
-msgstr "Reprogramare"
+msgstr "Reprogramează"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2026,6 +2040,8 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"Programarea unei activități folosind calendarul nu este posibilă pe mai "
+"multe înregistrări."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2046,7 +2062,7 @@ msgstr "Selectează participanți..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr "Trimite email participanților"
+msgstr "Trimite e-mail participanților"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2056,7 +2072,7 @@ msgstr "Trimite invitații"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Send Mail"
-msgstr "Trimite email"
+msgstr "Trimite e-mail"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
@@ -2077,7 +2093,7 @@ msgstr "Setări"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Ar trebui să arate starea"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2106,7 +2122,7 @@ msgstr "Dată început"
 msgid "Start date of an event, without time for full days events"
 msgstr ""
 "Data de start a evenimentului, fără oră pentru evenimente care sunt pentru "
-"totă ziua."
+"toată ziua."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -2128,13 +2144,13 @@ msgstr "Stop"
 msgid "Stop date of an event, without time for full days events"
 msgstr ""
 "Data de final a evenimentului, fără oră pentru evenimente care sunt pentru "
-"totă ziua."
+"toată ziua."
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop synchro"
-msgstr ""
+msgstr "Oprește sincronizarea"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2162,13 +2178,13 @@ msgstr "Duminică"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchro is paused"
-msgstr ""
+msgstr "Sincronizarea este întreruptă"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchronize with"
-msgstr ""
+msgstr "Sincronizează cu"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2205,7 +2221,7 @@ msgstr "Tentativă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Număr tentative"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2235,6 +2251,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Data și ora de final nu pot fi anterioare datei și orei de început.\n"
+"Întâlnirea „%(name)s” începe la %(start_time)s și se termină la %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -2243,12 +2261,14 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Data de final nu poate fi anterioară datei de început.\n"
+"Întâlnirea „%(name)s” începe pe %(start_date)s și se termină pe %(end_date)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "The interval cannot be negative."
-msgstr "Intervalul nu poate fi negativ"
+msgstr "Intervalul nu poate fi negativ."
 
 #. module: calendar
 #. odoo-python
@@ -2273,14 +2293,14 @@ msgstr "Al treilea (a treia)"
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 msgid "This and following events"
-msgstr "Aceasta și următoarele evenimente"
+msgstr "Acesta și următoarele evenimente"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 msgid "This event"
-msgstr "Acest Eveniment"
+msgstr "Acest eveniment"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -2303,7 +2323,7 @@ msgstr "Fus orar"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr "Fusul orar folosit pentru afișarea timpului în șablonul de email"
+msgstr "Fus orar folosit pentru afișarea orei în șablonul de email"
 
 #. module: calendar
 #. odoo-python
@@ -2347,7 +2367,7 @@ msgstr "Nesigur(ă)"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -2368,7 +2388,7 @@ msgstr "Utilizator"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr "Operatorul poate modifica"
+msgstr "Utilizatorul poate edita"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
@@ -2378,19 +2398,19 @@ msgstr "Setări utilizator"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr "Sursă videocall"
+msgstr "Sursă apel video"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Videocall URL"
-msgstr "Videocall URL"
+msgstr "URL apel video"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 msgid "View"
-msgstr "Afișare"
+msgstr "Vizualizare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -2442,7 +2462,7 @@ msgstr "Da"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Da, Mă duc."
+msgstr "Da, merg."
 
 #. module: calendar
 #. odoo-python
@@ -2451,6 +2471,8 @@ msgid ""
 "You are not allowed to change the calendar default privacy of another user "
 "due to privacy constraints."
 msgstr ""
+"Nu aveți permisiunea să schimbați confidențialitatea implicită a "
+"calendarului altui utilizator din motive de confidențialitate."
 
 #. module: calendar
 #. odoo-python
@@ -2462,19 +2484,19 @@ msgstr "Nu puteți actualiza o recurență fără evenimentul de bază."
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "You cannot duplicate a calendar attendee."
-msgstr "Nu puteți copia un participant în calendar."
+msgstr "Nu puteți duplica un participant la calendar."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "You have to choose at least one day in the week"
-msgstr "Trebuie să alegeți cel puțin o zi în săptămână"
+msgstr "Trebuie să alegeți cel puțin o zi din săptămână"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Ești singur(ă) la această întâlnire"
 
 #. module: calendar
 #. odoo-javascript
@@ -2502,23 +2524,23 @@ msgstr "refuzat"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "e.g. Prânz de afaceri"
+msgstr "ex. Prânz de afaceri"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr "ex. 31.12.2023"
+msgstr "ex: 31.12.2023"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "maybe,"
-msgstr "probabil,"
+msgstr "poate,"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "no email"
-msgstr ""
+msgstr "fără email"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2529,7 +2551,7 @@ msgstr "nu,"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
+msgstr "placeholder"
 
 #. module: calendar
 #. odoo-javascript
@@ -2550,7 +2572,7 @@ msgstr "{{ object.event_id.name }} - Memento"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr "{{ object.event_id.name }}: Data actualizată"
+msgstr "{{ object.event_id.name }}: Dată actualizată"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update

@@ -87,6 +87,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertEqual(fourth_attempt['attempts_count'], 4)
 
     @freeze_time("2020-02-15 18:00")
+    @users('survey_manager')
     def test_answer_display_name(self):
         """ The "display_name" field in a survey.user_input.line is a computed field that will
         display the answer label for any type of question.
@@ -110,7 +111,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                 self.assertEqual(question_answer.display_name, '2020-02-15')
             elif question.question_type == 'datetime':
                 question_answer = self._add_answer_line(question, user_input, fields.Datetime.now())
-                self.assertEqual(question_answer.display_name, '2020-02-15 18:00:00')
+                self.assertEqual(question_answer.display_name, '2020-02-15 19:00:00')
             elif question.question_type == 'simple_choice':
                 question_answer = self._add_answer_line(question, user_input, question.suggested_answer_ids[0].id)
                 self.assertEqual(question_answer.display_name, 'SChoice0')

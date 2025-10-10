@@ -65,7 +65,7 @@
                             </tr>
                         </table>
                         <table class="table table-borderless">
-                            <t t-foreach="props.info.productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                            <t t-foreach="props.info.productInfo.pricelists" t-as="pricelist" t-key="pricelist.id">
                                 <tr>
                                     <td t-esc="pricelist.name"/>
                                     <td t-esc="env.utils.formatCurrency(pricelist.price)"/>

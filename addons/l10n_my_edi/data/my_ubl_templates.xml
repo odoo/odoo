@@ -30,6 +30,16 @@
         </xpath>
         <!-- MyInvois does not support order references, having one will cause issues -->
         <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:PrepaidPayment>
+                    <cbc:PaidAmount
+                        t-att-currencyID="vals['prepaid_payment_vals']['currency'].name"
+                        t-out="format_float(vals['prepaid_payment_vals']['amount'], vals['prepaid_payment_vals']['currency_dp'])"/>
+                </cac:PrepaidPayment>
+            </t>
+        </xpath>
     </template>
 
     <!-- They are not using the same template at all, so we make a new one. They basically want the same data as supplier/customer party -->

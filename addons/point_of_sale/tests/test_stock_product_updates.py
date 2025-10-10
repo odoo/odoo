@@ -94,4 +94,13 @@ class TestStockProductUpdates(TestPoSCommon):
         self.product_template.attribute_line_ids[0].with_user(self.inventory_admin_without_pos).value_ids = [
             Command.unlink(attr_value_lg.id),
         ]
-        
+
+    def test_stock_duplicate_warehouse_with_PoS_operation_type(self):
+        wh = self.env['stock.warehouse'].create({
+            'name': 'WH1',
+            'code': 'WH1',
+            'company_id': self.env.company.id,
+        })
+        wh_copy = wh.copy()
+        self.assertTrue(wh_copy.pos_type_id)
+        self.assertNotEqual(wh.pos_type_id, wh_copy.pos_type_id)

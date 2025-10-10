@@ -1,7 +1,18 @@
-import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
+import {
+    isTextNode,
+    isParagraphRelatedElement,
+    isIconElement,
+    isEmptyBlock,
+} from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import {
+    unwrapContents,
+    wrapInlinesInBlocks,
+    splitTextNode,
+    setTagName,
+    fillEmpty,
+} from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -68,6 +79,8 @@ export const CLIPBOARD_WHITELISTS = {
         "img-thumbnail",
         "rounded",
         "rounded-circle",
+        // Odoo tables
+        "o_table",
         "table",
         "table-bordered",
         /^padding-/,
@@ -456,10 +469,7 @@ export class ClipboardPlugin extends Plugin {
             if (
                 (isParagraphRelatedElement(block) ||
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) &&
-                // TODO specific exception for "PRE" to keep everything inside one PRE.
-                // Consider removing this if PRE is to be used as a paragraph.
-                block.nodeName !== "PRE" &&
-                !block.closest("li")
+                block.nodeName !== "PRE"
             ) {
                 // A linebreak at the beginning of a block is an empty line.
                 const isEmptyLine = block.firstChild.nodeName === "BR";
@@ -493,8 +503,23 @@ export class ClipboardPlugin extends Plugin {
             } else {
                 let childrenNodes;
                 if (node.nodeName === "DIV") {
-                    if (this.dependencies.baseContainer.isCandidateForBaseContainer(node)) {
-                        childrenNodes = childNodes(node);
+                    if (!node.hasChildNodes()) {
+                        node.remove();
+                        return;
+                    } else if (this.dependencies.baseContainer.isCandidateForBaseContainer(node)) {
+                        const whiteSpace = node.style?.whiteSpace;
+                        if (whiteSpace && !["normal", "nowrap"].includes(whiteSpace)) {
+                            node.innerHTML = node.innerHTML.replace(/\n/g, "<br>");
+                        }
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        const dir = node.getAttribute("dir");
+                        if (dir) {
+                            baseContainer.setAttribute("dir", dir);
+                        }
+                        baseContainer.append(...node.childNodes);
+
+                        node.replaceWith(baseContainer);
+                        childrenNodes = childNodes(baseContainer);
                     } else {
                         childrenNodes = unwrapContents(node);
                     }
@@ -507,7 +532,30 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
+            if (node.nodeName === "THEAD") {
+                const tbody = node.nextElementSibling;
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...node.children);
+                    node.remove();
+                    node = tbody;
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    node = setTagName(node, "TBODY");
+                }
+            } else if (node.nodeName === "TH") {
+                // Convert all <th> into <td>
+                node = setTagName(node, "TD");
+            }
             if (node.nodeName === "TD") {
+                // Insert base container into empty TD.
+                if (isEmptyBlock(node)) {
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                    fillEmpty(baseContainer);
+                    node.replaceChildren(baseContainer);
+                }
+
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
                 }
@@ -550,14 +598,13 @@ export class ClipboardPlugin extends Plugin {
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
             for (const attribute of [...node.attributes]) {
-                // Keep allowed styles on nodes with allowed tags.
                 // todo: should the whitelist be a resource?
                 if (
                     CLIPBOARD_WHITELISTS.styledTags.includes(node.nodeName) &&
                     attribute.name === "style"
                 ) {
                     node.removeAttribute(attribute.name);
-                    if (["SPAN", "FONT"].includes(node.tagName)) {
+                    if (["SPAN", "FONT"].includes(node.tagName) && !isIconElement(node)) {
                         for (const unwrappedNode of unwrapContents(node)) {
                             this.cleanForPaste(unwrappedNode);
                         }
@@ -585,7 +632,7 @@ export class ClipboardPlugin extends Plugin {
      * @returns {boolean}
      */
     isWhitelisted(item) {
-        if (item instanceof Attr) {
+        if (item.nodeType === Node.ATTRIBUTE_NODE) {
             return CLIPBOARD_WHITELISTS.attributes.includes(item.name);
         } else if (typeof item === "string") {
             return CLIPBOARD_WHITELISTS.classes.some((okClass) =>

@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImagePadding">
-        <Dropdown>
+        <Dropdown menuRef="menuRef">
             <button t-att-title="props.title" class="btn btn-light fa fa-plus-square-o"> </button>
             <t t-set-slot="content">
                 <t t-foreach="this.paddings" t-as="padding" t-key="padding">

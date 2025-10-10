@@ -1,3 +1,4 @@
+/* global posmodel */
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
@@ -23,6 +24,16 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             // Go by default to home category
 
             Chrome.startPoS(),
+            // Make sure we don't have any scroll bar on the product list
+            {
+                trigger: ".product-list",
+                run: function () {
+                    const productList = document.querySelector(".product-list");
+                    if (productList.scrollWidth > document.documentElement.scrollWidth) {
+                        throw new Error("Product list is overflowing");
+                    }
+                },
+            },
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
@@ -168,6 +179,66 @@ registry.category("web_tour.tours").add("FloatingOrderTour", {
             ProductScreen.isShown(),
             ProductScreen.selectFloatingOrder(1),
             ProductScreen.productCardQtyIs("Letter Tray", "2.0"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Letter Tray", "2.0"),
+                ...ProductScreen.clickControlButtonMore(),
+                {
+                    trigger: "body",
+                    run: () => {
+                        window.dispatchEvent(new KeyboardEvent("keyup", { key: "9" }));
+                    },
+                },
+                Dialog.cancel(),
+            ]),
+            ProductScreen.isShown(),
+            ProductScreen.productCardQtyIs("Letter Tray", "2.0"),
+            inLeftSide([
+                ...Order.hasLine({
+                    productName: "Letter Tray",
+                    quantity: "2.0",
+                }),
+            ]),
+            {
+                trigger: "body",
+                run: () => {
+                    const bufferValue = posmodel.numberBuffer.get();
+                    if (bufferValue != "") {
+                        throw new Error(`Number buffer should be empty, but got ${bufferValue}`);
+                    }
+                },
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reuse_empty_floating_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.checkFloatingOrderCount(1),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.checkFloatingOrderCount(2),
+            ProductScreen.selectFloatingOrder(0),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            // Should reuse previously created empty floating order
+            ProductScreen.checkFloatingOrderCount(1),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_tax_control_button_visiblity", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButtonMore(),
+            negateStep(...ProductScreen.checkFiscalPositionButton()),
         ].flat(),
 });
 
@@ -613,5 +684,70 @@ registry.category("web_tour.tours").add("FiscalPositionTaxLabels", {
                 content: "Make sure receipt tax label is correct and correspond to the orderline",
                 trigger: ".pos-receipt-taxes:contains('Tax Group 2')",
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_barcode_search_attributes_preset", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Step 1: Search and add first variant
+            ProductScreen.searchProduct("12341357"),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            {
+                content: "Check that the product configurator is opened",
+                trigger: ".section-product-info-title:contains('Product with Attributes')",
+            },
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas(
+                "Product with Attributes (Value 1, Value 3, Value 5, Value 7)",
+                "1.0"
+            ),
+
+            // Step 2: Search and add product without attributes (used to delay UI update)
+            ProductScreen.searchProduct("987654321"),
+            {
+                content: "Wait for the product without attributes to be visible",
+                trigger: '.product:contains("Product without Attributes")',
+            },
+            ProductScreen.clickDisplayedProduct("Product without Attributes"),
+            ProductScreen.selectedOrderlineHas("Product without Attributes", "1.0"),
+
+            // Step 3: Search and add second variant of the original product
+            ProductScreen.searchProduct("12342468"),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            {
+                content: "Check that the product configurator is opened",
+                trigger: ".section-product-info-title:contains('Product with Attributes')",
+            },
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas(
+                "Product with Attributes (Value 2, Value 4, Value 6, Value 8)",
+                "1.0"
+            ),
+
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.clickDisplayedProduct("Test Product 2"),
+            inLeftSide([
+                ...["+/-"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product 2", "-1.0"),
+            ]),
+            ProductScreen.totalAmountIs("7,771.01"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.endTour(),
         ].flat(),
 });

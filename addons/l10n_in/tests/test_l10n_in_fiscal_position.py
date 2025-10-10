@@ -182,8 +182,8 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 template.ref('fiscal_position_in_inter_state')
             )
 
-        # Sub-test: Export/SEZ (Outside India)
-        with self.subTest(scenario="Export/SEZ"):
+        # Sub-test: Export (Outside India)
+        with self.subTest(scenario="Export"):
             vendor_bill = self._assert_invoice_fiscal_position(
                 fiscal_position_ref='fiscal_position_in_export_sez_in',
                 partner=self.partner_foreign,
@@ -205,15 +205,15 @@ class TestFiscal(L10nInTestInvoicingCommon):
             })
             self.assertEqual(
                 vendor_bill.fiscal_position_id,
-                template.ref('fiscal_position_in_export_sez_in')
+                template.ref('fiscal_position_in_sez')
             )
 
         # Sub-test: Manual Partner Fiscal Check
         with self.subTest(scenario="Manual Partner Fiscal Check"):
-            # Here fpos should Inter-State. But due to `property_account_position_id` it will be Export/SEZ
+            # Here fpos should Inter-State. But due to `property_account_position_id` it will be SEZ
             self.partner_a.write({
                 'state_id': company_state.id,  # Intra-State Partner
-                'property_account_position_id': template.ref('fiscal_position_in_export_sez_in').id
+                'property_account_position_id': template.ref('fiscal_position_in_lut_sez_1').id
             })
             vendor_bill = self.env['account.move'].with_company(self.env.company).create({
                 'move_type': 'in_invoice',
@@ -230,5 +230,20 @@ class TestFiscal(L10nInTestInvoicingCommon):
     
             self.assertEqual(
                 vendor_bill.fiscal_position_id,
-                self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in')
+                self.env['account.chart.template'].ref('fiscal_position_in_lut_sez_1')
             )
+
+    def test_l10n_in_company_with_no_vat(self):
+        """
+        Test the company with no VAT and update the partner and company states as per the GSTIN number
+        """
+        company = self.default_company
+
+        company.write({'vat': False})
+        self.assertFalse(company.vat)
+        company.action_update_state_as_per_gstin()
+        self.assertEqual(company.partner_id.state_id, self.env.ref('base.state_in_gj'))
+
+        company.write({'vat': '36AABCT1332L011'})
+        company.action_update_state_as_per_gstin()
+        self.assertEqual(company.state_id, self.env.ref('base.state_in_ts'))

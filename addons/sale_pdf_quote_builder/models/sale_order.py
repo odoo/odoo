@@ -38,7 +38,7 @@ class SaleOrder(models.Model):
             ).filtered(lambda doc:
                 order.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids
-            )
+            ) | order.quotation_document_ids
 
     @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
     def _compute_is_pdf_quote_builder_available(self):

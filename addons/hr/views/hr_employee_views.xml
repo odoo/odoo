@@ -17,7 +17,7 @@
                     <field name="job_id"/>
                     <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
-                    <field name="private_car_plate" />
+                    <field name="private_car_plate" groups="hr.group_hr_user"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
@@ -388,6 +388,7 @@
             <field name="name">Employees</field>
             <field name="path">employees</field>
             <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,list,form,activity,graph,pivot</field>
             <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>

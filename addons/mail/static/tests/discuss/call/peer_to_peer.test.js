@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { onRpc, mountWebClient, asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
@@ -6,6 +6,7 @@ import {
     assertSteps,
     defineMailModels,
     mockGetMedia,
+    onlineTest,
     step,
 } from "@mail/../tests/mail_test_helpers";
 import { PeerToPeer, STREAM_TYPE, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
@@ -47,7 +48,7 @@ class Network {
     }
 }
 
-test("basic peer to peer connection", async () => {
+onlineTest("basic peer to peer connection", async () => {
     await mountWebClient();
     const channelId = 1;
     const network = new Network();
@@ -66,7 +67,7 @@ test("basic peer to peer connection", async () => {
     network.close();
 });
 
-test("mesh peer to peer connections", async () => {
+onlineTest("mesh peer to peer connections", async () => {
     await mountWebClient();
     const channelId = 2;
     const network = new Network();
@@ -94,7 +95,7 @@ test("mesh peer to peer connections", async () => {
     expect(connectionsCount).toBe(0);
 });
 
-test("connection recovery", async () => {
+onlineTest("connection recovery", async () => {
     await mountWebClient();
     const channelId = 1;
     const network = new Network();
@@ -121,7 +122,7 @@ test("connection recovery", async () => {
     network.close();
 });
 
-test("can broadcast a stream and control download", async () => {
+onlineTest("can broadcast a stream and control download", async () => {
     mockGetMedia();
     await mountWebClient();
     const channelId = 3;
@@ -162,7 +163,7 @@ test("can broadcast a stream and control download", async () => {
     network.close();
 });
 
-test("can broadcast arbitrary messages (dataChannel)", async () => {
+onlineTest("can broadcast arbitrary messages (dataChannel)", async () => {
     await mountWebClient();
     const channelId = 4;
     const network = new Network();
@@ -196,7 +197,7 @@ test("can broadcast arbitrary messages (dataChannel)", async () => {
     network.close();
 });
 
-test("can reject arbitrary offers", async () => {
+onlineTest("can reject arbitrary offers", async () => {
     await mountWebClient();
     const channelId = 1;
     const network = new Network();

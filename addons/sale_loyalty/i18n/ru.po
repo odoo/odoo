@@ -1,29 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_loyalty
-# 
+# * sale_loyalty
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+# Anastasiia Koroleva, 2025
+#
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2025-10-03 18:39+0000\n"
+"PO-Revision-Date: 2025-10-08 11:12+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
+"sale_loyalty/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
-msgstr ""
+msgstr " - На товарах со следующими налогами: %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -33,7 +39,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> Копировать"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<strong>Loyalty Card</strong>"
-msgstr ""
+msgstr "<strong>Бонусная карта</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -108,14 +114,14 @@ msgstr "Купоны и лояльность"
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -127,7 +133,7 @@ msgstr "Отменить"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Discount %(desc)s%(tax_str)s"
-msgstr ""
+msgstr "Скидка %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
@@ -152,12 +158,6 @@ msgid "Expired Date:"
 msgstr "Дата истечения срока действия:"
 
 #. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Free Product - %(product)s"
-msgstr "Бесплатный продукт - %(product)s"
-
-#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift #"
 msgstr "Подарок"
@@ -175,7 +175,7 @@ msgstr "Подарочные карты и электронный кошелек
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "История бонусных карт и электронных кошельков"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -209,33 +209,33 @@ msgstr "Является ли программа линией вознаграж
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Issued"
-msgstr ""
+msgstr "Выпущено"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
-msgstr ""
+msgstr "Выпущено:"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Loyalty Card :"
-msgstr ""
+msgstr "Бонусная карта:"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -245,7 +245,7 @@ msgstr "Купон лояльности"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
 msgid "Loyalty Data"
-msgstr ""
+msgstr "Данные по бонусной программе"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -276,17 +276,11 @@ msgstr "Мультипродукт"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
+"No card found for this loyalty program and no points will be given with this "
+"order."
 msgstr ""
 "Не найдено ни одной карты для этой программы лояльности, и баллы не будут "
 "начислены за этот заказ."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "No product is compatible with this promotion."
-msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -493,12 +487,14 @@ msgid ""
 "This discount (%(discount)s) is not compatible with \"%(other_discount)s\". "
 "Please remove it in order to apply this one."
 msgstr ""
+"Эта скидка (%(discount)s) несовместима со скидкой «%(other_discount)s». "
+"Удалите ее, чтобы применить текущую скидку."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "This program cannot be applied with code."
-msgstr ""
+msgstr "Эта программа не может быть применена по коду."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -540,7 +536,7 @@ msgstr "Используемый"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Used :"
-msgstr ""
+msgstr "Использовано:"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -556,3 +552,6 @@ msgid ""
 msgstr ""
 "Ниже вы найдете код вашей подарочной карты. Он был отправлен по электронной "
 "почте. Вы можете использовать его прямо сейчас."
+
+#~ msgid "Free Product - %(product)s"
+#~ msgstr "Бесплатный продукт - %(product)s"

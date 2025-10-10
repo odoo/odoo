@@ -63,12 +63,12 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">ناونیشانی گەیاندن:</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">ناونیشانی گەیاندن</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -88,6 +88,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"بەپێی پێکهاتەی بەرهەم، دەتوانرێت بڕی وەرگیراو بە شێوەیەکی ئۆتۆماتیکی بە میکانیزم حیساب بکرێت:\n"
+"- دەستی: بڕ بە دەستی لەسەر هێڵەکە دانراوە\n"
+"- جوڵەی ستۆک: بڕی لە هەڵبژاردنە پشتڕاستکراوەکانەوە دێت\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -522,13 +525,13 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
 msgid "Purchase Order"
-msgstr ""
+msgstr "فەرمانی کڕین"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "هێڵی داواکاری کڕین"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
@@ -536,12 +539,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
-msgstr ""
+msgstr "داواکاری کڕین"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "ڕاپۆرتی کڕین"
 
 #. module: purchase_stock
 #. odoo-python
@@ -565,6 +568,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"ناونیشانێک دابنێ ئەگەر دەتەوێت ڕاستەوخۆ لە فرۆشیارەوە بۆ کڕیار بیگەیەنیت. "
+"ئەگەرنا بە بەتاڵی بهێڵەرەوە بۆ ئەوەی بیگەیەنیت بە کۆمپانیای خۆت."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -708,7 +713,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr ""
+msgstr "لیستی نرخی دابینکەر"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
@@ -800,7 +805,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
 msgid "Total Quantity"
-msgstr ""
+msgstr "کۆی گشتی بڕ"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable

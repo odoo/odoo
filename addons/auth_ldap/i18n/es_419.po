@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Fernanda Alvarez, 2024
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,15 +36,15 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    El filtro que se usa para buscar cuentas de usuario en la base de datos LDAP. Es un filtro LDAP    arbitrario en representación de una cadena. Cualquier marcador de posición `%s`  se reemplazará con el nombre utilizado para iniciar sesión (identificador) que el usuario proporcionó. El filtro debe incluir al menos uno de estos marcadores de posición.\n"
+"    El filtro utilizado para buscar cuentas de usuario en la base de datos LDAP. Es un filtro LDAP    arbitrario en representación de una cadena. Cualquier marcador de posición `%s` se reemplazará con el nombre utilizado para iniciar sesión (identificador) que el usuario proporcionó. El filtro debe incluir al menos uno de estos marcadores de posición.\n"
 "\n"
-"    El filtro debe dar como resultado solo un (1) resultado. De lo contrario, se considerará    que el inicio de sesión no es válido.\n"
+"    El filtro solo debe proporcionar un (1) resultado, de lo contrario se considerará    que el inicio de sesión no es válido.\n"
 "\n"
 "    Ejemplo (los atributos reales dependen del servidor LDAP y la configuración):\n"
 "\n"
 "        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"
-"    o\n"
+"    or\n"
 "\n"
 "        (|(mail=%s)(uid=%s))\n"
 "    "
@@ -55,8 +55,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Crear cuentas de usuario local en automático para los nuevos usuarios que se"
-" autentiquen mediante LDAP."
+"Crea cuentas de usuario local en automático para los nuevos usuarios que se "
+"autentican con LDAP."
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -99,8 +99,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
-"DN del ámbito de búsqueda de usuarios: se buscará en todos los descendientes"
-" de esta base para encontrar usuarios."
+"DN del alcance de búsqueda de usuario: Se buscarán usuarios en todos los "
+"descendientes de esta base."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -179,8 +179,8 @@ msgstr "Información de inicio de sesión"
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
-"No se encontró un usuario local para el inicio de sesión LDAP y tampoco está"
-" configurado para crear uno."
+"No se encontró un usuario local para el inicio de sesión LDAP y la opción "
+"para crear uno no está configurada."
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -194,9 +194,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"Solicitar cifrado seguro TLS/SSL al conectarse al servidor LDAP. Esta opción"
-" requiere un servidor con STARTTLS habilitado, de lo contrario, todos los "
-"intentos de autenticación fallarán."
+"Solicita una conexión segura TLS/SSL al conectarse al servidor LDAP. Esta "
+"opción requiere un servidor con STARTTLS habilitado o todos los intentos de "
+"autenticación fallarán."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -211,7 +211,7 @@ msgstr "Información del servidor"
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Configure su servidor LDAP"
+msgstr "Configura tu servidor LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -233,8 +233,8 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"La cuenta de usuario en el servidor LDAP que se usa para consultar el "
-"directorio. Deje el campo vacío para conectarse de forma anónima."
+"La cuenta de usuario en el servidor LDAP utilizada para consultar el "
+"directorio. Deja el campo vacío si quieres conectarte de forma anónima."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

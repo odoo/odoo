@@ -326,7 +326,7 @@ export class PaymentScreen extends Component {
             }
         } catch (error) {
             if (error instanceof ConnectionLostError) {
-                this.pos.showScreen(this.nextScreen);
+                this.afterOrderValidation();
                 Promise.reject(error);
             } else if (error instanceof RPCError) {
                 this.currentOrder.state = "draft";
@@ -372,11 +372,10 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (invoiced_finalized) {
-                this.pos.printReceipt(this.currentOrder);
+                this.pos.printReceipt({ order: this.currentOrder });
 
                 if (this.pos.config.iface_print_skip_screen) {
                     this.currentOrder.set_screen_data({ name: "" });
-                    this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextScreen = "ProductScreen";
                     if (switchScreen) {
@@ -389,12 +388,16 @@ export class PaymentScreen extends Component {
         if (switchScreen) {
             this.pos.showScreen(nextScreen);
         }
+
+        if (!this.pos.config.module_pos_restaurant) {
+            this.pos.checkPreparationStateAndSentOrderInPreparation(this.currentOrder);
+        }
     }
     selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
             this.pos.selectedOrderUuid = this.currentOrder.originalSplittedOrder.uuid;
         } else {
-            this.pos.add_new_order();
+            this.pos.selectEmptyOrder();
         }
     }
     /**
@@ -605,6 +608,16 @@ export class PaymentScreen extends Component {
     }
     async sendForceDone(line) {
         line.set_payment_status("done");
+        const config = this.pos.config;
+        const currency = this.pos.currency;
+        const currentOrder = line.pos_order_id;
+        if (
+            currentOrder.is_paid() &&
+            floatIsZero(currentOrder.get_due(), currency.decimal_places) &&
+            config.auto_validate_terminal_payment
+        ) {
+            this.validateOrder(true);
+        }
     }
 
     check_cash_rounding_has_been_well_applied() {

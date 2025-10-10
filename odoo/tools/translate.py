@@ -1834,7 +1834,7 @@ def _get_translation_upgrade_queries(cr, field):
         """
         migrate_queries.append(cr.mogrify(query, [Model._name, translation_name]).decode())
 
-        query = "DELETE FROM _ir_translation WHERE type = 'model' AND name = %s"
+        query = "DELETE FROM _ir_translation WHERE type = 'model' AND state = 'translated' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
 
     # upgrade model_terms translation: one update per field per record
@@ -1908,7 +1908,7 @@ def _get_translation_upgrade_queries(cr, field):
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 
-        query = "DELETE FROM _ir_translation WHERE type = 'model_terms' AND name = %s"
+        query = "DELETE FROM _ir_translation WHERE type = 'model_terms' AND state = 'translated' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
 
     return migrate_queries, cleanup_queries

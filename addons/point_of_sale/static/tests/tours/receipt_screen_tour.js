@@ -1,3 +1,4 @@
+/* global posmodel */
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
@@ -6,6 +7,7 @@ import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_u
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as ProductConfigurator from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
@@ -171,5 +173,47 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.trackingMethodIsLot(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_auto_validate_force_done", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            {
+                trigger: "body",
+                run: () => {
+                    posmodel.get_order().payment_ids[0].set_payment_status("force_done");
+                },
+            },
+            {
+                trigger: ".send_force_done",
+                run: "click",
+            },
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_free_text_custom_attribute_on_receipt", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.pickRadio("Other"),
+            ProductConfigurator.fillCustomAttribute("Custom Fabric"),
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            Order.hasLine({
+                productName: "Configurable Chair (Fabrics: Other: Custom Fabric)",
+            }),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

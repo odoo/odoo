@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-27 18:38+0000\n"
-"PO-Revision-Date: 2025-06-27 18:38+0000\n"
+"POT-Creation-Date: 2025-10-03 18:38+0000\n"
+"PO-Revision-Date: 2025-10-03 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -543,6 +543,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
 msgid "<br/> on this account:"
 msgstr ""
 
@@ -740,8 +742,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid ""
 "<small class=\"form-text text-muted\">\n"
-"                    You can choose how you want us to send your invoices, and with which electronic format.\n"
-"                </small>"
+"                        You can choose how you want us to send your invoices, and with which electronic format.\n"
+"                    </small>"
 msgstr ""
 
 #. module: account
@@ -772,16 +774,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" groups=\"account.group_account_readonly\" invisible=\"move_type == 'entry'\">\n"
-"                                        <span groups=\"base.group_multi_currency\">in </span>\n"
-"                                    </span>"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
-"or invoice_payment_term_id\"> or </span>"
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
 msgstr ""
 
 #. module: account
@@ -992,11 +986,6 @@ msgid "<span> (DR)</span>"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span> = </span>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
 msgstr ""
@@ -1029,7 +1018,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "<span>1 </span>"
+msgid "<span>1</span>"
 msgstr ""
 
 #. module: account
@@ -1040,6 +1029,11 @@ msgstr ""
 #. module: account
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "<span>=</span>"
 msgstr ""
 
 #. module: account
@@ -6776,6 +6770,12 @@ msgid "Excluded Journals"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
+#: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
+msgid "Expected Currency Rate"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
 msgstr ""
@@ -7527,8 +7527,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
-"Groupby feature isn't supported by aggregation engine. Please remove the "
-"groupby value on '%s'"
+"Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
+"groupby value on '%(report_line)s'"
 msgstr ""
 
 #. module: account
@@ -7685,11 +7685,6 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
-msgid "IBAN: BE76 4294 6878 9995"
 msgstr ""
 
 #. module: account
@@ -9178,6 +9173,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__6
 msgid "June"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_kpi_provider
+msgid "KPI Provider"
 msgstr ""
 
 #. module: account
@@ -11734,6 +11734,12 @@ msgid "Phishing risk: Medium"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_pick_currency_rate/account_pick_currency_rate.xml:0
+msgid "Pick the rate on a certain date"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Please contact your accountant to print the Hash integrity result."
@@ -12390,6 +12396,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Refresh currency rate to the invoice date"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Refund"
@@ -12720,6 +12731,13 @@ msgid "Reversed"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Reversed on"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -12996,7 +13014,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_qr_code_preview
 msgid "Scan this QR Code with<br/>your banking application"
 msgstr ""
 
@@ -14715,6 +14733,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The currency rate must be strictly positive."
 msgstr ""
 
 #. module: account
@@ -17993,6 +18017,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "in"
 msgstr ""
 
 #. module: account

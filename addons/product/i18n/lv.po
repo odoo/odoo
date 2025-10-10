@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* product
-# 
+# * product
+#
 # Translators:
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2024
 # Vladimirs Malejevs <vladimirs.malejevs@ms-idi.eu>, 2024
@@ -13,20 +13,22 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # Will Sensors, 2025
-# 
+# Aleksejs Ivanovs <ai@myacc.pro>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 20:47+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Will Sensors, 2025\n"
-"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"PO-Revision-Date: 2025-09-03 11:20+0000\n"
+"Last-Translator: Aleksejs Ivanovs <ai@myacc.pro>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-18/product/"
+"lv/>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: product
 #. odoo-python
@@ -69,6 +71,10 @@ msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s ar %(discount)s %% %(discount_type)s un %(surcharge)s papildus "
+"maksu\n"
+"Piemērs: %(amount)s * %(discount_charge)s + %(price_surcharge)s → "
+"%(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -77,24 +83,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
 msgstr ""
+"%(item_name)s: beigu datumam (%(end_date)s) jābūt pēc sākuma datuma "
+"(%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s priekš %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% atlaide %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% atlaide pārdošanas cenai"
 
 #. module: product
 #. odoo-python
@@ -122,19 +130,19 @@ msgstr "'Preču iepakojums - %s' % (object.name)"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr "(piem., preces apraksts, e-grāmata, juridiskais paziņojums)"
+msgstr "(piem., preces apraksts, e-grāmata, juridiskais paziņojums, ...)."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s papildu maksa"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s atlaide"
 
 #. module: product
 #. odoo-python
@@ -159,7 +167,7 @@ msgstr "1 gads"
 #. module: product
 #: model:product.attribute.value,name:product.pav_warranty
 msgid "1 year warranty extension"
-msgstr ""
+msgstr "1 gada garantijas pagarinājums"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -209,7 +217,7 @@ msgstr "4 x 7 ar cenu"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>Padoms: vēlaties noapaļot līdz 9,99?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -235,6 +243,13 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            Noteikumi\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
+"                                            Noteikums\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -246,6 +261,13 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Cenrāži\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible="
+"\"pricelist_item_count != 1\">\n"
+"                                        Cenrādis\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -255,7 +277,7 @@ msgstr "<span class=\"o_stat_text\"> Preces</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Produkti</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -373,17 +395,17 @@ msgstr "Piekļuves atslēga"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget"
-msgstr ""
+msgstr "Acme Widget"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget - Blue"
-msgstr ""
+msgstr "Acme Widget - Zilais"
 
 #. module: product
 #: model:product.template,name:product.product_template_acoustic_bloc_screens
 msgid "Acoustic Bloc Screens"
-msgstr ""
+msgstr "Acoustic Bloc Ekrāni"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_needaction
@@ -451,13 +473,13 @@ msgstr "Pievienot"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "Pievienot produktus"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Produktu pievienošana cenrāža pārskatam"
 
 #. module: product
 #. odoo-javascript
@@ -472,22 +494,25 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Pievienojiet produktus, izmantojot pogu \"Pievienot produktus\" augšējā "
+"labajā stūrī, lai\n"
+"                                iekļaut tos ziņojumā."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Pievienot visiem produktiem"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Pievienot esošajiem produktiem"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Pievienot produktiem"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -788,7 +813,7 @@ msgstr "Kategorija: %s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
 msgid "Checksum/SHA1"
-msgstr "Checksum/SHA1"
+msgstr "Kontroles summa/SHA1"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
@@ -2975,7 +3000,7 @@ msgstr "Radio"
 #: model:ir.model.fields,field_description:product.field_product_product__code
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Reference"
-msgstr "Reference"
+msgstr "Atsauce"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -3111,7 +3136,7 @@ msgstr "Sekvence"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__service
 msgid "Service"
-msgstr "Apkope"
+msgstr "Pakalpojums"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3460,8 +3485,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Tiks izmantota attiecīgais cenrādis noklusējuma vietā, tirgojot šim "
-"partnerim."
+"Pašreizējam partnerim priekš pārdošanai tiks izmantots šis cenrādis, nevis "
+"noklusējuma"
 
 #. module: product
 #. odoo-python

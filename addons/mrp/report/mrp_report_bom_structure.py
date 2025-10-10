@@ -44,7 +44,7 @@ class ReportBomStructure(models.AbstractModel):
         availability_delay = bom_data['availability_delay']
         same_delay = lead_time == availability_delay
         res = {}
-        if bom_data.get('producible_qty', 0):
+        if bom_data.get('producible_qty', 0) and not self.env.context.get('skip_producible_qty'):
             # Some quantities are producible today, at the earliest time possible
             earliest_capacity = bom_data['producible_qty']
 
@@ -128,7 +128,14 @@ class ReportBomStructure(models.AbstractModel):
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
         lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
-        production_capacities = self._compute_production_capacities(bom_quantity, lines)
+        try:
+            production_capacities = self._compute_production_capacities(bom_quantity, lines)
+        except UserError as e:
+            if not hasattr(e, '_planning_error'):
+                raise
+            # The planning failed, try again with the requested quantity
+            production_capacities = self.with_context(skip_producible_qty=True)._compute_production_capacities(bom_quantity, lines)
+
         lines.update(production_capacities)
         return {
             'lines': lines,
@@ -440,7 +447,7 @@ class ReportBomStructure(models.AbstractModel):
             if byproduct._skip_byproduct_line(product):
                 continue
             line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
-            cost_share = byproduct.cost_share / 100
+            cost_share = byproduct.cost_share / 100 if byproduct.product_qty > 0 else 0
             byproduct_cost_portion += cost_share
             price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.product_uom_id) * line_quantity
             byproducts.append({
@@ -867,7 +874,9 @@ class ReportBomStructure(models.AbstractModel):
                 best_duration_expected = duration_expected
         # If none of the workcenter are available, raise
         if best_date_finished == datetime.max:
-            raise UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
+            err = UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
+            err._planning_error = True
+            raise err
         planning_per_operation[operation] = {
             'date_start': best_date_start,
             'date_finished': best_date_finished,

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # Rolandas <info@paninfo.lt>, 2024
 # Nerijus, 2024
@@ -21,23 +21,26 @@
 # Paulius Sladkevičius <paulius@versada.eu>, 2024
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Jonas Zinkevicius <jozi@odoo.com>, 2024
-# 
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -50,6 +53,9 @@ msgid ""
 "<span class=\"o_stat_value\">New</span>\n"
 "                                <span class=\"o_stat_text\">Vehicle</span>"
 msgstr ""
+"<span class=\"o_stat_value\">Nauja</span>\n"
+"                                <span class=\"o_stat_text\">transporto "
+"priemonė</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -156,6 +162,11 @@ msgid "Activity State"
 msgstr "Veiklos būsena"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Veiklos tipas"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -205,6 +216,7 @@ msgstr "Archyvuoti"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -314,7 +326,7 @@ msgstr "Dviratis"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_type
 msgid "Bike Frame Type"
-msgstr ""
+msgstr "Dviračio rėmo tipas"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -397,7 +409,7 @@ msgstr "Atšaukti"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
 msgid "Cancellation Date"
-msgstr ""
+msgstr "Atšaukimo data"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
@@ -440,9 +452,11 @@ msgstr "Kategorijos"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
+"Kategorijos padės jums efektyviau valdyti transporto parką ir susisteminti "
+"transporto priemones"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
@@ -485,8 +499,7 @@ msgstr "Pasirinkite, ar sutartis vis dar galioja"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
 "Pasirinkite, ar paslauga nurodo į kontaktus, į automobilio paslaugas ar abu"
 
@@ -751,7 +764,7 @@ msgstr "Data"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date of vehicle registration"
-msgstr ""
+msgstr "Transporto priemonės registracijos data"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
@@ -767,8 +780,8 @@ msgstr "Data, kai įsigalioja sutarties sąlygos"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Data, kai sutarties sąlygos nustoja galioti (standartiškai, po metų nuo "
 "galiojimo pradžios)"
@@ -777,6 +790,8 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
 msgid "Date when the vehicle's license plate has been cancelled/removed."
 msgstr ""
+"Data, kada transporto priemonės valstybinis numeris buvo panaikintas/"
+"pašalintas."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
@@ -865,7 +880,7 @@ msgstr "Vairuotojas"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__driver_id
 msgid "Driver address of the vehicle"
-msgstr ""
+msgstr "Transporto priemonės vairuotojo adresas"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -900,8 +915,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
-"Kiekviena paslauga gali būti naudojama kaip sutartinė, kaip atskira arba abi"
-" iš karto."
+"Kiekviena paslauga gali būti naudojama kaip sutartinė, kaip atskira arba abi "
+"iš karto."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
@@ -990,7 +1005,7 @@ msgstr "Negaliojanti"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expires_today
 msgid "Expires Today"
-msgstr ""
+msgstr "Galioja iki šiandien"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
@@ -1101,7 +1116,7 @@ msgstr "Kuro tipas"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__full_hybrid
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__full_hybrid
 msgid "Full Hybrid"
-msgstr ""
+msgstr "Pilnai hibridinis"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -1421,7 +1436,7 @@ msgstr "Automobilio valstybinis numeris"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Load template"
-msgstr ""
+msgstr "Įkelti šabloną"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
@@ -1468,8 +1483,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
 msgstr ""
-"Efektyviai valdykite savo skirtingų  transporto priemonių išlaidas naudodami"
-" Odoo."
+"Efektyviai valdykite savo skirtingų  transporto priemonių išlaidas naudodami "
+"Odoo."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1799,8 +1814,8 @@ msgstr "Operacija nepalaikoma."
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 
 #. module: fleet
@@ -2341,7 +2356,8 @@ msgstr "Pagalba kelyje"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Sekite visas paslaugas, atliktas jūsų automobiliui.\n"
 "Paslaugos dali būti daugelio tipų: atsitiktiniai taisymai, priežiūra ir kt."
@@ -2604,6 +2620,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Write here any other information related to this vehicle"
 msgstr ""
+"Čia įrašykite bet kokią kitą su šia transporto priemone susijusią informaciją"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form

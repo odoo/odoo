@@ -2,7 +2,7 @@
 from datetime import datetime
 from psycopg2.errors import UniqueViolation
 
-from odoo.tests import Form, users, HttpCase, tagged
+from odoo.tests import Form, users, HttpCase, tagged, new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
@@ -490,7 +490,38 @@ class TestHrEmployee(TestHrCommon):
 
 
 @tagged('-at_install', 'post_install')
+class TestHrEmployeeLinks(HttpCase):
+    def test_shared_private_link_permissions(self):
+        """
+        Employees not part of group_hr_user are not supposed to be able to see
+        private employees pages (e.g.: from a shared link).
+        The tour will check if the correct redirection warning appears when such
+        case happens.
+        """
+        user_amy = new_test_user(
+            self.env,
+            name="Amy Rose",
+            login='amy',
+            groups='base.group_user'  # cannot access private employee profiles
+        )
+        employee_sonic = self.env['hr.employee'].create({
+            'name': 'Sonic the Hedgehog',
+        })
+        with mute_logger('odoo.http'):  # ignore raised RedirectWarning
+            self.start_tour(
+                f"/odoo/employees/{employee_sonic.id}",
+                "check_public_employee_link_redirect",
+                login=user_amy.login,
+            )
+
+
+@tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        # JSON route needs to be enabled for the tests
+        self.env['ir.config_parameter'].sudo().set_param('web.json.enabled', True)
 
     def test_webjson_employees(self):
         #check that json employees can be accessed

@@ -74,6 +74,24 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
             {'duplicated_ref_ids': (invoice_1 + invoice_2).ids},
         ])
 
+    def test_in_invoice_multiple_duplicate_reference_batch_in_edit_mode(self):
+        """
+            Ensure duplicated ref are computed correctly even when updated in batch
+            when they are in edit mode
+        """
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        invoices_new = self.env['account.move'].browse([
+            self.env['account.move'].new(origin=inv).id for inv in (invoice_1, invoice_2)
+        ])
+        # reassign to trigger the compute method
+        invoices_new.ref = invoice_1.ref
+        self.assertRecordValues(invoices_new, [
+            {'duplicated_ref_ids': []},
+            {'duplicated_ref_ids': (invoices_new[0]).ids},
+        ])
+
     def test_in_invoice_single_duplicate_reference_diff_date(self):
         """ Ensure duplicated ref are computed correctly for different dates"""
         bill1 = self.invoice.copy({'invoice_date': self.invoice.invoice_date})

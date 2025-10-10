@@ -846,6 +846,8 @@ class Picking(models.Model):
     @api.depends('move_ids.state', 'move_ids.date', 'move_type')
     def _compute_scheduled_date(self):
         for picking in self:
+            if not picking.id:
+                continue
             moves_dates = picking.move_ids.filtered(lambda move: move.state not in ('done', 'cancel')).mapped('date')
             if picking.move_type == 'direct':
                 picking.scheduled_date = min(moves_dates, default=picking.scheduled_date or fields.Datetime.now())
@@ -1360,7 +1362,8 @@ class Picking(models.Model):
         no_quantities_done_ids = set()
         pickings_without_quantities = self.env['stock.picking']
         for picking in self:
-            if all(float_is_zero(move.quantity, precision_digits=precision_digits) for move in picking.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
+            has_pick = any(move.picked and move.state not in ('done', 'cancel') for move in picking.move_ids)
+            if all(float_is_zero(move.quantity, precision_digits=precision_digits) for move in picking.move_ids.filtered(lambda m: m.state not in ('done', 'cancel') and (not has_pick or m.picked))):
                 pickings_without_quantities |= picking
 
         pickings_using_lots = self.filtered(lambda p: p.picking_type_id.use_create_lots or p.picking_type_id.use_existing_lots)
@@ -1503,7 +1506,7 @@ class Picking(models.Model):
         :rtype: str
         """
         return _(
-            'You cannot validate a transfer if no quantities are reserved. '
+            'You cannot validate a transfer if no quantities are reserved, or if only non-reserved moves are picked.'
             'To force the transfer, encode quantities.'
         )
 

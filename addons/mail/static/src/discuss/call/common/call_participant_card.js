@@ -17,7 +17,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
-const HIDDEN_CONNECTION_STATES = new Set([undefined, "connected", "completed"]);
+const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
     static props = ["className", "cardData", "thread", "minimized?", "inset?"];

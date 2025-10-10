@@ -34,12 +34,12 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if not move.picked or float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
                 continue
-            move.show_subcontracting_details_visible = True
+            move.show_subcontracting_details_visible = move.picked or any(p.subcontracting_has_been_recorded and p.state != 'done' for p in productions)
 
     def _compute_show_details_visible(self):
         """ If the move is subcontract and the components are tracked. Then the
@@ -58,9 +58,10 @@ class StockMove(models.Model):
             move.show_details_visible = True
         return res
 
-    def _compute_picked(self):
-        subcontracted_moves = self.filtered(lambda m: m.is_subcontract and float_compare(m.product_uom_qty, m.quantity, precision_rounding=m.product_uom.rounding) != 0)
-        super(StockMove, self - subcontracted_moves)._compute_picked()
+    def _compute_is_quantity_done_editable(self):
+        not_editable = self.filtered(lambda m: m.is_subcontract and (m.move_orig_ids.production_id._has_tracked_component() or m.has_tracking != "none"))
+        not_editable.is_quantity_done_editable = False
+        super(StockMove, self - not_editable)._compute_is_quantity_done_editable()
 
     def _set_quantity_done(self, qty):
         to_set_moves = self
@@ -328,7 +329,12 @@ class StockMove(models.Model):
 
         # Cancel productions until reach new_quantity
         for production in (productions - wip_production):
-            if quantity_to_remove >= production.product_qty:
+            if float_compare(quantity_to_remove, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
+                if len(productions + wip_production) == 1:
+                    production.qty_producing = 0
+                    production.subcontracting_has_been_recorded = False
+                    production._set_qty_producing()
+                    break  # Never cancel the last MO if there's still a subcontracting move
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:

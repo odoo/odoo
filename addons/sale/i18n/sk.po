@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-13 18:37+0000\n"
+"POT-Creation-Date: 2025-07-11 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Chris Podivinsky, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
@@ -1319,8 +1319,10 @@ msgstr "Rozloženie firemného dokumentu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Vypočítať dopravné náklady a dodávku DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1329,8 +1331,10 @@ msgstr "Vypočítať dopravné náklady a dodávku Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Vypočítať dopravné náklady a dodávku FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1351,13 +1355,17 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Vypočítať dopravné náklady a dodávku UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Vypočítať dopravné náklady a dodávku USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1644,6 +1652,11 @@ msgid "Customers"
 msgstr "Zákazníci"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "Konektor DHL Express"
@@ -1888,6 +1901,11 @@ msgid "Distribution Analytic Account"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentácia"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Documents"
 msgstr "Dokumenty"
@@ -2080,6 +2098,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Konektor FedEx"
 
@@ -2107,7 +2126,7 @@ msgstr "Pevná suma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Sledujte, zobrazte alebo zaplaťte svoje objednávky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -3701,7 +3720,7 @@ msgstr "Cenové ponuky a predaj"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "Ponuky na schválenie"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -5010,11 +5029,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Konektor UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Konektor USPS"
 

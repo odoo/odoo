@@ -1,4 +1,4 @@
-import { parseDateTime, deserializeDate } from "@web/core/l10n/dates";
+import { parseDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import { roundDecimals, floatIsZero } from "@web/core/utils/numbers";
 
 /*
@@ -198,8 +198,8 @@ export function computeProductPricelistCache(service, data = []) {
 
     for (const item of pricelistItems) {
         if (
-            (item.date_start && deserializeDate(item.date_start) > date) ||
-            (item.date_end && deserializeDate(item.date_end) < date)
+            (item.date_start && deserializeDateTime(item.date_start) > date) ||
+            (item.date_end && deserializeDateTime(item.date_end) < date)
         ) {
             continue;
         }

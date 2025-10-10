@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import convertInline from '@web_editor/js/backend/convert_inline';
 import {getGridHtml, getTableHtml, getRegularGridHtml, getRegularTableHtml, getTdHtml, removeComments} from '@web_editor/../tests/test_utils';
+import { unformat } from '@web_editor/js/editor/odoo-editor/test/utils';
 
 const TEST_WIDTH = 800;
 const TEST_HEIGHT = 600;
@@ -635,9 +636,9 @@ QUnit.module('convert_inline', {}, function () {
         // Some positional properties (eg., padding-right, margin-left) are not
         // concatenated (eg., as padding, margin) because they were defined with
         // variables (var) or calculated (calc).
-        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
-        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
-        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
+        const containerStyle = `border-radius: 0px; border-style: none; margin: 0px auto; box-sizing: border-box; border-color: rgb(55, 65, 81); border-width: 0px; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
+        const rowStyle = `border-radius: 0px; border-style: none; padding: 0px; box-sizing: border-box; border-color: rgb(55, 65, 81); border-width: 0px; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
+        const colStyle = `border-radius: 0px; border-style: none; box-sizing: border-box; border-color: rgb(55, 65, 81); border-width: 0px; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +
@@ -1001,7 +1002,7 @@ QUnit.module('convert_inline', {}, function () {
         $iframeEditable.append(`<div class="o_layout" style="padding: 50px;"></div>`);
         convertInline.classToStyle($iframeEditable, convertInline.getCSSRules($iframeEditable[0].ownerDocument));
         assert.strictEqual($iframeEditable.html(),
-            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
+            `<div class="o_layout" style="border-radius:0px;border-style:none;margin:0px;box-sizing:border-box;border-left-color:rgb(255, 255, 255);border-bottom-color:rgb(255, 255, 255);border-right-color:rgb(255, 255, 255);border-top-color:rgb(255, 255, 255);border-left-width:0px;border-bottom-width:0px;border-right-width:0px;border-top-width:0px;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
             "should have given all styles of body to .o_layout");
         styleSheet.deleteRule(0);
 
@@ -1079,6 +1080,27 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual(convertInline.createMso('<div>ef<!--[if !mso]><div>abcd</div><![endif]-->gh</div>').nodeValue,
             '[if mso]><div>efgh</div><![endif]',
             "Should remove nested mso hide condition");
+    });
+
+    QUnit.test('Should properly calculate colspan', async function (assert) {
+        const editable = document.createElement("div");
+        const container = document.createElement("div");
+        editable.append(container);
+        container.classList.add("container");
+        container.append(document.createElement("div"));
+        container.firstChild.classList.add("row");
+        container.firstChild.innerHTML = `<div class="col-sm">a</div><div class="col-1">b</div><div class="col-sm">c</div>`;
+        convertInline.bootstrapToTable(editable);
+        assert.strictEqual(editable.innerHTML,
+            unformat(`<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; font-size: unset; line-height: inherit;\">
+                <tr>
+                    <td colspan=\"5\" class=\"o_converted_col\" style=\"max-width: 0px;\">a</td>
+                    <td colspan=\"1\" class=\"o_converted_col\" style=\"max-width: 0px;\">b</td>
+                    <td colspan=\"5\" class=\"o_converted_col\" style=\"max-width: 0px;\">c</td>
+                    <td colspan=\"1\" class=\"o_converted_col\" style=\"max-width: 0px;\"></td>
+                </tr>
+            </table>`),
+            "Should have one row only");
     });
 
     QUnit.test('Correct border attributes for outlook', async function (assert) {

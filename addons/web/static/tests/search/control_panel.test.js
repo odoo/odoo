@@ -1,5 +1,5 @@
 import { expect, test, getFixture } from "@odoo/hoot";
-import { click, press, queryAll } from "@odoo/hoot-dom";
+import { click, press, keyDown, keyUp, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { reactive } from "@odoo/owl";
 import {
@@ -163,6 +163,35 @@ test("view switcher hotkey cycles through views", async () => {
     await press(["alt", "shift", "v"]);
     await animationFrame();
     expect(`.o_list_view`).toHaveCount(1);
+});
+
+test.tags("desktop");
+test("hotkey overlay not overlapped by active view button", async () => {
+    onRpc("has_group", () => true);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "kanban"],
+        ],
+    });
+
+    await keyDown("alt");
+    expect(`.o_cp_switch_buttons .o_web_hotkey_overlay`).toHaveCount(1);
+    expect(`.o_switch_view.active`).toHaveCount(1);
+
+    const hotkeyZIndex = Number(
+        getComputedStyle(queryFirst(`.o_cp_switch_buttons .o_web_hotkey_overlay`)).zIndex
+    );
+    const buttonZIndex = Number(getComputedStyle(queryFirst(`.o_switch_view.active`)).zIndex);
+
+    expect(hotkeyZIndex).toBeGreaterThan(buttonZIndex);
+
+    await keyUp("alt");
+    expect(`.o_cp_switch_buttons .o_web_hotkey_overlay`).toHaveCount(0);
 });
 
 test.tags("desktop");

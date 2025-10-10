@@ -5,7 +5,7 @@ from freezegun import freeze_time
 from lxml import etree
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tools import file_open
+from odoo.tools import file_open, cleanup_xml_node
 from odoo.tests import tagged
 
 NS_MAP = {
@@ -495,6 +495,26 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         with file_open('l10n_my_edi/tests/expected_xmls/invoice_import.xml', 'rb') as f:
             expected_xml = etree.fromstring(f.read())
         self.assertXmlTreeEqual(root, expected_xml)
+
+    def test_10_prepaid_amount_present(self):
+        """
+        Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>.
+        """
+        invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a)
+        invoice.action_post()
+        vals = self.env['account.edi.xml.ubl_myinvois_my'].with_context(
+            convert_fixed_taxes=True)._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang)
+        )
+        vals['vals']['prepaid_payment_vals'].update({
+            'amount': 2200.00,
+            'currency': self.other_currency,
+            'currency_dp': self.other_currency.decimal_places,
+        })
+        xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
+        file = etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+        root = etree.fromstring(file)
+        prepaid_node = root.xpath('cac:PrepaidPayment/cbc:PaidAmount', namespaces=NS_MAP)
+        self.assertEqual(prepaid_node[0].text, '2200.00')
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)

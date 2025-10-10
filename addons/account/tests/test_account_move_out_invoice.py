@@ -3,7 +3,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo import fields, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from collections import defaultdict
 from unittest.mock import patch
@@ -4777,3 +4777,73 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "<p>Manually written terms by user</p>",
             "Narration should be preserved after partner change when invoice terms are disabled"
         )
+
+    def test_multiple_currency_change(self):
+        """
+        Test amount currency and balance are correctly recomputed when switching currency multiple times
+        """
+        currency_a = self.env.company.currency_id
+        currency_b = self.other_currency
+
+        invoice = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', products=self.product_a, currency=currency_b)
+        initial_balance = invoice.line_ids[0].balance
+        # Simulate updating currency: Foreign currency -> Company currency -> Foreign Currency -> Save
+        with Form(invoice) as move_form:
+            for currency in (currency_a, currency_b):
+                move_form.currency_id = currency
+        self.assertEqual(invoice.line_ids[0].balance, initial_balance, "Balance with original currency should be the same.")
+
+    def test_invoice_currency_rate_onchange_sets_to_one(self):
+        """ Ensure that invoice_currency_rate is set to 1 if set to 0 or negative for foreign currency invoices. """
+        invoice = self.invoice
+        invoice.currency_id = self.other_currency
+
+        # Test invoice_currency_rate with 0 value
+        with self.assertRaises(ValidationError):
+            with Form(invoice) as move_form:
+                move_form.invoice_currency_rate = 0
+        self.assertEqual(invoice.invoice_currency_rate, 2.0)
+
+        # Test invoice_currency_rate with negative value
+        with self.assertRaises(ValidationError):
+            with Form(invoice) as move_form:
+                move_form.invoice_currency_rate = -420
+        self.assertEqual(invoice.invoice_currency_rate, 2.0)
+
+    def test_invoice_epd_cash_rounding_amount(self):
+        """
+        This test checks the correct calculation of early payment discount on an
+        invoice having also cash discount applied
+        """
+        tax = self.env['account.tax'].create({
+            'name': '8.1%',
+            'type_tax_use': 'sale',
+            'amount': 8.1,
+        })
+        self.cash_rounding_a.rounding_method = 'HALF-UP'
+        payment_terms = self.env['account.payment.term'].create({
+            'name': "2/7 Net 30",
+            'company_id': self.company_data['company'].id,
+            'discount_percentage': 2,
+            'discount_days': 7,
+            'early_discount': True,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': payment_terms.id,
+            'invoice_cash_rounding_id': self.cash_rounding_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'price_unit': 50.00,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        invoice.action_post()
+        invoice = invoice.with_context(active_model='account.move', active_id=invoice.id)
+        discounted_amount = invoice.invoice_payment_term_id._get_amount_due_after_discount(
+            total_amount=invoice.amount_total,
+            untaxed_amount=invoice.amount_tax,
+        )
+        self.assertEqual(discounted_amount, 52.95)

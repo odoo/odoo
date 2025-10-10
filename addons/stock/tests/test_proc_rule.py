@@ -672,8 +672,15 @@ class TestProcRule(TransactionCase):
             mto_rule.rule_message,
             'The help message should correctly display information for MTSO.'
         )
-        
-        
+
+    def test_replenishment_creation(self):
+        """Test that the default replenishment order values
+        are computed correctly in the tree view."""
+        orderpoint_list_view = Form(self.env['stock.warehouse.orderpoint'], view='stock.view_warehouse_orderpoint_tree_editable')
+        self.assertEqual(orderpoint_list_view.qty_to_order, 0)
+        self.assertFalse(orderpoint_list_view.product_id)
+
+
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
         super(TestProcRuleLoad, cls).setUp()

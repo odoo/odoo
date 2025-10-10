@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
 # Patrik Lermon <patrik.lermon@gmail.com>, 2024
@@ -24,19 +24,20 @@
 # Peter Wickenberg <peter@wickenberg.nu>, 2024
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
@@ -158,6 +159,11 @@ msgid "Activity State"
 msgstr "Aktivitetsläge"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Aktivitetstyp"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -207,6 +213,7 @@ msgstr "Arkiv"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -442,8 +449,8 @@ msgstr "Kategorier"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
 "Kategorierna hjälper dig att hantera din vagnpark mer effektivt och att "
 "ordna dina fordon."
@@ -489,8 +496,7 @@ msgstr "Välj om kontraktet fortfarande är giltigt eller inte"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr "Välj om tjänsten avser kontrakt, fordonstjänster eller båda"
 
 #. module: fleet
@@ -770,8 +776,8 @@ msgstr "Datum då kontraktets täckning börjar"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Datum då kontraktets täckning löper ut (som standard, ett år efter "
 "startdatumet)"
@@ -1802,13 +1808,13 @@ msgstr "Funktionen stöds inte."
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"Valfritt översättningsspråk (ISO-kod) som ska väljas när du skickar ett "
-"e-postmeddelande. Om inget anges används den engelska versionen. Detta bör "
-"vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t.ex. {{ "
-"object.partner_id.lang }}."
+"Valfritt översättningsspråk (ISO-kod) som ska väljas när du skickar ett e-"
+"postmeddelande. Om inget anges används den engelska versionen. Detta bör "
+"vanligtvis vara ett platshållaruttryck som anger lämpligt språk, t.ex. "
+"{{ object.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2349,10 +2355,12 @@ msgstr "Vägassistans"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Spåra alla tjänster som utförts på ditt fordon.\n"
-"            Tjänsterna kan vara av många olika slag: tillfällig reparation, fast underhåll osv."
+"            Tjänsterna kan vara av många olika slag: tillfällig reparation, "
+"fast underhåll osv."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
@@ -2644,8 +2652,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
 msgstr ""
-"Du kan definiera flera modeller (t.ex. V60, XC90) för varje fabrikat "
-"(Volvo)."
+"Du kan definiera flera modeller (t.ex. V60, XC90) för varje fabrikat (Volvo)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form

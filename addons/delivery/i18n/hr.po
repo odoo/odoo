@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
-# Luka Carević <luka@uvid.hr>, 2024
+# Antonijo Kovacevic, 2024
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2024
-# Antonijo Kovacevic, 2024
 # Bole <bole@dajmi5.com>, 2024
-# Martin Trigaux, 2024
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Martin Trigaux, 2024
 # Vladimir Vrgoč, 2024
 # Tina Milas, 2024
+# Luka Carević <luka@uvid.hr>, 2025
+# Ivica Dimjašević, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tina Milas, 2024\n"
+"Last-Translator: Ivica Dimjašević, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s Greška"
 
 #. module: delivery
 #. odoo-python
@@ -51,7 +52,7 @@ msgstr "%s (kopija)"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Dohvati trošak"
 
 #. module: delivery
 #. odoo-python
@@ -61,6 +62,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Kupite Odoo Enterprise za više pružatelja usluga.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -157,7 +161,7 @@ msgstr "Raspoloživost"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr "Raspoloživi prevoznici"
+msgstr "Raspoloživi dostavljači"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -175,7 +179,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Prijevoznik"
+msgstr "Dostavljač"
 
 #. module: delivery
 #. odoo-python
@@ -184,11 +188,13 @@ msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
 msgstr ""
+"Dostavljač %s ne može imati istu oznaku i u Obaveznim oznakama i u Izuzetim "
+"oznakama."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr "Opis prevoznika"
+msgstr "Opis dostavljača"
 
 #. module: delivery
 #. odoo-javascript
@@ -271,7 +277,7 @@ msgstr "Kupac"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "Debug zapisivanje"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
@@ -333,7 +339,7 @@ msgstr "Pravila dostave cijene"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
-msgstr "Proizvod za isporuku"
+msgstr "Proizvod za dostavu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
@@ -349,7 +355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr ""
+msgstr "Trošak dostave treba ponovno izračunati"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -357,6 +363,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Prefiksi poštanskih brojeva za dostavu dodjeljuju se dostavnim prijevoznicima kako bi se ograničilo\n"
+"            područje (poštanski brojevi) na kojima su dostupni."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -426,7 +434,7 @@ msgstr "Procjena troška"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr ""
+msgstr "Izuzete oznake"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -439,6 +447,8 @@ msgid ""
 "Filling this form allows you to make the shipping method available according"
 " to the content of the order or its destination."
 msgstr ""
+"Ispunjavanjem ovog obrasca omogućujete da metoda dostave bude dostupna "
+"ovisno o sadržaju narudžbe ili odredištu."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -459,7 +469,7 @@ msgstr "Besplatno ako je iznos narudžbe iznad"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr ""
+msgstr "Generiranje naljepnice za povrat"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -506,11 +516,13 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
+"Ako je ukupna težina narudžbe veća od ove težine, način dostave neće biti "
+"dostupan."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr "Instaliraj dodatne pružatelje"
+msgstr "Instaliraj dodatne pružatelje usluga"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
@@ -578,13 +590,13 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Upravljanje prefiksima poštanskih brojeva za dostavu"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Prikaz na karti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -604,12 +616,12 @@ msgstr "Marža na stopu"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Maks. volumen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
 msgid "Max Weight"
-msgstr "Max težina"
+msgstr "Maks. težina"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
@@ -619,7 +631,7 @@ msgstr "Maksimalna vrijednost"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Obavezne oznake"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -630,7 +642,7 @@ msgstr "Naziv"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "New Providers"
-msgstr "Novi poslužitelji"
+msgstr "Novi pružatelji usluga"
 
 #. module: delivery
 #. odoo-python
@@ -676,6 +688,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
 msgstr ""
+"Molimo odaberite državu prije nego što odaberete županiju ili prefiks "
+"poštanskog broja."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -695,6 +709,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Prefiksi poštanskih brojeva na koje se ovaj dostavljač odnosi. Imajte na umu"
+" da se regularni izrazi mogu koristiti za podršku zemljama s različitim "
+"duljinama poštanskih brojeva, tj. '$' se može dodati na kraj prefiksa kako "
+"bi se podudarao s točnim poštanskim brojem (npr. '100$' će se podudarati "
+"samo s '100', a ne s '1000')."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -733,7 +752,7 @@ msgstr "Količina"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr "Davatelj "
+msgstr "Pružatelj usluga"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
@@ -744,7 +763,7 @@ msgstr "Količina"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr ""
+msgstr "Naljepnica za povrat dostupna kroz korisnički portal"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -817,12 +836,14 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Detalji o metodi dostave koji će biti uključeni na dnu prodajnih narudžbi i "
+"u e-porukama s potvrdom. Npr. upute koje kupci trebaju slijediti."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Standardna dostava"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -901,6 +922,8 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Ova opcija dodaje poveznicu na portalu kako bi kupac lako pratio svoj paket."
+" Upotrijebite <shipmenttrackingnumber> kao rezervirano mjesto u svom URL-u.."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -910,12 +933,12 @@ msgstr "Ovaj će se postotak dodati trošku otpreme."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Ukupna težina narudžbe"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Link za praćenje"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -989,6 +1012,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Ne možete izbrisati kategoriju proizvoda za dostavu jer se koristi za "
+"proizvode dostavljača."
 
 #. module: delivery
 #. odoo-javascript
@@ -999,12 +1024,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Prefiks poštanskog broja"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Prefiksi poštanskih brojeva"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1015,3 +1040,4 @@ msgstr "npr. UPS Express"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+"npr. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

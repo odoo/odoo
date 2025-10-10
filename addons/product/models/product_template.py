@@ -511,11 +511,12 @@ class ProductTemplate(models.Model):
         if self._context.get("create_product_product", True):
             templates._create_variant_ids()
 
+        # TODO remove in master: this is not needed anymore
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
             related_vals = {}
             for field_name in self._get_related_fields_variant_template():
-                if vals.get(field_name):
+                if vals.get(field_name) and not template[field_name]:
                     related_vals[field_name] = vals[field_name]
             if related_vals:
                 template.write(related_vals)

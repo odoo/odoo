@@ -94,6 +94,7 @@ export class TablePlugin extends Plugin {
             node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
+        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
     };
 
     setup() {
@@ -128,6 +129,27 @@ export class TablePlugin extends Plugin {
             this.shiftCursorToTableCell(-1);
             return true;
         }
+    }
+
+    /**
+     * Inherits table-level colors to all child tds to make it
+     * easier to add/remove style on tables.
+     *
+     * @param {Element} root
+     */
+    distributeTableColorsToAllCells(root) {
+        [...root.querySelectorAll("table")]
+            .filter((table) => table.style["color"] || table.style["backgroundColor"])
+            .forEach((table) => {
+                const tds = table.querySelectorAll("td");
+                for (const td of tds) {
+                    td.style["color"] = td.style["color"] || table.style["color"];
+                    td.style["backgroundColor"] =
+                        td.style["backgroundColor"] || table.style["backgroundColor"];
+                }
+                table.style["color"] = "";
+                table.style["backgroundColor"] = "";
+            });
     }
 
     createTable({ rows = 2, cols = 2 } = {}) {
@@ -564,22 +586,22 @@ export class TablePlugin extends Plugin {
             .filter((node) => node.nodeName === "TABLE")
             .pop();
 
-        const traversedNodes = this.dependencies.selection.getTraversedNodes({ deep: true });
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
         if (startTd !== endTd && startTable === endTable) {
             if (!isProtected(startTable) && !isProtecting(startTable)) {
                 // The selection goes through at least two different cells ->
                 // select cells.
                 this.selectTableCells(selection);
             }
-        } else if (!traversedNodes.every((node) => closestElement(node.parentElement, "table"))) {
-            const traversedTables = new Set(
-                traversedNodes
+        } else if (!targetedNodes.every((node) => closestElement(node.parentElement, "table"))) {
+            const targetedTables = new Set(
+                targetedNodes
                     .map((node) => closestElement(node, "table"))
                     .filter((node) => node && !isProtected(node) && !isProtecting(node))
             );
-            for (const table of traversedTables) {
+            for (const table of targetedTables) {
                 // Don't apply several nested levels of selection.
-                if (!ancestors(table, this.editable).some((node) => traversedTables.has(node))) {
+                if (!ancestors(table, this.editable).some((node) => targetedTables.has(node))) {
                     table.classList.toggle("o_selected_table", true);
                     for (const td of [...table.querySelectorAll("td")].filter(
                         (td) => closestElement(td, "table") === table
@@ -643,7 +665,9 @@ export class TablePlugin extends Plugin {
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
         if (startTd && startTd === endTd && !isProtected(startTd) && !isProtecting(startTd)) {
-            const selectedNodes = this.dependencies.selection.getSelectedNodes();
+            const selectedNodes = this.dependencies.selection
+                .getTargetedNodes()
+                .filter(this.dependencies.selection.areNodeContentsFullySelected);
             const cellContents = descendants(startTd);
             const areCellContentsFullySelected = cellContents
                 .filter((d) => !isBlock(d))
@@ -733,11 +757,11 @@ export class TablePlugin extends Plugin {
         const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
             (node) => node.isContentEditable
         );
-        if (selectedTds.length && mode === "backgroundColor") {
-            if (previewMode) {
-                // Temporarily remove backgroundColor applied by "o_selected_td" class with !important.
-                selectedTds.forEach((td) => td.classList.remove("o_selected_td"));
-            }
+        if (selectedTds.length && (mode === "backgroundColor" || (mode === "color" && !color))) {
+            // Disable the `box-shadow` while previewing the background color.
+            selectedTds.forEach((td) =>
+                td.classList.toggle("o_selected_td_bg_color_preview", previewMode)
+            );
             for (const td of selectedTds) {
                 this.dependencies.color.colorElement(td, color, mode);
                 if (color) {
@@ -749,10 +773,17 @@ export class TablePlugin extends Plugin {
         }
     }
 
+    /**
+     * @deprecated
+     */
     adjustTraversedNodes(traversedNodes) {
-        const modifiedTraversedNodes = [];
+        return this.adjustTargetedNodes(traversedNodes);
+    }
+
+    adjustTargetedNodes(targetedNodes) {
+        const modifiedTargetedNodes = [];
         const visitedTables = new Set();
-        for (const node of traversedNodes) {
+        for (const node of targetedNodes) {
             const selectedTable = closestElement(node, ".o_selected_table");
             if (selectedTable) {
                 if (visitedTables.has(selectedTable)) {
@@ -760,13 +791,13 @@ export class TablePlugin extends Plugin {
                 }
                 visitedTables.add(selectedTable);
                 for (const selectedTd of selectedTable.querySelectorAll(".o_selected_td")) {
-                    modifiedTraversedNodes.push(selectedTd, ...descendants(selectedTd));
+                    modifiedTargetedNodes.push(selectedTd, ...descendants(selectedTd));
                 }
             } else {
-                modifiedTraversedNodes.push(node);
+                modifiedTargetedNodes.push(node);
             }
         }
-        return modifiedTraversedNodes;
+        return modifiedTargetedNodes;
     }
 
     resetTableSelection() {

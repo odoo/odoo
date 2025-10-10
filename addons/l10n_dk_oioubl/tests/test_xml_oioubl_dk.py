@@ -173,8 +173,11 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
     def test_export_invoice_company_and_partner_without_country_code_prefix_in_vat(self):
         self.company_data['company'].vat = '12345674'
         self.company_data['company'].partner_id.peppol_endpoint = False
-        self.partner_a.vat = 'DK12345674'
-        self.partner_a.peppol_endpoint = False
+        self.partner_a.write({
+            'vat': 'DK12345674',
+            'peppol_endpoint': False,
+            'invoice_edi_format': 'oioubl_201',
+        })
         invoice = self.create_post_and_send_invoice()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")

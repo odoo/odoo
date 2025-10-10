@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import contextlib
 import email
 import email.policy
 import json
@@ -17,6 +18,7 @@ from random import randint
 from unittest.mock import patch
 
 from odoo.addons.base.models.ir_mail_server import IrMailServer
+from odoo import fields
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import ImBus, json_dump
 from odoo.addons.mail.models.mail_mail import MailMail
@@ -1415,7 +1417,7 @@ class MailCase(MockEmail):
         notif_messages = [n.message for n in bus_notifs]
         for expected in message_items or []:
             for notification in notif_messages:
-                if json_dump(expected) == notification:
+                if json.loads(json_dump(expected)) == json.loads(notification):
                     break
             else:
                 matching_notifs = [m for m in notif_messages if json.loads(m).get("type") == expected.get("type")]
@@ -1801,3 +1803,18 @@ class MailCommon(common.TransactionCase, MailCase):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
         return list(threads_data)
+
+
+@contextlib.contextmanager
+def freeze_all_time(dt=None):
+    """Freeze both `cr.now` and `Datetime.now`. ORM `create_date` and `write_date`
+    are based on `cursor.now()`. Domains often use `Datetime.now()` which can
+    lead to inconsistencies when using `freeze_time`.
+
+    :param dt: Datetime to freeze the time to. Defaults to `Datetime.now()`.
+    :type dt: datetime.datetime
+    """
+    if not dt:
+        dt = fields.Datetime.now()
+    with patch('odoo.sql_db.Cursor.now', return_value=dt), freeze_time(dt):
+        yield

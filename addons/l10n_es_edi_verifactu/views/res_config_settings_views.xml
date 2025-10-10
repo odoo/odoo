@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.es</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='default_taxes_setting_container']" position="before">
+                <block title="Veri*Factu" name="l10n_es_edi_verifactu" invisible="country_code != 'ES'">
+                    <setting id="l10n_es_edi_verifactu_required"
+                             help="Automatically generate and send Veri*Factu records to the AEAT."
+                             company_dependent="1"
+                             documentation="/applications/finance/fiscal_localizations/spain.html#veri-factu">
+                        <field name="l10n_es_edi_verifactu_required"/>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <div class="o_row">
+                                    <button name="%(l10n_es_edi_verifactu_certificate_action)d" type="action"
+                                            icon="oi-arrow-right" class="oe_link">
+                                        Manage certificates
+                                    </button>
+                                </div>
+                                <div class="o_row mt16">
+                                    <label for="l10n_es_edi_verifactu_test_environment" class="o_light_label"
+                                           string="Test Environment"/>
+                                    <field name="l10n_es_edi_verifactu_test_environment"/>
+                                </div>
+                                <div class="text-muted" invisible="not l10n_es_edi_verifactu_test_environment">
+                                    The data is sent to test servers and is not considered official.
+                                </div>
+                                <div class="text-muted" invisible="l10n_es_edi_verifactu_test_environment">
+                                    The data is sent to the tax agency.
+                                </div>
+                                <br/>
+                                <div class="o_row mt8">
+                                    <label for="l10n_es_edi_verifactu_special_vat_regime" class="col-lg-6 o_light_label"
+                                           string="Special VAT Regime"/>
+                                    <field name="l10n_es_edi_verifactu_special_vat_regime"/>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

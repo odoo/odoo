@@ -345,7 +345,7 @@ class MrpWorkorder(models.Model):
             delta_duration = new_order_duration - old_order_duration
 
             if delta_duration > 0:
-                if order.state not in ('progress', 'done'):
+                if order.state not in ('progress', 'done', 'cancel'):
                     order.state = 'progress'
                 enddate = fields.Datetime.now()
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
@@ -649,6 +649,7 @@ class MrpWorkorder(models.Model):
 
     def button_finish(self):
         date_finished = fields.Datetime.now()
+        all_vals_dict = defaultdict(lambda: self.env['mrp.workorder'])
         for workorder in self:
             if workorder.state in ('done', 'cancel'):
                 continue
@@ -671,7 +672,9 @@ class MrpWorkorder(models.Model):
             }
             if not workorder.date_start or date_finished < workorder.date_start:
                 vals['date_start'] = date_finished
-            workorder.with_context(bypass_duration_calculation=True).write(vals)
+            all_vals_dict[frozenset(vals.items())] |= workorder
+        for frozen_vals, workorders in all_vals_dict.items():
+            workorders.with_context(bypass_duration_calculation=True).write(dict(frozen_vals))
         return True
 
     def end_previous(self, doall=False):

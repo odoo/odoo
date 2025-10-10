@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
 import base64
+import zipfile
+import qrcode
+from io import BytesIO
 from os.path import join as opj
 from typing import Optional, List, Dict
-from werkzeug.urls import url_quote
+from werkzeug.urls import url_quote, url_unquote
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
@@ -255,7 +258,7 @@ class PosConfig(models.Model):
     def _load_self_data_models(self):
         return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.product', 'product.combo', 'product.combo.item',
             'res.company', 'account.tax', 'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
-            'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
+            'res.lang', 'product.template.attribute.line', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.value',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding']
 
     def load_self_data(self):
@@ -363,3 +366,61 @@ class PosConfig(models.Model):
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
         })
+
+    def __generate_single_qr_code(self, url):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(url)
+        qr.make(fit=True)
+        return qr.make_image(fill_color="black", back_color="transparent")
+
+    def get_pos_qr_order_data(self):
+
+        url_form = "https://www.odoo.com/app/point-of-sale-restaurant-qr-code"
+
+        table_data = []
+        if self.self_ordering_mode not in ['mobile', 'consultation']:
+            return {
+                'success': False,
+                'error': 'INVALID_SELF_ORDERING_MODE',
+            }
+
+        table_ids = None
+        if self.module_pos_restaurant:
+            table_ids = self.floor_ids.table_ids
+
+        if table_ids and self.self_ordering_mode == 'mobile':
+            for table in table_ids:
+                url = self._get_self_order_url(table.id)
+                table_data.append({
+                    'url': url,
+                    'name': f"{table.floor_id.name} - {table.table_number}",
+                    'image': self.__generate_single_qr_code(url_unquote(url)),
+                })
+        else:
+            url = self._get_self_order_url()
+            table_data.append({
+                'url': url,
+                'name': "generic",
+                'image': self.__generate_single_qr_code(url_unquote(url)),
+            })
+
+        zip_buffer = BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
+            for index, qr_data in enumerate(table_data):
+                with zip_file.open(f"{qr_data['name']} ({index + 1}).png", "w") as buf:
+                    qr_data['image'].save(buf, format="PNG")
+        zip_buffer.seek(0)
+
+        return {
+            'success': True,
+            'table_data': table_data,
+            'self_ordering_mode': self.self_ordering_mode,
+            'db_name': self.env.cr.dbname,
+            'redirect_url': url_form,
+            'zip_archive': base64.b64encode(zip_buffer.read()).decode('utf-8'),
+        }

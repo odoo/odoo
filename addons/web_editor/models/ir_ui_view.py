@@ -127,7 +127,11 @@ class IrUiView(models.Model):
         if not lang_value:
             return
 
-        tree = html.fromstring(lang_value)
+        try:
+            tree = html.fromstring(lang_value)
+        except etree.ParserError as e:
+            raise ValidationError(str(e))
+
         for custom_snippet_el in tree.xpath('//*[hasclass("s_custom_snippet")]'):
             custom_snippet_name = custom_snippet_el.get('data-name')
             custom_snippet_view = self.search([('name', '=', custom_snippet_name)], limit=1)

@@ -167,11 +167,12 @@ class Website(Home):
         """
         path = '/' + path
         mode_edit = bool(kw.pop('enable_editor', False))
+        mode_debug = kw.get('debug', 0)
         if kw:
             path += '?' + werkzeug.urls.url_encode(kw)
 
         if request.env.user._is_internal():
-            path = request.website.get_client_action_url(path, mode_edit)
+            path = request.website.get_client_action_url(path, mode_edit, mode_debug)
 
         return request.redirect(path)
 
@@ -805,7 +806,7 @@ class Website(Home):
             req.raise_for_status()
             response = req.content
         except OSError:
-            return []
+            return json.dumps([])
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 

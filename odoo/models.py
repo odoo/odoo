@@ -3648,6 +3648,20 @@ class BaseModel(metaclass=MetaModel):
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with translate=True", cls._name, name)
                     fields_.append(type(fields_[0])(translate=True))
+            if f'{cls._name}.{name}' in cls.pool._database_company_dependent_fields:
+                # the field is currently company dependent in the database; ensure
+                # the field is company dependent to avoid converting its column to
+                # the base data type
+                company_dependent = next((
+                    field._args__['company_dependent'] for field in reversed(fields_) if 'company_dependent' in field._args__
+                ), False)
+                if not company_dependent:
+                    # validate column type again in case the column type is changed by upgrade script
+                    rows = self.env.execute_query(SQL('SELECT data_type FROM information_schema.columns WHERE table_name = %s AND column_name = %s', cls._table, name))
+                    if rows and rows[0][0] == 'jsonb':
+                        # patch the field definition by adding an override
+                        _logger.warning("Patching %s.%s with company_dependent=True", cls._name, name)
+                        fields_.append(type(fields_[0])(company_dependent=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
@@ -3978,7 +3992,7 @@ class BaseModel(metaclass=MetaModel):
             for lang, _translations in translations.items():
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
-                new_values[lang] = field.translate(_new_translations.get, old_source_lang_value)
+                new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
             self.env.cache.update_raw(self, field, [new_values], dirty=True)
 
         # the following write is incharge of
@@ -4111,6 +4125,7 @@ class BaseModel(metaclass=MetaModel):
         This method is implemented thanks to methods :meth:`_search` and
         :meth:`_fetch_query`, and should not be overridden.
         """
+        self = self._origin  # noqa: PLW0642 filtered out new records
         if not self or not field_names:
             return
 
@@ -4389,15 +4404,16 @@ class BaseModel(metaclass=MetaModel):
             root_company_msg = _lt("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
-                    msg, company = company_msg, record
+                    msg, companies = company_msg, record
                 elif record == corecords and name == 'company_id':
-                    msg, company = root_company_msg, record.company_id
+                    msg, companies = root_company_msg, record.company_id
                 else:
-                    msg, company = record_msg, record.company_id
+                    msg = record_msg
+                    companies = record.company_id if 'company_id' in record else record.company_ids
                 field = self.env['ir.model.fields']._get(self._name, name)
                 lines.append(str(msg) % {
                     'record': record.display_name,
-                    'company': company.display_name,
+                    'company': ", ".join(company.display_name for company in companies),
                     'field': field.field_description,
                     'fname': field.name,
                     'values': ", ".join(repr(rec.display_name) for rec in corecords),
@@ -5233,7 +5249,7 @@ class BaseModel(metaclass=MetaModel):
                     self.env.cache.set(record, field, field.convert_to_cache(None, record))
             for fname, value in vals.items():
                 field = self._fields[fname]
-                if field.type in ('one2many', 'many2many'):
+                if field.type in ('one2many', 'many2many', 'html'):
                     cachetoclear.append((record, field))
                 else:
                     cache_value = field.convert_to_cache(value, record)

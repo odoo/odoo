@@ -7,8 +7,9 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 import requests
+from werkzeug import urls
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.http import request
 
@@ -61,7 +62,7 @@ class PaymentProvider(models.Model):
             )
 
         params = {
-            'return_url': f'{self.get_base_url()}{RazorpayController.OAUTH_RETURN_URL}',
+            'return_url': urls.url_join(self.get_base_url(), RazorpayController.OAUTH_RETURN_URL),
             'provider_id': self.id,
             'csrf_token': request.csrf_token(),
         }
@@ -103,7 +104,7 @@ class PaymentProvider(models.Model):
 
         webhook_secret = uuid.uuid4().hex  # Generate a random webhook secret.
         payload = {
-            'url': f'{self.get_base_url()}/payment/razorpay/webhook',
+            'url': urls.url_join(self.get_base_url(), 'payment/razorpay/webhook'),
             'alert_email': self.env.user.partner_id.email,
             'secret': webhook_secret,
             'events': const.HANDLED_WEBHOOK_EVENTS,
@@ -130,6 +131,22 @@ class PaymentProvider(models.Model):
                 'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
             },
         }
+
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('state')
+    def _check_razorpay_credentials_are_set_before_enabling(self):
+        """ Check that the Razorpay credentials are valid when the provider is enabled.
+
+        :raise ValidationError: If the Razorpay credentials are not valid.
+        """
+        for provider in self.filtered(lambda p: p.code == 'razorpay' and p.state != 'disabled'):
+            if not provider.razorpay_account_id:
+                if not provider.razorpay_key_id or not provider.razorpay_key_secret:
+                    raise ValidationError(_(
+                        "Razorpay credentials are missing. Click the \"Connect\" button to set up"
+                        " your account"
+                    ))
 
     # === BUSINESS METHODS - OAUTH === #
 

@@ -53,7 +53,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
             # TIN
             gst_tax_scheme = tax_scheme_vals_list[0].copy()
             gst_tax_scheme.update({
-                'company_id': partner.vat,
+                'company_id': partner.vat or 'NA',
                 'tax_scheme_vals': {'id': 'GST'},
             })
             tax_scheme_vals_list.append(gst_tax_scheme)

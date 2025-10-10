@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_epson_printer
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_epson_printer
@@ -29,10 +29,9 @@ msgstr "ลิ้นชักเก็บเงิน"
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid ""
-"Check on the printer configuration for the 'Device ID' setting. It should be"
-" set to: "
-msgstr ""
-"ตรวจสอบการกำหนดค่าเครื่องพิมพ์สำหรับการตั้งค่า 'รหัสอุปกรณ์' ควรตั้งค่าเป็น:"
+"Check on the printer configuration for the 'Device ID' setting. It should be "
+"set to: "
+msgstr "ตรวจสอบการกำหนดค่าเครื่องพิมพ์สำหรับการตั้งค่า 'รหัสอุปกรณ์' ควรตั้งค่าเป็น:"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_res_config_settings
@@ -65,8 +64,8 @@ msgstr "ที่อยู่ IP เครื่องพิมพ์ใบเ�
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid ""
-"If you are on a secure server (HTTPS) please make sure you manually accepted"
-" the certificate by accessing %s. "
+"If you are on a secure server (HTTPS) please make sure you manually accepted "
+"the certificate by accessing %s. "
 msgstr ""
 "หากคุณอยู่บนเซิร์ฟเวอร์ที่ปลอดภัย (HTTPS) "
 "โปรดตรวจสอบให้แน่ใจว่าคุณได้ยอมรับใบรับรองด้วยตนเองโดยเข้าไปที่ %s"
@@ -74,8 +73,10 @@ msgstr ""
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_printer__epson_printer_ip
-msgid "Local IP address of an Epson receipt printer."
-msgstr "ที่อยู่ Local IP ในเครื่องพิมพ์ใบเสร็จของ Epson"
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
+msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -121,9 +122,7 @@ msgstr "การพิมพ์ล้มเหลว"
 msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
-msgstr ""
-"เครื่องพิมพ์ใบเสร็จของ Epson "
-"จะใช้แทนเครื่องพิมพ์ใบเสร็จที่เชื่อมต่อกับกล่องไอโอที"
+msgstr "เครื่องพิมพ์ใบเสร็จของ Epson จะใช้แทนเครื่องพิมพ์ใบเสร็จที่เชื่อมต่อกับกล่องไอโอที"
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -141,11 +140,12 @@ msgstr "เข้าถึงเครื่องพิมพ์สำเร็
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 msgid "To find more details on the error reason, please search online for:"
-msgstr ""
-"หากต้องการดูรายละเอียดเพิ่มเติมเกี่ยวกับสาเหตุของข้อผิดพลาด "
-"โปรดค้นหาทางออนไลน์ด้วย:"
+msgstr "หากต้องการดูรายละเอียดเพิ่มเติมเกี่ยวกับสาเหตุของข้อผิดพลาด โปรดค้นหาทางออนไลน์ด้วย:"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields.selection,name:pos_epson_printer.selection__pos_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
 msgstr "ใช้เครื่องพิมพ์ Epson "
+
+#~ msgid "Local IP address of an Epson receipt printer."
+#~ msgstr "ที่อยู่ Local IP ในเครื่องพิมพ์ใบเสร็จของ Epson"

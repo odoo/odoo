@@ -4,12 +4,9 @@ import {
     isAllowedContent,
     isButton,
     isContentEditable,
-    isEditorTab,
     isEmpty,
     isInPre,
-    isMediaElement,
     isProtected,
-    isSelfClosingElement,
     isShrunkBlock,
     isTangible,
     isTextNode,
@@ -159,6 +156,19 @@ export class DeletePlugin extends Plugin {
         if (selection.isCollapsed) {
             return;
         }
+        // Delete only if the targeted nodes are all editable or if every
+        // non-editable node's editable ancestor is fully selected. We use the
+        // targeted nodes here to be sure to include a partial text node
+        // selection.
+        const selectedNodes = this.dependencies.selection.getTargetedNodes();
+        const canBeDeleted = (node) =>
+            this.dependencies.selection.isNodeEditable(node) ||
+            selectedNodes.includes(
+                closestElement(node, (node) => this.dependencies.selection.isNodeEditable(node))
+            );
+        if (selectedNodes.some((node) => !canBeDeleted(node))) {
+            return;
+        }
 
         let range = this.adjustRange(selection, [
             this.expandRangeToIncludeNonEditables,
@@ -258,6 +268,22 @@ export class DeletePlugin extends Plugin {
 
     getRangeForDelete(node, offset, direction, granularity) {
         let destContainer, destOffset;
+        if (granularity === "word") {
+            // In some browsers such as Firefox or Safari, if the cursor
+            // is at the start of a block (when direction is "backward") or
+            // at the end of a block (when direction is "forward"),
+            // Selection.modify("extend", direction, "word") ends up
+            // selecting the previous or next adjacent text node, respectively.
+            // To handle such cases, the granularity should be "character".
+            const blockEl = closestBlock(node);
+            if (
+                (direction === "backward" &&
+                    this.isCursorAtStartOfElement(blockEl, node, offset)) ||
+                (direction === "forward" && this.isCursorAtEndOfElement(blockEl, node, offset))
+            ) {
+                granularity = "character";
+            }
+        }
         switch (granularity) {
             case "character":
                 [destContainer, destOffset] = this.findAdjacentPosition(node, offset, direction);
@@ -630,7 +656,11 @@ export class DeletePlugin extends Plugin {
             // The joinable in this case is its sibling (previous for the start
             // side, next for the end side), but only if inline.
             const sibling = childNodes(commonAncestor)[side === "start" ? offset - 1 : offset];
-            if (sibling && !isBlock(sibling) && !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))) {
+            if (
+                sibling &&
+                !isBlock(sibling) &&
+                !(sibling.nodeType === Node.TEXT_NODE && !isVisibleTextNode(sibling))
+            ) {
                 return { node: sibling, type: "inline" };
             }
             // No fragment to join.
@@ -1126,9 +1156,10 @@ export class DeletePlugin extends Plugin {
         if (leaf.nodeName === "BR" && isFakeLineBreak(leaf)) {
             return true;
         }
-        // @todo: register these as resources by other plugins?
         if (
-            [isSelfClosingElement, isMediaElement, isEditorTab].some((predicate) => predicate(leaf))
+            this.getResource("functional_empty_node_predicates").some((predicate) =>
+                predicate(leaf)
+            )
         ) {
             return false;
         }

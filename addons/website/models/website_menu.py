@@ -67,11 +67,42 @@ class Menu(models.Model):
                 menu_name += f' [{menu.website_id.name}]'
             menu.display_name = menu_name
 
+    @api.constrains("parent_id", "child_id", "is_mega_menu", "mega_menu_content")
+    def _validate_parent_menu(self):
+        """
+        Ensure valid menu hierarchy and mega menu constraints.
+
+        Rules enforced:
+        - Menus must not exceed two levels of nesting.
+        - A mega menu must not have a parent or child.
+        - Menus with children cannot be added as a submenu under another menu.
+        """
+        for record in self:
+            parent_menu = record.parent_id.sudo() if record.parent_id else None
+
+            # Check hierarchy level
+            level = 0
+            current_menu = parent_menu
+            while current_menu:
+                level += 1
+                current_menu = current_menu.parent_id
+                if level > 2:
+                    raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+
+            if parent_menu:
+                # Mega menu constraint
+                if parent_menu.is_mega_menu or (record.is_mega_menu and (parent_menu.parent_id or record.child_id)):
+                    raise UserError(_("A mega menu cannot have a parent or child menu."))
+
+                # Submenu structure constraint
+                if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
+                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' In case a menu without a website_id is trying to be created, we duplicate
             it for every website.
-            Note: Particulary useful when installing a module that adds a menu like
+            Note: Particularly useful when installing a module that adds a menu like
                   /shop. So every website has the shop menu.
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
@@ -91,14 +122,20 @@ class Menu(models.Model):
                 menus |= super().create(vals)
                 continue
             else:
-                # create for every site
-                w_vals = [dict(vals, **{
-                    'website_id': website.id,
-                    'parent_id': website.menu_id.id,
-                }) for website in self.env['website'].search([])]
-                new_menu = super().create(w_vals)[-1:]  # take the last one
                 # if creating a default menu, we should also save it as such
                 default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+                # create for every site
+                w_vals = []
+                for website in self.env["website"].search([]):
+                    parent_id = vals.get("parent_id")
+                    if not parent_id or (default_menu and parent_id == default_menu.id):
+                        parent_id = website.menu_id.id
+                    w_vals.append({
+                        **vals,
+                        'website_id': website.id,
+                        'parent_id': parent_id,
+                    })
+                new_menu = super().create(w_vals)[-1:]  # take the last record
                 if default_menu and vals.get('parent_id') == default_menu.id:
                     new_menu = super().create(vals)
                 menus |= new_menu

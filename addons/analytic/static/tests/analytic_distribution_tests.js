@@ -23,6 +23,14 @@ QUnit.module("Analytic", (hooks) => {
         target = getFixture();
         serverData = {
             models: {
+                company: {
+                    fields: {
+                        name: { string: "Company", type: "char" },
+                    },
+                    records: [
+                        { id: 1, name: "Company A" },
+                    ]
+                },
                 "account.analytic.account": {
                     fields: {
                         plan_id: { string: "Plan", type: "many2one", relation: "plan" },
@@ -30,24 +38,25 @@ QUnit.module("Analytic", (hooks) => {
                         color: { string: "Color", type: "integer" },
                         code: { string: "Ref", type: "string"},
                         partner_id: { string: "Partner", type: "many2one", relation: "partner" },
+                        company_id: { string: "Company", type: "many2one", relation: "company" },
                     },
                     records: [
-                        {id:  1, color: 1, root_plan_id: 2, plan_id: 2, name: "RD" },
-                        {id:  2, color: 1, root_plan_id: 2, plan_id: 2, name: "HR" },
-                        {id:  3, color: 1, root_plan_id: 2, plan_id: 2, name: "FI" },
-                        {id:  4, color: 2, root_plan_id: 1, plan_id: 1, name: "Time Off" },
-                        {id:  5, color: 2, root_plan_id: 1, plan_id: 1, name: "Operating Costs" },
-                        {id:  6, color: 6, root_plan_id: 4, plan_id: 4, name: "Incognito" },
-                        {id:  7, color: 5, root_plan_id: 5, plan_id: 5, name: "Belgium" },
-                        {id:  8, color: 6, root_plan_id: 5, plan_id: 6, name: "Brussels" },
-                        {id:  9, color: 6, root_plan_id: 5, plan_id: 6, name: "Beirut" },
-                        {id: 10, color: 6, root_plan_id: 5, plan_id: 6, name: "Berlin" },
-                        {id: 11, color: 6, root_plan_id: 5, plan_id: 6, name: "Bruges" },
-                        {id: 12, color: 6, root_plan_id: 5, plan_id: 6, name: "Birmingham" },
-                        {id: 13, color: 6, root_plan_id: 5, plan_id: 6, name: "Bologna" },
-                        {id: 14, color: 6, root_plan_id: 5, plan_id: 6, name: "Bratislava" },
-                        {id: 15, color: 6, root_plan_id: 5, plan_id: 6, name: "Budapest" },
-                        {id: 16, color: 6, root_plan_id: 5, plan_id: 6, name: "Namur" },
+                        {id:  1, color: 1, root_plan_id: 2, plan_id: 2, name: "RD", company_id: 1 },
+                        {id:  2, color: 1, root_plan_id: 2, plan_id: 2, name: "HR", company_id: 1 },
+                        {id:  3, color: 1, root_plan_id: 2, plan_id: 2, name: "FI", company_id: 1 },
+                        {id:  4, color: 2, root_plan_id: 1, plan_id: 1, name: "Time Off", company_id: 1 },
+                        {id:  5, color: 2, root_plan_id: 1, plan_id: 1, name: "Operating Costs", company_id: 1 },
+                        {id:  6, color: 6, root_plan_id: 4, plan_id: 4, name: "Incognito", company_id: 1 },
+                        {id:  7, color: 5, root_plan_id: 5, plan_id: 5, name: "Belgium", company_id: 1 },
+                        {id:  8, color: 6, root_plan_id: 5, plan_id: 6, name: "Brussels", company_id: 1 },
+                        {id:  9, color: 6, root_plan_id: 5, plan_id: 6, name: "Beirut", company_id: 1 },
+                        {id: 10, color: 6, root_plan_id: 5, plan_id: 6, name: "Berlin", company_id: 1 },
+                        {id: 11, color: 6, root_plan_id: 5, plan_id: 6, name: "Bruges", company_id: 1 },
+                        {id: 12, color: 6, root_plan_id: 5, plan_id: 6, name: "Birmingham", company_id: 1 },
+                        {id: 13, color: 6, root_plan_id: 5, plan_id: 6, name: "Bologna", company_id: 1 },
+                        {id: 14, color: 6, root_plan_id: 5, plan_id: 6, name: "Bratislava", company_id: 1 },
+                        {id: 15, color: 6, root_plan_id: 5, plan_id: 6, name: "Budapest", company_id: 1 },
+                        {id: 16, color: 6, root_plan_id: 5, plan_id: 6, name: "Namur", company_id: 1 },
                     ],
                 },
                 plan: {
@@ -64,14 +73,15 @@ QUnit.module("Analytic", (hooks) => {
                         color: { string: "Color", type: "integer" },
                         all_account_count: { type: "integer" },
                         parent_id: { type: "many2one", relation: "plan" },
+                        column_name: { type: "char" },
                     },
                     records: [
-                        { id: 1, name: "Internal", applicability: "optional", all_account_count: 2 },
-                        { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3 },
-                        { id: 3, name: "Projects", applicability: "optional" },
-                        { id: 4, name: "Hidden", applicability: "unavailable", all_account_count: 1 },
-                        { id: 5, name: "Country", applicability: "optional", all_account_count: 3 },
-                        { id: 6, name: "City", applicability: "optional", all_account_count: 2, parent_id: 5 },
+                        { id: 1, name: "Internal", applicability: "optional", all_account_count: 2, column_name: 'x_plan1_id' },
+                        { id: 2, name: "Departments", applicability: "mandatory", all_account_count: 3, column_name: 'x_plan2_id' },
+                        { id: 3, name: "Projects", applicability: "optional", column_name: 'account_id' },
+                        { id: 4, name: "Hidden", applicability: "unavailable", all_account_count: 1, column_name: 'x_plan4_id' },
+                        { id: 5, name: "Country", applicability: "optional", all_account_count: 3, column_name: 'x_plan5_id' },
+                        { id: 6, name: "City", applicability: "optional", all_account_count: 2, parent_id: 5, column_name: 'x_plan5_id' },
                     ],
                 },
                 aml: {
@@ -81,12 +91,13 @@ QUnit.module("Analytic", (hooks) => {
                         analytic_distribution: { string: "Analytic", type: "json" },
                         move_id: { string: "Account Move", type: "many2one", relation: "move" },
                         analytic_precision: { string: "Analytic Precision", type: "integer" },
+                        company_id: { string: "Company", type: "many2one", relation: "company" },
                     },
                     records: [
-                        { id: 1, label: "Developer Time", amount: 100.00, analytic_distribution: {"1, 7": 30.3, "3": 69.704}, analytic_precision: 3},
-                        { id: 2, label: "Coke", amount: 100.00, analytic_distribution: {}},
-                        { id: 3, label: "Sprite", amount: 100.00, analytic_distribution: {}, analytic_precision: 3},
-                        { id: 4, label: "", amount: 100.00, analytic_distribution: {}},
+                        { id: 1, label: "Developer Time", amount: 100.00, analytic_distribution: {"1, 7": 30.3, "3": 69.704}, analytic_precision: 3, company_id: 1},
+                        { id: 2, label: "Coke", amount: 100.00, analytic_distribution: {}, company_id: 1},
+                        { id: 3, label: "Sprite", amount: 100.00, analytic_distribution: {}, analytic_precision: 3, company_id: 1},
+                        { id: 4, label: "", amount: 100.00, analytic_distribution: {}, company_id: 1},
                     ],
                 },
                 partner: {
@@ -99,7 +110,7 @@ QUnit.module("Analytic", (hooks) => {
                 },
                 move: {
                     fields: {
-                        line_ids: { string: "Move Lines", type: "one2many", relation: "aml", relation_field: "move_line_id" },
+                        line_ids: { string: "Move Lines", type: "one2many", relation: "aml", relation_field: "move_id" },
                     },
                     records: [
                         { id: 1, display_name: "INV0001", line_ids: [1, 2]},
@@ -161,7 +172,7 @@ QUnit.module("Analytic", (hooks) => {
         let field = target.querySelector('.o_field_analytic_distribution');
         await click(field, ".o_input_dropdown");
         assert.containsN(target, ".analytic_distribution_popup", 1, "popup should be visible");
-        
+
         let popup = target.querySelector('.analytic_distribution_popup');
         let planTable = popup.querySelectorAll('table')[0];
 
@@ -178,7 +189,7 @@ QUnit.module("Analytic", (hooks) => {
         await click(planTable, "tr:first-of-type .o_field_percentage input");
         let input = document.activeElement;
         await editInput(input, null, "19.7001");
-        
+
         // mandatory plan is red
         assert.containsOnce(planTable, 'th:contains("Departments") .text-danger:contains("50%")', "Mandatory plan has invalid status");
 
@@ -264,7 +275,7 @@ QUnit.module("Analytic", (hooks) => {
         await addRow(planTable)
         await selectDropdownItem(planTable.querySelector("tr[name='line_2']"), "x_plan5_id", "Search More...");
         assert.containsN(target, ".modal-dialog .o_list_renderer", 1, "select create list dialog is visible");
-        
+
         await click(target, ".modal-dialog .modal-title");
         await click(target, ".modal-dialog .o_data_row:nth-of-type(4) .o_data_cell:first-of-type");
         assert.containsNone(target, ".modal-dialog .o_list_renderer", "select create list dialog is closed");
@@ -399,4 +410,54 @@ QUnit.module("Analytic", (hooks) => {
     QUnit.test("amount_field Column", (assert) => { assert.expect(0) });
     QUnit.test("save as model", (assert) => { assert.expect(0) });
 
+    QUnit.test("analytic distribution popup closes when inside modal and clicking outside", async function (assert) {
+        assert.expect(2);
+
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+        modal.style.display = "block";
+        modal.style.position = "fixed";
+        modal.innerHTML = `<div class="click-area">Click Here</div>`;
+        document.body.appendChild(modal);
+
+        const clickTarget = modal.querySelector(".click-area");
+
+        await makeView({
+            type: "form",
+            resModel: "aml",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="analytic_distribution" widget="analytic_distribution"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC(route, { method, model }) {
+                if (method === "get_relevant_plans" && model === "account.analytic.plan") {
+                    return Promise.resolve(
+                        serverData.models['plan'].records.filter((r) => !r.parent_id && r.applicability !== "unavailable" && r.all_account_count)
+                    );
+                }
+            },
+        });
+
+        await nextTick();
+
+        const widgetEl = target.querySelector(".o_field_analytic_distribution");
+        modal.appendChild(widgetEl);
+
+        await click(widgetEl.querySelector(".o_input_dropdown"));
+        assert.containsOnce(widgetEl, ".analytic_distribution_popup", "popup is visible");
+
+        clickTarget.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+        await nextTick();
+
+        assert.containsNone(widgetEl, ".analytic_distribution_popup", "popup should close on outside click");
+
+        modal.remove();
+    });
 });

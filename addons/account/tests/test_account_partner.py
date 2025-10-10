@@ -100,3 +100,42 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.partner_b.vat = 'DIFFERENT'
         with self.assertRaisesRegex(UserError, "different Tax ID"):
             self.partner_a.parent_id = self.partner_b
+
+    def test_manually_write_partner_id_empty_string_vs_False(self):
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2025-04-29',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 500.0,
+            })],
+        })
+        move.action_post()
+        self.partner_a.vat = ''
+        self.partner_b.vat = False
+
+        self.partner_a.parent_id = self.partner_b
+
+    def test_res_partner_bank(self):
+        partner = self.env['res.partner'].create({'name': 'MyCustomer'})
+        account = self.env['res.partner.bank'].create({
+            'acc_number': '123456789',
+            'partner_id': partner.id,
+        })
+        account.env.user.groups_id |= self.env.ref('account.group_validate_bank_account')
+        account.allow_out_payment = True
+
+        with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
+            account.write({'acc_number': '1234567890999'})
+        with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
+            account.write({'sanitized_acc_number': '1234567890999'})
+        with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
+            account.write({'partner_id': self.env['res.partner'].create({'name': 'MyCustomer 2'}).id})
+
+        account.allow_out_payment = False
+        account.write({'acc_number': '1234567890999000'})
+
+        account.env.user.groups_id -= self.env.ref('account.group_validate_bank_account')
+        with self.assertRaisesRegex(UserError, "You do not have the rights to trust"), self.cr.savepoint():
+            account.write({'allow_out_payment': True})

@@ -10,7 +10,6 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
-    isContentEditable,
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
@@ -23,6 +22,8 @@ import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
+import { isBlock } from "@html_editor/utils/blocks";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -101,7 +102,7 @@ export class ColorPlugin extends Plugin {
     }
 
     updateSelectedColor() {
-        const nodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
+        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
         }
@@ -176,7 +177,7 @@ export class ColorPlugin extends Plugin {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
                     const nodes = this.dependencies.selection
-                        .getTraversedNodes()
+                        .getTargetedNodes()
                         .filter(
                             (n) =>
                                 isTextNode(n) ||
@@ -206,9 +207,6 @@ export class ColorPlugin extends Plugin {
      * @param {boolean} [previewMode=false] true - apply color in preview mode
      */
     _applyColor(color, mode, previewMode = false) {
-        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
-            return;
-        }
         const activeTab = document
             .querySelector(".o_font_color_selector button.active")
             ?.innerHTML.trim();
@@ -217,8 +215,12 @@ export class ColorPlugin extends Plugin {
             // mode to make text highlighting more usable between light and dark modes.
             color += HEX_OPACITY;
         }
+        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
+            return;
+        }
+        let cursors;
         let selection = this.dependencies.selection.getEditableSelection();
-        let selectionNodes;
+        let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
             let zws;
@@ -237,44 +239,85 @@ export class ColorPlugin extends Plugin {
                 },
                 { normalize: false }
             );
-            selectionNodes = [zws];
+            cursors = this.dependencies.selection.preserveSelection();
+            targetedNodes = [zws];
         } else {
             selection = this.dependencies.split.splitSelection();
-            selectionNodes = this.dependencies.selection
-                .getSelectedNodes()
-                .filter((node) => isContentEditable(node) && node.nodeName !== "T");
+            cursors = this.dependencies.selection.preserveSelection();
+            targetedNodes = this.dependencies.selection
+                .getTargetedNodes()
+                .filter(
+                    (node) =>
+                        this.dependencies.selection.isNodeEditable(node) && node.nodeName !== "T"
+                );
             if (isEmptyBlock(selection.endContainer)) {
-                selectionNodes.push(selection.endContainer, ...descendants(selection.endContainer));
+                targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
         }
 
         const selectedNodes =
             mode === "backgroundColor" && color
-                ? selectionNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
-                : selectionNodes;
+                ? targetedNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
+                : targetedNodes;
 
-        const selectedFieldNodes = new Set(
+        const targetedFieldNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
         );
 
         const getFonts = (selectedNodes) => {
             return selectedNodes.flatMap((node) => {
-                let font = closestElement(node, "font") || closestElement(node, "span");
+                let font =
+                    closestElement(node, "font") ||
+                    closestElement(
+                        node,
+                        '[style*="color"], [style*="background-color"], [style*="background-image"]'
+                    ) ||
+                    closestElement(node, "span");
+                if (font && font.querySelector(".fa")) {
+                    return font;
+                }
                 const children = font && descendants(font);
                 const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                const isFullySelected =
+                    children && children.every((child) => selectedNodes.includes(child));
+                const isTextGradient =
+                    hasInlineGradient && font.classList.contains("text-gradient");
+                const shouldReplaceExistingGradient =
+                    isFullySelected &&
+                    ((mode === "color" && isTextGradient) ||
+                        (mode === "backgroundColor" && !isTextGradient));
                 if (
                     font &&
-                    (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
-                    (isColorGradient(color) || color === "" || !hasInlineGradient)
+                    font.nodeName !== "T" &&
+                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
+                    (isColorGradient(color) ||
+                        color === "" ||
+                        !hasInlineGradient ||
+                        shouldReplaceExistingGradient) &&
+                    !this.dependencies.split.isUnsplittable(font)
                 ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter((child) =>
                         selectedNodes.includes(child)
                     );
                     if (selectedChildren.length) {
+                        if (isBlock(font)) {
+                            const colorStyles = ["color", "background-color", "background-image"];
+                            const newFont = this.document.createElement("font");
+                            for (const style of colorStyles) {
+                                const styleValue = font.style[style];
+                                if (styleValue) {
+                                    this.colorElement(newFont, styleValue, style);
+                                    font.style.removeProperty(style);
+                                }
+                            }
+                            newFont.append(...font.childNodes);
+                            font.append(newFont);
+                            font = newFont;
+                        }
                         const closestGradientEl = closestElement(
                             node,
                             'font[style*="background-image"], span[style*="background-image"]'
@@ -307,7 +350,8 @@ export class ColorPlugin extends Plugin {
                             mode === "color" &&
                             (font.style.webkitTextFillColor ||
                                 (closestGradientEl &&
-                                    closestGradientEl.classList.contains("text-gradient")))
+                                    closestGradientEl.classList.contains("text-gradient") &&
+                                    !shouldReplaceExistingGradient))
                         ) {
                             font.style.webkitTextFillColor = color;
                         }
@@ -342,8 +386,6 @@ export class ColorPlugin extends Plugin {
                         font = previous;
                     } else {
                         // No <font> found: insert a new one.
-                        const isTextGradient =
-                            hasInlineGradient && font.classList.contains("text-gradient");
                         font = this.document.createElement("font");
                         node.after(font);
                         if (isTextGradient && mode === "color") {
@@ -362,7 +404,7 @@ export class ColorPlugin extends Plugin {
             });
         };
 
-        for (const fieldNode of selectedFieldNodes) {
+        for (const fieldNode of targetedFieldNodes) {
             this.colorElement(fieldNode, color, mode);
         }
 
@@ -381,8 +423,10 @@ export class ColorPlugin extends Plugin {
             if (
                 !hasColor(font, "color") &&
                 !hasColor(font, "backgroundColor") &&
+                ["FONT", "SPAN"].includes(font.nodeName) &&
                 (!font.hasAttribute("style") || !color)
             ) {
+                cursors.update(callbacksForCursorUpdate.unwrap(font));
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
                 }
@@ -390,7 +434,7 @@ export class ColorPlugin extends Plugin {
                 fontsSet.delete(font);
             }
         }
-        this.dependencies.selection.setSelection(selection, { normalize: false });
+        cursors.restore();
     }
 
     getUsedCustomColors(mode) {

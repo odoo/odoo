@@ -235,6 +235,15 @@ export class Rtc extends Record {
     cleanups = [];
     /** @type {number} */
     sfuTimeout;
+    /** @type {number} count of how many times the p2p service attempted a connection recovery */
+    _p2pRecoveryCount = 0;
+    upgradeConnectionDebounce = debounce(
+        () => {
+            this._upgradeConnection();
+        },
+        15000,
+        { leading: true, trailing: false }
+    );
 
     callActions = Record.attr([], {
         compute() {
@@ -645,6 +654,9 @@ export class Rtc extends Record {
      * @param {Boolean} [param2.important] if the log is important and should be kept even if logRtc is disabled
      */
     log(session, entry, { error, step, state, important, ...data } = {}) {
+        if (!session) {
+            return;
+        }
         session.logStep = entry;
         if (!this.store.settings.logRtc && !important) {
             return;
@@ -725,7 +737,7 @@ export class Rtc extends Record {
                 }
                 for (const [id, info] of Object.entries(payload)) {
                     const session = await this.store.RtcSession.getWhenReady(Number(id));
-                    if (!session || !this.state.channel) {
+                    if (!this.state.channel || !session || session.eq(this.selfSession)) {
                         return;
                     }
                     // `isRaisingHand` is turned into the Date `raisingHand`
@@ -765,6 +777,22 @@ export class Rtc extends Record {
                     }, 2000);
                 }
                 return;
+            case "recovery": {
+                const { id } = payload;
+                const session = await this.store.RtcSession.getWhenReady(id);
+                if (
+                    !this.store.self.isInternalUser ||
+                    this.serverInfo ||
+                    this.state.fallbackMode ||
+                    !session?.channel.eq(this.state.channel)
+                ) {
+                    return;
+                }
+                this._p2pRecoveryCount++;
+                if (this._p2pRecoveryCount > 1 || !hasTurn(this.iceServers)) {
+                    this.upgradeConnectionDebounce();
+                }
+            }
         }
     }
 
@@ -808,6 +836,18 @@ export class Rtc extends Record {
                 }
                 return;
         }
+    }
+
+    async _upgradeConnection() {
+        const channelId = this.state.channel?.id;
+        if (this.serverInfo || this.state.fallbackMode || !channelId) {
+            return;
+        }
+        await rpc(
+            "/mail/rtc/channel/upgrade_connection",
+            { channel_id: channelId },
+            { silent: true }
+        );
     }
 
     async _downgradeConnection() {
@@ -926,6 +966,9 @@ export class Rtc extends Record {
         if (camera) {
             await this.toggleVideo("camera");
         }
+        if (!this.selfSession) {
+            return;
+        }
         await this._initConnection();
         await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
@@ -1029,6 +1072,7 @@ export class Rtc extends Record {
         browser.clearTimeout(this.sfuTimeout);
         this.sfuClient = undefined;
         this.network = undefined;
+        this._p2pRecoveryCount = 0;
         this.state.updateAndBroadcastDebounce?.cancel();
         this.state.disconnectAudioMonitor?.();
         this.state.audioTrack?.stop();
@@ -1258,6 +1302,10 @@ export class Rtc extends Record {
                     : _t('%s" requires "screen recording" access', window.location.host);
             this.notification.add(str, { type: "warning" });
             stopVideo();
+            return;
+        }
+        if (!this.selfSession) {
+            closeStream(sourceStream);
             return;
         }
         let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;

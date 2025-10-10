@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # JernejEditor, 2024
-# Wil Odoo, 2024
 # Gregor Flajs, 2025
 # Aleš Pipan, 2025
-# 
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Aleš Pipan, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -141,6 +142,11 @@ msgid "Activity State"
 msgstr "Stanje aktivnosti"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tip aktivnosti"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -190,6 +196,7 @@ msgstr "Arhiv"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -425,8 +432,8 @@ msgstr "Kategorije"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
 "Kategorije vam bodo pomagale učinkoviteje upravljati vozni park in "
 "razporediti vozila."
@@ -472,8 +479,7 @@ msgstr "Izberi, ali je pogodba še vedno veljavna ali ne "
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr "Izberi, ali se storitev nanaša na pogodbe, storitve vozil ali oboje "
 
 #. module: fleet
@@ -753,8 +759,8 @@ msgstr "Datum pričetka veljavnosti pogodbe"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Datum izteka veljavnosti pogodbe (privzeto eno leto po začetnem datumu)"
 
@@ -1031,8 +1037,7 @@ msgstr "Vrsta storitve voznega parka"
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
-"Vozni park: Generiranje stroškov pogodb na podlagi pogostosti stroškov"
+msgstr "Vozni park: Generiranje stroškov pogodb na podlagi pogostosti stroškov"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
@@ -1449,7 +1454,8 @@ msgid ""
 "            you when some contracts have to be renewed."
 msgstr ""
 "Upravljajte vse svoje pogodbe (zakup, zavarovanja itd.)\n"
-"            in z njimi povezane storitve, stroški. Odoo bo samodejno opozoril,\n"
+"            in z njimi povezane storitve, stroški. Odoo bo samodejno "
+"opozoril,\n"
 "            ko je potrebno nekatere pogodbe podaljšati."
 
 #. module: fleet
@@ -1785,13 +1791,13 @@ msgstr "Operacija ni podprta."
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"Izbirni jezik prevoda (koda ISO), ki ga je treba izbrati pri pošiljanju "
-"e-pošte. Če ni nastavljen, bo uporabljena angleška različica. Običajno naj "
-"bo to nadomestni izraz, ki ponuja ustrezen jezik, npr. {{ "
-"object.partner_id.lang }}."
+"Izbirni jezik prevoda (koda ISO), ki ga je treba izbrati pri pošiljanju e-"
+"pošte. Če ni nastavljen, bo uporabljena angleška različica. Običajno naj bo "
+"to nadomestni izraz, ki ponuja ustrezen jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2335,10 +2341,12 @@ msgstr "Potovalna asistenca"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Sledite vsem storitvam opravljenim v vašem vozilu.\n"
-"            Storitve so lahko različne: občasno popravilo, stalno vzdrževanje itd. "
+"            Storitve so lahko različne: občasno popravilo, stalno "
+"vzdrževanje itd. "
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook

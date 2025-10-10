@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import ANY, patch
+from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.sale.controllers.portal import PaymentPortal
@@ -14,7 +15,7 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
+class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):
@@ -39,7 +40,8 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             '._compute_show_tokenize_input_mapping'
         ) as patched:
             tx_context = self._get_portal_pay_context(**route_values)
-            patched.assert_called_once_with(ANY, sale_order_id=ANY)
+            patched.assert_called_once()
+            self.assertIn('sale_order_id', patched.call_args[1])
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
@@ -227,18 +229,101 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(self.sale_order.state, 'sale')
 
     def test_auto_confirm_and_auto_invoice(self):
+        """
+        Assuming that the automatic invoice setting is activated, we expect
+        that after the payment is post processed:
+        - invoice created
+        - SO confirmed
+        - Two emails sent: SO confirmation and default invoice email template
+        """
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
 
         # Create the payment
         self.amount = self.sale_order.amount_total
         tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done')
-        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+        with (
+            mute_logger('odoo.addons.sale.models.payment_transaction'),
+            self.mock_mail_gateway(),
+        ):
             tx._post_process()
 
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(tx.invoice_ids)
         self.assertTrue(self.sale_order.invoice_ids)
+        self.assertEqual(len(self._new_mails), 2)
+        self.assertTrue(self._new_mails.filtered(lambda x: 'Invoice' in x.subject))
+
+    def test_auto_confirm_and_auto_invoice_custom_mail_template(self):
+        """
+        Assuming that the automatic invoice setting is activated and a custom
+        email template for invoicing was selected, we expect that after the
+        payment is post processed:
+        - invoice created
+        - SO confirmed
+        - Two emails sent: SO confirmation and invoice email using the custom template
+        """
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        custom_template = self.env['mail.template'].create({
+            'name': 'Custom Test Invoice Template',
+            'model_id': self.env.ref('account.model_account_move').id,
+            'subject': 'Your Custom Template',
+            'partner_to': '{{ object.partner_id.id }}',
+        })
+        self.env['ir.config_parameter'].set_param('sale.default_invoice_email_template', custom_template.id)
+
+        # Create the payment
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done')
+        with (
+            mute_logger('odoo.addons.sale.models.payment_transaction'),
+            self.mock_mail_gateway(),
+        ):
+            tx._post_process()
+
+        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertTrue(tx.invoice_ids)
+        self.assertTrue(self.sale_order.invoice_ids)
+        self.assertEqual(len(self._new_mails), 2)
+        self.assertTrue(self._new_mails.filtered(lambda x: 'Your Custom Template' in x.subject))
+
+    def test_auto_confirm_and_auto_invoice_custom_mail_template_unlinked(self):
+        """
+        Assuming that the automatic invoice setting is activated and a custom
+        email template for invoicing was selected. If the custom email template
+        gets unlinked, the system parameter still stores the id, but code
+        should fall back to default invoice email template. We expect that after the
+        payment is post processed:
+        - invoice created
+        - SO confirmed
+        - Two emails sent: SO confirmation and invoice email using the DEFAULT template
+        """
+        # Set automatic invoice
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        custom_template = self.env['mail.template'].create({
+            'name': 'Custom Test Invoice Template',
+            'model_id': self.env.ref('account.model_account_move').id,
+            'subject': 'Your Custom Template',
+            'partner_to': '{{ object.partner_id.id }}',
+        })
+        self.env['ir.config_parameter'].set_param('sale.default_invoice_email_template', custom_template.id)
+        custom_template.unlink()
+
+        # Create the payment
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done')
+        with (
+            mute_logger('odoo.addons.sale.models.payment_transaction'),
+            self.mock_mail_gateway(),
+        ):
+            tx._post_process()
+
+        self.assertEqual(self.sale_order.state, 'sale')
+        self.assertTrue(tx.invoice_ids)
+        self.assertTrue(self.sale_order.invoice_ids)
+        self.assertEqual(len(self._new_mails), 2)
+        self.assertTrue(self._new_mails.filtered(lambda x: 'Invoice' in x.subject))
 
     def test_auto_done_and_auto_invoice(self):
         # Set automatic invoice
@@ -552,6 +637,47 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             tx_done._post_process()
 
             self.assertEqual(notification_mail_mock.call_count, 2)
-            notification_mail_mock.assert_called_with(
-                self.env.ref('sale.mail_template_sale_confirmation'))
+            order_confirmation_mail_template_id = int(
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("sale.default_confirmation_template", self.env.ref("sale.mail_template_sale_confirmation").id)
+            )
+            notification_mail_mock.assert_called_with(self.env["mail.template"].browse(order_confirmation_mail_template_id))
             self.assertEqual(self.sale_order.state, 'sale')
+
+    def test_automatic_invoice_mail_author(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal Customer',
+            'login': 'portal@test.com',
+            'email': 'portal@test.com',
+            'partner_id': self.partner_a.id,
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        portal_user.partner_id.invoice_sending_method = 'email'
+
+        sale_order = self.env['sale.order'].with_user(portal_user).sudo().create({
+            'partner_id': portal_user.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100.0,
+            })],
+        })
+
+        self.amount = sale_order.amount_total
+        tx = self._create_transaction(
+            flow='redirect',
+            sale_order_ids=[sale_order.id],
+            state='done'
+        )
+
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx.with_user(portal_user).sudo()._post_process()
+
+        # Verify invoice was created and sent successfully
+        invoice = sale_order.invoice_ids[0]
+        self.assertTrue(invoice.is_move_sent, "Invoice should be marked as sent")
+        invoice_sent_mail = invoice.message_ids[0]
+        self.assertTrue(invoice_sent_mail.author_id.id not in invoice_sent_mail.notified_partner_ids.ids)

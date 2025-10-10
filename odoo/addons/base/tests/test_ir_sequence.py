@@ -192,6 +192,20 @@ class TestIrSequenceGenerate(BaseCase):
             with self.assertRaises(UserError):
                 env['ir.sequence'].next_by_code('test_sequence_type_7')
 
+    def test_ir_sequence_suffix(self):
+        """ test whether a user error is raised for an invalid sequence """
+
+        # try to create a sequence with invalid suffix
+        with environment() as env:
+            env['ir.sequence'].create({
+                'code': 'test_sequence_type_8',
+                'name': 'Test sequence',
+                'prefix': '',
+                'suffix': '/%(invalid)s',
+            })
+            with self.assertRaisesRegex(UserError, "Invalid prefix or suffix"):
+                env['ir.sequence'].next_by_code('test_sequence_type_8')
+
     @classmethod
     def tearDownClass(cls):
         drop_sequence('test_sequence_type_5')

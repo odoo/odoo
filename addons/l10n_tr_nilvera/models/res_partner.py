@@ -13,7 +13,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner']
 
-    invoice_edi_format = fields.Selection(selection_add=[('ubl_tr', "UBL TR 1.2")])
+    invoice_edi_format = fields.Selection(selection_add=[('ubl_tr', "Türkiye (UBL TR 1.2)")])
     l10n_tr_nilvera_customer_status = fields.Selection(
         selection=[
             ('not_checked', "Not Checked"),
@@ -44,7 +44,7 @@ class ResPartner(models.Model):
 
     @api.depends('vat', 'invoice_edi_format')
     def _compute_nilvera_customer_status_and_alias_id(self):
-        if modules.module.current_test:
+        if modules.module.current_test and not self.env.context.get('l10n_tr_nilvera_use_mock'):
             return
         for partner in self:
             if partner.vat and partner.invoice_edi_format == 'ubl_tr':

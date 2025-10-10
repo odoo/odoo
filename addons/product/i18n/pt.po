@@ -5,11 +5,11 @@
 # Translators:
 # Arxi, 2025
 # Vasco Rodrigues, 2025
-# Maitê Dietze, 2025
 # Rita Bastos, 2025
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # NumerSpiral HBG, 2025
 # Wil Odoo, 2025
+# Maitê Dietze, 2025
 # Daniel Reis, 2025
 # 
 msgid ""
@@ -64,6 +64,8 @@ msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s com uma %(discount)s %% %(discount_type)s e %(surcharge)s taxa extra \n"
+"Exemplo: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -77,19 +79,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s em %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% de desconto em %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% de desconto no preço de venda"
 
 #. module: product
 #. odoo-python
@@ -159,7 +161,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "10"
-msgstr ""
+msgstr "10"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -346,6 +348,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"O preço é o conjunto de preços de venda ou regras para calcular o preço das linhas de pedidos de venda com base em produtos, categorias de produtos, datas e quantidades pedidas.\n"
+"Essa é a ferramenta perfeita para lidar com vários preços, descontos sazonais etc."
 
 #. module: product
 #. odoo-python
@@ -1250,7 +1254,7 @@ msgstr "Desconto (%)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "Preço com desconto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
@@ -3103,6 +3107,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"Define o preço como múltiplo desse valor.\n"
+"O arredondamento é aplicado após o desconto e antes da sobretaxa.\n"
+"Para ter preços que terminem em 9,99, arredonde para 10,00 e defina o extra como -0,01"
 
 #. module: product
 #. odoo-javascript
@@ -3160,6 +3167,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Especifique o valor fixo a ser adicionado ou subtraído (se negativo) do "
+"valor calculado com o desconto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3606,6 +3615,8 @@ msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
 msgstr ""
+"Use as regras de desconto e ative as configurações de desconto para mostrar "
+"o desconto ao cliente."
 
 #. module: product
 #. odoo-python
@@ -3920,7 +3931,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "Você pode aplicar uma margem de lucro definindo um desconto negativo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup

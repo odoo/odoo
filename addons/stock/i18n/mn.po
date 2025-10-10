@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock
-# 
+#
 # Translators:
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2024
 # Suren Ch <oyunsuren.ch@gmail.com>, 2024
@@ -30,19 +30,19 @@
 # Гүррагчаа Ууганбаяр, 2024
 # Munkhbaatar g <muuguu17@gmail.com>, 2025
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock
@@ -51,11 +51,13 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
+"Transfers %(transfer_list)s: You need to supply a Lot/Serial number for "
+"products %(product_list)s."
 msgstr ""
 "\n"
 "\n"
-"Шилжүүлэг %(transfer_list)s: Та %(product_list)s барааны цувралын дугаарыг бөглөж өгнө үү."
+"Шилжүүлэг %(transfer_list)s: Та %(product_list)s барааны цувралын дугаарыг "
+"бөглөж өгнө үү."
 
 #. module: stock
 #. odoo-python
@@ -72,35 +74,51 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
 "\n"
-"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
-"Please change the quantity done or the rounding precision of your unit of measure."
+"The quantity done for the product %(product)s doesn't respect the rounding "
+"precision defined on the unit of measure %(unit)s.\n"
+"Please change the quantity done or the rounding precision of your unit of "
+"measure."
 msgstr ""
 "\n"
-"%(product)s барааны боловсруулсан тоо хэмжээ утга нь %(unit)sхэмжих нэгжийн бүхэлчлэх утгатай нийцэхгүй байна.\n"
-"Боловсруулсан тоо хэмжээг өөрчлөх эсвэл хэмжих нэгж дээрх бүхэлчлэн утгыг солино уу."
+"%(product)s барааны боловсруулсан тоо хэмжээ утга нь %(unit)sхэмжих нэгжийн "
+"бүхэлчлэх утгатай нийцэхгүй байна.\n"
+"Боловсруулсан тоо хэмжээг өөрчлөх эсвэл хэмжих нэгж дээрх бүхэлчлэн утгыг "
+"солино уу."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
 msgid ""
 " * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
-" * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+" * Waiting another operation: This transfer is waiting for another operation "
+"before being ready.\n"
 " * Waiting: The transfer is waiting for the availability of some products.\n"
-"(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n"
-"(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+"(a) The shipping policy is \"As soon as possible\": no product could be "
+"reserved.\n"
+"(b) The shipping policy is \"When all products are ready\": not all the "
+"products could be reserved.\n"
 " * Ready: The transfer is ready to be processed.\n"
-"(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n"
-"(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+"(a) The shipping policy is \"As soon as possible\": at least one product has "
+"been reserved.\n"
+"(b) The shipping policy is \"When all products are ready\": all product have "
+"been reserved.\n"
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-"* Ноорог: Шилжүүлгийг хараахан баталгаажуулаагүй байна. Нөөцлөлтөнд хамаарахгүй.\n"
-"* Өөр үйлдлийг хүлээж байна: Энэ шилжүүлэг бэлэн болохоос өмнө өөр үйлдлийг хүлээж байна.\n"
-"* Хүлээж байна: Шилжүүлэлт нь зарим бүтээгдэхүүний бэлэн байдлыг хүлээж байна.\n"
-"(a) Тээвэрлэлтийн бодлого нь \"аль болох хурдан\" бол: нэг ч барааны нөөц бэлэн түвшинд хүрээгүй.\n"
-"(б) Тээвэрлэлтийн бодлого нь \"Бүх бүтээгдэхүүн бэлэн болсон үед\": бүх бараанууд бүрэн гүйцэт нөөц хүрэлцээгүй.\n"
+"* Ноорог: Шилжүүлгийг хараахан баталгаажуулаагүй байна. Нөөцлөлтөнд "
+"хамаарахгүй.\n"
+"* Өөр үйлдлийг хүлээж байна: Энэ шилжүүлэг бэлэн болохоос өмнө өөр үйлдлийг "
+"хүлээж байна.\n"
+"* Хүлээж байна: Шилжүүлэлт нь зарим бүтээгдэхүүний бэлэн байдлыг хүлээж "
+"байна.\n"
+"(a) Тээвэрлэлтийн бодлого нь \"аль болох хурдан\" бол: нэг ч барааны нөөц "
+"бэлэн түвшинд хүрээгүй.\n"
+"(б) Тээвэрлэлтийн бодлого нь \"Бүх бүтээгдэхүүн бэлэн болсон үед\": бүх "
+"бараанууд бүрэн гүйцэт нөөц хүрэлцээгүй.\n"
 "* Бэлэн: Шилжүүлгийг боловсруулахад бэлэн байна.\n"
-"(a) Тээвэрлэлтийн бодлого нь \"аль болох хурдан\": дор хаяж нэг барааны нөөц хүрэлцсэн.\n"
-"(б) Тээвэрлэлтийн бодлого нь \"Бүх бүтээгдэхүүн бэлэн болсон үед\": бүх барааны нөөц хүрэлцсэн.\n"
+"(a) Тээвэрлэлтийн бодлого нь \"аль болох хурдан\": дор хаяж нэг барааны нөөц "
+"хүрэлцсэн.\n"
+"(б) Тээвэрлэлтийн бодлого нь \"Бүх бүтээгдэхүүн бэлэн болсон үед\": бүх "
+"барааны нөөц хүрэлцсэн.\n"
 "* Дууссан: Шилжүүлгийг боловсрууллаа.\n"
 "* Цуцлагдсан: Шилжүүлгийг цуцалсан."
 
@@ -108,7 +126,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid " - Product: %(product)s, Lot/Serial Number: %(lot)s"
-msgstr ""
+msgstr " - Бараа: %(product)s, Сери/Цувралын дугаар: %(lot)s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__cyclic_inventory_frequency
@@ -183,8 +201,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid ""
-"%(operations)s have default source or destination locations within warehouse"
-" %(warehouse)s, therefore you cannot archive it."
+"%(operations)s have default source or destination locations within warehouse "
+"%(warehouse)s, therefore you cannot archive it."
 msgstr ""
 
 #. module: stock
@@ -197,16 +215,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"%(product_name)s --> Product UoM is %(product_uom)s "
-"(%(product_uom_category)s) - Move UoM is %(move_uom)s "
-"(%(move_uom_category)s)"
+"%(product_name)s --> Product UoM is %(product_uom)s (%"
+"(product_uom_category)s) - Move UoM is %(move_uom)s (%(move_uom_category)s)"
 msgstr ""
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%(warehouse)s Sequence %(code)s"
-msgstr ""
+msgstr "%(warehouse)s Дараалал %(code)s"
 
 #. module: stock
 #. odoo-python
@@ -274,11 +291,9 @@ msgstr "'Тооллогын хүснэгт'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
-msgid ""
-"'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
+msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Хүргэлтийн тасалбар - %s - %s' % (object.partner_id.name or '', "
-"object.name)"
+"'Хүргэлтийн тасалбар - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -340,7 +355,8 @@ msgstr "(цувралын баркод)"
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
-"* Waiting Availability: The stock move is confirmed but the product can't be reserved.\n"
+"* Waiting Availability: The stock move is confirmed but the product can't be "
+"reserved.\n"
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
@@ -352,21 +368,36 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_line__location_dest_usage
 #: model:ir.model.fields,help:stock.field_stock_move_line__location_usage
 msgid ""
-"* Vendor Location: Virtual location representing the source location for products coming from your vendors\n"
-"* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products\n"
+"* Vendor Location: Virtual location representing the source location for "
+"products coming from your vendors\n"
+"* View: Virtual location used to create a hierarchical structures for your "
+"warehouse, aggregating its child locations ; can't directly contain "
+"products\n"
 "* Internal Location: Physical locations inside your own warehouses,\n"
-"* Customer Location: Virtual location representing the destination location for products sent to your customers\n"
-"* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)\n"
-"* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
-"* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
+"* Customer Location: Virtual location representing the destination location "
+"for products sent to your customers\n"
+"* Inventory Loss: Virtual location serving as counterpart for inventory "
+"operations used to correct stock levels (Physical inventories)\n"
+"* Production: Virtual counterpart location for production operations: this "
+"location consumes the components and produces finished products\n"
+"* Transit Location: Counterpart location that should be used in inter-"
+"company or inter-warehouses operations"
 msgstr ""
-"* Нийлүүлэгчийн Байршил: Хийсвэр байрлал бөгөөд нийлүүлэгчээс ирэх барааны эх байрлалыг илэрхийлдэг \n"
-"* Харагдац: Хийсвэр байрлал бөгөөд агуулахын мөчирлөсөн бүтэцийг үүсгэхэд хэрэглэгддэг. Энэ байрлал нь бараа агуулдаггүй бөгөөд дэд байрлалуудыг дотроо агуулдаг \n"
+"* Нийлүүлэгчийн Байршил: Хийсвэр байрлал бөгөөд нийлүүлэгчээс ирэх барааны "
+"эх байрлалыг илэрхийлдэг \n"
+"* Харагдац: Хийсвэр байрлал бөгөөд агуулахын мөчирлөсөн бүтэцийг үүсгэхэд "
+"хэрэглэгддэг. Энэ байрлал нь бараа агуулдаггүй бөгөөд дэд байрлалуудыг "
+"дотроо агуулдаг \n"
 "* Дотоод Байрлал: Агуулах доторх бодит байрлалууд \n"
-"* Захиалагчийн Байрлал: Хийсвэр байрлал бөгөөд захиалагчид илгээсэн барааны хүрэх байрлалыг илэрхийлдэг \n"
-"* Тооллогын дутагдал: Хийсвэр байрлал бөгөөд тооллогын зөрүүний хөдөлгөөний харьцсан байрлалыг илэрхийлдэг (Тооллого) \n"
-"* Үйлдвэрлэл: Хийсвэр байрлал бөгөөд үйлдвэрлэлийн ажилбар харьцсан байрлал болж хэрэглэгддэг: энэ байрлал нь түүхий эдийг хүлээн авч бэлэн бүтээгдэхүүний үүсгэдэг \n"
-"* Дамжих байрлал: Компани хооронд болон агуулах хоорондын хөдөлгөөнүүдэд харьцсан байрлал болж хэрэглэгддэг"
+"* Захиалагчийн Байрлал: Хийсвэр байрлал бөгөөд захиалагчид илгээсэн барааны "
+"хүрэх байрлалыг илэрхийлдэг \n"
+"* Тооллогын дутагдал: Хийсвэр байрлал бөгөөд тооллогын зөрүүний хөдөлгөөний "
+"харьцсан байрлалыг илэрхийлдэг (Тооллого) \n"
+"* Үйлдвэрлэл: Хийсвэр байрлал бөгөөд үйлдвэрлэлийн ажилбар харьцсан байрлал "
+"болж хэрэглэгддэг: энэ байрлал нь түүхий эдийг хүлээн авч бэлэн "
+"бүтээгдэхүүний үүсгэдэг \n"
+"* Дамжих байрлал: Компани хооронд болон агуулах хоорондын хөдөлгөөнүүдэд "
+"харьцсан байрлал болж хэрэглэгддэг"
 
 #. module: stock
 #. odoo-python
@@ -504,15 +535,15 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
-"<br>Тодорхой хэрэгцээ бүхий <b>%s</b>-г нөөцлөх бөгөөд нөөцийн дүрмийн дагуу"
-" зохистой нөөцийг дүүргэнэ."
+"<br>Тодорхой хэрэгцээ бүхий <b>%s</b>-г нөөцлөх бөгөөд нөөцийн дүрмийн дагуу "
+"зохистой нөөцийг дүүргэнэ."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring the missing quantity in this location."
+"<br>If the products are not available in <b>%s</b>, a rule will be triggered "
+"to bring the missing quantity in this location."
 msgstr ""
 
 #. module: stock
@@ -528,20 +559,26 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
@@ -550,11 +587,13 @@ msgid ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/"
+">\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
-"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br "
+"data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -563,17 +602,21 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
-msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                Бүх барааны нөөц бүрэн хангагдсангүй. \"Нөөц хүрэлцээ шалгах\" товч дээр дарж нөөцийг хангана уу."
+"                                Бүх барааны нөөц бүрэн хангагдсангүй. \"Нөөц "
+"хүрэлцээ шалгах\" товч дээр дарж нөөцийг хангана уу."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -754,6 +797,11 @@ msgid "<strong>Customer Address</strong>"
 msgstr "<strong>Захиалагчийн хаяг</strong>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivered</strong>"
+msgstr "<strong>Хүргэгдсэн</strong>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
 msgstr "<strong>Хүргэлтийн хаяг</strong>"
@@ -762,8 +810,8 @@ msgstr "<strong>Хүргэлтийн хаяг</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid ""
 "<strong>Due to some stock moves done between your initial update of the "
-"quantity and now, the difference of quantity is not consistent "
-"anymore.</strong>"
+"quantity and now, the difference of quantity is not consistent anymore.</"
+"strong>"
 msgstr ""
 "<strong>Агуулахын хөдөлгөөн хийх үед боловсруулсан тоо нь анх төлөвлөсөн "
 "тооноос зөрүүтэй байна, зөрүүг үл тоомсорлож болохгүй.</strong>"
@@ -793,6 +841,11 @@ msgstr "<strong>Доод тоо:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
 msgstr "<strong>Захиалга</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Ordered</strong>"
+msgstr "<strong>Захиалсан</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -930,8 +983,8 @@ msgstr "Үйлдэл шаардлагатай"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__replenish_location
 msgid ""
-"Activate this function to get all quantities to replenish at this particular"
-" location"
+"Activate this function to get all quantities to replenish at this particular "
+"location"
 msgstr ""
 "Уг функцыг идэвхижүүлснээр уг байрлалд байрших ёстой бүх тоо хэмжээ нөхөн "
 "дүүргэгдэнэ"
@@ -1011,11 +1064,19 @@ msgstr "Бэлтгэх ажилбарын хуудас дээр хэвлэгдэ
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
 msgid ""
-"Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
-" You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
+"Add and customize route operations to process product moves in your "
+"warehouse(s): e.g. unload > quality control > stock for incoming products, "
+"pick > pack > ship for outgoing products. \n"
+" You can also set putaway strategies on warehouse locations in order to send "
+"incoming products into specific child locations straight away (e.g. specific "
+"bins, racks)."
 msgstr ""
-"Агуулах дотор бараа хэрхэн шилжих, хөдлөх дамжлагыг нэмэх, өөрчлөн тохируулах боломжтой: ж.ш буулгах > чанарын шалгалт > хадгалалтын байрлалд орлого авах, цуглуулах > савлаж бэлтгэх > тээвэрлэж зарлага гаргах. \n"
-"Мөн та агуулахын байрлалуудад байршуулах стратеги тодорхойлж тохируулсанаар таны орлогод авсан бараа зориулалтын дэд байрлалдаа (ж.ш тавиур, нүд) автоматаар шилжиж очих боломжтой."
+"Агуулах дотор бараа хэрхэн шилжих, хөдлөх дамжлагыг нэмэх, өөрчлөн "
+"тохируулах боломжтой: ж.ш буулгах > чанарын шалгалт > хадгалалтын байрлалд "
+"орлого авах, цуглуулах > савлаж бэлтгэх > тээвэрлэж зарлага гаргах. \n"
+"Мөн та агуулахын байрлалуудад байршуулах стратеги тодорхойлж тохируулсанаар "
+"таны орлогод авсан бараа зориулалтын дэд байрлалдаа (ж.ш тавиур, нүд) "
+"автоматаар шилжиж очих боломжтой."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1028,8 +1089,8 @@ msgid ""
 msgstr ""
 "Агуулах дотор бараа хэрхэн шилжих, хөдөлгөөн хийх дамжлагыг нэмэх, өөрчлөн "
 "тохируулах боломжтой: ж.ш. байршуулах > чанар шалгах > барааг орлогод авах, "
-"цуглуулах > бэлтгэн савлах > барааг зарлагад гаргах. Мөн та бараа байршуулах"
-" дүрмүүдийн тусламжтайгаар орлогоор ирж буй барааг тогтсон нэг дэд байршилд "
+"цуглуулах > бэлтгэн савлах > барааг зарлагад гаргах. Мөн та бараа байршуулах "
+"дүрмүүдийн тусламжтайгаар орлогоор ирж буй барааг тогтсон нэг дэд байршилд "
 "хадгалах боломжтой (ж.ш. тогтсон тавиур, тавцан)."
 
 #. module: stock
@@ -1193,8 +1254,8 @@ msgid ""
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
 "Тооллогын давтамж тохируулаагүй байрлалууд дээрх барааны нөөцийг жилийн "
-"сонгосон сард нэг удаа тоолохоор төлөвлөнө.  Хэрэв жилийн давтамж хийх сарыг"
-" сонгохгүй орхивол жилийн тооллого төлөвлөгдөхгүй."
+"сонгосон сард нэг удаа тоолохоор төлөвлөнө.  Хэрэв жилийн давтамж хийх сарыг "
+"сонгохгүй орхивол жилийн тооллого төлөвлөгдөхгүй."
 
 #. module: stock
 #. odoo-python
@@ -1203,8 +1264,8 @@ msgid ""
 "Another parent/sub replenish location %s exists, if you wish to change it, "
 "uncheck it first"
 msgstr ""
-"Уг байрлалын эцэг эсвэл дэд байрлалууд доторх %s байрлалыг нөхөн дүүргэлтийн"
-" байрлалаар тохируулсан байна, хэрэв та уг байрлалыг нөхөн дүүргэлтийн "
+"Уг байрлалын эцэг эсвэл дэд байрлалууд доторх %s байрлалыг нөхөн дүүргэлтийн "
+"байрлалаар тохируулсан байна, хэрэв та уг байрлалыг нөхөн дүүргэлтийн "
 "байрлалаар ашиглахыг хүсвэл эхлээд тэрхүү өөр нэг байрлалыг өөрчилнө үү"
 
 #. module: stock
@@ -1364,7 +1425,7 @@ msgstr "Авто"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
 msgid "Auto Print Delivery Slip"
-msgstr ""
+msgstr "Хүргэлтийн тасалбар автоматаар хэвлэх"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
@@ -1610,7 +1671,7 @@ msgstr "Идэвхтэй талбарын тэмдэглэгээ арилгаж 
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "COPY"
-msgstr ""
+msgstr "ХУУЛБАРЛАХ"
 
 #. module: stock
 #: model:product.template,name:stock.product_cable_management_box_product_template
@@ -1717,8 +1778,8 @@ msgstr ""
 "үйлчлүүлэгч татварын албанд төлнө. Миний компани (Чикаго) ямар ч тохиолдолд "
 "тухайн улсын хууль тогтоомжтой холбоотой зардалд оролцох боломжгүй. Иймээс "
 "нэхэмжлэхийн дүнг бүхэлд нь Миний компанид (Чикаго) төлөх бөгөөд "
-"үйлчлүүлэгчийн оршин суугаа улсын хууль тогтоомжтой холбоотой аливаа зардлыг"
-" оруулаагүй болно."
+"үйлчлүүлэгчийн оршин суугаа улсын хууль тогтоомжтой холбоотой аливаа зардлыг "
+"оруулаагүй болно."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_change_product_quantity
@@ -1730,8 +1791,8 @@ msgstr "Барааны тоо хэмжээг өөрчлөх"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Changing the Lot/Serial number for move lines with different products is not"
-" allowed."
+"Changing the Lot/Serial number for move lines with different products is not "
+"allowed."
 msgstr ""
 
 #. module: stock
@@ -1911,6 +1972,14 @@ msgstr "DHL-н хүргэлт болон хүргэлтийн өртгийг т�
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Easypost-н хүргэлт болон хүргэлтийн өртгийг тооцох"
 
@@ -1918,6 +1987,14 @@ msgstr "Easypost-н хүргэлт болон хүргэлтийн өртгий�
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "FedEx-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1941,8 +2018,24 @@ msgstr "UPS-н хүргэлт болон хүргэлтийн өртгийг т�
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "USPS-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2003,7 +2096,8 @@ msgstr "Зөрчилтэй"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__visibility_days
 msgid ""
-"Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
+"Consider product forecast these many days in the future upon product "
+"replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
 "Өнөөдрөөс ийм хоногийн хугацаанд төлөвлөгдсөн орлого болон зарлагын "
@@ -2164,7 +2258,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid ""
 "Create a backorder if you expect to process the remaining\n"
-"                            products later. Do not create a backorder if you will not\n"
+"                            products later. Do not create a backorder if you "
+"will not\n"
 "                            process the remaining products."
 msgstr ""
 "Хэрэв үлдсэн барааг дараа нөхөн боловсруулна гэж үзэж байвал нөхөн захиалга "
@@ -2306,6 +2401,8 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
+"Шинэ агуулах нэмэх нь Хадгалалтын байрлал ашиглах тохиргоог автоматаар "
+"идэвхижүүлдэг."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
@@ -2363,15 +2460,22 @@ msgstr "Одоогийн нөөц"
 #: model:ir.model.fields,help:stock.field_product_product__qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Барааны одоогийн тоо хэмжээ.\n"
-"Нэг хадгалах байрлалын хувьд энэ нь тухайн байрлал болон түүний дэд бүх байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
-"Нэг агуулахын хувьд энэ нь тухайн агуулахын хадгалах байрлал, дэлгүүр болон түүний дэд бүх байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
-"Бусад тохиолдолд, энэ нь 'дотоод' төрөлтэй хадгалах байрлалд хадгалагдаж байгаа бараанууд байна."
+"Нэг хадгалах байрлалын хувьд энэ нь тухайн байрлал болон түүний дэд бүх "
+"байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
+"Нэг агуулахын хувьд энэ нь тухайн агуулахын хадгалах байрлал, дэлгүүр болон "
+"түүний дэд бүх байрлалуудад хадгалагдаж байгаа бараанууд байна.\n"
+"Бусад тохиолдолд, энэ нь 'дотоод' төрөлтэй хадгалах байрлалд хадгалагдаж "
+"байгаа бараанууд байна."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -2459,6 +2563,11 @@ msgid "DEMO_UOM"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "DHL Express Connector"
@@ -2536,8 +2645,10 @@ msgstr "Сарын өдөр"
 #: model:ir.model.fields,help:stock.field_res_company__annual_inventory_day
 #: model:ir.model.fields,help:stock.field_res_config_settings__annual_inventory_day
 msgid ""
-"Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
-"        If greater than the last day of a month, then the last day of the month will be selected instead."
+"Day of the month when the annual inventory should occur. If zero or "
+"negative, then the first day of the month will be selected instead.\n"
+"        If greater than the last day of a month, then the last day of the "
+"month will be selected instead."
 msgstr ""
 
 #. module: stock
@@ -2658,17 +2769,25 @@ msgid ""
 msgstr ""
 "Та агуулахынхаа дотоод бүтэц, зохион байгуулалтанд нийцүүлэн байрлалуудыг\n"
 "            тодорхойл. Odoo дээр бодит байрлалууд\n"
-"            (багуулах, тавиур, сагс, гм) болон үйлдвэрлэл, тооллого, орлого, зарлага зэрэгт бодит байрлалуудтай харьцах хийсвэр (нийлүүлэгчийн байрлал, захиалагчийн байрлал) байрлалуудыг ашигладаг."
+"            (багуулах, тавиур, сагс, гм) болон үйлдвэрлэл, тооллого, орлого, "
+"зарлага зэрэгт бодит байрлалуудтай харьцах хийсвэр (нийлүүлэгчийн байрлал, "
+"захиалагчийн байрлал) байрлалуудыг ашигладаг."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
-"Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.\n"
+"Defines the default method used for suggesting the exact location (shelf) "
+"where to take the products from, which lot etc. for this location. This "
+"method can be enforced at the product category level, and a fallback is made "
+"on the parent locations if none is set here.\n"
 "\n"
 "FIFO: products/lots that were stocked first will be moved out first.\n"
 "LIFO: products/lots that were stocked last will be moved out first.\n"
-"Closet location: products/lots closest to the target location will be moved out first.\n"
-"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
+"Closet location: products/lots closest to the target location will be moved "
+"out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first "
+"(the availability of this method depends on the \"Expiration Dates\" "
+"setting)."
 msgstr ""
 
 #. module: stock
@@ -3120,6 +3239,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Та нөөцийн хүрэлцээгүй бараанаас дотоод зарлага хийвэл"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Баримтжуулалт"
@@ -3171,6 +3291,9 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
+"Ирээдүйд төлөвлөгдсөн орлогын хөдөлгөөний дагуу, та хэт их нөөцтэй болох "
+"эрсдэлтэй байна. Тиймээс дахин захиалга ажлуулахаас өмнө Нөөцийн "
+"таамаглалтын тайлангаа шалгаарай."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -3180,7 +3303,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
 msgid "Duplicated Serial Number"
-msgstr ""
+msgstr "Давхардсан цувралын дугаар"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__dymo
@@ -3231,8 +3354,7 @@ msgstr "Бэлтгэх баримтын имэйл баталгаажуулал�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
-msgstr ""
-"Хүргэлтийн баримтыг боловсруулж дуусахад захиалагч уруу имэйл илгээнэ."
+msgstr "Хүргэлтийн баримтыг боловсруулж дуусахад захиалагч уруу имэйл илгээнэ."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -3242,13 +3364,13 @@ msgstr ""
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid ""
-"Enjoy a quick-paced experience with the Odoo barcode app. It is blazing fast"
-" and works even without a stable internet connection. It supports all flows:"
-" inventory adjustments, batch picking, moving lots or pallets, low inventory"
-" checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
+"Enjoy a quick-paced experience with the Odoo barcode app. It is blazing fast "
+"and works even without a stable internet connection. It supports all flows: "
+"inventory adjustments, batch picking, moving lots or pallets, low inventory "
+"checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Odoo баркод апп-аар сэтгэл ханамжтай ажиллая. Энэ нь маш хурдан мөн интернет"
-" сүлжээ тогтворгүй байхад ашиглах боломжтой. Агуулахын бүхий л процессийг "
+"Odoo баркод апп-аар сэтгэл ханамжтай ажиллая. Энэ нь маш хурдан мөн интернет "
+"сүлжээ тогтворгүй байхад ашиглах боломжтой. Агуулахын бүхий л процессийг "
 "хангаж ажиллана. Апп цесээс Баркод модулийг идэвхжүүлнэ."
 
 #. module: stock
@@ -3272,9 +3394,11 @@ msgid ""
 "            physical, partner or virtual locations."
 msgstr ""
 "Odoo систем дээрх агуулахын хөдөлгөөн гэдэг бол барааг нэг байрлалаас\n"
-"            нөгөө байрлал руу шилжүүлж буй ажиллагааг хэлнэ.  Тухайлбал, хэрэв нийлүүлэгчээс\n"
+"            нөгөө байрлал руу шилжүүлж буй ажиллагааг хэлнэ.  Тухайлбал, "
+"хэрэв нийлүүлэгчээс\n"
 "            бараа хүлээн авбал, Odoo нь нийлүүлэгчийн байрлалаас\n"
-"            агуулахын байрлал руу чиглэсэн хөдөлгөөн бүртгэнэ. Тайлан нь бодит байрлал,\n"
+"            агуулахын байрлал руу чиглэсэн хөдөлгөөн бүртгэнэ. Тайлан нь "
+"бодит байрлал,\n"
 "            харилцагчийн буюу хийсвэр байрлал дээр ажиллана."
 
 #. module: stock
@@ -3348,6 +3472,7 @@ msgstr "2-р сар"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "FedEx холболт"
 
@@ -3387,7 +3512,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "Анхны цувралын дугаар"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3451,22 +3576,32 @@ msgstr "Таамаглалын тайлан"
 #: model:ir.model.fields,help:stock.field_product_product__virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
-"Тоо хэмжээний урьдчилсан таамаг (Таамаг = Гарт буй тоо хэмжээ - Гаргахаар товлосон тоо + Хүлээн авахаар товлосон тоо)\n"
-"Тухайн нэг хадгалах байрлалын хувьд таамгыг тооцохдоо тухайн байрлал болон түүний дэд байрлалуудад хадгалагдаж буй бүх бараануудаар тооцно.\n"
-"Тухайн нэг агуулахын хэмжээний таамгыг тооцохдоо агуулахын хадгалах байрлал болон түүний дэд байрлалуудад хадгалагдаж буй бүх бараануудаар тооцно.\n"
-"Дээрхээс бусад тохиолдолд зөвхөн 'дотоод' төрөлтэй хадгалах байрлалуудад хадгалагдаж буй барааны нөөцийн таамгаар тооцоолно."
+"Тоо хэмжээний урьдчилсан таамаг (Таамаг = Гарт буй тоо хэмжээ - Гаргахаар "
+"товлосон тоо + Хүлээн авахаар товлосон тоо)\n"
+"Тухайн нэг хадгалах байрлалын хувьд таамгыг тооцохдоо тухайн байрлал болон "
+"түүний дэд байрлалуудад хадгалагдаж буй бүх бараануудаар тооцно.\n"
+"Тухайн нэг агуулахын хэмжээний таамгыг тооцохдоо агуулахын хадгалах байрлал "
+"болон түүний дэд байрлалуудад хадгалагдаж буй бүх бараануудаар тооцно.\n"
+"Дээрхээс бусад тохиолдолд зөвхөн 'дотоод' төрөлтэй хадгалах байрлалуудад "
+"хадгалагдаж буй барааны нөөцийн таамгаар тооцоолно."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - reserved quantity)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 
 #. module: stock
@@ -3528,7 +3663,7 @@ msgstr "Төлөвлөгдсөн орлогууд"
 #: model:ir.actions.client,name:stock.stock_forecasted_product_product_action
 #: model:ir.actions.client,name:stock.stock_forecasted_product_template_action
 msgid "Forecasted Report"
-msgstr ""
+msgstr "Нөөцийн таамаглал"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
@@ -3561,13 +3696,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Free Stock"
-msgstr "Нөөцгүй"
+msgstr "Ашиглагдаагүй нөөц"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Дотоод хөдөлгөөний замд яваа сул нөөц"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3651,13 +3786,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "Цувралын дугаар үүсгэх"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "Цувралын дугаар үүсгэх"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -3678,8 +3813,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
 msgid ""
-"Give to the more specialized category, a higher priority to have them in top"
-" of the list."
+"Give to the more specialized category, a higher priority to have them in top "
+"of the list."
 msgstr ""
 "Илүү тусгайлсан ангилал оноож тэдгээрийг жагсаалтын илүү урьтамжаар дээд "
 "талд нь гаргана."
@@ -3693,7 +3828,7 @@ msgstr "Агуулахын жагсаалтанд харуулах эрэмбэ 
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Go to Warehouses"
-msgstr ""
+msgstr "Агуулах руу очих"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
@@ -3891,8 +4026,8 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
-"If a separator is defined, a QR code containing all serial numbers contained"
-" in package will be generated, using the defined character(s) to separate "
+"If a separator is defined, a QR code containing all serial numbers contained "
+"in package will be generated, using the defined character(s) to separate "
 "each numbers"
 msgstr ""
 
@@ -3922,8 +4057,8 @@ msgstr "Үүнийг сонговол алдаа үүсэх үед зурвас�
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
-"Хэрэв тэмдэглэгдсэн бол энэ хөдөлгөөний цуцлахад холбогдсон хөдөлгөөнүүд мөн"
-" цуцлагдана"
+"Хэрэв тэмдэглэгдсэн бол энэ хөдөлгөөний цуцлахад холбогдсон хөдөлгөөнүүд мөн "
+"цуцлагдана"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
@@ -3933,8 +4068,8 @@ msgstr "Хэрэв сонгосон бол ажилбар нь энэ багла
 #. module: stock
 #: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
 msgid ""
-"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
-" only one label will be printed for this lot."
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and "
+"only one label will be printed for this lot."
 msgstr ""
 
 #. module: stock
@@ -3996,8 +4131,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels"
-" of a picking when it is validated."
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a picking when it is validated."
 msgstr ""
 
 #. module: stock
@@ -4017,8 +4152,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the return slip of"
-" a picking when it is validated."
+"If this checkbox is ticked, Odoo will automatically print the return slip of "
+"a picking when it is validated."
 msgstr ""
 "Үүнийг сонговол, буцаалтын баримт батлагдахад Систем автоматаар хүргэлтийн "
 "тасалбарын буцаалтын баримтыг хэвлэх болно."
@@ -4035,8 +4170,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__show_operations
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_operations
 msgid ""
-"If this checkbox is ticked, the pickings lines will represent detailed stock"
-" operations. If not, the picking lines will represent an aggregate of "
+"If this checkbox is ticked, the pickings lines will represent detailed stock "
+"operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
 "Хэрэв үүнийг сонговол, Шилжүүлгийн баримтын дэлгэцэнд бэлтгэх ажиллагааны "
@@ -4071,8 +4206,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
 msgid ""
-"If this picking was created as a return of another picking, this field links"
-" to the original picking."
+"If this picking was created as a return of another picking, this field links "
+"to the original picking."
 msgstr ""
 
 #. module: stock
@@ -4081,8 +4216,8 @@ msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
 msgstr ""
-"Хэрэв энэ хүргэлт хуваагдсан байсан бол энэ талбар нь боловсруулагдсан хэсэг"
-" рүү холбоход хэрэглэгдэнэ."
+"Хэрэв энэ хүргэлт хуваагдсан байсан бол энэ талбар нь боловсруулагдсан хэсэг "
+"рүү холбоход хэрэглэгдэнэ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picking_type_entire_packs
@@ -4114,13 +4249,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "Цувралын дугаар импортлох"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials/Lots"
-msgstr ""
+msgstr "Цувралын дугаар импортлох"
 
 #. module: stock
 #. odoo-python
@@ -4142,8 +4277,10 @@ msgstr "Орлогын төрөл"
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
 msgid ""
-"In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n"
-"        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier"
+"In case of outgoing flow, validate the transfer before this date to allow to "
+"deliver at promised date to the customer.\n"
+"        In case of incoming flow, validate the transfer before this date in "
+"order to have these products in stock at the date promised by the supplier"
 msgstr ""
 
 #. module: stock
@@ -4200,8 +4337,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
 msgid ""
-"Indicates the gap between the product's theoretical quantity and its counted"
-" quantity."
+"Indicates the gap between the product's theoretical quantity and its counted "
+"quantity."
 msgstr ""
 
 #. module: stock
@@ -4234,7 +4371,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/res_company.py:0
 msgid "Inter-warehouse transit"
-msgstr ""
+msgstr "Агуулах хоорондын хөдөлгөөн"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
@@ -4302,8 +4439,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__ref
 msgid ""
-"Internal reference number in case it differs from the manufacturer's "
-"lot/serial number"
+"Internal reference number in case it differs from the manufacturer's lot/"
+"serial number"
 msgstr "Үйлдвэрийн серийн дугаараас ялгаатай бол дотоод код"
 
 #. module: stock
@@ -4630,12 +4767,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Last 12 Months"
-msgstr ""
+msgstr "Сүүлийн 12 сар"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Last 3 Months"
-msgstr ""
+msgstr "Сүүлийн 3 сар"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4645,22 +4782,22 @@ msgstr "Сүүлийн 30 хоног"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
 msgid "Last Count Date"
-msgstr ""
+msgstr "Сүүлд тоолсон огноо"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
 msgid "Last Delivery Partner"
-msgstr ""
+msgstr "Сүүлд хүргэсэн харилцагч"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_lifo
 msgid "Last In First Out (LIFO)"
-msgstr ""
+msgstr "Сүүлд ирсэн нь түрүүлж гарах (LIFO)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Inventory"
-msgstr ""
+msgstr "Сүүлийн тооллого"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -4761,7 +4898,7 @@ msgstr "Сүүлд зассан огноо"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "Сүүлд ашигласан"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
@@ -4867,12 +5004,12 @@ msgstr "Холбогдсон хөдөлгөөнүүд"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "Ажиллагааны дэлгэрэнгүй жагсаалт харагдац"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of next transfers"
-msgstr ""
+msgstr "Дараагийн хөдөлгөөний жагсаалт харагдац"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4956,7 +5093,7 @@ msgstr "Байрлалууд"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
-msgstr ""
+msgstr "Түгжих/түгжээ тайлах"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -4974,7 +5111,7 @@ msgstr "Сери"
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_lot_customer_report_view_list
 msgid "Lot / Serial Number"
-msgstr ""
+msgstr "Сери / Цувралын дугаар"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
@@ -4984,7 +5121,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
 msgid "Lot Label Report"
-msgstr ""
+msgstr "Цувралын шошго"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -4995,18 +5132,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "Цувралын дугаар"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Lot/SN Labels"
-msgstr ""
+msgstr "Цувралын дугаарын шошго"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr ""
+msgstr "Цуврал:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -5056,12 +5193,12 @@ msgstr "Серийн дугаарын нэр"
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid "Lot/Serial Number Relocated"
-msgstr ""
+msgstr "Цувралын дугаарыг нүүлгэсэн"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial:"
-msgstr ""
+msgstr "Цувралын дугаар:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
@@ -5071,13 +5208,13 @@ msgstr "Цуврал & Серийн дугаар"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Хүргэлтийн тасалбар дээр цувралын дугаар харуулах"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Lots / Serial Numbers"
-msgstr ""
+msgstr "Сери / Цувралын дугаар"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5087,7 +5224,7 @@ msgstr "Сери харуулах"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Lots or serial numbers were not provided for tracked products"
-msgstr ""
+msgstr "Мөшгидөг аль нэг бараанд цувралын дугаар оноогдоогүй байна"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_product_production_lot_form
@@ -5102,7 +5239,8 @@ msgstr "Серийн дугаарууд"
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid ""
 "Lots/Serial numbers help you tracking the path followed by your products.\n"
-"            From their traceability report you will see the full history of their use, as well as their composition."
+"            From their traceability report you will see the full history of "
+"their use, as well as their composition."
 msgstr ""
 
 #. module: stock
@@ -5148,8 +5286,7 @@ msgstr "Барааг Түгээх болон Татах урсгалыг зох�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr ""
-"Барааны савлагаа ашиглах (ж.ш 6 шилтэй савлагаа, 10 ширхэгтэй хайрцаг)"
+msgstr "Барааны савлагаа ашиглах (ж.ш 6 шилтэй савлагаа, 10 ширхэгтэй хайрцаг)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -5190,12 +5327,12 @@ msgstr "Хийхээр товлох"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Max"
-msgstr ""
+msgstr "Дээд"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Max Quantity"
-msgstr ""
+msgstr "Дээд тоо хэмжээ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
@@ -5212,7 +5349,7 @@ msgstr "Максимум Жин эерэг байх ёстой"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_positive_max_weight
 msgid "Max weight should be a positive number."
-msgstr ""
+msgstr "Жингийн дээд хязгаар нэмэх тоон утгатай байх ёстой."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before_priority
@@ -5266,12 +5403,12 @@ msgstr "Арга"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Min"
-msgstr ""
+msgstr "Доод"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr ""
+msgstr "Доод тоо хэмжээ"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -5345,7 +5482,7 @@ msgstr "Хөдөлгөөн"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Хөдөлгөөний шинжилгээ"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -5357,8 +5494,8 @@ msgstr "Хөдөлгөөний түүх"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
 msgid ""
-"Moves created through this orderpoint will be put in this procurement group."
-" If none is given, the moves generated by stock rules will be grouped into "
+"Moves created through this orderpoint will be put in this procurement group. "
+"If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
 msgstr ""
 "Энэхүү дахин захиалах дүрмийн дагуу үүсч буй нөхөн дүүргэх хөдөлгөөн нь уг "
@@ -5394,8 +5531,8 @@ msgstr "Миний ажилбарын эцсийн огноо"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid ""
-"My Company (Chicago) undertakes to do its best to supply performant services"
-" in due time in accordance with the agreed timeframes. However, none of its "
+"My Company (Chicago) undertakes to do its best to supply performant services "
+"in due time in accordance with the agreed timeframes. However, none of its "
 "obligations can be considered as being an obligation to achieve results. My "
 "Company (Chicago) cannot under any circumstances, be required by the client "
 "to appear as a third party in the context of any claim for damages filed "
@@ -5600,7 +5737,7 @@ msgstr "Одоогоор гүйлгээ алга. Шинэ шилжүүлэг ү
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Цувралын дугаар үүсгэх бараа олдсонгүй."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5639,7 +5776,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"\"%(product)s\" байрлалд \"%(location)s\" барааны хэрэгцээг хангах ямар нэг дүрэм тодорхойлогдоогүй байна.\n"
+"\"%(product)s\" байрлалд \"%(location)s\" барааны хэрэгцээг хангах ямар нэг "
+"дүрэм тодорхойлогдоогүй байна.\n"
 "Чиглэлийн тохиргоог шалгана уу."
 
 #. module: stock
@@ -5677,7 +5815,7 @@ msgstr "Хэвийн"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 msgid "Not Available"
-msgstr "Нөөцгүй"
+msgstr "Хүрэлцээгүй"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -5769,9 +5907,12 @@ msgstr "10-р сар"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid ""
-"Odoo opens a PDF preview by default. If you (Enterprise users only) want to print instantly,\n"
-"                                        install the IoT App on a computer that is on the same local network as the\n"
-"                                        barcode operator and configure the routing of the reports.\n"
+"Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
+"print instantly,\n"
+"                                        install the IoT App on a computer "
+"that is on the same local network as the\n"
+"                                        barcode operator and configure the "
+"routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
 
@@ -5812,8 +5953,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Гарт буй нөөц гэдэг бол одоогоор ямар нэг захиалганд гаргахаар товлогдоогүй,"
-" бодит нөөц бөгөөд барааны үндсэн хэмжих нэгжээр илэрхийлэгддэг."
+"Гарт буй нөөц гэдэг бол одоогоор ямар нэг захиалганд гаргахаар товлогдоогүй, "
+"бодит нөөц бөгөөд барааны үндсэн хэмжих нэгжээр илэрхийлэгддэг."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -5877,7 +6018,7 @@ msgstr "Энэ үйлдэл зөвшөөрөгдөөгүй"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
 msgid "Operation type"
-msgstr ""
+msgstr "Ажиллагааны төрөл"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -6025,8 +6166,8 @@ msgid ""
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date, My Company (Chicago) reserves the right to "
 "request a fixed interest payment amounting to 10% of the sum remaining due. "
-"My Company (Chicago) will be authorized to suspend any provision of services"
-" without prior warning in the event of late payment."
+"My Company (Chicago) will be authorized to suspend any provision of services "
+"without prior warning in the event of late payment."
 msgstr ""
 
 #. module: stock
@@ -6288,8 +6429,10 @@ msgstr "Савлагаа"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
 msgid ""
-"Packages are usually created via transfers (during pack operation) and can contain different products.\n"
-"                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
+"Packages are usually created via transfers (during pack operation) and can "
+"contain different products.\n"
+"                Once created, the whole package can be moved at once, or "
+"products can be unpacked and moved as single units again."
 msgstr ""
 
 #. module: stock
@@ -6380,7 +6523,7 @@ msgstr "Харилцагчийн хаяг"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 msgid "Physical Inventory"
-msgstr "Физик агуулах"
+msgstr "Тооллого"
 
 #. module: stock
 #. odoo-python
@@ -6471,7 +6614,7 @@ msgstr "Хоцролттой"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Please create a warehouse for company %s."
-msgstr ""
+msgstr "%s компанид зориулж агуулах үүсгэнэ үү."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -6527,18 +6670,18 @@ msgstr "Хэвлэх"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr ""
+msgstr "Цувралын дугаарыг GS1 баркод хэлбэрээр хэвлэх"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr ""
+msgstr "Цувралын дугаарыг GS1 баркод хэлбэрээр хэвлэх"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 msgid "Print Label"
-msgstr ""
+msgstr "Шошго хэвлэх"
 
 #. module: stock
 #. odoo-javascript
@@ -6666,12 +6809,12 @@ msgstr "Бараа"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability
 msgid "Product Availability"
-msgstr ""
+msgstr "Барааны боломжит нөөц"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__product_capacity_ids
 msgid "Product Capacity"
-msgstr ""
+msgstr "Барааны багтаамж"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
@@ -6694,7 +6837,7 @@ msgstr "Барааны ангилал"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
 msgid "Product Display Name"
-msgstr ""
+msgstr "Барааны дэлгэрэнгүй нэр"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -6709,13 +6852,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_product_product_view
 msgid "Product Label Report"
-msgstr ""
+msgstr "Барааны шошго"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Product Labels"
-msgstr ""
+msgstr "Барааны шошго"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -6753,7 +6896,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Барааны тоо хэмжээ шинэлэгдсэн"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -6816,7 +6959,7 @@ msgstr "Барааны хувилбар"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "Барааны баркод"
 
 #. module: stock
 #. odoo-python
@@ -6858,7 +7001,7 @@ msgstr "Үйлдвэрлэлийн байрлал"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Production Locations"
-msgstr ""
+msgstr "Үйлдвэрлэлийн байрлал"
 
 #. module: stock
 #. odoo-python
@@ -6879,7 +7022,7 @@ msgstr "Бараа"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability_state
 msgid "Products Availability State"
-msgstr ""
+msgstr "Барааны боломжит нөөцийн төлөв"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__priority
@@ -6887,12 +7030,13 @@ msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
 msgstr ""
+"Барааны нөөц нь хамгийн өндөр урьтамжтай шилжүүлгэнд түрүүлж захиалагдана."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Products: %(location)s"
-msgstr ""
+msgstr "Бараа: %(location)s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__propagate
@@ -7166,27 +7310,42 @@ msgstr "Барааны үндсэн хэмжих нэгжээрх тоо хэм�
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
 msgid ""
 "Quantity of planned incoming products.\n"
-"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with "
+"'internal' type."
 msgstr ""
 "Орлогод авахаар төлөвлөгдсөн барааны тоо хэмжээ.\n"
-"Хэрэв context дотор Хадгалалтын байрлал заагдсан байвал тухайн байрлал дотор бүх дэд байрлалуудад орлого авахаар төлөвлөсөн бүх тоо хэмжээг тооцоолно.\n"
-"Хэрэв context дотор Агуулах заагдсан байвал тухайн агуулахын бүх хадгалалтын байрлал, тэдгээрийг дэд байрлалуудад орлого авахаар төлөвлөсөн бүх тоо хэмжээг тооцоолно.\n"
-"Context дотор ямар нэг байрлал, агуулах заагаагүй бол 'дотоод' төрөлтэй бүх байрлалуудын төлөвлөсөн орлогыг тооцоолно."
+"Хэрэв context дотор Хадгалалтын байрлал заагдсан байвал тухайн байрлал дотор "
+"бүх дэд байрлалуудад орлого авахаар төлөвлөсөн бүх тоо хэмжээг тооцоолно.\n"
+"Хэрэв context дотор Агуулах заагдсан байвал тухайн агуулахын бүх хадгалалтын "
+"байрлал, тэдгээрийг дэд байрлалуудад орлого авахаар төлөвлөсөн бүх тоо "
+"хэмжээг тооцоолно.\n"
+"Context дотор ямар нэг байрлал, агуулах заагаагүй бол 'дотоод' төрөлтэй бүх "
+"байрлалуудын төлөвлөсөн орлогыг тооцоолно."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
 msgid ""
 "Quantity of planned outgoing products.\n"
-"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods leaving this "
+"Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock "
+"Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Зарлагад гаргахаар төлөвлөгдсөн барааны тоо хэмжээ.\n"
-"Хэрэв context дотор Хадгалалтын байрлал заагдсан байвал тухайн байрлал дотор бүх дэд байрлалуудаас зарлага гаргахаар төлөвлөсөн бүх тоо хэмжээг тооцоолно.\n"
-"Хэрэв context дотор Агуулах заагдсан байвал тухайн агуулахын бүх хадгалалтын байрлал, тэдгээрийг дэд байрлалуудаас зарлага гаргахаар төлөвлөсөн бүх тоо хэмжээг тооцоолно.\n"
-"Context дотор ямар нэг байрлал, агуулах заагаагүй бол 'дотоод' төрөлтэй бүх байрлалуудын төлөвлөсөн зарлагыг тооцоолно."
+"Хэрэв context дотор Хадгалалтын байрлал заагдсан байвал тухайн байрлал дотор "
+"бүх дэд байрлалуудаас зарлага гаргахаар төлөвлөсөн бүх тоо хэмжээг "
+"тооцоолно.\n"
+"Хэрэв context дотор Агуулах заагдсан байвал тухайн агуулахын бүх хадгалалтын "
+"байрлал, тэдгээрийг дэд байрлалуудаас зарлага гаргахаар төлөвлөсөн бүх тоо "
+"хэмжээг тооцоолно.\n"
+"Context дотор ямар нэг байрлал, агуулах заагаагүй бол 'дотоод' төрөлтэй бүх "
+"байрлалуудын төлөвлөсөн зарлагыг тооцоолно."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -7210,7 +7369,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Quantity or Reserved Quantity should be set."
-msgstr ""
+msgstr "Тоо хэмжээ эсвэл нөөцлөгдсөн тоо заавал бөглөгдөх ёстой."
 
 #. module: stock
 #. odoo-javascript
@@ -7329,7 +7488,7 @@ msgstr "Бэлтгэн нийлүүлэгч"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
 msgid "Receive and Store (1 step)"
-msgstr ""
+msgstr "Хүлээн аваад хадгалах (1 алхам)"
 
 #. module: stock
 #. odoo-python
@@ -7352,12 +7511,12 @@ msgstr "3 алхамтайгаар хүлээн авах (оролт + чана�
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive then Store (2 steps)"
-msgstr ""
+msgstr "Хүлээн аваад хадгалах (2 алхам)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr ""
+msgstr "Хүлээн авах, чанар шалгах, тэгээд хадгалах (3 алхам)"
 
 #. module: stock
 #. odoo-python
@@ -7387,7 +7546,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid ""
 "Reduce stockouts with alerts, barcode app, replenishment propositions,\n"
-"                        locations management traceability, quality control, etc."
+"                        locations management traceability, quality control, "
+"etc."
 msgstr ""
 
 #. module: stock
@@ -7564,6 +7724,7 @@ msgstr ""
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
 msgstr ""
+"%(product)s барааг %(warehouse)s агуулах дээр нөөц ханган дүүргэх мэдээлэл"
 
 #. module: stock
 #. odoo-python
@@ -7634,8 +7795,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__packaging_reserve_method
 msgid ""
-"Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
-"Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved"
+"Reserve Only Full Packagings: will not reserve partial packagings. If "
+"customer orders 2 pallets of 1000 units each and you only have 1600 in "
+"stock, then only 1000 will be reserved\n"
+"Reserve Partial Packagings: allow reserving partial packagings. If customer "
+"orders 2 pallets of 1000 units each and you only have 1600 in stock, then "
+"1600 will be reserved"
 msgstr ""
 
 #. module: stock
@@ -7657,7 +7822,7 @@ msgstr "Нөөцлөгдсөн"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
 msgid "Reserved Packaging Quantity"
-msgstr ""
+msgstr "Нөөцлөгдсөн савалгааны тоо"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -7774,8 +7939,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package__package_use
 msgid ""
-"Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
-"        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
+"Reusable boxes are used for batch picking and emptied afterwards to be "
+"reused. In the barcode application, scanning a reusable box will add the "
+"products in this box.\n"
+"        Disposable boxes aren't reused, when scanning a disposable box in "
+"the barcode application, the contained products are added to the transfer."
 msgstr ""
 
 #. module: stock
@@ -7838,11 +8006,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__warehouseinfo_ids
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
 msgid ""
-"Routes will be created for these resupply warehouses and you can select them"
-" on products and product categories"
+"Routes will be created for these resupply warehouses and you can select them "
+"on products and product categories"
 msgstr ""
-"Эдгээр нөхөн дүүргэлт хийх агуулахуудын хүрээнд нөхөн дүүргэлтийн дамжлагууд"
-" үүснэ. Мөн та үүссэн дамжлагуудыг бараа болон барааны ангилал дээр сонгож "
+"Эдгээр нөхөн дүүргэлт хийх агуулахуудын хүрээнд нөхөн дүүргэлтийн дамжлагууд "
+"үүснэ. Мөн та үүссэн дамжлагуудыг бараа болон барааны ангилал дээр сонгож "
 "ашиглах боломжтой."
 
 #. module: stock
@@ -7850,8 +8018,8 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
-"%(route_company)s."
+"Rule %(rule)s belongs to %(rule_company)s while the route belongs to %"
+"(route_company)s."
 msgstr ""
 
 #. module: stock
@@ -7958,8 +8126,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
-"Боловсруулах шаардлагатай хүргэлтийн эхний хэсэгийн товлогдсон цаг. Энэ утга"
-" тохируулснаар бүх барааны хөдөлгөөнд таамагласан огноог тааруулна."
+"Боловсруулах шаардлагатай хүргэлтийн эхний хэсэгийн товлогдсон цаг. Энэ утга "
+"тохируулснаар бүх барааны хөдөлгөөнд таамагласан огноог тааруулна."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_scrap
@@ -8018,7 +8186,8 @@ msgstr "Хаягдал болгосон"
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
 msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
-"                end up in a scrap location that can be used for reporting purpose."
+"                end up in a scrap location that can be used for reporting "
+"purpose."
 msgstr ""
 "Барааг хаягдал болгох нь таны үлдэгдлийг бууруулна. Хаягдлын байрлал дээр "
 "очсон барааны тоо хэмжээгээр хаягдлын тайлан боловсруулж болно."
@@ -8089,8 +8258,7 @@ msgstr "Худалдан авах болон борлуулахдаа ялгаа
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
-"Send an automatic confirmation SMS Text Message when Delivery Orders are "
-"done"
+"Send an automatic confirmation SMS Text Message when Delivery Orders are done"
 msgstr ""
 
 #. module: stock
@@ -8157,15 +8325,16 @@ msgstr "Цуврал дугаарлалт"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid ""
-"Serial number (%(serial_number)s) already exists in location(s): "
-"%(location_list)s. Please correct the serial number encoded."
+"Serial number (%(serial_number)s) already exists in location(s): %"
+"(location_list)s. Please correct the serial number encoded."
 msgstr ""
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n"
+"Serial number (%(serial_number)s) is not located in %(source_location)s, but "
+"is located in location(s): %(other_locations)s.\n"
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
@@ -8174,7 +8343,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n"
+"Serial number (%(serial_number)s) is not located in %(source_location)s, but "
+"is located in location(s): %(other_locations)s.\n"
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
@@ -8203,19 +8373,24 @@ msgstr "Агуулахын дамжлага тохируулах"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
 msgid ""
-"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"Set a specific removal strategy that will be used regardless of the source "
+"location for this product category.\n"
 "\n"
 "FIFO: products/lots that were stocked first will be moved out first.\n"
 "LIFO: products/lots that were stocked last will be moved out first.\n"
-"Closest location: products/lots closest to the target location will be moved out first.\n"
-"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
-"Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
+"Closest location: products/lots closest to the target location will be moved "
+"out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first "
+"(the availability of this method depends on the \"Expiration Dates\" "
+"setting).\n"
+"Least Packages: FIFO but with the least number of packages possible when "
+"there are several packages containing the same product."
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr ""
+msgstr "Цувралын дугаар дээр дуусах огноог оруулна уу"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8235,7 +8410,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "Гарт буй тоог оноох"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -8287,8 +8462,8 @@ msgstr "Хүргэлтийн жин"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
-"Shipping connectors allow to compute accurate shipping costs, print shipping"
-" labels and request carrier picking at your warehouse to ship to the "
+"Shipping connectors allow to compute accurate shipping costs, print shipping "
+"labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
 "Хүргэлтийн үйлчилгээтэй холболт хийснээр хүргэлтийн нэмэлт өртөгийг "
@@ -8359,7 +8534,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_on_hand_qty_status_button
 msgid "Show On Hand Qty Status Button"
-msgstr ""
+msgstr "Гарт буй тоо төлвийн товчыг харуулах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__is_favorite
@@ -8592,7 +8767,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Дотоод хөдөлгөөний замд яваа нөөц"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8750,7 +8925,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
 msgid "Stock warehouse replenishment option"
-msgstr ""
+msgstr "Агуулахын нөөц ханган дүүргэх сонголт"
 
 #. module: stock
 #. odoo-python
@@ -8809,8 +8984,8 @@ msgstr ""
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
 msgid ""
-"Store and retrieve information regarding every Lot/Serial Number (condition,"
-" product info, ...)."
+"Store and retrieve information regarding every Lot/Serial Number (condition, "
+"product info, ...)."
 msgstr ""
 
 #. module: stock
@@ -8873,9 +9048,14 @@ msgstr "Нөөцөөс авна, боломжгүй бол өөр дүрмээр
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
 msgid ""
-"Take From Stock: the products will be taken from the available stock of the source location.\n"
-"Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
-"Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
+"Take From Stock: the products will be taken from the available stock of the "
+"source location.\n"
+"Trigger Another Rule: the system will try to find a stock rule to bring the "
+"products in the source location. The available stock will be ignored.\n"
+"Take From Stock, if Unavailable, Trigger Another Rule: the products will be "
+"taken from the available stock of the source location.If there is no stock "
+"available, the system will try to find a  rule to bring the products in the "
+"source location."
 msgstr ""
 
 #. module: stock
@@ -8883,7 +9063,8 @@ msgstr ""
 msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
-msgstr "\"Үйлдвэрлэлийн карт\" товчлуурыг дэлгэцэнд харуулах эсэхийг тодорхойлно."
+msgstr ""
+"\"Үйлдвэрлэлийн карт\" товчлуурыг дэлгэцэнд харуулах эсэхийг тодорхойлно."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -8913,8 +9094,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
 msgid ""
-"The 'Manual Operation' value will create a stock move after the current one."
-" With 'Automatic No Step Added', the location is replaced in the original "
+"The 'Manual Operation' value will create a stock move after the current one. "
+"With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
 "'Гар ажиллагаа' утга нь тухайн хөдөлгөөнийг дуусгавар болоход өөр нэг "
@@ -8939,9 +9120,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n"
+"The Serial Number (%(serial_number)s) is already used in location(s): %"
+"(location_list)s.\n"
 "\n"
-"Is this expected? For example, this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
+"Is this expected? For example, this can occur if a delivery operation is "
+"validated before its corresponding receipt operation is validated. In this "
+"case the issue will be solved automatically once all steps are completed. "
+"Otherwise, the serial number should be corrected to prevent inconsistent "
+"data."
 msgstr ""
 
 #. module: stock
@@ -8972,7 +9158,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid ""
-"The combination of lot/serial number and product must be unique within a company including when no company is defined.\n"
+"The combination of lot/serial number and product must be unique within a "
+"company including when no company is defined.\n"
 "The following combinations contain duplicates:\n"
 "%(error_lines)s"
 msgstr ""
@@ -9029,7 +9216,7 @@ msgstr "Таамаглалт нөөц"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "The inter-warehouse transfers have been generated"
-msgstr ""
+msgstr "Агуулах хоорондын хөдөлгөөний баримт үүслээ."
 
 #. module: stock
 #. odoo-python
@@ -9076,13 +9263,17 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid ""
 "The operation type system allows you to assign each stock\n"
-"            operation a specific type which will alter its views accordingly.\n"
-"            On the operation type you could e.g. specify if packing is needed by default,\n"
+"            operation a specific type which will alter its views "
+"accordingly.\n"
+"            On the operation type you could e.g. specify if packing is "
+"needed by default,\n"
 "            if it should show the customer."
 msgstr ""
 "Ажиллагааны төрлийн систем нь агуулахын үйлдэл бүрт тодорхой төрөл оноож, \n"
-"              түүнд тохирсон харагдах байдал болон үйлдлийг өөрчлөх боломж олгодог.\n"
-"Жишээлбэл, тухайн төрлөөс хамааран анхдагчаар савлах эсэх, эсвэл харилцагчийг харуулах эсэхийг тохируулж болно."
+"              түүнд тохирсон харагдах байдал болон үйлдлийг өөрчлөх боломж "
+"олгодог.\n"
+"Жишээлбэл, тухайн төрлөөс хамааран анхдагчаар савлах эсэх, эсвэл "
+"харилцагчийг харуулах эсэхийг тохируулж болно."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
@@ -9124,7 +9315,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid ""
 "The quantities selected do not all belong to the same location.\n"
-"                    You may not assign them a package without moving them to a common location."
+"                    You may not assign them a package without moving them to "
+"a common location."
 msgstr ""
 
 #. module: stock
@@ -9149,8 +9341,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
-"Хүссэн ажиллагааг боловсруулах боломжгүй. Учир нь `product_uom_qty` талбарын"
-" оронд `product_qty` талбарт утга оноолт хийх гэж байна."
+"Хүссэн ажиллагааг боловсруулах боломжгүй. Учир нь `product_uom_qty` талбарын "
+"оронд `product_qty` талбарт утга оноолт хийх гэж байна."
 
 #. module: stock
 #. odoo-python
@@ -9178,7 +9370,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
 msgid "The short name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Компани хэмжээнд агуулахын богино нэрлэлт үл давхардах ёстой!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
@@ -9246,11 +9438,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Энэхүү нэмэгдэл нь бараан дээр нийлүүлэгчээс үйлчлүүлэгч рүү шууд хүргэлт "
 "хийх чиглэл тохируулах боломжыг олгоно. Шууд хүргэлт хийхээр тохируулагдсан "
@@ -9278,8 +9470,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_rule__name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
-"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн "
-"байдаг."
+"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн байдаг."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_dest_id
@@ -9292,8 +9483,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
 msgid ""
-"This is the default source location when this operation is manually created."
-" However, it is possible to change it afterwards or that the routes use "
+"This is the default source location when this operation is manually created. "
+"However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
 
@@ -9340,7 +9531,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid ""
 "This menu gives you the full traceability of inventory\n"
-"                operations on a specific product. You can filter on the product\n"
+"                operations on a specific product. You can filter on the "
+"product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
 "Энэ меню нь тухайлсан барааны бүх ажилбарыг бүрэн мөшгиж хөтлүүлдэг. Бараан "
@@ -9349,8 +9541,10 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid ""
-"This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                    You can filter on the product to see all the past movements for the product."
+"This menu gives you the full traceability of inventory operations on a "
+"specific product.\n"
+"                    You can filter on the product to see all the past "
+"movements for the product."
 msgstr ""
 
 #. module: stock
@@ -9364,13 +9558,17 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
+"Энэ тайлбар нь дотоод хөдөлгөөний баримт дээр нэмэлт мэдээлэл болж очино "
+"(ж.ш агуулахын яг аль хэсгээс цуглуулах гэх мэт)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid ""
-"This note is added to receipt orders (e.g. where to store the product in the"
-" warehouse)."
+"This note is added to receipt orders (e.g. where to store the product in the "
+"warehouse)."
 msgstr ""
+"Энэ тайлбар нь агуулахын орлогын баримтанд нэмэлт мэдээлэл болж очино (ж.ш "
+"агуулахын аль хэсэгт байршуулах гэх мэт.)."
 
 #. module: stock
 #. odoo-python
@@ -9378,8 +9576,7 @@ msgstr ""
 msgid ""
 "This product has been used in at least one inventory movement. It is not "
 "advised to change the Product Type since it can lead to inconsistencies. A "
-"better solution could be to archive the product and create a new one "
-"instead."
+"better solution could be to archive the product and create a new one instead."
 msgstr ""
 
 #. module: stock
@@ -9394,8 +9591,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid ""
-"This product's company cannot be changed as long as there are stock moves of"
-" it belonging to another company."
+"This product's company cannot be changed as long as there are stock moves of "
+"it belonging to another company."
 msgstr ""
 
 #. module: stock
@@ -9422,9 +9619,12 @@ msgstr ""
 msgid ""
 "This sequence prefix is already being used by another operation type. It is "
 "recommended that you select a unique prefix to avoid issues and/or repeated "
-"reference values or assign the existing reference sequence to this operation"
-" type."
+"reference values or assign the existing reference sequence to this operation "
+"type."
 msgstr ""
+"Энэ дугаарлалтын угтвар нь аль хэдийнээ өөр ажиллагааны төрөлд ашиглагдсан "
+"байна. Тиймээс та баримтын дугаар давхардаж үүсэхээс сэргийлэх зорилгоор уг "
+"ажиллагааны төрөлд өмнө нь ашиглагдаагүй ямар нэг шинэ угтвар оноож өгнө үү."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9462,7 +9662,8 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid ""
-"Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>\n"
+"Those products you added are tracked but lots/serials were not defined. Once "
+"applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
 
@@ -9516,7 +9717,7 @@ msgstr "Тоолохоор төлөвлөсөн"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Deliver"
-msgstr ""
+msgstr "Хүргэх"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_graph
@@ -9574,7 +9775,7 @@ msgstr "Боловсруулах"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Хүлээн авах"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9622,7 +9823,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Free to Use"
-msgstr ""
+msgstr "Нийт чөлөөтэй нөөц"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9633,7 +9834,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total On Hand"
-msgstr ""
+msgstr "Нийт гарт буй"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9648,7 +9849,7 @@ msgstr "Нийт тоо хэмжээ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total Reserved"
-msgstr ""
+msgstr "Нийт нөөцлөгдсөн"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__total_route_ids
@@ -9659,8 +9860,8 @@ msgstr "Бүх дамжлаг"
 #: model:ir.model.fields,help:stock.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This "
+"is the weight used to compute the cost of the shipping."
 msgstr ""
 
 #. module: stock
@@ -9694,26 +9895,34 @@ msgstr "Мөшгөлтийн Тайлан"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Нөөц мөшгилт"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
 msgid ""
-"Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
-" Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
+"Track following dates on lots & serial numbers: best before, removal, end of "
+"life, alert. \n"
+" Such dates are set automatically at lot/serial number creation based on "
+"values set on the product (in days)."
 msgstr ""
-"Цувралын дугаар & сериал дугаар дээр дараах огноонуудыг хөтөлнө: аюулгүйн эцсийн огноо, устгах огноо, хугацаа дуусах огноо, анхаарах огноо. \n"
-" Эдгээр огноонууд цуврал/сериал дугаарын бүртгэл үүсгэх үед барааны мэдээлэлд тохируулсаны (тохируулсан өдрийн тоо) дагуу автоматаар тэмдэглэгдэнэ."
+"Цувралын дугаар & сериал дугаар дээр дараах огноонуудыг хөтөлнө: аюулгүйн "
+"эцсийн огноо, устгах огноо, хугацаа дуусах огноо, анхаарах огноо. \n"
+" Эдгээр огноонууд цуврал/сериал дугаарын бүртгэл үүсгэх үед барааны "
+"мэдээлэлд тохируулсаны (тохируулсан өдрийн тоо) дагуу автоматаар "
+"тэмдэглэгдэнэ."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
-"Track following dates on lots & serial numbers: best before, removal, end of"
-" life, alert. Such dates are set automatically at lot/serial number creation"
-" based on values set on the product (in days)."
+"Track following dates on lots & serial numbers: best before, removal, end of "
+"life, alert. Such dates are set automatically at lot/serial number creation "
+"based on values set on the product (in days)."
 msgstr ""
-"Цувралын дугаар & сериал дугаар дээр дараах огноонуудыг хөтөлнө: аюулгүйн эцсийн огноо, устгах огноо, хугацаа дуусах огноо, анхаарах огноо. \n"
-" Эдгээр огноонууд цуврал/сериал дугаарын бүртгэл үүсгэх үед барааны мэдээлэлд тохируулсаны (тохируулсан өдрийн тоо) дагуу автоматаар тэмдэглэгдэнэ."
+"Цувралын дугаар & сериал дугаар дээр дараах огноонуудыг хөтөлнө: аюулгүйн "
+"эцсийн огноо, устгах огноо, хугацаа дуусах огноо, анхаарах огноо. \n"
+" Эдгээр огноонууд цуврал/сериал дугаарын бүртгэл үүсгэх үед барааны "
+"мэдээлэлд тохируулсаны (тохируулсан өдрийн тоо) дагуу автоматаар "
+"тэмдэглэгдэнэ."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9863,6 +10072,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_type_code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Type of Operation"
 msgstr "Ажилбарын төрөл"
@@ -9875,11 +10085,13 @@ msgstr "Бичлэг дээрх асуудал бүхий ажилбарын т�
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "UPS холболт"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "USPS холболт"
 
@@ -9893,8 +10105,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"Unavailable Serial numbers. Please correct the serial numbers encoded: "
-"%(serial_numbers_to_locations)s"
+"Unavailable Serial numbers. Please correct the serial numbers encoded: %"
+"(serial_numbers_to_locations)s"
 msgstr ""
 
 #. module: stock
@@ -9948,7 +10160,7 @@ msgstr "Хэмжих нэгж"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
 msgid "Unit of Measure Name"
-msgstr ""
+msgstr "Хэмжих нэгжийн нэр"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -9985,8 +10197,8 @@ msgstr "Үл мэдэгдэх баглаа"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid ""
-"Unless previously specified by the source document, this will be the default"
-" picking policy for this operation type."
+"Unless previously specified by the source document, this will be the default "
+"picking policy for this operation type."
 msgstr ""
 
 #. module: stock
@@ -10057,13 +10269,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Update Quantity"
-msgstr ""
+msgstr "Тоо хэмжээг шинэчлэх"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid ""
-"Updating the location of this transfer will result in unreservation of the currently assigned items. An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n"
+"Updating the location of this transfer will result in unreservation of the "
+"currently assigned items. An attempt to reserve items at the new location "
+"will be made and the link with preceding transfers will be discarded.\n"
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
@@ -10107,7 +10321,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Used by"
-msgstr ""
+msgstr "Ашиглагдаж буй"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
@@ -10291,12 +10505,12 @@ msgstr "Агуулахын тохиргоо"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_domain_ids
 msgid "Warehouse Domain"
-msgstr ""
+msgstr "Агуулахын шүүлт"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Warehouse Location"
-msgstr ""
+msgstr "Агуулахын байрлал"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -10306,7 +10520,7 @@ msgstr "Агуулахын менежмент"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__warehouse_view_ids
 msgid "Warehouse View"
-msgstr ""
+msgstr "Агуулахын харагдац"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_warehouse_id
@@ -10316,7 +10530,7 @@ msgstr "Түгээх Агуулах"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse view location"
-msgstr ""
+msgstr "Агуулахын толгой байрлал"
 
 #. module: stock
 #. odoo-python
@@ -10328,7 +10542,7 @@ msgstr "Агуулахын дамжлага"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 msgid "Warehouse:"
-msgstr ""
+msgstr "Агуулах:"
 
 #. module: stock
 #. odoo-javascript
@@ -10492,17 +10706,17 @@ msgstr "Бараа энэ байрлалд ирвэл"
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"When products are needed in <b>%(destination)s</b>, <br> "
-"<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need. %(suffix)s"
+"When products are needed in <b>%(destination)s</b>, <br> <b>%(operation)s</"
+"b> are created from <b>%(source_location)s</b> to fulfill the need. %"
+"(suffix)s"
 msgstr ""
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
-"When products arrive in <b>%(source_location)s</b>, <br> "
-"<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
+"When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
+"b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
 
 #. module: stock
@@ -10522,9 +10736,9 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid ""
-"When the virtual stock goes below the Min Quantity specified for this field,"
-" Odoo generates a procurement to bring the forecasted quantity above of this"
-" Min Quantity."
+"When the virtual stock goes below the Min Quantity specified for this field, "
+"Odoo generates a procurement to bring the forecasted quantity above of this "
+"Min Quantity."
 msgstr ""
 
 #. module: stock
@@ -10551,7 +10765,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
 msgid ""
 "When validating a transfer:\n"
-" * Ask: users are asked to choose if they want to make a backorder for remaining products\n"
+" * Ask: users are asked to choose if they want to make a backorder for "
+"remaining products\n"
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
@@ -10607,8 +10822,10 @@ msgstr "Өчигдөр"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid ""
-"You are about to move quantities in a package without moving the full package.\n"
-"                    Those quantities will be removed from the following package(s):"
+"You are about to move quantities in a package without moving the full "
+"package.\n"
+"                    Those quantities will be removed from the following "
+"package(s):"
 msgstr ""
 
 #. module: stock
@@ -10637,8 +10854,8 @@ msgstr ""
 #: code:addons/stock/models/stock_lot.py:0
 msgid ""
 "You are not allowed to create a lot or serial number with this operation "
-"type. To change this, go on the operation type and tick the box \"Create New"
-" Lots/Serial Numbers\"."
+"type. To change this, go on the operation type and tick the box \"Create New "
+"Lots/Serial Numbers\"."
 msgstr ""
 
 #. module: stock
@@ -10663,8 +10880,10 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid ""
 "You can define here the main routes that run through\n"
-"                your warehouses and that define the flows of your products. These\n"
-"                routes can be assigned to a product, a product category or be fixed\n"
+"                your warehouses and that define the flows of your products. "
+"These\n"
+"                routes can be assigned to a product, a product category or "
+"be fixed\n"
 "                on procurement or sales order."
 msgstr ""
 "Энд та агуулахын хүрээнд ашиглагдах үндсэн дамжлагуудыг тодорхойлох "
@@ -10689,15 +10908,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid ""
-"You can not change the inventory tracking of a product that was already "
-"used."
+"You can not change the inventory tracking of a product that was already used."
 msgstr ""
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
-msgid ""
-"You can not create a snoozed orderpoint that is not manually triggered."
+msgid "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
 
 #. module: stock
@@ -10741,6 +10958,8 @@ msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
 msgstr ""
+"Та зөвхөн нэг компанид харьяалагдах байрлалууд дээрх нэмэх утга бүхий "
+"үлдэгдлээс хөдөлгөөн хийх боломжтой."
 
 #. module: stock
 #. odoo-python
@@ -10760,8 +10979,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/res_config_settings.py:0
 msgid ""
-"You can't deactivate the multi-location if you have more than once warehouse"
-" by company"
+"You can't deactivate the multi-location if you have more than once warehouse "
+"by company"
 msgstr ""
 
 #. module: stock
@@ -10774,9 +10993,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
-"You cannot archive location %(location)s because it is used by warehouse "
-"%(warehouse)s"
+"You cannot archive location %(location)s because it is used by warehouse %"
+"(warehouse)s"
 msgstr ""
+"Та %(location)s байрлалыг архивлах боломжгүй учир нь энэ байрлал нь  %"
+"(warehouse)s агуулахад ашиглагдаж байна."
 
 #. module: stock
 #. odoo-python
@@ -10803,16 +11024,15 @@ msgstr "Дууссан эсвэл цуцалсан шилжүүлгийн тов
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You cannot change the UoM for a stock move that has been set to 'Done'."
+msgid "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid ""
-"You cannot change the company of a lot/serial number currently in a location"
-" belonging to another company."
+"You cannot change the company of a lot/serial number currently in a location "
+"belonging to another company."
 msgstr ""
 
 #. module: stock
@@ -10865,8 +11085,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
-"You cannot move the same package content more than once in the same transfer"
-" or split the same package into two location."
+"You cannot move the same package content more than once in the same transfer "
+"or split the same package into two location."
 msgstr ""
 
 #. module: stock
@@ -10939,8 +11159,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid ""
-"You cannot validate a transfer if no quantities are reserved. To force the "
-"transfer, encode quantities."
+"You cannot validate a transfer if no quantities are reserved, or if only non-"
+"reserved moves are picked.To force the transfer, encode quantities."
 msgstr ""
 
 #. module: stock
@@ -10971,15 +11191,16 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
-"Уг бараа(ууд) нь одоогоор цувралын дугааргүй ямар нэг хэмээний үлдэгдэлтэй байна. \n"
+"Уг бараа(ууд) нь одоогоор цувралын дугааргүй ямар нэг хэмээний үлдэгдэлтэй "
+"байна. \n"
 "Та тооллого хийх замаар тэдгээр нөөцөнд цувралын дугаар оноох шаардлагатай."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid ""
-"You have to select a product unit of measure that is in the same category as"
-" the default unit of measure of the product"
+"You have to select a product unit of measure that is in the same category as "
+"the default unit of measure of the product"
 msgstr ""
 
 #. module: stock
@@ -11054,8 +11275,10 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid ""
-"You'll find here smart replenishment propositions based on inventory forecasts.\n"
-"            Choose the quantity to buy or manufacture and launch orders in a click.\n"
+"You'll find here smart replenishment propositions based on inventory "
+"forecasts.\n"
+"            Choose the quantity to buy or manufacture and launch orders in a "
+"click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 
@@ -11153,7 +11376,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
-msgstr ""
+msgstr "ж.ш. Төв агуулах"
 
 #. module: stock
 #. odoo-javascript
@@ -11279,7 +11502,7 @@ msgstr "Агуулахын үлдэгдлийн тайлан график"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "reserved"
-msgstr ""
+msgstr "нөөцлөгдсөн"
 
 #. module: stock
 #. odoo-javascript

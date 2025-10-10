@@ -428,6 +428,7 @@ test("existing record has an expand button", async () => {
                 actionRequest.res_model,
                 actionRequest.type,
                 actionRequest.views,
+                actionRequest.context,
             ]);
         },
     });
@@ -435,6 +436,7 @@ test("existing record has an expand button", async () => {
     getService("dialog").add(FormViewDialog, {
         resModel: "partner",
         resId: 1,
+        context: {key: "val"}
     });
     await animationFrame();
     expect(".o_dialog .o_form_view").toHaveCount(1);
@@ -442,7 +444,18 @@ test("existing record has an expand button", async () => {
     await fieldInput("foo").edit("hola");
     await click(".o_dialog .modal-header .o_expand_button");
     await animationFrame();
-    expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
+    expect.verifySteps([
+        "save",
+        [
+            1,
+            "partner",
+            "ir.actions.act_window",
+            [[false, "form"]],
+            {
+                key: "val",
+            },
+        ],
+    ]);
 });
 
 test("expand button with save and new", async () => {

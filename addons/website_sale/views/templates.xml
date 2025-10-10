@@ -706,8 +706,7 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="opt_wsale_categories"
-                     class="accordion-item">
+                <div t-if="opt_wsale_categories" class="accordion-item d-lg-none">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
                         <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                                 type="button"
@@ -3166,7 +3165,7 @@
         </div>
         <div
             t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
-            class="position-relative d-inline-flex overflow-hidden m-auto w-100"
+            class="position-relative d-inline-flex overflow-hidden m-auto h-100"
         >
             <span t-attf-class="o_ribbon #{ribbon._get_position_class()} z-1"
                   t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
@@ -3175,11 +3174,11 @@
             <div
                 t-field="product_image.image_1920"
                 name="o_img_with_max_suggested_width"
-                class="d-flex align-items-start justify-content-center w-100 oe_unmovable"
+                class="d-flex align-items-start justify-content-center h-100 oe_unmovable"
                 t-options="{
                     'widget': 'image',
                     'preview_image': 'image_1024',
-                    'class': 'oe_unmovable product_detail_img w-100',
+                    'class': 'oe_unmovable product_detail_img mh-100',
                     'alt-field': 'name',
                     'zoom': product_image.can_image_1024_be_zoomed and 'image_1920',
                 }"
@@ -3393,13 +3392,13 @@
 
     <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
         <xpath expr="//div[@id='product_details']" position="inside">
-            <t t-if="any([product[field.name] for field in website.shop_extra_field_ids])">
+            <t t-if="any([product.sudo()[field.name] for field in website.shop_extra_field_ids])">
                 <hr/>
                 <p class="text-muted">
-                    <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product[field.name]'>
+                    <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product.sudo()[field.name]'>
                         <b><t t-esc='field.label'/>: </b>
                         <t t-if='field.field_id.ttype != "binary"'>
-                            <span t-esc='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
+                            <span t-esc='product.sudo()[field.name]' t-options="{'widget': field.field_id.ttype}"/>
                         </t>
                         <t t-else=''>
                             <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>

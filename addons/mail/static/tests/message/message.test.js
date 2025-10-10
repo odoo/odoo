@@ -693,7 +693,7 @@ test("Reaction summary", async () => {
     }
 });
 
-test("Add the same reaction twice from the emoji picker", async () => {
+test("Select already reacted emoji from the emoji picker keeps the reaction on message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -708,9 +708,14 @@ test("Add the same reaction twice from the emoji picker", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-Emoji:contains(😅):eq(0)");
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
     await click("[title='Add a Reaction']");
-    await click(".o-Emoji", { text: "😅" });
+    await click(".o-Emoji:contains(😅):eq(0)");
+    // adding another emoji so that we ensure its rendering also show previous reaction is present on UI
+    await click("[title='Add a Reaction']");
+    await click(".o-Emoji:contains(😯):eq(0)");
+    await contains(".o-mail-MessageReaction", { text: "😯1" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
 
@@ -1239,9 +1244,8 @@ test("Toggle star should update starred counter on all tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(".o-mail-Message [title='Mark as Todo']", { target: env1 });
-    await contains("button", {
-        target: env2,
+    await click(`${env1.selector} .o-mail-Message [title='Mark as Todo']`);
+    await contains(`${env2.selector} button`, {
         text: "Starred",
         contains: [".badge", { text: "1" }],
     });

@@ -27,6 +27,6 @@ class HrWorkEntry(models.Model):
         if not french_part_time_work_entries:
             return res
         for entry in french_part_time_work_entries:
-            if entry.id in res and res[entry.id] == 0:
+            if entry.id in res and res[entry.id] == 0 and entry.date_start and entry.date_stop:
                 res[entry.id] = (entry.date_stop - entry.date_start).seconds/3600
         return res

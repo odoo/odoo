@@ -132,6 +132,62 @@ class TestStructure(TransactionCase):
         with self.assertRaisesRegex(ValidationError, msg):
             test_partner.vat = "2155 ABC 21750017"
 
+    def test_vat_vn(self):
+        test_partner = self.env['res.partner'].create({'name': "DuongDepTrai", 'country_id': self.env.ref('base.vn').id})
+        # Valid vn vat
+        test_partner.vat = "000012345679"  # individual
+        test_partner.vat = "0123457890"  # enterprise
+        test_partner.vat = "0123457890-111"  # branch
+
+        # Test invalid VAT (should raise a ValidationError)
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '00001234567912'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '10123457890'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '0123457890-11134'})
+
+    def test_vat_tw(self):
+        test_partner = self.env["res.partner"].create({"name": "TW Company", "country_id": self.env.ref("base.tw").id})
+
+        for ubn in ['88117254', '12345601', '90183275']:
+            test_partner.vat = ubn
+
+        for ubn in ['88117250', '12345600', '90183272']:
+            with self.assertRaises(ValidationError):
+                test_partner.vat = ubn
+
+    def test_vat_with_el_prefix(self):
+        """Ensure VAT numbers starting with 'EL' are validated correctly as Greek VATs"""
+        partner = self.env['res.partner'].create({
+            'name': 'Greek Company EL',
+            'country_id': self.env.ref('base.gr').id,
+            'vat': 'EL033910442',
+        })
+        vat_country, vat_id_no = partner._split_vat(partner.vat)
+        vat_is_valid = partner.simple_vat_check(vat_country, vat_id_no)
+
+        self.assertTrue(
+            vat_is_valid,
+            f"Expected EL-prefixed VAT ({partner.vat}) to be recognized as valid Greek VAT, "
+            f"but simple_vat_check({vat_country}, {vat_id_no}) returned False."
+        )
+
+    def test_vat_do(self):
+        test_partner = self.env["res.partner"].create({"name": "DO Company", "country_id": self.env.ref("base.do").id})
+        # Valid do vat
+        test_partner.write({"vat": "152-0000706-8"})
+        test_partner.write({"vat": "4-01-00707-1"})
+        # Test invalid VAT (should raise a ValidationError)
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '152-0000706-7'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '10123457890'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '152-0000706-99'})
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):

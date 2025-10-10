@@ -55,7 +55,7 @@ class MyInvoisDocumentPoS(models.Model):
     # --------------------------------
 
     def _compute_linked_order_count(self):
-        for consolidated_invoice in self.filtered('pos_order_ids'):
+        for consolidated_invoice in self:
             consolidated_invoice.linked_order_count = len(consolidated_invoice.pos_order_ids)
 
     @api.depends('pos_order_ids')

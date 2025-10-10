@@ -596,7 +596,7 @@ class MrpProduction(models.Model):
                     if not (bom.operation_ids and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.operation_ids != bom.operation_ids)):
                         continue
                     for operation in bom.operation_ids:
-                        if operation.with_context(never_attribute_ids=production.never_product_template_attribute_value_ids)._skip_operation_line(bom_data['product']):
+                        if operation.with_context(never_attribute_ids=production.never_product_template_attribute_value_ids)._skip_operation_line(bom_data['product'] if not bom_data['parent_line'] else bom_data['parent_line']['product_id']):
                             workorder = production.workorder_ids.filtered(lambda wo: wo.operation_id == operation and wo.operation_id.bom_id == bom)
                             if workorder:
                                 # If for some reason a non-relevant workorder is still there, e.g. after a change in never_product_template_attribute_value_ids
@@ -1578,7 +1578,7 @@ class MrpProduction(models.Model):
         for workorder in final_workorders:
             workorder._plan_workorder(replan)
 
-        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
+        workorders = self.workorder_ids.filtered(lambda w: w.leave_id and w.state not in ['done', 'cancel'])
         if not workorders:
             return
 
@@ -1774,7 +1774,7 @@ class MrpProduction(models.Model):
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
                     workorder.duration_expected = workorder._get_duration_expected()
-                if workorder.duration == 0.0:
+                if workorder.duration == 0.0 and workorder.state != 'cancel':
                     workorder.duration = workorder.duration_expected
                     workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
             order._cal_price(moves_to_do_by_order[order.id])

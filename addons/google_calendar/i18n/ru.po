@@ -1,23 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_calendar
-# 
+# * google_calendar
+#
 # Translators:
-# Wil Odoo, 2024
-# 
+# Anastasiia Koroleva, 2025
+# Wil Odoo, 2025
+#
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-27 18:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2025-07-18 18:38+0000\n"
+"PO-Revision-Date: 2025-08-28 06:22+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
+"google_calendar/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: google_calendar
 #. odoo-python
@@ -75,6 +81,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronization."
 msgstr ""
+"Произошла ошибка при генерации токена. Ваш код авторизации может быть "
+"недействительным или он уже истек [%s]. Вам следует проверить ID клиента и "
+"секретный ключ на платформе Google APIs или попробовать остановить и "
+"перезапустить синхронизацию календаря."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -142,12 +152,12 @@ msgstr "Подтвердить"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
@@ -180,6 +190,11 @@ msgstr "Отображаемое имя"
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Email"
 msgstr "Email"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Менеджер аварийных сигналов событий"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -284,12 +299,12 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete

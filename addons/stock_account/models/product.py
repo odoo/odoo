@@ -168,12 +168,8 @@ will update the cost of every lot/serial number in stock."),
                 }
             }
 
-    @api.depends('stock_valuation_layer_ids')
-    @api.depends_context('to_date', 'company')
-    def _compute_value_svl(self):
-        """Compute totals of multiple svl related values"""
-        company_id = self.env.company
-        self.company_currency_id = company_id.currency_id
+    def _get_valuation_layer_group_domain(self):
+        company_id = self.env.company.id
         domain = [
             *self.env['stock.valuation.layer']._check_company_domain(company_id),
             ('product_id', 'in', self.ids),
@@ -181,21 +177,46 @@ will update the cost of every lot/serial number in stock."),
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
-        groups = self.env['stock.valuation.layer']._read_group(
+        return domain
+
+    def _get_valuation_layer_group_fields_aggregate(self):
+        return ['value:sum', 'quantity:sum']
+
+    def _get_valuation_layer_groups(self):
+        domain = self._get_valuation_layer_group_domain()
+        group_fields_aggregate = self._get_valuation_layer_group_fields_aggregate()
+        return self.env['stock.valuation.layer']._read_group(
             domain,
             groupby=['product_id'],
-            aggregates=['value:sum', 'quantity:sum'],
+            aggregates=group_fields_aggregate,
         )
+
+    def _prepare_valuation_layer_field_values(self, aggregates):
+        self.ensure_one()
+        value_sum, quantity_sum = aggregates
+        value_svl = self.env.company.currency_id.round(value_sum)
+        avg_cost = 0
+        if not float_is_zero(quantity_sum, precision_rounding=self.uom_id.rounding):
+            avg_cost = value_svl / quantity_sum
+        return {
+            "value_svl": value_svl,
+            "quantity_svl": quantity_sum,
+            "avg_cost": avg_cost,
+            "total_value": avg_cost * self.sudo(False).qty_available
+        }
+
+    @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date', 'company')
+    def _compute_value_svl(self):
+        """Compute totals of multiple svl related values"""
+        self.company_currency_id = self.env.company.currency_id
+        valuation_layer_groups = self._get_valuation_layer_groups()
         # Browse all products and compute products' quantities_dict in batch.
-        group_mapping = {product: aggregates for product, *aggregates in groups}
+        group_mapping = {product: aggregates for product, *aggregates in valuation_layer_groups}
         for product in self:
-            value_sum, quantity_sum = group_mapping.get(product._origin, (0, 0))
-            value_svl = company_id.currency_id.round(value_sum)
-            avg_cost = value_svl / quantity_sum if quantity_sum else 0
-            product.value_svl = value_svl
-            product.quantity_svl = quantity_sum
-            product.avg_cost = avg_cost
-            product.total_value = avg_cost * product.sudo(False).qty_available
+            aggregates = group_mapping.get(product._origin, (0, 0))
+            vals = product._prepare_valuation_layer_field_values(aggregates)
+            product.update(vals)
 
     # -------------------------------------------------------------------------
     # Actions
@@ -338,7 +359,7 @@ will update the cost of every lot/serial number in stock."),
 
     def _get_fifo_candidates(self, company, lot=False):
         candidates_domain = self._get_fifo_candidates_domain(company, lot=lot)
-        return self.env["stock.valuation.layer"].sudo().search(candidates_domain).sorted(lambda svl: svl._candidate_sort_key())
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
 
     def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
         return min(qty_to_take_on_candidates, candidate.remaining_qty)

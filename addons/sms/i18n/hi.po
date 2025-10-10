@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sms
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Ronald Kung, 2025
 # Manav Shah, 2025
 # Ujjawal Pathak, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sms
@@ -96,7 +96,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 
 #. module: sms
@@ -108,28 +109,35 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                The message will be sent as an SMS to the recipients of the template\n"
-"                                and will not appear in the messaging history.\n"
+"                                The message will be sent as an SMS to the "
+"recipients of the template\n"
+"                                and will not appear in the messaging "
+"history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'note'\">\n"
-"                                The SMS will not be sent, it will only be posted as an\n"
+"                                The SMS will not be sent, it will only be "
+"posted as an\n"
 "                                internal note in the messaging history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'comment'\">\n"
-"                                The SMS will be sent as an SMS to the recipients of the\n"
-"                                template and it will also be posted as an internal note\n"
+"                                The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                template and it will also be posted as an "
+"internal note\n"
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
@@ -303,6 +311,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "बंद"
+
+#. module: sms
+#: model:ir.model,name:sms.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -498,19 +511,18 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "फ़ॉलोवर"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "फ़ॉलोवर (पार्टनर)"
 
 #. module: sms
 #. odoo-python
@@ -526,7 +538,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "मैसेज है"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
@@ -562,7 +574,7 @@ msgstr "आईडी"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -597,13 +609,13 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 
 #. module: sms
@@ -666,7 +678,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "फ़ॉलोवर है"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
@@ -681,7 +693,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__lang
 msgid "Language"
-msgstr ""
+msgstr "भाषा"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__write_uid
@@ -696,7 +708,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "इन्होंने आखिरी बार अपडेट किया"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__write_date
@@ -711,7 +723,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "आखिरी बार अपडेट हुआ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
@@ -744,12 +756,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Message"
-msgstr ""
+msgstr "मैसेज"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "मैसेज डिलीवरी में गड़बड़ी"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -807,7 +819,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
 msgid "Notification"
-msgstr ""
+msgstr "नोटिफ़िकेशन"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
@@ -817,7 +829,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
-msgstr ""
+msgstr "संख्या"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
@@ -827,28 +839,28 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "कार्रवाई की संख्या"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "गलतियों की संख्या"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ऐसे मैसेज की संख्या जिनपर कार्रवाई करना ज़रूरी है"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ऐसे मैसेज की संख्या जिनमें डिलीवरी की गड़बड़ी है"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr ""
 
 #. module: sms
@@ -861,9 +873,13 @@ msgstr ""
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
+"यह एक वैकल्पिक भाषा (ISO कोड) है जिसे आप ईमेल भेजते समय चुन सकते हैं, ताकि ईमेल उस भाषा "
+"में अनुवादित हो. अगर आप इसे सेट नहीं करते हैं, तो ईमेल अंग्रेजी में जाएगा. इसे आमतौर पर एक "
+"प्लेसहोल्डर (जैसे {{ object.partner_id.lang }}) के रूप में सेट करना चाहिए, जो अपने-आप "
+"सही भाषा कोड ले लेगा."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -926,7 +942,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "रेटिंग"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -952,7 +968,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
 msgid "Recipients"
-msgstr ""
+msgstr "रसीद"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
@@ -996,12 +1012,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
 msgid "Rejected"
-msgstr ""
+msgstr "अस्वीकार किया गया"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "इससे जुड़े हुए डॉक्यूमेंट मॉड"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -1011,7 +1027,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "रेंडरिंग मॉडल"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -1037,7 +1053,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Retry"
-msgstr ""
+msgstr "दोबारा कोशिश करें"
 
 #. module: sms
 #. odoo-javascript
@@ -1050,7 +1066,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "SMS"
-msgstr ""
+msgstr "एसएमएस"
 
 #. module: sms
 #. odoo-javascript
@@ -1115,7 +1131,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "एसएमएस डिलीवरी में गड़बड़ी"
 
 #. module: sms
 #. odoo-javascript
@@ -1325,12 +1341,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
 msgid "Sent"
-msgstr ""
+msgstr "भेजा गया"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr ""
+msgstr "सर्वर ऐक्श"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
@@ -1378,7 +1394,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
 msgid "Sms Template"
-msgstr ""
+msgstr "एसएमएस टेंप्लेट"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
@@ -1517,11 +1533,14 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other "
+"server actions\n"
 msgstr ""
 
 #. module: sms
@@ -1564,7 +1583,8 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 
@@ -1582,7 +1602,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Warning"
-msgstr ""
+msgstr "चेतावनी"
 
 #. module: sms
 #. odoo-python
@@ -1601,12 +1621,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "वेबसाइट मैसेज"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1674,8 +1694,10 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
 
 #. module: sms
@@ -1713,7 +1735,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr ""
+msgstr "से"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

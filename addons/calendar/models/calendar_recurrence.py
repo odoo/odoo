@@ -604,3 +604,18 @@ class RecurrenceRule(models.Model):
             freq_to_rrule(freq), **rrule_params
         )
 
+    def _is_event_over(self):
+        """Check if all events in this recurrence are in the past.
+        :return: True if all events are over, False otherwise
+        """
+        self.ensure_one()
+        if not self.calendar_event_ids:
+            return False
+
+        now = fields.Datetime.now()
+        today = fields.Date.today()
+
+        return all(
+            (event.stop_date < today if event.allday else event.stop < now)
+            for event in self.calendar_event_ids
+        )

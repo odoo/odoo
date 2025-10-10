@@ -323,6 +323,28 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
                 'active_model': 'stock.valuation.layer'
             })).save()
 
+    def test_stock_valuation_layer_revaluation_fifo_rounding_2_digits(self):
+        """ make sure that the rounding in the wizard does not incur a negative remaining value
+        """
+
+        self.product1.categ_id.property_cost_method = 'fifo'
+        context = {
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_added_value': 0.0
+        }
+
+        self._make_in_move(self.product1, 67104, unit_cost=0.00952)
+        self._make_in_move(self.product1, 898, unit_cost=0.00952)
+
+        self.assertEqual(self.product1.standard_price, 0.01)
+        revaluation_wizard = Form(self.env['stock.valuation.layer.revaluation'].with_context(context))
+        revaluation_wizard.added_value = 636  # triggers the rounding problem
+        revaluation_wizard.account_id = self.stock_valuation_account
+        revaluation_wizard.save().action_validate_revaluation()
+
+        self.assertEqual(self.product1.standard_price, 0.02)
+
     def test_multi_company_fifo_svl_negative_revaluation(self):
         """
         Check that the journal entries and stock valuation layers are created for the company related

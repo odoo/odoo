@@ -143,7 +143,7 @@ class AccountMove(models.Model):
         # Ensure the move is posted
         if self.state != 'posted':
             return _("Cannot send an entry that is not posted to TicketBAI.")
-        if self.l10n_es_tbai_state in ('sent', 'cancelled'):
+        if self.l10n_es_tbai_state in ('sent', 'cancelled') and not self.env.context.get('batuz_correction'):
             return _("This entry has already been posted.")
         if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
             return _("You need to fill in the Reference field as the invoice number from your vendor.")
@@ -187,6 +187,14 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
     # -------------------------------------------------------------------------
+
+    def l10n_es_tbai_resend_bill(self):
+        self.ensure_one()
+        self.l10n_es_tbai_post_document_id = False
+        if error := self.with_context(batuz_correction=True)._l10n_es_tbai_post():
+            error = error + "\n\n" + _("Be careful if you modified this vendor bill, "
+                                       "because the official version is still the previous one sent. ")
+            raise UserError(error)  # This way, we rollback when rejected and the old accepted document is kept
 
     def l10n_es_tbai_send_bill(self):
         for bill in self:
@@ -285,9 +293,14 @@ class AccountMove(models.Model):
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         for base_line in base_lines:
             base_line['name'] = base_line['record'].name
-        tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id, tax_lines=tax_lines)
+        for base_line in base_lines:
+            sign = base_line['is_refund'] and -1 or 1
+            base_line['gross_price_unit'] = sign * base_line['gross_price_unit']
+            base_line['discount_amount'] = sign * base_line['discount_amount']
+            base_line['price_total'] = sign * base_line['price_total']
         taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
         is_oss = any(tax._l10n_es_get_regime_code() == '17' for tax in taxes)
 
@@ -307,6 +320,7 @@ class AccountMove(models.Model):
             'refund_reason': self.l10n_es_tbai_refund_reason,
             'refunded_doc': self.reversed_entry_id.l10n_es_tbai_post_document_id,
             'refunded_doc_invoice_date': self.reversed_entry_id.invoice_date if self.reversed_entry_id else False,
+            'refunded_name': self.reversed_entry_id.name if self.reversed_entry_id else False,
         }
 
     def _l10n_es_tbai_get_vendor_bill_values_batuz(self):

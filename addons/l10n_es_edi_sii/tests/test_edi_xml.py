@@ -311,7 +311,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_050_out_invoice_s_iva0_sp_i_s_iva0_ic(self):
+    def test_050_out_invoice_s_iva0_sp_i_s_iva0_g_i(self):
         """An intra-community sale needs to be reported as exempt and intra-community services as no sujeto por reglas de localizacion (no_sujeto_loc)"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -320,7 +320,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -369,7 +369,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_060_out_refund_s_iva0_sp_i_s_iva0_ic(self):
+    def test_060_out_refund_s_iva0_sp_i_s_iva0_g_i(self):
         """ Intra-community refund of service and good"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -379,7 +379,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -429,7 +429,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_070_out_invoice_s_iva_e_s_iva0_e(self):
+    def test_070_out_invoice_s_iva_e_s_iva0_g_e(self):
         """ Export of service (no sujeto por reglas de localization) and export of goods (exempt)"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -438,7 +438,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva_e').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_e').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_e').ids)]},
                 ],
             )
             invoice.action_post()
@@ -487,7 +487,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_080_out_refund_s_iva0_sp_i_s_iva0_ic(self):
+    def test_080_out_refund_s_iva0_sp_i_s_iva0_g_i(self):
         """Customer refund of an intracom good and service"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -497,7 +497,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -547,7 +547,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_085_out_refund_s_iva0_sp_i_s_iva0_ic_multi_currency(self):
+    def test_085_out_refund_s_iva0_sp_i_s_iva0_g_i_multi_currency(self):
         """ Same as test_080 but in multi-currency"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -558,7 +558,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 currency_id=self.other_currency.id,
                 invoice_line_ids=[
                     {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 400.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 400.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()

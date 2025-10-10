@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_debit_note
-# 
+#
 # Translators:
 # emre oktem, 2024
 # Ayhan Kızıltan, 2024
@@ -11,19 +11,20 @@
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Hakan Türkün, 2025
-# 
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Hakan Türkün, 2025\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_debit_note
@@ -44,9 +45,11 @@ msgstr "İptal"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" debit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"debit notes made from this journal"
 msgstr ""
+"Bu kutuyu işaretlerseniz, bu yevmiyeden oluşturulan faturalar ve borç "
+"dekontları için aynı sıra numarası paylaşılmaz."
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -100,7 +103,7 @@ msgstr "Borç Fiyat Farkları"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
 msgid "Dedicated Debit Note Sequence"
-msgstr ""
+msgstr "Tahsilat Notu Sıralaması"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
@@ -196,7 +199,7 @@ msgstr "Bu fatura için oluşturulan Borç Fiyat Farkları"
 
 #. module: account_debit_note
 #. odoo-python
-#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#: code:addons/account_debit_note/models/account_move.py:0
 msgid "This debit note was created from: %s"
 msgstr "Bu borç notu %s 'dan oluşturulmuştur"
 
@@ -212,6 +215,8 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
+"Borç dekontu yalnızca bir Müşteri Faturası, Müşteri Alacak Dekontu, "
+"Tedarikçi Faturası veya Tedarikçi Alacak Dekontu için oluşturulabilir."
 
 #. module: account_debit_note
 #. odoo-python
@@ -223,6 +228,8 @@ msgstr "Yalnızca onaylı kayıtları borçlandırabilirsiniz."
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
 msgstr ""
+"Zaten bir borç dekontuyla ilişkilendirilmiş bir fatura için tekrar borç "
+"dekontu oluşturamazsınız."

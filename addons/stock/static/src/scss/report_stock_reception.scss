@@ -1,6 +1,5 @@
 .o_report_reception {
 
-    overflow-y: auto;
     .o_priority {
         &.o_priority_star {
             font-size: 1.35em;
@@ -27,6 +26,13 @@
         $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
         @include bg-variant(".bg-#{$-name}-light", rgba(map-get($theme-colors, $-name), 0.5), $-safe-text-color);
     }
+    & thead{
+        display: table-row-group;
+    }
+}
+
+.o_report_reception_no_print {
+    overflow-y: auto;
 }
 
 .o_label_page {

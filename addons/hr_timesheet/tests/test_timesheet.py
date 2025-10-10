@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo.fields import Command
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
 
@@ -93,12 +93,32 @@ class TestCommonTimesheet(TransactionCase):
             'user_id': cls.user_manager.id,
             'employee_type': 'freelance',
         })
+        cls.project = cls.env['project.project'].create({
+            'name': 'Test Project',
+            'privacy_visibility': 'followers',
+            'task_ids': [Command.create({
+                'name': 'Test Task',
+            })],
+        })
+        cls.timesheet = cls.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'project_id': cls.project.id,
+            'task_id': cls.project.task_ids[0].id,
+            'employee_id':   cls.empl_employee.id,
+        })
+        cls.timesheet_manager_no_project_user = new_test_user(
+            cls.env,
+            login='no_project_user',
+            groups='hr_timesheet.group_timesheet_manager'
+        )
 
 
 class TestTimesheet(TestCommonTimesheet):
 
     def setUp(self):
         super(TestTimesheet, self).setUp()
+        # Make sure to clean the plan fields
+        self.env.registry.setup_models(self.env.cr)
 
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.
@@ -389,6 +409,14 @@ class TestTimesheet(TestCommonTimesheet):
         })
 
         self.assertEqual(timesheet.project_id, second_project, 'The project_id of non-validated timesheet should have changed')
+
+    def test_compute_display_name(self):
+        self.timesheet.with_user(self.timesheet_manager_no_project_user)._compute_display_name()
+        self.assertEqual(
+            self.timesheet.display_name,
+            "Test Project - Test Task",
+            "Display name should be correctly computed without raising AccessError."
+        )
 
     def test_create_timesheet_employee_not_in_company(self):
         ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.
@@ -764,3 +792,96 @@ class TestTimesheet(TestCommonTimesheet):
                 'project_id': self.project_customer.id,
                 'employee_id': self.empl_employee.id,
             })
+
+    def test_keep_create_account_values_at_timesheet_creation(self):
+        field_name = self.analytic_plan._column_name()
+        analytic_account, another_account = self.env['account.analytic.account'].create([
+            {
+                'name': 'Analytic Account',
+                'partner_id': self.partner.id,
+                'plan_id': self.analytic_plan.id,
+                'code': 'TEST',
+            },
+            {
+                 'name': 'Another Analytic Account',
+                 'partner_id': self.partner.id,
+                 'plan_id': self.analytic_plan.id,
+                 'code': 'TEST2',
+            },
+       ])
+
+        self.project_customer.write({
+            field_name: another_account.id,
+        })
+
+        line = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            field_name: analytic_account.id,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(line[field_name].id, analytic_account.id, f"The value of {field_name} shouldn't get overwritten by the project's account")
+
+    def test_keep_write_account_values_at_timesheet_update(self):
+        field_name = self.analytic_plan._column_name()
+        analytic_account, another_account = self.env['account.analytic.account'].create([
+            {
+                'name': 'Analytic Account',
+                'partner_id': self.partner.id,
+                'plan_id': self.analytic_plan.id,
+                'code': 'TEST',
+            },
+            {
+                'name': 'Another Analytic Account',
+                'partner_id': self.partner.id,
+                'plan_id': self.analytic_plan.id,
+                'code': 'TEST2',
+            },
+        ])
+
+        self.project_customer.write({
+            field_name: another_account.id,
+        })
+
+        line = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'employee_id': self.empl_employee.id,
+        })
+
+        line.write({
+            'project_id': self.project_customer.id,
+            field_name: analytic_account.id
+        })
+        self.assertEqual(line[field_name].id, analytic_account.id, f"The value of {field_name} shouldn't get overwritten by the project's account")
+
+    def test_split_analytic_dynamic_update(self):
+        self.empl_employee.hourly_cost = 10.0
+        another_account = self.project.account_id.copy()
+
+        line = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            'account_id': self.project.account_id.id,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(line.amount, -10)
+        line.analytic_distribution = {
+            f"{self.project.account_id.id}": 50,
+            f"{another_account.id}": 50,
+        }
+        self.assertEqual(line.amount, -5)  # the line is split in 2
+
+    def test_log_timesheet_with_user_has_two_employees_from_different_companies(self):
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        self.env['hr.employee'].with_company(company_2).create({
+            'name': 'Employee 2',
+            'user_id': self.user_manager.id,
+        })
+        timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project.id,
+            'user_id': self.user_manager.id,
+        })
+        self.assertEqual(timesheet.company_id, self.env.company)

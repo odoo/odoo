@@ -8,7 +8,7 @@
             t-att-disabled="props.isDisabled()">
                 Translate
         </button>
-        <Dropdown t-elif="state.languages.length > 1">
+        <Dropdown t-elif="state.languages.length > 1" menuRef="menuRef">
             <button class="btn btn-light" name="translate" t-att-title="props.title" t-att-disabled="props.isDisabled()">
                 Translate
             </button>

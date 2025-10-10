@@ -1,4 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import os
+
+from unittest import skipIf
 
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.tests import HttpCase
@@ -14,30 +17,15 @@ class TestUi(HttpCase, TestCrmCommon):
         cls.env.ref('base.user_admin').tour_enabled = False
 
     def test_01_crm_tour(self):
-        # TODO: The tour is raising a JS error when selecting Brandon Freeman
-        # but with the demo data it succeeds to continue if there is already another lead
-        # in the pipe. Then the tour is using a record in the Qualified stage to create
-        # an activity, which is not existing without demo data as well
-        brandon = self.env["res.partner"].create({
+        self.env["res.partner"].create({
             'name': 'Brandon Freeman',
             'email': 'brandon.freeman55@example.com',
             'phone': '(355)-687-3262',
+            'is_company': True,
         })
-        self.env['crm.lead'].create([{
-            'name': "Zizizbroken",
-            'type': 'opportunity',
-            'partner_id': brandon.id,
-            'stage_id': self.stage_team1_1.id,
-            'user_id': self.env.ref('base.user_admin').id,
-        }, {
-            'name': "Zizizbroken 2",
-            'type': 'opportunity',
-            'partner_id': brandon.id,
-            'stage_id': self.stage_gen_1.id,
-            'user_id': self.env.ref('base.user_admin').id,
-        }])
         self.start_tour("/odoo", 'crm_tour', login="admin")
 
+    @skipIf(os.getenv("ODOO_FAKETIME_TEST_MODE"), 'This tour uses CURRENT_DATE which cannot work in faketime mode')
     def test_02_crm_tour_rainbowman(self):
         # we create a new user to make sure they get the 'Congrats on your first deal!'
         # rainbowman message.

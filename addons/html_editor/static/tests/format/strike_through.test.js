@@ -1,5 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
+import { press } from "@odoo/hoot-dom";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { s, span } from "../_helpers/tags";
@@ -8,6 +10,7 @@ import {
     strikeThrough,
     tripleClick,
     simulateArrowKeyPress,
+    undo,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 
@@ -109,7 +112,10 @@ test("should make qweb tag strikeThrough", async () => {
 test("should make a whole heading strikeThrough after a triple click", async () => {
     await testEditor({
         contentBefore: `<h1>[ab</h1><p>]cd</p>`,
-        stepFunction: strikeThrough,
+        stepFunction: async (editor) => {
+            await tripleClick(editor.editable.querySelector("h1"));
+            strikeThrough(editor);
+        },
         contentAfter: `<h1>${s(`[ab]`)}</h1><p>cd</p>`,
     });
 });
@@ -255,4 +261,22 @@ test("should remove empty strikeThrough when changing selection", async () => {
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
     expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
+});
+
+test("should not add history step for strikethrough on collapsed selection", async () => {
+    const { editor, el } = await setupEditor("<p>abcd[]</p>");
+
+    patchWithCleanup(console, { warn: () => {} });
+
+    // Collapsed formatting shortcuts (e.g. Ctrl+5) shouldn’t create a history
+    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom step in the history.
+    await press(["ctrl", "5"]);
+    expect(getContent(el)).toBe(`<p>abcd${s("[]\u200B", "first")}</p>`);
+
+    await insertText(editor, "A");
+    expect(getContent(el)).toBe(`<p>abcd${s("A[]")}</p>`);
+
+    undo(editor);
+    expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });

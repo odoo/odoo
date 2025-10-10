@@ -136,3 +136,86 @@ class TestTaxesTaxTotalsSummarySale(TestTaxCommonSale, TestTaxesTaxTotalsSummary
             },
             soft_checking=True,
         )
+
+    def test_apply_mixed_epd_discount_fixed_tax(self):
+        """
+        When applying an epd - mixed payment term, the fixed tax amount should be the same.
+        """
+        tax_a = self.fixed_tax(20.0)
+        early_payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100,
+                    'nb_days': 20,
+                }),
+            ],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'payment_term_id': early_payment_term.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'price_unit': 100,
+                    'tax_id': [Command.set(tax_a.ids)],
+                }),
+            ],
+        })
+        self.assert_sale_order_tax_totals_summary(
+            sale_order,
+            {
+                'base_amount_currency': 100.0,
+                'tax_amount_currency': 20.0,
+                'total_amount_currency': 120.0,
+            },
+            soft_checking=True,
+        )
+
+    def test_apply_mixed_epd_discount_percent_and_fixed_tax(self):
+        """
+        When applying an epd - mixed payment term, the percent tax should be computed based on the discounted untaxed amount.
+        """
+        tax_a = self.percent_tax(15.0)
+        tax_b = self.fixed_tax(20.0)
+        early_payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100,
+                    'nb_days': 20,
+                }),
+            ],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'payment_term_id': early_payment_term.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'price_unit': 100,
+                    'tax_id': [Command.set((tax_a + tax_b).ids)],
+                }),
+            ],
+        })
+        self.assert_sale_order_tax_totals_summary(
+            sale_order,
+            {
+                'base_amount_currency': 100.0,
+                'tax_amount_currency': 33.5,
+                'total_amount_currency': 133.5,
+            },
+            soft_checking=True,
+        )

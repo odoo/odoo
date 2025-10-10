@@ -120,15 +120,23 @@ class AccountMove(models.Model):
         fields_list.append("l10n_es_edi_facturae_xml_file")
         return fields_list
 
+    def _l10n_es_edi_facturae_export_data_check(self):
+        """ This function checks the Settings, Company, Partners involved in the
+            sending activity and returns an errors dictionary ready for the
+            actionable_errors widget to display. """
+
+        return {
+            **self.mapped("company_id")._l10n_es_edi_facturae_export_check(),
+            **self.mapped("partner_id")._l10n_es_edi_facturae_export_check(),
+        }
+
     def _l10n_es_edi_facturae_get_default_enable(self):
         self.ensure_one()
         return not self.invoice_pdf_report_id \
             and not self.l10n_es_edi_facturae_xml_id \
             and not self.l10n_es_is_simplified \
             and self.is_invoice(include_receipts=True) \
-            and (self.partner_id.is_company or self.partner_id.vat) \
-            and self.company_id.country_code == 'ES' \
-            and self.company_id.currency_id.name == 'EUR' \
+            and self.country_code == 'ES' \
             and self.company_id.sudo().l10n_es_edi_facturae_certificate_ids  # We only enable Facturae if a certificate is valid or has been valid (which will raise an error)
 
     def _l10n_es_edi_facturae_get_filename(self):

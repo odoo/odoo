@@ -35,9 +35,9 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <form>
-                <field name="l10n_latam_available_document_type_ids" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="l10n_latam_use_documents" invisible="1"/> <!-- TODO: to be removed in master -->
-                <field name="l10n_latam_manual_document_number" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_latam_available_document_type_ids" invisible="1"/>
+                <field name="l10n_latam_use_documents" invisible="1"/>
+                <field name="l10n_latam_manual_document_number" invisible="1"/>
             </form>
 
             <xpath expr="//div[@name='journal_div']" position="after">

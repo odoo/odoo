@@ -11,7 +11,7 @@
                 <control>
                     <create name="add_line_control" string="Add a Declaration of Intent"/>
                 </control>
-                <field name="currency_id" column_invisible="True"/> <!-- TODO: to be removed in master -->
+                <field name="currency_id" column_invisible="True"/>
                 <field name="partner_id" readonly="state != 'draft'"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hidden"/>
                 <field name="protocol_number_part1" readonly="state != 'draft'"/>
@@ -48,8 +48,8 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <field name="invoice_ids" invisible="True"/> <!-- TODO: to be removed in master -->
-                        <field name="sale_order_ids" invisible="True"/> <!-- TODO: to be removed in master -->
+                        <field name="invoice_ids" invisible="True"/>
+                        <field name="sale_order_ids" invisible="True"/>
                         <button type="object"
                                 class="oe_stat_button"
                                 name="action_open_invoice_ids"
@@ -91,7 +91,7 @@
                             <div colspan="2" class="o_wrap_label">
                                 <span class="o_form_label">Amounts:</span>
                             </div>
-                            <field name="currency_id" invisible="True"/> <!-- TODO: to be removed in master -->
+                            <field name="currency_id" invisible="True"/>
                             <field name="threshold" widget="monetary" readonly="state != 'draft'"/>
                             <field name="not_yet_invoiced" widget="monetary"/>
                             <field name="invoiced" widget="monetary"/>

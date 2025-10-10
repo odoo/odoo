@@ -3,8 +3,8 @@
 
 import logging
 import threading
-from uuid import uuid4
 
+from uuid import uuid4
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
@@ -26,7 +26,7 @@ class SmsSms(models.Model):
         'sent': 'pending',
         'delivered': 'sent',
     }
-    IAP_TO_SMS_FAILURE_TYPE = {
+    IAP_TO_SMS_FAILURE_TYPE = {  # TODO RIGR remove me in master
         'insufficient_credit': 'sms_credit',
         'wrong_number_format': 'sms_number_format',
         'country_not_supported': 'sms_country_not_supported',
@@ -100,12 +100,21 @@ class SmsSms(models.Model):
           :param auto_commit: commit after each batch of SMS;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
-        self = self.filtered(lambda sms: sms.state == 'outgoing' and not sms.to_delete)
-        for batch_ids in self._split_batch():
-            self.browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
-            # auto-commit if asked except in testing mode
-            if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
-                self._cr.commit()
+        to_send = self.filtered(lambda sms: sms.state == 'outgoing' and not sms.to_delete)
+
+        for sms_api, sms in to_send._split_by_api():
+            for batch_ids in sms._split_batch():
+                self.env['sms.sms'].browse(batch_ids).with_context(sms_api=sms_api)._send(
+                    unlink_failed=unlink_failed,
+                    unlink_sent=unlink_sent,
+                    raise_exception=raise_exception,
+                )
+                # auto-commit if asked except in testing mode
+                if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
+                    self._cr.commit()
+
+    def _split_by_api(self):
+        yield SmsApi(self.env), self
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error' and not sms.to_delete)
@@ -160,12 +169,33 @@ class SmsSms(models.Model):
             _logger.exception("Failed processing SMS queue")
         return res
 
+    def _get_sms_company(self):
+        return self.mail_message_id.record_company_id or self.env.company
+
+    def _get_batch_size(self):
+        return int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
+
     def _split_batch(self):
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('sms.session.batch.size', 500))
+        batch_size = self._get_batch_size()
         for sms_batch in tools.split_every(batch_size, self.ids):
             yield sms_batch
 
     def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
+        """Send SMS after checking the number (presence and formatting)."""
+        sms_api = self.env.context.get('sms_api')
+        if not sms_api:
+            company = self._get_sms_company()
+            company.ensure_one()  # This should always be the case since the grouping is done in `send`
+            sms_api = company._get_sms_api_class()(self.env)
+
+        return self._send_with_api(
+            sms_api,
+            unlink_failed=unlink_failed,
+            unlink_sent=unlink_sent,
+            raise_exception=raise_exception,
+        )
+
+    def _send_with_api(self, sms_api, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""
         messages = [{
             'content': body,
@@ -174,7 +204,7 @@ class SmsSms(models.Model):
 
         delivery_reports_url = url_join(self[0].get_base_url(), '/sms/status')
         try:
-            results = SmsApi(self.env)._send_sms_batch(messages, delivery_reports_url=delivery_reports_url)
+            results = sms_api._send_sms_batch(messages, delivery_reports_url=delivery_reports_url)
         except Exception as e:
             _logger.info('Sent batch %s SMS: %s: failed with exception %s', len(self.ids), self.ids, e)
             if raise_exception:
@@ -186,27 +216,32 @@ class SmsSms(models.Model):
         results_uuids = [result['uuid'] for result in results]
         all_sms_sudo = self.env['sms.sms'].sudo().search([('uuid', 'in', results_uuids)]).with_context(sms_skip_msg_notification=True)
 
-        for iap_state, results_group in tools.groupby(results, key=lambda result: result['state']):
+        for (iap_state, failure_reason), results_group in tools.groupby(results, key=lambda result: (result['state'], result.get('failure_reason'))):
             sms_sudo = all_sms_sudo.filtered(lambda s: s.uuid in {result['uuid'] for result in results_group})
             if success_state := self.IAP_TO_SMS_STATE_SUCCESS.get(iap_state):
                 sms_sudo.sms_tracker_id._action_update_from_sms_state(success_state)
                 to_delete = {'to_delete': True} if unlink_sent else {}
                 sms_sudo.write({'state': success_state, 'failure_type': False, **to_delete})
             else:
-                failure_type = self.IAP_TO_SMS_FAILURE_TYPE.get(iap_state, 'unknown')
+                failure_type = sms_api.PROVIDER_TO_SMS_FAILURE_TYPE.get(iap_state, 'unknown')
                 if failure_type != 'unknown':
-                    sms_sudo.sms_tracker_id._action_update_from_sms_state('error', failure_type=failure_type)
+                    sms_sudo.sms_tracker_id._action_update_from_sms_state('error', failure_type=failure_type, failure_reason=failure_reason)
                 else:
-                    sms_sudo.sms_tracker_id._action_update_from_provider_error(iap_state)
+                    sms_sudo.sms_tracker_id.with_context(sms_known_failure_reason=failure_reason)._action_update_from_provider_error(iap_state)
                 to_delete = {'to_delete': True} if unlink_failed else {}
                 sms_sudo.write({'state': 'error', 'failure_type': failure_type, **to_delete})
 
+        all_sms_sudo._handle_call_result_hook(results)
         all_sms_sudo.mail_message_id._notify_message_notification_update()
 
     def _update_sms_state_and_trackers(self, new_state, failure_type=None):
         """Update sms state update and related tracking records (notifications, traces)."""
         self.write({'state': new_state, 'failure_type': failure_type})
         self.sms_tracker_id._action_update_from_sms_state(new_state, failure_type=failure_type)
+
+    def _handle_call_result_hook(self, results):
+        """Further process SMS sending API results."""
+        pass
 
     @api.autovacuum
     def _gc_device(self):

@@ -298,7 +298,7 @@ class AccountWithholdingLine(models.AbstractModel):
     def _constrains_account_id(self):
         """ The account on the line cannot be one deemed as liquidity account, otherwise it will cause issues with the final entry. """
         for line in self:
-            if line.account_id in line._get_valid_liquidity_accounts():
+            if line.account_id in line._get_valid_liquidity_accounts() or line.account_id == line.company_id.transfer_account_id:
                 raise UserError(line.env._('The account "%(account_name)s" is not valid to use on withholding lines.', account_name=line.account_id.display_name))
 
     # ----------------
@@ -335,6 +335,7 @@ class AccountWithholdingLine(models.AbstractModel):
             manual_tax_line_name=self.name,
             computation_key=str(self.id),
             manual_tax_amounts=manual_tax_amounts,
+            is_refund=self._is_refund(),
         )
 
     def _prepare_withholding_amls_create_values(self):
@@ -381,6 +382,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'name': self.env._("WH Tax: %(name)s", name=tax_line_vals['name']),
                 'amount_currency': -tax_line_vals['amount_currency'],
                 'balance': -tax_line_vals['balance'],
+                'partner_id': self._get_comodel_partner().id,
             })
 
         # Aggregate the base lines.
@@ -406,6 +408,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'name': self.env._('WH Base: %(names)s', names=', '.join(amounts['names'])),
                 'amount_currency': amounts['amount_currency'],
                 'balance': amounts['balance'],
+                'partner_id': self._get_comodel_partner().id,
             })
             aml_create_values_list.append({
                 **grouping_key,
@@ -415,6 +418,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'analytic_distribution': None,
                 'amount_currency': -amounts['amount_currency'],
                 'balance': -amounts['balance'],
+                'partner_id': self._get_comodel_partner().id,
             })
 
         return aml_create_values_list
@@ -532,3 +536,17 @@ class AccountWithholdingLine(models.AbstractModel):
     def _get_valid_liquidity_accounts(self):
         """ Get the valid liquidity accounts for the payment; we need to ensure that the line account does not match any of them. """
         return ()
+
+    def _get_comodel_partner(self):
+        """ Get the partner from the comodel record; in order to have it available when required. """
+        return self.env['res.partner']
+
+    def _is_refund(self):
+        """
+        When refunding an invoice with withholding taxes, we need to ensure that the base line we use
+        to create the final journal entry is tagged as refund correctly to ensure the correct application
+        of the tax repartition line.
+        :return: True if the withholding line concerns a refund.
+        """
+        return ((self.type_tax_use == 'sale' and self.comodel_payment_type == 'outbound')
+                or (self.type_tax_use == 'purchase' and self.comodel_payment_type == 'inbound'))

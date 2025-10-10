@@ -751,7 +751,7 @@ class SurveyUserInputLine(models.Model):
             elif line.answer_type == 'date':
                 line.display_name = fields.Date.to_string(line.value_date)
             elif line.answer_type == 'datetime':
-                line.display_name = fields.Datetime.to_string(line.value_datetime)
+                line.display_name = fields.Datetime.to_string(fields.Datetime.context_timestamp(self.env.user, line.value_datetime))
             elif line.answer_type == 'scale':
                 line.display_name = line.value_scale
             elif line.answer_type == 'suggestion':

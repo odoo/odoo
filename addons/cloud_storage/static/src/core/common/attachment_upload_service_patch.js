@@ -84,7 +84,8 @@ patch(AttachmentUploadService.prototype, {
     async _upload(thread, composer, file, options, tmpId, tmpURL) {
         if (
             session.cloud_storage_min_file_size !== undefined &&
-            file.size > session.cloud_storage_min_file_size
+            file.size > session.cloud_storage_min_file_size &&
+            !session.cloud_storage_unsupported_models.includes(thread.model)
         ) {
             // store the file in the this.uploadingCloudFiles map
             this.uploadingCloudFiles.set(tmpId, file);

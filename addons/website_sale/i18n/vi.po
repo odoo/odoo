@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Thang Nguyen, 2025
 # Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -1443,23 +1444,31 @@ msgstr "Tính toán phí giao hàng và giao bằng Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Tính toán phí giao hàng và giao bằng DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Tính toán phí giao hàng và giao bằng FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Tính toán phí giao hàng và giao bằng UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Tính toán phí giao hàng và giao bằng USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1470,6 +1479,12 @@ msgstr "Tính toán phí giao hàng và giao bằng bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Tính toán phí giao hàng trên đơn hàng"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1707,13 +1722,8 @@ msgstr "Tùy chỉnh mẫu email"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "Liên kết DHL Express"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "Phương thức vận chuyển DHL"
+msgid "DHL"
+msgstr "DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1948,6 +1958,11 @@ msgstr ""
 "hàng không?"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Tài liệu"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
 msgstr "Tài liệu"
@@ -2171,11 +2186,6 @@ msgstr "Nổi bật"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "Phương thức vận chuyển FedEx"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -3812,7 +3822,7 @@ msgstr "Xóa một"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
 msgid "Repair and Maintenance"
-msgstr "Sửa chữa và Bảo trì"
+msgstr "Sửa chữa và Bảo dưỡng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4633,11 +4643,6 @@ msgid "USPS"
 msgstr "USPS"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "Phương thức vận chuyển USPS"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
 msgid "Under-bed Drawers"
 msgstr "Ngăn kéo gầm giường"
@@ -4994,9 +4999,9 @@ msgid ""
 "                                        at the same time!<br/>\n"
 "                                        If you want to modify your billing address, create a"
 msgstr ""
-"Bạn đang chỉnh sửa địa chỉ<b>thanh toán và giao hàng</b>\n"
+"Bạn đang chỉnh sửa địa chỉ <b>thanh toán và giao hàng</b>\n"
 "                                            cùng lúc!<br/>\n"
-"                                            Nếu muốn thay đổi địa chỉ giao hàng, tạo một"
+"                                            Nếu muốn thay đổi địa chỉ thanh toán, tạo một"
 
 #. module: website_sale
 #. odoo-python

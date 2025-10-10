@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, queryAll, queryAllProperties, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import {
+    click,
+    queryAll,
+    queryAllProperties,
+    queryAllTexts,
+    queryOne,
+    queryText,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -489,11 +496,29 @@ describe("DebugMenu", () => {
             _name = "custom";
 
             name = fields.Char();
+            raw = fields.Binary();
+            properties = fields.Properties({
+                string: "Properties",
+                definition_record: "product_id",
+                definition_record_field: "definitions",
+            });
+            definitions = fields.PropertiesDefinition({
+                string: "Definitions",
+            });
 
             _records = [
                 {
                     id: 1,
                     name: "custom1",
+                    raw: "<raw>",
+                    properties: [
+                        {
+                            name: "bd6404492c244cff",
+                            string: "test",
+                            type: "char",
+                        },
+                    ],
+                    definitions: [{ name: "xphone_prop_1", string: "P1", type: "boolean" }],
                 },
             ];
         }
@@ -511,9 +536,25 @@ describe("DebugMenu", () => {
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains(/^Data/)").click();
         expect(".modal").toHaveCount(1);
-        expect(".modal-body pre").toHaveText(
-            '{\n "create_date": "2019-03-11 09:30:00",\n "display_name": "custom1",\n "id": 1,\n "name": "custom1",\n "write_date": "2019-03-11 09:30:00"\n}'
-        );
+        const data = queryText(".modal-body pre");
+        const modalObj = JSON.parse(data);
+        expect(modalObj).toInclude("create_date");
+        expect(modalObj).toInclude("write_date");
+        expect(modalObj).not.toInclude("raw");
+        const expectedObj = {
+            display_name: "custom1",
+            id: 1,
+            name: "custom1",
+            properties: false,
+            definitions: [
+                {
+                    name: "xphone_prop_1",
+                    string: "P1",
+                    type: "boolean",
+                },
+            ],
+        };
+        expect(modalObj).toMatchObject(expectedObj);
     });
 
     test("view metadata: basic rendering", async () => {

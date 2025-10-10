@@ -56,7 +56,8 @@
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="amount_currency"/>
+                                        <field name="display_type" invisible="1"/>
+                                        <field name="amount_currency" readonly="display_type != 'tax' or parent_state != 'draft'"/>
                                     </group>
                                     <group string="Product" invisible="not product_id">
                                         <field name="product_id" readonly="1"/>
@@ -174,7 +175,7 @@
                            widget="analytic_distribution"
                            groups="analytic.group_analytic_accounting"
                            optional="hide"
-                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"
+                           options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional', 'multi_edit': true}"
                     />
                     <field name="tax_ids" widget="many2many_tags" optional="hide" readonly="1"/>
                     <field name="amount_currency" string="In Currency" groups="base.group_multi_currency" optional="hide" readonly="1" invisible="is_same_currency"/>
@@ -474,7 +475,7 @@
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
                     <field name="date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
+                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/" readonly="state != 'draft'"/>
                     <field name="partner_id" optional="show" readonly="state != 'draft'"/>
                     <field name="ref" optional="show"/>
                     <field name="journal_id"/>
@@ -929,6 +930,7 @@
                         <field name="bank_partner_id" invisible="1"/>
                         <field name="display_qr_code" invisible="1"/>
                         <field name="show_reset_to_draft_button" invisible="1"/>
+                        <field name="expected_currency_rate" invisible="1"/>
 
                         <field name="invoice_has_outstanding" invisible="1"/>
                         <field name="is_move_sent" invisible="1"/>
@@ -1046,8 +1048,8 @@
                                     <field name="invoice_date_due" force_save="1"
                                            placeholder="Date"
                                            invisible="invoice_payment_term_id"/>
-                                    <span class="o_form_label mx-3 oe_edit_only"
-                                          invisible="state != 'draft' or invoice_payment_term_id"> or </span>
+                                    <span class="o_form_label mx-3 oe_edit_only text-center" style="width: 6ch;"
+                                          invisible="state != 'draft' or invoice_payment_term_id">or</span>
                                     <field name="invoice_payment_term_id"
                                            context="{'example_date': invoice_date, 'example_amount': tax_totals['total_amount_currency']}"
                                            placeholder="Payment Terms"
@@ -1063,32 +1065,41 @@
                                            groups="account.group_account_readonly"
                                            options="{'no_create': True, 'no_open': True}"
                                            readonly="posted_before and name not in (False, '', '/')"/>
-
-                                    <span class="o_form_label mx-3 oe_edit_only"
-                                          groups="account.group_account_readonly"
-                                          invisible="move_type == 'entry'">
-                                        <span groups="base.group_multi_currency">in </span>
-                                    </span>
+                                    <div name="in_and_refresh_button_div"
+                                         groups="base.group_multi_currency"
+                                         class="d-flex flex-column mx-3 text-center"
+                                         style="width: 6ch;"
+                                         invisible="move_type == 'entry'">
+                                        <div>in</div>
+                                        <div class="d-flex flex-column justify-content-center flex-grow-1"
+                                             invisible="state != 'draft' or invoice_currency_rate == expected_currency_rate">
+                                            <button type="object"
+                                                    name="refresh_invoice_currency_rate"
+                                                    icon="fa-refresh"
+                                                    title="Refresh currency rate to the invoice date"
+                                                    class="btn btn-link p-0"/>
+                                        </div>
+                                    </div>
                                     <div name="currency_div"
                                          groups="base.group_multi_currency"
                                          class="w-100"
-                                         style="white-space: pre;"
                                          invisible="move_type == 'entry'">
-                                        <field name="currency_id"
-                                               readonly="state != 'draft'"
-                                               class="oe_inline"
-                                               options="{'no_create': True}"
-                                               context="{'search_default_active': 1, 'search_default_inactive': 1}"/>
-                                        <div class="break"/>
+                                        <div class="d-flex gap-1">
+                                            <field name="currency_id"
+                                                   readonly="state != 'draft'"
+                                                   class="oe_inline"
+                                                   options="{'no_create': True}"
+                                                   context="{'search_default_active': 1, 'search_default_inactive': 1}"/>
+                                            <widget name="account_pick_currency_date" invisible="state != 'draft' or currency_id == company_currency_id"/>
+                                        </div>
                                         <div name="currency_conversion_div"
-                                             class="d-flex text-muted float-start"
+                                             class="d-flex gap-1 text-muted"
                                              invisible="currency_id == company_currency_id">
-                                            <span>1 </span>
-                                            <field name="company_currency_id" readonly="True" options="{'no_open': True}"/>
-                                            <span> = </span>
-                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="True"/>
-                                            <span> </span>
-                                            <field name="currency_id" readonly="True" options="{'no_open': True}"/>
+                                            <span>1</span>
+                                            <field name="company_currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
+                                            <span>=</span>
+                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'"/>
+                                            <field name="currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
                                         </div>
                                     </div>
                                 </div>

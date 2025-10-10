@@ -170,7 +170,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTemplate = env['product.template']
         dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
         dom += website.sale_product_domain()
-        for product in ProductTemplate.search(dom):
+        for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
             loc = '/shop/%s' % env['ir.http']._slug(product)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
@@ -233,7 +233,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
         try:
             min_price = float(min_price)
         except ValueError:
@@ -329,7 +329,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
-            domain = self._get_shop_domain(search, category, attrib_values)
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            domain = self._get_shop_domain(search_term, category, attrib_values)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._where_calc(domain)
@@ -360,7 +361,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search(
                 expression.AND([
-                    [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)],
+                    [
+                        ('visible_on_ecommerce', '=', True),
+                        '|',
+                        ('product_template_ids.is_published', '=', True),
+                        ('product_product_ids.is_published', '=', True),
+                    ],
                     website_domain
                 ])
             )
@@ -387,12 +393,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
-            attributes = lazy(lambda: ProductAttribute.search([
-                ('product_tmpl_ids', 'in', search_product.ids),
-                ('visibility', '=', 'visible'),
-            ]))
-        else:
-            attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
+            attributes_grouped = request.env['product.template.attribute.line']._read_group(
+                domain=[
+                    ('product_tmpl_id', 'in', search_product.ids),
+                    ('attribute_id.visibility', '=', 'visible'),
+                ],
+                groupby=['attribute_id']
+            )
+
+            attributes_ids = [attribute.id for attribute, *aggregates in attributes_grouped]
+        attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
 
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
@@ -455,7 +465,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
     def product(self, product, category='', search='', **kwargs):
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
@@ -752,7 +762,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
         if not request.website.has_ecommerce_access():
-            return request.redirect('/web/login')
+            return request.redirect('/web/login?redirect=/shop/cart')
 
         order = request.website.sale_get_order()
         if order and order.state != 'draft':
@@ -1663,7 +1673,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             self._include_country_and_state_in_address(shipping_address)
             shipping_address, _side_values = self._parse_form_data(shipping_address)
 
-            if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+            if order_sudo.name in order_sudo.partner_shipping_id.name:
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
                 # means that the partner is missing information, so we update it.
                 order_sudo.partner_shipping_id.write(shipping_address)
@@ -1839,7 +1849,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'shipping_info_required': order._has_deliverable_products(),
             # Todo: remove in master
             'delivery_amount': payment_utils.to_minor_currency_units(
-                order.order_line.filtered(lambda l: l.is_delivery).price_total, order.currency_id
+                order.amount_total - order._compute_amount_total_without_delivery(), order.currency_id
             ),
             'shipping_address_update_route': self._express_checkout_delivery_route,
         })
@@ -1944,6 +1954,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if order and not order.amount_total and not tx_sudo:
             if order.state != 'sale':
+                order._check_cart_is_ready_to_be_paid()
                 order._validate_order()
 
             # clean context and session, then redirect to the portal page

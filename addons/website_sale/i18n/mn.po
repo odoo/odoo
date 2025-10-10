@@ -16,18 +16,18 @@
 # hish, 2024
 # Onii Onii <onii0223@yahoo.com>, 2024
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
-# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
 # Purevsuren Demberel <purevsurento@gmail.com>, 2024
-# Martin Trigaux, 2025
 # Mandalbayar Batbayar <bat.mandalbayar@gmail.com>, 2025
 # baaska sh <sh.baaskash@gmail.com>, 2025
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2025
+# Martin Trigaux, 2025
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-07-11 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
@@ -1311,7 +1311,7 @@ msgstr "Баганууд"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_combos
 msgid "Combo Choices"
-msgstr ""
+msgstr "Багцын сонголт"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1361,23 +1361,31 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "DHL-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "FedEx-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "UPS-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "USPS-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1388,6 +1396,12 @@ msgstr "bpost-н хүргэлт болон хүргэлтийн өртгийг �
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Захиалгын хүргэлтийн өртөг тооцох"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1608,13 +1622,8 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "DHL Express Connector"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr ""
+msgid "DHL"
+msgstr "DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1843,6 +1852,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Та барааг сагслахаасаа өмнө сагсаа хоослохыг хүсч байна уу?"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Баримтжуулалт"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
 msgstr "Баримтууд"
@@ -2059,11 +2073,6 @@ msgstr "Онцолсон"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -3415,7 +3424,7 @@ msgstr "Барааны загварын шинж чанарууд"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Барааны загварын шинж чанарын утга"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
@@ -4485,11 +4494,6 @@ msgstr "Таны барааны танилцуулга бүхий видео URL
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
 msgstr "USPS"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed

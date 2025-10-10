@@ -53,6 +53,7 @@ const makeSession = ({
     user_companies: {
         allowed_companies: Object.fromEntries(companies.map((company) => [company.id, company])),
         current_company: companies[0]?.id,
+        disallowed_ancestor_companies: {},
     },
     user_context: {
         ...userContext,

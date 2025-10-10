@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* marketing_card
-# 
+#
 # Translators:
 # Silvija Butko <silvija.butko@gmail.com>, 2024
 # Tomas Darius Davainis <tomas@davainis.lt>, 2024
@@ -18,20 +18,22 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Martin Trigaux, 2024
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-03 08:35+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: marketing_card
 #. odoo-python
@@ -48,7 +50,9 @@ msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 msgstr ""
 
 #. module: marketing_card
@@ -202,6 +206,12 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Card Layout"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Card Preview"
 msgstr ""
 
 #. module: marketing_card
@@ -363,12 +373,24 @@ msgstr ""
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Hello everyone"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Help us share the news"
 msgstr ""
 
 #. module: marketing_card
 #: model:ir.module.category,description:marketing_card.module_category_marketing_card
 msgid "Helps you manage marketing card campaigns."
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Here's the link to advertise your participation."
 msgstr ""
 
 #. module: marketing_card
@@ -482,6 +504,12 @@ msgid "Mailing Count"
 msgstr ""
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Many thanks"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
 #: model:ir.module.category,name:marketing_card.module_category_marketing_card
 #: model:ir.ui.menu,name:marketing_card.card_menu
@@ -540,6 +568,11 @@ msgstr "Modelio pavadinimas"
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid ""
 "Model of campaign %(campaign)s may not be changed as it already has cards"
+msgstr ""
+
+#. module: marketing_card
+#: model:ir.model,name:marketing_card.model_ir_model
+msgid "Models"
 msgstr ""
 
 #. module: marketing_card
@@ -619,8 +652,8 @@ msgstr "Odoo"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 
 #. module: marketing_card
@@ -886,13 +919,8 @@ msgid "Tags may not reuse existing names."
 msgstr ""
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
-msgid "Thanks for sharing, here is your reward!"
-msgstr ""
-
-#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
-msgid "Thanks to You Message"
+msgid "Thank You Message"
 msgstr ""
 
 #. module: marketing_card
@@ -919,10 +947,8 @@ msgid "Update"
 msgstr "Atnaujinti"
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.robots
-msgid ""
-"User-agent: *\n"
-"                Allow: /cards/"
+#: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
+msgid "Update Cards"
 msgstr ""
 
 #. module: marketing_card
@@ -959,11 +985,22 @@ msgid "Your Home Page"
 msgstr ""
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Your help with this promotion would be greatly appreciated!"
+msgstr ""
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_2
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_3
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_5
 msgid "button text"
+msgstr ""
+
+#. module: marketing_card
+#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
+msgid "e.g. \"Thanks for sharing, here is your reward!\""
 msgstr ""
 
 #. module: marketing_card

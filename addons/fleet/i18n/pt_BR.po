@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# Maitê Dietze, 2024
-# 
+# Maitê Dietze, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Maitê Dietze, 2025\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -139,6 +141,11 @@ msgid "Activity State"
 msgstr "Status da atividade"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tipo de atividade"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -188,6 +195,7 @@ msgstr "Arquivar"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -423,11 +431,11 @@ msgstr "Categorias"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
-"As categorias ajudam a gerenciar sua frota com mais eficiência e a organizar"
-" seus veículos."
+"As categorias ajudam a gerenciar sua frota com mais eficiência e a organizar "
+"seus veículos."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
@@ -470,8 +478,7 @@ msgstr "Escolha se o contrato ainda é válido ou não"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
 "Escolha se o serviço se refere a contratos, serviços de veículos ou ambos"
 
@@ -752,8 +759,8 @@ msgstr "Data de início da cobertura do contrato"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Data em que a cobertura do contrato expira (por padrão, um ano após a data "
 "de início)"
@@ -1448,15 +1455,16 @@ msgid ""
 "            you when some contracts have to be renewed."
 msgstr ""
 "Gerencie todos os seus contratos (locação, seguros etc.) com\n"
-"            seus serviços e custos relacionados. O Odoo avisará automaticamente\n"
+"            seus serviços e custos relacionados. O Odoo avisará "
+"automaticamente\n"
 "            quando os contratos precisarem ser renovados."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
 msgstr ""
-"Gerencie com eficiência os custos de seus diferentes veículos efetivos com o"
-" Odoo."
+"Gerencie com eficiência os custos de seus diferentes veículos efetivos com o "
+"Odoo."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1786,13 +1794,13 @@ msgstr "Operação não suportada."
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"Idioma opcional de tradução (código ISO) para selecionar ao enviar um "
-"e-mail. Se não for definido, a versão inglês será usada. Isso geralmente "
-"deve ser uma expressão marcadora de posição que fornece o idioma apropriado,"
-" por exemplo, {{ object.partner_id.lang }}."
+"Idioma opcional de tradução (código ISO) para selecionar ao enviar um e-"
+"mail. Se não for definido, a versão inglês será usada. Isso geralmente deve "
+"ser uma expressão marcadora de posição que fornece o idioma apropriado, por "
+"exemplo, {{ object.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2334,10 +2342,12 @@ msgstr "Assistência em tour"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Acompanhe todos os serviços feitos em seu veículo.\n"
-"            Os serviços podem ser de vários tipos: reparos ocasionais, manutenção regular etc."
+"            Os serviços podem ser de vários tipos: reparos ocasionais, "
+"manutenção regular etc."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook

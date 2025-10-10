@@ -95,7 +95,7 @@ class PurchaseBillMatch(models.Model):
               FROM purchase_order_line pol
          LEFT JOIN purchase_order po ON pol.order_id = po.id
              WHERE pol.state in ('purchase', 'done')
-               AND pol.product_qty > pol.qty_invoiced
+               AND (pol.product_qty > pol.qty_invoiced OR pol.qty_to_invoice != 0)
                 OR ((pol.display_type = '' OR pol.display_type IS NULL) AND pol.is_downpayment AND pol.qty_invoiced > 0)
         """)
 
@@ -180,8 +180,11 @@ class PurchaseBillMatch(models.Model):
     def action_add_to_po(self):
         if not self or not self.aml_id:
             raise UserError(_("Select Vendor Bill lines to add to a Purchase Order"))
+        partner = self.mapped("partner_id.commercial_partner_id")
+        if len(partner) > 1:
+            raise UserError(_("Please select bill lines with the same vendor."))
         context = {
-            'default_partner_id': self.partner_id.id,
+            'default_partner_id': partner.id,
             'dialog_size': 'medium',
             'has_products': bool(self.aml_id.product_id),
         }

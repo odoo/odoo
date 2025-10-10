@@ -264,11 +264,9 @@
                 </cac:Address>
             </cac:DeliveryLocation>
             <cac:DeliveryParty>
-                <cac:Party>
-                    <t t-call="{{PartyType_template}}">
-                        <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
-                    </t>
-                </cac:Party>
+                <t t-call="{{PartyType_template}}">
+                    <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
+                </t>
             </cac:DeliveryParty>
         </t>
     </template>
@@ -305,6 +303,9 @@
             <cbc:PrepaidAmount
                 t-att-currencyID="vals['currency'].name"
                 t-out="format_float(vals.get('prepaid_amount'), vals.get('currency_dp'))"/>
+            <cbc:PayableRoundingAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('payable_rounding_amount'), vals.get('currency_dp'))"/>
             <cbc:PayableAmount
                 t-att-currencyID="vals['currency'].name"
                 t-out="format_float(vals.get('payable_amount'), vals.get('currency_dp'))"/>

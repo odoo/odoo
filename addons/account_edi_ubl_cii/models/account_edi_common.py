@@ -7,6 +7,7 @@ from odoo.tools import float_is_zero, float_repr, format_list
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
+from datetime import datetime
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
@@ -45,6 +46,7 @@ UOM_TO_UNECE_CODE = {
 # -------------------------------------------------------------------------
 EAS_MAPPING = {
     'AD': {'9922': 'vat'},
+    'AE': {'0235': 'vat'},
     'AL': {'9923': 'vat'},
     'AT': {'9915': 'vat'},
     'AU': {'0151': 'vat'},
@@ -72,7 +74,7 @@ EAS_MAPPING = {
     'LI': {'9936': 'vat'},
     'LT': {'9937': 'vat'},
     'LU': {'9938': 'vat'},
-    'LV': {'9939': 'vat'},
+    'LV': {'0218': 'company_registry', '9939': 'vat'},
     'MC': {'9940': 'vat'},
     'ME': {'9941': 'vat'},
     'MK': {'9942': 'vat'},
@@ -93,6 +95,19 @@ EAS_MAPPING = {
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
+    # DOM-TOM
+    'BL': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Barthélemy
+    'GF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Guiana
+    'GP': {'0009': 'siret', '9957': 'vat', '0002': None},  # Guadeloupe
+    'MF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Martin
+    'MQ': {'0009': 'siret', '9957': 'vat', '0002': None},  # Martinique
+    'NC': {'0009': 'siret', '9957': 'vat', '0002': None},  # New Caledonia
+    'PF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Polynesia
+    'PM': {'0009': 'siret', '9957': 'vat', '0002': None},  # Saint Pierre and Miquelon
+    'RE': {'0009': 'siret', '9957': 'vat', '0002': None},  # Réunion
+    'TF': {'0009': 'siret', '9957': 'vat', '0002': None},  # French Southern and Antarctic Lands
+    'WF': {'0009': 'siret', '9957': 'vat', '0002': None},  # Wallis and Futuna
+    'YT': {'0009': 'siret', '9957': 'vat', '0002': None},  # Mayotte
 }
 
 
@@ -417,13 +432,15 @@ class AccountEdiCommon(models.AbstractModel):
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in ResPartnerBank.search(
+            for bank in ResPartnerBank.with_context(active_test=False).search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
         for account_number in bank_details:
             partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
             if partner_bank.partner_id == partner:
+                if not partner_bank.active:
+                    partner_bank.active = True
                 invoice.partner_bank_id = partner_bank
                 return
             elif not partner_bank and account_number:
@@ -510,6 +527,41 @@ class AccountEdiCommon(models.AbstractModel):
             logs.append(_("A payment of %s was detected.", formatted_amount))
         return logs
 
+    def _import_rounding_amount(self, invoice, tree, xpath, qty_factor):
+        """
+        Add an invoice line representing the rounding amount given in the document.
+        - The amount is assumed to be in document currency
+        """
+        logs = []
+        line_vals = []
+
+        currency = invoice.currency_id
+        rounding_amount_currency = currency.round(qty_factor * float(tree.findtext(xpath) or 0))
+
+        if invoice.currency_id.is_zero(rounding_amount_currency):
+            return line_vals, logs
+
+        inverse_rate = abs(invoice.amount_total_signed) / invoice.amount_total if invoice.amount_total else 0
+        rounding_amount = invoice.company_id.currency_id.round(rounding_amount_currency * inverse_rate)
+
+        line_vals.append({
+            'display_type': 'product',
+            'name': _('Rounding'),
+            'quantity': 1,
+            'product_id': False,
+            'price_unit': rounding_amount_currency,
+            'amount_currency': invoice.direction_sign * rounding_amount_currency,
+            'balance': invoice.direction_sign * rounding_amount,
+            'company_id': invoice.company_id.id,
+            'move_id': invoice.id,
+            'tax_ids': False,
+        })
+
+        formatted_amount = formatLang(self.env, rounding_amount_currency, currency_obj=currency)
+        logs.append(_("A rounding amount of %s was detected.", formatted_amount))
+
+        return line_vals, logs
+
     def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
         logs = []
         lines_values = []
@@ -527,14 +579,15 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
         # Start and End date (enterprise fields)
+        xpath_dict = self._get_invoice_line_xpaths(document_type, qty_factor)
         deferred_values = {}
         start_date = end_date = None
         if self.env['account.move.line']._fields.get('deferred_start_date'):
-            start_date_node = tree.find('./{*}InvoicePeriod/{*}StartDate')
-            end_date_node = tree.find('./{*}InvoicePeriod/{*}EndDate')
+            start_date_node = tree.find(xpath_dict['deferred_start_date'])
+            end_date_node = tree.find(xpath_dict['deferred_end_date'])
             if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
-                start_date = start_date_node.text
-                end_date = end_date_node.text
+                start_date = datetime.strptime(start_date_node.text.strip(), xpath_dict['date_format'])
+                end_date = datetime.strptime(end_date_node.text.strip(), xpath_dict['date_format'])
             deferred_values = {
                 'deferred_start_date': start_date,
                 'deferred_end_date': end_date,
@@ -587,7 +640,7 @@ class AccountEdiCommon(models.AbstractModel):
         """
         xpath_dict = self._get_line_xpaths(document_type, qty_factor)
         # basis_qty (optional)
-        basis_qty = float(self._find_value(xpath_dict['basis_qty'], tree) or 1)
+        basis_qty = float(self._find_value(xpath_dict['basis_qty'], tree) or 1) or 1.0
 
         # gross_price_unit (optional)
         gross_price_unit = None
@@ -671,8 +724,8 @@ class AccountEdiCommon(models.AbstractModel):
 
         # discount
         discount = 0
-        if delivered_qty * price_unit != 0 and price_subtotal is not None:
-            currency = self.env.company.currency_id
+        currency = self.env.company.currency_id
+        if not float_is_zero(delivered_qty * price_unit, currency.decimal_places) and price_subtotal is not None:
             inferred_discount = 100 * (1 - (price_subtotal - charge_amount) / currency.round(delivered_qty * price_unit))
             discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
 
