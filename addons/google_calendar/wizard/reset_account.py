@@ -42,8 +42,9 @@ class ResetGoogleAccount(models.TransientModel):
         # Delete events according to the selected policy. If the deletion is only in
         # Google, we won't keep track of the 'google_id' field for events and recurrences.
         if self.delete_policy in ('delete_odoo', 'delete_both', 'delete_google'):
-            events.google_id = False
-            recurrences.google_id = False
+            # Flag need_sync as False in order to skip the write permission when resetting.
+            events.with_context(skip_event_permission=True).google_id = False
+            recurrences.with_context(skip_event_permission=True).google_id = False
             if self.delete_policy != 'delete_google':
                 events.unlink()
 
@@ -58,7 +59,7 @@ class ResetGoogleAccount(models.TransientModel):
 
         # Write the next sync update attribute on the existing events.
         if self.delete_policy not in ('delete_odoo', 'delete_both'):
-            events.write(next_sync_update)
+            events.with_context(skip_event_permission=True).write(next_sync_update)
 
         self.user_id.res_users_settings_id._set_google_auth_tokens(False, False, 0)
         self.user_id.write({

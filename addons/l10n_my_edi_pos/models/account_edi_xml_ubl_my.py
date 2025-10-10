@@ -215,6 +215,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             consolidated_base_lines.append(new_base_line)
 
         vals['base_lines'] = consolidated_base_lines
+        # We aggregate multiple PoS orders into an UBL InvoiceLine.
+        # So any cash rounding will just be part of the line's amount.
+        vals['cash_rounding_base_lines'] = []
 
     def _add_consolidated_invoice_monetary_total_vals(self, vals):
         self._add_document_monetary_total_vals(vals)

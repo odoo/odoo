@@ -110,7 +110,7 @@ function compare(contentEl, contentSpec, mode) {
     const { text: expectedContent, widths: expectedWidths } = extractWidth(contentSpec);
 
     expect(receivedContent).toBe(expectedContent, {
-        message: `(testEditor) ${mode} is strictly equal to %actual%`,
+        message: `(testEditor) ${mode} should be strictly equal to ${expectedContent}`,
     });
 
     const diffs = expectedWidths.map((width, i) => Math.abs(width - receivedWidths[i]));

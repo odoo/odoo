@@ -11,8 +11,9 @@ class AccountMove(models.Model):
         arch, view = super()._get_view(view_id, view_type, **options)
         company = self.env.company
         if view_type == 'form' and company.country_code in company._get_france_country_codes():
-            shipping_field = arch.xpath("//field[@name='partner_shipping_id']")[0]
-            shipping_field.attrib.pop("groups", None)
+            shipping_fields = arch.xpath("//field[@name='partner_shipping_id']")
+            if shipping_fields:
+                shipping_fields[0].attrib.pop("groups", None)
         return arch, view
 
     @api.depends('company_id.country_code')
@@ -26,10 +27,3 @@ class AccountMove(models.Model):
         super()._compute_show_delivery_date()
         for move in self.filtered(lambda m: m.country_code == 'FR'):
             move.show_delivery_date = move.is_sale_document()
-
-    def _post(self, soft=True):
-        # EXTEND 'account'
-        res = super()._post(soft=soft)
-        for move in self.filtered(lambda m: m.show_delivery_date and not m.delivery_date):
-            move.delivery_date = move.invoice_date
-        return res

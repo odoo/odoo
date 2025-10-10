@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tools.float_utils import float_split_str
 
@@ -348,3 +349,10 @@ class TestManual(common.TestAr):
         self.assertAlmostEqual(l10n_ar_values['price_unit'], 5470.0)
         self.assertAlmostEqual(l10n_ar_values['price_subtotal'], 124716.0)
         self.assertAlmostEqual(l10n_ar_values['price_net'], 5196.5)
+
+    def test_l10n_ar_vat_with_non_numeric_value(self):
+        with self.assertRaises(ValidationError) as e:
+            with Form(self.partner) as partner_form:
+                partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
+                partner_form.vat = "test"
+        self.assertIn('Only numbers allowed for "DNI"', str(e.exception))

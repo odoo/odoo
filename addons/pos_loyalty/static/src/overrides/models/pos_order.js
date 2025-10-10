@@ -1,6 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
+import { roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
 import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
@@ -97,6 +97,11 @@ patch(PosOrder.prototype, {
     setupState(vals) {
         super.setupState(...arguments);
         this.uiState.disabledRewards = new Set(vals?.disabledRewards || []);
+        for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
+            if (!this.models["loyalty.program"].get(pe.program_id)) {
+                delete this.uiState.couponPointChanges[key];
+            }
+        }
     },
     serializeState() {
         const state = super.serializeState(...arguments);
@@ -314,7 +319,12 @@ patch(PosOrder.prototype, {
             }
 
             //If there is only one possible reward we try to claim the most possible out of it
-            if (claimedReward.reward.reward_product_ids?.length === 1) {
+            if (
+                claimedReward.reward.reward_product_ids?.length === 1 &&
+                allRewardsMerged.filter(
+                    (reward) => reward.reward.program_id.id === claimedReward.reward.program_id.id
+                ).length === 1
+            ) {
                 delete claimedReward.args["quantity"];
             }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
@@ -379,6 +389,15 @@ patch(PosOrder.prototype, {
      */
     _getPointsCorrection(program) {
         const rewardLines = this.lines.filter((line) => line.is_reward_line);
+        if (
+            !this._canGenerateRewards(
+                program,
+                this.get_total_with_tax(),
+                this.get_total_without_tax()
+            )
+        ) {
+            return 0;
+        }
         let res = 0;
         for (const rule of program.rule_ids) {
             for (const line of rewardLines) {
@@ -505,7 +524,7 @@ patch(PosOrder.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.get_orderlines().filter((line) => !line.combo_parent_id);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id;
@@ -547,11 +566,19 @@ patch(PosOrder.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
+                    (sum, line) =>
+                        sum +
+                        (line.combo_line_ids.length > 0
+                            ? line.getComboTotalPrice()
+                            : line.get_price_with_tax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) =>
+                        sum +
+                        (line.combo_line_ids.length > 0
+                            ? line.getComboTotalPriceWithoutTax()
+                            : line.get_price_without_tax()),
                     0
                 );
                 const amountCheck =
@@ -592,7 +619,10 @@ patch(PosOrder.prototype, {
                             qtyPerProduct[line._reward_product_id?.id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        orderedProductPaid +=
+                            line.combo_line_ids.length > 0
+                                ? line.getComboTotalPrice()
+                                : line.get_price_with_tax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -642,9 +672,10 @@ patch(PosOrder.prototype, {
                                                 points: pointsPerUnit,
                                                 barcode: line._gift_barcode,
                                                 giftCardId: line._gift_card_id.id,
+                                                gift_code: line.gift_code,
                                             };
                                         }
-                                        return { points: pointsPerUnit };
+                                        return { points: pointsPerUnit, gift_code: line.gift_code };
                                     })
                                 );
                             }
@@ -892,7 +923,9 @@ patch(PosOrder.prototype, {
     processGiftCard(newGiftCardCode, points, expirationDate) {
         const partner_id = this.partner_id?.id || false;
         const product_id = this.get_selected_orderline().product_id.id;
-        const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
+        const program =
+            this.get_selected_orderline()._e_wallet_program_id ||
+            this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
 
         let couponId;
         const couponData = {
@@ -1122,7 +1155,7 @@ patch(PosOrder.prototype, {
         }
         let { discountable, discountablePerTax } = getDiscountable(reward);
         discountable = Math.min(this.get_total_with_tax(), discountable);
-        if (!discountable) {
+        if (floatIsZero(discountable)) {
             return [];
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
@@ -1313,12 +1346,9 @@ patch(PosOrder.prototype, {
                 this._isRewardProductPartOfRules(reward, product) &&
                 reward.program_id.applies_on !== "future"
             ) {
-                const line = this.get_orderlines().find(
-                    (line) => line._reward_product_id?.id === product.id
-                );
                 // Compute the correction points once even if there are multiple reward lines.
                 // This is because _getPointsCorrection is taking into account all the lines already.
-                const claimedPoints = line ? this._getPointsCorrection(reward.program_id) : 0;
+                const claimedPoints = this._getPointsCorrection(reward.program_id);
                 return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
                     ? reward.reward_product_qty
                     : 0;

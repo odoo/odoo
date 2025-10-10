@@ -481,6 +481,16 @@ class MailMail(models.Model):
             link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
             if link_ids:
                 attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
+
+        # Convert URL-only attachments (e.g. cloud or plain external links) into email links
+        url_attachments = attachments.sudo().filtered(
+            lambda a: a.url and not a.file_size and a.url.startswith(('http://', 'https://', 'ftp://')))
+        if url_attachments:
+            url_attachments.sudo().generate_access_token()
+            attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': url_attachments})
+            body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+            attachments -= url_attachments
+
         # Turn remaining attachments into links if they are too heavy and
         # their ownership are business models (i.e. something != mail.message,
         # otherwise they will be deleted along with the mail message leading to a 404)
@@ -545,7 +555,8 @@ class MailMail(models.Model):
         Return iterators over
             mail_server_id, email_from, Records<mail.mail>.ids
         """
-        mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+        mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'], load='')
+        self.env['ir.mail_server'].browse(values['mail_server_id'] for values in mail_values if values['mail_server_id']).mapped('display_name')
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
@@ -553,8 +564,8 @@ class MailMail(models.Model):
             # protect against ill-formatted email_from when formataddr was used on an already formatted email
             emails_from = tools.mail.email_split_and_format_normalize(values['email_from'])
             email_from = emails_from[0] if emails_from else values['email_from']
-            mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
-            alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
+            mail_server_id = values['mail_server_id'] if values['mail_server_id'] else False
+            alias_domain_id = values['record_alias_domain_id'] if values['record_alias_domain_id'] else False
             key = (mail_server_id, alias_domain_id, email_from)
             group_per_email_from[key].append(values['id'])
 
@@ -847,6 +858,7 @@ class MailMail(models.Model):
                 if post_send_callback:
                     post_send_callback([mail_id])
                 self._cr.commit()
+            mail.invalidate_recordset(['body_html'])
         if post_send_callback:
             post_send_callback(self.ids)
         return True

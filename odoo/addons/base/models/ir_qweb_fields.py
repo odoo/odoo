@@ -13,7 +13,7 @@ from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, tools
-from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration
+from odoo.tools import posix_to_ldml, float_is_zero, float_utils, format_date, format_duration
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools.mimetypes import guess_mimetype
@@ -358,6 +358,19 @@ class ManyToManyConverter(models.AbstractModel):
         return nl2br(text)
 
 
+class OneToManyConverter(models.AbstractModel):
+    _name = 'ir.qweb.field.one2many'
+    _description = 'Qweb field one2many'
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def value_to_html(self, value, options):
+        if not value:
+            return False
+        text = ', '.join(value.sudo().mapped('display_name'))
+        return nl2br(text)
+
+
 class HTMLConverter(models.AbstractModel):
     _name = 'ir.qweb.field.html'
     _description = 'Qweb Field HTML'
@@ -398,18 +411,20 @@ class ImageConverter(models.AbstractModel):
         except binascii.Error:
             raise ValueError("Invalid image content") from None
 
-        if img_b64 and guess_mimetype(img_b64, '') == 'image/webp':
+        mimetype = guess_mimetype(img_b64, '') if img_b64 else None
+        if mimetype == 'image/webp':
             return self.env["ir.qweb"]._get_converted_image_data_uri(value)
+        elif mimetype != "image/svg+xml":
+            try:
+                image = Image.open(BytesIO(img_b64))
+                image.verify()
+                mimetype = Image.MIME[image.format]
+            except OSError as exc:
+                raise ValueError("Non-image binary fields can not be converted to HTML") from exc
+            except Exception as exc:  # noqa: BLE001
+                raise ValueError("Invalid image content") from exc
 
-        try:
-            image = Image.open(BytesIO(img_b64))
-            image.verify()
-        except IOError:
-            raise ValueError("Non-image binary fields can not be converted to HTML") from None
-        except: # image.verify() throws "suitable exceptions", I have no idea what they are
-            raise ValueError("Invalid image content") from None
-
-        return "data:%s;base64,%s" % (Image.MIME[image.format], value.decode('ascii'))
+        return "data:%s;base64,%s" % (mimetype, value.decode('ascii'))
 
     @api.model
     def value_to_html(self, value, options):
@@ -478,6 +493,9 @@ class MonetaryConverter(models.AbstractModel):
             else:
                 company = self.env.company
             value = options['from_currency']._convert(value, display_currency, company, date)
+
+        if float_is_zero(value, precision_digits=display_currency.decimal_places):
+            value = 0.0
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value), grouping=True)\

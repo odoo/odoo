@@ -856,6 +856,7 @@ class TestSaleMrpKitBom(TransactionCase):
         """
         Test that when selling a kit, and changing the packaging on the stock move
         to the packaging of the comp, the correct quantity is computed when printing
+        before and after validating
         """
         grp_pack = self.env.ref('product.group_stock_packaging')
         self.env.user.write({'groups_id': [(4, grp_pack.id, 0)]})
@@ -882,7 +883,6 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_id': comp_product.id,
                     'product_qty': 0.1,
                     'product_uom_id': self.env.ref('uom.product_uom_gram').id
-
                 }),
             ]
         })
@@ -894,12 +894,24 @@ class TestSaleMrpKitBom(TransactionCase):
                     'product_id': kit_product.id,
                     'product_uom_qty': 9,
                     'product_packaging_id': packaging_final_prod.id
-            })],
+                }),
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
         })
         so.action_confirm()
-        so.picking_ids.move_ids.product_packaging_id = packaging_comp
-        so.picking_ids.move_ids.write({'quantity': 0.9})
-
+        # check that before validating, the product packaging quantity is good, both if we keep the final product packages
+        # and if we change to a packages of the component
+        so.picking_ids.move_ids[0].write({'quantity': 0.9})
+        so.picking_ids.move_ids[1].write({'quantity': 0.1})
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 1)
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[1].product_packaging_qty, 0)  # there is no packaging on that line
+        so.picking_ids.move_ids[0].product_packaging_id = packaging_comp
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 2)
+        # check that after validating, if the packages was changed to a package of the component the quantity is good
         so.picking_ids.button_validate()
         aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
         key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"

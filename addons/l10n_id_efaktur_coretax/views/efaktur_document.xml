@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="E-faktur Document" create="false">
                     <header>
-                        <field name="attachment_id" invisible="1" /> <!-- TODO: to be removed in master -->
+                        <field name="attachment_id" invisible="1" />
                         <button name="action_download" string="Download" class="btn-primary"
                                 type="object" groups="account.group_account_invoice" data-hotkey="q"
                                 invisible="not invoice_ids"/>

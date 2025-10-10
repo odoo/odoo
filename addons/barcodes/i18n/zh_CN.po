@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
@@ -30,21 +31,27 @@ msgstr " '*'不是有效的 Regex 正则表达式条形码样式。您想用的�
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
 "<i>条码命名规则</i> 定义如何识别和归类条码。\n"
-"                                扫描条形码时，它会关联具有匹配模式的 <i>第一条</i> 规则。\n"
-"                                模式的语法是正则表达式，如果正则表达式与条形码的前缀相匹配，\n"
+"                                扫描条形码时，它会关联具有匹配模式的 <i>第一"
+"条</i> 规则。\n"
+"                                模式的语法是正则表达式，如果正则表达式与条形"
+"码的前缀相匹配，\n"
 "                                则匹配条形码。"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
 msgstr "条形码命名规则定义了 POS 如何识别和解释条形码"
 
 #. module: barcodes
@@ -212,18 +219,26 @@ msgstr "命名规则"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
 "模式还可以定义如何将重量或价格等数值\n"
-"                                编码到条形码中。它们用<code>{NNN}</code> 表示，其中 N\n"
+"                                编码到条形码中。它们用<code>{NNN}</code> 表"
+"示，其中 N\n"
 "                                代表数字的编码位置。也支持浮点数，\n"
-"                                用 D 表示小数，如<code>{NNNDD}</code>。 在这种情况下，\n"
-"                                相关记录上的条形码字段<i>必须</i> 将这些数字显示为\n"
+"                                用 D 表示小数，如<code>{NNNDD}</code>。 在这"
+"种情况下，\n"
+"                                相关记录上的条形码字段<i>必须</i> 将这些数字"
+"显示为\n"
 "                                零。"
 
 #. module: barcodes
@@ -319,10 +334,11 @@ msgstr "类型"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"UPC 代码可以通过前缀加零的方式转换为 EAN。此设置可确定在尝试将规则与其他编码匹配时，是否应以某种方式自动转换 UPC/EAN 条形码。"
+"UPC 代码可以通过前缀加零的方式转换为 EAN。此设置可确定在尝试将规则与其他编码"
+"匹配时，是否应以某种方式自动转换 UPC/EAN 条形码。"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -352,11 +368,17 @@ msgstr "未知条码命令"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
+msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr "用于规则排序，这样较小序列的规则最先匹配"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "最后扫描的条形码值。"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
-# Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fleet
@@ -139,6 +139,11 @@ msgid "Activity State"
 msgstr "活動状態"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "活動タイプ"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -188,6 +193,7 @@ msgstr "アーカイブ"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -423,8 +429,8 @@ msgstr "カテゴリ"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr "カテゴリは、より効率的に車両を管理し、車両を手配するのに役立ちます。"
 
 #. module: fleet
@@ -468,9 +474,9 @@ msgstr "契約が有効かどうかを選択する"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
-msgstr "サービスが契約、車両サービス、またはその両方を参照するかどうかを選択する"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
+msgstr ""
+"サービスが契約、車両サービス、またはその両方を参照するかどうかを選択する"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__closed
@@ -749,8 +755,8 @@ msgstr "契約の適用範囲が始まる日"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr "契約の対象期間が満了する日（デフォルトでは、開始日の1年後）"
 
 #. module: fleet
@@ -872,12 +878,16 @@ msgstr "車両の運転手履歴"
 msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
-msgstr "各契約（例：リース）には、複数のサービス（修理、保険、定期整備）が含まれる場合がある。"
+msgstr ""
+"各契約（例：リース）には、複数のサービス（修理、保険、定期整備）が含まれる場"
+"合がある。"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
-msgstr "各サービスは、契約、スタンドアロンサービス、またはその両方として使用できます。"
+msgstr ""
+"各サービスは、契約、スタンドアロンサービス、またはその両方として使用できま"
+"す。"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
@@ -949,7 +959,9 @@ msgstr "サービス税への入国"
 msgid ""
 "Every service and contract of this vehicle will be considered as archived. "
 "Are you sure that you want to archive this record?"
-msgstr "この車両の全てのサービスおよび契約はアーカイブされたものとみなされます。この記録をアーカイブしてもよろしいですか？"
+msgstr ""
+"この車両の全てのサービスおよび契約はアーカイブされたものとみなされます。この"
+"記録をアーカイブしてもよろしいですか？"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -1435,7 +1447,9 @@ msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
-msgstr "すべての契約（リース、保険など）を関連サービス、費用と共に管理できます。契約更新が必要な場合、Odooが自動的に警告します。"
+msgstr ""
+"すべての契約（リース、保険など）を関連サービス、費用と共に管理できます。契約"
+"更新が必要な場合、Odooが自動的に警告します。"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1770,12 +1784,12 @@ msgstr "操作はサポートされていません。"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"メールを送信時に、オプションで選択可能な翻訳言語 "
-"(ISOコード)。セットしてない場合は、英語版が使われます。これは通常、適切な言語を提供するプレースホルダ式であります、例: {{ "
-"object.partner_id.lang }}"
+"メールを送信時に、オプションで選択可能な翻訳言語 (ISOコード)。セットしてない"
+"場合は、英語版が使われます。これは通常、適切な言語を提供するプレースホルダ式"
+"であります、例: {{ object.partner_id.lang }}"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2262,7 +2276,9 @@ msgstr "温度計交換"
 msgid ""
 "This is the date at which the car will be available, if not set it means "
 "available instantly"
-msgstr "これは、車が利用可能になる日付であり、設定されていない場合は、即座に利用可能になることを意味します。"
+msgstr ""
+"これは、車が利用可能になる日付であり、設定されていない場合は、即座に利用可能"
+"になることを意味します。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -2314,7 +2330,8 @@ msgstr "ツーリングアシスタンス"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "あなたの車両で行われた全てのサービスを追跡します。\n"
 "サービスにはさまざまな種類があります: 臨時の修理、定期整備など。"

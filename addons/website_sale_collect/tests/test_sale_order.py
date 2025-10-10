@@ -19,7 +19,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         self.warehouse_2 = self._create_warehouse()
         self.website.warehouse_id = self.warehouse
         so = self._create_in_store_delivery_order(warehouse_id=self.warehouse_2.id)
-        so.set_delivery_line(self.free_delivery, 0)
+        so._set_delivery_method(self.free_delivery)
         self.assertEqual(so.warehouse_id, self.warehouse)
 
     def test_setting_pickup_location_assigns_warehouse(self):
@@ -61,7 +61,7 @@ class TestSaleOrder(ClickAndCollectCommon):
         })
         so = self._create_in_store_delivery_order()
         so.fiscal_position_id = fp_us
-        so.set_delivery_line(self.free_delivery, 0)
+        so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
     def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):

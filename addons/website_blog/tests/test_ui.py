@@ -95,3 +95,6 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
         self.env.ref("website_blog.opt_blog_post_sidebar").active = True
         self.start_tour("/blog", "blog_sidebar_with_date_and_tag", login="admin")
+
+    def test_blog_tags_with_date(self):
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_tags_with_date", login="admin")

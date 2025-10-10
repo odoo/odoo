@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_automation
-# 
+# * base_automation
+#
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
-# 
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:50+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
+"PO-Revision-Date: 2025-09-30 22:20+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/base_automation/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -44,8 +47,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"Las reglas de automatización \"Al actualizar en tiempo real\" solo se pueden"
-" ejecutar mediante una acción de tipo \"Ejecutar código Python\"."
+"Las reglas de automatización \"Al actualizar en tiempo real\" solo se pueden "
+"ejecutar mediante una acción de tipo \"Ejecutar código Python\"."
 
 #. module: base_automation
 #. odoo-javascript
@@ -67,8 +70,8 @@ msgstr "<code>env</code>: entorno en el que se activa la acción."
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
 msgstr ""
 "<code>model</code>: modelo del registro en el cual se activa la acción. Es "
 "un conjunto de registros vacío."
@@ -113,8 +116,8 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> Las reglas de automatización que se activan por"
-" cambios en la IU se ejecutarán <em>cada que</em> que los campos observados "
+"<i class=\"fa fa-warning\"/> Las reglas de automatización que se activan por "
+"cambios en la IU se ejecutarán <em>cada que</em> que los campos observados "
 "cambien, <em>sin importar si los guarda o no</em>."
 
 #. module: base_automation
@@ -126,21 +129,27 @@ msgstr "<span class=\"text-muted\"> Variables disponibles: </span>"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value'\">para</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">como</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">como</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">after</span>"
 msgstr ""
 "<span invisible=\"trigger != 'on_time_created'\">después de crear</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">después de la última actualización</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">después de</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">después de la última actualización</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">después de</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -160,13 +169,15 @@ msgstr "<span>al eliminar</span>"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr "<span>al establecer a</span>"
+msgstr "<span>al configurarlo como</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid ""
+"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
-"<strong><i class=\"fa fa-lock\"/> Manténgalo en secreto y guárdelo.</strong>"
+"<strong><i class=\"fa fa-lock\"/> Guárdala en secreto y manténla segura.</"
+"strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -224,7 +235,6 @@ msgstr "Aplicar en"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "Archivado"
 
@@ -258,7 +268,7 @@ msgstr "Reglas de automatización"
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr "Reglas de automatización: verificar y ejecutar"
+msgstr "Reglas de automatización: Verificar y ejecutar"
 
 #. module: base_automation
 #. odoo-javascript
@@ -282,8 +292,8 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
-"Cambie el secreto de la URL si cree que la URL ya no es segura. Tendrá que "
-"actualizar cualquier sistema automatizado que llame a este webhook a la "
+"Cambia el secreto de la URL si crees que ya no es segura. Tendrás que "
+"actualizar cualquier sistema automatizado que llame a este webhook con la "
 "nueva URL."
 
 #. module: base_automation
@@ -397,13 +407,18 @@ msgstr "Desactivar regla de automatización"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be corrupted,\n"
-"                as you are effectively disabling a customization that may set\n"
+"                but any data created after this could potentially be "
+"corrupted,\n"
+"                as you are effectively disabling a customization that may "
+"set\n"
 "                important and/or required fields."
 msgstr ""
-"Deshabilitar esta acción automatizada le permitirá continuar con su flujo de trabajo\n"
-"                pero cualquiera de los datos que haya creado después de esto podrían estar dañados,\n"
-"                ya que está deshabilitando la personalización configurada en los \n"
+"Deshabilitar esta acción automatizada le permitirá continuar con su flujo de "
+"trabajo\n"
+"                pero cualquiera de los datos que haya creado después de esto "
+"podrían estar dañados,\n"
+"                ya que está deshabilitando la personalización configurada en "
+"los \n"
 "                campos importantes o requeridos"
 
 #. module: base_automation
@@ -436,9 +451,9 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
-"Los correos electrónicos, seguidores o tipos de acción de las actividades ya"
-" no se pueden utilizar al eliminar los registros, ya que no hay más "
-"registros en donde se puedan aplicar estos cambios."
+"Los correos electrónicos, seguidores o tipos de acción de las actividades ya "
+"no se pueden utilizar al eliminar los registros, ya que no hay más registros "
+"en donde se puedan aplicar estos cambios."
 
 #. module: base_automation
 #. odoo-javascript
@@ -492,8 +507,8 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
+"If present, this condition must be satisfied before executing the automation "
+"rule."
 msgstr ""
 "Si está marcada esta casilla, la condición debe cumplirse antes de ejecutar "
 "la regla de automatización."
@@ -507,6 +522,11 @@ msgstr ""
 "Si la casilla está seleccionada, entonces es necesario cumplir esta "
 "condición antes de actualizar el registro. No está seleccionada al crear un "
 "registro."
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr "Incluir archivados"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -572,8 +592,8 @@ msgstr "Nombre del modelo"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
 msgstr ""
 "El modelo de la acción %(action_name)s debe coincidir con el modelo de la "
 "regla automatizada %(rule_name)s."
@@ -581,7 +601,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr "Modelo sobre el que se ejecuta la regla de automatización."
+msgstr "Modelo en el que se ejecuta la regla de automatización."
 
 #. module: base_automation
 #. odoo-javascript
@@ -742,18 +762,21 @@ msgstr "Enviar notificación webhook"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
-"Envíe un correo electrónico cuando un objeto cambie de estado, archive los registros \n"
-"                después de un mes de inactividad o establezca un recordatorio para realizar seguimiento \n"
+"Envíe un correo electrónico cuando un objeto cambie de estado, archive los "
+"registros \n"
+"                después de un mes de inactividad o establezca un "
+"recordatorio para realizar seguimiento \n"
 "                de las tareas al agregar una etiqueta específica."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "Envíe un correo electrónico cuando un objeto cambie de estado, archive los "
@@ -790,11 +813,11 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
+"Some triggers need a reference to another field. This field is used to store "
+"it."
 msgstr ""
-"Algunos activadores necesitan una referencia a otro campo, este campo se usa"
-" para almacenarlo."
+"Algunos activadores necesitan una referencia a otro campo, este campo se usa "
+"para almacenarlo."
 
 #. module: base_automation
 #. odoo-javascript
@@ -831,18 +854,17 @@ msgstr "Registro objetivo"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
-"El modelo objetivo de las acciones %(action_names)s es distinto al modelo de"
-" la regla."
+"El modelo objetivo de las acciones %(action_names)s es distinto al modelo de "
+"la regla."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
 msgstr ""
 "El \"%(trigger_value)s\" %(trigger_label)s solo se puede utilizar con el "
 "tipo de acción \"%(state_value)s\""
@@ -1006,17 +1028,19 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"Cuando se calcula una condición de tiempo basada en días, es posible "
-"utilizar un calendario para calcular la fecha según los días laborables."
+"Al calcular una condición basada en días, puedes usar un calendario para "
+"calcular la fecha con los días laborables."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "Cuando se debe activar la condición.\n"
-"                Si se encuentra seleccionada, la revisará el programador. De lo contrario, se revisará en la creación y actualización."
+"                Si se encuentra seleccionada, la revisará el programador. De "
+"lo contrario, se revisará en la creación y actualización."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1044,7 +1068,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
 msgstr ""
-"Puede solicitarle a un administrador que desactive o corrija esta regla de "
+"Puedes pedirle a un administrador que desactive o corrija esta regla de "
 "automatización."
 
 #. module: base_automation
@@ -1052,7 +1076,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can disable this automation rule or edit it to solve the issue."
 msgstr ""
-"Puede deshabilitar esta regla de automatización o editarla para resolver el "
+"Puedes desactivar esta regla de automatización o editarla para resolver el "
 "problema."
 
 #. module: base_automation
@@ -1070,7 +1094,8 @@ msgstr ""
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
-"La URL del webhook contiene un secreto, no lo comparta en ningún lado."
+"Tu URL de webhook contiene un secreto. No la compartas con nadie ni en "
+"ningún lado."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban

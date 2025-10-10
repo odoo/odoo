@@ -10,6 +10,11 @@
                 <field name="date" optional="show"/>
                 <field name="name"/>
                 <field name="account_id"/>
+                <field name="analytic_distribution"
+                       widget="analytic_distribution"
+                       optional="hide"
+                       options="{'multi_edit': true}"
+                />
                 <field name="currency_id" column_invisible="True"/>
                 <field name="unit_amount" sum="Quantity" optional="hide"/>
                 <field name="product_uom_id" optional="hide"/>

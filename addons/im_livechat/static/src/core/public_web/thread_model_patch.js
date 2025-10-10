@@ -71,6 +71,10 @@ patch(Thread.prototype, {
         return super.avatarUrl;
     },
 
+    get inChathubOnNewMessage() {
+        return this.channel_type === "livechat" || super.inChathubOnNewMessage;
+    },
+
     /**
      * @override
      * @param {boolean} pushState

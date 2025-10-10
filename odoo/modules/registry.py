@@ -153,6 +153,7 @@ class Registry(Mapping):
         self._sql_constraints = set()
         self._init = True
         self._database_translated_fields = ()  # names of translated fields in database
+        self._database_company_dependent_fields = ()  # names of company dependent fields in database
         if config['test_enable'] or config['test_file']:
             from odoo.tests.result import OdooTestResult  # noqa: PLC0415
             self._assertion_report = OdooTestResult()

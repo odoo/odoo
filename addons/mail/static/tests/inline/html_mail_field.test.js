@@ -6,6 +6,7 @@ import { after, before, beforeEach, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, enableTransitions } from "@odoo/hoot-mock";
 import {
+    clickSave,
     contains,
     defineModels,
     fields,
@@ -93,8 +94,8 @@ test("HtmlMail save inline html", async function () {
     await press("enter");
     expect(".odoo-editor-editable").toHaveInnerHTML("<h1> first </h1>");
 
-    await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+    await clickSave();
+    await expect.waitForSteps(["web_save"]);
 });
 
 test("HtmlMail don't have access to column commands", async function () {
@@ -147,6 +148,6 @@ test("HtmlMail add icon and save inline html", async function () {
     await contains("a.nav-link:contains('Icons')").click();
     await contains("span.fa-glass").click();
 
-    await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+    await clickSave();
+    await expect.waitForSteps(["web_save"]);
 });

@@ -331,13 +331,13 @@ test("join/leave sounds are only played on main tab", async () => {
     });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await click("[title='Start a Call']", { target: env1 });
-    await contains(".o-discuss-Call", { target: env1 });
-    await contains(".o-discuss-Call", { target: env2 });
+    await click(`${env1.selector} [title='Start a Call']`);
+    await contains(`${env1.selector} .o-discuss-Call`);
+    await contains(`${env2.selector} .o-discuss-Call`);
     await assertSteps(["tab1 - play - channel-join"]);
-    await click("[title='Disconnect']:not([disabled])", { target: env1 });
-    await contains(".o-discuss-Call", { target: env1, count: 0 });
-    await contains(".o-discuss-Call", { target: env2, count: 0 });
+    await click(`${env1.selector} [title='Disconnect']:not([disabled])`);
+    await contains(`${env1.selector} .o-discuss-Call`, { count: 0 });
+    await contains(`${env2.selector} .o-discuss-Call`, { count: 0 });
     await assertSteps(["tab1 - play - channel-leave"]);
 });
 

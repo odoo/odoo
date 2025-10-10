@@ -40,8 +40,10 @@ test("reply: discard on reply button toggle", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer", { count: 0 });
 });
@@ -68,6 +70,7 @@ test("reply: discard on pressing escape", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
     // Escape on emoji picker does not stop replying
@@ -111,6 +114,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
     await insertText(".o-mail-Composer-input", "Test");
@@ -143,6 +147,7 @@ test('"reply to" composer should send message if message replied to is not a not
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
     await insertText(".o-mail-Composer-input", "Test");
@@ -588,6 +593,7 @@ test("reply: stop replying button click", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
     await contains("i[title='Stop replying']");
@@ -775,6 +781,7 @@ test("can reply to email message", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Message");
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer", { text: "Replying to md@oilcompany.fr" });
 });

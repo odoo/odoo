@@ -44,7 +44,7 @@ class SaleOrderLine(models.Model):
                 sale_order = None
                 so_create_values = {
                     'partner_id': partner_id,
-                    'company_id': self.env.context.get('default_company_id') or self.env.company.id,
+                    'company_id': self.env.context.get('company_id') or self.env.company.id,
                 }
                 if project_id:
                     try:
@@ -144,7 +144,7 @@ class SaleOrderLine(models.Model):
             if line.analytic_distribution:
                 applied_root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
-                ).root_plan_id
+                ).exists().root_plan_id
                 if accounts_to_add := project._get_analytic_accounts().filtered(
                     lambda account: account.root_plan_id not in applied_root_plans
                 ):
@@ -473,6 +473,6 @@ class SaleOrderLine(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         values = super()._prepare_procurement_values(group_id=group_id)
-        if self.project_id:
+        if self.order_id.project_id:
             values['project_id'] = self.order_id.project_id.id
         return values

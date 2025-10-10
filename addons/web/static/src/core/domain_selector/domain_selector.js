@@ -82,7 +82,7 @@ export class DomainSelector extends Component {
         this.showArchivedCheckbox = this.getShowArchivedCheckBox(Boolean(getFieldDef("active")), p);
         this.includeArchived = false;
         if (this.showArchivedCheckbox) {
-            if (this.tree.value === "&") {
+            if (this.tree.type === "connector" && this.tree.value === "&") {
                 this.tree.children = this.tree.children.filter((child) => {
                     if (deepEqual(child, ARCHIVED_CONDITION)) {
                         this.includeArchived = true;

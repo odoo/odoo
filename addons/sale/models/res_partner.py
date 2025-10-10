@@ -105,14 +105,3 @@ class ResPartner(models.Model):
                 fields.Date.context_today(self),
             )
             partner.commercial_partner_id.credit_to_invoice += credit_company_currency
-
-    def unlink(self):
-        # Unlink draft/cancelled SO so that the partner can be removed from database
-        self.env['sale.order'].sudo().search([
-            ('state', 'in', ['draft', 'cancel']),
-            '|', '|',
-            ('partner_id', 'in', self.ids),
-            ('partner_invoice_id', 'in', self.ids),
-            ('partner_shipping_id', 'in', self.ids),
-        ]).unlink()
-        return super().unlink()

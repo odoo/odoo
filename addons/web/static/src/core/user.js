@@ -148,7 +148,9 @@ export const setLastConnectedUsers = (users) => {
     browser.localStorage.setItem(LAST_CONNECTED_USER_KEY, JSON.stringify(users.slice(0, 5)));
 };
 
-if (user.login && user.login !== "__system__") {
+if (!session.quick_login) {
+    browser.localStorage.removeItem(LAST_CONNECTED_USER_KEY);
+} else if (user.login && user.login !== "__system__") {
     const users = getLastConnectedUsers();
     const lastConnectedUsers = [
         {
@@ -162,3 +164,4 @@ if (user.login && user.login !== "__system__") {
     ];
     setLastConnectedUsers(lastConnectedUsers);
 }
+delete session.quick_login;

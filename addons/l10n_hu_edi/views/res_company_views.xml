@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_registry']" position="after">
-                <field name="account_fiscal_country_id" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="account_fiscal_country_id" invisible="1"/>
                 <field name="l10n_hu_group_vat" invisible="account_fiscal_country_id != %(base.hu)d"/>
             </xpath>
         </field>

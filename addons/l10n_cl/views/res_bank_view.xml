@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_res_bank_form" />
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="fiscal_country_codes" invisible="1"/> <!-- TODO: to be removed in master -->
+                    <field name="fiscal_country_codes" invisible="1"/>
                     <field name="l10n_cl_sbif_code" invisible="'CL' not in fiscal_country_codes"/>
                 </field>
             </field>

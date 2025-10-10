@@ -14,6 +14,7 @@ class AccountTax(models.Model):
             ('SRCA-C', "SG - Customer accounting supply made by the customer on supplier’s behalf"),
             ('SROVR-RS', "SG - Supply of remote services accountable by the electronic marketplace under the Overseas Vendor Registration Regime"),
             ('SROVR-LVG', "SG - Supply of low-value goods accountable by the redeliverer or electronic marketplace on behalf of third-party suppliers"),
+            ('SRRC', "SG - Reverse charge regime for Business-to-Business (“B2B”) supplies of imported services"),
             ('SRLVG', "SG - Own supply of low-value goods"),
             ('ZR', "SG - Supplies involving goods for export/ provision of international services"),
             ('ES33', "SG - Specific categories of exempt supplies listed under regulation 33 of the GST (General) Regulations"),

@@ -10,6 +10,7 @@
         padding: $o-hrs-timeline-entry-padding;
 
         &.o_resume_timeline_cell {
+            overflow: hidden !important;
             div {
                 width: $o-hrs-timeline-dot-size;
                 height: $o-hrs-timeline-dot-size;
@@ -31,6 +32,10 @@
                 }
             }
         }
+    }
+
+    .o_resume_line_desc {
+        overflow: auto;
     }
 
     .o_resume_line_title, .o_resume_line_desc {

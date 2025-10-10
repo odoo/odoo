@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_reporting']" position="after">
-                <field name="l10n_it_partner_pa" invisible="1"/> <!-- TODO: to be removed in master -->
+                <field name="l10n_it_partner_pa" invisible="1"/>
                 <group name="it_edi_sale_order"
                        string="Italian Electronic Invoicing"
                        invisible="country_code != 'IT' or not l10n_it_partner_pa">

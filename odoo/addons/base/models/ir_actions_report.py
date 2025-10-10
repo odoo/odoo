@@ -22,6 +22,7 @@ import lxml.html
 import tempfile
 import subprocess
 import re
+import requests
 import json
 
 from lxml import etree
@@ -692,6 +693,9 @@ class IrActionsReport(models.Model):
         if kwargs['humanReadable']:
             kwargs['fontName'] = _DEFAULT_BARCODE_FONT
 
+        if kwargs['width'] * kwargs['height'] > 1200000 or max(kwargs['width'], kwargs['height']) > 10000:
+            raise ValueError("Barcode too large")
+
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
@@ -943,9 +947,11 @@ class IrActionsReport(models.Model):
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-
                     return collected_streams
-
+                else:
+                    for res_id in res_ids_wo_stream:
+                        individual_collected_stream = self._render_qweb_pdf_prepare_streams(report_ref=report_ref, data=data, res_ids=[res_id])
+                        collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
@@ -1177,3 +1183,31 @@ class IrActionsReport(models.Model):
             if records.filtered_domain(literal_eval(action.domain)):
                 valid_action_report_ids.append(action.id)
         return valid_action_report_ids
+
+    @api.model
+    def _prepare_local_attachments(self, attachments):
+        attachments_with_data = self.env['ir.attachment']
+        for attachment in attachments:
+            if not attachment._is_remote_source():
+                attachments_with_data |= attachment
+            elif (stream := attachment._to_http_stream()) and stream.url:
+                # call `_to_http_stream()` in case the attachment is an url or cloud storage attachment
+                try:
+                    response = requests.get(stream.url, timeout=10)
+                    response.raise_for_status()
+                    attachment_data = response.content
+                    if not attachment_data:
+                        _logger.warning("Attachment %s at with URL %s retrieved successfully, but no content was found.", attachment.id, attachment.url)
+                        continue
+                    attachments_with_data |= self.env['ir.attachment'].new({
+                        'db_datas': attachment_data,
+                        'name': attachment.name,
+                        'mimetype': attachment.mimetype,
+                        'res_model': attachment.res_model,
+                        'res_id': attachment.res_id
+                    })
+                except requests.exceptions.RequestException as e:
+                    _logger.error("Request for attachment %s with URL %s failed: %s", attachment.id, attachment.url, e)
+            else:
+                _logger.error("Unexpected edge case: Is not being considered as a local or remote attachment, attachment ID:%s will be skipped.", attachment.id)
+        return attachments_with_data

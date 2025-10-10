@@ -1,15 +1,15 @@
 /** @odoo-module */
 
-import { queryAll } from "@odoo/hoot-dom";
-import { reactive, useEffect, useExternalListener } from "@odoo/owl";
+import { on, queryAll } from "@odoo/hoot-dom";
+import { reactive, useComponent, useEffect, useExternalListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
+    isInstanceOf,
     isIterable,
     parseRegExp,
     R_WHITE_SPACE,
     toSelector,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { DiffMatchPatch } from "./lib/diff_match_patch";
 import { getRunner } from "./main_runner";
 
 /**
@@ -157,7 +157,7 @@ function getFunctionString(fn) {
  */
 function getGenericSerializer(value) {
     for (const [constructor, serialize] of GENERIC_SERIALIZERS) {
-        if (value instanceof constructor) {
+        if (isInstanceOf(value, constructor)) {
             return serialize;
         }
     }
@@ -235,7 +235,7 @@ function _deepEqual(a, b, ignoreOrder, partial, cache) {
     }
 
     // Files
-    if (a instanceof File) {
+    if (isInstanceOf(a, File)) {
         // Files
         return a.name === b.name && a.size === b.size && a.type === b.type;
     }
@@ -551,11 +551,10 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
-const dmp = new DiffMatchPatch();
-const { DIFF_INSERT, DIFF_DELETE } = DiffMatchPatch;
-
 const labelObjects = new WeakSet();
 const objectConstructors = new Map();
+/** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
+const hootKeys = [];
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -573,21 +572,6 @@ let fuzzyScoreMap = null;
 //-----------------------------------------------------------------------------
 
 /**
- * @template P
- * @param {((...args: P[]) => any)[]} callbacks
- * @param {"pop" | "shift"} method
- * @param {...P} args
- */
-export function consumeCallbackList(callbacks, method, ...args) {
-    while (callbacks.length) {
-        if (method === "shift") {
-            callbacks.shift()(...args);
-        } else {
-            callbacks.pop()(...args);
-        }
-    }
-}
-/**
  * @param {string} text
  */
 export async function copy(text) {
@@ -596,6 +580,20 @@ export async function copy(text) {
         $debug(`Copied to clipboard: ${stringify(text)}`);
     } catch (error) {
         console.warn("Could not copy to clipboard:", error);
+    }
+}
+
+/**
+ * @param {KeyboardEvent} ev
+ */
+export function callHootKey(ev) {
+    for (const { callback, ...params } of hootKeys) {
+        if ($entries(params).every(([k, v]) => ev[k] === v)) {
+            callback(ev);
+            if (ev.defaultPrevented) {
+                return;
+            }
+        }
     }
 }
 
@@ -734,13 +732,13 @@ export function deepCopy(value) {
     }
 
     if (typeof value === "object" && !Markup.isMarkup(value)) {
-        if (value instanceof String || value instanceof Number || value instanceof Boolean) {
+        if (isInstanceOf(value, String, Number, Boolean)) {
             return value;
         }
         if (isNode(value)) {
             // Nodes
             return value.cloneNode(true);
-        } else if (value instanceof Date || value instanceof RegExp) {
+        } else if (isInstanceOf(value, Date, RegExp)) {
             // Dates & regular expressions
             return new (getConstructor(value))(value);
         } else if (isIterable(value)) {
@@ -758,32 +756,25 @@ export function deepCopy(value) {
 /**
  * @template {(...args: any[]) => any} T
  * @param {T} fn
- * @param {number} [interval]
  */
-export function batch(fn, interval) {
-    /** @type {(() => ReturnType<T>)[]} */
+export function batch(fn) {
+    /** @type {Parameters<T>[]} */
     const currentBatch = [];
-    let timeoutId = 0;
 
     /** @type {T} */
     function batched(...args) {
-        currentBatch.push(() => fn(...args));
-        if (timeoutId) {
-            return;
-        }
-        timeoutId = setTimeout(() => {
-            timeoutId = 0;
-            flush();
-        }, interval);
+        currentBatch.push(args);
+        throttledFlush();
     }
 
     function flush() {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-            timeoutId = 0;
+        for (const args of currentBatch) {
+            fn(...args);
         }
-        consumeCallbackList(currentBatch, "shift");
+        currentBatch.length = 0;
     }
+
+    const throttledFlush = throttle(flush);
 
     return [batched, flush];
 }
@@ -866,13 +857,13 @@ export function ensureArray(value) {
  * @returns {Error}
  */
 export function ensureError(value) {
-    if (value instanceof Error) {
+    if (isInstanceOf(value, Error)) {
         return value;
     }
-    if (value instanceof ErrorEvent) {
+    if (isInstanceOf(value, ErrorEvent)) {
         return ensureError(value.error || value.message);
     }
-    if (value instanceof PromiseRejectionEvent) {
+    if (isInstanceOf(value, PromiseRejectionEvent)) {
         return ensureError(value.reason || value.message);
     }
     return new Error(String(value || "unknown error"));
@@ -1044,19 +1035,19 @@ export function getTypeOf(value) {
             if (value === null) {
                 return "null";
             }
-            if (value instanceof Date) {
+            if (isInstanceOf(value, Date)) {
                 return "date";
             }
-            if (value instanceof Error) {
+            if (isInstanceOf(value, Error)) {
                 return "error";
             }
             if (isNode(value)) {
                 return "node";
             }
-            if (value instanceof RegExp) {
+            if (isInstanceOf(value, RegExp)) {
                 return "regex";
             }
-            if (value instanceof URL) {
+            if (isInstanceOf(value, URL)) {
                 return "url";
             }
             if ($isArray(value)) {
@@ -1116,17 +1107,17 @@ export function isOfType(value, type) {
         case "any":
             return true;
         case "date":
-            return value instanceof Date;
+            return isInstanceOf(value, Date);
         case "error":
-            return value instanceof Error;
+            return isInstanceOf(value, Error);
         case "integer":
             return $isInteger(value);
         case "node":
             return isNode(value);
         case "regex":
-            return value instanceof RegExp;
+            return isInstanceOf(value, RegExp);
         case "url":
-            return value instanceof URL;
+            return isInstanceOf(value, URL);
         default:
             return typeof value === type;
     }
@@ -1264,7 +1255,9 @@ export function makeRuntimeHook(name) {
                 valid ||= Boolean(last.global);
             }
             if (!valid) {
-                throw new HootError(`cannot call "${name}" callback outside of a suite`);
+                throw new HootError(`cannot call "${name}" callback outside of a suite`, {
+                    level: "critical",
+                });
             }
             return runner[name](...callbacks);
         },
@@ -1284,7 +1277,7 @@ export function match(value, ...matchers) {
     }
     return matchers.some((matcher) => {
         if (typeof matcher === "function") {
-            if (value instanceof matcher) {
+            if (isInstanceOf(value, matcher)) {
                 return true;
             }
             matcher = new RegExp(matcher.name);
@@ -1293,7 +1286,7 @@ export function match(value, ...matchers) {
         if (R_OBJECT.test(strValue)) {
             strValue = getConstructor(value).name;
         }
-        if (matcher instanceof RegExp) {
+        if (isInstanceOf(matcher, RegExp)) {
             return matcher.test(strValue);
         } else {
             return strValue.includes(String(matcher));
@@ -1346,7 +1339,7 @@ export function parseQuery(query) {
         return [];
     }
     const regex = parseRegExp(nQuery, { safe: true });
-    if (regex instanceof RegExp) {
+    if (isInstanceOf(regex, RegExp)) {
         // Do not go further: the entire query is treated as a regular expression
         return [new QueryRegExp(regex)];
     }
@@ -1460,14 +1453,19 @@ export function stringToNumber(string) {
  * @returns {T}
  */
 export function throttle(fn) {
-    let canRun = true;
+    function unlock() {
+        locked = false;
+    }
+
+    let locked = false;
+
     return function throttled(...args) {
-        if (!canRun) {
+        if (locked) {
             return;
         }
-        canRun = false;
-        requestAnimationFrame(() => (canRun = true));
-        return fn(...args);
+        locked = true;
+        requestAnimationFrame(unlock);
+        fn(...args);
     };
 }
 
@@ -1525,9 +1523,61 @@ export function useAutofocus(ref) {
     useEffect(autofocus, () => [ref.el]);
 }
 
+/**
+ * @param {string[]} keyStroke
+ * @param {(ev: KeyboardEvent) => any} callback
+ */
+export function useHootKey(keyStroke, callback) {
+    const component = useComponent();
+    /** @type {KeyboardEventInit} */
+    const params = { callback: callback.bind(component) };
+    for (const key of keyStroke) {
+        switch (key) {
+            case "Alt": {
+                params.altKey = true;
+                break;
+            }
+            case "Control": {
+                params.ctrlKey = true;
+                break;
+            }
+            case "Meta": {
+                params.metaKey = true;
+                break;
+            }
+            case "Shift": {
+                params.shiftKey = true;
+                break;
+            }
+            default: {
+                params.key = key;
+                break;
+            }
+        }
+    }
+    hootKeys.push(params);
+}
+
 /** @type {EventTarget["addEventListener"]} */
 export function useWindowListener(type, callback, options) {
     return useExternalListener(windowTarget, type, (ev) => ev.isTrusted && callback(ev), options);
+}
+
+/**
+ * @param {Document} doc
+ */
+export function waitForDocument(doc) {
+    return new Promise(function (resolve) {
+        if (doc.readyState !== "loading") {
+            return resolve(true);
+        }
+        const removeListener = on(doc, "readystatechange", function checkReadyState() {
+            if (doc.readyState !== "loading") {
+                removeListener();
+                resolve(true);
+            }
+        });
+    });
 }
 
 export class Callbacks {
@@ -1541,7 +1591,7 @@ export class Callbacks {
      * @param {boolean} [once]
      */
     add(type, callback, once) {
-        if (callback instanceof Promise) {
+        if (isInstanceOf(callback, Promise)) {
             const promiseValue = callback;
             callback = function waitForPromise() {
                 return Promise.resolve(promiseValue).then(resolve);
@@ -1716,6 +1766,22 @@ export class ElementMap extends Map {
 
 export class HootError extends Error {
     name = "HootError";
+    /** @type {keyof typeof import("./core/logger").ISSUE_LEVELS} */
+    level;
+
+    /**
+     *
+     * @param {string} [message]
+     * @param {ErrorOptions & {
+     *  level?: keyof typeof import("./core/logger").ISSUE_LEVELS;
+     * }} [options]
+     */
+    constructor(message, options) {
+        super(message, options);
+
+        // See 'logger.js' for details on each issue level
+        this.level = options?.level;
+    }
 }
 
 /** @template [T=string] */
@@ -1743,12 +1809,17 @@ export class Markup {
      * @param {unknown} actual
      */
     static diff(expected, actual) {
+        if (!window.DiffMatchPatch) {
+            return null;
+        }
         const eType = typeof expected;
         if (eType !== typeof actual || !((expected && eType === "object") || eType === "string")) {
             // Cannot diff
             return null;
         }
-        let hasDiff;
+        let hasDiff = false;
+        const { DIFF_INSERT, DIFF_DELETE } = window.DiffMatchPatch;
+        const dmp = new window.DiffMatchPatch();
         const diff = dmp
             .diff_main(formatTechnical(expected), formatTechnical(actual))
             .map((diff) => {

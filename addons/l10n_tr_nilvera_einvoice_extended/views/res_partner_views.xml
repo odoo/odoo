@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form_l10n_tr_nilvera_extended" model="ir.ui.view">
+            <field name="name">view.partner.form.inherit.l10n_tr_nilvera_extended</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div/field[@name='state_id']/.." position="after">
+                    <field name="l10n_tr_tax_office_id" invisible="country_code != 'TR'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

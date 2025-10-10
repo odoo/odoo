@@ -211,18 +211,21 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
  * @returns {string}
  */
 export function formatFloat(value, options = {}) {
-    if (options.humanReadable) {
-        return humanNumber(value, options);
-    }
-    const grouping = options.grouping || l10n.grouping;
-    const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
-    const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
     let precision;
     if (options.digits && options.digits[1] !== undefined) {
         precision = options.digits[1];
     } else {
         precision = 2;
     }
+    if (floatIsZero(value, precision)) {
+        value = 0.0;
+    }
+    if (options.humanReadable) {
+        return humanNumber(value, options);
+    }
+    const grouping = options.grouping || l10n.grouping;
+    const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
+    const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
     const formatted = value.toFixed(precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.trailingZeros === false && formatted[1]) {

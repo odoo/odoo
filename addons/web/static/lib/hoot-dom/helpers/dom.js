@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getTag, isFirefox, isIterable, parseRegExp } from "../hoot_dom_utils";
+import { getTag, isFirefox, isInstanceOf, isIterable, parseRegExp } from "../hoot_dom_utils";
 import { waitUntil } from "./time";
 
 /**
@@ -488,7 +488,7 @@ function makePatternBasedPseudoClass(pseudoClass, getContent) {
         } catch (err) {
             throw selectorError(pseudoClass, err.message);
         }
-        if (regex instanceof RegExp) {
+        if (isInstanceOf(regex, RegExp)) {
             return function containsRegExp(node) {
                 return regex.test(String(getContent(node)));
             };

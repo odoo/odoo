@@ -99,13 +99,18 @@ class Meeting(models.Model):
         return res
 
     def _check_modify_event_permission(self, values):
-        # Check if event modification attempt by attendee is valid to avoid duplicate events creation.
-        for event in self:
-            # Edge case: when restarting the synchronization, guests can write 'need_sync=True' on events.
-            google_sync_restart = values.get('need_sync') and len(values)
-            if not google_sync_restart and (event.guests_readonly and self.env.user.id != event.user_id.id):
-                raise ValidationError(_("The following event can only be updated by the organizer "
-                                        "according to the event permissions set on Google Calendar."))
+        """ Check if event modification attempt by attendee is valid to avoid duplicate events creation. """
+        # Edge case: when restarting the synchronization, guests can write 'need_sync=True' on events.
+        google_sync_restart = values.get('need_sync') and len(values)
+        # Edge case 2: when resetting an account, we must be able to erase the event's google_id.
+        skip_event_permission = self.env.context.get('skip_event_permission', False)
+        if google_sync_restart or skip_event_permission:
+            return
+        if any(event.guests_readonly and self.env.user.id != event.user_id.id for event in self):
+            raise ValidationError(
+                _("The following event can only be updated by the organizer "
+                "according to the event permissions set on Google Calendar.")
+            )
 
     def _skip_send_mail_status_update(self):
         """If a google calendar is not syncing with the user, don't send a mail."""
@@ -375,3 +380,8 @@ class Meeting(models.Model):
         if self.user_id and self.user_id.sudo().google_calendar_token:
             return self.user_id
         return self.env.user
+
+    def _is_google_insertion_blocked(self, sender_user):
+        self.ensure_one()
+        has_different_owner = self.user_id and self.user_id != sender_user
+        return has_different_owner

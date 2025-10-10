@@ -6,6 +6,7 @@
 # Ilya Rozhkov, 2024
 # Alena Vlasova, 2024
 # Wil Odoo, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +63,10 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Заказ на "
+"продажу, связанный с этим проектом, был отменен. Рекомендуем либо обновить "
+"позицию заказа, либо отменить этот проект в соответствии с отменой заказа.\""
+" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -72,6 +77,10 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Заказ на "
+"продажу, связанный с этой задачей, был отменен. Рекомендуем либо обновить "
+"позицию заказа, либо отменить эту задачу в соответствии с отменой заказа.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -107,6 +116,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Клиент</span>\n"
+"                        <span class=\"o_stat_text\">Предпросмотр</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -132,6 +143,8 @@ msgid ""
 "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
 "The following product need a project in which to put its task: %(product_name)s"
 msgstr ""
+"Проект должен быть указан либо в коммерческом предложении %(order)s, либо в карточке товара, создающего задачу при оформлении заказа.\n"
+"Следующий товар требует указания проекта, в котором будет размещена задача: %(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -140,6 +153,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"При подтверждении заказа на продажу будет создана задача для проекта. "
+"Аналитическое распределение этого проекта также будет использовано как "
+"основа для новых позиций в заказе на продажу."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -195,7 +211,7 @@ msgstr "Себестоимость"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Себестоимость проданных товаров"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -221,12 +237,15 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"Создать проект для заказа с задачей на каждую позицию, чтобы отслеживать "
+"затраченное время."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
+"Создать задачу в существующем проекте для отслеживания затраченного времени."
 
 #. module: sale_project
 #. odoo-python
@@ -239,6 +258,7 @@ msgstr "Создать счет от поставщика"
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
 msgstr ""
+"Создать пустой проект для заказа, чтобы отслеживать затраченное время."
 
 #. module: sale_project
 #. odoo-python
@@ -272,6 +292,8 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"Создайте проекты или задачи позже и привяжите их к заказу для отслеживания "
+"затраченного времени."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -288,7 +310,7 @@ msgstr "Счета-фактуры для клиентов"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Указано в коммерческом предложении"
 
 #. module: sale_project
 #. odoo-javascript
@@ -299,7 +321,7 @@ msgstr "Отгружено"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "Кампания цифрового маркетинга (проект)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -321,12 +343,12 @@ msgstr "Авансовые платежи"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Пустой проект"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "Услуги по укладке напольных покрытий"
 
 #. module: sale_project
 #. odoo-python
@@ -433,14 +455,14 @@ msgstr "Не выставлен счет"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "Комплект офисной мебели (задача)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
+msgstr "После подтверждения КП клиентом оно становится заказом на продажу."
 
 #. module: sale_project
 #. odoo-python
@@ -451,7 +473,7 @@ msgstr "Другие услуги"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "Покрасочные работы"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -465,13 +487,13 @@ msgstr ""
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "Сантехнические услуги"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Портал – Заказ на продажу"
 
 #. module: sale_project
 #. odoo-python
@@ -496,6 +518,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"Товары, добавленные в складские операции, которые предусматривают создание "
+"аналитических затрат, будут повторно выставлены в этом заказе на продажу, "
+"если настроены соответствующим образом."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -651,7 +676,7 @@ msgstr "Заказ на продажу, к которому привязана �
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "Отвертка"
 
 #. module: sale_project
 #. odoo-python
@@ -718,7 +743,7 @@ msgstr "Анализ задач"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
-msgstr ""
+msgstr "Позиция заказа на продажу должна содержать товар с типом «услуга»."
 
 #. module: sale_project
 #. odoo-python
@@ -757,6 +782,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
+"Не удалось создать проект, так как заказ на продажу: должен быть "
+"подтвержден, уже связан с другим проектом или не содержит услуг."
 
 #. module: sale_project
 #. odoo-python
@@ -803,12 +830,12 @@ msgstr "Просмотр заказа на продажу"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "Услуга по редизайну сайта (проект и задача)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "Услуги по электромонтажу"
 
 #. module: sale_project
 #. odoo-python
@@ -824,4 +851,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "Вы сможете создать счет и получить оплату."

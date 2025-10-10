@@ -41,7 +41,7 @@ class AccountMove(models.Model):
                 if move._l10n_sa_is_simplified():
                     x509_cert_sudo = move.journal_id.sudo().l10n_sa_production_csid_certificate_id
                     xml_content = self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_generate_zatca_template(move)
-                    qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, x509_cert_sudo,
+                    qr_code_str = move._l10n_sa_get_qr_code(move.company_id, xml_content, x509_cert_sudo,
                                                             move.l10n_sa_invoice_signature, True)
                     qr_code_str = b64encode(qr_code_str).decode()
                 elif zatca_document.state == 'sent' and zatca_document.sudo().attachment_id.datas:
@@ -73,7 +73,7 @@ class AccountMove(models.Model):
         return self.reversed_entry_id or self.ref
 
     @api.model
-    def _l10n_sa_get_qr_code(self, journal_id, unsigned_xml, certificate, signature, is_b2c=False):
+    def _l10n_sa_get_qr_code(self, company_id, unsigned_xml, certificate, signature, is_b2c=False):
         """
             Generate QR code string based on XML content of the Invoice UBL file, X509 Production Certificate
             and company info.
@@ -95,14 +95,15 @@ class AccountMove(models.Model):
         invoice_time = xpath_ns('//cbc:IssueTime')
         invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
 
-        if invoice_datetime and journal_id.company_id.vat and certificate and signature:
+        if invoice_datetime and company_id.vat and certificate and signature:
+
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
-            amount_total = float(xpath_ns('//cbc:TaxInclusiveAmount'))
+            amount_total = float(xpath_ns('//cbc:PayableAmount'))
             amount_tax = float(xpath_ns('//cac:TaxTotal/cbc:TaxAmount'))
-            seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, journal_id.company_id.display_name.encode())
-            seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, journal_id.company_id.vat.encode())
+            seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, company_id.display_name.encode())
+            seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, company_id.vat.encode())
             timestamp_enc = self._l10n_sa_get_qr_code_encoding(3,
                                                                invoice_datetime.strftime("%Y-%m-%dT%H:%M:%S").encode())
             amount_total_enc = self._l10n_sa_get_qr_code_encoding(4, float_repr(abs(amount_total), 2).encode())
@@ -171,10 +172,8 @@ class AccountMove(models.Model):
             Save submitted invoice XML hash in case of either Rejection or Acceptance.
         """
         self.ensure_one()
-        self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(
-            xml_content)
-        bootstrap_cls, title, content = ("success", _("Invoice Successfully Submitted to ZATCA"),
-                                         "" if (not error or not response_data) else response_data)
+        bootstrap_cls, title, subtitle, content = ("success", _("Invoice Successfully Submitted to ZATCA"), "", "" if (not error or not response_data) else response_data)
+        status_code = response_data.get('status_code')
         attachment = False
         if error:
             xml_filename = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
@@ -189,41 +188,72 @@ class AccountMove(models.Model):
                 'mimetype': 'application/xml',
             })
             bootstrap_cls, title = ("danger", _("Invoice was rejected by ZATCA"))
-            error_msg = response_data['error']
-            content = Markup("""
-                <p class='mb-0'>
-                    %s
-                </p>
-                <hr>
-                <p class='mb-0'>
-                    %s
-                </p>
-            """) % (_('The invoice was rejected by ZATCA. Please, check the response below:'), error_msg)
+            subtitle = _('The invoice was rejected by ZATCA. Please, check the response below:')
+            content = response_data['error']
         if response_data and response_data.get('validationResults', {}).get('warningMessages'):
-            status_code = response_data.get('status_code')
             bootstrap_cls, title = ("warning", _("Invoice was Accepted by ZATCA (with Warnings)"))
-            content = Markup("""
-                <p class='mb-0'>
-                    %s
-                </p>
-                <hr>
-                <p class='mb-0'>
-                    <b>%s</b>%s
-                </p>
-            """) % (_('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:'),
-                    f"[{status_code}] " if status_code else "",
-                    Markup("<br/>").join([Markup("<b>%s</b> : %s") % (m['code'], m['message']) for m in response_data['validationResults']['warningMessages']]))
+            subtitle = _('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:')
+            content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
+                "status_code": f"[{status_code}] " if status_code else "",
+                "errors": Markup("<br/>").join([
+                    Markup("<b>%(code)s</b> : %(message)s") % {
+                        "code": m['code'],
+                        "message": m['message'],
+                    } for m in response_data['validationResults']['warningMessages']
+                ])
+            }
+        if response_data.get("error") and response_data.get("excepted"):
+            bootstrap_cls, title = ("warning", _("Warning: Unable to Retrieve a Response from ZATCA"))
+            subtitle = _('Unable to retrieve response from ZATCA. Please, check the response below:')
+            content = response_data['error']
+        if status_code == 409:
+            bootstrap_cls, title = ("warning", _("Warning: Invoice was already successfully reported to ZATCA"))
+            subtitle = _("This invoice was already successfully reported to ZATCA. Please, check the response below:")
+            content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
+                "status_code": f"[{status_code}] " if status_code else "",
+                "errors": Markup("<br/>").join([
+                    Markup("<b>%(code)s</b> : %(message)s") % {
+                        "code": m['code'],
+                        "message": m['message'],
+                    } for m in response_data['validationResults']['errorMessages']
+                ])
+            }
+        if response_data.get("error") and not content:
+            # if there is an error, but no exception or rejection in the response
+            # then it is due to an internal error raised. No need to log a note
+            return
+
+        if not response_data.get("excepted"):
+            self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
+
         self.with_context(no_new_invoice=True).message_post(body=Markup("""
                 <div role='alert' class='alert alert-%s'>
-                    <h4 class='alert-heading'>%s</h4>%s
+                    <h4 class='alert-heading'>%s</h4>
+                    <p class='mb-0'>
+                        %s
+                    </p>
+                    %s
+                    <p class='mb-0'>
+                        %s
+                    </p>
                 </div>
-            """) % (bootstrap_cls, title, content),
+            """) % (bootstrap_cls, title, subtitle, Markup("<hr>") if content else "", content),
             attachment_ids=attachment and [attachment.id] or []
         )
 
     def _is_l10n_sa_eligibile_invoice(self):
         self.ensure_one()
         return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA'
+
+    def _l10n_sa_is_legal(self):
+        # Extends l10n_sa
+        # Accounts for both ZATCA phases
+        # Phase 1: no documents
+        # Phase 2: checks the state of documents
+        self.ensure_one()
+        result = super()._l10n_sa_is_legal()
+        zatca_document = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+        return result or (self.company_id.country_id.code == 'SA' and zatca_document and self.edi_state == "sent")
 
     def _get_report_base_filename(self):
         """

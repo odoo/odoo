@@ -633,7 +633,7 @@ export class CollaborationOdooPlugin extends Plugin {
         // different history, we should not apply it.
         this.historyShareId = Math.floor(Math.random() * Math.pow(2, 52)).toString();
 
-        const lastStepId = content && this.getLastHistoryStepId(content);
+        const lastStepId = content && content.match(/data-last-history-steps="([\d,]+)"/)?.[1];
         if (lastStepId) {
             this.dependencies.collaboration.setInitialBranchStepId(lastStepId);
         }

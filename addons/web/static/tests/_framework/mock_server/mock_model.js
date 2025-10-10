@@ -618,9 +618,11 @@ function isValidFieldValue(record, fieldDef) {
         case "binary":
         case "char":
         case "html":
-        case "json":
         case "text": {
             return typeof value === "string";
+        }
+        case "json": {
+            return typeof value === "string" || typeof value === "object";
         }
         case "boolean": {
             return typeof value === "boolean";
@@ -3279,7 +3281,7 @@ export class Model extends Array {
                         const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
                         const inverseFieldName = field.inverse_fname_by_model_name?.[coModel._name];
                         if (inverseFieldName) {
-                            inverseData[inverseFieldName] = id;
+                            inverseData[inverseFieldName] = field.type === "many2many" ? [id] : id;
                         }
                         const [newId] = coModel.create([inverseData]);
                         ids.push(newId);

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
+import { press } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
@@ -10,6 +11,7 @@ import {
     simulateArrowKeyPress,
     tripleClick,
     underline,
+    undo,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 
@@ -56,7 +58,10 @@ test("should make qweb tag underline", async () => {
 test("should make a whole heading underline after a triple click", async () => {
     await testEditor({
         contentBefore: `<h1>[ab</h1><p>]cd</p>`,
-        stepFunction: underline,
+        stepFunction: async (editor) => {
+            await tripleClick(editor.editable.querySelector("h1"));
+            underline(editor);
+        },
         contentAfter: `<h1>${u(`[ab]`)}</h1><p>cd</p>`,
     });
 });
@@ -354,4 +359,22 @@ describe("with italic", () => {
         await tick(); // await selectionchange
         expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
     });
+});
+
+test("should not add history step for underline on collapsed selection", async () => {
+    const { editor, el } = await setupEditor("<p>abcd[]</p>");
+
+    patchWithCleanup(console, { warn: () => {} });
+
+    // Collapsed formatting shortcuts (e.g. Ctrl+U) shouldn’t create a history
+    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom step in the history.
+    await press(["ctrl", "u"]);
+    expect(getContent(el)).toBe(`<p>abcd${u("[]\u200B", "first")}</p>`);
+
+    await insertText(editor, "A");
+    expect(getContent(el)).toBe(`<p>abcd${u("A[]")}</p>`);
+
+    undo(editor);
+    expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 });

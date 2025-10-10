@@ -1,31 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* certificate
-# 
+# * certificate
+#
 # Translators:
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2025
-# 
+#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
-"PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Fernanda Alvarez, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"PO-Revision-Date: 2025-09-30 22:20+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/certificate/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "A private key is required to decrypt data."
-msgstr ""
-"Es necesario que cuente con una clave privada para descifrar los datos."
+msgstr "Necesitas una clave privada para descifrar los datos."
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
@@ -36,12 +39,12 @@ msgstr "Activo"
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Add, edit and delete certificates."
-msgstr "Agregue, edite y elimine certificados."
+msgstr "Agrega, edita y elimina certificados."
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Add, edit and delete keys."
-msgstr "Agregue, edite y elimine claves."
+msgstr "Agrega, edita y elimina claves."
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
@@ -106,17 +109,17 @@ msgstr "Empresa"
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__country_code
 msgid "Country Code"
-msgstr "Código de país"
+msgstr "Código del país"
 
 #. module: certificate
 #: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
 msgid "Create a first certificate"
-msgstr "Cree el primer certificado"
+msgstr "Crea el primer certificado"
 
 #. module: certificate
 #: model_terms:ir.actions.act_window,help:certificate.certificate_key_action_view_list
 msgid "Create a first key"
-msgstr "Cree la primera clave"
+msgstr "Crea la primera clave"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
@@ -217,17 +220,17 @@ msgstr "Error al cargar"
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
 msgid "Make sure to use a private key to sign documents."
-msgstr "Asegúrese de utilizar una clave privada para firmar los documentos."
+msgstr "Asegúrate de utilizar una clave privada para firmar los documentos."
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your certificates"
-msgstr "Gestione sus certificados"
+msgstr "Gestiona tus certificados"
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
 msgid "Manage your keys"
-msgstr "Gestione sus claves"
+msgstr "Gestiona tus claves"
 
 #. module: certificate
 #: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
@@ -327,7 +330,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "El código ISO del país en dos caracteres.\n"
-"Puede utilizar este campo para realizar una búsqueda rápida."
+"Puedes utilizar este campo para realizar una búsqueda rápida."
 
 #. module: certificate
 #. odoo-python
@@ -344,12 +347,12 @@ msgstr "El certificado y la clave pública no son compatibles."
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
 msgid "The date on which the certificate expires (UTC)"
-msgstr "La fecha de vencimiento del certificado (UTC)"
+msgstr "La fecha en que vence el certificado (UTC)"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
 msgid "The date on which the certificate starts to be valid (UTC)"
-msgstr "La fecha en que inicia la validez del certificado (UTC)"
+msgstr "La fecha en que el certificado empieza a ser válido (UTC)"
 
 #. module: certificate
 #. odoo-python
@@ -420,8 +423,8 @@ msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "decryption: RSA."
 msgstr ""
-"El algoritmo de criptografía asimétrica \"%s\" no es compatible, puede usar "
-"RSA para descifrarlo."
+"El algoritmo de criptografía asimétrica \"%s\" no es compatible, puedes usar"
+" RSA para descifrarlo."
 
 #. module: certificate
 #. odoo-python
@@ -430,8 +433,8 @@ msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "signature: EC and RSA."
 msgstr ""
-"El algoritmo de criptografía asimétrica \"%s\" no es compatible, puede usar "
-"EC y RSA para la firma."
+"El algoritmo de criptografía asimétrica \"%s\" no es compatible, puedes usar"
+" EC y RSA para firmar."
 
 #. module: certificate
 #. odoo-python
@@ -440,8 +443,8 @@ msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
 " RSA."
 msgstr ""
-"El algoritmo de criptografía asimétrica \"%s\" no es compatible, puede usar "
-"EC y RSA para descifrarlo."
+"El algoritmo de criptografía asimétrica \"%s\" no es compatible, puedes usar"
+" EC y RSA"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id

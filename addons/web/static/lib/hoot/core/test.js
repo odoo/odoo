@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 import { Tag } from "./tag";
@@ -36,7 +36,8 @@ const SHARED_RESULTS = $freeze([]);
 export function testError({ name, parent }, ...message) {
     const parentString = parent ? ` (in suite ${stringify(parent.name)})` : "";
     return new HootError(
-        `error while registering test ${stringify(name)}${parentString}: ${message.join("\n")}`
+        `error while registering test ${stringify(name)}${parentString}: ${message.join("\n")}`,
+        { level: "critical" }
     );
 }
 
@@ -62,6 +63,14 @@ export class Test extends Job {
         if (!this.formatted) {
             this.formatted = true;
             this.runFnString = this.formatFunctionSource(this.runFnString);
+            if (window.Prism) {
+                const highlighted = window.Prism.highlight(
+                    this.runFnString,
+                    Prism.languages.javascript,
+                    "javascript"
+                );
+                this.runFnString = markup(highlighted);
+            }
         }
         return this.runFnString;
     }

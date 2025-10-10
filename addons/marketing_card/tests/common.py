@@ -1,5 +1,6 @@
 import base64
 from contextlib import contextmanager
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.tests import BaseCase, TransactionCase
@@ -133,3 +134,9 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
             'reward_target_url': f"{cls.env['card.campaign'].get_base_url()}/share-rewards/2039-sharer-badge/",
             'target_url': cls.env['card.campaign'].get_base_url(),
         })
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        with freeze_time(mock_dt), \
+                patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield

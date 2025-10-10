@@ -67,10 +67,17 @@ class AccountMove(models.Model):
 
             move.l10n_it_document_type = document_type.get(move._l10n_it_edi_get_document_type())
 
+    def _l10n_it_edi_get_document_type(self):
+        # EXTENDS 'l10n_it_edi'
+        self.ensure_one()
+
+        if self.l10n_it_document_type:
+            return self.l10n_it_document_type.code
+        return super()._l10n_it_edi_get_document_type()
+
     def _l10n_it_edi_get_values(self, pdf_values=None):
         # EXTENDS 'l10n_it_edi'
         res = super()._l10n_it_edi_get_values(pdf_values)
-        res['document_type'] = self.l10n_it_document_type.code
         res['payment_method'] = self.l10n_it_payment_method
 
         return res
@@ -92,10 +99,15 @@ class AccountMove(models.Model):
         if not res:
             return
         self = res
+        tree = data['xml_tree']
 
         #l10n_it_payment_method
-        if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+        if payment_method := get_text(tree, '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
             if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
                 self.l10n_it_payment_method = payment_method
+
+        document_type_code = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
+        if document_type := self.env['l10n_it.document.type'].search([('code', '=', document_type_code)]):
+            self.l10n_it_document_type = document_type
 
         return self

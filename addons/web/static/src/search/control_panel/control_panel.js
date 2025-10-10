@@ -587,7 +587,7 @@ export class ControlPanel extends Component {
                 name: action.python_method || action.action_id[0] || action.action_id,
                 resModel: action.parent_res_model,
                 context,
-                stackPosition: this.env.config.parentActionId ? "replaceCurrentAction" : "",
+                stackPosition: "replaceCurrentAction",
                 viewType: action.default_view_mode,
             },
             { isEmbeddedAction: true }

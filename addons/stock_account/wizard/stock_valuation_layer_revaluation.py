@@ -120,15 +120,15 @@ class StockValuationLayerRevaluation(models.TransientModel):
         # Update the stardard price in case of AVCO/FIFO
         cost_method = product_id.categ_id.property_cost_method
         if cost_method in ['average', 'fifo']:
-            previous_cost = lot_id.standard_price if lot_id else product_id.standard_price
+            previous_cost = product_id.avg_cost or product_id.standard_price
             total_product_qty = sum(layers_with_qty.mapped('remaining_qty'))
+            product_id.with_context(disable_auto_svl=True).standard_price = previous_cost + (self.added_value / product_id.quantity_svl)
             if lot_id:
+                previous_cost_lot = lot_id.standard_price
                 lot_id.with_context(disable_auto_svl=True).standard_price += self.added_value / total_product_qty
-            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / product_id.quantity_svl
-            if self.lot_id:
                 description += _(
                     " lot/serial number cost updated from %(previous)s to %(new_cost)s.",
-                    previous=previous_cost,
+                    previous=previous_cost_lot,
                     new_cost=lot_id.standard_price
                 )
             else:
@@ -151,7 +151,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         remaining_qty = sum(adjusted_layers.mapped('remaining_qty'))
         remaining_value = self.added_value
-        remaining_value_unit_cost = self.currency_id.round(remaining_value / remaining_qty)
+        remaining_value_unit_cost = remaining_value / remaining_qty
 
         # adjust all layers by the unit value change per unit, except the last layer which gets
         # whatever is left. This avoids rounding issues e.g. $10 on 3 products => 3.33, 3.33, 3.34
@@ -162,6 +162,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
                 taken_remaining_value = remaining_value
             else:
                 taken_remaining_value = remaining_value_unit_cost * svl.remaining_qty
+            taken_remaining_value = self.currency_id.round(taken_remaining_value)
             if float_compare(svl.remaining_value + taken_remaining_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
                 raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be use to correct a specific transfer.'))
 
@@ -180,6 +181,10 @@ class StockValuationLayerRevaluation(models.TransientModel):
                 revaluation_svl_vals.append(
                     dict(vals, value=value, lot_id=lot)
                 )
+                # update the lot's standard price
+                if cost_method in ['average', 'fifo']:
+                    lot = self.env['stock.lot'].browse(lot).with_company(self.company_id)
+                    lot.with_context(disable_auto_svl=True).standard_price += self.added_value / total_qty
 
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 

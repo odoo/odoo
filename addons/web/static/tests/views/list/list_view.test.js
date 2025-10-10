@@ -3454,6 +3454,20 @@ test(`selection box is properly displayed (multi pages)`, async () => {
     });
 });
 
+test(`selection box shows '+' suffix on selection count beyond count_limit`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>`,
+    });
+    // select all records of first page
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_list_selection_box`).toHaveText("2\nselected\n Select all 3+");
+    // select all domain
+    await contains(`.o_list_selection_box .o_list_select_domain`).click();
+    expect(`.o_list_selection_box`).toHaveText("All 3+ selected");
+});
+
 test(`selection box is properly displayed (group list)`, async () => {
     await mountView({
         resModel: "foo",
@@ -16671,4 +16685,21 @@ test(`hide pager in the list view with sample data`, async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toHaveCount();
+});
+
+test(`basic open record with allowOpenAction`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`, params);
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list action="test_action" type="object"><field name="foo"/></list>`,
+        allowOpenAction: false,
+    });
+    await contains(".o_field_cell").click();
+    expect.verifySteps([]);
 });

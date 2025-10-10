@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # Triine Aavik <triine@avalah.ee>, 2024
 # Patrick-Jordan Kiudorv, 2024
@@ -18,22 +18,22 @@
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # Siim Raasuke, 2024
 # Leaanika Randmets, 2024
-# Stevin Lilla, 2024
 # Birgit Vijar, 2024
 # Anna, 2024
-# 
+# Stevin Lilla, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
@@ -153,6 +153,11 @@ msgid "Activity State"
 msgstr "Tegevuse staatus"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tegevuse tüüp"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -202,6 +207,7 @@ msgstr "Arhiveeri"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -437,8 +443,8 @@ msgstr "Kategooriad"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr "Kategooriad aitavad teil oma sõidukiparki tõhusamalt hallata."
 
 #. module: fleet
@@ -482,8 +488,7 @@ msgstr "Vali, kas leping on kehtiv või mitte"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr "Vali, kas teenus viitab lepingutele, sõidukiteenustele või mõlemale"
 
 #. module: fleet
@@ -763,8 +768,8 @@ msgstr "Lepingu kehtivuse alguskuupäev"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Kuupäev, millal lepingu kehtivus lõppeb (vaikimisi üks aasta peale "
 "alguskuupäeva)"
@@ -970,8 +975,8 @@ msgid ""
 "Every service and contract of this vehicle will be considered as archived. "
 "Are you sure that you want to archive this record?"
 msgstr ""
-"Iga selle sõiduki teenus ja leping loetakse arhiveerituks. Kas olete kindel,"
-" et soovite selle kirje arhiveerida?"
+"Iga selle sõiduki teenus ja leping loetakse arhiveerituks. Kas olete kindel, "
+"et soovite selle kirje arhiveerida?"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -1795,13 +1800,13 @@ msgstr "Toimingut ei toetata."
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Valikuline tõlkekeel (ISO-kood), mis valitakse meili saatmisel. Kui seda "
 "pole määratud, kasutatakse ingliskeelset versiooni. Tavaliselt peaks see "
-"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. {{ "
-"object.partner_id.lang }}."
+"olema kohahoidja avaldis, mis pakub sobivat keelt, nt. "
+"{{ object.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2142,8 +2147,7 @@ msgstr "Seaded"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on ennem tänast "
-"kuupäeva"
+"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on ennem tänast kuupäeva"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -2291,8 +2295,8 @@ msgid ""
 "This is the date at which the car will be available, if not set it means "
 "available instantly"
 msgstr ""
-"See on kuupäev, millal auto on saadaval; kui pole märgitud, tähendab see, et"
-" auto on kohe saadaval."
+"See on kuupäev, millal auto on saadaval; kui pole märgitud, tähendab see, et "
+"auto on kohe saadaval."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -2344,10 +2348,12 @@ msgstr "Reisitoetus"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Jälgige kõiki teie sõidukile osutatud teenuseid\n"
-"            Teenused võivad olla mitut tüüpi: ajutine remont, korraline hooldus, jne."
+"            Teenused võivad olla mitut tüüpi: ajutine remont, korraline "
+"hooldus, jne."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook

@@ -32,6 +32,7 @@ export class DynamicModelFieldSelectorChar extends CharField {
     //---- Getters ----
     get getSelectorProps() {
         return {
+            allowEmpty: !this.props.required,
             path: this.props.record.data[this.props.name],
             resModel: this.getResModel(),
             readonly: this.props.readonly,
@@ -45,6 +46,10 @@ export class DynamicModelFieldSelectorChar extends CharField {
     }
 
     filter(fieldDef) {
+        if (fieldDef.type === "separator") {
+            // Don't show properties separator
+            return false;
+        }
         return !this.props.onlySearchable || fieldDef.searchable;
     }
 

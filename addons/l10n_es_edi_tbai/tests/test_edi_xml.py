@@ -33,6 +33,20 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             })],
         })
 
+    def create_total_refund(self):
+        move_reversal = self.env['account.move.reversal'].with_context(
+            active_model="account.move",
+            active_ids=self.out_invoice.ids
+        ).create({
+            'date': '2020-02-01',
+            'reason': 'no reason',
+            'journal_id': self.out_invoice.journal_id.id,
+        })
+        reversal = move_reversal.refund_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        reverse_move.action_post()
+        return reverse_move
+
     def test_xml_tree_post(self):
         """Test of Customer Invoice XML"""
         with freeze_time(self.frozen_today):
@@ -41,6 +55,22 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_doc = edi_document._get_xml()
             xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
             xml_expected = etree.fromstring(super()._get_sample_xml('xml_post.xml'))
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
+
+    def test_xml_tree_post_refund(self):
+        """Test of Customer Invoice XML"""
+        with freeze_time(self.frozen_today):
+            edi_document = self.out_invoice._l10n_es_tbai_create_edi_document(cancel=False)
+            edi_document._generate_xml(self.out_invoice._l10n_es_tbai_get_values(cancel=False))
+            self.out_invoice.action_post()
+            self.out_invoice.l10n_es_tbai_post_document_id = edi_document.id
+            refund = self.create_total_refund()
+            edi_document = refund._l10n_es_tbai_create_edi_document(cancel=False)
+            edi_document._generate_xml(refund._l10n_es_tbai_get_values(cancel=False))
+            xml_doc = edi_document._get_xml()
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+
+            xml_expected = etree.fromstring(super()._get_sample_xml('xml_post_refund.xml'))
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
     def test_xml_tree_post_generic_sequence(self):

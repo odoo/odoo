@@ -459,7 +459,7 @@ export class Store extends BaseStore {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
                 if (isTabFocused && thread?.isDisplayed) {
-                    navigator.serviceWorker.controller.postMessage({
+                    navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
                     });

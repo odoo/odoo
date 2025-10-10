@@ -105,7 +105,7 @@ class AccountAnalyticLine(models.Model):
         super(AccountAnalyticLine, self - analytic_line_with_project)._compute_display_name()
         for analytic_line in analytic_line_with_project:
             if analytic_line.task_id:
-                analytic_line.display_name = f"{analytic_line.project_id.display_name} - {analytic_line.task_id.display_name}"
+                analytic_line.display_name = f"{analytic_line.project_id.sudo().display_name} - {analytic_line.task_id.sudo().display_name}"
             else:
                 analytic_line.display_name = analytic_line.project_id.display_name
 
@@ -197,7 +197,11 @@ class AccountAnalyticLine(models.Model):
 
             company = task.company_id or project.company_id or self.env['res.company'].browse(vals.get('company_id'))
             vals['company_id'] = company.id
-            vals.update(self._timesheet_preprocess_get_accounts(vals))
+            vals.update({
+                fname: account_id
+                for fname, account_id in self._timesheet_preprocess_get_accounts(vals).items()
+                if fname not in vals
+            })
 
             if not vals.get('product_uom_id'):
                 vals['product_uom_id'] = company.project_time_mode_id.id
@@ -258,7 +262,7 @@ class AccountAnalyticLine(models.Model):
             employee_out_id = False
             if employee_per_company:
                 company_id = list(employee_per_company)[0] if len(employee_per_company) == 1\
-                        else vals.get('company_id', self.env.company.id)
+                        else vals.get('company_id') or self.env.company.id
                 employee_out_id = employee_per_company.get(company_id, False)
 
             if employee_out_id:
@@ -290,7 +294,11 @@ class AccountAnalyticLine(models.Model):
             raise ValidationError(_('Timesheets cannot be created on a private task.'))
         if project or task:
             values['company_id'] = task.company_id.id or project.company_id.id
-        values.update(self._timesheet_preprocess_get_accounts(values))
+        values.update({
+            fname: account_id
+            for fname, account_id in self._timesheet_preprocess_get_accounts(values).items()
+            if fname not in values
+        })
 
         if values.get('employee_id'):
             employee = self.env['hr.employee'].browse(values['employee_id'])
@@ -390,6 +398,11 @@ class AccountAnalyticLine(models.Model):
                     'amount': amount_converted,
                 })
         return result
+
+    def _split_amount_fname(self):
+        # split the quantity instead of the amount, since the amount is postprocessed
+        # based on the quantity
+        return 'unit_amount' if self.project_id else super()._split_amount_fname()
 
     def _is_timesheet_encode_uom_day(self):
         company_uom = self.env.company.timesheet_encode_uom_id

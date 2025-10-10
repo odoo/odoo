@@ -121,7 +121,8 @@ messageActionsRegistry
     .add("mark-as-unread", {
         condition: (component) =>
             component.props.thread?.model === "discuss.channel" &&
-            component.store.self.type === "partner",
+            component.store.self.type === "partner" &&
+            component.props.message.persistent,
         icon: "fa fa-eye-slash",
         title: _t("Mark as Unread"),
         onClick: (component) => component.props.message.onClickMarkAsUnread(component.props.thread),
@@ -191,17 +192,20 @@ messageActionsRegistry
         sequence: 55,
     })
     .add("toggle-translation", {
-        condition: (component) => component.props.message.isTranslatable(component.props.thread),
+        condition: (component) => component.props.message.isTranslatable(component.message.thread),
         icon: (component) =>
-            `fa fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
-        title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
-        onClick: (component) => component.onClickToggleTranslation(),
+            `fa fa-language ${
+                component.message.showTranslation ? "o-mail-Message-translated" : ""
+            }`,
+        title: (component) => (component.message.showTranslation ? _t("Revert") : _t("Translate")),
+        onClick: (component) => component.message.onClickToggleTranslation(),
         sequence: 100,
     })
     .add("copy-link", {
         condition: (component) =>
             component.message.message_type &&
-            component.message.message_type !== "user_notification",
+            component.message.message_type !== "user_notification" &&
+            (!component.props.thread.access_token || component.props.thread.hasReadAccess),
         icon: "fa fa-link",
         title: _t("Copy Link"),
         onClick: (component) => component.message.copyLink(),

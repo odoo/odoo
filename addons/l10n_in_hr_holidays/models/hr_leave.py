@@ -16,7 +16,7 @@ class HolidaysRequest(models.Model):
             return
         date_from = self.request_date_from
         date_to = self.request_date_to
-        total_leaves = (self.request_date_to - self.request_date_from).days + 1
+        total_leaves = (self.request_date_to - self.request_date_from).days + (0.5 if self.request_unit_half else 1)
 
         def is_non_working_day(calendar, date):
             return not calendar._works_on_date(date) or any(
@@ -36,14 +36,12 @@ class HolidaysRequest(models.Model):
 
         calendar = self.resource_calendar_id
         total_leaves += count_sandwich_days(calendar, date_from, -1) + count_sandwich_days(calendar, date_to, 1)
-        if is_non_working_day(calendar, date_from):
+        while is_non_working_day(calendar, date_from):
             total_leaves -= 1
-            if is_non_working_day(calendar, date_from + timedelta(days=+1)):
-                total_leaves -= 1
-        if is_non_working_day(calendar, date_to):
+            date_from += timedelta(days=1)
+        while is_non_working_day(calendar, date_to):
             total_leaves -= 1
-            if is_non_working_day(calendar, date_to + timedelta(days=-1)):
-                total_leaves -= 1
+            date_to -= timedelta(days=1)
         return total_leaves
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
@@ -71,8 +69,8 @@ class HolidaysRequest(models.Model):
                 days, hours = result[leave.id]
                 updated_days = leave._l10n_in_apply_sandwich_rule(public_holidays, leaves_by_employee.get(leave.employee_id, []))
                 result[leave.id] = (updated_days, hours)
-                if updated_days:
+                if updated_days and leave.state not in ['validate', 'validate1']:
                     leave.l10n_in_contains_sandwich_leaves = updated_days != days
-            else:
+            elif leave.state not in ['validate', 'validate1']:
                 leave.l10n_in_contains_sandwich_leaves = False
         return result

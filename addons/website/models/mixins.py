@@ -230,6 +230,10 @@ class WebsitePublishedMixin(models.AbstractModel):
                 # Some main_record might be in sudo because their content needs
                 # to be rendered by a template even if they were not supposed
                 # to be accessible
+                # TODO in master, instead of this we should ensure main_object
+                # (which calls can_publish) is ensured to not be in sudo for all
+                # renderings, and sudo() only the required operations if needed.
+                # See REVIEW_CAN_PUBLISH_UNSUDO
                 plain_record = record.sudo(flag=False) if self._context.get('can_publish_unsudo_main_object', False) else record
                 self.env['website'].get_current_website()._check_user_can_modify(plain_record)
                 record.can_publish = True
@@ -362,7 +366,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
             limit=limit,
             order=search_detail.get('order', order)
         )
-        count = model.search_count(domain)
+        count = model.search_count(domain) if limit and limit == len(results) else len(results)
         return results, count
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):

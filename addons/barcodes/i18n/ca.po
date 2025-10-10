@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes
-# 
+# * barcodes
+#
 # Translators:
 # Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Iván Infantes Castarnado, 2024
@@ -15,48 +15,58 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Ivan Espinola, 2024
 # Noemi Pla, 2025
-# 
+# Santiago Payà <santiagopim@gmail.com>, 2025
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Noemi Pla, 2025\n"
-"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
+"PO-Revision-Date: 2025-09-03 11:19+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/barcodes/"
+"ca/>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
 msgstr ""
-" '*' no és un patró Regex vàlid per a codi de barres. Potser volia utilitzar"
-" '.*'?"
+" '*' no és un patró Regex vàlid per a codi de barres. Potser volia utilitzar "
+"'.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"Les <i>nomenclatures de codis de barres</i> defineixen com es reconeixen i "
-"categoritzen els codis de barres. Quan s'escaneja un codi de barres "
-"s'associa a la <i>primera</i>regla amb un patró coincident. La sintaxi dels "
-"patrons és la d'una expressió regular, i un codi de barres es reconeix si "
-"l'expressió regular coincideix amb un prefix del codi de barres."
+"Les<i>nomenclatures de codi de barres</i> defineixen com es reconeixen i "
+"categoritzen els codis de barres.\n"
+"                                Quan s'escaneja un codi de barres s'associa "
+"a la <i>primera</i> regla amb un patró\n"
+"                                coincident. La sintaxi dels patrons és la "
+"d'una expressió regular, i un codi de barres es reconeix \n"
+"                                si l'expressió regular coincideix amb un "
+"prefix del codi de barres."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
 msgstr ""
 "Una nomenclatura de codi de barres defineix com el punt de venda identifica "
 "i interpreta els codis de barres"
@@ -116,7 +126,7 @@ msgstr "Nomenclatura del codi de barres"
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclatures de codi de barres "
+msgstr "Nomenclatures de codi de barres"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -201,6 +211,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"Per poder utiltizar barcodes.barcode_events_mixin, cal implementar el mètode "
+"on_barcode_scanned"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -227,18 +239,28 @@ msgstr "Nomenclatura"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
-"Els patrons també poden definir com es codifiquen els valors numèrics, tals com el pes o el preu,\n"
-"                                en el codi de barres. S'indica amb <code>{NNN}</code>, on les N\n"
-"                                defineixen en quina posició es codifiquen els dígits. També es permeten\n"
-"                                 nombres reals si els decimals s'indiquen amb D, com ara <code>{NNNDD}</code>. En aquests casos,\n"
-"                                el camp del codi de barres en els registres associats <i>ha</i> de mostrar zeros\n"
+"Els patrons també poden definir com es codifiquen els valors numèrics, tals "
+"com el pes o el preu,\n"
+"                                en el codi de barres. S'indica amb "
+"<code>{NNN}</code>, on les N\n"
+"                                defineixen en quina posició es codifiquen "
+"els dígits. També es permeten\n"
+"                                 nombres reals si els decimals s'indiquen "
+"amb D, com ara <code>{NNNDD}</code>. En aquests casos,\n"
+"                                el camp del codi de barres en els registres "
+"associats <i>ha</i> de mostrar zeros\n"
 "                                en aquestes posicions."
 
 #. module: barcodes
@@ -265,7 +287,7 @@ msgstr "Seqüència"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr "Taules "
+msgstr "Taules"
 
 #. module: barcodes
 #. odoo-javascript
@@ -344,13 +366,13 @@ msgstr "Tipus"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "Els codis UPC es poden convertir a EAN prefixant-los amb un zero. Aquest "
-"ajustament determina si un codi de barres UPC/EAN ha de ser convertit "
-"automàticament en un sentit o l'altre en buscar una coincidència amb l'altra"
-" codificació."
+"ajust determina si un codi de barres UPC/EAN ha de ser convertit "
+"automàticament en un sentit o l'altre en buscar una coincidència amb l'altra "
+"codificació."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -380,8 +402,7 @@ msgstr "Ordre desconeguda de codi de barres"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
+msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 "Utilitzat per ordenar regles tals que les regles amb menor seqüència "
 "coincideixin primer"
@@ -390,3 +411,10 @@ msgstr ""
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "Valor de l'últim codi de barres escanejat."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""

@@ -70,6 +70,9 @@ class SurveyQuestion(models.Model):
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
     session_available = fields.Boolean(related='survey_id.session_available', string='Live Session available', readonly=True)
+    survey_session_speed_rating = fields.Boolean(related="survey_id.session_speed_rating")
+    survey_session_speed_rating_time_limit = fields.Integer(related="survey_id.session_speed_rating_time_limit", string="General Time limit (seconds)")
+
     # page specific
     is_page = fields.Boolean('Is a page?')
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
@@ -637,11 +640,11 @@ class SurveyQuestion(models.Model):
             'value': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
             'suggested_answer': suggested_answer,
             'count': count_data[suggested_answer],
-            'count_text': _("%s Votes", count_data[suggested_answer]),
+            'count_text': self.env._("%s Votes", count_data[suggested_answer]),
             }
             for suggested_answer in suggested_answers]
         graph_data = [{
-            'text': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
+            'text': self.env._('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
             'count': count_data[suggested_answer]
             }
             for suggested_answer in suggested_answers]

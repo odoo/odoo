@@ -41,12 +41,12 @@ class SmsTracker(models.Model):
             If provided, notification values will be derived from it.
             (see ``_get_tracker_values_from_provider_error``)
         """
-        failure_reason = False
+        failure_reason = self.env.context.get("sms_known_failure_reason")  # TODO RIGR in master: pass as param instead of context
         failure_type = f'sms_{provider_error}'
         error_status = None
         if failure_type not in self.env['sms.sms'].DELIVERY_ERRORS:
             failure_type = 'unknown'
-            failure_reason = provider_error
+            failure_reason = failure_reason or provider_error
         elif failure_type in self.env['sms.sms'].BOUNCE_DELIVERY_ERRORS:
             error_status = "bounce"
 

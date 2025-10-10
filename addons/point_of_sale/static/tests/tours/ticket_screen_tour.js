@@ -9,6 +9,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
@@ -179,6 +180,10 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             ProductScreen.isShown(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
 
@@ -276,6 +281,50 @@ registry.category("web_tour.tours").add("LotTour", {
             ProductScreen.clickDisplayedProduct("Product B"),
             inLeftSide({
                 trigger: ".info-list:contains('Lot Number 1001')",
+            }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_order_with_existing_serial", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterLotNumber("SN1"),
+            ProductScreen.selectedOrderlineHas("Serial Product", "1.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN SN1')",
+            }),
+            ProductScreen.clickDisplayedProduct("Serial Product"),
+            ProductScreen.enterLastLotNumber("SN2"),
+            ProductScreen.selectedOrderlineHas("Serial Product", "2.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN SN2')",
+            }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_serial_number_do_not_duplicate_after_refresh", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumber("1"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            Utils.refresh(),
+            inLeftSide({
+                content: `check serial number`,
+                trigger: `.info-list`,
+                run: () => {
+                    const serialNumberCount = document.querySelectorAll(
+                        "ul.info-list li:not(:first-child)"
+                    ).length;
+                    if (serialNumberCount !== 1) {
+                        throw new Error(`Expected 1 serial number, got ${serialNumberCount}`);
+                    }
+                },
             }),
         ].flat(),
 });

@@ -57,7 +57,7 @@ class AccountMove(models.Model):
         string="SDI State",
         selection=[
             ('being_sent', 'Being Sent To SdI'),
-            ('requires_user_signature', 'Requires user signature'),
+            ('requires_user_signature', 'Requires user signature'),  # TODO: remove in master
             ('processing', 'SdI Processing'),
             ('rejected', 'SdI Rejected'),
             ('forwarded', 'SdI Accepted, Forwarded to Partner'),
@@ -320,7 +320,9 @@ class AccountMove(models.Model):
                     downpayment_moves_description = ', '.join(downpayment_moves.mapped('name'))
                     sep = ', ' if description else ''
                     description = f"{description}{sep}{downpayment_moves_description}"
-            description = description or "NO NAME"
+            # Workaround: remove line breaks due to Tax Agency portal bug.
+            # This deviates from Odoo's standard behavior and must be reviewed if the issue gets fixed.
+            description = description and description.replace('\n', ' ').strip() or "NO NAME"
 
             # Price unit.
             if quantity:
@@ -488,7 +490,7 @@ class AccountMove(models.Model):
         # Base lines.
         base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
-        tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
 
         if reverse_charge_refund:
@@ -613,7 +615,7 @@ class AccountMove(models.Model):
             'document_type': document_type,
             'payment_method': 'MP05',
             'downpayment_moves': downpayment_moves,
-            'reconciled_moves': self._get_reconciled_invoices(),
+            'reconciled_moves': self._get_reconciled_invoices().filtered(lambda move: move.date <= self.date),
             'rc_refund': reverse_charge_refund,
             'conversion_rate': conversion_rate,
             'balance_multiplicator': -1 if self.is_inbound() else 1,
@@ -1316,12 +1318,16 @@ class AccountMove(models.Model):
                 percentage = round(tax_amount / (amount - tax_amount) * 100)
             move_line.price_unit = amount / (1 + percentage / 100)
 
-        move_line.tax_ids = []
+        move_line.tax_ids = [Command.clear()]
         if percentage is not None:
             l10n_it_exempt_reason = get_text(element, './/Natura').upper() or False
             extra_domain = extra_info.get('type_tax_use_domain', [('type_tax_use', '=', 'purchase')])
+            if move_line.product_id:
+                extra_domain = list(extra_domain)
+                tax_scope = 'service' if move_line.product_id.type == 'service' else 'consu'
+                extra_domain += [('tax_scope', 'in', [tax_scope, False])]
             if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
-                move_line.tax_ids += tax
+                move_line.tax_ids |= tax
             else:
                 message = Markup("<br/>").join((
                     _("Tax not found for line with description '%s'", move_line.name),
@@ -1336,7 +1342,7 @@ class AccountMove(models.Model):
                 move_line.tax_ids = [Command.set(fitting_taxes)]
 
         # Discounts
-        if discounts := element.xpath('.//ScontoMaggiorazione'):
+        if (discounts := element.xpath('.//ScontoMaggiorazione')) and not float_is_zero(move_line.price_unit, precision_rounding=move_line.currency_id.rounding):
             current_unit_price = move_line.price_unit
             # We apply the discounts in the order they are found in the XML.
             # The first discount is applied to the unit price, the second to the result of the first, etc.
@@ -1346,7 +1352,7 @@ class AccountMove(models.Model):
             for discount in discounts:
                 discount_type = get_text(discount, './/Tipo')
                 discount_sign = -1 if discount_type == 'MG' else 1
-                if discount_percentage := get_float(discount, './/Percentuale'):
+                if (discount_percentage := get_float(discount, './/Percentuale')) and not float_is_zero(discount_percentage, precision_rounding=move_line.currency_id.rounding):
                     current_unit_price *= discount_sign * (100 - discount_percentage) / 100
                 elif discount_amount := get_float(discount, './/Importo'):
                     current_unit_price -= discount_sign * discount_amount
@@ -1434,18 +1440,27 @@ class AccountMove(models.Model):
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
-        if move_lines := self.mapped("invoice_line_ids").filtered(lambda line:
+        return self._l10n_it_edi_check_lines_for_tax_kind('vat', _('VAT'))
+
+    def _l10n_it_edi_check_lines_for_tax_kind(self, kind_code, kind_desc, min_len=1):
+        assert min_len in (0, 1)
+        if self.invoice_line_ids.filtered(lambda line:
             line.display_type == 'product'
-            and len(line.tax_ids.flatten_taxes_hierarchy()._l10n_it_filter_kind('vat')) != 1
+            and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= 1)
         ):
             return {
-                'l10n_it_edi_move_only_one_vat_tax_per_line': {
-                    'message': _("Invoices must have exactly one VAT tax set per line."),
+                f'l10n_it_edi_move_{kind_code}_tax_per_line': {
+                    'message': _(
+                        "Invoices must have %(number)s one %(kind)s tax set per line.",
+                        number=_("exactly") if min_len == 1 else _("at most"),
+                        kind=kind_desc
+                    ),
                     **({
                         'action_text': _("View invoice(s)"),
-                        'action': move_lines.mapped("move_id")._get_records_action(name=_("Check taxes on invoice lines")),
+                        'action': self._get_records_action(name=_("Check taxes on invoice lines")),
                     } if len(self) > 1 else {})
-                }}
+                }
+            }
         return {}
 
     def _l10n_it_edi_get_formatters(self):
@@ -1581,23 +1596,21 @@ class AccountMove(models.Model):
         # Setup moves for sending
         for move in self:
             move.l10n_it_edi_header = False
-            if move.commercial_partner_id._l10n_it_edi_is_public_administration():
-                move.l10n_it_edi_state = 'requires_user_signature'
-                move.l10n_it_edi_transaction = False
-                move.sudo().message_post(body=nl2br(_(
-                    "Sending invoices to Public Administration partners is not supported.\n"
-                    "The IT EDI XML file is generated, please sign the document and upload it "
-                    "through the 'Fatture e Corrispettivi' portal of the Tax Agency."
-                )))
-            else:
-                attachment_vals = attachments_vals[move]
-                filename = attachment_vals['name']
-                content = b64encode(attachment_vals['raw']).decode()
-                move.l10n_it_edi_state = 'being_sent'
-                proxy_user = move.company_id.l10n_it_edi_proxy_user_id
-                moves, files = files_to_upload[proxy_user]
-                files_to_upload[proxy_user] = (moves | move, files + [{'filename': filename, 'xml': content}])
-                filename_move[filename] = move
+            attachment_vals = attachments_vals[move]
+            filename = attachment_vals['name']
+            content = b64encode(attachment_vals['raw']).decode()
+            proxy_user = move.company_id.l10n_it_edi_proxy_user_id
+            moves, files = files_to_upload[proxy_user]
+            to_upload = (
+                moves | move,
+                files + [{
+                    'filename': filename,
+                    'xml': content,
+                    'destination_code': move.commercial_partner_id.l10n_it_pa_index,
+                }],
+            )
+            files_to_upload[proxy_user] = to_upload
+            filename_move[filename] = move
 
         # Upload files
         results = {}
@@ -1618,20 +1631,45 @@ class AccountMove(models.Model):
 
         # Handle results
         for filename, vals in results.items():
-            sent_move = filename_move[filename]
+            move = filename_move[filename]
             if 'error' in vals:
-                sent_move.l10n_it_edi_state = False
-                sent_move.l10n_it_edi_transaction = False
-                message = nl2br(_("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=vals['error']))
+                state, id_transaction = False, False
+                error_code, error_description = vals.get('error'), vals.get('error_description')
+                error_message = self._l10n_it_edi_upload_error_message(error_code, error_description)
+                header = nl2br(_("Error uploading the e-invoice file %(file)s.\n%(error)s",
+                    file=filename,
+                    error=error_message
+                ))
             else:
-                is_demo = vals['id_transaction'] == 'demo'
-                sent_move.l10n_it_edi_state = 'processing'
-                sent_move.l10n_it_edi_transaction = vals['id_transaction']
-                message = (
-                    _("We are simulating the sending of the e-invoice file %s, as we are in demo mode.", filename)
-                    if is_demo else _("The e-invoice file %s was sent to the SdI for processing.", filename))
-            sent_move.l10n_it_edi_header = message
-            sent_move.sudo().message_post(body=message)
+                state, id_transaction = "processing", vals.get('id_transaction')
+                if vals['id_transaction'] == 'demo':
+                    header = _("We are simulating the sending of the e-invoice file %s, as we are in demo mode.", filename)
+                elif vals.get('signed', False):
+                    header = nl2br(_("The e-invoice file %s was signed and sent to the SdI for processing.", filename))
+                else:
+                    header = _("The e-invoice file %s was sent to the SdI for processing.", filename)
+                move.sudo().message_post(body=header)
+
+            move.l10n_it_edi_header = header
+            move.l10n_it_edi_state = state
+            move.l10n_it_edi_transaction = id_transaction
+
+        return results
+
+    def _l10n_it_edi_upload_error_message(self, error_code, error_description):
+        """ Translate server errors with the client user's language. """
+        errors_map = {
+            'EI01': _('Attached file is empty'),
+            'EI02': _('Service momentarily unavailable'),
+            'EI03': _('Unauthorized user'),
+            'OOGE': _('Error sending file from the Proxy Server to SdI'),
+            'OOSE': _('Error signing the XML'),
+            'OOCE': _('Proxy Server configuration error'),
+        }
+        error_message = errors_map.get(error_code, _("Unknown error"))
+        if error_description:
+            error_message = f'{error_message}: {error_description}'
+        return error_message
 
     def _l10n_it_edi_upload(self, files):
         '''Upload files to the SdI.
@@ -1649,18 +1687,10 @@ class AccountMove(models.Model):
         if proxy_user.edi_mode == 'demo':
             return {file_data['filename']: {'id_transaction': 'demo'} for file_data in files}
 
-        ERRORS = {'EI01': _('Attached file is empty'),
-                  'EI02': _('Service momentarily unavailable'),
-                  'EI03': _('Unauthorized user')}
-
         server_url = proxy_user._get_server_url()
         results = proxy_user._make_request(
             f'{server_url}/api/l10n_it_edi/1/out/SdiRiceviFile',
             params={'files': files})
-
-        for filename, vals in results.items():
-            if 'error' in vals:
-                results[filename]['error'] = ERRORS.get(vals.get('error'), _("Unknown error"))
 
         return results
 

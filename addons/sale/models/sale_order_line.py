@@ -560,6 +560,16 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
+        def has_manual_price(line):
+            # `line.currency_id` can be False for NewId records
+            currency = (
+                line.currency_id
+                or line.company_id.currency_id
+                or line.env.company.currency_id
+            )
+            return currency.compare_amounts(line.technical_price_unit, line.price_unit)
+
+        force_recompute = self.env.context.get('force_price_recomputation')
         for line in self:
             # Don't compute the price for deleted lines.
             if not line.order_id:
@@ -567,7 +577,7 @@ class SaleOrderLine(models.Model):
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
-                (line.technical_price_unit != line.price_unit and not line.env.context.get('force_price_recomputation'))
+                (not force_recompute and has_manual_price(line))
                 or line.qty_invoiced > 0
                 or (line.product_id.expense_policy == 'cost' and line.is_expense)
             ):
@@ -577,15 +587,23 @@ class SaleOrderLine(models.Model):
                 line.price_unit = 0.0
                 line.technical_price_unit = 0.0
             else:
-                line = line.with_company(line.company_id)
-                price = line._get_display_price()
-                product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
-                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
-                    price,
-                    product_taxes=product_taxes,
-                    fiscal_position=line.order_id.fiscal_position_id,
-                )
-                line.technical_price_unit = line.price_unit
+                line._reset_price_unit()
+
+    def _reset_price_unit(self):
+        self.ensure_one()
+
+        line = self.with_company(self.company_id)
+        price = line._get_display_price()
+        product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
+        price_unit = line.product_id._get_tax_included_unit_price_from_price(
+            price,
+            product_taxes=product_taxes,
+            fiscal_position=line.order_id.fiscal_position_id,
+        )
+        line.update({
+            'price_unit': price_unit,
+            'technical_price_unit': price_unit,
+        })
 
     def _get_order_date(self):
         self.ensure_one()
@@ -744,6 +762,10 @@ class SaleOrderLine(models.Model):
                 line.discount = 0.0
 
             if not (line.order_id.pricelist_id and discount_enabled):
+                continue
+
+            if line.combo_item_id:
+                line.discount = line._get_linked_line().discount
                 continue
 
             line.discount = 0.0
@@ -1028,6 +1050,10 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.product_id.id != self.company_id.sale_discount_product_id.id
 
+    def _is_discount_line(self):
+        self.ensure_one()
+        return self.product_id in self.company_id.sale_discount_product_id
+
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
         """ Compute the untaxed amount already invoiced from the sale order line, taking the refund attached
@@ -1191,6 +1217,12 @@ class SaleOrderLine(models.Model):
                     'message': product.sale_line_warn_msg,
                 }
             }
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not self.product_id:
+            return
+        self._reset_price_unit()
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):

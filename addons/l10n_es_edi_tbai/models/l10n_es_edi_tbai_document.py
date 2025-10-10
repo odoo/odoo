@@ -137,10 +137,18 @@ class L10nEsEdiTbaiDocument(models.Model):
             if values['is_refund']:
                 refunded_doc = values['refunded_doc']
                 refund_reason = values['refund_reason']
+                refunded_doc_invoice_date = values['refunded_doc_invoice_date']
                 is_simplified = values['is_simplified']
 
                 if not refunded_doc or refunded_doc.state == 'to_send':
-                    return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
+                    invoice_sent_before_original = True
+                    if not refunded_doc and refunded_doc_invoice_date:
+                        domain = [('date', '<', refunded_doc_invoice_date),
+                                  ('company_id', '=', self.company_id.id),
+                                  ('chain_index', '!=', 0)]
+                        invoice_sent_before_original = self.search(domain, order="date", limit=1)
+                    if invoice_sent_before_original:  # No error if the original invoice was imported from a previous system
+                        return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
                 if not refund_reason:
                     return _('Refund reason must be specified (TicketBAI)')
                 if is_simplified and refund_reason != 'R5':
@@ -411,10 +419,26 @@ class L10nEsEdiTbaiDocument(models.Model):
 
         return {'recipient': recipient_values}
 
+    def _get_refunded_values(self, values):
+        if not values.get('is_refund'):
+            return {}
+        refunded_doc = values['refunded_doc']
+        refunded_name = values['refunded_name']
+        if refunded_doc:
+            sequence, number = refunded_doc._get_tbai_sequence_and_number()
+        else:
+            sequence, number = self._get_tbai_seq_from_name(refunded_name)
+        return {
+            'refunded_serie': sequence,
+            'refunded_num': number,
+            'refunded_date': values['refunded_doc_invoice_date'],
+        }
+
     def _get_sale_values(self, values):
         sale_values = {
-            'prev_doc': self.company_id._get_l10n_es_tbai_last_chained_document(),
+            'chain_prev_document': self.company_id._get_l10n_es_tbai_last_chained_document(),
             **self._get_regime_code_value(values['taxes'], values['is_simplified']),
+            **self._get_refunded_values(values),
         }
 
         if not values['partner'] or not values['partner']._l10n_es_is_foreign() or values["is_simplified"]:
@@ -469,12 +493,13 @@ class L10nEsEdiTbaiDocument(models.Model):
                 continue
 
             l10n_es_type = grouping_key['l10n_es_type']
+            sign = grouping_key['is_refund'] and -1 or 1
             encountered_l10n_es_type.add(l10n_es_type)
             if l10n_es_type in ('sujeto', 'sujeto_isp'):
                 tax_info = {
                     'TipoImpositivo': grouping_key['applied_tax_amount'],
-                    'BaseImponible': float_round(values['base_amount'], 2),
-                    'CuotaRepercutida': float_round(values['tax_amount'], 2),
+                    'BaseImponible': sign * float_round(values['base_amount'], 2),
+                    'CuotaRepercutida': sign * float_round(values['tax_amount'], 2),
                 }
                 sujeta_no_sujeta\
                     .setdefault('Sujeta', {})\
@@ -490,7 +515,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                     .setdefault('Sujeta', {})\
                     .setdefault('Exenta', {'DetalleExenta': []})['DetalleExenta']\
                     .append({
-                        'BaseImponible': float_round(values['base_amount'], 2),
+                        'BaseImponible': sign * float_round(values['base_amount'], 2),
                         'CausaExencion': grouping_key['l10n_es_exempt_reason'],
                     })
             elif l10n_es_type == 'recargo':
@@ -500,16 +525,16 @@ class L10nEsEdiTbaiDocument(models.Model):
                     .get('DesgloseIVA', {})\
                     .get('DetalleIVA')
                 if detalle_iva:
-                    detalle_iva[-1]['CuotaRecargoEquivalencia'] = float_round(values['tax_amount'], 2)
-                    detalle_iva[-1]['TipoRecargoEquivalencia'] = grouping_key['applied_tax_amount']
+                    detalle_iva[-1]['CuotaRecargoEquivalencia'] = sign * float_round(values['tax_amount'], 2)
+                    detalle_iva[-1]['TipoRecargoEquivalencia'] = sign * grouping_key['applied_tax_amount']
             elif l10n_es_type == 'no_sujeto':
                 no_sujeta = sujeta_no_sujeta.setdefault('NoSujeta', {})
                 no_sujeta.setdefault('ImportePorArticulos7_14_Otros', 0.0)
-                no_sujeta['ImportePorArticulos7_14_Otros'] += float_round(values['base_amount'], 2)
+                no_sujeta['ImportePorArticulos7_14_Otros'] += sign * float_round(values['base_amount'], 2)
             elif l10n_es_type == 'no_sujeto_loc':
                 no_sujeta = sujeta_no_sujeta.setdefault('NoSujeta', {})
                 no_sujeta.setdefault('ImporteTAIReglasLocalizacion', 0.0)
-                no_sujeta['ImporteTAIReglasLocalizacion'] += float_round(values['base_amount'], 2)
+                no_sujeta['ImporteTAIReglasLocalizacion'] += sign * float_round(values['base_amount'], 2)
 
         if 'sujeto' in encountered_l10n_es_type and 'sujeto_isp' not in encountered_l10n_es_type:
             sujeta_no_sujeta['Sujeta']['NoExenta']['TipoNoExenta'] = 'S2'
@@ -540,6 +565,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
                 'is_reverse_charge': tax_data['is_reverse_charge'],
                 'tax_scope': tax.tax_scope,
+                'is_refund': base_line['is_refund'],
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_info_grouping_function)
@@ -572,6 +598,10 @@ class L10nEsEdiTbaiDocument(models.Model):
         for values in values_per_grouping_key.values():
             total_amount += values['base_amount']
 
+        if is_refund:
+            total_amount = -total_amount
+            total_retention = -total_retention
+
         return {
             'invoice_info': invoice_info,
             'total_amount': total_amount,
@@ -594,6 +624,7 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
                 'is_reverse_charge': tax_data['is_reverse_charge'],
                 'tax_scope': tax.tax_scope,
+                'is_refund': base_line['is_refund'],
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_info_grouping_function)
@@ -634,6 +665,7 @@ class L10nEsEdiTbaiDocument(models.Model):
 
         if is_refund:
             total_amount = -total_amount
+            total_retention = -total_retention
 
         return {
             'invoice_info': invoice_info,
@@ -712,8 +744,8 @@ class L10nEsEdiTbaiDocument(models.Model):
             'sender': sender,
             'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
             'fiscal_year': str(self.date.year),
-            'epigrafe': self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', '')
-
+            'epigrafe': self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', ''),
+            'batuz_correction': self.env.context.get('batuz_correction'),
         }
         lroe_values.update(values)
         lroe_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values)
@@ -743,16 +775,13 @@ class L10nEsEdiTbaiDocument(models.Model):
         return sequence, self.name
 
     @api.model
-    def _get_tbai_sequence_and_number(self):
-        """Get the TicketBAI sequence a number values for this invoice."""
-        self.ensure_one()
-
-        matching = list(re.finditer(r'\d+', self.name))[-1]
-        sequence_prefix = self.name[:matching.start()]
+    def _get_tbai_seq_from_name(self, name):
+        matching = list(re.finditer(r'\d+', name))[-1]
+        sequence_prefix = name[:matching.start()]
         sequence_number = int(matching.group())
 
         # NOTE non-decimal characters should not appear in the number
-        seq_length = self.env['sequence.mixin']._get_sequence_format_param(self.name)[1]['seq_length']
+        seq_length = self.env['sequence.mixin']._get_sequence_format_param(name)[1]['seq_length']
         number = f"{sequence_number:0{seq_length}d}"
 
         sequence = sequence_prefix.rstrip('/')
@@ -760,7 +789,12 @@ class L10nEsEdiTbaiDocument(models.Model):
         sequence = re.sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
         # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
         sequence += "TEST" if self.company_id.l10n_es_tbai_test_env else ""
-        return sequence, number
+        return sequence[-20:], number
+
+    def _get_tbai_sequence_and_number(self):
+        """Get the TicketBAI sequence a number values for this invoice."""
+        self.ensure_one()
+        return self._get_tbai_seq_from_name(self.name)
 
     def _get_tbai_signature_and_date(self):
         """

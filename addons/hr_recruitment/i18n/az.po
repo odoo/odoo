@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment
-# 
+# * hr_recruitment
+#
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # erpgo translator <jumshud@erpgo.az>, 2025
-# 
+# ERPGo Odoo <erpgo.odoo@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
-"Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
+"PO-Revision-Date: 2025-10-09 17:02+0000\n"
+"Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
+"Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-18/"
+"hr_recruitment/az/>\n"
+"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: az\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__accepted_applications_count
@@ -218,66 +220,103 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
-"<table border=“0” cellpadding=“0” cellspacing=“0” width=“590” style=“background-color: white; border-collapse: collapse; margin-left: 20px;”>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style"
+"=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">"
+"\n"
 "    <tr>\n"
-"        <td valign=“top” style=“padding: 0px 10px;”>\n"
-"            <div style=“font-size: 13px; margin: 0px; padding: 0px;”>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Salam,\n"
 "                <br/><br/>\n"
-"                <strong t-out=“object.company_id.name or ‘’”>YourCompany</strong> şirkətində\n"
-"                “<a t-att-href=“hasattr(object.job_id, ‘website_url’) and object.job_id.website_url or ‘’” style=“color:#9A6C8E;”><strong t-out=“object.job_id.name or ‘’”>Təcrübəli Proqramçı</strong></a>”\n"
-"                vakansiyasına müraciətinizin uğurla alındığını təsdiqləyirik.\n"
+"                <strong t-out=\"object.company_id.name or ''\">YourCompany</"
+"strong> şirkətində\n"
+"                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\""
+"object.job_id.name or ''\">Təcrübəli Proqramçı</strong></a>\"\n"
+"                vakansiyasına müraciətinizin uğurla alındığını təsdiqləyirik."
+"\n"
 "                <br/><br/>\n"
 "                Qısa müddət ərzində sizinlə əlaqə saxlayacağıq.\n"
 "\n"
-"                <div t-if=“’website_url’ in object.job_id and object.job_id.website_url” style=“padding: 16px 8px 16px 8px;”>\n"
-"                    <a t-att-href=“object.job_id.website_url” style=“background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;”>Vakansiya haqqında</a>\n"
+"                <div t-if="
+"\"'website_url' in object.job_id and object.job_id.website_url\" style="
+"\"padding: 16px 8px 16px 8px;\">\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style"
+"=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: "
+"8px 16px 8px 16px; border-radius: 5px;\">Vakansiya haqqında</a>\n"
 "                </div>\n"
 "\n"
-"                <hr width=“97%” style=“background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;”/>\n"
-"                <t t-if=“object.user_id”>\n"
-"                    <h3 style=“color:#9A6C8E;”><strong>Sizin əlaqəniz:</strong></h3>\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204);"
+" border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <t t-if=\"object.user_id\">\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Sizin "
+"əlaqəniz:</strong></h3>\n"
 "                    <p>\n"
-"                        <strong t-out=“object.user_id.name or ‘’”>Mitchell Admin</strong><br/>\n"
-"                        <span>E-poçt: <t t-out=“object.user_id.email or ‘’”>admin@yourcompany.example.com</t></span><br/>\n"
-"                        <span>Telefon: <t t-out=“object.user_id.phone or ‘’”>+1 650-123-4567</t></span>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell "
+"Admin</strong><br/>\n"
+"                        <span>E-poçt: <t t-out=\"object.user_id.email or ''\""
+">admin@yourcompany.example.com</t></span><br/>\n"
+"                        <span>Telefon: <t t-out="
+"\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    </p>\n"
-"                    <hr width=“97%” style=“background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;”/>\n"
+"                    <hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </t>\n"
 "\n"
-"                <h3 style=“color:#9A6C8E;”><strong>Növbəti addım nədir?</strong></h3>\n"
-"                Adətən <strong>müraciətlərə bir neçə gün ərzində cavab veririk.</strong><br/><br/>\n"
-"                Əgər <strong>daha tez rəy almaq istəyirsinizsə</strong> və ya bizdən cavab gəlməzsə, bizimlə əlaqə saxlaya bilərsiniz (sadəcə bu e-poçta cavab yazın).\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Növbəti addım "
+"nədir?</strong></h3>\n"
+"                Adətən <strong>müraciətlərə bir neçə gün ərzində cavab "
+"veririk.</strong><br/><br/>\n"
+"                Əgər <strong>daha tez rəy almaq istəyirsinizsə</strong> və "
+"ya bizdən cavab gəlməzsə, bizimlə əlaqə saxlaya bilərsiniz (sadəcə bu e-"
+"poçta cavab yazın).\n"
 "\n"
-"                <hr width=“97%” style=“background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;”/>\n"
-"                <t t-set=“location” t-value=“’’”/>\n"
-"                <t t-if=“object.job_id.address_id.name”>\n"
-"                    <strong t-out=“object.job_id.address_id.name or ‘’”>Teksa SpA</strong><br/>\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204);"
+" border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                <t t-set=\"location\" t-value=\"''\"/>\n"
+"                <t t-if=\"object.job_id.address_id.name\">\n"
+"                    <strong t-out=\"object.job_id.address_id.name or ''\""
+">Teksa SpA</strong><br/>\n"
 "                </t>\n"
-"                <t t-if=“object.job_id.address_id.street”>\n"
-"                    <t t-out=“object.job_id.address_id.street or ‘’”>Puerto Madero 9710</t><br/>\n"
-"                    <t t-set=“location” t-value=“object.job_id.address_id.street”/>\n"
+"                <t t-if=\"object.job_id.address_id.street\">\n"
+"                    <t t-out=\"object.job_id.address_id.street or ''\""
+">Puerto Madero 9710</t><br/>\n"
+"                    <t t-set=\"location\" t-value="
+"\"object.job_id.address_id.street\"/>\n"
 "                </t>\n"
-"                <t t-if=“object.job_id.address_id.street2”>\n"
-"                    <t t-out=“object.job_id.address_id.street2 or ‘’”>Of A15, Santiago (RM)</t><br/>\n"
-"                    <t t-set=“location” t-value=“’%s, %s’ % (location, object.job_id.address_id.street2)”/>\n"
+"                <t t-if=\"object.job_id.address_id.street2\">\n"
+"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of "
+"A15, Santiago (RM)</t><br/>\n"
+"                    <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
 "                </t>\n"
-"                <t t-if=“object.job_id.address_id.city”>\n"
-"                    <t t-out=“object.job_id.address_id.city or ‘’”>Pudahuel</t>,\n"
-"                    <t t-set=“location” t-value=“’%s, %s’ % (location, object.job_id.address_id.city)”/>\n"
+"                <t t-if=\"object.job_id.address_id.city\">\n"
+"                    <t t-out=\"object.job_id.address_id.city or ''\""
+">Pudahuel</t>,\n"
+"                    <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
 "                </t>\n"
-"                <t t-if=“object.job_id.address_id.state_id.name”>\n"
-"                    <t t-out=“object.job_id.address_id.state_id.name or ‘’”>C1</t>,\n"
-"                    <t t-set=“location” t-value=“’%s, %s’ % (location, object.job_id.address_id.state_id.name)”/>\n"
+"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\""
+">C1</t>,\n"
+"                    <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
 "                </t>\n"
-"                <t t-if=“object.job_id.address_id.zip”>\n"
-"                    <t t-out=“object.job_id.address_id.zip or ‘’”>98450</t>\n"
-"                    <t t-set=“location” t-value=“’%s, %s’ % (location, object.job_id.address_id.zip)”/>\n"
+"                <t t-if=\"object.job_id.address_id.zip\">\n"
+"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>"
+"\n"
+"                    <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
 "                </t>\n"
 "                <br/>\n"
-"                <t t-if=“object.job_id.address_id.country_id.name”>\n"
-"                    <t t-out=“object.job_id.address_id.country_id.name or ‘’”>Argentina</t><br/>\n"
-"                    <t t-set=“location” t-value=“’%s, %s’ % (location, object.job_id.address_id.country_id.name)”/>\n"
+"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"                    <t t-out="
+"\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
+"                    <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
 "                </t>\n"
 "                <br/>\n"
 "            </div>\n"
@@ -676,7 +715,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
-msgstr "İşəqəbul prosesində yeni mərhələ əlavə et"
+msgstr "İşə qəbul prosesində yeni mərhələ əlavə et"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -886,7 +925,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Archive"
-msgstr "Arxiv"
+msgstr "Arxiv edin"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__archived
@@ -1455,7 +1494,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
 msgid "Duplicate"
-msgstr "Təkrar"
+msgstr "Dublikat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
@@ -1715,7 +1754,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Group By"
-msgstr "Görə Qrupla"
+msgstr "Qrupla"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
@@ -2748,12 +2787,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment"
-msgstr "Seçim"
+msgstr "İşə qəbul"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr "İşçilərin/namizədlərin seçim mərhələləri"
+msgstr "İşə qəbul / Namizədlərin Mərhələləri"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -2764,7 +2803,7 @@ msgstr "İşçilərin/namizədlərin seçim mərhələləri"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Recruitment Analysis"
-msgstr "Seçim təhlili"
+msgstr "İşə qəbul Təhlilləri"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
@@ -2774,7 +2813,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stages"
-msgstr "Seçim mərhələləri"
+msgstr "İşə qəbul Mərhələləri"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
@@ -3650,7 +3689,7 @@ msgstr ""
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "Sizin İş Müraciətiniz: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.quick_create_applicant_form
@@ -3680,7 +3719,7 @@ msgstr "məs. Satış Meneceri"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. ^New application:.*from (.*)"
-msgstr ""
+msgstr "misal. ^Yeni müraciət:.*from (.*)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey

@@ -443,19 +443,19 @@ class TestSearchTemplateCategory(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.mail_template = cls.env['mail.template'].with_context(active_test=False)
-        cls.model_data = cls.env['ir.model.data']
+        MailTemplate = cls.env['mail.template'].with_context(active_test=False)
+        ModelData = cls.env['ir.model.data']
 
-        cls.existing = cls.mail_template.search([])
+        cls.existing = MailTemplate.search([])
 
         # Create templates
         # 2 Hidden templates
-        cls.hidden_templates = cls.mail_template.create([
+        cls.hidden_templates = MailTemplate.create([
             {'name': 'Hidden Template 1', 'active': False},
             {'name': 'Hidden Template 2', 'description': ''},
         ])
         last = cls.hidden_templates[-1]
-        cls.model_data.create({
+        ModelData.create({
             'name': f'mail_template_{last.id}',
             'module': 'test_module',
             'model': 'mail.template',
@@ -463,71 +463,73 @@ class TestSearchTemplateCategory(MailCommon):
         })
 
         # 5 Custom templates
-        cls.custom_templates = cls.mail_template.create([
+        cls.custom_templates = MailTemplate.create([
             {'name': f'Custom Template {i + 1}', 'description': f'Desc {i + 1}'}
             for i in range(4)
         ])
-        cls.custom_templates |= cls.mail_template.create({'name': 'Custom Template empty', 'description': ''})
+        cls.custom_templates |= MailTemplate.create({'name': 'Custom Template empty', 'description': ''})
 
         # 4 Base templates with XML ID
-        cls.base_templates = cls.mail_template.create([
+        cls.base_templates = MailTemplate.create([
             {'name': f'Base Template {i + 1}', 'description': f'Desc Base {i + 1}'}
             for i in range(4)
         ])
 
         for template in cls.base_templates:
-            cls.model_data.create({
+            ModelData.create({
                 'name': f'mail_template_{template.id}',
                 'module': 'test_module',
                 'model': 'mail.template',
                 'res_id': template.id
             })
 
+    @users('employee')
     def test_search_template_category(self):
+        MailTemplate = self.env['mail.template'].with_context(active_test=False)
 
         # Search by hidden templates
         hidden_domain = [('template_category', 'in', ['hidden_template'])]
-        hidden_templates = self.mail_template.search(hidden_domain) - self.existing
+        hidden_templates = MailTemplate.search(hidden_domain) - self.existing
         self.assertEqual(len(hidden_templates), len(self.hidden_templates), "Hidden templates count mismatch")
         self.assertEqual(set(hidden_templates.mapped('template_category')), {'hidden_template'}, "Computed field doesn't match 'hidden_template'")
 
         # Search by base templates
         base_domain = [('template_category', 'in', ['base_template'])]
-        base_templates = self.mail_template.search(base_domain) - self.existing
+        base_templates = MailTemplate.search(base_domain) - self.existing
         self.assertEqual(len(base_templates), len(self.base_templates), "Base templates count mismatch")
         self.assertEqual(set(base_templates.mapped('template_category')), {'base_template'}, "Computed field doesn't match 'base_template'")
 
         # Search by custom templates
         custom_domain = [('template_category', 'in', ['custom_template'])]
-        custom_templates = self.mail_template.search(custom_domain) - self.existing
+        custom_templates = MailTemplate.search(custom_domain) - self.existing
         self.assertEqual(len(custom_templates), len(self.custom_templates), "Custom templates count mismatch")
         self.assertEqual(set(custom_templates.mapped('template_category')), {'custom_template'}, "Computed field doesn't match 'custom_template'")
 
         # Combined search
         combined_domain = [('template_category', 'in', ['hidden_template', 'base_template', 'custom_template'])]
-        combined_templates = self.mail_template.search(combined_domain) - self.existing
+        combined_templates = MailTemplate.search(combined_domain) - self.existing
         total_templates = len(self.hidden_templates) + len(self.base_templates) + len(self.custom_templates)
         self.assertEqual(len(combined_templates), total_templates, "Combined templates count mismatch")
 
         # Search with '=' operator
         hidden_domain = [('template_category', '=', 'hidden_template')]
-        hidden_templates = self.mail_template.search(hidden_domain) - self.existing
+        hidden_templates = MailTemplate.search(hidden_domain) - self.existing
         self.assertEqual(len(hidden_templates), len(self.hidden_templates), "Hidden templates count mismatch")
 
         # Search with '!=' operator
         not_in_domain = [('template_category', '!=', 'hidden_template')]
-        not_in_templates = self.mail_template.search(not_in_domain) - self.existing
+        not_in_templates = MailTemplate.search(not_in_domain) - self.existing
         expected_templates = len(self.base_templates) + len(self.custom_templates)
         self.assertEqual(len(not_in_templates), expected_templates, "Not in templates count mismatch")
 
         # Search with 'not in' operator
         not_in_domain = [('template_category', 'not in', ['hidden_template'])]
-        not_in_templates = self.mail_template.search(not_in_domain) - self.existing
+        not_in_templates = MailTemplate.search(not_in_domain) - self.existing
         expected_templates = len(self.base_templates) + len(self.custom_templates)
         self.assertEqual(len(not_in_templates), expected_templates, "Not in templates count mismatch")
 
         # Search with 'not in' operator
         not_in_domain = [('template_category', 'not in', ['hidden_template', 'base_template'])]
-        not_in_templates = self.mail_template.search(not_in_domain) - self.existing
+        not_in_templates = MailTemplate.search(not_in_domain) - self.existing
         expected_templates = len(self.custom_templates)
         self.assertEqual(len(not_in_templates), expected_templates, "Not in multi templates count mismatch")

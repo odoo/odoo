@@ -2638,3 +2638,84 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
             mo.button_mark_done()
             self.assertEqual(mo.state, 'done')
+
+    def test_bidirectional_so_mo_link_with_mtso(self):
+        """Test the link from the Manufacturing Order to the Sale Order
+        when using the MTSO (Make To Stock or Make To Order) procurement method."""
+        # Set the MTO and Manufacture routes on the product
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
+        self.product_a.route_ids = [Command.set([route_manufacture.id, route_mto.id])]
+        # Set the procure method to 'mts_else_mto'
+        route_mto.rule_ids.filtered(lambda r: r.location_dest_id.usage == 'production').procure_method = 'mts_else_mto'
+        # Create and confirm a Sale Order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        # Check the link between the SO and the MO
+        self.assertEqual(sale_order.mrp_production_count, 1)
+        mo = sale_order.mrp_production_ids
+        self.assertEqual(mo.sale_order_count, 1)
+
+    def test_so_with_kit_and_multiple_same_component(self):
+        """Test that a Sale Order with a kit product containing multiple identical components
+        can be confirmed, and that the picking is created correctly. Then verify that the
+        Sale Order can be cancelled and re-confirmed, resulting in a new picking with moves
+        properly linked to each BOM line. Finally, test returning a kit component for exchange."""
+        # Create a kit product with two identical components by duplicating the first BOM line
+        self.bom_kit_1.bom_line_ids = self.bom_kit_1.bom_line_ids[0]
+        self.env['mrp.bom.line'].create([
+            {'product_id': self.bom_kit_1.bom_line_ids[0].product_id.id, 'product_qty': 1.0, 'bom_id': self.bom_kit_1.id},
+        ])
+        # Create a Sale Order with the kit product
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.kit_1.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        so.action_confirm()
+
+        # Check that the picking has 2 moves for the same component
+        picking = so.picking_ids
+        self.assertEqual(len(picking.move_ids), 2, "There should be 2 moves for the same component in the picking")
+        self.assertEqual(picking.move_ids.product_id, self.component_a, "All moves should be for the same component")
+        self.assertEqual(picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids, "Each move should be linked to a BOM line of the kit")
+
+        # Cancel the Sale Order
+        so._action_cancel()
+        self.assertEqual(so.state, 'cancel', "The Sale Order should be cancelled")
+        self.assertEqual(picking.state, 'cancel', "The picking should be cancelled when the Sale Order is cancelled")
+
+        # Set the Sale Order back to draft and confirm again
+        so.action_draft()
+        so.action_confirm()
+
+        # Check that a new picking is created with correct moves
+        second_picking = so.picking_ids - picking
+        self.assertEqual(len(second_picking.move_ids), 2, "The second picking should have 2 moves for the component")
+        self.assertEqual(second_picking.move_ids.product_id, self.component_a, "All moves in the second picking should be for the same component")
+        self.assertEqual(second_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids, "Each move in the second picking should be linked to a BOM line of the kit")
+        # Returning for exchange a kit's component
+        self.env['stock.quant']._update_available_quantity(self.component_a, self.company_data['default_warehouse'].lot_stock_id, quantity=10)
+        second_picking.action_assign()
+        second_picking.button_validate()
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=second_picking.id, active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        return_wizard.product_return_moves.filtered(lambda prm: prm.product_id == self.component_a).quantity = 1
+        res = return_wizard.action_create_exchanges()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.button_validate()
+        exchange_picking = so.picking_ids.filtered(lambda so: so.state == 'assigned')
+        exchange_picking.button_validate()
+        so.order_line._compute_qty_delivered()
+        # In the case where the kit has multiple identical components, only the first BOM line
+        # is linked to all moves (this is a known limitation).
+        self.assertEqual(exchange_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids[0], "All moves in the exchange picking should be linked to the first BOM line.")
+        self.assertEqual(exchange_picking.move_ids.quantity, 2)

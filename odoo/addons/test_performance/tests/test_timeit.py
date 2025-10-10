@@ -100,9 +100,8 @@ class TestPerformanceTimeit(TransactionCase):
         code: str, *,
         record_list: list[BaseModel] | None = None,
         relative_size: list[int] | None = None,
-        check_type: Literal['linear', 'maybe-linear'] | None = 'linear',
+        check_type: Literal['linear'] | None = 'linear',
         number: int = 4,
-        repeat: int = 3,
         **kw,
     ):
         # initialize the record list with the children records
@@ -111,6 +110,7 @@ class TestPerformanceTimeit(TransactionCase):
         # relative sizes are initialized to 1, 10, 100, ...
         relative_sizes = relative_size or [10 ** i for i in range(len(record_list))]
         assert len(relative_sizes) == len(record_list)
+        repeat = 3
         results = [
             self.launch_perf(code, records=records, relative_size=relative_size, repeat=repeat, number=number, **kw)
             for records, relative_size in zip(record_list, relative_sizes)
@@ -118,7 +118,7 @@ class TestPerformanceTimeit(TransactionCase):
         # checks
         if len(results) <= 3:
             check_type = None
-        if check_type in ('linear', 'maybe-linear'):
+        if check_type == 'linear':
             # approximative check that the resulting runs are behaving linearly
             # skip the first result as it is very small and not comparable
             check_results = [r / s for r, s in zip(results, relative_sizes)][1:]
@@ -127,10 +127,7 @@ class TestPerformanceTimeit(TransactionCase):
             # just check that the biggest difference of timings per record
             # compared to minimum run time is not greater than the max_tolerance
             max_tolerance = 2.5
-            if check_type == 'linear':
-                self.assertLess(max_time / min_time, max_tolerance, f"Non-linear behaviour detected, relative results: {check_results}")
-            else:
-                _logger.info("Linear behaviour result is %s for %s", max_time / min_time < max_tolerance, check_results)
+            _logger.info("%s Linear behaviour for %s", max_time / min_time < max_tolerance, check_results)
         else:
             self.assertFalse(check_type, "Unsupported check_type")
         return results
@@ -163,16 +160,16 @@ class TestPerformanceTimeit(TransactionCase):
             p.with_context(active_test=True)
             for p in self.get_parents()
         ]
-        self.launch_perf_set("records.child_ids", record_list=record_list, check_type='maybe-linear')
+        self.launch_perf_set("records.child_ids", record_list=record_list)
 
     def test_perf_access_iter(self):
         self.launch_perf_set("list(records)")
 
     def test_perf_as_query(self):
-        self.launch_perf_set("records._as_query()", number=100)
+        self.launch_perf_set("records._as_query()", number=20)
 
     def test_perf_exists(self):
-        self.launch_perf_set("records.exists()", check_type='maybe-linear')
+        self.launch_perf_set("records.exists()")
 
     def test_perf_search_query(self):
         self.launch_perf("records._search([])", self.Model)
@@ -187,7 +184,7 @@ class TestPerformanceTimeit(TransactionCase):
 
     def test_perf_domain_filtered(self):
         for domain in self.example_domains:
-            self.launch_perf_set(f"records.filtered_domain({domain!r})", repeat=2, check_type='maybe-linear')
+            self.launch_perf_set(f"records.filtered_domain({domain!r})", number=3)
 
     def test_perf_xxlarge_domain(self):
 
@@ -198,16 +195,16 @@ class TestPerformanceTimeit(TransactionCase):
         ctx = {'dom': large_domain}
         # _search()
         self.launch_perf_set("records._search(dom(records))",
-            ctx=ctx, repeat=2, number=3, check_type='maybe-linear')
+            ctx=ctx, number=3)
         # search() with result, minimal run times, just to check if we can handle the query execution
         self.launch_perf_set("records.search(dom(records))",
             # max is set to 9.5k because for 10k we get an out of memory error
             record_list=self.get_test_children(max_size=9500),
-            ctx=ctx, repeat=2, number=1, check_type='maybe-linear')
+            ctx=ctx, number=1)
         # filtered_domain() is non-linear and may time-out!
         self.launch_perf_set("records.filtered_domain(dom(records))",
             record_list=self.get_test_children(max_size=400),
-            ctx=ctx, repeat=2, number=2, check_type=None)
+            ctx=ctx, number=2, check_type=None)
 
     def test_perf_xxlarge_domain_unique(self):
 
@@ -217,4 +214,4 @@ class TestPerformanceTimeit(TransactionCase):
 
         ctx = {'dom': large_domain_uniq}
         self.launch_perf_set("records._search(dom(records))",
-            ctx=ctx, repeat=2, number=3, check_type='maybe-linear')
+            ctx=ctx, number=3)

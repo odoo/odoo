@@ -10,7 +10,7 @@ import {
     normalizeColors,
     normalizeRem,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
-import { afterEach, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
 import {
     getGridHtml,
@@ -850,14 +850,9 @@ describe("Convert classes to inline styles", () => {
         editable = document.createElement("div");
 
         styleEl = document.createElement("style");
-        styleEl.type = "text/css";
         styleEl.title = "test-stylesheet";
         document.head.appendChild(styleEl);
         styleSheet = [...document.styleSheets].find((sheet) => sheet.title === "test-stylesheet");
-    });
-    afterEach(() => {
-        // @todo to adapt when hoot has a better way to remove it
-        document.head.removeChild(styleEl);
     });
 
     test("convert Bootstrap classes to inline styles", async () => {
@@ -1420,6 +1415,48 @@ describe("Convert classes to inline styles", () => {
         );
 
         // @todo to adapt when hoot has a better way to remove it
+    });
+
+    test("Correct border attributes for outlook", async () => {
+        styleSheet.insertRule(
+            `
+            .test-border-zero {
+                border-bottom-width: 0px;
+                border-left-width: 0px;
+                border-right-width: 0px;
+                border-top-width: 0px;
+                border-style: solid;
+            }
+        `,
+            0
+        );
+
+        styleSheet.insertRule(
+            `
+            .test-border-one {
+                border-bottom-width: 1px;
+                border-left-width: 1px;
+                border-right-width: 1px;
+                border-top-width: 1px;
+                border-style: solid;
+            }
+        `,
+            1
+        );
+
+        editable.innerHTML = `<div><div class="test-border-zero"></div></div>`;
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+        expect(editable).toHaveInnerHTML(
+            `<div><div class="test-border-zero" style="border-style:none;box-sizing:border-box;border-top-width:0px;border-right-width:0px;border-left-width:0px;border-bottom-width:0px;"></div></div>`,
+            { message: "Should change border-style to none" }
+        );
+
+        editable.innerHTML = `<div><div class="test-border-one"></div></div>`;
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+        expect(editable).toHaveInnerHTML(
+            `<div><div class="test-border-one" style="border-style:solid;box-sizing:border-box;border-top-width:1px;border-right-width:1px;border-left-width:1px;border-bottom-width:1px;"></div></div>`,
+            { message: "Should keep border style solid" }
+        );
     });
 });
 

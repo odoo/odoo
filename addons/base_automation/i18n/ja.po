@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:50+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_automation
@@ -42,7 +42,9 @@ msgstr "\"%s\"タグが追加されました。"
 msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
-msgstr "\"本番更新時 \"の自動化規則は、\"Pythonコードの実行 \"アクションタイプでのみ使用できます。"
+msgstr ""
+"\"本番更新時 \"の自動化規則は、\"Pythonコードの実行 \"アクションタイプでのみ"
+"使用できます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -64,16 +66,20 @@ msgstr "<code>env</code>: アクションがトリガされる環境"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
-"<code>model</code>: model of the record on which the action is triggered; is"
-" a void recordset"
-msgstr "<code>モデル</code>: アクションがトリガされるレコードのモデル;は無効なレコードセットです。"
+"<code>model</code>: model of the record on which the action is triggered; is "
+"a void recordset"
+msgstr ""
+"<code>モデル</code>: アクションがトリガされるレコードのモデル;は無効なレコー"
+"ドセットです。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
-msgstr "<code>ペイロード</code>: dictとしての呼出のペイロード(GETパラメータ、JSONボディ)"
+msgstr ""
+"<code>ペイロード</code>: dictとしての呼出のペイロード(GETパラメータ、JSONボ"
+"ディ)"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -95,8 +101,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-"
-"circle\"/>デフォルトのターゲットレコードゲッターは、他のOdooインスタンスからのWebhookに対してすぐに動作します。 "
+"<i class=\"fa fa-info-circle\"/>デフォルトのターゲットレコードゲッターは、他"
+"のOdooインスタンスからのWebhookに対してすぐに動作します。 "
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -105,8 +111,9 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> "
-"UIの変更によってトリガされる自動化規則は監視されているフィールドが変更されるたびに<em>常に</em>、<em>保存の有無にかかわらず</em>実行されます。"
+"<i class=\"fa fa-warning\"/> UIの変更によってトリガされる自動化規則は監視され"
+"ているフィールドが変更されるたびに<em>常に</em>、<em>保存の有無にかかわらず</"
+"em>実行されます。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -117,21 +124,27 @@ msgstr "<span class=\"text-muted\">利用可能なバリエーション : </span
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value'\">から</span>\n"
-"                                                        <span invisible=\"evaluation_type != 'equation'\">以下として:</span>"
+"                                                        <span "
+"invisible=\"evaluation_type != 'equation'\">以下として:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "<span invisible=\"trigger != 'on_time_created'\">after creation</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">after</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">after last update</span>\n"
+"                                    <span invisible=\"trigger != "
+"'on_time'\">after</span>"
 msgstr ""
 "<span invisible=\"trigger != 'on_time_created'\">作成後</span>\n"
-"                                    <span invisible=\"trigger != 'on_time_updated'\">最終更新後</span>\n"
-"                                    <span invisible=\"trigger != 'on_time'\">以下の後:</span>"
+"                                    <span invisible=\"trigger != "
+"'on_time_updated'\">最終更新後</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">"
+"以下の後:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -155,7 +168,8 @@ msgstr "<span>それを以下に設定することで:</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
+msgid ""
+"<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr "<strong><i class=\"fa fa-lock\"/>秘密にして、安全に保つ</strong>"
 
 #. module: base_automation
@@ -214,7 +228,6 @@ msgstr "適用対象"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
-#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
 msgstr "アーカイブ済"
 
@@ -272,7 +285,8 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
-"URLがもはや安全でないと思われる場合は、URLのシークレットを変更して下さい。このWebhookを呼び出す自動システムを新しいURLに更新する必要があります。"
+"URLがもはや安全でないと思われる場合は、URLのシークレットを変更して下さい。こ"
+"のWebhookを呼び出す自動システムを新しいURLに更新する必要があります。"
 
 #. module: base_automation
 #. odoo-python
@@ -343,7 +357,9 @@ msgid ""
 "Delay after the trigger date. You can put a negative number if you need a "
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr "トリガ日以降の遅延。トリガ日の15分前にリマインダを送信するなど、トリガ日よりも前に遅延が必要な場合は、負の数を入力することができます。"
+msgstr ""
+"トリガ日以降の遅延。トリガ日の15分前にリマインダを送信するなど、トリガ日より"
+"も前に遅延が必要な場合は、負の数を入力することができます。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -382,8 +398,10 @@ msgstr "自動化規則の無効化"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid ""
 "Disabling this automation rule will enable you to continue your workflow\n"
-"                but any data created after this could potentially be corrupted,\n"
-"                as you are effectively disabling a customization that may set\n"
+"                but any data created after this could potentially be "
+"corrupted,\n"
+"                as you are effectively disabling a customization that may "
+"set\n"
 "                important and/or required fields."
 msgstr ""
 "この自動化規則を無効にすると、ワークフローを継続することができます。\n"
@@ -420,7 +438,9 @@ msgstr "Eメールイベント"
 msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
-msgstr "Eメール、フォロワー、または活動のアクションタイプは、レコードを削除する際には使用できません。"
+msgstr ""
+"Eメール、フォロワー、または活動のアクションタイプは、レコードを削除する際には"
+"使用できません。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -474,16 +494,25 @@ msgstr "ID"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
-"If present, this condition must be satisfied before executing the automation"
-" rule."
-msgstr "存在する場合、この条件は、自動化規則を実行する前に満たされなければなりません。"
+"If present, this condition must be satisfied before executing the automation "
+"rule."
+msgstr ""
+"存在する場合、この条件は、自動化規則を実行する前に満たされなければなりませ"
+"ん。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
-msgstr "この条件が存在する場合、レコードの更新前にこの条件を満たす必要があります。レコード作成時にはチェックされません。"
+msgstr ""
+"この条件が存在する場合、レコードの更新前にこの条件を満たす必要があります。レ"
+"コード作成時にはチェックされません。"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Include Archived"
+msgstr ""
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -526,7 +555,9 @@ msgstr "ログ"
 msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
-msgstr "メールイベントはモデルには設定できません%s。ディスカッション機能を持つモデルのみ使用可能です。"
+msgstr ""
+"メールイベントはモデルには設定できません%s。ディスカッション機能を持つモデル"
+"のみ使用可能です。"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -547,9 +578,11 @@ msgstr "モデル名"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule "
-"%(rule_name)s."
-msgstr "アクションモデル%(action_name)sは自動化規則%(rule_name)sからのモデルに一致する必要があります。"
+"Model of action %(action_name)s should match the one from automated rule %"
+"(rule_name)s."
+msgstr ""
+"アクションモデル%(action_name)sは自動化規則%(rule_name)sからのモデルに一致す"
+"る必要があります。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -575,7 +608,9 @@ msgstr "自動化を実行するレコードが見つかりません。"
 msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
-msgstr "この自動化規則は、スケジュールの%d分後までトリガ可能であることに注意して下さい。"
+msgstr ""
+"この自動化規則は、スケジュールの%d分後までトリガ可能であることに注意して下さ"
+"い。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -713,7 +748,8 @@ msgstr "Webhook通知を送信"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Send an email when an object changes state, archive records\n"
-"                after a month of inactivity or remind yourself to follow-up on\n"
+"                after a month of inactivity or remind yourself to follow-up "
+"on\n"
 "                tasks when a specific tag is added."
 msgstr ""
 "オブジェクトの状態が変更されたときに電子メールを送信したり、1か月間\n"
@@ -723,11 +759,14 @@ msgstr ""
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid ""
-"Send an email when an object changes state, archive records after a month of"
-" inactivity or remind yourself to follow-up on tasks when a specific tag is "
+"Send an email when an object changes state, archive records after a month of "
+"inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
-"オブジェクトの状態が変更された際にEメールを送信したり、1か月間操作がない場合にレコードをアーカイブしたり、特定のタグが追加された際にタスクのフォローアップをリマインドする機能です。<br>自動化規則であらゆるワークフローを自動化できます。"
+"オブジェクトの状態が変更された際にEメールを送信したり、1か月間操作がない場合"
+"にレコードをアーカイブしたり、特定のタグが追加された際にタスクのフォローアッ"
+"プをリマインドする機能です。<br>自動化規則であらゆるワークフローを自動化でき"
+"ます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -751,14 +790,18 @@ msgstr "サーバーアクション"
 msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
-msgstr "いくつかのトリガは選択フィールドへの参照を必要とします。このフィールドはそれを格納するために使用されます。"
+msgstr ""
+"いくつかのトリガは選択フィールドへの参照を必要とします。このフィールドはそれ"
+"を格納するために使用されます。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
 msgid ""
-"Some triggers need a reference to another field. This field is used to store"
-" it."
-msgstr "いくつかのトリガは別のフィールドへの参照を必要とします。このフィールドはそれを格納するために使用されます。"
+"Some triggers need a reference to another field. This field is used to store "
+"it."
+msgstr ""
+"いくつかのトリガは別のフィールドへの参照を必要とします。このフィールドはそれ"
+"を格納するために使用されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -795,24 +838,27 @@ msgstr "ターゲットレコード"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
-msgid ""
-"Target model of actions %(action_names)s are different from rule model."
+msgid "Target model of actions %(action_names)s are different from rule model."
 msgstr "アクション%(action_names)sのターゲットモデルは規則モデルとは異なります"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
-msgstr " \"%(trigger_value)s\" %(trigger_label)s は \"%(state_value)s\" 動作タイプとのみ使えます"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
+"(state_value)s\" action type"
+msgstr ""
+" \"%(trigger_value)s\" %(trigger_label)s は \"%(state_value)s\" 動作タイプと"
+"のみ使えます"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
 msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
-msgstr "これらのフィールドの1つが更新された場合にのみ、自動化規則がトリガされます。空の場合、全てのフィールドが監視されます。"
+msgstr ""
+"これらのフィールドの1つが更新された場合にのみ、自動化規則がトリガされます。空"
+"の場合、全てのフィールドが監視されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -829,7 +875,8 @@ msgstr ""
 msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
-msgstr "このコードは、自動化規則を実行すべきレコードを見つけるために実行されます。"
+msgstr ""
+"このコードは、自動化規則を実行すべきレコードを見つけるために実行されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -961,16 +1008,20 @@ msgstr "週"
 msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
-msgstr "日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するために、カレンダを使用することが可能です。"
+msgstr ""
+"日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するため"
+"に、カレンダを使用することが可能です。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will "
+"be checked at creation and update."
 msgstr ""
 "いつその条件をトリガーするのか。\n"
-"　　　　存在する場合、スケジューラによって確認されます。空の場合は、作成時と更新時に確認されます。"
+"　　　　存在する場合、スケジューラによって確認されます。空の場合は、作成時と"
+"更新時に確認されます。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1010,13 +1061,17 @@ msgstr "この自動化規則を無効にするか、編集して問題を解決
 msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
-msgstr "削除されたレコードに対して、メールを送信したり、フォロワーを追加したり、活動を作成したりできません。 単に動作しません。"
+msgstr ""
+"削除されたレコードに対して、メールを送信したり、フォロワーを追加したり、活動"
+"を作成したりできません。 単に動作しません。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
-msgstr "Webhook URLはシークレットを含んでいます。オンライン上や不用意に共有しないで下さい。"
+msgstr ""
+"Webhook URLはシークレットを含んでいます。オンライン上や不用意に共有しないで下"
+"さい。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban

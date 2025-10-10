@@ -6,8 +6,9 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { onEmployeeSubRedirect } from './hooks';
-import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 class HrOrgChartPopover extends Component {
     static template = "hr_org_chart.hr_orgchart_emp_popover";
@@ -48,24 +49,27 @@ export class HrOrgChart extends Component {
 
         this.state = useState({'employee_id': null});
         this.lastParent = null;
+        this.max_level = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
-        onWillStart(this.handleComponentUpdate.bind(this));
-        onWillRender(this.handleComponentUpdate.bind(this));
-    }
-
-    /**
-     * Called on start and on render
-     */
-    async handleComponentUpdate() {
-        this.employee = this.props.record.data;
-        // the widget is either dispayed in the context of a hr.employee form or a res.users form
-        this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
-        const manager = this.employee.parent_id || this.employee.employee_parent_id;
-        const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
-        this.lastParent = manager;
-        this.lastRecord = this.props.record;
-        await this.fetchEmployeeData(this.state.employee_id, forceReload);
+        useRecordObserver(async (record) => {
+            // employee and parent IDs are based on the model context:
+            // - If the widget is used in the context of a `res.users` form:
+            //     - employee_id     = record.data.employee_id?.[0]
+            //     - parent_id       = record.data.employee_parent_id?.[0]
+            // - If the widget is used in the context of a `hr.employee` or `hr.employee.public` form:
+            //     - employee_id     = record.resId
+            //     - parent_id       = record.data.parent_id?.[0]
+            const newParentId =
+                record.data.employee_parent_id?.[0] || record.data.parent_id?.[0] || false;
+            const newEmployeeId = record.data.employee_id?.[0] || record.resId || false;
+            if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId) {
+                this.lastParent = newParentId;
+                this.max_level = null; // Reset max_level to default
+                await this.fetchEmployeeData(newEmployeeId, true);
+            }
+            this.state.employee_id = newEmployeeId;
+        });
     }
 
     async fetchEmployeeData(employeeId, force = false) {
@@ -82,9 +86,12 @@ export class HrOrgChart extends Component {
                 '/hr/get_org_chart',
                 {
                     employee_id: employeeId,
-                    context: user.context,
-                }
-            );
+                    context: {
+                        ...user.context,
+                    max_level: this.max_level,
+                    new_parent_id: this.lastParent,
+                },
+            });
             if (Object.keys(orgData).length === 0) {
                 orgData = {
                     managers: [],
@@ -116,8 +123,8 @@ export class HrOrgChart extends Component {
     }
 
     async _onEmployeeMoreManager(managerId) {
-        await this.fetchEmployeeData(managerId);
-        this.state.employee_id = managerId;
+        this.max_level = 100; // Set a high level to fetch all managers
+        await this.fetchEmployeeData(this.state.employee_id, true);
     }
 }
 

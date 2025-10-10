@@ -183,8 +183,8 @@ class TestReturnPicking(TestStockCommon):
         # Create a stock picking with moves
         original_picking = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
             'move_ids': [(0, 0, {
                 'name': product_serial.name,
                 'product_id': product_serial.id,
@@ -203,8 +203,8 @@ class TestReturnPicking(TestStockCommon):
         return_picking_wizard = self.env['stock.return.picking'].with_context(
             active_id=original_picking.id, active_ids=original_picking.ids, active_model='stock.picking'
         ).create({})
-        # Change the quantity of the product return move from 0 to 1
-        return_picking_wizard.product_return_moves.quantity = 1.0
+        # Change the quantity of the product return move from 0 to 3
+        return_picking_wizard.product_return_moves.quantity = 3.0
         # Create a return picking exchange
         return_picking_wizard.action_create_exchanges()
 
@@ -221,15 +221,23 @@ class TestReturnPicking(TestStockCommon):
         self.assertEqual(original_picking.picking_type_id.id, self.picking_type_in)
         self.assertEqual(len(original_picking.move_line_ids), 10)
 
-        # Return: one return (exchange picking), type out, 1 item
+        # Return: one return (exchange picking), type out, 3 item
         self.assertEqual(return_picking.return_count, 1)
         self.assertEqual(return_picking.picking_type_id.id, self.picking_type_out)
-        self.assertEqual(len(return_picking.move_line_ids), 1)
+        self.assertEqual(len(return_picking.move_line_ids), 3)
+        # By default, the serial IDs picked are the first 3 of the original picking
+        # and it should not be possible to create new serial numbers.
+        self.assertListEqual(return_picking.move_line_ids.lot_id.ids, original_picking.move_line_ids[:3].lot_id.ids)
+        self.assertEqual(return_picking.move_ids.display_assign_serial, False)
 
-        # Exchange: no returns, type in, 1 item
+        # Exchange: no returns, type in, 3 item
         self.assertEqual(exchange_picking.return_count, 0)
         self.assertEqual(exchange_picking.picking_type_id.id, self.picking_type_in)
-        self.assertEqual(len(exchange_picking.move_line_ids), 1)
+        self.assertEqual(len(exchange_picking.move_line_ids), 3)
+        # There should be not pre-selected serial IDs for the exchange picking
+        # and it should be possible to create new serial numbers because it's an incoming picking.
+        self.assertListEqual(exchange_picking.move_line_ids.lot_id.ids, [])
+        self.assertEqual(exchange_picking.move_ids.display_assign_serial, True)
 
     def test_stock_picking_report_has_return(self):
         """
@@ -295,3 +303,46 @@ class TestReturnPicking(TestStockCommon):
             {'lot_id': serial_1.id, 'has_return': True},
             {'lot_id': serial_2.id, 'has_return': False},
         ])
+
+    def test_product_quantities_in_return_for_exchange(self):
+        """ Ensure that on-hand and forecast quantities are correctly computed
+        whe doing an exchange on an incoming picking. """
+        original_picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'move_ids': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.stock_location,
+                'product_uom_qty': 10,
+                'product_uom': self.uom_unit.id,
+            })],
+        })
+        original_picking.button_validate()
+
+        # Product received: both on-hand and forecasted quantities should be 10
+        self.assertEqual(self.productA.qty_available, 10)
+        self.assertEqual(self.productA.virtual_available, 10)
+
+        return_picking_wizard = self.env['stock.return.picking'].with_context(
+            active_id=original_picking.id, active_ids=original_picking.ids, active_model='stock.picking'
+        ).create({})
+        return_picking_wizard.product_return_moves.quantity = 2
+        return_picking_wizard.action_create_exchanges()
+
+        return_picking = original_picking.return_ids
+        exchange_picking = return_picking.return_ids
+
+        return_picking.button_validate()
+
+        # 2 products returned: on-hand = 8, forecasted = 10
+        self.assertEqual(self.productA.qty_available, 8)
+        self.assertEqual(self.productA.virtual_available, 10)
+
+        exchange_picking.button_validate()
+
+        # 2 exchanged products received: both on-hand and forecasted quantities should be 10
+        self.assertEqual(self.productA.qty_available, 10)
+        self.assertEqual(self.productA.virtual_available, 10)

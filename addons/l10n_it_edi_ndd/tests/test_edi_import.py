@@ -1,12 +1,9 @@
-import uuid
-from freezegun import freeze_time
-from unittest.mock import patch
-
-from odoo import fields, sql_db, tools, Command
-from odoo.tests import new_test_user, tagged
+from odoo import fields
+from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 import logging
+
 _logger = logging.getLogger(__name__)
 
 
@@ -14,6 +11,7 @@ _logger = logging.getLogger(__name__)
 class TestItEdiImportNdd(TestItEdi):
 
     def test_l10n_it_payment_method_correctly_imported(self):
+        td01 = self.env.ref('l10n_it_edi_ndd.l10n_it_document_type_01')
         self._assert_import_invoice('IT01234567890_FPR01.xml', [{
             'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2014-12-18'),
@@ -25,4 +23,5 @@ class TestItEdiImportNdd(TestItEdi):
                 'debit': 5.0,
             }],
             'l10n_it_payment_method': 'MP01',
+            'l10n_it_document_type': td01.id,
         }])

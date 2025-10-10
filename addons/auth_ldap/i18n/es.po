@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_ldap
-# 
+# * auth_ldap
+#
 # Translators:
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2025
-# 
+#
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"PO-Revision-Date: 2025-10-01 14:01+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
+"auth_ldap/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -36,11 +41,17 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    Filtro que se usa para buscar cuentas de usuarios en a base de datos de LDAP. es un filtro LDAP arbitrario que se representa en strings. Cualquier marcador de posición `%s` se remplazará con el inicio de sesión (identificador) proporcionado por el usuario, el filtro debería contener al menos uno de esos marcadores de posición.\n"
+"    Filtro que se usa para buscar cuentas de usuarios en la base de datos de "
+"LDAP. Se trata de un filtro LDAP arbitrario que se representa en formato de "
+"cadena. Cualquier marcador de posición \"%s\" se reemplazará con el inicio "
+"de sesión (identificador) proporcionado por el usuario, y el filtro debe "
+"contener al menos uno de estos marcadores de posición.\n"
 "\n"
-"    El filtro debe arrojar al menos un (1) resultado, de lo contrario, el inicio de sesión se considerará inválido.\n"
+"    El filtro debe devolver exactamente (1) resultado; de lo contrario, el "
+"inicio de sesión se considerará inválido.\n"
 "\n"
-"    Por ejemplo (los atributos actuales dependen del servidor y configuración de LDAP):\n"
+"    Ejemplo (los atributos reales dependen del servidor y de la "
+"configuración LDAP):\n"
 "\n"
 "        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"
@@ -105,7 +116,7 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id

@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Aleš Pipan, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:39+0000\n"
+"POT-Creation-Date: 2025-09-27 01:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: barcodes
 #. odoo-python
@@ -30,24 +31,32 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"<i>Nomenklature črtnih kod</i> določite, kako se črtne kode prepoznavajo in kategorizirajo.\n"
-"                                Ko je črtna koda skenirana, je povezana z <i>prvim</i> pravilom ujemajočim se z\n"
-"                                vzorcem. Sintaksa vzorca je regularni izraz, črtna koda pa se ujema\n"
-"                                če se regularni izraz ujema s predpono črtne kode."
+"<i>Nomenklature črtnih kod</i> določite, kako se črtne kode prepoznavajo in "
+"kategorizirajo.\n"
+"                                Ko je črtna koda skenirana, je povezana z "
+"<i>prvim</i> pravilom ujemajočim se z\n"
+"                                vzorcem. Sintaksa vzorca je regularni izraz, "
+"črtna koda pa se ujema\n"
+"                                če se regularni izraz ujema s predpono črtne "
+"kode."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
 msgstr ""
-"Nomenklatura črtnih kod določa, kako prodajno mesto prepozna in interpretira"
-" črtne kode"
+"Nomenklatura črtnih kod določa, kako prodajno mesto prepozna in interpretira "
+"črtne kode"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -188,8 +197,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
-"Za uporabo črtnih kod.barcode_events_mixin, method on_barcode_skenirano mora"
-" biti izvedeno"
+"Za uporabo črtnih kod.barcode_events_mixin, method on_barcode_skenirano mora "
+"biti izvedeno"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -216,18 +225,28 @@ msgstr "Nomenklatura"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the\n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
-"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
-"Vzorci lahko določajo tudi, kako se lahko prikažejo numerične vrednosti, kot sta teža ali cena\n"
-"                                kodirane v črtno kodo. Označene so z <code>{ŠŠŠ}</code>kjer Š'ka\n"
-"                                določa, kje so kodirane števke števila. Podprte so tudi plavajoče številske vrednosti za\n"
-"                                decimalna števila, označena z D-ji, kot na primer <code>{ŠŠŠDD}</code>. V teh primerih,\n"
-"                                mora polje s črtno kodo na povezanih  <i>zapisih\n"
+"Vzorci lahko določajo tudi, kako se lahko prikažejo numerične vrednosti, kot "
+"sta teža ali cena\n"
+"                                kodirane v črtno kodo. Označene so z "
+"<code>{ŠŠŠ}</code>kjer Š'ka\n"
+"                                določa, kje so kodirane števke števila. "
+"Podprte so tudi plavajoče številske vrednosti za\n"
+"                                decimalna števila, označena z D-ji, kot na "
+"primer <code>{ŠŠŠDD}</code>. V teh primerih,\n"
+"                                mora polje s črtno kodo na povezanih  "
+"<i>zapisih\n"
 "</i> prikazati te številke kot\n"
 "                                ničle."
 
@@ -293,8 +312,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
-"V vzorcu črtne kode je sintaktična napaka %(pattern)s: Pravilo lahko vsebuje"
-" samo en par oklepajev."
+"V vzorcu črtne kode je sintaktična napaka %(pattern)s: Pravilo lahko vsebuje "
+"samo en par oklepajev."
 
 #. module: barcodes
 #. odoo-python
@@ -330,11 +349,11 @@ msgstr "Tip"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"Kode UPC je mogoče pretvoriti v kode EAN tako, da jim dodate predpono ničlo."
-" Ta nastavitev določa, ali naj se črtna koda UPC/EAN samodejno pretvori na "
+"Kode UPC je mogoče pretvoriti v kode EAN tako, da jim dodate predpono ničlo. "
+"Ta nastavitev določa, ali naj se črtna koda UPC/EAN samodejno pretvori na "
 "tak ali drugačen način, ko se poskuša pravilo ujemati z drugim kodiranjem."
 
 #. module: barcodes
@@ -365,13 +384,19 @@ msgstr "Neznan ukaz za črtno kodo"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
+msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"Uporablja se za naročanje takšnih pravil, da se pravila z manjšim zaporedjem"
-" najprej ujemajo"
+"Uporablja se za naročanje takšnih pravil, da se pravila z manjšim zaporedjem "
+"najprej ujemajo"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
 msgstr "Vrednost zadnje skenirane črtne kode."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_nomenclature.py:0
+msgid ""
+"You cannot delete '%(name)s' because it's the default barcode nomenclature."
+msgstr ""

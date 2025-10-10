@@ -60,12 +60,12 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
-" * Taslak:  MO henüz onaylanmadı.\n"
-" * Onaylandı: MO onaylandı, stok kuralları ve bileşenlerin yeniden sıralanması tetiklendi.\n"
-" *  Devam Ediyor: Üretim başladı (MO'da veya WO'da).\n"
-" * Kapatılacak: Üretim tamamlandı, MO kapatılmalıdır.\n"
-" * Tamamlandı: MO kapatıldı, stok hareketleri işlendi. \n"
-" * İptal Edildi: MO iptal edildi, artık onaylanamaz."
+" * Taslak: Üretim emri henüz onaylanmadı.\n"
+" * Onaylandı: Üretim emri onaylandı, stok kuralları ve bileşenlerin yeniden siparişi tetiklendi.\n"
+" * Devam Ediyor: Üretim başladı (üretim emri veya iş emri üzerinden).\n"
+" * Kapatılacak: Üretim tamamlandı, üretim emri kapatılmalı.\n"
+" * Tamamlandı: Üretim emri kapatıldı, stok hareketleri kaydedildi. \n"
+" * İptal Edildi: Üretim emri iptal edildi, artık onaylanamaz."
 
 #. module: mrp
 #. odoo-python
@@ -1163,6 +1163,8 @@ msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components"
 " and work order instructions."
 msgstr ""
+"Ürün reçeteleri, diğer adıyla malzeme listeleri; bileşenleri ve iş emri "
+"talimatlarını otomatik olarak tamamlamak için kullanılır."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1884,11 +1886,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Ürünlerin geçerli miktarı.\n"
-"Tek stok Konumlu bir bağlamda, bu Konumda depolanan mallar ya da alt mallar içerilir.\n"
-"Tek Depolu bir bağlamda, Bu Depodaki Stok Konumunda depolanan mallar ya da alt mallar içerilir.\n"
-"Tek Mağazalı bir bağlamda, Bu Mağazaya ait Depodaki Stok Konumunda depolanan mallar ya da alt mallar içerilir.\n"
-"Aksi durumda, 'İç' tipli herhangi bir Stok Konumundaki mallar içerilir."
+"Mevcut ürün miktarı.\n"
+"Tek bir Stok Lokasyonu bağlamında, bu lokasyonda veya ona bağlı alt lokasyonlarda depolanan ürünleri kapsar.\n"
+"Tek bir Depo bağlamında, bu deponun Stok Lokasyonu veya onun alt lokasyonlarında depolanan ürünleri kapsar.\n"
+"Bu Mağazanın Deposunun Stok Lokasyonunda veya ona bağlı alt lokasyonlarda depolanan ürünleri kapsar.\n"
+"Aksi takdirde, 'dahili' türdeki herhangi bir Stok Lokasyonunda depolanan ürünleri içerir."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing

@@ -3,6 +3,7 @@ from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import OrderedSet
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -18,9 +19,9 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_default_sending_method(self, move) -> set:
+    def _get_default_sending_method(self, move) -> str:
         """ By default, we use the sending method set on the partner or email. """
-        return move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'
+        return move.commercial_partner_id.with_company(move.company_id).invoice_sending_method or 'email'
 
     @api.model
     def _get_all_extra_edis(self) -> dict:
@@ -38,11 +39,11 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_invoice_edi_format(self, move, **kwargs) -> str:
         """ By default, we generate the EDI format set on partner. """
-        return move.partner_id.with_company(move.company_id).invoice_edi_format
+        return move.commercial_partner_id.with_company(move.company_id).invoice_edi_format
 
     @api.model
     def _get_default_pdf_report_id(self, move):
-        return move.partner_id.with_company(move.company_id).invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
+        return move.commercial_partner_id.with_company(move.company_id).invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
 
     @api.model
     def _get_default_mail_template_id(self, move):
@@ -169,6 +170,8 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_default_mail_attachments_widget(self, move, mail_template, invoice_edi_format=None, extra_edis=None, pdf_report=None):
+        if extra_edis is None:
+            extra_edis = {}
         return self._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis) \
             + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template, pdf_report=pdf_report) \
             + self._get_invoice_extra_attachments_data(move) \
@@ -427,7 +430,7 @@ class AccountMoveSend(models.AbstractModel):
             if allow_raising:
                 raise UserError(self._format_error_text(error))
 
-            move.with_context(no_new_invoice=True).message_post(body=self._format_error_html(error))
+            move.with_context(no_document=True, no_new_invoice=True).message_post(body=self._format_error_html(error))
 
     @api.model
     def _hook_if_success(self, moves_data):
@@ -447,6 +450,7 @@ class AccountMoveSend(models.AbstractModel):
 
         new_message = move\
             .with_context(
+                no_document=True,
                 no_new_invoice=True,
                 mail_notify_author=author_id in partner_ids,
                 email_notification_allow_footer=True,
@@ -691,7 +695,7 @@ class AccountMoveSend(models.AbstractModel):
         self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
-            for sending_method in custom_settings.get('sending_methods', [])
+            for sending_method in OrderedSet(custom_settings.get('sending_methods', ()))
         ) if 'sending_methods' in custom_settings else True
 
     @api.model

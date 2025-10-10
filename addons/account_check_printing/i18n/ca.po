@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
 # Albert Parera, 2024
 # Iván Infantes Castarnado, 2024
@@ -15,19 +15,19 @@
 # ericrolo, 2024
 # Wil Odoo, 2025
 # Noemi Pla, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-10-03 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
@@ -196,8 +196,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "Per imprimir múltiples xecs d'un cop, han de pertànyer al mateix diari "
 "bancari."
@@ -227,18 +227,30 @@ msgstr "Numeració manual"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Manual: Paga o rep un pagament per qualsevol mètode fora d'Odoo.\n"
-"Proveïdors de pagament: Cada proveïdor de pagament té el seu propi mètode de pagament. Sol·licita una transacció en/a una targeta gràcies a un testimoni de pagament desat pel company quan es compra o es subscriu en línia.\n"
+"Proveïdors de pagament: Cada proveïdor de pagament té el seu propi mètode de "
+"pagament. Sol·licita una transacció en/a una targeta gràcies a un testimoni "
+"de pagament desat pel company quan es compra o es subscriu en línia.\n"
 "Comprovació: Paga factures per xec i imprimeix des d'Odoo.\n"
-"Dipòsit per lots: Recolliu diverses comprovacions de client alhora generant i enviant un dipòsit per lots al vostre banc. El mòdul de pagament de comptes és necessari.\n"
-"Transferència de crèdit SEPA: Paga a la zona SEPA enviant un fitxer de transferència de crèdit SEPA al banc. El mòdul account_sepa és necessari.\n"
-"Dèbit directe SEPA: Es paga a la zona SEPA gràcies a un mandat que el vostre soci us haurà concedit. El mòdul account_sepa és necessari.\n"
+"Dipòsit per lots: Recolliu diverses comprovacions de client alhora generant "
+"i enviant un dipòsit per lots al vostre banc. El mòdul de pagament de "
+"comptes és necessari.\n"
+"Transferència de crèdit SEPA: Paga a la zona SEPA enviant un fitxer de "
+"transferència de crèdit SEPA al banc. El mòdul account_sepa és necessari.\n"
+"Dèbit directe SEPA: Es paga a la zona SEPA gràcies a un mandat que el vostre "
+"soci us haurà concedit. El mòdul account_sepa és necessari.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -292,8 +304,8 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr "Introduïu el número del primer xec pre-imprès que aneu a imprimir."
 
 #. module: account_check_printing
@@ -340,10 +352,12 @@ msgstr "Marge Dret"
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid ""
-"Select the format corresponding to the check paper you will be printing your checks on.\n"
+"Select the format corresponding to the check paper you will be printing your "
+"checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Seleccioneu el format corresponent al paper de xecs on imprimireu els vostres xecs.\n"
+"Seleccioneu el format corresponent al paper de xecs on imprimireu els "
+"vostres xecs.\n"
 "Per desactivar la funció d'impressió, seleccioneu \"Cap\"."
 
 #. module: account_check_printing
@@ -368,9 +382,17 @@ msgid ""
 "Something went wrong with Check Layout, please select another layout in "
 "Invoicing/Accounting Settings and try again."
 msgstr ""
-"S'ha produït un error amb Comprova la disposició. Si us plau, seleccioneu un"
-" altre disseny a la configuració de facturació/comptabilitat i torneu-ho a "
+"S'ha produït un error amb Comprova la disposició. Si us plau, seleccioneu un "
+"altre disseny a la configuració de facturació/comptabilitat i torneu-ho a "
 "provar."
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+msgid ""
+"The check number you entered (%(num)s) exceeds the maximum allowed value of %"
+"(max)d. Please enter a smaller number."
+msgstr ""
 
 #. module: account_check_printing
 #. odoo-python
@@ -420,15 +442,15 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Aquesta opció us permet imprimir l'etiqueta de la data al xec segons el CPA.\n"
+"Aquesta opció us permet imprimir l'etiqueta de la data al xec segons el "
+"CPA.\n"
 "Desactiveu-ho si el vostre xec preimpres inclou l'etiqueta de la data."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
-"Això permetrà guardar en els pagaments el número del xec corresponent."
+msgstr "Això permetrà guardar en els pagaments el número del xec corresponent."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited

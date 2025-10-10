@@ -82,6 +82,7 @@
                     <li t-foreach="group.dashboards" t-as="dashboard" t-key="dashboard.id"
                         t-on-click="() => this.openDashboard(dashboard.id)"
                         t-att-data-name="dashboard.displayName"
+                        t-att-title="dashboard.displayName"
                         class="o_search_panel_category_value list-group-item cursor-pointer border-0 d-flex justify-content-between align-items-center"
                         t-att-class="{'active': dashboard.id === state.activeDashboard.id}">
                         <div class="o_dashboard_name">

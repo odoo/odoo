@@ -1,27 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
-# 
+# * base
+#
 # Translators:
 # Javier Alejandro Sánchez Torres, 2024
 # Adrien Widart, 2024
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
-# 
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-13 15:13+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"PO-Revision-Date: 2025-10-01 00:55+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/base/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -725,11 +729,11 @@ msgstr ""
 "* Agrega un reporte de resumen del IVA que se utiliza para analizar la facturación.\n"
 "* Agrega la función de un libro de IVA digital que nos permite generar archivos TXT para importarlos a la AFIP. Los que implementamos son los siguientes:\n"
 "\n"
-"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
-"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
-"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
-"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
-"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"* LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"* LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"* LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"* LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"* LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
 "Documentación oficial de la AFIP\n"
 "\n"
@@ -5634,69 +5638,93 @@ msgstr ""
 "Funcional\n"
 "----------\n"
 "\n"
-"Crear diarios en Odoo para crear facturas electrónicas de los clientes y después reportarlas a la AFIP (a través de los servicios web).\n"
+"Crea diarios en Odoo para generar facturas electrónicas de clientes y "
+"repórtalas a la ARCA (a través de los servicios web).\n"
 "Las opciones disponibles son:\n"
 "\n"
 "    * Factura electrónica - Web Service\n"
-"    * Voucher para exportar - Web Service\n"
+"    * Comprobante de exportación - Web Service\n"
 "    * Bono fiscal electrónico - Web Service\n"
 "\n"
-"Si valida una factura en los diarios electrónicos, entonces se validará tanto en Odoo como en la AFIP. Esta validación\n"
-"se hace de forma instantánea y recibimos un estado de la AFIP que puede ser \"aprobado/aprobado con observaciones/rechazado\". Si la AFIP\n"
-"rechazó la factura, esta no se publicará en el sistema y aparecerá una notificación con los motivos del error (por qué la rechazaron)\n"
-"y una PISTA de cuál es el problema.\n"
+"Si validas una factura en los diarios electrónicos, entonces se validará "
+"tanto en Odoo como en la ARCA. Esta validación\n"
+"se hace de forma instantánea y recibimos un estado que puede ser "
+"\"aprobado/aprobado con observaciones/rechazado\" de la ARCA. Si la ARCA\n"
+"rechazó la factura, esta no se registrará en el sistema y aparecerá una "
+"notificación con los detalles del error (motivo por el que la rechazaron)\n"
+"y una PISTA sobre cuál podría ser el problema.\n"
 "\n"
-"Para auditorías y solución de problemas también agregamos el menú \"Consulta de facturas de AFIP\". Con este menú podrá consultar las facturas\n"
-"que se enviaron con anterioridad a la AFIP y el último número que se usó como soporte para posibles errores en las secuencias de sincronización entre Odoo y la AFIP.\n"
+"Para auditorías y solución de problemas, también agregamos el menú "
+"\"Consulta de facturas de ARCA\" con el que podrás consultar las facturas\n"
+"enviadas con anterioridad a la ARCA y el último número utilizado como "
+"soporte para posibles problemas de sincronización de secuencias entre Odoo y "
+"ARCA.\n"
 "\n"
-"    NOTA: Desde la vista del diario podemos forzar una sincronización entre las secuencias de Odoo y cada uno de los tipos de documentos en\n"
-"    los últimos números que se registraron en la AFIP.\n"
+"    NOTA: Desde la vista de formulario del diario podemos forzar una "
+"sincronización entre las secuencias de Odoo y cada uno de los tipos de "
+"documentos en\n"
+"    los últimos números registrados en la ARCA.\n"
 "\n"
-"Agregamos una funcionalidad a las facturas de proveedores que se puede configurar en los ajustes de contabilidad para poder verificar\n"
-"facturas de proveedores en la AFIP para revisar si estas facturas son reales (para más información revise la descripción de los ajustes).\n"
+"Agregamos una funcionalidad a las facturas de proveedores que se puede "
+"configurar en los ajustes de contabilidad para poder verificar\n"
+"las facturas de proveedores en la ARCA para revisar si estas facturas son "
+"reales (revisa la descripción de los ajustes para obtener más información).\n"
 "\n"
 "Configuración:\n"
 "\n"
-"1. Vaya a los ajustes de Contabilidad > sección de localización argentina. \n"
+"1. Ve a los ajustes de Contabilidad > sección de localización argentina. \n"
 "\n"
-"    1.1. Configure el modo Web Service de AFIP:\n"
+"    1.1. Configura el modo Web Service de ARCA:\n"
 "\n"
-"    * Entorno de prueba para usar certificados de demostración que se utilizarán para probar el caso y para NO\n"
-"      crear facturas reales en la AFIP. Este entorno solo es para prueba. Para casos de demostración ya está predeterminado, no necesitará configurarlo\n"
-"      (por lo general, en la AFIP se llama entorno de homologación).\n"
-"    * Entorno de producción para generar certificados reales y facturas legales en la AFIP.\n"
+"    * Entorno de prueba para usar certificados de demostración que permiten "
+"probar la instancia y para NO\n"
+"      emitir facturas reales en la ARCA. Este entorno solo es para prueba. "
+"Es el entorno predeterminado en las instancias de demostración, no "
+"necesitarás configurarlo\n"
+"      (por lo general, en la ARCA se llama entorno de homologación).\n"
+"    * Entorno de producción para generar certificados reales y facturas "
+"legales en la ARCA.\n"
 "\n"
-"    1.2. Configure su certificado AFIP: si está en un entorno demo se programará en automático. Si está\n"
-"         en un entorno de producción, solo necesita subir su certificado de AFIP.\n"
+"    1.2. Configura tu certificado de ARCA: Si estás en una instancia de "
+"demostración ya estará configurado de forma predeterminada. Si estás\n"
+"         en un entorno de producción, solo necesitas subir tu certificado de "
+"ARCA.\n"
 "\n"
-"    1.3. De forma opcional puede definir si le gustaría poder verificar facturas de proveedor en la AFIP.\n"
+"    1.3. De forma opcional, puedes definir si quieres habilitar la "
+"verificación de facturas de proveedor en la ARCA.\n"
 "\n"
-"2. Cree diarios de ventas que representarán cada uno de sus PdV de AFIP (disponible en el portal de la AFIP) que quiera usar en Odoo.\n"
+"2. Crea diarios de ventas que representarán cada uno de tus PdV de ARCA ("
+"disponible en el portal de la ARCA) que quieras usar en Odoo.\n"
 "\n"
-"    2.1. El campo de usar Documentos está configurado en automático, no lo cambie.\n"
-"    2.2. Configure el sistema de AFIP POS para uno de los electrónicos.\n"
+"    2.1. El campo \"Usar Documentos\" está configurado de forma "
+"predeterminada, no lo cambies.\n"
+"    2.2. Configura el sistema ARCA POS para uno de los electrónicos.\n"
 "\n"
 "        * Factura electrónica - Web Service\n"
 "        * Bono fiscal electrónico - Web Service\n"
-"        * Exportar voucher - Web Service\n"
+"        * Comprobante de exportación - Web Service\n"
 "\n"
-"    2.3. Establezca el número POS de la AFIP y la dirección POS de la AFIP tomando en cuenta lo que configuró en su portal AFIP.\n"
+"    2.3. Configura el número PdV de la ARCA y la dirección PdV de la ARCA "
+"según lo que tengas configurado en tu portal ARCA.\n"
 "\n"
-"    NOTA: puede revisar el botón de \"revisar POS AFIP disponible\" en el formulario del diario para corroborar el uso para crear diarios.\n"
+"    NOTA: Puedes usar el botón \"Verificar PdV ARCA disponible\" en el "
+"formulario del diario para corroborar cuál usar al crear los diarios..\n"
 "\n"
-"Vaya a http://www.afip.gob.ar/fe/ayuda.asp para obtener más información sobre la facturación electrónica de Argentina\n"
+"Ve a http://www.afip.gob.ar/fe/ayuda.asp para obtener más información sobre "
+"la facturación electrónica en Argentina\n"
 "\n"
 "Técnico\n"
 "---------\n"
 "\n"
-"Los servicios web que se implementan son los más comunes:\n"
+"Los servicios web implementados son los más comunes:\n"
 "\n"
-"* wsfev1 - \"Factura Electrónica\" \n"
-"* wsbfev1 - \"Bono Fiscal Electrónico\" \n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\" \n"
-"* wscdc - \"Constatación de Comprobantes\" \n"
+"* wsfev1 - \"Factura electrónica\" \n"
+"* wsbfev1 - \"Bono fiscal electrónico\" \n"
+"* wsfexv1 - \"Factura de exportación electrónica\" \n"
+"* wscdc - \"Constatación de comprobantes\" \n"
 "\n"
-"Para consultar la información de desarrollo, vaya a http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"Para consultar la información de desarrollo, ve a http://www.afip.gob.ar/fe/"
+"documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 
 #. module: base
@@ -19162,7 +19190,7 @@ msgstr "Pago por lotes"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
 msgid "Batch Transfer, Carrier"
-msgstr "Translado por lotes, transportista"
+msgstr "Traslado por lotes, transportista"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
@@ -21656,7 +21684,7 @@ msgstr "Código de llamada del país"
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__country_code
 #: model:ir.model.fields,field_description:base.field_res_users__country_code
 msgid "Country Code"
-msgstr "Código de país"
+msgstr "Código del país"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_group
@@ -21777,7 +21805,7 @@ msgstr "Crear una etiqueta de contacto"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a Contact in your address book"
-msgstr "Crear un contacto en su libreta de direcciones"
+msgstr "Crear un contacto en la libreta de direcciones"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_group
@@ -26122,7 +26150,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
 msgid "For relationship fields, the technical name of the target model"
-msgstr "Para campos de relación, el nombre técnico del modelo destino"
+msgstr "Para los campos de relación, el nombre técnico del modelo destino"
 
 #. module: base
 #. odoo-python
@@ -26155,7 +26183,7 @@ msgstr "Uso prohibido de   `__comp__` en la arquitectura. "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Forgot password?"
-msgstr "¿Olvidó su contraseña?"
+msgstr "¿Olvidaste tu contraseña?"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.HUF
@@ -31951,7 +31979,7 @@ msgstr "Varios"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr "Varios"
+msgstr "Misceláneo"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -33477,6 +33505,7 @@ msgstr ""
 "### Objetivos por equipo\n"
 "\n"
 "Compare los ingresos con los pronósticos y los presupuestos en tiempo real.\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__oeel-1
@@ -34948,8 +34977,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you track all activities related to your contacts."
 msgstr ""
-"Odoo le ayuda a llevar seguimiento de todas las actividades relacionadas con"
-" sus contactos."
+"Odoo te ayuda a llevar seguimiento de todas las actividades relacionadas con"
+" tus contactos."
 
 #. module: base
 #. odoo-python
@@ -36934,7 +36963,8 @@ msgstr "Tabla dinámica"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_gelato
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr "Ordene al servicio de impresión bajo demanda de Gelato"
+msgstr ""
+"Crea tus pedidos a través del servicio de impresión bajo demanda de Gelato"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
@@ -38441,7 +38471,7 @@ msgstr "Registre el tiempo"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Record to Create"
-msgstr "Registro por crear"
+msgstr "Registro a crear"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -40837,7 +40867,7 @@ msgstr "Conectores a redes sociales para los ajustes de la empresa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_software_reseller
 msgid "Software Reseller"
-msgstr "Revendedor de software"
+msgstr "Distribuidor de software"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
@@ -42367,7 +42397,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "El código ISO del país en dos caracteres.\n"
-"Puede utilizar este campo para realizar una búsqueda rápida."
+"Puedes utilizar este campo para realizar una búsqueda rápida."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -44399,15 +44429,20 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
-"Tipo de acción de servidor. Los valores disponibles son:\n"
-"- 'Actualizar un registro': actualiza los valores de un registro\n"
-"- 'Crear actividad': crea una actividad (Conversaciones)\n"
-"- 'Enviar correo electrónico': publica un mensaje, una nota o envia un correo electrónico (Conversaciones)\n"
-"- 'Enviar SMS': envía SMS y los registra en los documentos (SMS)- 'Agregar o eliminar seguidores': agrega o elimina seguidores de un registro (Conversaciones)\n"
-"- 'Crear registro': crea un nuevo registro con nuevos valores\n"
-"- 'Ejecutar código': se ejecuta un bloque de código Python\n"
-"- 'Enviar notificación webhook': envía una solicitud POST a un sistema externo, también conocido como Webhook\n"
-"- 'Ejecutar acciones existentes': define una acción que activa otras acciones de servidor\n"
+"Tipo de acción del servidor. Los valores disponibles son:\n"
+"- \"Actualizar un registro\": actualiza los valores de un registro \n"
+"- \"Crear actividad\": crea una actividad (Conversaciones) \n"
+"- \"Enviar correo electrónico\"': registra un mensaje, una nota o envía un "
+"correo electrónico (Conversaciones) \n"
+"- \"Enviar SMS\": envía SMS y los registra en los documentos (SMS) - "
+"\"Agregar o eliminar seguidores\": agrega o elimina seguidores de un "
+"registro (Conversaciones) \n"
+"- \"Crear registro\": crea un nuevo registro con nuevos valores \n"
+"- \"Ejecutar código\": ejecuta un bloque de código Python \n"
+"- \"Enviar notificación webhook\": envía una solicitud POST a un sistema "
+"externo, también conocido como webhook \n"
+"- \"Ejecutar acciones existentes\": define una acción que activa otras "
+"acciones del servidor\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -46106,7 +46141,7 @@ msgstr "Perfil del sitio web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wedding_planner
 msgid "Wedding Planner"
-msgstr "Planeación de bodas"
+msgstr "Organizador de bodas"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -46121,7 +46156,7 @@ msgstr "Semanas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wellness_practitioner
 msgid "Wellness Practitioner"
-msgstr "Expertos en bienestar"
+msgstr "Especialistas en bienestar"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -47153,7 +47188,7 @@ msgstr "Por ejemplo, BE0477472701"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Brandon Freeman"
-msgstr "por ejemplo, Francisco Perez"
+msgstr "Por ejemplo, Francisco Pérez"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
