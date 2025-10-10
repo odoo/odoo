@@ -47,10 +47,10 @@ registerThreadAction("fold-chat-window", {
     sequenceQuick: 20,
 });
 registerThreadAction("rename-thread", {
-    condition: ({ owner, thread }) =>
-        thread &&
+    condition: ({ channel, owner, thread }) =>
+        channel &&
         owner.props.chatWindow?.isOpen &&
-        (thread.is_editable || thread.channel?.channel_type === "chat") &&
+        (thread.is_editable || channel.channel_type === "chat") &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-pencil",
     name: _t("Rename Thread"),
@@ -127,7 +127,8 @@ export class ThreadAction extends Action {
     }
 
     get params() {
-        return Object.assign(super.params, { thread: this.threadFn() });
+        const thread = this.threadFn();
+        return Object.assign(super.params, { channel: thread?.channel, thread });
     }
 
     /** Optional component that is used as action panel of this component, i.e. when action is active. */

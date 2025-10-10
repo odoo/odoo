@@ -4,13 +4,10 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
 export const joinChannelAction = {
-    condition: ({ thread }) =>
-        thread &&
-        !thread.self_member_id &&
-        !["chat", "group"].includes(thread.channel_type) &&
-        thread.model !== "mail.box",
-    open: ({ store, thread }) =>
-        store.env.services.orm.call("discuss.channel", "add_members", [[thread.id]], {
+    condition: ({ channel, thread }) =>
+        channel && !channel.self_member_id && !["chat", "group"].includes(channel.channel_type),
+    open: ({ channel, store }) =>
+        store.env.services.orm.call("discuss.channel", "add_members", [[channel.id]], {
             partner_ids: [store.self.id],
         }),
     icon: "fa fa-fw fa-sign-in",
@@ -21,10 +18,9 @@ export const joinChannelAction = {
 };
 registerThreadAction("join-channel", joinChannelAction);
 registerThreadAction("expand-discuss", {
-    condition: ({ owner, store, thread }) =>
-        thread &&
+    condition: ({ channel, owner, store }) =>
+        channel &&
         owner.props.chatWindow?.isOpen &&
-        thread.model === "discuss.channel" &&
         !store.env.services.ui.isSmall &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-expand",
@@ -45,13 +41,13 @@ registerThreadAction("expand-discuss", {
     sequenceGroup: 5,
 });
 registerThreadAction("advanced-settings", {
-    condition: ({ owner, thread }) => thread && owner.isDiscussSidebarChannelActions,
-    open: ({ owner, store, thread }) => {
+    condition: ({ channel, owner }) => channel && owner.isDiscussSidebarChannelActions,
+    open: ({ channel, store }) => {
         store.env.services.action.doAction({
             type: "ir.actions.act_window",
             res_model: "discuss.channel",
             views: [[false, "form"]],
-            res_id: thread.id,
+            res_id: channel.id,
             target: "current",
         });
     },
