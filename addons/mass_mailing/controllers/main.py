@@ -237,7 +237,7 @@ class MassMailController(http.Controller):
         # opt-out
         contacts = self._fetch_contacts(email)
         lists_optin = contacts.subscription_ids.filtered(
-            lambda sub: not sub.opt_out
+            lambda sub: not sub.opt_out and sub.list_id.is_public
         ).list_id.filtered('active')
         lists_optout = contacts.subscription_ids.filtered(
             lambda sub: sub.opt_out and sub.list_id not in lists_optin

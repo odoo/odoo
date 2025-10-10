@@ -31,3 +31,7 @@ class TestSnippets(HttpCase):
             "snippet_newsletter_block_with_edit",
             login='admin'
         )
+
+    def test_snippet_newsletter_mailing_list(self):
+        self.env['mailing.list'].create({'name': 'Ben 10', 'is_public': False})
+        self.start_tour('/', 'snippet_newsletter_mailing_list', login='admin')

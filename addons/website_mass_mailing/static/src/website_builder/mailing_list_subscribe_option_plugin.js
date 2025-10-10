@@ -73,7 +73,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
             const response = await this.services.orm.call(
                 "mailing.list",
                 "name_search",
-                ["", [["is_public", "=", true]]],
+                [],
                 { context }
             );
             this.mailingLists = [];
