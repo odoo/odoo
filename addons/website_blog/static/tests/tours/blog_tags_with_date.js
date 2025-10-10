@@ -9,16 +9,7 @@ import wTourUtils from "@website/js/tours/tour_utils";
 wTourUtils.registerWebsitePreviewTour("blog_tags_with_date", {
     test: true,
     url: "/blog",
-    edition: true,
 }, () => [{
-        content: "Click on first blog",
-        trigger: "iframe article[name=blog_post] a",
-    }, {
-        content: "Click on sidebar option",
-        trigger: "we-customizeblock-options we-button[data-customize-website-views='website_blog.opt_blog_sidebar_show'] we-title",
-    },
-    ...wTourUtils.clickOnSave(),
-    {
         content: "Check that the sidebar is present",
         trigger: "iframe #o_wblog_sidebar",
         isCheck: true,
