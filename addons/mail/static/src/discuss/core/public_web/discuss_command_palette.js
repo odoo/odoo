@@ -231,7 +231,7 @@ export class DiscussCommandPalette {
                 Component: DiscussCommand,
                 action: async () => {
                     const channel = await this.store["mail.thread"].getOrFetch(thread);
-                    channel.open({ focus: true, bypassCompact: true });
+                    await channel.openWithPin();
                 },
                 name: thread.displayName,
                 category,

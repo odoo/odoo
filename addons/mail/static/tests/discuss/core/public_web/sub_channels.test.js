@@ -7,6 +7,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Deferred, mockDate, animationFrame } from "@odoo/hoot-mock";
@@ -56,6 +57,77 @@ test("can manually unpin a sub-thread", async () => {
     await click("[title='Thread Actions']");
     await click(".o-dropdown-item:contains('Unpin Conversation')");
     await contains(".o-mail-DiscussSidebar-item", { text: "New Thread", count: 0 });
+});
+
+test("pinning a sub-thread pins its parent channel if it is unpinned originally", async () => {
+    mockDate("2023-01-03 12:00:00");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    pyEnv["discuss.channel"].create({
+        name: "sub channel 1",
+        parent_channel_id: channelId,
+        channel_member_ids: [
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    pyEnv["discuss.channel"].create({
+        name: "sub channel 2",
+        parent_channel_id: channelId,
+        channel_member_ids: [
+            Command.create({
+                unpin_dt: "2021-01-01 12:00:00",
+                last_interest_dt: "2021-01-01 10:00:00",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    await start();
+    await openDiscuss();
+    triggerHotkey("control+k");
+    await insertText("input[placeholder='Search a conversation']", "sub channel 1");
+    await click(".o_command.focused:has(.fa-comments-o)", { text: "sub channel 1" });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel", { name: "sub channel 1" });
+    await contains(".o-mail-DiscussSidebarChannel", { name: "General" });
+});
+
+test("should unpin all the sub-threads when its parent thread is unpinned", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "SubChannel_1",
+        parent_channel_id: channelId,
+    });
+    pyEnv["discuss.channel"].create({
+        name: "SubChannel_2",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel", { text: "SubChannel_1" });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel", { text: "SubChannel_2" });
+    await click("[title='Channel Actions']");
+    await click(".o-mail-ActionList-button", { text: "Unpin Conversation" });
+    await contains(".o-mail-DiscussSidebarChannel-itemMain[title='General']", {
+        count: 0,
+    });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel[title='SubChannel_1']", { count: 0 });
+    await contains(".o-mail-DiscussSidebarChannel-subChannel[title='SubChannel_2']", { count: 0 });
 });
 
 test("create sub thread from existing message", async () => {

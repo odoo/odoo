@@ -503,7 +503,7 @@ const threadPatch = {
         );
     },
     get allowedToUnpinChannelTypes() {
-        return ["chat"];
+        return ["channel", "chat", "group"];
     },
     get canUnpin() {
         return (
