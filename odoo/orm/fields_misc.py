@@ -13,7 +13,7 @@ from .identifiers import IdType
 
 if typing.TYPE_CHECKING:
     from .models import BaseModel
-    from odoo.tools import Query
+    from .query import Query
 
 # integer needs to be imported before Id because of `type` attribute clash
 from . import fields_numeric  # noqa: F401

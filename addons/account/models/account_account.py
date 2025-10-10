@@ -8,7 +8,8 @@ import json
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
-from odoo.tools import SQL, Query
+from odoo.models import Query
+from odoo.tools import SQL
 
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
@@ -409,7 +410,7 @@ class AccountAccount(models.Model):
     def _search_placeholder_code(self, operator, value):
         if operator not in ('=ilike', 'in'):
             return NotImplemented
-        query = Query(self.env, 'account_account')
+        query = Query(self)
         placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
         if operator == 'in':
             query.add_where(SQL("%s IN %s", placeholder_code_sql, tuple(value)))
@@ -1269,7 +1270,7 @@ class AccountAccount(models.Model):
                 return
             # We would get a ValueError if the _field_to_sql is not implemented. In that case, we return None.
             with contextlib.suppress(ValueError):
-                query = Query(self.env, self.env[model]._table, self.env[model]._table_sql)
+                query = Query(self.env[model])
                 return query.select(
                     SQL('%s AS id', self.env[model]._field_to_sql(query.table, 'id')),
                     SQL('%s AS company_id', self.env[model]._field_to_sql(query.table, company_id_field, query)),

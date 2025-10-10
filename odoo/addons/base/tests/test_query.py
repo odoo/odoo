@@ -1,69 +1,47 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.models import Query
 from odoo.tests.common import BaseCase, TransactionCase
-from odoo.tools import Query, SQL
+from odoo.tools import SQL
 
 
 class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
-        query = Query(None, 'product_product')
-        query.add_table('product_template')
-        query.add_where("product_product.template_id = product_template.id")
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
+        query.add_where('1=1')
         # add inner join
-        alias = query.join("product_template", "categ_id", "product_category", "id", "categ_id")
-        self.assertEqual(alias, 'product_template__categ_id')
+        template = query.join('product_product', 'product_template_id', 'product_template', 'id', 'template')
+        self.assertEqual(template, 'product_product__template')
         # add left join
         alias = query.left_join("product_product", "user_id", "res_user", "id", "user_id")
         self.assertEqual(alias, 'product_product__user_id')
 
         self.assertEqual(query.from_clause.code,
-            '"product_product", "product_template" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_product__user_id" ON ("product_product"."user_id" = "product_product__user_id"."id")')
+            '"product_product" JOIN "product_template" AS "product_product__template" ON ("product_product"."product_template_id" = "product_product__template"."id") LEFT JOIN "res_user" AS "product_product__user_id" ON ("product_product"."user_id" = "product_product__user_id"."id")')
         self.assertEqual(query.where_clause.code,
-            "product_product.template_id = product_template.id")
+            "1=1")
 
     def test_query_chained_explicit_joins(self):
-        query = Query(None, 'product_product')
-        query.add_table('product_template')
-        query.add_where("product_product.template_id = product_template.id")
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         # add inner join
-        alias = query.join("product_template", "categ_id", "product_category", "id", "categ_id")
-        self.assertEqual(alias, 'product_template__categ_id')
+        template = query.join('product_product', 'product_template_id', 'product_template', 'id', 'template')
+        self.assertEqual(template, 'product_product__template')
         # add CHAINED left join
-        alias = query.left_join("product_template__categ_id", "user_id", "res_user", "id", "user_id")
-        self.assertEqual(alias, 'product_template__categ_id__user_id')
+        alias = query.left_join("product_product__template", "user_id", "res_user", "id", "user_id")
+        self.assertEqual(alias, 'product_product__template__user_id')
 
         self.assertEqual(query.from_clause.code,
-            '"product_product", "product_template" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_template__categ_id__user_id" ON ("product_template__categ_id"."user_id" = "product_template__categ_id__user_id"."id")')
-        self.assertEqual(query.where_clause.code,
-            "product_product.template_id = product_template.id")
-
-    def test_mixed_query_chained_explicit_implicit_joins(self):
-        query = Query(None, 'product_product')
-        query.add_table('product_template')
-        query.add_where("product_product.template_id = product_template.id")
-        # add inner join
-        alias = query.join("product_template", "categ_id", "product_category", "id", "categ_id")
-        self.assertEqual(alias, 'product_template__categ_id')
-        # add CHAINED left join
-        alias = query.left_join("product_template__categ_id", "user_id", "res_user", "id", "user_id")
-        self.assertEqual(alias, 'product_template__categ_id__user_id')
-        # additional implicit join
-        query.add_table('account_account')
-        query.add_where("product_category.expense_account_id = account_account.id")
-
-        self.assertEqual(query.from_clause.code,
-            '"product_product", "product_template", "account_account" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_template__categ_id__user_id" ON ("product_template__categ_id"."user_id" = "product_template__categ_id__user_id"."id")')
-        self.assertEqual(query.where_clause.code,
-            "product_product.template_id = product_template.id AND product_category.expense_account_id = account_account.id")
+            '"product_product" JOIN "product_template" AS "product_product__template" ON ("product_product"."product_template_id" = "product_product__template"."id") LEFT JOIN "res_user" AS "product_product__template__user_id" ON ("product_product__template"."user_id" = "product_product__template__user_id"."id")')
+        self.assertFalse(query.where_clause.code)
 
     def test_raise_missing_lhs(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         with self.assertRaises(AssertionError):
             query.join("product_template", "categ_id", "product_category", "id", "categ_id")
 
     def test_long_aliases(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         tmp = query.join('product_product', 'product_tmpl_id', 'product_template', 'id', 'product_tmpl_id')
         self.assertEqual(tmp, 'product_product__product_tmpl_id')
         # no hashing
@@ -81,7 +59,7 @@ class QueryTestCase(BaseCase):
         self.assertEqual(tmp_cat_stm_par, 'product_product__product_tmpl_id__product_category_id__00363fdd')
 
     def test_table_expression(self):
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo"')
 
@@ -89,18 +67,13 @@ class QueryTestCase(BaseCase):
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
 
-        query = Query(None, 'foo')
-        query.add_table('bar', SQL('(SELECT id FROM foo)'))
-        from_clause = query.from_clause.code
-        self.assertEqual(from_clause, '"foo", (SELECT id FROM foo) AS "bar"')
-
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
 
     def test_empty_set_result_ids(self):
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.set_result_ids([])
         self.assertEqual(query.get_result_ids(), ())
         self.assertTrue(query.is_empty())
@@ -110,7 +83,7 @@ class QueryTestCase(BaseCase):
         self.assertTrue(query.is_empty(), "adding where clauses keeps the result empty")
 
     def test_set_result_ids(self):
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.set_result_ids([1, 2, 3])
         self.assertEqual(query.get_result_ids(), (1, 2, 3))
         self.assertFalse(query.is_empty())

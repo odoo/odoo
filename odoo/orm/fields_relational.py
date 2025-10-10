@@ -8,7 +8,7 @@ from collections.abc import Reversible
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import SQL, OrderedSet, Query, sql, unique
+from odoo.tools import SQL, OrderedSet, sql, unique
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
@@ -18,6 +18,7 @@ from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
+from .query import Query
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:

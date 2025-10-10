@@ -6,7 +6,8 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import Query, SQL
+from odoo.models import Query
+from odoo.tools import SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 
@@ -444,7 +445,7 @@ class ProjectProject(models.Model):
             f'{SaleOrderLine._table}.id AS sale_line_id',
         )
 
-        return Query(self.env, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
+        return Query(None, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
 

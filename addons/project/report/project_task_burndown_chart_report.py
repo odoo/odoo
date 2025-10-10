@@ -199,7 +199,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
 
         # hardcode 'project_task_burndown_chart_report' as the query above
         # (with its own parameters)
-        main_query._tables['project_task_burndown_chart_report'] = burndown_chart_sql
+        main_query._joins['project_task_burndown_chart_report'] = (SQL(), burndown_chart_sql, SQL())
 
         return main_query
 

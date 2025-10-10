@@ -326,11 +326,13 @@ class ProjectProject(models.Model):
             f'{EmployeeMapping._table}.sale_line_id',
         )
 
-        query._tables['project_sale_order_item'] = SQL('(%s)', SQL(' UNION ').join([
-            query._tables['project_sale_order_item'],
+        join, sql, condition = query._joins['project_sale_order_item']
+        sql = SQL('(%s)', SQL(' UNION ').join([
+            sql,
             timesheet_sql,
             employee_mapping_sql,
         ]))
+        query._joins['project_sale_order_item'] = (join, sql, condition)
         return query
 
     def _get_domain_from_section_id(self, section_id):

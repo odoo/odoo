@@ -35,7 +35,7 @@ from odoo.exceptions import MissingError, AccessError
 from odoo.fields import Domain
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
-    clean_context, split_every, Query, SQL,
+    clean_context, split_every, SQL,
     ormcache, is_list_of,
 )
 from odoo.tools.mail import (

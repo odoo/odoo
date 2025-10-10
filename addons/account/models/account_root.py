@@ -3,7 +3,7 @@ from itertools import accumulate
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import Query
+from odoo.models import Query
 
 
 class AccountRoot(models.Model):
