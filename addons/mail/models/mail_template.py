@@ -652,7 +652,7 @@ class MailTemplate(models.Model):
         records.check_access('read')
 
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
-                  email_layout_xmlid=False):
+                  email_layout_xmlid=False, additional_context=None):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
 
@@ -663,6 +663,8 @@ class MailTemplate(models.Model):
             customize the mail;
         :param str email_layout_xmlid: optional notification layout to encapsulate the
             generated email;
+        :param dict additional_context: optional additional context values for rendering
+          the encapsulating layout (given to _render_encapsulate).
         :returns: id of the mail.mail that was created """
 
         # Grant access to send_mail only if access to related document
@@ -672,15 +674,17 @@ class MailTemplate(models.Model):
             force_send=force_send,
             raise_exception=raise_exception,
             email_values=email_values,
-            email_layout_xmlid=email_layout_xmlid
+            email_layout_xmlid=email_layout_xmlid,
+            additional_context=additional_context,
         )[0].id  # TDE CLEANME: return mail + api.returns ?
 
     def send_mail_batch(self, res_ids, force_send=False, raise_exception=False, email_values=None,
-                  email_layout_xmlid=False):
+                        email_layout_xmlid=False, additional_context=None):
         """ Generates new mail.mails. Batch version of 'send_mail'.'
 
         :param list res_ids: IDs of modelrecords on which template will be rendered
-
+        :param dict additional_context: optional additional context values for rendering
+          the encapsulating layout (given to _render_encapsulate).
         :returns: newly created mail.mail
         """
         # Grant access to send_mail only if access to related document
@@ -757,6 +761,7 @@ class MailTemplate(models.Model):
                     add_context={
                         'company': company,
                         'model_description': model_lang.display_name,
+                        **(additional_context or {}),
                     },
                     context_record=record_lang,
                 )

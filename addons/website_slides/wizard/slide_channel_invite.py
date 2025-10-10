@@ -105,13 +105,18 @@ class SlideChannelInvite(models.TransientModel):
         # optional support of default_email_layout_xmlid in context
         email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
         if email_layout_xmlid:
+            model_description = self.env['ir.model']._get('slide.channel').display_name
             mail_values['body_html'] = self._render_encapsulate(
                 email_layout_xmlid, mail_values['body_html'],
                 context_record=slide_channel_partner,
                 add_context={
+                    'email_notification_force_header': True,
+                    'email_notification_force_footer': True,
                     'record_name': self.channel_id.name,
                     'signature': self.channel_id.user_id.signature,
+                    'subtitles': [_('Your %s', model_description or 'document'),
+                                  self.channel_id.name.replace('/', '-') if self.channel_id.name else ''],
+                    'subtitles_highlight_2nd': True,
                 },
             )
-
         return mail_values
