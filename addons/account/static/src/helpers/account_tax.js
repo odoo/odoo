@@ -4,7 +4,32 @@ import { _t } from "@web/core/l10n/translation";
 export const accountTaxHelpers = {
     // -------------------------------------------------------------------------
     // HELPERS IN BOTH PYTHON/JAVASCRIPT (account_tax.js / account_tax.py)
+    // -------------------------------------------------------------------------
 
+    /**
+     * Helper to stringify a grouping key that could contains some records.
+     *
+     * [!] Only added javascript-side.
+     */
+    stringify_grouping_key(grouping_key) {
+        if (!grouping_key || typeof grouping_key !== "object") {
+            return grouping_key;
+        }
+
+        if ("id" in grouping_key) {
+            return grouping_key.id;
+        }
+
+        const serializable_grouping_key = { ...grouping_key };
+        for (const [key, value] of Object.entries(grouping_key)) {
+            if (typeof value === "object" && "id" in value) {
+                serializable_grouping_key[key] = value.id;
+            }
+        }
+        return JSON.stringify(serializable_grouping_key);
+    },
+
+    // -------------------------------------------------------------------------
     // PREPARE TAXES COMPUTATION
     // -------------------------------------------------------------------------
 
@@ -663,22 +688,12 @@ export const accountTaxHelpers = {
             if (!tax_data) {
                 return;
             }
-            const common_grouping_key = {
+            return {
                 is_refund: base_line.is_refund,
                 is_reverse_charge: tax_data.is_reverse_charge,
                 price_include: tax_data.price_include,
-            };
-            return {
-                grouping_key: {
-                    ...common_grouping_key,
-                    tax: tax_data.tax.id,
-                    currency: base_line.currency_id.id,
-                },
-                raw_grouping_key: {
-                    ...common_grouping_key,
-                    tax: tax_data.tax,
-                    currency: base_line.currency_id,
-                },
+                tax: tax_data.tax,
+                currency: base_line.currency_id,
             };
         }
 
@@ -789,15 +804,9 @@ export const accountTaxHelpers = {
     round_tax_details_base_lines(base_lines, company, { mode = "mixed" } = {}) {
         function grouping_function(base_line, tax_data) {
             return {
-                grouping_key: {
-                    is_refund: base_line.is_refund,
-                    currency: base_line.currency_id.id,
-                },
-                raw_grouping_key: {
-                    is_refund: base_line.is_refund,
-                    currency: base_line.currency_id,
-                },
-            };
+                is_refund: base_line.is_refund,
+                currency: base_line.currency_id,
+            }
         }
 
         const base_lines_aggregated_values = this.aggregate_base_lines_tax_details(
@@ -1021,10 +1030,7 @@ export const accountTaxHelpers = {
             if (!tax_data) {
                 return;
             }
-            return {
-                grouping_key: tax_data.tax.tax_group_id.id,
-                raw_grouping_key: tax_data.tax.tax_group_id,
-            };
+            return tax_data.tax.tax_group_id;
         }
 
         base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, tax_group_grouping_function);
@@ -1236,21 +1242,22 @@ export const accountTaxHelpers = {
                     ? manual_tax_amounts[tax_data.tax.id.toString()] || {}
                     : {};
 
-            const generated_grouping_key = grouping_function(base_line, tax_data);
-            let raw_grouping_key = generated_grouping_key;
-            let grouping_key = generated_grouping_key;
-
-            // There is no FrozenDict in javascript.
-            // When the key is a record, it can't be jsonified so this is a trick to provide both the
-            // raw_grouping_key (to be jsonified) from the grouping_key (to be added to the values).
+            let raw_grouping_key = grouping_function(base_line, tax_data);
+            let grouping_key;
             if (raw_grouping_key && typeof raw_grouping_key === "object" && "raw_grouping_key" in raw_grouping_key) {
-                raw_grouping_key = generated_grouping_key.raw_grouping_key;
-                grouping_key = generated_grouping_key.grouping_key;
-            }
+                // TODO: TO BE REMOVED IN MASTER (here for retro-compatibility)
+                // There is no FrozenDict in javascript.
+                // When the key is a record, it can't be jsonified so this is a trick to provide both the
+                // raw_grouping_key (to be jsonified) from the grouping_key (to be added to the values).
+                raw_grouping_key = raw_grouping_key.raw_grouping_key;
+                grouping_key = raw_grouping_key.grouping_key;
 
-            // Handle dictionary-like keys (converted to string in JS)
-            if (typeof grouping_key === "object") {
-                grouping_key = JSON.stringify(grouping_key);
+                // Handle dictionary-like keys (converted to string in JS)
+                if (typeof grouping_key === "object") {
+                    grouping_key = JSON.stringify(grouping_key);
+                }
+            } else {
+                grouping_key = this.stringify_grouping_key(raw_grouping_key);
             }
 
             // Base amount.
