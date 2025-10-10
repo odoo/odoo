@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.WebsiteSaleDashboard">
+        <div class="o_website_sale_dashboard container-fluid py-4 border-bottom bg-view">
+            <div class="row justify-content-between gap-2 gap-lg-0">
+                <div class="col-12 col-lg-8 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                    <div class="grid gap-1 gap-lg-4">
+                        <div class="g-col-12 g-col-lg-11 grid gap-1" style="--columns: 61">
+                            <div class="g-col-12 p-0" t-on-click="setSearchContext" title="Orders to Fulfill" filter_name="to_fulfill">
+                                <a href="#" class="btn p-1 p-lg-2 text-truncate text-wrap">
+                                    <div class="fs-2">
+                                        <span class="ps-4">
+                                            <span t-out="'WaitForIt'"/>
+                                        </span>
+                                    </div>To Fulfill
+                                </a>
+                            </div>
+                            <div class="g-col-12 p-0" t-on-click="setSearchContext" title="Orders to Confirm" filter_name="to_confirm">
+                                <a href="#" class="btn p-1 p-lg-2 bg-secondary-subtle text-secondary-emphasis text-truncate text-wrap">
+                                    <div class="fs-2">
+                                        <span class="ps-4">
+                                            <span t-out="'WaitForIt'"/>
+                                        </span>
+                                    </div>To Confirm
+                                </a>
+                            </div>
+                            <div class="g-col-12 p-0" t-on-click="setSearchContext" title="Orders to Invoice" filter_name="to_invoice">
+                                <a href="#" class="btn p-1 p-lg-2 text-truncate text-wrap">
+                                    <div class="fs-2">
+                                        <span class="ps-4">
+                                            <span t-out="'WaitForIt'"/>
+                                        </span>
+                                    </div>To Invoice
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

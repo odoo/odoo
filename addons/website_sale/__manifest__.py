@@ -159,6 +159,8 @@
             'website_sale/static/src/js/tours/website_sale_shop.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/scss/kanban_record.scss',
+            'website_sale/static/src/js/website_sale_dashboard/**/*',
+            'website_sale/static/src/views/**/*',
         ],
         'website.website_builder_assets': [
             'website_sale/static/src/js/website_sale_form_editor.js',
