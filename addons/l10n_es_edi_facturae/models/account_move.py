@@ -432,6 +432,7 @@ class AccountMove(models.Model):
         def grouping_function(base_line, tax_data):
             return tax_data['tax'] if tax_data else None
 
+        rounding_method = self.env.company.tax_calculation_rounding_method
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
         for base_line, aggregated_values in base_lines_aggregated_values:
             invoice_line_values = self._l10n_es_edi_facturae_prepare_inv_line(base_line, aggregated_values)
@@ -446,10 +447,18 @@ class AccountMove(models.Model):
                 tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data(values)
                 if tax.amount < 0.0:
                     invoice_values['TaxesWithheld'].append(tax_data)
-                    invoice_values['TotalTaxesWithheld'] += tax_data['TaxAmount']['TotalAmount']
+                    invoice_values['TotalTaxesWithheld'] += (
+                        values['raw_tax_amount'] if rounding_method == 'round_globally'
+                        else tax_data['TaxAmount']['TotalAmount'])
                 else:
                     invoice_values['TaxOutputs'].append(tax_data)
-                    invoice_values['TotalTaxOutputs'] += tax_data['TaxAmount']['TotalAmount']
+                    invoice_values['TotalTaxOutputs'] += (
+                        values['raw_tax_amount'] if rounding_method == 'round_globally'
+                        else tax_data['TaxAmount']['TotalAmount'])
+
+        if rounding_method == 'round_globally':
+            invoice_values['TotalTaxesWithheld'] = self.currency_id.round(invoice_values['TotalTaxesWithheld'])
+            invoice_values['TotalTaxOutputs'] = self.currency_id.round(invoice_values['TotalTaxOutputs'])
 
         invoice_values['TotalGrossAmountBeforeTaxes'] = (
             invoice_values['TotalGrossAmount']

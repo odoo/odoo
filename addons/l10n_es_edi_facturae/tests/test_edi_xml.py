@@ -480,3 +480,26 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             with file_open("l10n_es_edi_facturae/tests/data/expected_simplified_document.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_facturae_xml_global_rounding(self):
+        """
+        Test that global rounding is taken into account in the facturae xml
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        invoice = self.create_invoice(
+            partner_id=self.partner_a.id,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {'price_unit': 230.83, 'tax_ids': [self.tax_sale_a.id]}
+                for _ in range(25)
+            ],
+        )
+        invoice.action_post()
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        self.assertTrue(generated_file)
+
+        with file_open('l10n_es_edi_facturae/tests/data/expected_global_tax_rounding.xml', 'rt') as f:
+            expected_xml = lxml.etree.fromstring(f.read().encode())
+        self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
