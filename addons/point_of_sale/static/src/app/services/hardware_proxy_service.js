@@ -149,6 +149,7 @@ export class HardwareProxy extends EventBus {
             const response = await browser
                 .fetch(`${url}/hw_proxy/hello`, {
                     signal: timeoutController.signal,
+                    targetAddressSpace: "local",
                 })
                 .catch(() => ({}));
             if (response.ok) {
