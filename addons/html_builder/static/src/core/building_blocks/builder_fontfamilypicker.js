@@ -45,9 +45,11 @@ export class BuilderFontFamilyPicker extends Component {
     async onDeleteFontClick(font) {
         const save = await new Promise((resolve) => {
             this.env.services.dialog.add(ConfirmationDialog, {
+                title: _t("Delete Font"),
                 body: _t(
-                    "Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"
+                    "This change will be applied after saving and reloading the page. Are you sure you want to continue?"
                 ),
+                confirmLabel: _t("Delete & Reload"),
                 confirm: () => resolve(true),
                 cancel: () => resolve(false),
             });

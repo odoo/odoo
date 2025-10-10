@@ -416,9 +416,10 @@ export class SurveyForm extends Interaction {
         } else if (targetEl.value === "finish" && !this.options.sessionInProgress) {
             // Adding pop-up before the survey is submitted when not in live session
             this.dialog.add(ConfirmationDialog, {
-                title: _t("Submit confirmation"),
-                body: _t("Are you sure you want to submit the survey?"),
-                confirmLabel: _t("Submit"),
+                title: _t("Submit survey"),
+                body: _t("Submit your survey? Once it's out, it is like a letter in the mail: it cannot be recalled."),
+                confirmLabel: _t("Yes, submit"),
+                cancelLabel: _t("No, wait a minute"),
                 confirm: () => {
                     this.waitForTimeout(() => this.submitForm({ isFinish: true }), 0);
                 },

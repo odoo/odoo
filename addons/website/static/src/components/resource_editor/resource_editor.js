@@ -486,10 +486,11 @@ export class ResourceEditor extends Component {
 
     onReset() {
         this.dialog.add(ConfirmationDialog, {
-            title: _t("Careful"),
+            title: _t("Reset to default?"),
             body: _t(
-                "If you reset this file, all your customizations will be lost as it will be reverted to the default file."
+                "All your custom changes will be lost. Are you sure?"
             ),
+            confirmLabel: _t("Reset"),
             confirm: () => this.resetResource(),
             cancel: () => {},
         });

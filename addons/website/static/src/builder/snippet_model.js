@@ -40,10 +40,14 @@ patch(SnippetModel.prototype, {
      */
     async deleteCustomSnippet(snippet) {
         return new Promise((resolve) => {
-            const message = _t("Are you sure you want to delete the block %s?", snippet.title);
+            const message = _t(
+                "Are you sure you want to remove %(snippetName)s from your list of Custom Blocks?\nThis action is permanent and will affect all users across the website.", {
+                snippetName: snippet.title
+            });
             this.dialog.add(
                 ConfirmationDialog,
                 {
+                    title: _t("Delete Custom Block"),
                     body: message,
                     confirm: async () => {
                         const isInnerContent =
@@ -61,8 +65,8 @@ patch(SnippetModel.prototype, {
                         });
                     },
                     cancel: () => {},
-                    confirmLabel: _t("Yes"),
-                    cancelLabel: _t("No"),
+                    confirmLabel: _t("Delete Block"),
+                    cancelLabel: _t("Keep it"),
                 },
                 {
                     onClose: resolve,

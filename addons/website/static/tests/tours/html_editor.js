@@ -315,7 +315,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "confirm reset warning",
-            trigger: ".modal:contains(careful) .modal-footer .btn-primary",
+            trigger: ".modal:contains(Reset to default?) .modal-footer .btn-primary",
             run: "click",
         },
         {

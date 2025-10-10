@@ -82,7 +82,9 @@ export class AttachmentList extends Component {
             return this.props.unlinkAttachment(attachment);
         }
         this.dialog.add(ConfirmationDialog, {
-            body: _t('Do you really want to delete "%s"?', attachment.name),
+            title: _t('Delete Attachment'),
+            body: _t('Are you sure you want to delete "%s"?\nThis action cannot be undone.', attachment.name),
+            confirmLabel: _t('Delete Attachment'),
             cancel: () => {},
             confirm: () => this.onConfirmUnlink(attachment),
         });

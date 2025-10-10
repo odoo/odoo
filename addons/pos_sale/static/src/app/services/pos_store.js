@@ -146,6 +146,7 @@ patch(PosStore.prototype, {
                     useLoadedLots = await ask(this.dialog, {
                         title: _t("SN/Lots Loading"),
                         body: _t("Do you want to load the SN/Lots linked to the Sales Order?"),
+                        cancelLabel: _t("Cancel"),
                     });
                     userWasAskedAboutLoadedLots = true;
                 }
