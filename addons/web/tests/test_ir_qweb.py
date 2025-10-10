@@ -1,9 +1,11 @@
 import base64
 from lxml import etree
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 from odoo.tools.mimetypes import guess_mimetype
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrQweb(TransactionCase):
     def test_image_field(self):
         view = self.env["ir.ui.view"].create({

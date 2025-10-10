@@ -3,10 +3,11 @@
 from unittest.mock import patch, DEFAULT
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCarrierPropagation(TransactionCase):
 
     @classmethod

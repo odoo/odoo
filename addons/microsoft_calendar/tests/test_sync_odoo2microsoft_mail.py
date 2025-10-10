@@ -8,9 +8,12 @@ from odoo import Command
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
+from odoo.tests import tagged
+
 from odoo.addons.microsoft_calendar.tests.common import TestCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
     @classmethod
     def setUpClass(cls):

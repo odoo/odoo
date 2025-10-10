@@ -8,12 +8,13 @@ from odoo import fields
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_account.models.microsoft_service import MicrosoftService
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 
 
 DEFAULT_TIMEOUT = 20
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMicrosoftService(TransactionCase):
 
     def _do_request_result(self, data):

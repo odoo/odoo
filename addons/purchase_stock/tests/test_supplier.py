@@ -1,6 +1,8 @@
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tests import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSupplier(TestStockCommon):
     def test_display_name(self):
         supplier = self.env['product.supplierinfo'].create({

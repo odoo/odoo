@@ -10,6 +10,7 @@ from odoo.tools import convert_file, mute_logger
 
 
 @tagged('mail_template')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplate(MailCommon):
 
     @classmethod
@@ -388,6 +389,7 @@ class TestMailTemplate(MailCommon):
 
 
 @tagged('mail_template')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, filepath):

@@ -10,7 +10,7 @@ import babel.dates
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tests import Form, TransactionCase, users
+from odoo.tests import tagged, Form, TransactionCase, users
 from odoo.tools import get_lang, mute_logger
 
 
@@ -117,6 +117,7 @@ class TestPropertiesMixin(TransactionCase):
         return field._list_to_dict(read_value)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class PropertiesCase(TestPropertiesMixin):
 
     @mute_logger('odoo.sql_db')
@@ -2402,6 +2403,7 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         self.assertNotIn('value', message_values[0]['attributes'][0], 'Value should not be set')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class PropertiesGroupByCase(TestPropertiesMixin):
     @classmethod
     def setUpClass(cls):

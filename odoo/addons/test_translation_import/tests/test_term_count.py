@@ -9,6 +9,7 @@ from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestImport(common.TransactionCase):
 
     def test_import_code_translation(self):

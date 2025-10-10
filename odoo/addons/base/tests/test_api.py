@@ -5,9 +5,12 @@ from odoo import models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tools import mute_logger, unique, lazy
 from odoo.tools.constants import PREFETCH_MAX
+from odoo.tests import tagged
+
 from odoo.exceptions import AccessError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAPI(SavepointCaseWithUserDemo):
     """ test the new API of the ORM """
 

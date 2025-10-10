@@ -8,6 +8,7 @@ from odoo.tests.common import warmup
 
 
 @tagged('mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMenuRootLookupByModel(MailCommon):
     """ Test the determination of the best menu root for a given model.
 

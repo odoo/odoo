@@ -1,7 +1,10 @@
 from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.tests import tagged
+
 from odoo.fields import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleCrm(TestCrmCommon):
 
     def test_sale_crm_revenue(self):

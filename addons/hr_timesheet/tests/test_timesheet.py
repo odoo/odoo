@@ -5,7 +5,7 @@ from lxml import etree
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form, TransactionCase, new_test_user
+from odoo.tests import tagged, Form, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
 
@@ -114,6 +114,7 @@ class TestCommonTimesheet(TransactionCase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimesheet(TestCommonTimesheet):
 
     def setUp(self):

@@ -25,6 +25,7 @@ from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 
 
 @tagged('mail_gateway')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmailParsing(MailCommon):
 
     def test_message_parse_and_replace_binary_octetstream(self):
@@ -240,6 +241,7 @@ class MailGatewayCommon(MailCommon):
 
 
 @tagged('mail_gateway')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailgateway(MailGatewayCommon):
 
     def test_assert_initial_values(self):
@@ -1937,6 +1939,7 @@ class TestMailgateway(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_loop')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGatewayLoops(MailGatewayCommon):
 
     @classmethod
@@ -2250,6 +2253,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_tools')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGatewayRecipients(MailGatewayCommon):
 
     @classmethod
@@ -2307,6 +2311,7 @@ class TestMailGatewayRecipients(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_loop', 'mail_reply')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailGatewayReplies(MailGatewayCommon):
     """ Check routing of replies, using headers, references, ... """
 
@@ -2654,6 +2659,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
 
 
 @tagged('mail_gateway', 'mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailThreadCC(MailCommon):
 
     @classmethod

@@ -8,11 +8,12 @@ from freezegun import freeze_time
 from odoo import fields, SUPERUSER_ID
 
 from odoo.exceptions import UserError
-from odoo.tests import common, new_test_user
+from odoo.tests import tagged, common, new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 import time
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimesheetHolidaysCreate(common.TransactionCase):
 
     def test_company_create(self):
@@ -27,6 +28,8 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         company = Company.create({'name': "Wall Company"})
         self.assertEqual(company.internal_project_id.sudo().company_id, company, "It should have created a project for the company")
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimesheetHolidays(TestCommonTimesheet):
 
     def setUp(self):

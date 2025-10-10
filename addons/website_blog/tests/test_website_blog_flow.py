@@ -8,6 +8,7 @@ from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
     def setUp(self):
         super(TestWebsiteBlogFlow, self).setUp()

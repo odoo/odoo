@@ -5,9 +5,12 @@ from psycopg2 import IntegrityError
 
 from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
 from odoo.exceptions import UserError, AccessError
+from odoo.tests import tagged
+
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumCRUD(TestForumCommon):
 
     @mute_logger('odoo.addons.base.models.ir_rule')
@@ -132,6 +135,7 @@ class TestForumCRUD(TestForumCommon):
         (new_employee_vote + new_portal_vote).with_user(self.user_admin).read(['vote'])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumKarma(TestForumCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')

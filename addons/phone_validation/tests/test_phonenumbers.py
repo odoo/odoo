@@ -8,6 +8,7 @@ from odoo.tests.common import BaseCase
 
 
 @tagged('phone_validation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPhonenumbers(BaseCase):
 
     def test_country_code_falsy(self):

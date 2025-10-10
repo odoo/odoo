@@ -7,6 +7,7 @@ from odoo.tests import tagged, users
 
 
 @tagged('mail_thread')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
     """ Test mail.thread.phone mixin, its tools and API """
 

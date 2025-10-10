@@ -6,9 +6,10 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from .common import PurchaseTestCommon
-from odoo.tests import Form, freeze_time
+from odoo.tests import tagged, Form, freeze_time
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_00_product_company_level_delays(self):

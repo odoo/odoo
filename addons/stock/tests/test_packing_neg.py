@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import tagged
+
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPackingNeg(TestPackingCommon):
 
     def test_packing_neg(self):

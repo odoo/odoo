@@ -295,6 +295,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
 
 
 @tagged('sms_composer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSComposerBatch(SMSCommon):
 
     @classmethod
@@ -347,6 +348,7 @@ class TestSMSComposerBatch(SMSCommon):
 
 
 @tagged('sms_composer', 'twilio')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSComposerBatchTwilio(SMSCommon, MockSmsTwilioApi):
 
     @classmethod
@@ -381,6 +383,7 @@ class TestSMSComposerBatchTwilio(SMSCommon, MockSmsTwilioApi):
 
 
 @tagged('sms_composer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSComposerMass(SMSCommon):
 
     @classmethod
@@ -670,6 +673,7 @@ class TestSMSComposerMass(SMSCommon):
 
 
 @tagged('sms_composer', 'twilio')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSComposerMassTwilio(SMSCommon, MockSmsTwilioApi):
 
     @classmethod

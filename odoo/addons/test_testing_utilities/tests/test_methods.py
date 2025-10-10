@@ -7,13 +7,15 @@ import psycopg2
 
 from odoo.exceptions import AccessError
 from odoo.sql_db import BaseCursor
-from odoo.tests import common
+from odoo.tests import tagged, common
 from odoo.tools import mute_logger
 
 
 class CustomError(Exception):
     ...
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBasic(common.TransactionCase):
     def test_assertRecordValues(self):
         X1 = {'f1': "X", 'f2': 1}

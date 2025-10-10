@@ -2,10 +2,11 @@
 import threading
 import unicodedata
 
-from odoo.tests.common import BaseCase
+from odoo.tests.common import tagged, BaseCase
 from odoo.modules.registry import Registry
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlugUnslug(BaseCase):
 
     def test_unslug(self):
@@ -49,6 +50,7 @@ class TestSlugUnslug(BaseCase):
             self.assertEqual(slug(value), expected, "%r case failed" % (value,))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTitleToSlug(BaseCase):
     """
     Those tests should pass with or without python-slugify

@@ -9,6 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('mail_server')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrMailServerPersonal(MailCommon):
 
     @classmethod

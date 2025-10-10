@@ -6,7 +6,7 @@ import collections
 from lxml import etree as ET
 from lxml.builder import E
 
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools.convert import _eval_xml, convert_file, xml_import
 from odoo.tools.misc import file_path
 
@@ -14,6 +14,7 @@ Field = E.field
 Value = E.value
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEvalXML(common.TransactionCase):
     def eval_xml(self, node, obj=None):
         return _eval_xml(obj, node, self.env)

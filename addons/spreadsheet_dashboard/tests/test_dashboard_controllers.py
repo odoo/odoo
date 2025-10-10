@@ -1,9 +1,10 @@
 
-from odoo.tests.common import HttpCase
+from odoo.tests.common import tagged, HttpCase
 
 from .common import DashboardTestCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDashboardController(DashboardTestCommon, HttpCase):
 
     def test_load_with_user_locale(self):

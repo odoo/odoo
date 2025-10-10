@@ -12,6 +12,7 @@ from odoo import fields, Command
 
 
 @skip('Temporary to fast merge new valuation')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpAccount(TestMrpCommon):
 
     @classmethod

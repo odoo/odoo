@@ -1,6 +1,6 @@
 from freezegun import freeze_time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 CURRENT_USD = 1.5
 CURRENT_EUR = 1
@@ -13,6 +13,7 @@ CAD_AUS = 2
 fake_now_utc = "2020-01-01 21:00:00"
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCurrencyRates(TransactionCase):
     @classmethod
     def setUpClass(cls):

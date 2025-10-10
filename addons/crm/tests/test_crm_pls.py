@@ -862,6 +862,7 @@ class TestCrmPlsSides(CrmPlsCommon):
 
 
 @tagged('lead_manage', 'crm_lead_pls')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadLost(TestCrmCommon):
 
     @classmethod

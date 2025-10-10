@@ -7,6 +7,7 @@ from odoo.tests import common, tagged
 
 
 @tagged('link_tracker')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
     def setUp(self):

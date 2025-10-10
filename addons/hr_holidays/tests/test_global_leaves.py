@@ -10,6 +10,7 @@ from freezegun import freeze_time
 from odoo.tests import tagged
 
 @tagged('global_leaves')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGlobalLeaves(TestHrHolidaysCommon):
     """ Test global leaves for a whole company, conflict resolutions """
 

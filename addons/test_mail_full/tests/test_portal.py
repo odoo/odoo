@@ -488,6 +488,7 @@ class TestPortalFlow(MailCommon, HttpCase):
 
 
 @tagged('portal')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPortalMixin(TestPortal):
 
     @users('employee')

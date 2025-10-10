@@ -4,7 +4,7 @@ import datetime
 import os
 import re
 
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools.misc import file_open
 
 directory = os.path.dirname(__file__)
@@ -53,6 +53,7 @@ class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCharExport(TestBasicExport):
     def test_char(self):
         converter = self.get_converter('char')
@@ -64,6 +65,7 @@ class TestCharExport(TestBasicExport):
         self.assertEqual(value, "foo&lt;bar&gt;")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIntegerExport(TestBasicExport):
     def test_integer(self):
         converter = self.get_converter('integer')
@@ -72,6 +74,7 @@ class TestIntegerExport(TestBasicExport):
         self.assertEqual(value, "42")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFloatExport(TestBasicExport):
     def setUp(self):
         super().setUp()
@@ -102,6 +105,7 @@ class TestFloatExport(TestBasicExport):
         self.assertEqual(value, '42.01')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCurrencyExport(TestExport):
     _model = 'test_converter.monetary'
 
@@ -163,6 +167,7 @@ class TestCurrencyExport(TestExport):
             ))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTextExport(TestBasicExport):
     maxDiff = None
 
@@ -201,6 +206,7 @@ class TestTextExport(TestBasicExport):
         """)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
         Sub = self.env['test_converter.test_model.sub']
@@ -213,6 +219,7 @@ class TestMany2OneExport(TestBasicExport):
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBinaryExport(TestBasicExport):
     def test_image(self):
         converter = self.env['ir.qweb.field.image']
@@ -239,6 +246,7 @@ class TestBinaryExport(TestBasicExport):
             converter.value_to_html(base64.b64encode(content), {})
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
         converter = self.get_converter('selection_str')
@@ -246,6 +254,7 @@ class TestSelectionExport(TestBasicExport):
         self.assertEqual(value, "Qu&#39;est-ce qu&#39;il fout ce maudit pancake, tabernacle ?")
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHTMLExport(TestBasicExport):
     def test_html(self):
         converter = self.get_converter('html')
@@ -255,6 +264,7 @@ class TestHTMLExport(TestBasicExport):
         self.assertEqual(value, input)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDatetimeExport(TestBasicExport):
     def setUp(self):
         super().setUp()
@@ -294,6 +304,7 @@ class TestDatetimeExport(TestBasicExport):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDurationExport(TestBasicExport):
     def setUp(self):
         super().setUp()
@@ -337,6 +348,7 @@ class TestDurationExport(TestBasicExport):
         self.assertEqual(result, '-01:30')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRelativeDatetime(TestBasicExport):
     # not sure how a test based on "current time" should be tested. Even less
     # so as it would mostly be a test of babel...

@@ -5,6 +5,7 @@ from odoo.tests import tagged, users
 
 
 @tagged("utm")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUTM(common.TestMassMailCommon):
 
     @users("employee")

@@ -5,11 +5,12 @@ from typing import Literal
 
 from odoo import Command
 from odoo.models import BaseModel
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 _logger = logging.getLogger(__name__)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPerformanceTimeit(TransactionCase):
 
     @classmethod

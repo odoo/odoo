@@ -7,6 +7,7 @@ from odoo.tests import tagged
 
 
 @tagged('mail_management')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailManagement(MailCommon, TestRecipients):
 
     @classmethod

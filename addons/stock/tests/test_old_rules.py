@@ -3,9 +3,11 @@
 from datetime import timedelta
 
 from odoo.addons.stock.models.stock_rule import StockRule
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.addons.stock.tests.common import TestStockCommon
 
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOldRules(TestStockCommon):
 
     @classmethod

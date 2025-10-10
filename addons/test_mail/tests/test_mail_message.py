@@ -338,6 +338,7 @@ class TestMessageValues(MailCommon):
 
 
 @tagged("mail_message")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessageLinks(MailCommon, HttpCase):
 
     def test_message_link_by_employee(self):

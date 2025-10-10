@@ -6,11 +6,12 @@ from werkzeug.urls import url_unquote_plus
 
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase
+from odoo.tests import tagged, HttpCase
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResources(common.SlidesCase, HttpCase):
 
     @users('user_officer')

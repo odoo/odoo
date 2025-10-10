@@ -8,10 +8,12 @@ from pytz import timezone
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Datetime
 
+from odoo.tests import tagged
+
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
-
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
     # Test all the validity rules to allow a customer to have a reward.
     # The check based on the products is already done in the basic operations test

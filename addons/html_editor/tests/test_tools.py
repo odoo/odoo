@@ -138,6 +138,7 @@ class TestVideoUtils(common.BaseCase):
 
 
 @tagged('-standard', 'external')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestVideoUtilsExternal(common.BaseCase):
     def test_get_video_thumbnail(self):
         # youtube

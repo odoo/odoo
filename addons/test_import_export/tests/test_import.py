@@ -8,7 +8,7 @@ import unittest
 
 from PIL import Image
 
-from odoo.tests.common import TransactionCase, can_import, RecordCapturer
+from odoo.tests.common import tagged, TransactionCase, can_import, RecordCapturer
 from odoo.tools import mute_logger, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import file_open
 from odoo.addons.base_import.models.base_import import ImportValidationError
@@ -128,6 +128,7 @@ class BaseImportCase(TransactionCase):
         ))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBasicFields(BaseImportCase):
 
     def get_fields(self, field):
@@ -178,6 +179,7 @@ class TestBasicFields(BaseImportCase):
         ]))
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestO2M(BaseImportCase):
 
     def test_shallow(self):
@@ -251,6 +253,7 @@ class TestO2M(BaseImportCase):
             )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMatchHeadersSingle(TransactionCase):
 
     def test_match_by_name(self):
@@ -304,6 +307,7 @@ class TestMatchHeadersSingle(TransactionCase):
         self.assertEqual(match, {})
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMatchHeadersMultiple(TransactionCase):
 
     def test_noheaders(self):
@@ -356,6 +360,7 @@ class TestMatchHeadersMultiple(TransactionCase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestColumnMapping(TransactionCase):
 
     def test_column_mapping(self):
@@ -404,6 +409,7 @@ class TestColumnMapping(TransactionCase):
             )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPreview(TransactionCase):
 
     def make_import(self):
@@ -537,6 +543,7 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['preview'], [['foo', 'bar', 'aux'], ['1', '3', '5'], ['2', '4', '6']])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
     can be fed to Model.load
@@ -1090,6 +1097,7 @@ foo3,US,0,persons\n""",
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
         f = io.StringIO()
@@ -1217,6 +1225,7 @@ g,g@example.com
         self.assertEqual(partners_3.mapped('name'), ['d', 'e', 'f', 'g'])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_failures(TransactionCase):
     def test_big_attachments(self):
         """

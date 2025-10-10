@@ -30,6 +30,7 @@ class FiltersCase(TransactionCaseWithUserDemo):
         Model.create(args)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGetFilters(FiltersCase):
 
     def test_own_filters(self):
@@ -127,6 +128,7 @@ class TestAllFilters(TransactionCase):
                 )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmbeddedFilters(FiltersCase):
 
     def setUp(self):

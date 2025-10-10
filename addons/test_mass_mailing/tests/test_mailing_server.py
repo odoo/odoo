@@ -9,6 +9,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing', 'mail_server')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailingServer(TestMassMailCommon):
 
     @classmethod

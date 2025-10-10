@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.tests import tagged
+
 from odoo.addons.hr.tests.common import TestHrCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmployeeDeleteWizard(TestHrCommon):
     def setUp(self):
         super().setUp()

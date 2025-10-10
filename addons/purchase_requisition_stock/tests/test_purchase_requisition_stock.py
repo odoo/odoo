@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo import Command
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
 
     def test_02_purchase_requisition_stock(self):

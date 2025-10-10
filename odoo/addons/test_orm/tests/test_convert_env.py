@@ -7,7 +7,7 @@ import os.path
 from lxml import etree
 from lxml.builder import E
 
-from odoo.tests import common
+from odoo.tests import tagged, common
 from odoo.tools import config
 from odoo.tools.convert import xml_import
 
@@ -18,6 +18,7 @@ field = E.field
 function = E.function
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEnv(common.TransactionCase):
     def setUp(self):
         super().setUp()

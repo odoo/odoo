@@ -3,9 +3,12 @@
 
 from datetime import datetime, date
 
+from odoo.tests import tagged
+
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPayslipHolidaysComputation(TestWorkEntryHolidaysBase):
 
     def test_work_data(self):

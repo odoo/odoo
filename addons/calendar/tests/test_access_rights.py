@@ -3,11 +3,12 @@
 from datetime import datetime, timedelta
 
 from odoo.tests.common import TransactionCase, new_test_user
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRights(TransactionCase):
 
     @classmethod

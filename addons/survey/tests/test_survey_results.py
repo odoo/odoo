@@ -10,6 +10,7 @@ from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tagged("is_query_count")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSurveyResults(common.TestSurveyResultsCommon):
     """ Check the results and the performance of the different filters combinations.
     The filters can be combined but their query count doesn't add up if their

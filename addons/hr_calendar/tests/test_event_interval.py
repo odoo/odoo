@@ -7,6 +7,7 @@ from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
 
 
 @tagged('event_interval')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventInterval(TestHrCalendarCommon):
     @classmethod
     def setUpClass(cls):

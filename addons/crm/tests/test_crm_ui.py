@@ -71,6 +71,7 @@ class TestUi(HttpCase, TestCrmCommon):
         self.assertEqual(partner.phone, '+32 494 44 44 44', 'Should have propagated the lead phone on the partner')
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmKanbanUI(TransactionCase):
     @classmethod
     def setUpClass(cls):

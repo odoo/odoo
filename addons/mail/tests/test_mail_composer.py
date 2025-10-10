@@ -42,6 +42,7 @@ class TestMailComposer(MailCommon):
         })
 
 @tagged('mail_composer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerForm(TestMailComposer):
     """ Test mail composer form view usage. """
 
@@ -216,6 +217,7 @@ class TestMailComposerForm(TestMailComposer):
 
 
 @tagged('mail_composer')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerRendering(TestMailComposer):
     """ Test rendering and support of various html tweaks in composer """
 

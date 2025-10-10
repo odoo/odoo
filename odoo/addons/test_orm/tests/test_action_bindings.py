@@ -1,6 +1,7 @@
-from odoo.tests import common
+from odoo.tests import tagged, common
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActionBindings(common.TransactionCase):
 
     def test_bindings(self):
@@ -52,6 +53,7 @@ class TestActionBindings(common.TransactionCase):
         )
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBindingViewFilters(common.TransactionCase):
     def test_act_window(self):
         A = self.env['tab.a']

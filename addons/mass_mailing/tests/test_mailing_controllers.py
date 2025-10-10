@@ -629,6 +629,7 @@ class TestMailingControllers(TestMailingControllersCommon):
 
 
 @tagged('link_tracker', 'mailing_portal')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingTracking(TestMailingControllersCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mass_mailing.models.mailing')

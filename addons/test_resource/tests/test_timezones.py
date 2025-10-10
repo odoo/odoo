@@ -3,9 +3,12 @@ from datetime import date, datetime
 from freezegun import freeze_time
 from pytz import utc
 
+from odoo.tests import tagged
+
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimezones(TestResourceCommon):
     def setUp(self):
         super().setUp()

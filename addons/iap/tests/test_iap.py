@@ -3,9 +3,12 @@
 
 from odoo.exceptions import AccessError
 
+from odoo.tests import tagged
+
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIAP(TransactionCaseWithUserDemo):
     def test_get_iap_account(self):
         user_demo = self.user_demo

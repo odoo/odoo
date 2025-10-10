@@ -2,10 +2,13 @@
 from unittest.mock import patch
 
 import odoo.tests
+from odoo.tests import tagged
+
 from odoo import modules
 
 
 @odoo.tests.tagged('website_nightly', '-standard')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIap(odoo.tests.HttpCase):
 
     def test_01_industries_lang(self):

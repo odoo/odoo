@@ -10,6 +10,7 @@ from zeep import Client, Transport
 from zeep.wsdl import Document
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStructure(TransactionCase):
     @classmethod
     def setUpClass(cls):

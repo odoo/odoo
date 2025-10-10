@@ -8,6 +8,7 @@ from odoo.tests import tagged
 
 
 @tagged('sms')
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCalendarSms(SMSCommon):
 
     @classmethod

@@ -20,6 +20,7 @@ except ImportError:
     vobject = None
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPartnerPrivate(TransactionCaseWithUserPortal):
     def test_access_onchange(self):
         partner = self.partner_portal.with_user(self.user_portal)

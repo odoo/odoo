@@ -1,6 +1,8 @@
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tests import tagged
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReplenishment(TestStockCommon):
     def test_effective_route(self):
         orderpoint = self.env['stock.warehouse.orderpoint'].create({

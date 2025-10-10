@@ -14,6 +14,7 @@ from odoo.tools import mute_logger
 from odoo.tests.common import users
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
     def test_event_registration_utm_values(self):
         self.event_0.registration_ids.unlink()
