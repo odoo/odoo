@@ -376,6 +376,7 @@ class AccountMove(models.Model):
             return amount
         return self.currency_id._convert(amount, self.env.ref("base.TWD"), self.company_id, self.invoice_date or self.date, round=False)
 
+    @api.model
     def _reformat_phone_number(self, phone):
         """
         Cleans and reformats a phone number string by handling different input formats.
