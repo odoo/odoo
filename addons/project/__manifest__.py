@@ -227,7 +227,6 @@
 
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/components/project_task_state_selection/*',
-            'project/static/src/components/project_many2one_field/*',
             'project/static/src/views/project_task_form/*.scss',
             'project/static/src/views/project_task_kanban/*.scss',
             'project/static/src/views/project_task_control_panel/*',

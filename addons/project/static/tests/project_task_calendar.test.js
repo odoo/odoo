@@ -64,7 +64,7 @@ const calendarMountParams = {
     arch: `
         <calendar date_start="date_deadline" mode="month"
                     js_class="project_task_calendar">
-            <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
+            <field name="project_id" widget="many2one_private_placeholder" invisible="context.get('default_project_id', False)"/>
             <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection"/>
         </calendar>
     `,
@@ -88,7 +88,7 @@ test("test task_stage_with_state_selection widget with non-editable state", asyn
         arch: `
             <calendar date_start="date_deadline" mode="month"
                         js_class="project_task_calendar">
-                <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
+                <field name="project_id" widget="many2one_private_placeholder" invisible="context.get('default_project_id', False)"/>
                 <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection" options="{'state_readonly': True}"/>
             </calendar>
         `,
@@ -111,7 +111,7 @@ test("test task_stage_with_state_selection widget with editable state", async ()
         arch: `
             <calendar date_start="date_deadline" mode="month"
                         js_class="project_task_calendar">
-                <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
+                <field name="project_id" widget="many2one_private_placeholder" invisible="context.get('default_project_id', False)"/>
                 <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection" options="{'state_readonly': False}"/>
             </calendar>
         `,

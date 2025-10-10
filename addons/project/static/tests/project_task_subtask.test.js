@@ -114,7 +114,7 @@ beforeEach(() => {
                 <field name="parent_id"/>
                 <field name="child_ids" context="{'default_parent_id': id}" widget="subtasks_one2many">
                     <list editable="bottom" open_form_view="True">
-                        <field name="project_id" widget="project"/>
+                        <field name="project_id" widget="many2one_private_placeholder"/>
                         <field name="name"/>
                     </list>
                 </field>
@@ -267,15 +267,15 @@ test("project.task (form): check that the subtask of another project can be adde
 
     await click(".o_field_x2many_list_row_add a");
     await animationFrame();
-    await click(".o_field_project input");
+    await click(".o_field_many2one_private_placeholder input");
     await animationFrame();
-    await click(".o_field_project li");
+    await click(".o_field_many2one_private_placeholder li");
     await animationFrame();
-    await click(".o_field_project input");
+    await click(".o_field_many2one_private_placeholder input");
     await edit("aaa");
     await click(".o_form_button_save");
     await animationFrame();
-    expect(".o_field_project").toHaveText("Project 1");
+    expect(".o_field_many2one_private_placeholder").toHaveText("Project 1");
 });
 
 test("project.task (form): check focus on new subtask's name", async () => {
