@@ -755,7 +755,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit: highlightedPre({ value: "abcd" }),
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]cd"
                     contentAfterEdit: highlightedPre({ value: "abd", textareaRange: 2 }),
-                    contentAfter: `<pre data-language-id="plaintext">abd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -767,7 +767,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit: highlightedPre({ value: "     abcd" }),
                     stepFunction: testDeleteInCodeBlock(7), // "     ab[]cd"
                     contentAfterEdit: highlightedPre({ value: "     abd", textareaRange: 7 }),
-                    contentAfter: `<pre data-language-id="plaintext">     abd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">     abd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -779,7 +779,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit: highlightedPre({ value: "abcd     " }),
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]cd     "
                     contentAfterEdit: highlightedPre({ value: "abd     ", textareaRange: 2 }),
-                    contentAfter: `<pre data-language-id="plaintext">abd     </pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -791,7 +791,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit: highlightedPre({ value: "     abcd     " }),
                     stepFunction: testDeleteInCodeBlock(7), // "     ab[]cd     "
                     contentAfterEdit: highlightedPre({ value: "     abd     ", textareaRange: 7 }),
-                    contentAfter: `<pre data-language-id="plaintext">     abd     </pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">     abd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -803,7 +803,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit: highlightedPre({ value: "     ab" }),
                     stepFunction: testDeleteInCodeBlock(2), // "  []   ab"
                     contentAfterEdit: highlightedPre({ value: "    ab", textareaRange: 2 }),
-                    contentAfter: `<pre data-language-id="plaintext">    ab</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">    ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -815,7 +815,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit: highlightedPre({ value: "ab\ncd" }),
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]\ncd"
                     contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 2 }),
-                    contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -833,7 +833,7 @@ describe("Selection collapsed", () => {
                         await testDeleteInCodeBlock(0)(editor); // "[] ab"
                     },
                     contentAfterEdit: highlightedPre({ value: "ab", textareaRange: 0 }),
-                    contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -851,7 +851,7 @@ describe("Selection collapsed", () => {
                         await testDeleteInCodeBlock(2)(editor); // "ab[] "
                     },
                     contentAfterEdit: highlightedPre({ value: "ab", textareaRange: 2 }),
-                    contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
