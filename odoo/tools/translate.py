@@ -37,7 +37,7 @@ import odoo
 from odoo.exceptions import UserError
 from .config import config
 from .i18n import format_list
-from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
@@ -1839,15 +1839,15 @@ class CodeTranslations:
         def filter_func(row):
             return row.get('value') and PYTHON_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.python_translations[(module_name, lang)] = ReadonlyDict(translations)
+        self.python_translations[module_name, lang] = frozendict(translations)
 
     def _load_web_translations(self, module_name, lang):
         def filter_func(row):
             return row.get('value') and JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.web_translations[(module_name, lang)] = ReadonlyDict({
+        self.web_translations[module_name, lang] = frozendict({
             "messages": tuple(
-                ReadonlyDict({"id": src, "string": value})
+                frozendict({"id": src, "string": value})
                 for src, value in translations.items())
         })
 

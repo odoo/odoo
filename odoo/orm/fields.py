@@ -19,7 +19,7 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, sql
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.misc import SENTINEL, ReadonlyDict, Sentinel, unique
+from odoo.tools.misc import frozendict, SENTINEL, Sentinel, unique
 
 from .domains import Domain
 from .query import Query
@@ -320,7 +320,7 @@ class Field(typing.Generic[T]):
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
-        self._args__ = ReadonlyDict({key: val for key, val in kwargs.items() if val is not SENTINEL})
+        self._args__ = frozendict({key: val for key, val in kwargs.items() if val is not SENTINEL})
 
     def __str__(self):
         if not self.name:
