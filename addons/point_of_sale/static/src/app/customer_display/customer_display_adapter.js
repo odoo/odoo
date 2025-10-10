@@ -32,6 +32,7 @@ export class CustomerDisplayPosAdapter {
                         data: this.data,
                     },
                 }),
+                targetAddressSpace: "local",
             }).catch(() => {
                 console.log("Failed to send data to customer display");
             });
