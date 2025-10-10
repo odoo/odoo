@@ -1,4 +1,4 @@
-import { Component, useEffect, whenReady } from "@odoo/owl";
+import { Component, useEffect, whenReady, useRef } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { useSingleDialog } from "@point_of_sale/customer_display/utils";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -18,6 +18,13 @@ export class CustomerDisplay extends Component {
         this.dialog = useService("dialog");
         this.order = useService("customer_display_data");
         const singleDialog = useSingleDialog();
+
+        this.scrollableRef = useRef("scrollable");
+        useEffect(() => {
+            this.scrollableRef.el
+                ?.querySelector(".orderline.selected")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
 
         useEffect(
             (qrPaymentData) => {
