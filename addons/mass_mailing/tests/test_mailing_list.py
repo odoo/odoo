@@ -36,6 +36,8 @@ class TestMailingContactToList(MassMailCommon):
         wizard = wizard_form.save()
         action = wizard.action_add_contacts()
         self.assertEqual(contacts.list_ids, mailing)
+        create_dates = contacts.subscription_ids.mapped('create_date')
+        self.assertTrue(all(create_dates), "Some subscriptions have no Subscription Date.")
         self.assertEqual(action["type"], "ir.actions.client")
         self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
         subaction = action["params"]["next"]
