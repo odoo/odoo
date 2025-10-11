@@ -916,11 +916,11 @@ class IrActionsReport(models.Model):
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
-                    return {False: {
-                        'report_action': self,
-                        'stream': pdf_content_stream,
-                        'attachment': None,
-                    }}
+                    for res_id in res_ids_wo_stream:
+                        individual_collected_stream = self._render_qweb_pdf_prepare_streams(report_ref=report_ref, data=data, res_ids=[res_id])
+                        collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
+
+                    return collected_streams
 
                 outlines_pages = []
                 node = root['/Outlines']['/First']
