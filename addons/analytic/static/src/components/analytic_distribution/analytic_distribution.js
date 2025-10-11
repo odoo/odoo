@@ -503,7 +503,7 @@ export class AnalyticDistribution extends Component {
             'default_analytic_distribution': this.dataToJson(),
             'default_partner_id': record.data['partner_id'] ? record.data['partner_id'][0] : undefined,
             'default_product_id': product_field ? record.data[product_field][0] : undefined,
-            'default_account_prefix': account_field ? record.data[account_field][1].substr(0, 3) : undefined,
+            'default_account_prefix': account_field ? record.data[account_field][1]?.substr(0, 3) : undefined,
         }});
     }
 
