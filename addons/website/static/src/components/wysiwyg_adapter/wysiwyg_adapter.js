@@ -334,6 +334,17 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _getBannerCategory() {
         return [];
     }
+    postHistoryUndo() {
+        super.postHistoryUndo();
+        // Re-initialized all dynamic elements which were added by undo.
+        const dynamicEls = this.$root[0].querySelectorAll(".s_dynamic");
+        for (const element of dynamicEls) {
+            this._websiteRootEvent("widgets_start_request", {
+                $target: $(element),
+                editableMode: true,
+            });
+        }
+    }
     /**
      * Stop the widgets and save the content.
      *

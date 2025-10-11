@@ -247,6 +247,7 @@ export class OdooEditor extends EventTarget {
                     }
                 },
                 preHistoryUndo: () => {},
+                postHistoryUndo: () => {},
                 beforeAnyCommand: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
@@ -1473,6 +1474,7 @@ export class OdooEditor extends EventTarget {
             this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyUndo'));
         }
+        this.options.postHistoryUndo();
     }
     /**
      * Redo a step of the history.
