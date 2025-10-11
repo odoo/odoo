@@ -14,7 +14,10 @@ class TestItEdiPa(TestItEdi):
 
         cls.Move = cls.env['account.move'].with_company(cls.company)
         journal_code = cls.company_data_2['default_journal_sale'].code
-        cls.split_payment_tax = cls.env['account.tax'].with_company(cls.company).search([('name', '=', '22% SP')])
+        cls.split_payment_tax = cls.env['account.tax'].with_company(cls.company).search([
+            *cls.env['account.tax']._check_company_domain(cls.company),
+            ('name', '=', '22% SP'),
+        ])
         cls.split_payment_line_data = {
             'name': 'standard_line',
             'quantity': 1,

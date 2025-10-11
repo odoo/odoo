@@ -167,7 +167,13 @@ class PosConfig(models.Model):
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
              "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
              "the closing of his session saying that he needs to contact his manager.")
-    payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods(), copy=False)
+    payment_method_ids = fields.Many2many(
+        comodel_name='pos.payment.method',
+        string='Payment Methods',
+        default=lambda self: self._default_payment_methods(),
+        check_company=True,
+        copy=False,
+    )
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
@@ -490,12 +496,6 @@ class PosConfig(models.Model):
                 if method.is_cash_count and (not method.journal_id.loss_account_id or not method.journal_id.profit_account_id):
                     raise ValidationError(_("You need a loss and profit account on your cash journal."))
 
-    @api.constrains('company_id', 'payment_method_ids')
-    def _check_company_payment(self):
-        for config in self:
-            if self.env['pos.payment.method'].search_count([('id', 'in', config.payment_method_ids.ids), ('company_id', '!=', config.company_id.id)]):
-                raise ValidationError(_("The payment methods for the point of sale %s must belong to its company.", self.name))
-
     @api.constrains('pricelist_id', 'use_pricelist', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):
         for config in self:
@@ -811,7 +811,6 @@ class PosConfig(models.Model):
     def _check_before_creating_new_session(self):
         self._check_company_has_template()
         self._check_pricelists()
-        self._check_company_payment()
         self._check_currencies()
         self._check_profit_loss_cash_journal()
         self._check_payment_method_ids()
@@ -1041,9 +1040,17 @@ class PosConfig(models.Model):
         payment_methods |= cash_pm
 
         # only create bank and customer account payment methods per company
-        bank_pm = self.env['pos.payment.method'].search([('journal_id.type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)])
+        journal_domain = [
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'bank'),
+            ('currency_id', '=', False),
+        ]
+        bank_pm = self.env['pos.payment.method'].search([
+            *self.env['pos.payment.method']._check_company_domain(self.env.company),
+            ('journal_id', 'any', journal_domain),
+        ])
         if not bank_pm:
-            bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
+            bank_journal = self.env['account.journal'].search(journal_domain, limit=1)
             if not bank_journal:
                 raise UserError(_('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
             bank_pm = self.env['pos.payment.method'].create({
@@ -1055,7 +1062,10 @@ class PosConfig(models.Model):
 
         payment_methods |= bank_pm
 
-        pay_later_pm = self.env['pos.payment.method'].search([('journal_id', '=', False), ('company_id', 'in', self.env.company.parent_ids.ids)])
+        pay_later_pm = self.env['pos.payment.method'].search([
+            *self.env['pos.payment.method']._check_company_domain(self.env.company),
+            ('journal_id', '=', False),
+        ])
         if not pay_later_pm:
             pay_later_pm = self.env['pos.payment.method'].create({
                 'name': _('Customer Account'),
