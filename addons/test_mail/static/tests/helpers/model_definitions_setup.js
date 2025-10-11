@@ -10,6 +10,8 @@ addModelNamesToFetch([
     "mail.test.activity",
     "mail.test.multi.company",
     "mail.test.multi.company.read",
+    "mail.test.multi.company.with.activity",
+    "mail.test.multi.company.with.activity.read",
     "mail.test.properties",
     "mail.test.simple.main.attachment",
     "res.currency",
