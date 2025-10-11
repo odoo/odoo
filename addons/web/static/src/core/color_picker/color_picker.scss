@@ -42,8 +42,15 @@
     }
 }
 
-.o_custom_gradient_button[style*="background-image"] {
-    background: unset;
+.o_custom_gradient_button {
+    &, &:hover, &:focus {
+        color: #000000;
+    }
+
+    &[style*="background-image"] {
+        background: unset;
+        color: $o-we-item-clickable-color;
+    }
 }
 
 .o_custom_gradient_button,
