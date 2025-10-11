@@ -348,6 +348,19 @@ class AccountMove(models.Model):
             return 'l10n_ar.report_invoice_document'
         return super()._get_name_invoice_report()
 
+    def _get_amount_letter_translation_invoice_report(self):
+        """
+        Get the spanish translation of the currency amount in letter for the invoice report
+        Required if l10n_latam_document_type_id is 201, 202, 203, 206, 207, 208, 211, 212 or 213
+        """
+        installed = self.env['res.lang'].search([]).mapped('code')
+        installed_es_langs = [code for code in installed if code.startswith('es_')]
+
+        if not installed_es_langs:
+            raise UserError(_("Could not print the invoice as no spanish language is installed"))
+        lang = 'es_AR' if 'es_AR' in installed_es_langs else installed_es_langs[0]
+        return self.currency_id.with_context(lang=lang).amount_to_text(self.amount_total)
+
     def _l10n_ar_get_invoice_totals_for_report(self):
         """If the invoice document type indicates that vat should not be detailed in the printed report (result of _l10n_ar_include_vat()) then we overwrite tax_totals field so that includes taxes in the total amount, otherwise it would be showing amount_untaxed in the amount_total"""
         self.ensure_one()

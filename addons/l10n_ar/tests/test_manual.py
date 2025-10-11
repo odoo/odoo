@@ -356,3 +356,33 @@ class TestManual(common.TestAr):
                 partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
                 partner_form.vat = "test"
         self.assertIn('Only numbers allowed for "DNI"', str(e.exception))
+
+    def test_l10n_ar_pdf_amount_letter_translation(self):
+        """
+        Test that a PDF can be generated with the amount written in letters using a Spanish language other than es_AR.
+        """
+        latam = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'es_419')])
+        wizard = self.env['base.language.install'].create({
+            'lang_ids': latam.ids,
+        })
+
+        wizard.lang_install()
+        document_type = self.env['l10n_latam.document.type'].search([
+            ('code', '=', '201'),
+            ('country_id.code', '=', 'AR'),
+        ])
+        invoice = self.env['account.move'].create({
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_a.id,
+            "invoice_line_ids": [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                }),
+            ],
+            'l10n_latam_document_type_id': document_type.id,
+        })
+        invoice.action_post()
+        invoice._generate_and_send()
+        self.assertTrue(invoice.invoice_pdf_report_id)
