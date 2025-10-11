@@ -6,7 +6,11 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
-import { checkSimplifiedInvoiceNumber, pay } from "./utils/receipt_util";
+import {
+    checkSimplifiedInvoiceNumber,
+    checkSimplifiedInvoiceState,
+    pay,
+} from "./utils/receipt_util";
 
 const SIMPLIFIED_INVOICE_LIMIT = 1000;
 
@@ -48,6 +52,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             pay(),
             checkSimplifiedInvoiceNumber("0003"),
+            checkSimplifiedInvoiceState("Badajoz"),
             ReceiptScreen.clickNextOrder(),
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.clickPayButton(),
