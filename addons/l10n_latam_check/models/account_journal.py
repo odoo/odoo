@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountJournal(models.Model):
@@ -26,3 +26,21 @@ class AccountJournal(models.Model):
             raise UserError(_(
                 "Manual checks (electronic/deferred) can't be used together with check manual sequencing (check printing functionality), "
                 "please choose one or the other. Journals: %s", ",".join(recs.mapped("name"))))
+
+    @api.constrains("inbound_payment_method_line_ids", "outbound_payment_method_line_ids")
+    def _check_payment_method_line_ids_multiplicity(self):
+        super()._check_payment_method_line_ids_multiplicity()
+        # Ensure that only one instance of specific third-party check payment methods
+        # exists in a journal.
+        restricted_methods = {"in_third_party_checks", "out_third_party_checks", "return_third_party_checks"}
+        for journal in self:
+            journal_payment_method_lines = (
+                journal.inbound_payment_method_line_ids + journal.outbound_payment_method_line_ids
+            )
+
+            for method_code in restricted_methods:
+                if len(journal_payment_method_lines.filtered(lambda x: x.payment_method_id.code == method_code)) > 1:
+                    raise ValidationError(
+                        _("The payment method '%(method)s' cannot be added more than once in the journal '%(journal)s'.",
+                        method=method_code, journal=journal.name)
+                    )
