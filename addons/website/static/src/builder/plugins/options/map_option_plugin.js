@@ -17,6 +17,7 @@ class MapOptionPlugin extends Plugin {
         builder_actions: {
             MapUpdateSrcAction,
             MapDescriptionAction,
+            MapDescriptionTextAction,
         },
         // TODO remove when the snippet will have a "Height" option.
         keep_overlay_options: (el) => el.matches(".s_map"),
@@ -59,6 +60,18 @@ export class MapDescriptionAction extends BuilderAction {
     }
     clean({ editingElement }) {
         editingElement.querySelector(".description").remove();
+    }
+}
+class MapDescriptionTextAction extends BuilderAction {
+    static id = "mapDescriptionTextValue";
+    getValue({ editingElement }) {
+        return editingElement
+            .querySelector(".description")
+            ?.textContent.trim()
+            .replace(/\s+/g, " ") || "";
+    }
+    apply({ editingElement, value }) {
+        return editingElement.querySelector(".description").textContent = value;
     }
 }
 

@@ -54,6 +54,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         builder_actions: {
             ResetMapColorAction,
             ShowDescriptionAction,
+            GoogleMapsDescriptionTextAction,
         },
         // TODO remove when the snippet will have a "Height" option.
         keep_overlay_options: (el) => el.matches(".s_google_map"),
@@ -299,10 +300,22 @@ export class ShowDescriptionAction extends BuilderAction {
         return !!editingElement.querySelector(".description");
     }
     apply({ editingElement }) {
-        editingElement.append(renderToElement("html_builder.GoogleMapsDescription"));
+        editingElement.append(renderToElement("website.GoogleMapsDescription"));
     }
     clean({ editingElement }) {
         editingElement.querySelector(".description").remove();
+    }
+}
+class GoogleMapsDescriptionTextAction extends BuilderAction {
+    static id = "googleMapDescriptionTextValue";
+    getValue({ editingElement }) {
+        return editingElement
+            .querySelector(".description")
+            ?.textContent.trim()
+            .replace(/\s+/g, " ") || "";
+    }
+    apply({ editingElement, value }) {
+        return editingElement.querySelector(".description").textContent = value;
     }
 }
 

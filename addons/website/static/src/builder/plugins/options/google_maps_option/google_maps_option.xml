@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.GoogleMapsDescription">
-    <div class="description">
+    <div class="description o_not_editable">
         <font>Visit us:</font>
         <span>Our office is located in the northeast of Brussels. TEL (555) 432 2365</span>
     </div>
@@ -70,8 +70,21 @@
         <BuilderNumberInput dataAttributeAction="'mapZoom'" default="12" step="1" min="0" max="22"/>
     </BuilderRow>
     <BuilderRow label.translate="Description" preview="false">
-        <BuilderCheckbox action="'showDescription'"/>
+        <BuilderCheckbox id="'google_maps_description'" action="'showDescription'"/>
     </BuilderRow>
+    <t t-if="isActiveItem('google_maps_description')">
+        <BuilderRow label.translate="Description Text" level="1">
+            <BuilderTextInput action="'googleMapDescriptionTextValue'"/>
+        </BuilderRow>
+        <BuilderContext applyTo="'.description'">
+            <BuilderRow label.translate="Text Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom']" styleAction="'color'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Background Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom', 'gradient']" styleAction="'background-color'"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
 </t>
 
 </templates>
