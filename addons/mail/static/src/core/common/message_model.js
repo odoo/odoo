@@ -180,7 +180,11 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get allowsEdition() {
-        return this.store.self.main_user_id?.is_admin || this.isSelfAuthored;
+        return (
+            this.store.self.main_user_id?.is_admin ||
+            this.isSelfAuthored ||
+            ["owner", "admin"].includes(this.thread?.selfMember?.channel_role)
+        );
     }
 
     get bubbleColor() {

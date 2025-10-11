@@ -229,6 +229,8 @@ const threadPatch = {
             },
         });
         this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
+        this.is_self_channel_owner = false;
+        this.is_self_channel_admin = false;
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
