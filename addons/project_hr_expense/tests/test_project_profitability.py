@@ -163,3 +163,85 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
         )
+
+    def test_project_profitability_after_expense_sheet_actions_several_analytics(self):
+        """
+        An expense is split among several projects
+        Profitability should take into account only the part associated with the right project
+
+        Expense | Plan x1 account           | Plan x2 account
+        ======================================================
+                | default_project_account   |
+                | default_project_account   | account B
+                | account with Plan id 1    | project_3_account
+        """
+
+        analytic_plan_b = self.env['account.analytic.plan'].create({
+            'name': 'Plan B',
+        })
+        analytic_account_plan_b, analytic_account_project_plan_b = self.env['account.analytic.account'].create([{
+            'name': 'one more analytica account',
+            'code': 'BB-1234',
+            'plan_id': analytic_plan_b.id,
+        }, {
+            'name': 'Project - BB',
+            'code': 'BB-12345678',
+            'plan_id': analytic_plan_b.id,
+        }])
+        project_2, project_3 = self.env['project.project'].with_context({'mail_create_nolog': True}).create([{
+            'name': 'Project',
+            'partner_id': self.partner.id,
+        }, {
+            'name': 'Project',
+            'partner_id': self.partner.id,
+            'analytic_account_id': analytic_account_project_plan_b.id,
+        }])
+
+        expense = self.env["hr.expense"].create({
+            "name": "Car Travel Expenses",
+            "employee_id": self.expense_employee.id,
+            "product_id": self.product_c.id,
+            "total_amount": 100.00,
+            "company_id": self.project.company_id.id,
+            "analytic_distribution": {
+                f"{self.project.analytic_account_id.id  }": 20,
+                f"{project_2.analytic_account_id.id     },{analytic_account_plan_b.id       }": 30,
+                f"{project_2.analytic_account_id.id     },{project_3.analytic_account_id.id }": 50,
+            },
+            "tax_ids": False,
+        })
+        expense_sheet = self.env["hr.expense.sheet"].create({
+            "name": "Expense for Jannette",
+            "employee_id": self.expense_employee.id,
+            "expense_line_ids": expense,
+        })
+
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
+        self.assertIn('expenses', sequence_per_invoice_type)
+        expense_sequence = sequence_per_invoice_type['expenses']
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False).get('costs', {}),
+            {
+                'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -20.0}],
+                'total': {'to_bill': 0.0, 'billed': -20.0},
+            },
+        )
+        self.assertDictEqual(
+            project_2._get_profitability_items(False).get('costs', {}),
+            {
+                'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -80.0}],
+                'total': {'to_bill': 0.0, 'billed': -80.0},
+            },
+        )
+        self.assertDictEqual(
+            project_3._get_profitability_items(False).get('costs', {}),
+            {
+                'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -50.0}],
+                'total': {'to_bill': 0.0, 'billed': -50.0},
+            },
+        )
