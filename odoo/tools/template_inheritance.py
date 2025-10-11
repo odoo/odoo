@@ -18,6 +18,9 @@ RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
 
 # attribute names that contain Python expressions
 PYTHON_ATTRIBUTES = {'readonly', 'required', 'invisible', 'column_invisible', 't-if', 't-elif'}
+# Attributes that require special merge handling
+MERGE_ATTRIBUTES = ("options", "context", "domain")
+DOMAIN_OPERATORS = ("!", "|", "&")
 
 
 def add_stripped_items_before(node, spec, extract):
@@ -224,12 +227,12 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 for child in spec.getiterator('attribute'):
                     # The element should only have attributes:
                     # - name (mandatory),
-                    # - add, remove, separator
+                    # - add, remove, separator, merge
                     # - any attribute that starts with data-oe-*
                     unknown = [
                         key
                         for key in child.attrib
-                        if key not in ('name', 'add', 'remove', 'separator')
+                        if key not in ('name', 'add', 'remove', 'separator', 'merge')
                         and not key.startswith('data-oe-')
                     ]
                     if unknown:
@@ -290,6 +293,27 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                                 (v for v in values if v and v not in to_remove),
                                 to_add
                             ))
+                    elif child.get("merge"):
+                        if child.text:
+                            raise ValueError(
+                                _lt(
+                                    "Element <attribute> with 'merge' cannot contain text %s",
+                                    repr(child.text),
+                                )
+                            )
+
+                        merge_from: str = node.attrib.get(attribute)
+                        merge_to: str = child.get("merge", "")
+
+                        if merge_from:
+                            if attribute not in MERGE_ATTRIBUTES:
+                                value = f"{merge_from} {merge_to}"
+                            elif attribute == "domain":
+                                value = domain_combine(merge_from, merge_to)
+                            else:
+                                value = f"{merge_from[:-1]},{merge_to[1:]}"
+                        else:
+                            value = merge_to
                     else:
                         value = child.text or ''
 
@@ -332,3 +356,55 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             )
 
     return source
+
+def domain_combine(source_domain_str: str, target_domain_str: str):
+    """
+    Combines two domain lists (represented as strings with brackets), prioritizing
+    operators from the target domain and ensuring the final result is a bracketed string.
+
+    Args:
+        source_domain_str: The string representing the domain to merge from (e.g., "[A, B]").
+        target_domain_str: The string representing the domain to merge into (e.g., "[C, D, '!', E]").
+
+    Returns:
+        A new string representing the combined, bracketed domain.
+    """
+
+    # 1. Convert the input strings into lists of domain elements by removing brackets and splitting by comma
+    source_elements = remove_enclosing_characters(source_domain_str)
+    target_elements = remove_enclosing_characters(target_domain_str)
+
+    # 2. Identify all domain operators present in the target domain list
+    domain_operators = [
+        element
+        for element in target_elements
+        if element.strip("'") in DOMAIN_OPERATORS  # strip("'") handles quotes
+    ]
+
+    # 3. Remove the identified operators from the target domain list
+    # This leaves only non-operator elements in target_elements.
+    for operator in domain_operators:
+        target_elements.remove(operator)
+
+    combined_list = [
+        ",".join(element)
+        for element in [domain_operators, source_elements, target_elements]
+        if element
+    ]
+    return f"[{",".join(combined_list)}]"
+
+
+def remove_enclosing_characters(value: str) -> list:
+    """
+    Removes the specified enclosing characters (e.g., brackets or braces)
+    from a string.
+    """
+    if value == "[]":
+        return []
+
+    for char in list("[]"):
+        # Replaces all occurrences of the character with an empty string
+        value = value.replace(char, "")
+
+    return value.split(",")
+
