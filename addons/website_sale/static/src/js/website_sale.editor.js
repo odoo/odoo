@@ -731,14 +731,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const mimetype = `image/${format}`;
         let referenceId = undefined;
         for (const size of [originalSize, ...smallerSizes]) {
-            const ratio = size / originalSize;
-            const canvas = document.createElement("canvas");
-            canvas.width = imgEl.width * ratio;
-            canvas.height = imgEl.height * ratio;
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = 'transparent';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
+            const canvas = lanczos.resizeImageWithResampling(imgEl, size, originalSize);
             const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [[{
                 name: webpName,
                 description: size === originalSize ? "" : `resize: ${size}`,

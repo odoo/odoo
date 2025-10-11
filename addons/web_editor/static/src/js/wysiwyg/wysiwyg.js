@@ -3681,14 +3681,7 @@ export class Wysiwyg extends Component {
             const originalSize = Math.max(image.width, image.height);
             const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
             for (const size of [originalSize, ...smallerSizes]) {
-                const ratio = size / originalSize;
-                const canvas = document.createElement('canvas');
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = 'rgb(255, 255, 255)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+                const canvas = lanczos.resizeImageWithResampling(image, size, originalSize);
                 altData[size] = {
                     'image/jpeg': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
                 };
