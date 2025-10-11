@@ -62,6 +62,9 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
+        disabledCondition(component) {
+            return component.thread.isEmpty;
+        },
         panelOuterClass: "o-mail-SearchMessagesPanel",
         icon: "oi oi-fw oi-search",
         iconLarge: "oi oi-fw oi-search",
