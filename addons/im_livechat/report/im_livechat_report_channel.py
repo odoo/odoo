@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import SQL
+from odoo.tools import SQL, get_lang
 
 
 class Im_LivechatReportChannel(models.Model):
@@ -238,6 +238,13 @@ class Im_LivechatReportChannel(models.Model):
                 for answer_id in id_list
             )
         return result
+
+    def _read_group_orderby(self, order: str, groupby_terms: dict[str, SQL], query) -> SQL:
+        custom_groupby_terms = dict(groupby_terms)
+        if 'day_number' in custom_groupby_terms:
+            first_week_day = int(get_lang(self.env, self.env.context.get('tz')).week_start)
+            custom_groupby_terms['day_number'] = SQL('mod(7 - %s + (%s)::int, 7)', first_week_day, custom_groupby_terms['day_number'])
+        return super()._read_group_orderby(order, custom_groupby_terms, query)
 
     @api.model
     def action_open_discuss_channel_list_view(self, report_channels_domain=()):
