@@ -215,8 +215,10 @@ class SaleOrderLine(models.Model):
         for line in self:
             remaining_hours = None
             if line.remaining_hours_available:
-                qty_left = line.product_uom_qty - line.qty_delivered
-                remaining_hours = line.product_uom._compute_quantity(qty_left, uom_hour)
+                remaining_hours = (
+                    line.product_uom._compute_quantity(line.product_uom_qty, uom_hour, round=False)
+                    - line.product_uom._compute_quantity(line.qty_delivered, uom_hour, round=False)
+                )
             line.remaining_hours = remaining_hours
 
     @api.depends('product_id')
