@@ -6,6 +6,7 @@ from babel.dates import format_date
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
+from markupsafe import Markup
 from pytz import timezone
 from random import randint
 
@@ -270,6 +271,7 @@ class MrpWorkcenter(models.Model):
             raise exceptions.UserError(_("It has already been unblocked."))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': datetime.now()})
+        self._log_block_status()
         return True
 
     @api.model_create_multi
@@ -413,6 +415,25 @@ class MrpWorkcenter(models.Model):
                 return (default_capacity, capacity.time_start, capacity.time_stop)
             return (capacity.product_uom_id._compute_quantity(capacity.capacity, unit), capacity.time_start, capacity.time_stop)
         return (default_capacity, self.time_start, self.time_stop)
+
+    def _log_block_status(self, loss_reason='', description=''):
+        if self.working_state == 'blocked' and not loss_reason:
+            raise ValidationError(_('You must provide a Loss Reason when blocking a workcenter.'))
+
+        title = self.env._('The workcenter has been blocked') if self.working_state == 'blocked' else self.env._('The workcenter has been unblocked')
+        reason_template = self.env._('Reason: %s', loss_reason)
+        description_template = self.env._('Description: %s', description)
+
+        if self.working_state != 'blocked':
+            message = Markup("<div>%s</div>") % title
+        elif description:
+            message = Markup("<div>%(title)s<ul><li>%(reason_template)s</li><li>%(description_template)s</li></ul></div>") % {
+                'title': title, 'reason_template': reason_template, 'description_template': description_template,
+            }
+        else:
+            message = Markup("<div>%(title)s<ul><li>%(reason_template)s</li></ul></div>") % {'title': title, 'reason_template': reason_template}
+
+        self.message_post(body=message)
 
 
 class MrpWorkcenterTag(models.Model):
@@ -561,6 +582,7 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+        self.workcenter_id._log_block_status(self.loss_id.display_name, self.description)
 
     def _loss_type_change(self):
         self.ensure_one()

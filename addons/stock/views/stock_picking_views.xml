@@ -367,10 +367,6 @@
                     <filter name="waiting" string="Waiting" domain="[('state', 'in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter name="available" string="Ready" domain="[('state', '=', 'assigned')]" help="Assigned Moves"/>
                     <separator/>
-                    <filter name="reception" invisible="1" string="Receipts" domain="[('picking_type_code', '=', 'incoming')]"/>
-                    <filter name="delivery" invisible="1" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
-                    <filter name="internal" invisible="1" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
-                    <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
                         domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
