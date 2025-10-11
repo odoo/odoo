@@ -878,3 +878,35 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+    def test_partner_bank_onchange_triggered_by_bank_creation(self):
+        """Ensure payment.partner_bank_id is updated when a new bank account is added to the partner."""
+
+        partner = self.env['res.partner'].create({'name': 'Bank Partner'})
+        payments = self.env['account.payment']
+        for _ in range(2):
+            payments += self.env['account.payment'].create({
+                'amount': 50.0,
+                'payment_type': 'outbound',
+                'partner_type': 'supplier',
+                'partner_id': partner.id,
+                'destination_account_id': partner.property_account_payable_id.id,
+                'currency_id': self.other_currency.id,
+                'partner_bank_id': False,
+            })
+
+        payments.action_post()
+        batch_payment_action = payments.create_batch_payment()
+        batch_payment_id = self.env['account.batch.payment'].browse(batch_payment_action.get('res_id'))
+
+        bank = self.env['res.partner.bank'].create({
+            'partner_id': partner.id,
+            'acc_number': 'BE123',
+            'acc_holder_name': 'Bank Test',
+            'allow_out_payment': True,
+            'acc_type': 'bank',
+        })
+
+        for payment in batch_payment_id.payment_ids:
+            self.assertEqual(payment.partner_bank_id.acc_number, bank.acc_number)
+            self.assertEqual(payment.partner_bank_id.acc_holder_name, bank.acc_holder_name)

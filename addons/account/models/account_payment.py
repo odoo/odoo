@@ -516,7 +516,7 @@ class AccountPayment(models.Model):
             else:
                 payment.amount_signed = payment.amount
 
-    @api.depends('partner_id', 'company_id', 'payment_type')
+    @api.depends('partner_id', 'company_id', 'payment_type', 'partner_id', 'partner_id.bank_ids')
     def _compute_available_partner_bank_ids(self):
         for pay in self:
             if pay.payment_type == 'inbound':
