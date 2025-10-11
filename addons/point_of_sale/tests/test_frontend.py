@@ -2927,6 +2927,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_preset_customer_selection')
 
+    def test_add_money_button_with_different_decimal_separator(self):
+        """
+        Tests that the buttons such as +10 or +50 work even in languages such as
+        french that have ',' as a decimal separator.
+        """
+        self.env['res.lang']._activate_lang('fr_BE')
+        self.pos_user.write({'lang': 'fr_BE'})
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_add_money_button_with_different_decimal_separator', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
