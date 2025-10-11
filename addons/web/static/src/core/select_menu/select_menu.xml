@@ -95,12 +95,12 @@
         <DropdownItem
             t-if="!choice.isGroup"
             onSelected="() => this.onItemSelected(choice.value)"
-            class="getItemClass(choice) + ' d-flex align-items-center'"
+            class="getItemClass(choice) + ' text-wrap'"
             attrs="{ 'data-choice-index': choice_index }"
         >
             <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
             <t t-else="">
-                <div class="text-wrap" t-esc="choice.label || choice.value" />
+                <div t-esc="choice.label || choice.value" />
             </t>
         </DropdownItem>
     </t>
