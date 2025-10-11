@@ -929,7 +929,7 @@ test(
 );
 test(
     "reposition from top-start to top-start",
-    getRepositionTest("top-start", "top-start", "slimfit")
+    getRepositionTest("top-start", "top-start", "bottom")
 );
 test(
     "reposition from top-start to top-middle",
@@ -1018,7 +1018,9 @@ test(
 );
 test("reposition from top-end to top-start", getRepositionTest("top-end", "top-start", "left"));
 test("reposition from top-end to top-middle", getRepositionTest("top-end", "top-middle", "w125"));
-test("reposition from top-end to top-end", getRepositionTest("top-end", "top-end", "slimfit"));
+test(
+    "reposition from top-end to top-end",
+    getRepositionTest("top-end", "top-end", "bottom"));
 // -----------------------------------------------------------------------------
 test(
     "reposition from left-start to bottom-start",
@@ -1046,7 +1048,7 @@ test(
 );
 test(
     "reposition from left-start to left-start",
-    getRepositionTest("left-start", "left-start", "slimfit")
+    getRepositionTest("left-start", "left-start", "top")
 );
 test(
     "reposition from left-start to left-middle",
@@ -1156,11 +1158,13 @@ test(
     "reposition from left-end to left-middle",
     getRepositionTest("left-end", "left-middle", "h125")
 );
-test("reposition from left-end to left-end", getRepositionTest("left-end", "left-end", "slimfit"));
+test(
+    "reposition from left-end to left-end",
+    getRepositionTest("left-end", "left-end", "bottom"));
 // -----------------------------------------------------------------------------
 test(
     "reposition from bottom-start to bottom-start",
-    getRepositionTest("bottom-start", "bottom-start", "slimfit")
+    getRepositionTest("bottom-start", "bottom-start", "top")
 );
 test(
     "reposition from bottom-start to bottom-middle",
@@ -1266,7 +1270,7 @@ test(
 );
 test(
     "reposition from bottom-end to bottom-end",
-    getRepositionTest("bottom-end", "bottom-end", "slimfit")
+    getRepositionTest("bottom-end", "bottom-end", "top")
 );
 test(
     "reposition from bottom-end to right-start",
@@ -1316,7 +1320,7 @@ test(
 );
 test(
     "reposition from right-start to right-start",
-    getRepositionTest("right-start", "right-start", "slimfit")
+    getRepositionTest("right-start", "right-start", "top")
 );
 test(
     "reposition from right-start to right-middle",
@@ -1422,7 +1426,7 @@ test(
 );
 test(
     "reposition from right-end to right-end",
-    getRepositionTest("right-end", "right-end", "slimfit")
+    getRepositionTest("right-end", "right-end", "bottom")
 );
 test(
     "reposition from right-end to left-start",
