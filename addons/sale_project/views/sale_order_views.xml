@@ -25,6 +25,7 @@
                     icon="fa-check-square-o"
                     invisible="not is_product_milestone or not project_ids or state == 'draft'"
                     groups="project.group_project_milestone"
+                    context="{'active_id': project_id}"
                 >
                     <field name="milestone_count" widget="statinfo" string="Milestones"/>
                 </button>
