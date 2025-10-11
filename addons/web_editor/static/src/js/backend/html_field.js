@@ -743,6 +743,7 @@ export const htmlField = {
             minHeight: options.minHeight,
             maxHeight: options.maxHeight,
             resizable: 'resizable' in options ? options.resizable : false,
+            allowPastingFiles: 'allowPastingFiles' in options ? options.allowPastingFiles : true,
         };
         if ('collaborative' in options) {
             wysiwygOptions.collaborative = options.collaborative;
