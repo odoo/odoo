@@ -345,7 +345,8 @@
                                 help="Recompute all prices based on this pricelist"
                                 class="btn-link mb-1 px-0" icon="fa-refresh"
                                 confirm="This will update the unit price of all products based on the new pricelist."
-                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"/>
+                                invisible="not show_update_pricelist or state in ['sale', 'cancel']"
+                                context="{'pricelist_update': 1}"/>
                         </div>
                         <field name="country_code" invisible="1"/>
                         <field name="company_id" invisible="1"/>
