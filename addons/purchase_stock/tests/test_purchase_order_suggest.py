@@ -29,6 +29,16 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             'product_id': cls.product_1.id,
         }])
 
+        cls.internal_user = cls.env['res.users'].create({
+            'name': 'internal user',
+            'login': 'internal_user_test',
+            'group_ids': [Command.set([
+                cls.env.ref('base.group_user').id,
+                cls.env.ref('purchase.group_purchase_user').id,
+                cls.env.ref('stock.group_stock_user').id,
+            ])]
+        })
+
     def assertEstimatedPrice(self, po_suggest, price, based_on='one_month', days=30, factor=100, warehouse=False):
         """ This helper method does an assert for the `purchase.order.suggest` wizard
         estimated price for the given parameters (use the default values if not set).
@@ -441,3 +451,29 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         self.assertRecordValues(po_2.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 10},
         ])
+
+    def test_purchase_order_suggest_access_error_non_admin(self):
+        """ Test that non-admin users can use the suggest feature without access errors """
+        today = fields.Datetime.now()
+        warehouse = self.delivery_type.warehouse_id
+        self.env['stock.quant']._update_available_quantity(self.product_1, warehouse.lot_stock_id, 50)
+        self._create_and_process_delivery_at_date(
+            [(self.product_1, 10)], today - relativedelta(months=1), warehouse=warehouse
+        )
+        self.env['stock.quant']._update_available_quantity(self.product_1, warehouse.lot_stock_id, -45)
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_1.id,
+        })
+        po_as_user = po.with_user(self.internal_user)
+        action = po_as_user.action_display_suggest()
+        context = {
+            **action['context'],
+            'default_product_ids': self.product_1.ids,
+        }
+        po_suggest = self.env['purchase.order.suggest'].with_user(self.internal_user).with_context(context).create({
+            'number_of_days': 30,
+            'based_on': 'one_month',
+            'percent_factor': 100,
+        })
+        po_suggest.action_purchase_order_suggest()
+        self.assertGreater(po_suggest.estimated_price, 0, "estimated price should be computed")

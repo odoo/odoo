@@ -201,4 +201,4 @@ class PurchaseOrderSuggest(models.TransientModel):
         cid = self.env.company.id
         condition = f'partner_id={self.partner_id.id}'
         for field in ['based_on', 'number_of_days', 'percent_factor']:
-            self.env['ir.default'].set('purchase.order.suggest', field, self[field], company_id=cid, condition=condition)
+            self.env['ir.default'].set('purchase.order.suggest', field, self[field], user_id=True, company_id=cid, condition=condition)
