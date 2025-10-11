@@ -355,6 +355,8 @@ class EventMailScheduler(models.Model):
         composer = self.env['mail.compose.message'].create(composer_values)
         # backward compatible behavior: event mail scheduler does not force partner
         # creation, email_cc / email_to is kept on outgoing emails
+        if 'use_exclusion_list' in self.env.context:
+            composer.use_exclusion_list = self.env.context.get('use_exclusion_list')
         composer.with_context(mail_composer_force_partners=False)._action_send_mail()
 
     def _template_model_by_notification_type(self):

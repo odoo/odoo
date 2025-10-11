@@ -738,3 +738,30 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             event_cron_id.method_direct_trigger()
         self.assertEqual(len(self._new_mails), 3)
         self.assertTrue(event_after_scheduler.mail_done)
+
+    def test_event_mail_schedule_ignore_exclusion_list(self):
+        """ Ensure mass mailing blacklist is not applied """
+        self.env["mail.blacklist"].create({
+            "email": self.event_customer.email,
+        })
+        self.assertTrue(self.event_customer.is_blacklisted)
+
+        self.test_event.registration_ids.unlink()
+        start_date = self.reference_now + relativedelta(days=3)
+        with self.mock_datetime_and_now(start_date), self.mock_mail_gateway():
+            attendee = self.env['event.registration'].create({
+                'event_id': self.test_event.id,
+                'name': self.event_customer.email,
+                'email': self.event_customer.email,
+            })
+
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertEqual(self.event_customer.email, attendee.email)
+        self.assertMailMailWEmails(
+            [formataddr((attendee.name, attendee.email))],
+            'outgoing',
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Confirmation for {self.test_event.name}',
+            },
+        )
