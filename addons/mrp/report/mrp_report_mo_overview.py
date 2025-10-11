@@ -743,6 +743,14 @@ class ReportMoOverview(models.AbstractModel):
     def _add_origins_to_forecast(self, forecast_lines):
         # Keeps the link to its origin even when the product is now in stock.
         new_lines = []
+        # prevent lines to be displayed several times
+        # this filter come from _get_replenishment_lines()
+        displayed_origins = [line.get('document_in') for line in filter(lambda line: line.get('document_in', False) and line.get('move_out', False)
+            and not line.get('already_used'), forecast_lines)]
+        displayed_origin_ids_per_model = defaultdict(set)
+        for origin in displayed_origins:
+            displayed_origin_ids_per_model[origin.get('_name')].add(origin.get('id'))
+        origin_qty = {}
         for line in filter(lambda line: not line.get('document_in', False) and line.get('move_out', False), forecast_lines):
             move_out_qty = line['move_out'].product_uom._compute_quantity(line['move_out'].product_uom_qty, line['uom_id'])
             for move_origin in self.env['stock.move'].browse(line['move_out']._rollup_move_origs()):
@@ -750,24 +758,40 @@ class ReportMoOverview(models.AbstractModel):
                 if doc_origin:
                     # Remove 'in_transit' for MTO replenishments
                     line['in_transit'] = False
-                    move_origin_qty = move_origin.product_uom._compute_quantity(move_origin.product_uom_qty, line['uom_id'])
+                    if not origin_qty.get(doc_origin):
+                        origin_qty[doc_origin] = {'qty': move_origin.product_uom_qty, 'uom_id': move_origin.product_uom}
+                    remaining_origin_qty = origin_qty[doc_origin]['uom_id']._compute_quantity(origin_qty[doc_origin]['qty'], line['uom_id'])
+
                     # Move quantity matches forecast, can add origin to the line
-                    if float_compare(line['quantity'], move_origin_qty, precision_rounding=line['uom_id'].rounding) == 0:
+                    if float_compare(line['quantity'], remaining_origin_qty, precision_rounding=line['uom_id'].rounding) == 0:
+                        # if the doc_origin is already displayed, this line is a duplicate
+                        if doc_origin.id in displayed_origin_ids_per_model[doc_origin._name]:
+                            forecast_lines.pop(forecast_lines.index(line))
                         line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
                         line['move_in'] = move_origin
+                        displayed_origin_ids_per_model[doc_origin._name].add(doc_origin.id)
                         break
 
                     # Quantity doesn't match, either multiple origins for a single line or multiple lines for a single origin
-                    used_quantity = min(move_out_qty, move_origin_qty)
-                    new_line = copy.copy(line)
-                    new_line['quantity'] = used_quantity
-                    new_line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
-                    new_line['move_in'] = move_origin
-                    new_lines.append(new_line)
+                    used_quantity = min(move_out_qty, remaining_origin_qty)
                     # Remove used quantity from original forecast line
                     line['quantity'] -= used_quantity
-
+                    remaining_origin_qty -= used_quantity
                     move_out_qty -= used_quantity
+
+                    if not doc_origin.id in displayed_origin_ids_per_model[doc_origin._name]:
+                        new_line = copy.copy(line)
+                        new_line['quantity'] = used_quantity
+                        new_line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
+                        new_line['move_in'] = move_origin
+                        new_lines.append(new_line)
+
+                        # line is fully dispatched, prevent future lines to display a 0 quantity
+                        if float_compare(line['uom_id']._compute_quantity(remaining_origin_qty, line['move_out'].product_uom), 0, line['move_out'].product_uom.rounding) <= 0:
+                            displayed_origin_ids_per_model[doc_origin._name].append(doc_origin.id)
+
+                    origin_qty[doc_origin]['qty'] -= line['uom_id']._compute_quantity(used_quantity, origin_qty[doc_origin]['uom_id'])
+
                     if float_compare(move_out_qty, 0, line['move_out'].product_uom.rounding) <= 0:
                         break
         return new_lines + forecast_lines
