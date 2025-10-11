@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta
 
+from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.tests import Form
 from odoo.exceptions import AccessError
@@ -291,6 +292,18 @@ class TestAccessRights(TransactionCase):
         )
         john_private_evt.message_post(body="Message to be hidden.")
 
+        # Uninvited admins shouldn't have access to messages on a private event
+        # Messages in the chatter of a calendar event are fetch through mail.message
+        private_evt_message = john_private_evt.with_user(self.env.user).message_ids.ids
+        # This is a mock up of the function mail_thread_messages in addons/mail/controllers/thread.py
+        search_fetch_message = self.env['mail.message'].with_user(self.admin_user).search_fetch([
+                ('res_id', '=', 8),
+                ('model', '=', 'calendar.event'),
+                ('message_type', '!=', 'user_notification'),
+            ], ['id']).ids
+        for message in private_evt_message:
+            self.assertFalse(message in search_fetch_message, "Messages from a private Calendar event should be private.")
+
         # Search_fetch the event as an uninvited administrator and ensure that the sensitive fields were hidden.
         # This method goes through the _fetch_query method which covers all variations of read(), search_read() and export_data().
         private_event_domain = ('id', '=', john_private_evt.id)
@@ -369,3 +382,41 @@ class TestAccessRights(TransactionCase):
             form.partner_ids.add(self.raoul.partner_id)
 
         self.assertIn(self.raoul.partner_id.id, recurring_event.partner_ids.ids, "Partner should be added as attendee")
+
+
+@tagged('post_install', '-at_install')
+class TestOtherAccessRights(HttpCase):
+
+    @classmethod
+    @mute_logger('odoo.tests', 'odoo.addons.auth_signup.models.res_users')
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.john = new_test_user(cls.env, login='john', groups='base.group_user')
+        cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user')
+        cls.george = new_test_user(cls.env, login='george', groups='base.group_user')
+        cls.portal = new_test_user(cls.env, login='pot', groups='base.group_portal')
+        cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_partner_manager,base.group_user')
+        cls.admin_system_user = new_test_user(cls.env, login='admin_system_user', groups='base.group_system')
+
+    def create_event(self, user, **values):
+        return self.env['calendar.event'].with_user(user).create({
+            'name': 'Event',
+            'start': datetime(2020, 2, 2, 8, 0),
+            'stop': datetime(2020, 2, 2, 18, 0),
+            'user_id': user.id,
+            'partner_ids': [(4, self.george.partner_id.id, 0)],
+            **values,
+        })
+
+    def test_check_admin_cant_fetch_private_events_messages_through_technical_messages(self):
+        """
+        Verify that admin can't see messsages linked to a private calendar event through : Settings > Technical > Messages
+        """
+        john_private_evt = self.create_event(self.john, name='priv', privacy='private', location='loc_1', description='priv')
+        john_public_evt = self.create_event(self.john, name='pub', privacy='public', location='loc_2', description='pub')
+        self.env.invalidate_all()
+
+        john_private_evt.message_post(body="Message to be hidden.")
+        john_public_evt.message_post(body="Message to be shown.")
+
+        self.start_tour('/odoo', 'test_messages_shown_through_technical_messages', login='admin')

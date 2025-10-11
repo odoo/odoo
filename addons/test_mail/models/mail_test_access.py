@@ -57,4 +57,8 @@ class MailTestAccessCusto(models.Model):
                 raise exceptions.AccessError('Cannot post on locked records')
             else:
                 return "read"
+        elif operation == "read":
+            if any(record.is_locked for record in self.browse(res_ids)):
+                return "write"
+            return 'read'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
