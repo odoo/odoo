@@ -153,8 +153,19 @@ class ProjectProject(models.Model):
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_invoice_line_ids.extend(purchase_lines.invoice_lines.ids)
                 for purchase_line in purchase_lines:
-                    if purchase_line.invoice_lines:
-                        for line in purchase_line.invoice_lines:
+                    price_subtotal = purchase_line.currency_id._convert(purchase_line.price_subtotal, self.currency_id, self.company_id)
+                    # an analytic account can appear several time in an analytic distribution with different repartition percentage
+                    analytic_contribution = sum(
+                        percentage for ids, percentage in purchase_line.analytic_distribution.items()
+                        if str(self.account_id.id) in ids.split(',')
+                    ) / 100.
+                    purchase_line_amount_to_invoice = price_subtotal * analytic_contribution
+                    invoice_lines = purchase_line.invoice_lines.filtered(lambda l: l.parent_state != 'cancel' and l.analytic_distribution and str(self.account_id.id) in l.analytic_distribution)
+                    if invoice_lines:
+                        invoiced_qty = sum(invoice_lines.filtered(lambda l: not l.is_refund).mapped('quantity'))
+                        if invoiced_qty < purchase_line.product_qty:
+                            amount_to_invoice -= purchase_line_amount_to_invoice * ((purchase_line.product_qty - invoiced_qty) / purchase_line.product_qty)
+                        for line in invoice_lines:
                             price_subtotal = line.currency_id._convert(line.price_subtotal, self.currency_id, self.company_id)
                             if not line.analytic_distribution:
                                 continue
@@ -169,13 +180,7 @@ class ProjectProject(models.Model):
                             else:
                                 amount_to_invoice -= cost
                     else:
-                        price_subtotal = purchase_line.currency_id._convert(purchase_line.price_subtotal, self.currency_id, self.company_id)
-                        # an analytic account can appear several time in an analytic distribution with different repartition percentage
-                        analytic_contribution = sum(
-                            percentage for ids, percentage in purchase_line.analytic_distribution.items()
-                            if str(self.account_id.id) in ids.split(',')
-                        ) / 100.
-                        amount_to_invoice -= price_subtotal * analytic_contribution
+                        amount_to_invoice -= purchase_line_amount_to_invoice
 
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
