@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ProductProduct(models.Model):
@@ -48,37 +48,51 @@ class ProductProduct(models.Model):
         return not self._is_sold_out() and super()._website_show_quick_add()
 
     def _send_availability_email(self):
-        for product in self.search([('stock_notification_partner_ids', '!=', False)]):
-            if product._is_sold_out():
-                continue
-            for partner in product.stock_notification_partner_ids:
-                self_ctxt = self.with_context(lang=partner.lang)
+        products = self.search([('stock_notification_partner_ids', '!=', False)]).filtered(
+            lambda p: not p._is_sold_out(),
+        )
+        self.env['ir.cron']._commit_progress(remaining=len(products.stock_notification_partner_ids))
+
+        website = self.env['website'].get_current_website()
+        for product_id in products.ids:
+            product = self.env['product.product'].browse(product_id)
+            for partner_id in product.with_context(
+                # Only fetch the ids, all the other fields will be invalidated either way
+                prefetch_fields=False,
+            ).stock_notification_partner_ids.ids:
+                partner = self.env['res.partner'].browse(partner_id)
+                self_ctxt = self.with_context(lang=partner.lang).with_user(website.salesperson_id)
                 product_ctxt = product.with_context(lang=partner.lang)
-                body_html = self_ctxt.env['ir.qweb']._render(
+                body_html = self_ctxt.env['mail.render.mixin']._render_template(
                     'website_sale_stock.availability_email_body',
-                    {'product': product_ctxt},
-                )
+                    'res.partner',
+                    partner.ids,
+                    engine='qweb_view',
+                    add_context={'product': product_ctxt},
+                    options={'post_process': True},
+                )[partner.id]
                 full_mail = product_ctxt.env['mail.render.mixin']._render_encapsulate(
                     'mail.mail_notification_light',
                     body_html,
-                    add_context={'model_description': _("Product")},
+                    add_context={'model_description': self_ctxt.env._("Product")},
                     context_record=product_ctxt,
                 )
-                context = {'lang': partner.lang}  # Use partner lang to translate mail subject below
                 mail_values = {
-                    'subject': _(
-                        "The product '%(product_name)s' is now available",
-                        product_name=product_ctxt.name
+                    'subject': self_ctxt.env._(
+                        "%(product_name)s is back in stock", product_name=product_ctxt.name,
                     ),
-                    'email_from': (product.company_id.partner_id or self.env.user).email_formatted,
+                    'email_from': (
+                        website.company_id.partner_id.email_formatted
+                        or self_ctxt.env.user.email_formatted
+                    ),
                     'email_to': partner.email_formatted,
                     'body_html': full_mail,
                 }
-                del context
-
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
                 mail.send(raise_exception=False)
+
                 product.stock_notification_partner_ids -= partner
+                self.env['ir.cron']._commit_progress(1)
 
     def _to_markup_data(self, website):
         """ Override of `website_sale` to include the product availability in the offer. """
