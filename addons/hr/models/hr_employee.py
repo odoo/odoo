@@ -583,7 +583,6 @@ class HrEmployee(models.Model):
         ])
         return [('id', operator, new_hires.ids)]
 
-    @api.depends('address_id.phone')
     def _compute_phones(self):
         for employee in self:
             if employee.address_id.phone:
