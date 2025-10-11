@@ -78,53 +78,7 @@ patch(LinkPopover.prototype, {
     },
 
     get optionsSource() {
-        return {
-            placeholder: _t("Loading..."),
-            options: this.loadOptionsSource.bind(this),
-            optionSlot: "urlOption",
-        };
-    },
-
-    async loadOptionsSource(term) {
-        const makeItem = (item) => ({
-            cssClass: "ui-autocomplete-item",
-            label: item.label,
-            onSelect: this.onSelect.bind(this, item.value),
-            data: { icon: item.icon || false, isCategory: false },
-        });
-
-        if (term[0] === "#") {
-            const anchors = await wUtils.loadAnchors(
-                term,
-                this.props.linkElement.ownerDocument.body
-            );
-            return anchors.map((anchor) => makeItem({ label: anchor, value: anchor }), this);
-        } else if (term.startsWith("http") || term.length === 0) {
-            // avoid useless call to /website/get_suggested_links
-            return [];
-        }
-
-        const res = await rpc("/website/get_suggested_links", {
-            needle: term,
-            limit: 15,
-        });
-        const choices = [];
-        for (const page of res.matching_pages) {
-            choices.push(makeItem(page));
-        }
-        for (const other of res.others) {
-            if (other.values.length) {
-                choices.push({
-                    cssClass: "ui-autocomplete-category",
-                    label: other.title,
-                    data: { icon: false, isCategory: true },
-                });
-                for (const page of other.values) {
-                    choices.push(makeItem(page));
-                }
-            }
-        }
-        return choices;
+        return buildOptionsSource(this);
     },
 
     onSelect(value) {
@@ -166,3 +120,53 @@ patch(LinkPopover.prototype, {
         }
     },
 });
+
+export async function loadOptionsSource(term, context) {
+    const makeItem = (item) => ({
+        cssClass: "ui-autocomplete-item",
+        label: item.label,
+        onSelect: context.onSelect.bind(context, item.value),
+        data: { icon: item.icon || false, isCategory: false },
+    });
+
+    if (term[0] === "#") {
+        const anchors = await wUtils.loadAnchors(
+            term,
+            context.props.linkElement?.ownerDocument.body || document.body
+        );
+        return anchors.map((anchor) => makeItem({ label: anchor, value: anchor }), context);
+    } else if (term.startsWith("http") || term.length === 0) {
+        // avoid useless call to /website/get_suggested_links
+        return [];
+    }
+
+    const res = await rpc("/website/get_suggested_links", {
+        needle: term,
+        limit: 15,
+    });
+    const choices = [];
+    for (const page of res.matching_pages) {
+        choices.push(makeItem(page));
+    }
+    for (const other of res.others) {
+        if (other.values.length) {
+            choices.push({
+                cssClass: "ui-autocomplete-category",
+                label: other.title,
+                data: { icon: false, isCategory: true },
+            });
+            for (const page of other.values) {
+                choices.push(makeItem(page));
+            }
+        }
+    }
+    return choices;
+}
+
+export function buildOptionsSource(context) {
+    return {
+        placeholder: _t("Loading..."),
+        options: (term) => loadOptionsSource(term, context),
+        optionSlot: "urlOption",
+    };
+}

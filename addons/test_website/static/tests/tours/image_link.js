@@ -39,7 +39,7 @@ registerWebsitePreviewTour('test_image_link', {
         run: "click",
     }, {
         content: "enter site URL",
-        trigger: ".o_customize_tab [data-container-title='Image'] div[data-action-id='setUrl'] input",
+        trigger: ".o_customize_tab [data-container-title='Image'] input.o_builder_url_input",
         run: "edit odoo.com && click body",
     },
     ...selectImageSteps,
