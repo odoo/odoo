@@ -71,6 +71,10 @@ class AccountMove(models.Model):
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for so_dpl in downpayment_lines:
             so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
+            # si la linea de venta esta vinculada a más de una compañía o está cruzado de compañía! NO queremos actualizar impuestos en la venta
+            # porque van a quedar cruzados o con impuestos duplicados
+            if len(so_dpl.invoice_lines.company_id) != 1 or so_dpl.invoice_lines.company_id != so_dpl.company_id:
+                continue
             so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
 
         return res
