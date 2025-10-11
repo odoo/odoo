@@ -161,12 +161,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Check message contains the second attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentContainer:contains("file2.txt")',
         },
-        // Test the full composer input text is kept on closing
-        {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
-            run: "click",
-        },
         {
             content: "Open full composer",
             trigger: "button[title='Open Full Composer']",
@@ -197,11 +191,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             trigger: ".btn-close",
             run: "click",
         },
-        {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
-            run: "click",
-        },
+        // Test the full composer input text is kept on closing
         {
             content: "Check full composer text is kept",
             trigger: ".o-mail-Composer-input",
@@ -237,11 +227,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Close full composer",
             trigger: ".btn-close",
-            run: "click",
-        },
-        {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
             run: "click",
         },
         {
