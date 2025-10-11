@@ -163,6 +163,8 @@ def setup_product_combo_items(self):
         }
     )
 
+    combo_product_8_tmpl_id = combo_product_8.product_tmpl_id
+
     combo_product_9 = self.env["product.product"].create(
         {
             "name": "Combo Product 9",
@@ -194,6 +196,28 @@ def setup_product_combo_items(self):
         'attribute_id': chair_color_attribute.id,
         'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
     })
+
+    chair_size_attribute = self.env['product.attribute'].create({
+        'name': 'Size',
+        'display_type': 'radio',
+        'create_variant': 'always',
+    })
+    chair_size_L = self.env['product.attribute.value'].create({
+        'name': 'L',
+        'attribute_id': chair_size_attribute.id,
+    })
+    chair_size_M = self.env['product.attribute.value'].create({
+        'name': 'M',
+        'attribute_id': chair_size_attribute.id,
+    })
+
+    self.env['product.template.attribute.line'].create({
+        'product_tmpl_id': combo_product_8.product_tmpl_id.id,
+        'attribute_id': chair_size_attribute.id,
+        'value_ids': [(6, 0, [chair_size_L.id, chair_size_M.id])],
+    })
+
+    combo_product_8 = combo_product_8_tmpl_id.product_variant_id
 
     self.chairs_combo = self.env["product.combo"].create(
         {
