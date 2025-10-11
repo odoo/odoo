@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
+from odoo import Command, fields
 
 
 @tagged('post_install', '-at_install')
@@ -425,3 +428,58 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertEqual(dropship3_layers[0].value, 24)
         dropship3_cogs_line = customer_invoice3.line_ids.filtered(lambda aml: aml.account_id.id == account_output.id)
         self.assertEqual(dropship3_cogs_line.balance, -24)
+
+    def test_exchange_rate_difference_post_reception_prior_to_bill(self):
+        """
+        Ensure journal entries for currency rate change between dropship validation date and bill date
+        appear under the 'Stock Valuation' account (as opposed to the regular exchange account)
+        """
+        avco_prod = self.product1
+        avco_prod.categ_id.property_cost_method = 'average'
+        avco_prod.supplier_taxes_id = False
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': avco_prod.product_tmpl_id.id,
+            'partner_id': self.partner_a.id,
+            'price': 10,
+            'currency_id': self.ref('base.EUR'),
+        })
+        self.env.ref('base.EUR').active = True
+        self.env['res.currency.rate'].create([
+            {'name': fields.Date.today(), 'currency_id': self.ref('base.EUR'), 'rate': 1.0},
+            {'name': fields.Date.today() - timedelta(days=1), 'currency_id': self.ref('base.EUR'), 'rate': 3},
+            {'name': fields.Date.today() - timedelta(days=2), 'currency_id': self.ref('base.EUR'), 'rate': 0.5},
+        ])
+        sale_orders = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': avco_prod.id,
+                'route_id': self.env.ref('stock_dropshipping.route_drop_shipping').id,
+                'product_uom_qty': 1,
+            })],
+        } for _ in range(2)])
+
+        # Scenario 1: higher rate for billing than delivery
+        sale_orders[0].action_confirm()
+        po = sale_orders[0]._get_purchase_orders()
+        po.button_confirm()
+        po.picking_ids.button_validate()
+        po.action_create_invoice()
+        amls = self.env['account.move.line'].search([])
+        bill = po.invoice_ids
+        bill.invoice_date = fields.Date.today() - timedelta(days=1)
+        bill.action_post()
+        currency_exchange_amls = self.env['account.move.line'].search([]) - amls
+        self.assertEqual(currency_exchange_amls.journal_id, avco_prod.categ_id.property_stock_journal)
+
+        # Scenario 2: lower rate for billing than delivery
+        sale_orders[1].action_confirm()
+        po = sale_orders[1]._get_purchase_orders()
+        po.button_confirm()
+        po.picking_ids.button_validate()
+        po.action_create_invoice()
+        amls = self.env['account.move.line'].search([])
+        bill = po.invoice_ids
+        bill.invoice_date = fields.Date.today() - timedelta(days=2)
+        bill.action_post()
+        currency_exchange_amls = self.env['account.move.line'].search([]) - amls
+        self.assertEqual(currency_exchange_amls.journal_id, avco_prod.categ_id.property_stock_journal)
