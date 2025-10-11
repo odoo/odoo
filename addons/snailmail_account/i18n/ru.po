@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail_account
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Ilya Rozhkov, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:37+0000\n"
+"POT-Creation-Date: 2025-10-09 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: snailmail_account
 #. odoo-python
@@ -62,6 +64,7 @@ msgid "Create a Customer"
 msgstr "Создать клиента"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__display_name
 #: model:ir.model.fields,field_description:snailmail_account.field_res_partner__display_name
@@ -69,6 +72,7 @@ msgid "Display Name"
 msgstr "Отображаемое имя"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move__id
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__id
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__id
 #: model:ir.model.fields,field_description:snailmail_account.field_res_partner__id
@@ -80,6 +84,11 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:snailmail_account.field_res_users__invoice_sending_method
 msgid "Invoice sending"
 msgstr "Отправка счета"
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_move
+msgid "Journal Entry"
+msgstr ""
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send_batch_wizard__send_by_post_stamps
