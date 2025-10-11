@@ -408,3 +408,19 @@ class TestRecruitment(TransactionCase):
 
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
+
+    def test_applicant_email_update_excludes_old_address(self):
+        """
+        Ensure that when an applicant's email is updated, only the new email address
+        is suggested for communications, and the old email address is no longer
+        included in the suggested recipients.
+        """
+        applicant_1 = self.env['hr.applicant'].create({
+            'partner_name': 'Applicant 1',
+            'email_from': 'test_applicant@example.com'
+        })
+        applicant_1.email_from = 'test_applicant_new@example.com'
+        recipients = applicant_1._message_get_suggested_recipients()
+        emails = [r['email'] for r in recipients]
+        assert 'test_applicant@example.com' not in emails
+        assert 'test_applicant_new@example.com' in emails
