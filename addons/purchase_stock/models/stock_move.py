@@ -160,11 +160,11 @@ class StockMove(models.Model):
                 continue
             aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += aml.quantity
-                value += aml.price_subtotal
+                aml_quantity += aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
+                value += aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
             elif aml.move_type == 'in_refund':
-                aml_quantity -= aml.quantity
-                value -= aml.price_subtotal
+                aml_quantity -= aml.product_uom_id._compute_quantity(aml.quantity, self.product_id.uom_id)
+                value -= aml.currency_id._convert(aml.price_subtotal, self.company_id.currency_id, date=aml.date)
 
         if aml_quantity <= 0:
             return valuation_data
