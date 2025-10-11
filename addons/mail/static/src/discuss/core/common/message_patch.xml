@@ -19,5 +19,10 @@
                 />
             </div>
         </xpath>
+        <xpath expr="(//small[@name='starred'])" position="after">
+            <small t-if="message.child_ids.length and env.repliesMenu and !env.repliesMenu.message" class="cursor-pointer" t-on-click="() => this.env.repliesMenu.open(message)">
+                <small class="o-xsmaller text-muted" t-att-title="repliesIndicatorTitle"><t t-out="message.child_ids.length"/> <i class="fa fa-reply-all"/></small>
+            </small>
+        </xpath>
     </t>
 </templates>

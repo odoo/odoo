@@ -25,6 +25,7 @@ class MailMessage(models.Model):
                 ["duration_hour", "end_dt"],
                 predicate=lambda m: m.body and 'data-oe-type="call"' in m.body,
             ),
+            Store.Many("child_ids", [], predicate=lambda m: m.model == "discuss.channel"),
         ]
 
     def _extras_to_store(self, store: Store, format_reply):

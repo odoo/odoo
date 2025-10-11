@@ -181,6 +181,13 @@ export class MailMessage extends models.ServerModel {
                 })
             ),
             mailDataHelpers.Store.attr("body", (m) => ["markup", m.body]),
+            mailDataHelpers.Store.many(
+                "child_ids",
+                makeKwArgs({
+                    fields: [],
+                    predicate: (m) => m.model === "discuss.channel",
+                })
+            ),
             "create_date",
             "date",
             "message_type",

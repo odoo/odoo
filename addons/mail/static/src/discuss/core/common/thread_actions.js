@@ -6,11 +6,12 @@ import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list
 import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useSubEnv, xml } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { MessageRepliesPanel } from "./message_replies_panel";
 
 class ChannelActionDialog extends Component {
     static props = ["title", "contentComponent", "contentProps", "close?"];
@@ -193,4 +194,24 @@ registerThreadAction("delete-thread", {
     sequence: ({ owner }) => (owner.props.chatWindow ? 50 : 40),
     sequenceGroup: 40,
     tags: [ACTION_TAGS.DANGER],
+});
+registerThreadAction("message-replies", {
+    actionPanelComponent: MessageRepliesPanel,
+    condition: false, // Not shown in the action list, gets managed by methods in `env`
+    actionPanelComponentCondition: ({ owner }) => owner.env.repliesMenu,
+    setup: ({ action, thread }) =>
+        useSubEnv({
+            repliesMenu: {
+                open: (message) => {
+                    action.definition.actionPanelComponentProps = () => ({ thread, message });
+                    action.open();
+                },
+                close: () => {
+                    if (action.isActive) {
+                        action.close();
+                    }
+                },
+            },
+        }),
+    toggle: true,
 });
