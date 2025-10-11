@@ -569,3 +569,17 @@ registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_points_update_after_global_discount", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("AAA Product"),
+            PosLoyalty.clickDiscountButton(),
+            PosLoyalty.clickConfirmButton(),
+            PosLoyalty.pointsTotalIs(192),
+            PosLoyalty.orderTotalIs("92"),
+            PosLoyalty.finalizeOrder("Bank", "92"),
+        ].flat(),
+});
