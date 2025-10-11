@@ -4847,3 +4847,28 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             untaxed_amount=invoice.amount_tax,
         )
         self.assertEqual(discounted_amount, 52.95)
+
+    def test_invoice_currency_rate_round_globally(self):
+        """Ensure that when the tax rounding method is set to 'global', changing the currency rate directly
+         on the invoice results in journal entries that are rounded globally, not per line. """
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        self.other_currency.rate = 0.0
+        currency = self.env['res.currency'].create([{
+            'name': 'AAA',
+            'symbol': 'AAA',
+        }])
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'quantity': 0.80,
+                    'price_unit': 894.34,
+                }),
+            ],
+        })
+        invoice.write({'invoice_currency_rate': 1 / 1189.5})
+        self.assertEqual(invoice.line_ids.mapped('balance'), [-851053.94, 851053.94])

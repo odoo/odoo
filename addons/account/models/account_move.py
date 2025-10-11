@@ -3004,6 +3004,8 @@ class AccountMove(models.Model):
             elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
                 # Removed a base line affecting the taxes.
                 round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
+            elif self.env.company.tax_calculation_rounding_method == 'round_globally':
+                round_from_tax_lines = False
             else:
                 continue
 
