@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <template id="payment_toss_payments.method_form" inherit_id="payment.method_form">
+        <input name="o_payment_radio" position="attributes">
+            <attribute name="t-att-data-tosspayments-client-key">
+                provider_sudo.tosspayments_client_key
+            </attribute>
+        </input>
+    </template>
+
+    <template id="inline_form">
+        <t t-if="pm_sudo.code == 'gift_certificate'">
+            <div class="col-12 ps-4">
+                <div class="form-check d-flex flex-column">
+                    <label class="col-form-label">
+                        <div class="form-check ps-0">
+                            <input type="radio" class="form-check-input"
+                                   name="gift_certificate_type"
+                                   value="CULTURE_GIFT_CERTIFICATE"
+                                   checked="1"/>
+                            <div class="form-check-label fw-normal">
+                                Culture Gift Certificate
+                            </div>
+                        </div>
+                    </label>
+                    <label class="col-form-label">
+                        <div class="form-check ps-0">
+                            <input type="radio" class="form-check-input"
+                                   name="gift_certificate_type"
+                                   value="BOOK_GIFT_CERTIFICATE"/>
+                            <div class="form-check-label fw-normal">
+                                Book Gift Certificate
+                            </div>
+                        </div>
+                    </label>
+                    <label class="col-form-label">
+                        <div class="form-check ps-0">
+                            <input type="radio" class="form-check-input"
+                                   name="gift_certificate_type"
+                                   value="GAME_GIFT_CERTIFICATE"/>
+                            <div class="form-check-label fw-normal">
+                                Game Gift Certificate
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
