@@ -464,6 +464,15 @@ export class Store extends BaseStore {
                         payload: { correlationId },
                     });
                 }
+                else if (this.store.self.notification_preference === "inbox" && model !== "discuss.channel") {
+                    // Prevent duplicate inbox push notifications since they're already handled by
+                    // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
+                    // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
+                    navigator.serviceWorker.controller.postMessage({
+                        type: "notification-display-response",
+                        payload: { correlationId },
+                    });
+                }
             }
         });
     }
