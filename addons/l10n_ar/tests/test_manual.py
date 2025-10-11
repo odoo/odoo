@@ -247,3 +247,29 @@ class TestManual(common.TestAr):
             ],
         })
         self.assertEqual(self._get_simple_detail_ar_tax(invoice3), [("vat", 0.0)])
+
+    def test_create_debit_note_for_credit_note(self):
+        """
+        Test that it is possible to create a debit note from a credit note
+        """
+
+        invoice = self.init_invoice('out_invoice', partner=self.partner_afip, products=[self.product_a], post=True)
+
+        credit_note_wizard = self.env['account.move.reversal'].with_context({
+            'active_ids': invoice.ids,
+            'active_model': 'account.move',
+        }).create({
+            'reason': 'credit note',
+            'journal_id': invoice.journal_id.id,
+        })
+        credit_note_wizard.refund_moves()
+        invoice.reversal_move_id.action_post()
+
+        debit_note_wizard = self.env['account.debit.note'].with_context({
+            'active_ids': invoice.reversal_move_id.ids,
+            'active_model': 'account.move',
+        }).create({
+            'reason': 'debit_note',
+        })
+        debit_note_wizard.create_debit()
+        self.assertTrue(invoice.reversal_move_id.debit_note_ids)
