@@ -3270,7 +3270,7 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None):
+    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None, computation_key=None):
         """ Create the new base lines that will get the discount.
         Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending on
         the grouping_function passed as parameter.
@@ -3282,6 +3282,7 @@ class AccountTax(models.Model):
         :param grouping_function:   An optional function taking a base line as parameter and returning a grouping key
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
+        :param computation_key:     The computation_key to be set on the aggregated base_lines.
         :return:                    The base lines aggregated.
         """
         aggregated_base_lines = {}
@@ -3295,10 +3296,7 @@ class AccountTax(models.Model):
                 discount=0.0,
                 manual_tax_amounts=None,
             )
-            grouping_key = {
-                'tax_ids': new_base_line['tax_ids'],
-                'computation_key': base_line['computation_key'],
-            }
+            grouping_key = {'tax_ids': new_base_line['tax_ids']}
             if grouping_function:
                 grouping_key.update(grouping_function(new_base_line))
             grouping_key = frozendict(grouping_key)
@@ -3315,9 +3313,10 @@ class AccountTax(models.Model):
                     tax_details_2=base_line['tax_details'],
                 )
             else:
-                target_base_line = base_line_map[grouping_key] = self._prepare_base_line_for_taxes_computation(
+                base_line_map[grouping_key] = self._prepare_base_line_for_taxes_computation(
                     new_base_line,
                     **grouping_key,
+                    computation_key=computation_key,
                     tax_details={
                         **base_line['tax_details'],
                         'taxes_data': [dict(tax_data) for tax_data in base_line['tax_details']['taxes_data']],
@@ -3551,6 +3550,7 @@ class AccountTax(models.Model):
         reduced_base_lines = self._reduce_base_lines_with_grouping_function(
             base_lines=base_lines,
             grouping_function=grouping_function,
+            computation_key=computation_key,
         )
 
         # Reduce the unit price to approach the target amount.
