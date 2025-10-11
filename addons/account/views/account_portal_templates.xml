@@ -137,12 +137,9 @@
 
     <template id="portal_invoice_page" name="Invoice/Bill" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
-                <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/odoo/action-account.action_move_out_invoice_type/%s' % invoice.id"/>
-                </t>
-            </t>
-
+             <div class="alert alert-info alert-dismissible fade show d-print-none css_editable_mode_hidden" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
+                <t t-call="portal.portal_back_in_edit_mode" backend_url="'/odoo/action-account.action_move_out_invoice_type/%s' % invoice.id"/>
+            </div>
             <div class="row o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
