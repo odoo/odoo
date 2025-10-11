@@ -215,7 +215,19 @@ class StockRule(models.Model):
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
         seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
+<<<<<<< 8e304ab52981aca6143d2cd28720303b259841de
         if not buy_rule:
+||||||| 67490af868f8bd3a502085836d64217fa5fbb459
+        if not buy_rule or not seller:
+=======
+        if not buy_rule:
+            return delays, delay_description
+        if not seller:
+            delays['total_delay'] += 365
+            delays['no_vendor_found_delay'] += 365
+            if not bypass_delay_description:
+                delay_description.append((_('No Vendor Found'), _('+ %s day(s)', 365)))
+>>>>>>> 390040dcf12de6ca204faea6d6f20284132a3f4c
             return delays, delay_description
         buy_rule.ensure_one()
         if not self.env.context.get('ignore_vendor_lead_time'):
