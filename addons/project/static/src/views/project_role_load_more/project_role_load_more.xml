@@ -1,0 +1,25 @@
+<template>
+    <t t-name="ProjectRoleLoadMoreWidget">
+        <div class="o_project_role_load_more_container mt-4">
+            <div class="o_project_role_items_list">
+                <t t-foreach="state.allRoleItems" t-as="item" t-key="item.data.role_id.id">
+                    <div class="o_project_role_item d-flex mb-4">
+                        <div class="o_project_role_name me-3" style="min-width:160px; max-width:162px; white-space:normal; word-break:break-word;">
+                            <span class="fw-bold" t-att-title="item.data.role_id.display_name">
+                                <t t-esc="item.data.role_id.display_name.length > 15 ? item.data.role_id.display_name.substring(0, 15) + '...' : item.data.role_id.display_name"/>
+                            </span>
+                        </div>
+                        <div class="o_project_role_users o_field_widget o_field_many2many_tags d-flex" style="width:100%;">
+                            <Many2ManyTagsAvatarUserField
+                            name="'user_ids'"
+                            record="item"
+                            readonly="false"
+                            class="`width:100%;`"
+                        />
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
