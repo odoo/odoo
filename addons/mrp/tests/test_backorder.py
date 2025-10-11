@@ -900,6 +900,141 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertRecordValues(mo_ask, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
         self.assertRecordValues(mo_never, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
 
+    def test_removal_strategy_split(self):
+        """
+        Tests that the removal strategy for a product is used when splitting the MO
+        """
+        category_fifo, category_lifo = self.env['product.category'].create([
+            {
+                'name': 'FIFO Category',
+                'removal_strategy_id': self.env.ref('stock.removal_fifo').id,
+            },
+            {
+                'name': 'LIFO Category',
+                'removal_strategy_id': self.env.ref('stock.removal_lifo').id,
+            },
+
+        ])
+        component_fifo, component_lifo = self.env['product.product'].create([
+            {
+                'name': 'Component Fifo',
+                'type': 'product',
+                'tracking': 'lot',
+                'categ_id': category_fifo.id,
+            },
+            {
+                'name': 'Component Lifo',
+                'type': 'product',
+                'tracking': 'lot',
+                'categ_id': category_lifo.id,
+            },
+        ])
+        product = self.env['product.product'].create({
+            'name': 'Product Fifo Lifo',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_fifo.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_id': component_lifo.id,
+                    'product_qty': 1,
+                }),
+            ],
+        })
+        lot1_fifo, lot2_fifo, lot1_lifo, lot2_lifo = self.env['stock.lot'].create([
+            {
+                'product_id': component_fifo.id,
+                'name': 'Lot 1 fifo'
+            },
+            {
+                'product_id': component_fifo.id,
+                'name': 'Lot 2 fifo'
+            },
+            {
+                'product_id': component_lifo.id,
+                'name': 'Lot 1 lifo'
+            },
+            {
+                'product_id': component_lifo.id,
+                'name': 'Lot 2 lifo'
+            },
+        ])
+        self.env['stock.quant'].create([
+            {
+                'product_id': component_fifo.id,
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'lot_id': lot1_fifo.id,
+                'quantity': 3,
+            },
+            {
+                'product_id': component_fifo.id,
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'lot_id': lot2_fifo.id,
+                'quantity': 3,
+            },
+            {
+                'product_id': component_lifo.id,
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'lot_id': lot1_lifo.id,
+                'quantity': 3,
+            },
+            {
+                'product_id': component_lifo.id,
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'lot_id': lot2_lifo.id,
+                'quantity': 3,
+            },
+        ])
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_qty': 6,
+            'bom_id': product.bom_ids[0].id,
+            'product_uom_id': product.uom_id.id,
+        })
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertEqual(mo.product_qty, 6)
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 6
+        wizard.save().action_split()
+        # Retrieving the lots assigned to the fifo component
+        all_mo = self.env['mrp.production'].search([
+            ('product_id', '=', product.id),
+            ('product_qty', '=', 1),
+        ], order='id asc')
+        self.assertEqual(len(all_mo), 6)
+        lot_ids_fifo = []
+        fifo_ids = []
+        for mo in all_mo:
+            lot = mo.move_raw_ids.move_line_ids.filtered(
+                lambda l: l.product_id == component_fifo and l.lot_id
+            ).mapped('lot_id.id')
+            lot_ids_fifo.append(lot)
+        for id_list in lot_ids_fifo:
+            for lot_id in id_list:
+                fifo_ids.append(lot_id)
+        self.assertEqual(fifo_ids, sorted(fifo_ids))
+        # Same for lifo component
+        lot_ids_lifo = []
+        lifo_ids = []
+        for mo in all_mo:
+            lot = mo.move_raw_ids.move_line_ids.filtered(
+                lambda l: l.product_id == component_lifo and l.lot_id
+            ).mapped('lot_id.id')
+            lot_ids_lifo.append(lot)
+        for id_list in lot_ids_lifo:
+            for lot_id in id_list:
+                lifo_ids.append(lot_id)
+        self.assertEqual(lifo_ids, sorted(lifo_ids, reverse=True))
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
