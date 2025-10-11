@@ -159,11 +159,13 @@ class StockMove(models.Model):
             if aml.move_id.state != 'posted':
                 continue
             aml_ids.add(aml.id)
+
+            aml_converted_quantity = aml.product_uom_id._compute_quantity(aml.quantity, aml.product_id.uom_id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += aml.quantity
+                aml_quantity += aml_converted_quantity
                 value += aml.price_subtotal
             elif aml.move_type == 'in_refund':
-                aml_quantity -= aml.quantity
+                aml_quantity -= aml_converted_quantity
                 value -= aml.price_subtotal
 
         if aml_quantity <= 0:

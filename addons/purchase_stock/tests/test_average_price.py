@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo import Command
 from odoo.tests import tagged
 
 import time
@@ -290,3 +291,47 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         po.invoice_ids[0].action_post()
 
         self.assertFalse(po.picking_ids.move_ids.stock_valuation_layer_ids.stock_valuation_layer_ids)
+
+    def test_standard_price_with_uom_conversion(self):
+        """ Test that the standard price is correctly computed
+        when the purchase order and bills are made in a UoM different than the product's UoM
+        """
+
+        uom_pack_6 = self.env.ref('uom.product_uom_pack_6')
+
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'is_storable': True,
+            'categ_id': self.stock_account_product_categ.id,
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.partner_a.id,
+                    'product_uom_id': uom_pack_6.id,
+                    'price': 12.0,
+                }),
+            ]
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+        self.assertNotEqual(avco_product.uom_id, uom_pack_6, 'The default UoM of the product should be different than the UoM of the supplier info.')
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': avco_product.id,
+                    'product_qty': 1.0,
+                }),
+            ]
+        })
+        self.assertEqual(purchase_order.order_line.product_uom_id, uom_pack_6)
+        purchase_order.button_confirm()
+
+        purchase_order.picking_ids.button_validate()
+        self.assertEqual(avco_product.standard_price, 2.0, 'The standard price should be the price per unit of measure.')
+
+        purchase_order.action_create_invoice()
+        self.assertEqual(purchase_order.invoice_ids.line_ids.product_uom_id, uom_pack_6)
+
+        purchase_order.invoice_ids.action_post()
+        self.assertEqual(purchase_order.order_line.qty_invoiced, 1.0, 'qty_invoiced should have been set to 1 on the purchase order line')
+        self.assertEqual(avco_product.standard_price, 2.0, 'The standard price should be the price per unit of measure.')
