@@ -755,3 +755,52 @@ export function clickToolbarButton(elementName, selector, button, expand = false
     }
     return steps;
 }
+
+// Common function to change color (both text and background color)
+/**
+ * @param {Object} params
+ * @param {string} [containerTitle=""] :
+ * Title of the container (e.g., "Header", "Social Media").
+ * @param {string} [optionLabel=""] :
+ * Label of the color option (e.g., "Background", "Format").
+ * @param {string} [toolbarColorPickerSelector=""] :
+ * Selector of floating toolbar color picker(e.g,".o-select-color-foreground").
+ * @param {string} colorTabsWrapperSelector :
+ * Selector for color tabs(e.g, `.o-hb-colorpicker`, `.o_font_color_selector`).
+ * @param {string} colorTabSelector :
+ * Selector for the specific color tab (e.g., `.custom-tab`, `.solid-tab`).
+ * @param {string} colorSelector :
+ * Attribute selector for color (e.g., `data-color='600' or '#FFFF00'`).
+ * @returns {Array<Object>} :
+ * A list of tour step objects usable directly in Odoo website tours.
+ */
+export function changeColor({
+    containerTitle = "",
+    optionLabel = "",
+    toolbarColorPickerSelector = "",
+    colorTabsWrapperSelector,
+    colorTabSelector,
+    colorSelector,
+}) {
+    return [
+        {
+            content: "Open the color picker",
+            trigger:
+                `div[data-container-title='${containerTitle}'] [data-label='${optionLabel}'] .o_we_color_preview, ${toolbarColorPickerSelector}`.replace(
+                    /^, |, $/g,
+                    ""
+                ), // clean unnecessary space and comma.
+            run: "click",
+        },
+        {
+            content: "Click on the colors tab (theme, custom, gradient or solid)",
+            trigger: `${colorTabsWrapperSelector} ${colorTabSelector}`,
+            run: "click",
+        },
+        {
+            content: "Select the color",
+            trigger: `.popover button[${colorSelector}]`,
+            run: "click",
+        },
+    ];
+}
