@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Date, Datetime
+from odoo.fields import Command, Date, Datetime
 from odoo.tools import mute_logger
 from odoo.tests import Form, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -273,3 +273,274 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         manufacturing_order.move_raw_ids.quantity = 1
 
         self.assertEqual(self.product_a.standard_price, 100)
+
+    def test_purchase_kit_cumulative_cost_share_with_auto_avco_components_bom_repetition(self):
+        """
+        A kit Super Kit with three AVCO components
+        - C01, cost share 10%
+        - A kit Sub Kit 1 with three AVCO components, cost share 30%
+            - C02, cost share 50%
+            - C03, cost share 25%
+            - Sub Kit 2 with two AVCO components, cost share 25%
+                - C04, cost share 30%
+                - C05, cost share 70%
+        - Sub Kit 2 with two AVCO components, cost share 60%
+                - C04, cost share 30%
+                - C05, cost share 70%
+        Buy and receive 1 kit Super Kit @ 1000
+        """
+        component01, component02, component03, component04, component05 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'categ_id': self.avco_category.id,
+        } for name in ['01 (super kit)', '02 (sub kit 1)', '03 (sub kit 1)', '04 (sub kit 2)', '05 (sub kit 2)']])
+
+        super_kit, sub_kit_1, sub_kit_2 = self.env['product.product'].create([{
+            'name': name,
+        } for name in ['Super Kit', 'Sub Kit 1', 'Sub Kit 2']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': super_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component01.id,
+                'product_qty': 1,
+                'cost_share': 10,
+            }), Command.create({
+                'product_id': sub_kit_1.id,
+                'product_qty': 1,
+                'cost_share': 30,
+            }), Command.create({
+                'product_id': sub_kit_2.id,
+                'product_qty': 1,
+                'cost_share': 60,
+            })],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': sub_kit_1.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component02.id,
+                'product_qty': 1,
+                'cost_share': 50,
+            }), Command.create({
+                'product_id': component03.id,
+                'product_qty': 1,
+                'cost_share': 25,
+            }), Command.create({
+                'product_id': sub_kit_2.id,
+                'product_qty': 1,
+                'cost_share': 25,
+            })],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': sub_kit_2.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component04.id,
+                'product_qty': 1,
+                'cost_share': 30,
+            }), Command.create({
+                'product_id': component05.id,
+                'product_qty': 1,
+                'cost_share': 70,
+            })],
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor01.id,
+            'order_line': [Command.create({
+                'product_id': super_kit.id,
+                'product_qty': 1,
+                'price_unit': 1000,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        purchase_order.button_confirm()
+
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+
+        # Actual cost shares:
+        # Component01:
+        #   0.1
+        # Component02:
+        #   0.3 * 0.5  = 0.15
+        # Component03:
+        #   0.3 * 0.25 = 0.075 -> 0.08
+        # Component04:
+        #   0.6 * 0.3 = 0.18
+        #   0.3 * 0.25 * 0.3 = 0.0225 -> 0.02
+        # Component05:
+        #   0.6 * 0.7 = 0.42
+        #   0.3 * 0.25 * 0.7 = 0.0525 -> 0.05
+        # => 0.1 + 0.15 + 0.08 + 0.02 + 0.18 + 0.05 + 0.42 = 1.0
+        self.assertRecordValues(component01.stock_valuation_layer_ids, [{'value': 100.0,   'unit_cost': 100.0,    'quantity': 1.0}])
+        self.assertRecordValues(component02.stock_valuation_layer_ids, [{'value': 150.0,   'unit_cost': 150.0,    'quantity': 1.0}])
+        self.assertRecordValues(component03.stock_valuation_layer_ids, [{'value':  80.0,   'unit_cost':  80.0,    'quantity': 1.0}])
+        self.assertRecordValues(
+            component04.stock_valuation_layer_ids,
+            [
+                {'value':  20,   'unit_cost':  20,   'quantity': 1.0},
+                {'value': 180,   'unit_cost': 180,   'quantity': 1.0},
+            ]
+        )
+        self.assertRecordValues(
+            component05.stock_valuation_layer_ids,
+            [
+                {'value':  50,    'unit_cost': 50,   'quantity': 1.0},
+                {'value': 420,   'unit_cost': 420,   'quantity': 1.0},
+            ]
+        )
+
+    def test_purchase_kit_cost_share_0_with_auto_avco_components(self):
+        """
+        If a BoM has BoM lines with cost shares that add to 0 (i.e., each one has cost share of 0)
+        then we should distribute the cost share equally among all of them. Otherwise, any lines
+        with a cost share of 0 should be valuated as 0.
+
+        A kit A with two AVCO components
+        - C01, cost share 100%
+        - C02, cost share 0%
+        A kit B with two AVCO components
+        - C03, cost share 0%
+        - C04, cost share 0%
+        """
+        component01, component02, component03, component04 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'categ_id': self.avco_category.id,
+        } for name in ['01', '02', '03', '04']])
+
+        kit_a, kit_b = self.env['product.product'].create([{
+            'name': name,
+            'type': 'consu',
+        } for name in ['Kit A', 'Kit B']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_a.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component01.id,
+                'product_qty': 1,
+                'cost_share': 100,
+            }), Command.create({
+                'product_id': component02.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            })],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_b.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component03.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            }), Command.create({
+                'product_id': component04.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            })],
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor01.id,
+            'order_line': [Command.create({
+                'product_id': kit_a.id,
+                'product_qty': 1,
+                'price_unit': 1000,
+                'tax_ids': [Command.clear()],
+            }), Command.create({
+                'product_id': kit_b.id,
+                'product_qty': 1,
+                'price_unit': 1000,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+
+        self.assertRecordValues(component01.stock_valuation_layer_ids, [{'value': 1000.0,   'unit_cost': 1000.0,   'quantity': 1.0}])
+        self.assertRecordValues(component02.stock_valuation_layer_ids, [{'value': 0.0,      'unit_cost': 0.0,      'quantity': 1.0}])
+        self.assertRecordValues(component03.stock_valuation_layer_ids, [{'value': 500.0,    'unit_cost': 500.0,    'quantity': 1.0}])
+        self.assertRecordValues(component04.stock_valuation_layer_ids, [{'value': 500.0,    'unit_cost': 500.0,    'quantity': 1.0}])
+
+    def test_purchase_kit_cost_share_0_with_auto_avco_components_bom_repetition(self):
+        """
+        If a BoM has BoM lines with cost shares that add to 0 (i.e., each one has cost share of 0)
+        then we should distribute the cost share equally among all of them. Otherwise, any lines
+        with a cost share of 0 should be valuated as 0.
+
+        A kit A with two AVCO components
+        - C01, cost share 0% -> 0.5
+        - A Sub kit B with two AVCO components cost share 0% -> 0.5
+            - C02, cost share 0% -> 0.1666666
+            - C03, cost share 0% -> 0.1666666
+            - C04, cost share 0% -> 0.1666666
+        """
+        component01, component02, component03, component04 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'categ_id': self.avco_category.id,
+        } for name in ['01', '02', '03', '04']])
+
+        kit_a, kit_b = self.env['product.product'].create([{
+            'name': name,
+            'type': 'consu',
+        } for name in ['Kit A', 'Kit B']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_a.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component01.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            }), Command.create({
+                'product_id': kit_b.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            })],
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_b.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component02.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            }), Command.create({
+                'product_id': component03.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            }), Command.create({
+                'product_id': component04.id,
+                'product_qty': 1,
+                'cost_share': 0,
+            })],
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.vendor01.id,
+            'order_line': [
+                Command.create({
+                    'product_id': kit_a.id,
+                    'product_qty': 1,
+                    'price_unit': 1000,
+                    'tax_ids': [Command.clear()],
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+
+        self.assertRecordValues(component01.stock_valuation_layer_ids, [{'value': 500.0, 'unit_cost': 500.0, 'quantity': 1.0}])
+        self.assertRecordValues(component02.stock_valuation_layer_ids, [{'value': 170.0, 'unit_cost': 170.0, 'quantity': 1.0}])
+        self.assertRecordValues(component03.stock_valuation_layer_ids, [{'value': 170.0, 'unit_cost': 170.0, 'quantity': 1.0}])
+        self.assertRecordValues(component04.stock_valuation_layer_ids, [{'value': 160.0, 'unit_cost': 160.0, 'quantity': 1.0}])
+
+        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 1.0)
