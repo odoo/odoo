@@ -3,6 +3,7 @@
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.exceptions import UserError
 
 
@@ -44,6 +45,7 @@ class StockPickingBatch(models.Model):
         ('cancel', 'Cancelled')], default='draft',
         store=True, compute='_compute_state',
         copy=False, tracking=True, required=True, readonly=True, index=True)
+    priority = fields.Selection(PROCUREMENT_PRIORITIES, string='Priority', default='0')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', check_company=True, copy=False,
         index=True)
@@ -59,8 +61,10 @@ class StockPickingBatch(models.Model):
                 but this scheduled date will not be set for all transfers in batch.""")
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
     estimated_shipping_weight = fields.Float(
         "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name')
     estimated_shipping_volume = fields.Float(
         "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
     properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
@@ -73,6 +77,12 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.display_name = f"{batch.name}: {batch.description}" if batch.description else batch.name
 
+    def _compute_weight_uom_name(self):
+        self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    def _compute_volume_uom_name(self):
+        self.volume_uom_name = self.env['product.template']._get_volume_uom_name_from_ir_config_parameter()
+
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):
         for batch in self:
@@ -84,7 +94,7 @@ class StockPickingBatch(models.Model):
             estimated_shipping_volume = 0
             done_package_ids = set()
             # packs
-            for pack in self.move_line_ids.result_package_id:
+            for pack in batch.move_line_ids.result_package_id:
                 p_type = pack.package_type_id
                 if pack.shipping_weight:
                     # shipping_weight was computed, so base_weight should be included.
@@ -94,7 +104,7 @@ class StockPickingBatch(models.Model):
                     estimated_shipping_weight += p_type.base_weight or 0
                     estimated_shipping_volume += (p_type.packaging_length * p_type.width * p_type.height) / 1000.0**3
             # move without packs
-            for move_line in self.picking_ids.move_ids.move_line_ids:
+            for move_line in batch.picking_ids.move_ids.move_line_ids:
                 if move_line.result_package_id.id in done_package_ids:
                     continue
                 estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
