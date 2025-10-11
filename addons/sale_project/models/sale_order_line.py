@@ -395,6 +395,7 @@ class SaleOrderLine(models.Model):
                     map_so_project_templates.get((so_line.order_id.id, so_line.product_id.project_template_id.id))
                     or map_so_project.get(so_line.order_id.id)
                 )
+                project = so_line.project_id
             if so_line.product_id.service_tracking == 'task_in_project':
                 if not project:
                     if so_line.product_id.project_template_id:
@@ -419,6 +420,7 @@ class SaleOrderLine(models.Model):
                     if so_line.product_id.task_template_id not in task_templates:
                         task_templates |= so_line.product_id.task_template_id
                         so_line._timesheet_create_task(project)
+                    so_line._handle_milestones(project)
 
                 elif not project:
                     raise UserError(_(
@@ -442,7 +444,7 @@ class SaleOrderLine(models.Model):
         else:
             milestone = self.env['project.milestone'].create({
                 'name': self.name,
-                'project_id': self.project_id.id or self.order_id.project_id.id,
+                'project_id': project.id or self.order_id.project_id.id,
                 'sale_line_id': self.id,
                 'quantity_percentage': 1,
             })

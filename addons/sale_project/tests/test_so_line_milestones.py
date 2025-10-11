@@ -318,3 +318,46 @@ class TestSoLineMilestones(TestSaleCommon):
         self.assertEqual(tasks[0].sale_line_id,
                          tasks[0].project_id.sale_line_id,
                          "Task should have the correct sale line based on project.")
+
+    def test_milestone_handling_task_global_project_two_products(self):
+        """Test milestone handling with task_global_project tracking."""
+        project2 = self.env['project.project'].create({'name': 'Test Project 2', 'allow_milestones': True})
+
+        (self.product_delivery_milestones1 | self.product_delivery_milestones2).write({
+            'service_tracking': 'task_global_project',
+        })
+        self.product_delivery_milestones1.project_id = self.project
+        self.product_delivery_milestones2.project_id = project2
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': p.id, 'product_uom_qty': 10})
+                          for p in [self.product_delivery_milestones1, self.product_delivery_milestones2]]
+        })
+        sale_order.action_confirm()
+        sol1, sol2 = sale_order.order_line
+
+        self.assertEqual(len(self.project.milestone_ids.filtered(lambda m: m.sale_line_id == sol1)), 1)
+        self.assertEqual(len(project2.milestone_ids.filtered(lambda m: m.sale_line_id == sol2)), 1)
+
+    def test_milestone_handling_mixed_project_configuration(self):
+        """Test milestone handling with mixed project configuration."""
+        self.product_delivery_milestones1.write({
+            'service_tracking': 'task_global_project',
+            'project_id': self.project.id,
+        })
+        self.product_delivery_milestones2.write({
+            'service_tracking': 'task_global_project',
+            'project_id': False,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': p.id, 'product_uom_qty': 10})
+                          for p in [self.product_delivery_milestones1, self.product_delivery_milestones2]]
+        })
+        sale_order.action_confirm()
+        sol1, sol2 = sale_order.order_line
+
+        milestones = self.project.milestone_ids.filtered(lambda m: m.sale_line_id in (sol1 | sol2))
+        self.assertEqual(len(milestones), 2)
