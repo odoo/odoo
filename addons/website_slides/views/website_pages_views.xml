@@ -39,7 +39,7 @@
             <attribute name="action">open_website_url</attribute>
         </xpath>
         <xpath expr="//kanban" position="inside">
-            <field name="website_url" invisible="1"/>
+            <field name="website_url"/>
         </xpath>
         <xpath expr="//div[@name='card_primary_left']" position="replace">
             <div class="col-6 text-primary" t-if="record.website_id.value" groups="website.group_multi_website">

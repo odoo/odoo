@@ -9,7 +9,6 @@
                 <attribute name="default_order">is_published desc, is_favorite desc, create_date DESC</attribute>
             </xpath>
             <xpath expr="//t[@t-name='card']/div" position="before">
-                <field name="website_published" invisible="1"/>
                 <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published"/>
             </xpath>
             <xpath expr="//button[@name='%(hr_recruitment.action_hr_job_applications)d']" position="replace">

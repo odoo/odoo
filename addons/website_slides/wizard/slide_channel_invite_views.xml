@@ -10,10 +10,6 @@
                         This course is not published. Attendees may not be able to access its contents.
                     </div>
                     <sheet>
-                        <field name="channel_id" invisible="1"/>
-                        <field name="channel_published" invisible="1"/>
-                        <field name="channel_visibility" invisible="1"/>
-                        <field name="enroll_mode" invisible="1"/>
                         <group col="1">
                             <group col="2" invisible="enroll_mode or channel_visibility != 'public'">
                                 <field name="channel_invite_url" readonly="1" widget="CopyClipboardChar"/>
@@ -28,11 +24,8 @@
                                     context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                             </group>
                             <group col="2" invisible="not send_email">
-                                <field name="lang" invisible="1"/>
-                                <field name="render_model" invisible="1"/>
                                 <field name="subject" placeholder="Subject..."/>
                             </group>
-                            <field name="can_edit_body" invisible="1"/>
                             <field name="body" class="oe-bordered-editor" widget="html_mail" invisible="not send_email" readonly="not can_edit_body" force_save="1"/>
                             <group invisible="not send_email">
                                 <group>
