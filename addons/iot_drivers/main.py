@@ -3,7 +3,7 @@ import logging
 import platform
 import requests
 import schedule
-from threading import Thread
+from threading import Thread, Lock
 import time
 
 from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
@@ -16,9 +16,11 @@ if platform.system() == 'Linux':
 _logger = logging.getLogger(__name__)
 
 drivers = []
-interfaces = {}
 iot_devices = {}
 unsupported_devices = {}
+socket_devices = {}
+bt_devices = {}
+print_lock = Lock()
 
 
 class Manager(Thread):
@@ -133,14 +135,11 @@ class Manager(Thread):
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
         self.send_all_devices()
         helpers.download_iot_handlers()
-        helpers.load_iot_handlers()
-
-        for interface in interfaces.values():
-            interface().start()
 
         # Set scheduled actions
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)

@@ -1,20 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import server_logger
+from . import connection_manager
+from . import controllers
+from . import event_manager
+from . import exception_logger
+from . import http
+from . import tools
+from . import websocket_client
+from . import main
+from . import iot_handlers
 
 from functools import wraps
 import requests
 import logging
-
-from . import server_logger
-from . import connection_manager
-from . import controllers
-from . import driver
-from . import event_manager
-from . import exception_logger
-from . import http
-from . import interface
-from . import main
-from . import tools
-from . import websocket_client
 
 _logger = logging.getLogger(__name__)
 _logger.warning("==== Starting Odoo ====")

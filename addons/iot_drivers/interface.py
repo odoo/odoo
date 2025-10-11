@@ -4,7 +4,7 @@ import logging
 from threading import Thread
 import time
 
-from odoo.addons.iot_drivers.main import drivers, interfaces, iot_devices, unsupported_devices
+from odoo.addons.iot_drivers.main import drivers, iot_devices, unsupported_devices
 
 _logger = logging.getLogger(__name__)
 
@@ -22,7 +22,8 @@ class Interface(Thread):
 
     def __init_subclass__(cls):
         super().__init_subclass__()
-        interfaces[cls.__name__] = cls
+        interface = cls()
+        interface.start()
 
     def run(self):
         while self.connection_type and self.drivers:

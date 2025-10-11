@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import inspect
 import logging
 from threading import Thread, Event
 
@@ -31,7 +32,7 @@ class Driver(Thread):
 
     def __init_subclass__(cls):
         super().__init_subclass__()
-        if cls not in drivers:
+        if not inspect.isabstract(cls) and cls not in drivers:
             drivers.append(cls)
 
     @classmethod

@@ -7,7 +7,7 @@ from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
-from odoo.addons.iot_drivers.tools import helpers, upgrade, wifi
+from odoo.addons.iot_drivers.tools import helpers, wifi, certificate
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +20,6 @@ class ConnectionManager(Thread):
         self.pairing_code = False
         self.pairing_uuid = False
         self.pairing_code_expired = False
-        self.new_database_url = False
 
         self.iot_box_registered = False
         self.n_times_polled = -1
@@ -94,15 +93,12 @@ class ConnectionManager(Thread):
             self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
-        self.new_database_url = url
         # Save DB URL and token
         helpers.save_conf_server(url, token, db_uuid, enterprise_code)
         # Send already detected devices and IoT Box info to the database
         manager.send_all_devices()
-        # Switch git branch before restarting, this avoids restarting twice
-        upgrade.check_git_branch()
-        # Restart to get a certificate, load the IoT handlers...
-        helpers.odoo_restart(2)
+        # Update the IoT Box certificate
+        certificate.ensure_validity()
 
     def _try_print_pairing_code(self):
         printers = [device for device in iot_devices.values() if device.device_type == 'printer' and device.connected_by_usb and device.device_subtype in ['receipt_printer', 'label_printer']]
