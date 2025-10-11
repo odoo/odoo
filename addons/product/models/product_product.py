@@ -65,6 +65,7 @@ class ProductProduct(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='product_id',
         compute='_compute_pricelist_rule_ids',
+        inverse='_inverse_pricelist_rule_ids',
         readonly=False,
     )
 
@@ -145,8 +146,12 @@ class ProductProduct(models.Model):
                 product.pricelist_rule_ids = False
                 continue
             product.pricelist_rule_ids = product.product_tmpl_id.pricelist_rule_ids.filtered(
-                lambda rule: not rule.product_id or rule.product_id == product.id
+                lambda rule: not rule.product_id or rule.product_id.id == product.id
             )
+
+    def _inverse_pricelist_rule_ids(self):
+        for product in self:
+            product.product_tmpl_id.pricelist_rule_ids = product.pricelist_rule_ids
 
     @api.depends("product_tmpl_id.write_date")
     def _compute_write_date(self):

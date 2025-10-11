@@ -351,3 +351,9 @@ class TestProductPricelist(ProductCommon):
         form = Form(self.product.product_tmpl_id)
         with self.assertRaises(ValidationError):
             form.standard_price = -5
+
+    def test_pricelist_rule_linked_to_product_variant(self):
+        """Verify that pricelist rules assigned to a product variant remain linked after saving the record."""
+        self.computer_SC234.pricelist_rule_ids = self.customer_pricelist.item_ids[0]
+        self.computer_SC234.invalidate_recordset()
+        self.assertTrue(self.computer_SC234.pricelist_rule_ids)
