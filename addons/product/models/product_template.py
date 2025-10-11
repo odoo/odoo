@@ -2,7 +2,6 @@
 
 import itertools
 import logging
-
 from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
@@ -142,7 +141,7 @@ class ProductTemplate(models.Model):
     valid_product_template_attribute_line_ids = fields.Many2many('product.template.attribute.line',
         compute="_compute_valid_product_template_attribute_line_ids", string='Valid Product Attribute Lines')
 
-    product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
+    product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', auto_join=True, required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
 
