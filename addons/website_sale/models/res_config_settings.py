@@ -114,13 +114,8 @@ class ResConfigSettings(models.TransientModel):
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
 
-            # Pre-populate the website feeds if none already exists.
-            if (
-                self.group_gmc_feed
-                and not self.env['product.feed'].search_count(
-                    [('website_id', '=', website.id)], limit=1
-                )
-            ):
+            # Pre-populate the website product feeds if none already exist (company-independent).
+            if self.group_gmc_feed and not self.env['product.feed'].sudo()._search([], limit=1):
                 website._populate_product_feeds()
 
             # Due to an earlier oversight, the GMC feature flag was implemented as website-specific,
