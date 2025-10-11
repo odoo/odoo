@@ -534,14 +534,16 @@ class TestTraceability(TestMrpCommon):
         Form.from_action(self.env, mo.button_unbuild()).save().action_validate()
 
         # scrap the component
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].with_context(is_scrap=True).create({
             'product_id': component.id,
             'product_uom_id': component.uom_id.id,
             'location_id': self.stock_location.id,
-            'scrap_qty': 1,
+            'location_dest_id': self.scrap_location.id,
+            'quantity': 1,
             'lot_id': serial_number.id,
+            'company_id': self.env.company.id,
         })
-        scrap_location = scrap.scrap_location_id
+        scrap_location = scrap.location_dest_id
         scrap.do_scrap()
 
         # unscrap the component

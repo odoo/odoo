@@ -730,7 +730,7 @@ class TestUnbuild(TestMrpCommon):
         internal_form.picking_type_id = warehouse.int_type_id
         internal_form.location_id = self.stock_location
         internal_form.location_dest_id = subloc01
-        with internal_form.move_ids.new() as move:
+        with internal_form.non_scrapped_move_ids.new() as move:
             move.product_id = p_final
             move.quantity = 1.0
             move.picked = True

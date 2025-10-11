@@ -246,7 +246,7 @@ class TestMrpStockReports(TestReportsCommon):
             picking_form = Form(self.env['stock.picking'])
             picking_form.picking_type_id = self.picking_type_in
             picking_form.partner_id = self.partner
-            with picking_form.move_ids.new() as move:
+            with picking_form.non_scrapped_move_ids.new() as move:
                 move.product_id = superkit
                 move.product_uom_qty = 4
             picking = picking_form.save()
@@ -300,16 +300,16 @@ class TestMrpStockReports(TestReportsCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.picking_type_out
         picking_form.partner_id = self.partner
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = superkit
             move.product_uom_qty = 1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = subkit
             move.product_uom_qty = 1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = compo01
             move.product_uom_qty = 1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = compo02
             move.product_uom_qty = 1
         picking = picking_form.save()

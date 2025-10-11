@@ -27,10 +27,10 @@ class StockMove(TransactionCase):
         """
         # create a delivery order
         picking = Form(self.env['stock.picking'].with_context(default_picking_type_id=self.ref('stock.picking_type_out')))
-        with picking.move_ids.new() as move:
+        with picking.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 1.0
-        with picking.move_ids.new() as move:
+        with picking.non_scrapped_move_ids.new() as move:
             move.product_id = self.product_consu
             move.product_uom_qty = 1.0
         picking = picking.save()
@@ -44,7 +44,7 @@ class StockMove(TransactionCase):
         """
         # create a delivery order
         picking = Form(self.env['stock.picking'].with_context(default_picking_type_id=self.ref('stock.picking_type_out')))
-        with picking.move_ids.new() as move:
+        with picking.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 2.0
         picking = picking.save()

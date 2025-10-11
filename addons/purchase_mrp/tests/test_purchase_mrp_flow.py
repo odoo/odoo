@@ -529,10 +529,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # Delivery to trigger replenishment
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = warehouse.out_type_id
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = finished
             move.product_uom_qty = 3
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = component
             move.product_uom_qty = 2
         picking = picking_form.save()

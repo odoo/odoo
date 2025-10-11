@@ -301,7 +301,7 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_in
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         receipt = picking_form.save()
@@ -349,7 +349,7 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_in
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.apple_product
             move.quantity = 4
             move.picked = True
@@ -405,7 +405,7 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         # Saves and confirms it...
@@ -430,7 +430,7 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 8
         # Saves and confirms it...
@@ -465,7 +465,7 @@ class TestStockLot(TestStockCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.picking_type_out
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         # Saves and confirms it...
@@ -644,7 +644,7 @@ class TestStockLot(TestStockCommon):
 
         with Form(self.PickingObj) as picking_form:
             picking_form.picking_type_id = self.picking_type_out
-            with picking_form.move_ids.new() as move:
+            with picking_form.non_scrapped_move_ids.new() as move:
                 move.product_id = self.apple_product
                 move.product_uom_qty = 10
             picking_out = picking_form.save()
@@ -667,7 +667,7 @@ class TestStockLot(TestStockCommon):
         picking_form.scheduled_date = new_date
         picking_form.picking_type_id = self.picking_type_in
 
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.apple_product
             move.product_uom_qty = 4
         delivery = picking_form.save()

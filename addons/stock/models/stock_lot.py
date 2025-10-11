@@ -4,7 +4,7 @@ import operator as py_operator
 from collections.abc import Iterable
 from re import findall as regex_findall, split as regex_split
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
@@ -60,6 +60,7 @@ class StockLot(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
         inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
+    is_scrap = fields.Boolean('Is Scrapped', compute='_compute_is_scrap')
 
     @api.depends('product_id')
     def _compute_name(self):
@@ -176,6 +177,12 @@ class StockLot(models.Model):
             quants.move_quants(location_dest_id=self.location_id, message=_("Lot/Serial Number Relocated"), unpack=unpack)
         elif len(quants.location_id) > 1:
             raise UserError(_('You can only move a lot/serial to a new location if it exists in a single location.'))
+
+    def _compute_is_scrap(self):
+        scrap_moves_by_lot = self.env['stock.move.line']._read_group([('is_scrap', '=', True), ('lot_id', 'in', self.ids)], ['lot_id'], ['__count'])
+        scrapped_lots = {lot for lot, count in scrap_moves_by_lot if count > 0}
+        for lot in self:
+            lot.is_scrap = lot in scrapped_lots
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -344,3 +351,76 @@ class StockLot(models.Model):
 
             delivery_by_lot[lot.id] = list(delivery_ids)
         return delivery_by_lot
+
+    def action_open_scrap_moves(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Scraps of %s', self.name),
+            'res_model': 'stock.move.line',
+            'views': [(self.env.ref('stock.view_scrapped_move_line_list').id, 'list'), (self.env.ref('stock.view_scrap_move_line_form').id, 'form')],
+            'domain': [('lot_id', '=', self.id), ('is_scrap', '=', True)],
+        }
+
+    def _prepare_scrap_move_values(self):
+        vals = []
+        default_scrap_location = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.company_id.id or self.env.company.id)], limit=1)
+        for lot in self:
+            if not self.location_id:
+                lot_quants_by_location = self.env['stock.quant']._read_group([('lot_id', '=', lot.id), ('quantity', '>', 0)], ['location_id'], ['quantity:sum'])
+                for location, qty in lot_quants_by_location:
+                    vals.append({
+                        'product_id': lot.product_id.id,
+                        'product_uom': lot.product_id.uom_id.id,
+                        'reference': f'Scrap {lot.name}',
+                        'state': 'draft',
+                        'product_uom_qty': qty,
+                        'location_id': location.id,
+                        'location_dest_id': default_scrap_location.id,
+                        'picked': True,
+                        'move_line_ids': [Command.create({
+                            'product_id': lot.product_id.id,
+                            'product_uom_id': lot.product_id.uom_id.id,
+                            'lot_id': lot.id,
+                            'quantity': qty,
+                            'location_id': location.id,
+                            'location_dest_id': default_scrap_location.id,
+                            'is_scrap': True,
+                        })],
+                    })
+            else:
+                vals.append({
+                    'product_id': lot.product_id.id,
+                    'product_uom': lot.product_id.uom_id.id,
+                    'reference': f'Scrap {lot.name}',
+                    'state': 'draft',
+                    'product_uom_qty': lot.product_qty,
+                    'location_id': lot.location_id.id,
+                    'location_dest_id': default_scrap_location.id,
+                    'picked': True,
+                    'move_line_ids': [Command.create({
+                        'product_id': lot.product_id.id,
+                        'product_uom_id': lot.product_id.uom_id.id,
+                        'lot_id': lot.id,
+                        'quantity': lot.product_qty,
+                        'location_id': lot.location_id.id,
+                        'location_dest_id': default_scrap_location.id,
+                        'is_scrap': True,
+                    })],
+                })
+        return vals
+
+    def button_scrap(self):
+        scrap_move_vals = self._prepare_scrap_move_values()
+        scrap_moves = self.env['stock.move'].create(scrap_move_vals)
+        scrap_moves.with_context(is_scrap=True)._action_done()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'sticky': True,
+                'message': _("Lot(s): %(lot_names)s are successfully scrapped.", lot_names=', '.join(self.mapped('name'))),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }

@@ -436,7 +436,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt = receipt_form.save()
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 2
         receipt = receipt_form.save()
@@ -452,7 +452,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery = delivery_form.save()
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery = delivery_form.save()
@@ -498,7 +498,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         receipt2 = receipt_form.save()
@@ -506,7 +506,7 @@ class TestReports(TestReportsCommon):
 
         # ... and valid the first one.
         receipt_form = Form(receipt)
-        with receipt_form.move_ids.edit(0) as move_line:
+        with receipt_form.non_scrapped_move_ids.edit(0) as move_line:
             move_line.quantity = 2
         receipt = receipt_form.save()
         receipt.move_ids.picked = True
@@ -538,7 +538,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 6
         receipt = receipt_form.save()
@@ -548,7 +548,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery = delivery_form.save()
@@ -577,7 +577,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_1 = delivery_form.save()
@@ -587,7 +587,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today + one_hours
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_2 = delivery_form.save()
@@ -597,7 +597,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today - one_hours
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_3 = delivery_form.save()
@@ -607,7 +607,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today + one_day
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_4 = delivery_form.save()
@@ -617,7 +617,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today - one_day
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_5 = delivery_form.save()
@@ -627,7 +627,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today + one_month
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_6 = delivery_form.save()
@@ -637,7 +637,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = today - one_month
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery_7 = delivery_form.save()
@@ -662,7 +662,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt_form.scheduled_date = today + one_month
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         receipt_1 = receipt_form.save()
@@ -672,7 +672,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt_form.scheduled_date = today - one_month
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         receipt_2 = receipt_form.save()
@@ -682,7 +682,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt_form.scheduled_date = today - one_hours
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 10
         receipt_3 = receipt_form.save()
@@ -760,7 +760,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery = delivery_form.save()
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         delivery = delivery_form.save()
@@ -800,7 +800,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_out_2
         delivery_2 = delivery_form.save()
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 8
         delivery_2 = delivery_form.save()
@@ -906,7 +906,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         wh_1_receipt = receipt_form.save()
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 2
         wh_1_receipt = receipt_form.save()
@@ -916,7 +916,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = wh_2_picking_type_in
         wh_2_receipt = receipt_form.save()
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
         wh_2_receipt = receipt_form.save()
@@ -1002,10 +1002,10 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = gamejoy_pocket_gray
             move_line.product_uom_qty = 8
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = gamejoy_pocket_blue
             move_line.product_uom_qty = 4
         receipt_1 = receipt_form.save()
@@ -1014,13 +1014,13 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = gamejoy_pocket_gray
             move_line.product_uom_qty = 2
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = gamejoy_xl_gray
             move_line.product_uom_qty = 10
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = gamejoy_xl_blue
             move_line.product_uom_qty = 12
         receipt_2 = receipt_form.save()
@@ -1035,7 +1035,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = gamejoy_pocket_gray
             move_line.product_uom_qty = 10
         delivery = delivery_form.save()
@@ -1068,7 +1068,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 100
         delivery = delivery_form.save()
@@ -1077,7 +1077,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 200
         delivery2 = delivery_form.save()
@@ -1087,7 +1087,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt = receipt_form.save()
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 200
         receipt = receipt_form.save()
@@ -1122,7 +1122,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 100
         delivery = delivery_form.save()
@@ -1131,7 +1131,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 200
         delivery2 = delivery_form.save()
@@ -1141,7 +1141,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt = receipt_form.save()
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 300
         receipt = receipt_form.save()
@@ -1175,7 +1175,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.scheduled_date = date.today()
-        with delivery_form.move_ids.new() as move:
+        with delivery_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 200
         delivery1 = delivery_form.save()
@@ -1187,7 +1187,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt_form.scheduled_date = scheduled_date1
-        with receipt_form.move_ids.new() as move:
+        with receipt_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 150
         receipt1 = receipt_form.save()
@@ -1200,7 +1200,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt_form.scheduled_date = scheduled_date2
-        with receipt_form.move_ids.new() as move:
+        with receipt_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 50
         receipt2 = receipt_form.save()
@@ -1269,7 +1269,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_manual
         delivery_form.scheduled_date = datetime.now() - timedelta(days=10)
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery_manual = delivery_form.save()
@@ -1280,7 +1280,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_by_date
         delivery_form.scheduled_date = datetime.now() + timedelta(days=5)
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery_by_date = delivery_form.save()
@@ -1291,7 +1291,7 @@ class TestReports(TestReportsCommon):
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_by_date
         delivery_form.scheduled_date = datetime.now() + timedelta(days=5)
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery_by_date_priority = delivery_form.save()
@@ -1306,7 +1306,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_at_confirm
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 3
         delivery_at_confirm = delivery_form.save()
@@ -1328,7 +1328,7 @@ class TestReports(TestReportsCommon):
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         receipt_form.scheduled_date = date.today() + timedelta(days=1)
-        with receipt_form.move_ids.new() as move:
+        with receipt_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 6
         receipt1 = receipt_form.save()
@@ -1350,14 +1350,14 @@ class TestReports(TestReportsCommon):
         warehouse.reception_steps = 'two_steps'
         outgoing = Form(self.env['stock.picking'])
         outgoing.picking_type_id = self.picking_type_out
-        with outgoing.move_ids.new() as move:
+        with outgoing.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 2
         outgoing = outgoing.save()
         outgoing.action_confirm()
         incoming = Form(self.env['stock.picking'])
         incoming.picking_type_id = self.picking_type_in
-        with incoming.move_ids.new() as move:
+        with incoming.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 2
         incoming = incoming.save()
@@ -1384,7 +1384,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.picking_type_id = self.picking_type_out
         delivery_form.partner_id = self.partner
-        with delivery_form.move_ids.new() as move:
+        with delivery_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 3
         delivery = delivery_form.save()
@@ -1462,10 +1462,10 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 5
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = product2
             move_line.product_uom_qty = 10
         delivery1 = delivery_form.save()
@@ -1474,7 +1474,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 2
         delivery2 = delivery_form.save()
@@ -1484,15 +1484,15 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             # incoming qty greater than total (2 moves) outgoing amount => 2 report lines, each = outgoing qty
             move_line.product_id = self.product
             move_line.product_uom_qty = 15
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             # outgoing qty greater than incoming amount => report line = incoming qty
             move_line.product_id = product2
             move_line.product_uom_qty = 5
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             # not outgoing => shouldn't appear in report
             move_line.product_id = product3
             move_line.product_uom_qty = 5
@@ -1564,7 +1564,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = outgoing_qty
         delivery = delivery_form.save()
@@ -1577,7 +1577,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = receipt1_qty
         receipt1 = receipt_form.save()
@@ -1585,7 +1585,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = receipt2_qty
         receipt2 = receipt_form.save()
@@ -1697,7 +1697,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = picking_type_out_2
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 100
         delivery = delivery_form.save()
@@ -1707,7 +1707,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.quantity = 15
         receipt = receipt_form.save()
@@ -1734,7 +1734,7 @@ class TestReports(TestReportsCommon):
         # create delivery + receipt
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = outgoing_qty
         delivery = delivery_form.save()
@@ -1743,7 +1743,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = incoming_qty
         receipt = receipt_form.save()
@@ -1796,7 +1796,7 @@ class TestReports(TestReportsCommon):
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = outgoing_qty
         delivery = delivery_form.save()
@@ -1806,7 +1806,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = incoming_qty
         receipt = receipt_form.save()
@@ -1871,7 +1871,7 @@ class TestReports(TestReportsCommon):
         # create delivery + receipt
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.picking_type_id = self.picking_type_out
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = outgoing_qty
         delivery = delivery_form.save()
@@ -1880,7 +1880,7 @@ class TestReports(TestReportsCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = incoming_qty
         receipt = receipt_form.save()

@@ -133,7 +133,7 @@ class StockMove(models.Model):
              "The other possibility allows you to directly create a procurement on the source location (and thus ignore "
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, "
              "this second option should be chosen.")
-    scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True, index='btree_not_null')
+    is_scrap = fields.Boolean(compute='_compute_is_scrap', store=True, readonly=True)
     procurement_values = fields.Json(store=False, help="Dummy field to store procurement values to propagate them to later steps")
     reference_ids = fields.Many2many(
         'stock.reference', 'stock_reference_move_rel', 'move_id', 'reference_id', string='References')
@@ -192,6 +192,7 @@ class StockMove(models.Model):
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
+    scrap_reason_tag_ids = fields.Many2many(related='move_line_ids.scrap_reason_tag_ids')
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
 
@@ -222,6 +223,8 @@ class StockMove(models.Model):
         customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
         inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
         for move in self:
+            if move.is_scrap:
+                continue
             location_dest = False
             if move.picking_id:
                 location_dest = move.picking_id.location_dest_id
@@ -285,6 +288,11 @@ class StockMove(models.Model):
         for move in self:
             move.move_line_ids.picked = move.picked
 
+    @api.depends('move_line_ids', 'move_line_ids.is_scrap')
+    def _compute_is_scrap(self):
+        for move in self:
+            move.is_scrap = len(move.move_line_ids) == 1 and move.move_line_ids.is_scrap
+
     @api.depends('picking_id.priority')
     def _compute_priority(self):
         for move in self:
@@ -342,12 +350,10 @@ class StockMove(models.Model):
         for move in self:
             move.is_quantity_done_editable = move.product_id
 
-    @api.depends('picking_id.name', 'scrap_id.name', 'location_dest_usage', 'is_inventory', 'inventory_name')
+    @api.depends('picking_id.name', 'is_inventory', 'inventory_name')
     def _compute_reference(self):
         for move in self:
-            if move.scrap_id:
-                move.reference = move.scrap_id.name
-            elif move.is_inventory:
+            if move.is_inventory:
                 if move.inventory_name:
                     move.reference = move.inventory_name
                 else:
@@ -1094,6 +1100,76 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
         return vals_list
+
+    def action_scrap(self):
+        self.ensure_one()
+        if self.product_id.is_storable:
+            available_qty = self.with_context(
+                location=self.location_id.id,
+                lot_id=self.lot_ids.id,
+                strict=True,
+            ).product_id.qty_available
+            if float_compare(available_qty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) < 0:
+                raise UserError(_("You cannot scrap more products than the quantity available in the location."))
+
+        self.write({
+            'picked': True,
+            'move_line_ids': [Command.create({
+                'product_id': self.product_id.id,
+                'is_scrap': True,
+                'product_uom_id': self.product_uom.id,
+                'quantity': self.product_uom_qty,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+            })],
+        })
+        self.with_context(is_scrap=True)._action_done()
+        return True
+
+    def _get_revert_scrap_move_values(self):
+        self.ensure_one()
+        return {
+            'inventory_name': _('Revert Scrap of %s') % self.reference,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom.id,
+            'product_uom_qty': self.quantity,
+            'company_id': self.company_id.id or self.env.company.id,
+            'state': 'confirmed',
+            'location_id': self.location_dest_id.id,
+            'location_dest_id': self.location_id.id,
+            'picked': True,
+            'move_line_ids': [Command.create({
+                'product_id': self.product_id.id,
+                'product_uom_id': self.product_uom.id,
+                'quantity': self.quantity,
+                'location_id': self.location_dest_id.id,
+                'location_dest_id': self.location_id.id,
+                'company_id': self.company_id.id or self.env.company.id,
+                'lot_id': self.lot_ids.id,
+                'is_scrap': False,
+            })],
+        }
+
+    def action_revert_scrap(self):
+        if any(not m.is_scrap for m in self):
+            raise UserError(_("This move is not a scrap move."))
+        if any(m.state != 'done' for m in self):
+            raise UserError(_("You can only revert a scrap move that is done."))
+        revert_move_vals = []
+        for move in self:
+            revert_move_vals.append(move._get_revert_scrap_move_values())
+        revert_moves = self.env['stock.move'].create(revert_move_vals)
+        revert_moves._action_done()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'sticky': False,
+                'message': _('The scrap move has been successfully reverted. A new move has been created to reintroduce the products in stock.'),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
     def _push_apply(self):
         new_moves = []
@@ -2472,13 +2548,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
         """
         self.ensure_one()
-        if not self.is_inventory and self.location_dest_usage == 'inventory':
-            return {
-                'res_model': 'stock.scrap',
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'res_id': self.scrap_id.id,
-            }
         source = self.picking_id
         if source and source.browse().has_access('read'):
             return {
@@ -2581,3 +2650,22 @@ Please change the quantity done or the rounding precision in your settings.""",
         return self.location_dest_id.usage in ('customer', 'supplier') or (
             self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
         )
+
+    def scrap_move_line_action(self):
+        default_location_id = self.env.ref('stock.stock_location_stock')
+        default_location_dest_id = self.env['stock.location'].search([('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Scrap Products'),
+            'view_mode': 'form',
+            'res_model': 'stock.move.line',
+            'view_id': self.env.ref('stock.view_scrap_move_line_form2').id,
+            'views': [(self.env.ref('stock.view_scrap_move_line_form2').id, 'form')],
+            'context': {
+                'is_scrap': True,
+                'default_state': 'draft',
+                'default_location_id': default_location_id.id,
+                'default_location_dest_id': default_location_dest_id.id,
+                'default_company_id': self.env.company.id,
+            },
+        }
