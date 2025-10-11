@@ -75,7 +75,12 @@
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
             <div t-if="thread and thread.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge shadow-sm" t-ref="needactionCounter">
-                <t t-out="thread.importantCounter"/>
+                <t t-if="thread.id === 'inbox'">
+                    <t t-out="thread.messages.filter(m => !m.thread).length"/>
+                </t>
+                <t t-else="">
+                    <t t-out="thread.importantCounter"/>
+                </t>
             </div>
             <div class="flex-grow-1"/>
             <div class="o-mail-ChatWindow-quickActions d-flex flex-shrink-0 o-gap-0_5" t-att-class="{ 'me-2': !ui.isSmall }">
@@ -108,7 +113,7 @@
                             <Typing channel="thread" size="'medium'"/>
                         </div>
                     </div>
-                    <Composer t-if="thread.composer" composer="thread.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
+                    <Composer t-if="thread.composer and thread.id !== 'inbox'" composer="thread.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
                 </t>
             </t>
         </div>

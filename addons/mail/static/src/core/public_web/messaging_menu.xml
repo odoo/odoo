@@ -12,7 +12,7 @@
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    counter="thread.needactionCounter"
+                    counter="thread.id === 'inbox' ? thread.messages.filter(m => !m.thread).length : thread.needactionCounter"
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"
                     hasMarkAsReadButton="thread.isUnread"
