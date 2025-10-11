@@ -319,3 +319,23 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         today = datetime.combine(fields.Datetime.now(), time(12))
         self.assertEqual(purchase_order.date_order, today)
         self.assertEqual(purchase_order.date_planned, today + timedelta(days=7))
+
+    def test_lead_time_with_no_supplier(self):
+        """Test that lead time is incremented by 365 days (1 year) when there
+        is no supplier defined on a product with buy route.
+        """
+        buy_route = self.warehouse_1.buy_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': buy_route.ids,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        self.assertEqual(orderpoint.lead_days_date, fields.Date.today() + timedelta(days=365))

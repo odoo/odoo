@@ -431,6 +431,9 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         format_string, format_values = self._get_next_sequence_format()
 
+        sequence = self._locked_increment(format_string, format_values)
+        self.with_context(clear_sequence_mixin_cache=False)[self._sequence_field] = sequence
+
         registry = self.env.registry
         triggers = registry._field_triggers[self._fields[self._sequence_field]]
         for inverse_field, triggered_fields in triggers.items():
@@ -439,9 +442,6 @@ class SequenceMixin(models.AbstractModel):
                     continue
                 for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:
                     self.env.add_to_compute(triggered_field, self[field.name] if field else self)
-
-        sequence = self._locked_increment(format_string, format_values)
-        self.with_context(clear_sequence_mixin_cache=False)[self._sequence_field] = sequence
 
         self._compute_split_sequence()
 

@@ -106,3 +106,51 @@ test("display the avatar of the parent when there is more than one node in the s
     expect(".o_hierarchy_parent_node_container .o_avatar").toHaveCount(1);
     expect(".o_avatar").toHaveText("Josephine");
 });
+
+test("hierarchy with a self manager employee", async () => {
+    Employee._records = [{ id: 1, name: "Albert", parent_id: 1, child_ids: [1] }]
+    await mountView({
+        context:{
+            hierarchy_res_id: 1,
+        },
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(".o_hierarchy_row").toHaveCount(2);
+    expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
+    expect(".o_hierarchy_node").toHaveCount(2);
+    await contains(".o_hierarchy_node_button.btn-secondary").click();
+    expect(".o_hierarchy_row").toHaveCount(1);
+    expect(".o_hierarchy_node").toHaveCount(1);
+});
+
+test("hierarchy with a cycle", async () =>{
+    Employee._records = [
+                { id: 1, name: "Albert", parent_id: 4, child_ids: [2, 3] },
+                { id: 2, name: "Georges", parent_id: 1, child_ids: [] },
+                { id: 3, name: "Josephine", parent_id: 1, child_ids: [4] },
+                { id: 4, name: "Louis", parent_id: 3, child_ids: [1] },
+            ]
+    await mountView({
+        context:{
+            hierarchy_res_id: 1,
+        },
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(".o_hierarchy_row").toHaveCount(4);
+    expect(".o_hierarchy_node").toHaveCount(5);
+    expect(".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node").toHaveCount(1);
+    // check that the node in the cycle cannot be expanded
+    expect(".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node_button").toHaveCount(0);
+    expect(".o_hierarchy_row:nth-of-type(1) .o_hierarchy_node_content").toHaveText("Albert\nLouis");
+    await contains(".o_hierarchy_row:nth-of-type(1) .btn-secondary").click();
+    await contains(".o_hierarchy_row:nth-of-type(1) .btn-primary").click();
+    await contains(".o_hierarchy_row:nth-of-type(3) .btn-primary").click();
+    await contains(".o_hierarchy_row:nth-of-type(6) .btn-primary").click();
+    // check the root of the tree is still Albert
+    expect(".o_hierarchy_row:nth-of-type(1) .o_hierarchy_node_content").toHaveText("Albert\nLouis");
+    expect(".o_hierarchy_row:nth-of-type(8) .o_hierarchy_node_content").toHaveText("Albert\nLouis");
+});

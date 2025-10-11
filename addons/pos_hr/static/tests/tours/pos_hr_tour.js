@@ -22,7 +22,14 @@ registry.category("web_tour.tours").add("PosHrTour", {
             SelectionPopup.has("Pos Employee1", { run: "click" }),
             NumberPopup.enterValue("25"),
             NumberPopup.isShown("••"),
-            NumberPopup.enterValue("81"),
+            {
+                trigger: "body",
+                run: () => {
+                    window.dispatchEvent(new KeyboardEvent("keyup", { key: "8" }));
+                },
+            },
+            NumberPopup.isShown("•••"),
+            NumberPopup.enterValue("1"),
             NumberPopup.isShown("••••"),
             Dialog.confirm(),
             // after trying to close the number popup, the error popup should be shown
@@ -174,5 +181,79 @@ registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.cashierNameExists("Test Employee 3"),
             ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("pos_hr_go_backend_closed_registered", {
+    steps: () =>
+        [
+            // Admin --> 403: not the one that opened the session
+            Chrome.clickBtn("Backend"),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            PosHr.loginScreenIsShown(),
+
+            // Employee with user --> 403
+            Chrome.clickBtn("Backend"),
+            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            PosHr.enterPin("2580"),
+            PosHr.loginScreenIsShown(),
+
+            // Employee without user --> 403
+            Chrome.clickBtn("Backend"),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            PosHr.loginScreenIsShown(),
+
+            // Manager without user --> 403
+            Chrome.clickBtn("Backend"),
+            SelectionPopup.has("Test Manager 2", { run: "click" }),
+            PosHr.enterPin("5652"),
+            PosHr.loginScreenIsShown(),
+
+            // Manager that opened the session --> access granted
+            Chrome.clickBtn("Backend"),
+            SelectionPopup.has("Test Manager 1", { run: "click" }),
+            PosHr.enterPin("5651"),
+            PosHr.loginScreenIsNotShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.clickLoginButton(),
+
+            // Admin --> 403: not the one that opened the session
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Chrome.clickBtn("Open Register"),
+            Chrome.existMenuOption("Close Register"),
+            Chrome.notExistMenuOption("Backend"),
+
+            // Employee with user --> 403
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            PosHr.enterPin("2580"),
+            Chrome.notExistMenuOption("Close Register"),
+            Chrome.notExistMenuOption("Backend"),
+
+            // Employee without user --> 403
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            Chrome.notExistMenuOption("Close Register"),
+            Chrome.notExistMenuOption("Backend"),
+
+            // Manager without user --> 403
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Manager 2", { run: "click" }),
+            PosHr.enterPin("5652"),
+            Chrome.existMenuOption("Close Register"),
+            Chrome.notExistMenuOption("Backend"),
+
+            // Manager that opened the session --> access granted
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Manager 1", { run: "click" }),
+            PosHr.enterPin("5651"),
+            Chrome.existMenuOption("Close Register"),
+            Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
         ].flat(),
 });

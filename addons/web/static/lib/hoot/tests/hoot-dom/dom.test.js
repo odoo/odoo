@@ -1,11 +1,13 @@
 /** @odoo-module */
 
-import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
+    describe,
+    expect,
     formatXml,
     getActiveElement,
+    getFixture,
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
@@ -14,16 +16,17 @@ import {
     isFocusable,
     isInDOM,
     isVisible,
+    mockTouch,
     queryAll,
     queryAllRects,
     queryAllTexts,
     queryFirst,
     queryOne,
     queryRect,
+    test,
     waitFor,
     waitForNone,
-} from "@odoo/hoot-dom";
-import { mockTouch } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
 import { mountForTest, parseUrl } from "../local_helpers";
 
@@ -493,6 +496,17 @@ describe(parseUrl(import.meta.url), () => {
             });
         });
 
+        test("query options", async () => {
+            await mountForTest(FULL_HTML_TEMPLATE);
+
+            expect($$("input", { count: 2 })).toHaveLength(2);
+            expect(() => $$("input", { count: 1 })).toThrow();
+
+            expect($$("option", { count: 6 })).toHaveLength(6);
+            expect($$("option", { count: 3, root: "[name=title]" })).toHaveLength(3);
+            expect(() => $$("option", { count: 6, root: "[name=title]" })).toThrow();
+        });
+
         test("advanced use cases", async () => {
             await mountForTest(FULL_HTML_TEMPLATE);
 
@@ -861,7 +875,7 @@ describe(parseUrl(import.meta.url), () => {
             expect($1(".title:first")).toBe(getFixture().querySelector("header .title"));
 
             expect(() => $1(".title")).toThrow();
-            expect(() => $1(".title", { exact: 2 })).toThrow();
+            expect(() => $1(".title", { count: 2 })).toThrow();
         });
 
         test("queryRect", async () => {
@@ -899,10 +913,10 @@ describe(parseUrl(import.meta.url), () => {
 
             // queryOne error messages
             expect(() => $1()).toThrow(`found 0 elements instead of 1`);
-            expect(() => $$([], { exact: 18 })).toThrow(`found 0 elements instead of 18`);
+            expect(() => $$([], { count: 18 })).toThrow(`found 0 elements instead of 18`);
             expect(() => $1("")).toThrow(`found 0 elements instead of 1: 0 matching ""`);
-            expect(() => $$(".tralalero", { exact: -20 })).toThrow(
-                `found 1 element instead of -20: 1 matching ".tralalero"`
+            expect(() => $$(".tralalero", { count: -20 })).toThrow(
+                `invalid 'count' option: should be a positive integer`
             );
             expect(() => $1`.tralalero:contains(Tralala):visible:scrollable:first`).toThrow(
                 `found 0 elements instead of 1: 0 matching ".tralalero:contains(Tralala):visible:scrollable:first" (1 element with text "Tralala" > 1 visible element > 0 scrollable elements)`

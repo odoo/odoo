@@ -1,6 +1,7 @@
 import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
+import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
 export function clickLoginButton() {
     return [
@@ -28,6 +29,14 @@ export function loginScreenIsShown() {
         },
     ];
 }
+export function loginScreenIsNotShown() {
+    return [
+        {
+            content: "login screen is not shown",
+            trigger: negate(".login-overlay .screen-login"),
+        },
+    ];
+}
 export function cashierNameIs(name) {
     return [
         {
@@ -47,11 +56,10 @@ export function login(name, pin) {
     if (!pin) {
         return res;
     }
-    return res.concat([
-        ...NumberPopup.enterValue(pin),
-        ...NumberPopup.isShown("••••"),
-        Dialog.confirm(),
-    ]);
+    return res.concat(enterPin(pin));
+}
+export function enterPin(pin) {
+    return [...NumberPopup.enterValue(pin), ...NumberPopup.isShown("••••"), Dialog.confirm()];
 }
 export function clickLockButton() {
     return {

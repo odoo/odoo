@@ -54,9 +54,11 @@ export class ProductImageViewer extends Dialog {
         );
         onMounted(() => {
             const carousel = document.querySelector('.o_wsale_image_viewer_carousel');
-            carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
-            carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
-            this._updateCarousel();
+            if (carousel) {
+                carousel.addEventListener('touchstart', this._onTouchstartCarousel.bind(this));
+                carousel.addEventListener('touchmove', this._onTouchmoveCarousel.bind(this));
+                this._updateCarousel();
+            }
         });
         // For some reason the styling does not always update properly.
         onRendered(() => {

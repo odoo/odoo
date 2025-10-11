@@ -1,4 +1,4 @@
-import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { findComponent, mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";

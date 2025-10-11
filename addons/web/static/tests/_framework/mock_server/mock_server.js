@@ -1,5 +1,12 @@
-import { before, createJobScopedGetter, expect, getCurrent, registerDebugInfo } from "@odoo/hoot";
-import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
+import {
+    before,
+    createJobScopedGetter,
+    expect,
+    getCurrent,
+    mockFetch,
+    mockWebSocket,
+    registerDebugInfo,
+} from "@odoo/hoot";
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
@@ -78,7 +85,7 @@ const { DateTime } = luxon;
  *  translations?: Record<string, string>;
  * }} ServerParams
  *
- * @typedef {import("@odoo/hoot-mock").ServerWebSocket} ServerWebSocket
+ * @typedef {import("@odoo/hoot").ServerWebSocket} ServerWebSocket
  *
  * @typedef {string | Iterable<string> | RegExp} StringMatcher
  *
