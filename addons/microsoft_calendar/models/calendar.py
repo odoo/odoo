@@ -171,11 +171,17 @@ class Meeting(models.Model):
         notify_context = self.env.context.get('dont_notify', False)
 
         # Forbid recurrence updates through Odoo and suggest user to update it in Outlook.
-        if self._check_microsoft_sync_status():
+        if not notify_context:
             recurrency_in_batch = self.filtered(lambda ev: ev.recurrency)
             recurrence_update_attempt = recurrence_update_setting or 'recurrency' in values or recurrency_in_batch and len(recurrency_in_batch) > 0
-            if not notify_context and recurrence_update_attempt and not 'active' in values:
-                self._forbid_recurrence_update()
+            if recurrence_update_attempt and not 'active' in values:
+                # Check if this is an Outlook recurring event with active sync
+                if any(event.microsoft_recurrence_master_id for event in self):
+                    organizer = self[0]._get_organizer()
+                    if organizer and organizer._get_microsoft_calendar_token() and not organizer.microsoft_synchronization_stopped:
+                        self._forbid_recurrence_update()
+                elif self._check_microsoft_sync_status():
+                    self._forbid_recurrence_update()
 
         # When changing the organizer, check its sync status and verify if the user is listed as attendee.
         # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
