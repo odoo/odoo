@@ -1,9 +1,10 @@
 import { DISCUSS_ACTION_ID, mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { makeMailActivityMixin } from "@mail/../tests/mock_server/mock_models/mail_activity_mixin";
 
 import { fields, makeKwArgs, serverState, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 
-export class ResUsers extends webModels.ResUsers {
+class ResUsers extends webModels.ResUsers {
     im_status = fields.Char({ default: "online" });
     notification_type = fields.Selection({
         selection: [
@@ -12,6 +13,33 @@ export class ResUsers extends webModels.ResUsers {
         ],
         default: "email",
     });
+
+    activity_type_id = fields.Many2one({
+        relation: "mail.activity.type",
+        string: "Next Activity Type",
+        compute: "_compute_activity_type_id"
+    });
+
+    _compute_activity_type_id() {
+        for (const record of this) {
+            const activities = record.activity_ids?.filter(activity => {
+                const activityRecord = this.env["mail.activity"].browse(activity)[0];
+                return activityRecord?.state !== 'done';
+            }) || [];
+            
+            if (activities.length > 0) {
+                const activityRecords = this.env["mail.activity"].browse(activities);
+                const firstActivity = activityRecords.reduce((earliest, current) => {
+                    const earliestDate = earliest.date_deadline || '9999-12-31';
+                    const currentDate = current.date_deadline || '9999-12-31';
+                    return currentDate < earliestDate ? current : earliest;
+                });
+                record.activity_type_id = firstActivity.activity_type_id;
+            } else {
+                record.activity_type_id = false;
+            }
+        }
+    }
 
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data(store) {
@@ -185,3 +213,6 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 }
+
+const ResUsersActivityMixin = makeMailActivityMixin(ResUsers);
+export { ResUsersActivityMixin as ResUsers };
