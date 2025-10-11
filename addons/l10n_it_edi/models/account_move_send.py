@@ -91,6 +91,10 @@ class AccountMoveSend(models.AbstractModel):
         # Send
         results = moves._l10n_it_edi_send(attachments_vals)
 
+        # Show that those moves couldn't be sent
+        for move in moves.filtered(lambda m: not m.l10n_it_edi_state):
+            moves_data[move]['error'] = True
+
         # Eventually update attachments with signed data
         for move, move_data in moves_data.items():
             if attachment := move.l10n_it_edi_attachment_id or move_data.get('l10n_it_edi_values'):
