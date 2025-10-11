@@ -233,11 +233,11 @@ class AccountFiscalPosition(models.Model):
             )),
             ('country_id', lambda fpos: (
                 not fpos.country_id
-                or (partner.country_id == fpos.country_id and 2)
+                or ((partner.country_id or partner.state_id.country_id) == fpos.country_id and 2)
             )),
             ('country_group', lambda fpos: (
                 not fpos.country_group_id
-                or (partner.country_id in fpos.country_group_id.country_ids and 2)
+                or ((partner.country_id or partner.state_id.country_id) in fpos.country_group_id.country_ids and 2)
             )),
             ('sequence', lambda fpos: -(fpos.sequence or 0.1)),  # do not filter out sequence=0, priority to lowest sequence in `max` method
         ]
@@ -270,7 +270,7 @@ class AccountFiscalPosition(models.Model):
         if manual_fiscal_position:
             return manual_fiscal_position
 
-        if not partner.country_id:
+        if not partner.country_id and not partner.state_id:
             return self.env['account.fiscal.position']
 
         # Search for a auto applied fiscal position matching the partner
