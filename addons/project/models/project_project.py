@@ -836,7 +836,7 @@ class Project(models.Model):
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
         if show_profitability:
-            profitability_items = self._get_profitability_items()
+            profitability_items = self.with_context(active_test=False)._get_profitability_items()
             if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
                 profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
                 profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
