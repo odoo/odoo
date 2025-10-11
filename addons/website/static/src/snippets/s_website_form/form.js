@@ -449,10 +449,18 @@ export class Form extends Interaction {
                     this.resetForm();
                 }
             })
-            .catch(error => {
+            .catch((error) => {
+                let fileName = "";
+                if (error.message && error.message === "Content too large") {
+                    const largestFile = Object.values(formValues)
+                        .filter(value => value instanceof File)
+                        .reduce((max, file) => (!max || file.size > max.size ? file : max), null);
+                    fileName = largestFile?.name || "";
+                }
                 this.updateStatus(
                     "error",
-                    error.message && error.message === 'Content too large' ? _t("Uploaded file is too large.") : "",
+                    error.message && error.message === "Content too large" ? _t("The file %(fileName)s is too large for the server to accept. Please choose a smaller file.", { fileName })
+                        : ""
                 );
             });
     }
@@ -654,6 +662,21 @@ export class Form extends Interaction {
                 }
             }
         }
+        // Checking the allowed file input
+        const onlyAllowPdf = inputEl.dataset.onlyAllowPdf;
+        if (onlyAllowPdf === "true") {
+            for (const file of Object.values(inputEl.files)) {
+                if (file.type !== "application/pdf") {
+                    const errorMessage = _t(
+                        "Please upload a PDF file. The file “%(fileName)s” is not a PDF.",
+                        { fileName: file.name }
+                    );
+                    this.updateStatusInline(errorMessage, inputEl);
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 

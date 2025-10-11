@@ -204,15 +204,19 @@
             min="1"
         />
     </BuilderRow>
-    <BuilderRow label.translate="Max File Size">
+    <BuilderRow label.translate="Max File Size"
+        tooltip.translate="The maximum size (in MB) an uploaded file can have.">
         <BuilderNumberInput
-            title.translate="The maximum size (in MB) an uploaded file can have."
+            title.translate="Note that your server has its own upload limit (typically 64 MB on Odoo SaaS), which will take precedence over this value"
             dataAttributeAction="'maxFileSize'"
             applyTo="`input[type='file']`"
-            default="1"
+            default="64"
             unit="'MB'"
             applyWithUnit="false"
         />
+    </BuilderRow>
+    <BuilderRow label.translate="Restrict to PDF">
+        <BuilderCheckbox dataAttributeAction="'onlyAllowPdf'" dataAttributeActionValue="'true'" applyTo="`input[type='file']`"/>
     </BuilderRow>
     <BuilderRow t-if="state.valueList">
         <div class="d-flex flex-column w-100">
