@@ -37,6 +37,7 @@ async function autoHideMenu(el, options) {
     }, options || {});
 
     const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
+    const isNavbar = el.parentElement.classList.contains('o_main_nav');
     const dropdownSubMenuClasses = ['show', 'border-0', 'position-static'];
     const dropdownToggleClasses = ['h-auto', 'py-2', 'text-secondary'];
     const autoMarginLeftRegex = /\bm[sx]?(?:-(?:sm|md|lg|xl|xxl))?-auto\b/; // grep: ms-auto mx-auto
@@ -92,7 +93,9 @@ async function autoHideMenu(el, options) {
                 const itemLink = item.querySelector('.dropdown-item');
                 if (itemLink) {
                     itemLink.classList.remove('dropdown-item');
-                    itemLink.classList.add('nav-link');
+                    if( !isNavbar ){
+                        itemLink.classList.add('nav-link');
+                    }
                 }
             } else {
                 item.classList.remove('dropdown-item');
@@ -174,7 +177,9 @@ async function autoHideMenu(el, options) {
                 const navLink = el.querySelector('.nav-link, a');
                 el.classList.remove('nav-item');
                 if (navLink) {
-                    navLink.classList.remove('nav-link');
+                    if( !isNavbar ){
+                        navLink.classList.remove('nav-link');
+                    }
                     navLink.classList.add('dropdown-item');
                 }
             } else {
@@ -296,6 +301,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
             return img.matches && !img.matches(excludedImagesSelector);
+        });
+        // All menu items should be "nav-link" to allow correct font style.
+        header.querySelectorAll('[role="menuitem"]').forEach((el) => {
+            el.classList.add("nav-link")
         });
         autoHideMenu(topMenu, {
             unfoldable: unfoldable,
