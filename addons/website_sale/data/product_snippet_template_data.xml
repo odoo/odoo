@@ -61,13 +61,14 @@
                         <div class="o_wsale_product_info_attributes_wrapper">
                             <div class="o_wsale_product_information_text">
                                 <!-- Product Name -->
+                                <t t-set="product_name" t-value="product.name if product.attribute_line_ids else product.display_name"/>
                                 <h2 class="o_wsale_products_item_title h6 text-break">
                                     <a
                                         class="text-decoration-none"
                                         t-att-href="product.website_url"
-                                        t-att-content="product.display_name"
-                                        t-att-title="product.display_name"
-                                        t-field="product.display_name"
+                                        t-att-content="product_name"
+                                        t-att-title="product_name"
+                                        t-out="product_name"
                                     />
                                 </h2>
                                 <!-- Description -->
