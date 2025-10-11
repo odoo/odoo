@@ -479,12 +479,18 @@ class Base(models.AbstractModel):
                     not p.is_public
                 )
             ))
+            existing_mails = set()
+            for rec in (followers | partners):
+                if rec.email_normalized:
+                    existing_mails.add(email_key(rec.email_normalized))
+                for e in email_split_and_format(rec.email or ''):
+                    existing_mails.add(email_key(e))
             email_to_lst = list(tools.misc.unique(
                 e for email_input in suggested[record.id]['email_to_lst'] for e in email_split_and_format(email_input)
                 if (
                     e and e.strip() and
                     email_key(e) not in ban_emails and
-                    email_key(e) not in ((followers | partners).mapped('email_normalized') + (followers | partners).mapped('email'))
+                    email_key(e) not in existing_mails
                 )
             ))
 

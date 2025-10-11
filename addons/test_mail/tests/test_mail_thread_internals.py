@@ -1005,6 +1005,19 @@ class TestAPI(ThreadRecipients):
                     message, "<p>New Body</p>"
                 )
 
+    @users("employee")
+    def test_message_get_suggested_recipients_multiemail(self):
+        """ Test default values returned for suggested recipient with
+        partner having multiple emails. """
+        self.test_partner.email = 'test1.external@example.com,test2.external@example.com'
+        ticket_partner = self.env['mail.test.ticket.mc'].create({
+            'customer_id': self.test_partner.id,
+            'email_from': self.test_partner.email_formatted,
+        })
+        suggestions = ticket_partner._message_get_suggested_recipients(no_create=True)
+        self.assertEqual(len(suggestions), 1)
+        self.assertEqual(suggestions[0]['partner_id'], self.test_partner.id)
+
 
 @tagged('mail_thread')
 class TestChatterTweaks(ThreadRecipients):
