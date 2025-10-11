@@ -180,7 +180,7 @@ class Base(models.AbstractModel):
                     if not record[field_name]:
                         continue
 
-                    record_values = values_by_id[record.id]
+                    record_values = values_by_id.get(record.id, {})
 
                     if field.type == 'reference':
                         co_record = record[field_name]
