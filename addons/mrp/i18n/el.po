@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-13 18:36+0000\n"
+"POT-Creation-Date: 2025-10-11 02:15+0000\n"
 "PO-Revision-Date: 2025-09-01 21:17+0000\n"
 "Last-Translator: Dionysis Zacharioudakis <d.zacharioudakis@dileanity.com>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-18/mrp/el/>\n"
@@ -40,18 +40,24 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
 msgid ""
 " * Draft: The MO is not confirmed yet.\n"
-" * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+" * Confirmed: The MO is confirmed, the stock rules and the reordering of the "
+"components are trigerred.\n"
 " * In Progress: The production has started (on the MO or on the WO).\n"
 " * To Close: The production is done, the MO has to be closed.\n"
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * Προσχέδιο: Η Εντολή Παραγωγής δεν έχει επιβεβαιωθεί ακόμη.\n"
-" * Επιβεβαιωμένη: Εντολή Παραγωγής έχει επιβεβαιωθεί, έχουν ενεργοποιηθεί οι κανόνες αποθέματος και η επαναπαραγγελία των συστατικών.\n"
-" * Σε Εξέλιξη: Η παραγωγή έχει ξεκινήσει (στην Εντολή Παραγωγής ή στην Εντολή Εργασίας).\n"
-" * Προς Ολοκλήρωση: Η παραγωγή έχει ολοκληρωθεί, η Εντολή Παραγωγής πρέπει να κλείσει.\n"
-" * Ολοκληρωμένη: Η Εντολή Παραγωγής έχει κλείσει, οι κινήσεις αποθέματος έχουν καταχωρηθεί. \n"
-" * Ακυρωμένη: Η Εντολή Παραγωγής έχει ακυρωθεί, δεν μπορεί πλέον να επιβεβαιωθεί."
+" * Επιβεβαιωμένη: Εντολή Παραγωγής έχει επιβεβαιωθεί, έχουν ενεργοποιηθεί οι "
+"κανόνες αποθέματος και η επαναπαραγγελία των συστατικών.\n"
+" * Σε Εξέλιξη: Η παραγωγή έχει ξεκινήσει (στην Εντολή Παραγωγής ή στην "
+"Εντολή Εργασίας).\n"
+" * Προς Ολοκλήρωση: Η παραγωγή έχει ολοκληρωθεί, η Εντολή Παραγωγής πρέπει "
+"να κλείσει.\n"
+" * Ολοκληρωμένη: Η Εντολή Παραγωγής έχει κλείσει, οι κινήσεις αποθέματος "
+"έχουν καταχωρηθεί. \n"
+" * Ακυρωμένη: Η Εντολή Παραγωγής έχει ακυρωθεί, δεν μπορεί πλέον να "
+"επιβεβαιωθεί."
 
 #. module: mrp
 #. odoo-python
@@ -63,9 +69,8 @@ msgstr " <br/><br/> Τα συστατικά θα ληφθούν από <b>%s</b>
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/> Τα παραγόμενα είδη θα μεταφερθούν <b>%(destination)s</b>, <br/> "
 "όπως έχουν οριστεί από <b>%(operation)s</b> τον προορισμό."
@@ -201,6 +206,12 @@ msgid "+ %d day(s)"
 msgstr "Μέρα (ες)"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
 msgstr "Επισκόπηση"
@@ -217,11 +228,14 @@ msgstr "Χειροκίνητες ενέργειες μπορεί να χρεια
 msgid ""
 "1 Step: Consume components from stock and produce.\n"
 "              2 Steps: Pick components from stock and then produce.\n"
-"              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock."
+"              3 Steps: Pick components from stock, produce, and then move "
+"final product(s) from production area to stock."
 msgstr ""
 " 1 Βήμα: Κατανάλωση συστατικών από το απόθεμα και παραγωγή.\n"
-"              2 Βήματα: Παραλαβή συστατικών από το απόθεμα και έπειτα παραγωγή.\n"
-"              3 Βήματα: Παραλαβή συστατικών από το απόθεμα, παραγωγή και μετά μετακίνηση των τελικών προϊόντων από την παραγωγή στο απόθεμα."
+"              2 Βήματα: Παραλαβή συστατικών από το απόθεμα και έπειτα "
+"παραγωγή.\n"
+"              3 Βήματα: Παραλαβή συστατικών από το απόθεμα, παραγωγή και "
+"μετά μετακίνηση των τελικών προϊόντων από την παραγωγή στο απόθεμα."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -282,18 +296,24 @@ msgstr ":  ώρες"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgid ""
+"<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgstr ""
+"<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
+msgid ""
+"<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
+msgstr ""
+"<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgid ""
+"<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgstr ""
+"<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
 #. odoo-python
@@ -302,13 +322,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Upload files to your product\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings or specifications.\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Φόρτωση αρχείων στο είδος\n"
 "                    </p><p>\n"
-"                        Χρησιμοποιήστε αυτή τη λειτουργία για να αποθηκεύσετε αρχεία, όπως σχέδια ή προδιαγραφές.\n"
+"                        Χρησιμοποιήστε αυτή τη λειτουργία για να "
+"αποθηκεύσετε αρχεία, όπως σχέδια ή προδιαγραφές.\n"
 "                    </p>"
 
 #. module: mrp
@@ -428,12 +450,12 @@ msgstr "<span class=\"o_stat_text\">Αποσυναρμολογήσεις</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid ""
 "<span class=\"text-muted\">Modifying the quantity to produce will also "
-"modify the quantities of components to consume for this manufacturing "
-"order.</span>"
+"modify the quantities of components to consume for this manufacturing order."
+"</span>"
 msgstr ""
 "<span class=\"text-muted\">Τροποποιώντας την ποσότητα που θα παραχθεί θα "
-"τροποποιήσει και τις ποσότητες των συστατικών που θα αναλωθούν γι' αυτήν την"
-" εντολή παραγωγής.</span>"
+"τροποποιήσει και τις ποσότητες των συστατικών που θα αναλωθούν γι' αυτήν την "
+"εντολή παραγωγής.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -602,10 +624,12 @@ msgstr "? Αυτό ενδέχεται να οδηγήσει σε ασυνέπε�
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
-"                                Instead, it is used to decompose a BoM into its components when:"
+"                                Instead, it is used to decompose a BoM into "
+"its components when:"
 msgstr ""
 "Μία Συνταγής Παραγωγής τύπου Κιτ δεν παράγεται με εντολή παραγωγής.<br/>\n"
-"                                Αντιθέτως, χρησιμοποιείται για να αποσυνθέσει μία Συνταγή Παραγωγής στα συστατικά της όταν:"
+"                                Αντιθέτως, χρησιμοποιείται για να "
+"αποσυνθέσει μία Συνταγή Παραγωγής στα συστατικά της όταν:"
 
 #. module: mrp
 #. odoo-python
@@ -735,11 +759,13 @@ msgstr "Όλες οι Κινήσεις Πρώτων Υλών"
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs!"
 msgstr ""
 "Όλες οι ποσότητες είδους πρέπει να είναι μεγαλύτερες ή ίσες με το 0.\n"
 "Γραμμές με 0 ποσότητες μπορούν να χρησιμοποιηθούν ως προαιρετικές γραμμές. \n"
-"Θα πρέπει να εγκαταστήσετε το πρόσθετο mrp_byproduct αν θέλετε να διαχειρίζεστε επιπλέον είδη στις Συνταγές Παραγωγής!"
+"Θα πρέπει να εγκαταστήσετε το πρόσθετο mrp_byproduct αν θέλετε να "
+"διαχειρίζεστε επιπλέον είδη στις Συνταγές Παραγωγής!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -818,8 +844,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
-"Εναλλακτικά κέντρα εργασίας που μπορούν να αντικατασταθούν αντί γι' αυτό για"
-" την εκτέλεση της παραγωγής"
+"Εναλλακτικά κέντρα εργασίας που μπορούν να αντικατασταθούν αντί γι' αυτό για "
+"την εκτέλεση της παραγωγής"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -974,8 +1000,8 @@ msgstr "Άβαταρ"
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added. In "
-"case the product is subcontracted, this can be used to determine the date at"
-" which components should be sent to the subcontractor."
+"case the product is subcontracted, this can be used to determine the date at "
+"which components should be sent to the subcontractor."
 msgstr ""
 "Μέσος χρόνος σε ημέρες για την παραγωγή αυτού του είδους. Στην περίπτωση "
 "πολυεπίπεδης Συνταγής Παραγωγής, οι χρόνοι παραγωγής των συστατικών "
@@ -1069,8 +1095,7 @@ msgstr "Ακολουθία Εκκρεμούς Παραγγελίας"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
-msgid ""
-"Backorder sequence, if equals to 0 means there is not related backorder"
+msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
 "Ακολουθία Εκκρεμούς Παραγγελίας, αν είναι ίση με 0 σημαίνει ότι δεν υπάρχει "
 "σχετική εκκρεμής παραγγελία"
@@ -1151,8 +1176,8 @@ msgstr "Συνταγές Παραγωγής (ΒοΜ)"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__mo_bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_bom_id
 msgid ""
-"Bills of Materials, also called recipes, are used to autocomplete components"
-" and work order instructions."
+"Bills of Materials, also called recipes, are used to autocomplete components "
+"and work order instructions."
 msgstr ""
 "Οι Συνταγές Παραγωγής, ονομάζονται και συνταγές, χρησιμοποιούνται για την "
 "αυτόματη συμπλήρωση των συστατικών και των οδηγιών εντολής εργασίας."
@@ -1161,11 +1186,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Οι Συνταγές Παραγωγής σας επιτρέπουν να ορίσετε τη λίστα των απαιτούμενων  πρώτων υλών\n"
-"                υλικά που χρησιμοποιούνται για να φτιάξουν ένα τελικό προϊόν, είτε μέσω μίας εντολής\n"
+"Οι Συνταγές Παραγωγής σας επιτρέπουν να ορίσετε τη λίστα των απαιτούμενων  "
+"πρώτων υλών\n"
+"                υλικά που χρησιμοποιούνται για να φτιάξουν ένα τελικό "
+"προϊόν, είτε μέσω μίας εντολής\n"
 "                παραγωγής είτε μέσω ενός πακέτου προϊόντων."
 
 #. module: mrp
@@ -1567,15 +1595,16 @@ msgstr "Υπολογίζεται βάσει του καταγεγραμμένο�
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
-"buying or manufacturing the components and/or subassemblies."
-"                                                       Also note that "
-"purchase security lead times will be added when appropriate."
+"buying or manufacturing the components and/or "
+"subassemblies.                                                       Also "
+"note that purchase security lead times will be added when appropriate."
 msgstr ""
 "Υπολογισμός των ημερών που απαιτούνται για την αναπλήρωση όλων των "
 "συστατικών από τη Συνταγή Παραγωγής, είτε μέσω αγοράς είτε μέσω παραγωγής "
-"των συστατικών και/ή των υποσυγκροτημάτων."
-"                                                       Λάβετε επίσης υπόψη "
-"ότι θα προστεθούν οι προθεσμίες ασφαλείας αγορών όπου είναι απαραίτητο."
+"των συστατικών και/ή των "
+"υποσυγκροτημάτων.                                                       "
+"Λάβετε επίσης υπόψη ότι θα προστεθούν οι προθεσμίες ασφαλείας αγορών όπου "
+"είναι απαραίτητο."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1761,8 +1790,8 @@ msgstr "Δημιουργία Εκκρεμούς Παραγγελίας"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid ""
-"Create a backorder if you expect to process the remaining products later. Do"
-" not create a backorder if you will not process the remaining products."
+"Create a backorder if you expect to process the remaining products later. Do "
+"not create a backorder if you will not process the remaining products."
 msgstr ""
 "Δημιουργήστε εκκρεμή παραγγελία αν σκοπεύετε να επεξεργαστείτε τα υπόλοιπα "
 "προϊόντα αργότερα. Μην δημιουργήσετε εκκρεμή παραγγελία αν δεν πρόκειται να "
@@ -1788,11 +1817,15 @@ msgstr "Δημιουργία νέας απόδοσης εντολών εργασ
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Create and confirm Manufacturing Orders this many days in advance, to have "
+"enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Δημιουργήστε και επιβεβαιώστε τις Εντολές Παραγωγής τόσες ημέρες νωρίτερα, ώστε να υπάρχει επαρκής χρόνος για την αναπλήρωση των συστατικών ή την παραγωγή ημιτελών προϊόντων.\n"
-"Σημειώστε ότι θα ληφθούν υπόψη και οι προθεσμίες ασφαλείας, όπου είναι απαραίτητο.."
+"Δημιουργήστε και επιβεβαιώστε τις Εντολές Παραγωγής τόσες ημέρες νωρίτερα, "
+"ώστε να υπάρχει επαρκής χρόνος για την αναπλήρωση των συστατικών ή την "
+"παραγωγή ημιτελών προϊόντων.\n"
+"Σημειώστε ότι θα ληφθούν υπόψη και οι προθεσμίες ασφαλείας, όπου είναι "
+"απαραίτητο.."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1814,8 +1847,11 @@ msgid ""
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
 msgstr ""
-"Δημιουργήστε εξαρτήσεις μεταξύ ενεργειών που θα επηρεάζουν τόσο τον προγραμματισμό όσο και την κατάσταση των εντολών εργασίας κατά την επιβεβαίωση της Εντολής Παραγωγής.\n"
-"Αν ενεργοποιηθεί αυτή η λειτουργία χωρίς να οριστεί κάτι συγκεκριμένο, το Odoo θα υποθέσει ότι όλες οι εργασίες μπορούν να ξεκινήσουν ταυτόχρονα."
+"Δημιουργήστε εξαρτήσεις μεταξύ ενεργειών που θα επηρεάζουν τόσο τον "
+"προγραμματισμό όσο και την κατάσταση των εντολών εργασίας κατά την "
+"επιβεβαίωση της Εντολής Παραγωγής.\n"
+"Αν ενεργοποιηθεί αυτή η λειτουργία χωρίς να οριστεί κάτι συγκεκριμένο, το "
+"Odoo θα υποθέσει ότι όλες οι εργασίες μπορούν να ξεκινήσουν ταυτόχρονα."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1890,15 +1926,24 @@ msgstr "Νόμισμα"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Τρέχουσα ποσότητα των ειδών.\n"
-"Σε ένα περιεχόμενο με μια μόνο Θέση Αποθέματος, συμπεριλαμβανομένων των ειδών που αποθηκεύονται σε αυτήν τη Θέση, ή σε οποιαδήποτε από τις θυγατρικές.\n"
-"Σε ένα πλαίσιο με μία μόνο Αποθήκη, συμπεριλαμβανομένων των ειδών που αποθηκεύονται στη Θέση Αποθέματος της αποθήκης αυτού του καταστήματος, ή σε οποιαδήποτε από τις θυγατρικές της.\n"
-"Διαφορετικά, αυτό συμπεριλαμβάνει είδη που αποθηκεύονται σε οποιοδήποτε Θέση Αποθέματος με «εσωτερικό» τύπο."
+"Σε ένα περιεχόμενο με μια μόνο Θέση Αποθέματος, συμπεριλαμβανομένων των "
+"ειδών που αποθηκεύονται σε αυτήν τη Θέση, ή σε οποιαδήποτε από τις "
+"θυγατρικές.\n"
+"Σε ένα πλαίσιο με μία μόνο Αποθήκη, συμπεριλαμβανομένων των ειδών που "
+"αποθηκεύονται στη Θέση Αποθέματος της αποθήκης αυτού του καταστήματος, ή σε "
+"οποιαδήποτε από τις θυγατρικές της.\n"
+"Διαφορετικά, αυτό συμπεριλαμβάνει είδη που αποθηκεύονται σε οποιοδήποτε Θέση "
+"Αποθέματος με «εσωτερικό» τύπο."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -1987,8 +2032,8 @@ msgstr "Προεπιλεγμένος Χρόνος Εκτέλεσης Παραγ�
 msgid ""
 "Default number of pieces (in product UoM) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
-"you need to produce 10 units, then the operation time listed on the BOM will"
-" be multiplied by two. However, note that both time before and after "
+"you need to produce 10 units, then the operation time listed on the BOM will "
+"be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
 "Προεπιλεγμένος αριθμός τεμαχίων (στη μονάδα μέτρησης προϊόντος) που μπορούν "
@@ -2027,17 +2072,28 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
 msgid ""
-"Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+"Defines if you can consume more or less components than the quantity defined "
+"on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
-"  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
-"  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
+"  * Allowed with warning: allowed for all manufacturing users with summary "
+"of consumption differences when closing the manufacturing order.\n"
+"  Note that in the case of component Highlight Consumption, where "
+"consumption is registered manually exclusively, consumption warnings will "
+"still be issued when appropriate also.\n"
+"  * Blocked: only a manager can close a manufacturing order when the BoM "
+"consumption is not respected."
 msgstr ""
-" Καθορίζει αν μπορείτε να αναλώσετε περισσότερα ή λιγότερα συστατικά από την ποσότητα που ορίζεται στη Συνταγή Παραγωγής:\n"
+" Καθορίζει αν μπορείτε να αναλώσετε περισσότερα ή λιγότερα συστατικά από την "
+"ποσότητα που ορίζεται στη Συνταγή Παραγωγής:\n"
 "  * Επιτρέπεται: επιτρέπεται για όλους τους χρήστες παραγωγής.\n"
-"  * Επιτρέπεται με προειδοποίηση: επιτρέπεται για όλους τους χρήστες παραγωγής, με συνοπτική αναφορά των διαφορών κατανάλωσης κατά το κλείσιμο της εντολής παραγωγής.\n"
-"  Σημειώστε ότι στην περίπτωση της προβολής «Επισήμανση Ανάλωσης Συστατικού», όπου η ανάλωση καταχωρείται αποκλειστικά χειροκίνητα, θα εμφανίζονται προειδοποιήσεις ανάλωσης όπου χρειάζεται.\n"
-"  * Μπλοκαρισμένο: μόνο διαχειριστής μπορεί να κλείσει την εντολή παραγωγής όταν δεν τηρείται η προβλεπόμενη ανάλωση της Συνταγής Παραγωγής."
+"  * Επιτρέπεται με προειδοποίηση: επιτρέπεται για όλους τους χρήστες "
+"παραγωγής, με συνοπτική αναφορά των διαφορών κατανάλωσης κατά το κλείσιμο "
+"της εντολής παραγωγής.\n"
+"  Σημειώστε ότι στην περίπτωση της προβολής «Επισήμανση Ανάλωσης "
+"Συστατικού», όπου η ανάλωση καταχωρείται αποκλειστικά χειροκίνητα, θα "
+"εμφανίζονται προειδοποιήσεις ανάλωσης όπου χρειάζεται.\n"
+"  * Μπλοκαρισμένο: μόνο διαχειριστής μπορεί να κλείσει την εντολή παραγωγής "
+"όταν δεν τηρείται η προβλεπόμενη ανάλωση της Συνταγής Παραγωγής."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2255,8 +2311,7 @@ msgstr "Ημερ. Λήξης"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__product_tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
-"Διασφαλίστε την ιχνηλασιμότητα ενός αποθηκεύσιμου προϊόντος στην αποθήκη "
-"σας."
+"Διασφαλίστε την ιχνηλασιμότητα ενός αποθηκεύσιμου προϊόντος στην αποθήκη σας."
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
@@ -2435,14 +2490,23 @@ msgstr "Αναφορά Πρόβλεψης"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
-"Πρόβλεψη ποσότητας (υπολογίζεται ώς Ποσότητα στο Χέρι - Εξερχόμενη + Εισερχόμενη)\n"
-"Σε ένα πλαίσιο με μία μοναδική Τοποθεσία Αποθέματος, αυτό περιλαμβάνει αποθηκευμένα αγαθά σε αυτήν την τοποθεσία ή οποιοδήποτε απο τις θυγατρικές του. \n"
-"Σε ένα περιεχόμενο με μια μοναδική Αποθήκη, αυτό περιλαμβάνει αποθηκευμένα αγαθά σε μια Τοποθεσία Αποθέματος αυτής της Αποθήκης, ή οποιοδήποτε απο τις θυγατρικές του.\n"
-"Αλλιώς, αυτό περιλαμβάνει αγαθά αποθηκευμένα σε κάθε Τοποθεσία Αποθέματος με 'εσωτερικό' τύπο."
+"Πρόβλεψη ποσότητας (υπολογίζεται ώς Ποσότητα στο Χέρι - Εξερχόμενη + "
+"Εισερχόμενη)\n"
+"Σε ένα πλαίσιο με μία μοναδική Τοποθεσία Αποθέματος, αυτό περιλαμβάνει "
+"αποθηκευμένα αγαθά σε αυτήν την τοποθεσία ή οποιοδήποτε απο τις θυγατρικές "
+"του. \n"
+"Σε ένα περιεχόμενο με μια μοναδική Αποθήκη, αυτό περιλαμβάνει αποθηκευμένα "
+"αγαθά σε μια Τοποθεσία Αποθέματος αυτής της Αποθήκης, ή οποιοδήποτε απο τις "
+"θυγατρικές του.\n"
+"Αλλιώς, αυτό περιλαμβάνει αγαθά αποθηκευμένα σε κάθε Τοποθεσία Αποθέματος με "
+"'εσωτερικό' τύπο."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2677,8 +2741,8 @@ msgstr "Εικονίδιο που υποδεικνύει μια δραστηρι
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Εάν οριστεί παραλλαγή προϊόντος η Συνταγή Παραγωγής είναι διαθέσιμη μόνο για"
-" αυτό το προϊόν."
+"Εάν οριστεί παραλλαγή προϊόντος η Συνταγή Παραγωγής είναι διαθέσιμη μόνο για "
+"αυτό το προϊόν."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -2748,14 +2812,14 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
-"ν αυτή η επιλογή είναι επιλεγμένη, το Odoo θα εκτυπώνει αυτόματα την ετικέτα"
-" παρτίδας/σειριακού αριθμού μιας Εντολής Παραγωγής όταν αυτή ολοκληρωθεί."
+"ν αυτή η επιλογή είναι επιλεγμένη, το Odoo θα εκτυπώνει αυτόματα την ετικέτα "
+"παρτίδας/σειριακού αριθμού μιας Εντολής Παραγωγής όταν αυτή ολοκληρωθεί."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels"
-" of a MO when it is done."
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a MO when it is done."
 msgstr ""
 "Αν αυτή η επιλογή είναι επιλεγμένη, το Odoo θα εκτυπώνει αυτόματα τις "
 "ετικέτες προϊόντων μιας Εντολής Παραγωγής όταν ολοκληρωθεί."
@@ -2766,8 +2830,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
-"Αν αυτή η επιλογή είναι επιλεγμένη, το Odoo θα εκτυπώνει αυτόματα την εντολή"
-" παραγωγής μιας Εντολής Παραγωγής όταν αυτή ολοκληρωθεί."
+"Αν αυτή η επιλογή είναι επιλεγμένη, το Odoo θα εκτυπώνει αυτόματα την εντολή "
+"παραγωγής μιας Εντολής Παραγωγής όταν αυτή ολοκληρωθεί."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2784,8 +2848,7 @@ msgstr "Εισαγωγή προτύπου για τη Συνταγή Παραγ�
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"Impossible to plan the workorder. Please check the workcenter "
-"availabilities."
+"Impossible to plan the workorder. Please check the workcenter availabilities."
 msgstr ""
 "Αδύνατος ο προγραμματισμός της εντολής εργασίας. Ελέγξτε τις διαθεσιμότητες "
 "του κέντρου εργασίας."
@@ -2841,8 +2904,7 @@ msgstr "Κινήσεις Αποθεμάτων"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
-msgid ""
-"Inventory moves for which you must scan a lot number at this work order"
+msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 "Κινήσεις αποθέματος για τις οποίες πρέπει να σαρώσετε αριθμό παρτίδας σε "
 "αυτήν την εντολή εργασίας"
@@ -3040,8 +3102,8 @@ msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
-"Τελευταία κατάσταση διαθεσιμότητας συστατικών για αυτή την Εντολή Παραγωγής."
-" Αν είναι πράσινο, τότε η κατάσταση ετοιμότητας είναι 'Έτοιμο', σύμφωνα με "
+"Τελευταία κατάσταση διαθεσιμότητας συστατικών για αυτή την Εντολή Παραγωγής. "
+"Αν είναι πράσινο, τότε η κατάσταση ετοιμότητας είναι 'Έτοιμο', σύμφωνα με "
 "τις ρυθμίσεις της Συνταγής Παραγωγής."
 
 #. module: mrp
@@ -3072,10 +3134,12 @@ msgstr "Αποχώρηση"
 #: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
 msgid ""
 "Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material."
+"Select Bill of Materials to visualise this document as a product attachment "
+"when this product is in a bill of material."
 msgstr ""
 "Αφήστε το κρυφό αν το έγγραφο είναι προσβάσιμο μόνο από τη φόρμα προϊόντος.\n"
-"Επιλέξτε Συνταγή Παραγωγής για να εμφανίζεται αυτό το έγγραφο ως συνημμένο προϊόντος όταν το προϊόν αυτό περιλαμβάνεται σε συνταγή παραγωγής."
+"Επιλέξτε Συνταγή Παραγωγής για να εμφανίζεται αυτό το έγγραφο ως συνημμένο "
+"προϊόντος όταν το προϊόν αυτό περιλαμβάνεται σε συνταγή παραγωγής."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3454,21 +3518,30 @@ msgstr "Ημέρες Ορατότητας Παραγωγής για Ανατρο
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc."
 msgstr ""
-"Οι εργασίες παραγωγής εκτελούνται σε Κέντρα Εργασίας. Ένα Κέντρο Εργασίας μπορεί να αποτελείται απόf\n"
-"                εργαζόμενους και/ή μηχανήματα, χρησιμοποιούνται για τον υπολογισμό κόστους, τον προγραμματισμό, τον σχεδιασμό δυναμικότητας κ.λπ."
+"Οι εργασίες παραγωγής εκτελούνται σε Κέντρα Εργασίας. Ένα Κέντρο Εργασίας "
+"μπορεί να αποτελείται απόf\n"
+"                εργαζόμενους και/ή μηχανήματα, χρησιμοποιούνται για τον "
+"υπολογισμό κόστους, τον προγραμματισμό, τον σχεδιασμό δυναμικότητας κ.λπ."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"Οι εργασίες παραγωγής εκτελούνται σε Κέντρα Εργασίας. Ένα Κέντρο Εργασίας μπορεί να αποτελείται απόf\n"
-"                εργαζόμενους και/ή μηχανήματα, χρησιμοποιούνται για τον υπολογισμό του κόστους, τον χρονοπρογραμματισμό, τον σχεδιασμό δυναμικότητας κ.ά.\n"
+"Οι εργασίες παραγωγής εκτελούνται σε Κέντρα Εργασίας. Ένα Κέντρο Εργασίας "
+"μπορεί να αποτελείται απόf\n"
+"                εργαζόμενους και/ή μηχανήματα, χρησιμοποιούνται για τον "
+"υπολογισμό του κόστους, τον χρονοπρογραμματισμό, τον σχεδιασμό δυναμικότητας "
+"κ.ά.\n"
 "                Μπορούν να οριστούν μέσω του μενού ρυθμίσεων."
 
 #. module: mrp
@@ -3477,11 +3550,14 @@ msgstr ""
 msgid ""
 "Manufacturing readiness for this MO, as per bill of material configuration:\n"
 "            * Ready: The material is available to start the production.\n"
-"            * Waiting: The material is not available to start the production.\n"
+"            * Waiting: The material is not available to start the "
+"production.\n"
 msgstr ""
-"Ετοιμότητα παραγωγής για αυτή την Εντολή Παραγωγής, σύμφωνα με τις ρυθμίσεις της συνταγής παραγωγής:\n"
+"Ετοιμότητα παραγωγής για αυτή την Εντολή Παραγωγής, σύμφωνα με τις ρυθμίσεις "
+"της συνταγής παραγωγής:\n"
 "            * Έτοιμη: Τα υλικά είναι διαθέσιμα για την έναρξη της παραγωγής\n"
-"            * Σε Αναμονή: Τα υλικά δεν είναι διαθέσιμα για την έναρξη της παραγωγής.\n"
+"            * Σε Αναμονή: Τα υλικά δεν είναι διαθέσιμα για την έναρξη της "
+"παραγωγής.\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation
@@ -3662,6 +3738,12 @@ msgid "No Backorder"
 msgstr "Χωρίς Υπόλοιπο Παραγγελίας"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "No BoM Found"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
 msgstr "Δεν βρέθηκε συνταγή παραγωγής. Δημιουργία νέας!"
@@ -3751,10 +3833,10 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"Σημειώστε ότι το/τα αρχειοθετημένο/α κέντρο/α εργασίας: '%s' εξακολουθεί/ουν"
-" να συνδέεται/ονται με ενεργές Συνταγές Παραγωγής, πράγμα που σημαίνει ότι "
-"μπορούν ακόμα να προγραμματιστούν εργασίες σε αυτό/α. Για την αποφυγή αυτού,"
-" συνιστάται η διαγραφή του κέντρου εργασίας."
+"Σημειώστε ότι το/τα αρχειοθετημένο/α κέντρο/α εργασίας: '%s' εξακολουθεί/ουν "
+"να συνδέεται/ονται με ενεργές Συνταγές Παραγωγής, πράγμα που σημαίνει ότι "
+"μπορούν ακόμα να προγραμματιστούν εργασίες σε αυτό/α. Για την αποφυγή αυτού, "
+"συνιστάται η διαγραφή του κέντρου εργασίας."
 
 #. module: mrp
 #. odoo-python
@@ -3868,12 +3950,17 @@ msgstr "Στόχος Συνολικής Αποτελεσματικότητας �
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
-"                                install the IoT App on a computer that is on the same local network as the\n"
-"                                barcode operator and configure the routing of the reports."
+"                                install the IoT App on a computer that is on "
+"the same local network as the\n"
+"                                barcode operator and configure the routing "
+"of the reports."
 msgstr ""
-"Το Odoo ανοίγει προεπισκόπηση PDF από προεπιλογή. Εάν θέλετε να εκτυπώνετε άμεσα,\n"
-"                                εγκαταστήστε την εφαρμογή IoT σε έναν υπολογιστή που βρίσκεται στο ίδιο τοπικό δίκτυο με τον\n"
-"                                χειριστή barcode και διαμορφώστε τη δρομολόγηση των αναφορών."
+"Το Odoo ανοίγει προεπισκόπηση PDF από προεπιλογή. Εάν θέλετε να εκτυπώνετε "
+"άμεσα,\n"
+"                                εγκαταστήστε την εφαρμογή IoT σε έναν "
+"υπολογιστή που βρίσκεται στο ίδιο τοπικό δίκτυο με τον\n"
+"                                χειριστή barcode και διαμορφώστε τη "
+"δρομολόγηση των αναφορών."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -3891,8 +3978,8 @@ msgstr "Σε Απόθεμα"
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
 msgstr ""
-"Μόνο εντολές παραγωγής σε κατάσταση είτε πρόχειρη ή επιβεβαιωμένη μπορούν να"
-" %s."
+"Μόνο εντολές παραγωγής σε κατάσταση είτε πρόχειρη ή επιβεβαιωμένη μπορούν να "
+"%s."
 
 #. module: mrp
 #. odoo-python
@@ -3940,10 +4027,12 @@ msgstr "Τύπος Εργασίας"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
-"                Each operation is done at a specific Work Center and has a specific duration."
+"                Each operation is done at a specific Work Center and has a "
+"specific duration."
 msgstr ""
 "Εργασία που πρέπει να εκτελεστεί για την υλοποίηση μιας Εντολής Εργασίας.\n"
-"                Κάθε εργασία πραγματοποιείται σε συγκεκριμένο Κέντρο Εργασίας και έχει καθορισμένη διάρκεια."
+"                Κάθε εργασία πραγματοποιείται σε συγκεκριμένο Κέντρο "
+"Εργασίας και έχει καθορισμένη διάρκεια."
 
 #. module: mrp
 #. odoo-python
@@ -4861,10 +4950,8 @@ msgstr "Η αναφορά πρέπει να είναι μοναδική ανά �
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
-msgid ""
-"Reference of the document that generated this production order request."
-msgstr ""
-"Αναφορά του εγγράφου που δημιούργησε αυτό το αίτημα εντολής παραγωγής."
+msgid "Reference of the document that generated this production order request."
+msgstr "Αναφορά του εγγράφου που δημιούργησε αυτό το αίτημα εντολής παραγωγής."
 
 #. module: mrp
 #. odoo-javascript
@@ -5220,8 +5307,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
-"Μερικά από τα υποπροϊόντα σας παρακολουθούνται, πρέπει να ορίσετε μια εντολή"
-" παραγωγής για να ανακτήσετε τα σωστά υποπροϊόντα."
+"Μερικά από τα υποπροϊόντα σας παρακολουθούνται, πρέπει να ορίσετε μια εντολή "
+"παραγωγής για να ανακτήσετε τα σωστά υποπροϊόντα."
 
 #. module: mrp
 #. odoo-python
@@ -5237,11 +5324,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders are already done, so you cannot unplan this manufacturing order.\n"
+"Some work orders are already done, so you cannot unplan this manufacturing "
+"order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Κάποιες εντολές εργασίας έχουν ήδη ολοκληρωθεί, οπότε δεν μπορείτε να αποπρογραμματίσετε αυτή την εντολή παραγωγής.\n"
+"Κάποιες εντολές εργασίας έχουν ήδη ολοκληρωθεί, οπότε δεν μπορείτε να "
+"αποπρογραμματίσετε αυτή την εντολή παραγωγής.\n"
 "\n"
 "Θα ήταν κρίμα να χαθεί όλη αυτή η πρόοδος, έτσι δεν είναι;"
 
@@ -5249,11 +5338,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders have already started, so you cannot unplan this manufacturing order.\n"
+"Some work orders have already started, so you cannot unplan this "
+"manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Κάποιες εντολές εργασίας έχουν ήδη ξεκινήσει, γι' αυτό δεν μπορείτε να ακυρώσετε τον προγραμματισμό αυτής της εντολής παραγωγής.\n"
+"Κάποιες εντολές εργασίας έχουν ήδη ξεκινήσει, γι' αυτό δεν μπορείτε να "
+"ακυρώσετε τον προγραμματισμό αυτής της εντολής παραγωγής.\n"
 "\n"
 "Θα ήταν κρίμα να χαθεί όλη αυτή η πρόοδος, σωστά;"
 
@@ -5274,11 +5365,9 @@ msgstr "Ειδικές Χωρητικότητες"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
-msgid ""
-"Specific number of pieces that can be produced in parallel per product."
+msgid "Specific number of pieces that can be produced in parallel per product."
 msgstr ""
-"Συγκεκριμένος αριθμός τεμαχίων που μπορούν να παραχθούν παράλληλα ανά "
-"προϊόν."
+"Συγκεκριμένος αριθμός τεμαχίων που μπορούν να παραχθούν παράλληλα ανά προϊόν."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -5561,8 +5650,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
-"Η τιμή χαρακτηριστικού %(attribute)s έχει οριστεί στο προϊόν %(product)s δεν"
-" ταιριάζει με το προϊόν της Συνταγής Παραγωγής %(bom_product)s."
+"Η τιμή χαρακτηριστικού %(attribute)s έχει οριστεί στο προϊόν %(product)s δεν "
+"ταιριάζει με το προϊόν της Συνταγής Παραγωγής %(bom_product)s."
 
 #. module: mrp
 #. odoo-python
@@ -5632,8 +5721,7 @@ msgid ""
 "of all by-products' cost share must be smaller or equal to 100."
 msgstr ""
 "Το ποσοστό του τελικού κόστους παραγωγής για αυτό το υποπροϊόν. Το συνολικό "
-"μερίδιο κόστους όλων των υποπροϊόντων πρέπει να είναι μικρότερο ή ίσο με "
-"100."
+"μερίδιο κόστους όλων των υποπροϊόντων πρέπει να είναι μικρότερο ή ίσο με 100."
 
 #. module: mrp
 #. odoo-python
@@ -5642,9 +5730,9 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
-"Η προγραμματισμένη ημερομηνία λήξης της εντολής εργασίας δεν μπορεί να είναι"
-" πριν από την προγραμματισμένη ημερομηνία έναρξης, παρακαλώ διορθώστε το για"
-" να αποθηκευτεί η εντολή εργασίας."
+"Η προγραμματισμένη ημερομηνία λήξης της εντολής εργασίας δεν μπορεί να είναι "
+"πριν από την προγραμματισμένη ημερομηνία έναρξης, παρακαλώ διορθώστε το για "
+"να αποθηκευτεί η εντολή εργασίας."
 
 #. module: mrp
 #. odoo-python
@@ -5682,11 +5770,11 @@ msgstr "Η ποσότητα προς αποσυναρμολόγηση πρέπε
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"The serial number %(number)s used for byproduct %(product_name)s has already"
-" been produced"
+"The serial number %(number)s used for byproduct %(product_name)s has already "
+"been produced"
 msgstr ""
-"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το υποπροϊόν "
-"%(product_name)s έχει ήδη παραχθεί"
+"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το υποπροϊόν %"
+"(product_name)s έχει ήδη παραχθεί"
 
 #. module: mrp
 #. odoo-python
@@ -5695,8 +5783,8 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
-"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το συστατικό "
-"%(component)s έχει ήδη αναλωθεί"
+"Ο σειριακός αριθμός %(number)s που χρησιμοποιείται για το συστατικό %"
+"(component)s έχει ήδη αναλωθεί"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
@@ -5737,8 +5825,7 @@ msgstr "Η εντολή εργασίας θα έπρεπε να έχει ήδη 
 msgid ""
 "There are no components to consume. Are you still sure you want to continue?"
 msgstr ""
-"Δεν υπάρχουν συστατικά προς ανάλωση. Είστε σίγουροι ότι θέλετε να "
-"συνεχίσετε;"
+"Δεν υπάρχουν συστατικά προς ανάλωση. Είστε σίγουροι ότι θέλετε να συνεχίσετε;"
 
 #. module: mrp
 #. odoo-python
@@ -5764,8 +5851,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
-"Αυτό το πεδίο χρησιμοποιείται για τον καθορισμό της ζώνης ώρας στην οποία θα"
-" εργάζονται οι πόροι."
+"Αυτό το πεδίο χρησιμοποιείται για τον καθορισμό της ζώνης ώρας στην οποία θα "
+"εργάζονται οι πόροι."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
@@ -5778,8 +5865,8 @@ msgid ""
 msgstr ""
 "Αυτό το πεδίο χρησιμοποιείται για τον υπολογισμό της αναμενόμενης διάρκειας "
 "μιας εντολής εργασίας σε αυτό το κέντρο εργασίας. Για παράδειγμα, αν μια "
-"εντολή εργασίας διαρκεί μία ώρα και ο συντελεστής αποδοτικότητας είναι 100%,"
-" τότε η αναμενόμενη διάρκεια θα είναι μία ώρα. Αν όμως ο συντελεστής "
+"εντολή εργασίας διαρκεί μία ώρα και ο συντελεστής αποδοτικότητας είναι 100%, "
+"τότε η αναμενόμενη διάρκεια θα είναι μία ώρα. Αν όμως ο συντελεστής "
 "αποδοτικότητας είναι 200%, η αναμενόμενη διάρκεια θα είναι 30 λεπτά."
 
 #. module: mrp
@@ -5808,11 +5895,15 @@ msgstr "Αυτό είναι το κόστος που ορίζεται στο π�
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid ""
-"This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                You can filter on the product to see all the past movements for the product."
+"This menu gives you the full traceability of inventory operations on a "
+"specific product.\n"
+"                You can filter on the product to see all the past movements "
+"for the product."
 msgstr ""
-"Αυτό το μενού σας παρέχει πλήρη ιχνηλασιμότητα των αποθεματικών κινήσεων για ένα συγκεκριμένο προϊόν.\n"
-"                Μπορείτε να φιλτράρετε ανά προϊόν για να δείτε όλες τις προηγούμενες κινήσεις του προϊόντος."
+"Αυτό το μενού σας παρέχει πλήρη ιχνηλασιμότητα των αποθεματικών κινήσεων για "
+"ένα συγκεκριμένο προϊόν.\n"
+"                Μπορείτε να φιλτράρετε ανά προϊόν για να δείτε όλες τις "
+"προηγούμενες κινήσεις του προϊόντος."
 
 #. module: mrp
 #. odoo-python
@@ -5840,9 +5931,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
-"Αυτή πρέπει να είναι η μικρότερη ποσότητα στην οποία μπορεί να παραχθεί αυτό"
-" το προϊόν. Εάν η Συνταγή Παραγωγής περιλαμβάνει εργασίες, βεβαιωθείτε ότι η"
-" χωρητικότητα του κέντρου εργασίας είναι ακριβής."
+"Αυτή πρέπει να είναι η μικρότερη ποσότητα στην οποία μπορεί να παραχθεί αυτό "
+"το προϊόν. Εάν η Συνταγή Παραγωγής περιλαμβάνει εργασίες, βεβαιωθείτε ότι η "
+"χωρητικότητα του κέντρου εργασίας είναι ακριβής."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -6098,8 +6189,7 @@ msgstr "Τύπος της καταγεγραμμένης δραστηριότη�
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Unable to split with more than the quantity to produce."
 msgstr ""
-"Δεν είναι δυνατός ο διαχωρισμός με ποσότητα μεγαλύτερη από την προς "
-"παραγωγή."
+"Δεν είναι δυνατός ο διαχωρισμός με ποσότητα μεγαλύτερη από την προς παραγωγή."
 
 #. module: mrp
 #. odoo-javascript
@@ -6311,8 +6401,8 @@ msgstr "Επικύρωση"
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 msgid ""
 "Values cannot be set and validated because a Lot/Serial Number needs to be "
-"specified for a tracked product that is having its consumed amount "
-"increased:%(products)s"
+"specified for a tracked product that is having its consumed amount increased:"
+"%(products)s"
 msgstr ""
 "Οι τιμές δεν μπορούν να οριστούν και να επικυρωθούν γιατί πρέπει να οριστεί "
 "ένας Αριθμός Παρτίδας/Σειριακός Αριθμός για ένα παρακολουθούμενο προϊόν του "
@@ -6436,8 +6526,8 @@ msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a operation type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same"
-" operation type. That allows to define stock rules which trigger different "
+"try to create a Manufacturing Order for that product using a BoM of the same "
+"operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
 "Όταν μια προμήθεια έχει διαδρομή 'παραγωγής' με ορισμένο τύπο εργασίας, θα "
@@ -6450,11 +6540,15 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
 msgid ""
-"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+"When activated, then the registration of consumption for that component is "
+"recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually "
+"on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
-"Όταν ενεργοποιηθεί, η καταγραφή της ανάλωσης για το συγκεκριμένο συστατικό γίνεται αποκλειστικά χειροκίνητα.\n"
-"Αν δεν ενεργοποιηθεί και οποιαδήποτε ανάλωση συστατικών τροποποιηθεί χειροκίνητα στην εντολή παραγωγής, το Odoo θεωρεί επίσης χειροκίνητη ανάλωση."
+"Όταν ενεργοποιηθεί, η καταγραφή της ανάλωσης για το συγκεκριμένο συστατικό "
+"γίνεται αποκλειστικά χειροκίνητα.\n"
+"Αν δεν ενεργοποιηθεί και οποιαδήποτε ανάλωση συστατικών τροποποιηθεί "
+"χειροκίνητα στην εντολή παραγωγής, το Odoo θεωρεί επίσης χειροκίνητη ανάλωση."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6485,9 +6579,9 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"Με τον πίνακα ελέγχου κέντρου εργασίας του Odoo, ο εργαζόμενός σας μπορεί να"
-" ξεκινά τις εντολές εργασίας στο εργαστήριο και να ακολουθεί τις οδηγίες του"
-" φύλλου εργασίας. Οι ποιοτικοί έλεγχοι είναι πλήρως ενσωματωμένοι στη "
+"Με τον πίνακα ελέγχου κέντρου εργασίας του Odoo, ο εργαζόμενός σας μπορεί να "
+"ξεκινά τις εντολές εργασίας στο εργαστήριο και να ακολουθεί τις οδηγίες του "
+"φύλλου εργασίας. Οι ποιοτικοί έλεγχοι είναι πλήρως ενσωματωμένοι στη "
 "διαδικασία. Οι εργαζόμενοι μπορούν να ενεργοποιούν βρόχους ανατροφοδότησης, "
 "ειδοποιήσεις συντήρησης, απόρριψη προϊόντων κ.ά."
 
@@ -6659,10 +6753,13 @@ msgstr "Κέντρο εργασίας"
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+"                    Operations are defined in the bill of materials or added "
+"in the manufacturing order directly."
 msgstr ""
-"Οι εντολές εργασίας είναι οι εργασίες που πρέπει να γίνουν ως μέρος μιας εντολής παραγωγής.\n"
-"                    Οι εργασίες ορίζονται στη συνταγή παραγωγής ή προστίθενται απευθείας στην εντολή παραγωγής."
+"Οι εντολές εργασίας είναι οι εργασίες που πρέπει να γίνουν ως μέρος μιας "
+"εντολής παραγωγής.\n"
+"                    Οι εργασίες ορίζονται στη συνταγή παραγωγής ή "
+"προστίθενται απευθείας στην εντολή παραγωγής."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6671,17 +6768,19 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"            Operations are defined in the bill of materials or added in the manufacturing order directly."
+"            Operations are defined in the bill of materials or added in the "
+"manufacturing order directly."
 msgstr ""
-"Οι εντολές εργασίας είναι ενέργειες που πρέπει να εκτελεστούν στο πλαίσιο μιας εντολής παραγωγής.\n"
-"            Οι ενέργειες αυτές ορίζονται στη συνταγή παραγωγής ή προστίθενται απευθείας στην εντολή παραγωγής."
+"Οι εντολές εργασίας είναι ενέργειες που πρέπει να εκτελεστούν στο πλαίσιο "
+"μιας εντολής παραγωγής.\n"
+"            Οι ενέργειες αυτές ορίζονται στη συνταγή παραγωγής ή "
+"προστίθενται απευθείας στην εντολή παραγωγής."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
 msgstr ""
-"Εντολές εργασίας σε εξέλιξη. Κάντε κλικ για να εμποδίσετε το κέντρο "
-"εργασίας."
+"Εντολές εργασίας σε εξέλιξη. Κάντε κλικ για να εμποδίσετε το κέντρο εργασίας."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workcenter_id
@@ -6786,8 +6885,8 @@ msgid ""
 "Components\"."
 msgstr ""
 "Δεν επιτρέπεται η δημιουργία ή επεξεργασία παρτίδας ή σειριακού αριθμού για "
-"τα συστατικά με τύπο εργασίας 'Παραγωγή'. Για να το αλλάξετε, μεταβείτε στον"
-" τύπο εργασίας και επιλέξτε το πλαίσιο 'Δημιουργία νέων παρτίδων/σειριακών "
+"τα συστατικά με τύπο εργασίας 'Παραγωγή'. Για να το αλλάξετε, μεταβείτε στον "
+"τύπο εργασίας και επιλέξτε το πλαίσιο 'Δημιουργία νέων παρτίδων/σειριακών "
 "αριθμών για τα συστατικά'"
 
 #. module: mrp
@@ -6807,7 +6906,8 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"Δεν μπορείτε να διαγράψετε μία Συνταγή Παραγωγής ενώ τρέχει σε κάποια εντολή παραγωγής.\n"
+"Δεν μπορείτε να διαγράψετε μία Συνταγή Παραγωγής ενώ τρέχει σε κάποια εντολή "
+"παραγωγής.\n"
 "Παρακαλώ κλείστε την ή ακυρώστε την πρώτα."
 
 #. module: mrp
@@ -6840,15 +6940,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You can only merge manufacturing with the same state."
-msgstr ""
-"Μπορείτε να συγχωνεύσετε μόνο εντολές παραγωγής με την ίδια κατάσταση."
+msgstr "Μπορείτε να συγχωνεύσετε μόνο εντολές παραγωγής με την ίδια κατάσταση."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"You cannot change the workcenter of a work order that is in progress or "
-"done."
+"You cannot change the workcenter of a work order that is in progress or done."
 msgstr ""
 "Δεν μπορείτε να αλλάξετε το κέντρο εργασίας μιας εντολής εργασίας που "
 "βρίσκεται σε εξέλιξη ή έχει ολοκληρωθεί."
@@ -6936,19 +7034,27 @@ msgid ""
 "                            Please confirm it has been done on purpose.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Please review your component consumption or ask a manager to validate\n"
-"                            <span invisible=\"mrp_production_count != 1\">this manufacturing order</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
+"                            Please review your component consumption or ask "
+"a manager to validate\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">this manufacturing order</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
-"Καταναλώσατε διαφορετική ποσότητα από την αναμενόμενη για τα παρακάτω προϊόντα.\n"
+"Καταναλώσατε διαφορετική ποσότητα από την αναμενόμενη για τα παρακάτω "
+"προϊόντα.\n"
 "                        <b invisible=\"consumption == 'strict'\">\n"
-"                            Παρακαλούμε επιβεβαιώστε ότι αυτό έγινε εσκεμμένα.\n"
+"                            Παρακαλούμε επιβεβαιώστε ότι αυτό έγινε "
+"εσκεμμένα.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Παρακαλώ επανεξετάστε την ανάλωση των συστατικών ή ζητήστε από έναν υπεύθυνο να επικυρώσει\n"
-"                            <span invisible=\"mrp_production_count != 1\">αυτή την εντολή παραγωγής</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">αυτές τις εντολές παραγωγής</span>.\n"
+"                            Παρακαλώ επανεξετάστε την ανάλωση των συστατικών "
+"ή ζητήστε από έναν υπεύθυνο να επικυρώσει\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">αυτή την εντολή παραγωγής</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">αυτές τις εντολές παραγωγής</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -6974,8 +7080,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
-" Productivity Losses."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
 msgstr ""
 "Πρέπει να ορίσετε τουλάχιστον μία απώλεια παραγωγικότητας στην κατηγορία "
 "'Παραγωγικότητα'. Δημιουργήστε μία από την εφαρμογή Παραγωγής, μενού: "
@@ -7003,8 +7109,8 @@ msgstr "Πρέπει να ορίσετε παρτίδα για το τελικό
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
 "Πρέπει να παρέχετε Αριθμό Παρτίδας/Σειριακό Αριθμό για τα προϊόντα και να "
 "τους 'αναλώσετε': %(missing_products)s"

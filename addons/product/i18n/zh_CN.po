@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Tiffany Chang, 2024
@@ -10,19 +10,20 @@
 # Chill Liao <chill421@qq.com>, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-10-11 02:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product
@@ -63,19 +64,23 @@ msgstr "$15.00"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+"fee\n"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
-"%(base)s 然后套用 %(discount)s%% %(discount_type)s 并加上 %(surcharge)s 额外费用\n"
+"%(base)s 然后套用 %(discount)s%% %(discount_type)s 并加上 %(surcharge)s 额外"
+"费用\n"
 "例：%(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
-msgstr "%(item_name)s：结束日期（%(end_date)s）应在开始日期（%(start_date)s）之后"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
+msgstr ""
+"%(item_name)s：结束日期（%(end_date)s）应在开始日期（%(start_date)s）之后"
 
 #. module: product
 #. odoo-python
@@ -138,14 +143,17 @@ msgstr "- %(amount)s回扣"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgid ""
+"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr "- 条形码 “%(barcode)s” 已分配给产品：%(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
@@ -220,13 +228,16 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"箭头 icon\""
-" title=\"箭头\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"箭头 "
+"icon\" title=\"箭头\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"币别\" title=\"币别\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"币别\" title=\"币别\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -234,14 +245,16 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                            Rules\n"
 "                                        </span>\n"
-"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                            规则\n"
 "                                        </span>\n"
-"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                            规则\n"
 "                                        </span>"
 
@@ -251,14 +264,16 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        Pricelists\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
 "                                        价格表\n"
 "                                    </span>\n"
-"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"pricelist_item_count != 1\">\n"
 "                                        价格表\n"
 "                                    </span>"
 
@@ -349,10 +364,12 @@ msgstr "组合产品必须包含至少 1 个组合选项。"
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
-msgstr "您想与客户沟通的产品说明。 此说明将被复制到每个销售订单，交货订单和客户结算单/信用单"
+msgstr ""
+"您想与客户沟通的产品说明。 此说明将被复制到每个销售订单，交货订单和客户结算"
+"单/信用单"
 
 #. module: product
 #. odoo-python
@@ -363,11 +380,23 @@ msgstr "已经有包装使用该条码"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
-"价格是一组销售价格或计算销售订单明细价格的规则，基于产品、产品类别、订单日期和订购数量。 \n"
+"价格是一组销售价格或计算销售订单明细价格的规则，基于产品、产品类别、订单日期"
+"和订购数量。 \n"
 "这是处理多种定价、季节性折扣等的完美工具。"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -529,10 +558,8 @@ msgid "All Product Variants using this Tag"
 msgstr "所有产品变体都使用该标记"
 
 #. module: product
-#. odoo-javascript
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
-#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "All Products"
@@ -1471,10 +1498,11 @@ msgstr "额外价格"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
 msgstr ""
-"累加单价: 变体的销售价格随着累加单价进行变化,如:原销售单价是1000,累加单价是200,则该变体售价是1200 = 1000 + 200."
+"累加单价: 变体的销售价格随着累加单价进行变化,如:原销售单价是1000,累加单价是"
+"200,则该变体售价是1200 = 1000 + 200."
 
 #. module: product
 #: model:product.attribute,name:product.fabric_attribute
@@ -1545,9 +1573,12 @@ msgstr "Font Awesome图标，例如：fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
-msgstr "对于规则提出申请，购买进/卖出量必须大于或等于本字段在衡量产品的默认单位表达规定的最低数量。"
+msgstr ""
+"对于规则提出申请，购买进/卖出量必须大于或等于本字段在衡量产品的默认单位表达规"
+"定的最低数量。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
@@ -1661,7 +1692,9 @@ msgstr "有消息"
 msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
-msgstr "如果属性类型为“颜色”，则可以在此处设置特定的HTML颜色索引（例如＃ff0000）以显示颜色。"
+msgstr ""
+"如果属性类型为“颜色”，则可以在此处设置特定的HTML颜色索引（例如＃ff0000）以显"
+"示颜色。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -2018,9 +2051,11 @@ msgstr "寻找与现有家具相匹配的定制竹染色？联系我们获取报
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
-msgstr "设置此属性值，不可用于与指定产品的某属性值。或者不可用于指定推荐产品的某属性值。"
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
+msgstr ""
+"设置此属性值，不可用于与指定产品的某属性值。或者不可用于指定推荐产品的某属性"
+"值。"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -2293,17 +2328,21 @@ msgstr "办公台灯"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
-msgstr "在产品 %(product)s 上，您不能将值 %(value)s 与属性 %(attribute)s 关联起来，因为它们不匹配。"
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
+msgstr ""
+"在产品 %(product)s 上，您不能将值 %(value)s 与属性 %(attribute)s 关联起来，因"
+"为它们不匹配。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
-msgstr "对于产品%(product)s，您无法将属性转换为%(attribute_src)s属性%(attribute_dest)s。"
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
+msgstr ""
+"对于产品%(product)s，您无法将属性转换为%(attribute_src)s属性%"
+"(attribute_dest)s。"
 
 #. module: product
 #. odoo-javascript
@@ -2992,8 +3031,8 @@ msgstr "参考号"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
 msgstr "根据数量和时期，记录供应商要求的每种产品的价格。"
 
 #. module: product
@@ -3169,7 +3208,9 @@ msgstr "特定属性产品价格表"
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr "指定一个产品类别 ，规则只被应用在与这个类别以及它的下级类一致的产品上。其它情况留空。"
+msgstr ""
+"指定一个产品类别 ，规则只被应用在与这个类别以及它的下级类一致的产品上。其它情"
+"况留空。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -3296,8 +3337,8 @@ msgstr "参考 “%s” 已经存在。"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr "属性%(attribute)s必须至少具有产品%(product)s的一个值。"
 
 #. module: product
@@ -3321,7 +3362,9 @@ msgid ""
 "The desk organiser is perfect for storing all kinds of small things and "
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
-msgstr "这款桌面收纳盒非常适合存放各种小东西，由于 5 个盒子都是松散的，您可以按照最适合自己和物品的方式移动和摆放它们。"
+msgstr ""
+"这款桌面收纳盒非常适合存放各种小东西，由于 5 个盒子都是松散的，您可以按照最适"
+"合自己和物品的方式移动和摆放它们。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -3353,10 +3396,11 @@ msgstr "最小保证金应低于最大保证金。"
 msgid ""
 "The minimum price among the products in this combo. This value will be used "
 "to prorate the price of this combo with respect to the other combos in a "
-"combo product. This heuristic ensures that whatever product the user chooses"
-" in a combo, it will always be the same price."
+"combo product. This heuristic ensures that whatever product the user chooses "
+"in a combo, it will always be the same price."
 msgstr ""
-"该组合中产品的最低价格。该值将用于按比例分配该组合相对于组合产品中其他组合的价格。这种启发式方法确保用户在组合中选择任何产品时，价格始终相同。"
+"该组合中产品的最低价格。该值将用于按比例分配该组合相对于组合产品中其他组合的"
+"价格。这种启发式方法确保用户在组合中选择任何产品时，价格始终相同。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3369,12 +3413,13 @@ msgstr "此类别下的产品数量（不考虑子类别）"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
-"要生成的变量数量超过了允许的限制。要么不为每个组合生成变体，要么根据销售订单的要求生成变体。为此，请打开属性的表单视图并更改*创建变量*模式。"
+"要生成的变量数量超过了允许的限制。要么不为每个组合生成变体，要么根据销售订单"
+"的要求生成变体。为此，请打开属性的表单视图并更改*创建变量*模式。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3405,8 +3450,8 @@ msgstr "舍入方法必须严格为正数。"
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr "销售价格由产品模板管理。点击“可变配置”按钮来设置额外的产品变体价格。"
 
 #. module: product
@@ -3442,7 +3487,9 @@ msgid ""
 "This configuration of product attributes, values, and exclusions would lead "
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
-msgstr "产品属性、值和排除项的这种配置不会导致任何可能的变体。 如果需要，请直接存档或删除您的产品。"
+msgstr ""
+"产品属性、值和排除项的这种配置不会导致任何可能的变体。 如果需要，请直接存档或"
+"删除您的产品。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -3478,7 +3525,8 @@ msgstr "该产品是组合商品的一部分，因此其类型不能更改为 �
 #. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
-"This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
+"This rounding precision is higher than the Decimal Accuracy (%(digits)s "
+"digits).\n"
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
@@ -3690,7 +3738,8 @@ msgstr "价值计数"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "产品价值（在AVCO中自动计算）。\n"
@@ -3882,8 +3931,8 @@ msgstr "警告"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
 msgstr "我们特别注重细节，这就是我们的办公桌质量上乘的原因。"
 
 #. module: product
@@ -3948,7 +3997,8 @@ msgid ""
 "You are setting a Decimal Accuracy less precise than the UOMs:\n"
 "%s\n"
 "This may cause inconsistencies in computations.\n"
-"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+"Please increase the rounding of those units of measure, or the digits of "
+"this Decimal Accuracy."
 msgstr ""
 "您设置的小数精度低于计量单位:\n"
 "%s\n"
@@ -4012,7 +4062,8 @@ msgstr "您不能将主要价格表分配为PriceList项目中的其他价格表
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
 "您不能更改属性%(attribute)s的 \"变体创建模式\"， 因为该属性已用于以下产品：\n"
@@ -4022,24 +4073,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
 msgstr "您不能更改 %(value)s 值的属性，因为它已用于以下产品：%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
 msgstr "无法更改在产品%(product)s上设置的产品值%(value)s。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr "无法更改在产品%(product)s上设置的值%(value)s。"
 
 #. module: product
@@ -4080,7 +4131,8 @@ msgstr "您不能删除%s产品类别."
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
 "您不能删除属性 %(attribute)s ，因为该属性已被用于以下产品：\n"
@@ -4090,7 +4142,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
 msgstr ""
 "不可删除值 %(value)s，因为该值已被用于以下产品：\n"
@@ -4107,9 +4160,10 @@ msgstr "您不能删除此产品类别，它是默认的常规类别。"
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
-msgstr "无法将属性%(attribute)s从产品%(product_src)s调整至产品%(product_dest)s。"
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
+msgstr ""
+"无法将属性%(attribute)s从产品%(product_src)s调整至产品%(product_dest)s。"
 
 #. module: product
 #. odoo-python
@@ -4124,7 +4178,8 @@ msgstr "不能直接在变体中更新变体值。请在变体管理中进行相
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 "您必须为您销售或采购的所有产品定义产品、\n"
 "                            无论是可储存产品、消耗品还是服务。"
@@ -4144,8 +4199,10 @@ msgstr ""
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "必须定义所有的产品类型,\n"
 "                确定其是可库存产品，消耗品，或服务。\n"
@@ -4155,10 +4212,13 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "您必须为您销售的每一件产品定义一种产品，不管它是一种物理产品。\n"
 "您为顾客提供的消耗品或服务。\n"
