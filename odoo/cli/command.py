@@ -1,11 +1,11 @@
 import argparse
-import contextlib
 import logging
 import sys
+import traceback
 from inspect import cleandoc
 from pathlib import Path
 
-import odoo.init  # import first for core setup
+import odoo.init  # import first for core setup  # noqa: F401
 import odoo.cli
 from odoo.modules import get_module_path, get_modules, initialize_sys_path
 from odoo.tools import config
@@ -57,8 +57,13 @@ def load_addons_commands():
     initialize_sys_path()
     for module in get_modules():
         if (Path(get_module_path(module)) / 'cli').is_dir():
-            with contextlib.suppress(ImportError):
-                __import__(f'odoo.addons.{module}')
+            try:
+                __import__('odoo.addons.' + module)
+            except Exception:  # noqa: BLE001
+                print("Failed to scan module", module, file=sys.stderr)  # noqa: T201
+                if module == 'hw_drivers':
+                    print("maybe a git clean -df addons/ can fix the problem", file=sys.stderr)  # noqa: T201
+                traceback.print_exc()
     logging.disable(logging.NOTSET)
     return list(commands)
 
