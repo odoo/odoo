@@ -748,3 +748,95 @@ class TestConfigManager(TransactionCase):
             _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
         self.assertIsNone(options['db_replica_host'])
         self.assertEqual(options['dev_mode'], ['replica'])
+
+    def test_14_size_unit_parsing(self):
+        """Test size_unit type parsing for memory limit options"""
+        # Test with human-readable size units via CLI
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '2GB',
+            '--limit-memory-hard', '2560MB',
+        ])
+        self.assertEqual(options['limit_memory_soft'], 2 * 1024 ** 3)  # 2GB in bytes
+        self.assertEqual(options['limit_memory_hard'], 2560 * 1024 ** 2)  # 2560MB in bytes
+        # limit_memory_soft_gevent should default to None when not specified
+        self.assertIsNone(options['limit_memory_soft_gevent'])
+        self.assertIsNone(options['limit_memory_hard_gevent'])
+
+        # Test backward compatibility with raw integers
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '2147483648',
+            '--limit-memory-hard', '2684354560',
+        ])
+        self.assertEqual(options['limit_memory_soft'], 2147483648)
+        self.assertEqual(options['limit_memory_hard'], 2684354560)
+        self.assertIsNone(options['limit_memory_soft_gevent'])
+        self.assertIsNone(options['limit_memory_hard_gevent'])
+
+        # Test various size units
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '512KB',
+            '--limit-memory-hard', '1024MB',
+        ])
+        self.assertEqual(options['limit_memory_soft'], 512 * 1024)  # 512KB in bytes
+        self.assertEqual(options['limit_memory_hard'], 1024 * 1024 ** 2)  # 1024MB in bytes
+
+        # Test case insensitivity
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '2gb',
+            '--limit-memory-hard', '2560mb',
+        ])
+        self.assertEqual(options['limit_memory_soft'], 2 * 1024 ** 3)
+        self.assertEqual(options['limit_memory_hard'], 2560 * 1024 ** 2)
+
+        # Test decimal numbers
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '2.5GB',
+            '--limit-memory-hard', '1.5GB',
+        ])
+        self.assertEqual(options['limit_memory_soft'], int(2.5 * 1024 ** 3))
+        self.assertEqual(options['limit_memory_hard'], int(1.5 * 1024 ** 3))
+
+        # Test with whitespace
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '2 GB',
+            '--limit-memory-hard', '2560 MB',
+        ])
+        self.assertEqual(options['limit_memory_soft'], 2 * 1024 ** 3)
+        self.assertEqual(options['limit_memory_hard'], 2560 * 1024 ** 2)
+
+        # Test gevent-specific options with size units
+        _, options = self.parse_reset([
+            '--limit-memory-soft-gevent', '1GB',
+            '--limit-memory-hard-gevent', '1.5GB',
+        ])
+        self.assertEqual(options['limit_memory_soft_gevent'], 1 * 1024 ** 3)
+        self.assertEqual(options['limit_memory_hard_gevent'], int(1.5 * 1024 ** 3))
+        # Non-gevent versions should still have their defaults
+        self.assertEqual(options['limit_memory_soft'], 2048 * 1024 * 1024)
+        self.assertEqual(options['limit_memory_hard'], 2560 * 1024 * 1024)
+
+    @patch('optparse.OptionParser.error')
+    def test_15_size_unit_invalid_format(self, error):
+        """Test that invalid size_unit formats raise appropriate errors"""
+        # Invalid format - letters without valid unit
+        self.parse_reset(['--limit-memory-soft', 'invalid'])
+        # Invalid format - unit only
+        self.parse_reset(['--limit-memory-soft', 'GB'])
+
+        # Verify error was called with helpful messages
+        self.assertEqual(error.call_count, 2)
+        calls = [str(call) for call in error.call_args_list]
+        self.assertIn('invalid size format', calls[0])
+        self.assertIn('invalid', calls[0])
+        self.assertIn('invalid size format', calls[1])
+        self.assertIn('GB', calls[1])
+
+    def test_16_size_unit_negative_values(self):
+        """Test that negative values are converted to positive (absolute value)"""
+        _, options = self.parse_reset([
+            '--limit-memory-soft', '-2GB',
+            '--limit-memory-hard', '-1024MB',
+        ])
+        # Negative values should be converted to positive
+        self.assertEqual(options['limit_memory_soft'], 2 * 1024 ** 3)
+        self.assertEqual(options['limit_memory_hard'], 1024 * 1024 ** 2)

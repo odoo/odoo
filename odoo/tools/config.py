@@ -11,6 +11,7 @@ import os
 import sys
 import tempfile
 import warnings
+import re
 from os.path import expandvars, expanduser, abspath, realpath, normcase
 from odoo import release
 from odoo.tools.func import classproperty
@@ -40,7 +41,7 @@ EMPTY = _Empty()
 class _OdooOption(optparse.Option):
     config = None  # must be overriden
 
-    TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma',
+    TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma', 'size_unit',
              'addons_path', 'upgrade_path', 'pre_upgrade_scripts', 'without_demo']
 
     @classproperty
@@ -53,6 +54,7 @@ class _OdooOption(optparse.Option):
             'bool': cls.config._check_bool,
             'path': cls.config._check_path,
             'comma': cls.config._check_comma,
+            'size_unit': cls.config._check_size_unit,
             'addons_path': cls.config._check_addons_path,
             'upgrade_path': cls.config._check_upgrade_path,
             'pre_upgrade_scripts': cls.config._check_scripts,
@@ -69,6 +71,7 @@ class _OdooOption(optparse.Option):
             'bool': cls.config._format_string,
             'path': cls.config._format_string,
             'comma': cls.config._format_list,
+            'size_unit': cls.config._format_string,
             'addons_path': cls.config._format_list,
             'upgrade_path': cls.config._format_list,
             'pre_upgrade_scripts': cls.config._format_list,
@@ -460,22 +463,22 @@ class configmanager:
         group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
                          help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                          "reset after the current request (default 2048MiB).",
-                         type="int")
+                         type="size_unit")
         group.add_option(PosixOnlyOption(
                          "--limit-memory-soft-gevent", dest="limit_memory_soft_gevent", my_default=None,
                          help="Maximum allowed virtual memory per gevent worker (in bytes), when reached the worker will be "
                          "reset after the current request. Defaults to `--limit-memory-soft`.",
-                         type="int"))
+                         type="size_unit"))
         group.add_option(PosixOnlyOption(
                          "--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
                          help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory "
                          "allocation will fail (default 2560MiB).",
-                         type="int"))
+                         type="size_unit"))
         group.add_option(PosixOnlyOption(
                          "--limit-memory-hard-gevent", dest="limit_memory_hard_gevent", my_default=None,
                          help="Maximum allowed virtual memory per gevent worker (in bytes), when reached, any memory "
                          "allocation will fail. Defaults to `--limit-memory-hard`.",
-                         type="int"))
+                         type="size_unit"))
         group.add_option(PosixOnlyOption(
                          "--limit-time-cpu", dest="limit_time_cpu", my_default=60,
                          help="Maximum allowed CPU time per request (default 60).",
@@ -834,6 +837,40 @@ class configmanager:
     @classmethod
     def _check_comma(cls, option_name, option, value):
         return [v for s in value.split(',') if (v := s.strip())]
+
+    @classmethod
+    def _check_size_unit(cls, option, opt, value):
+        """Parse size with optional unit suffix (B, KB, MB, GB, TB).
+        """
+        value = str(value).strip()
+        if not value:
+            return None
+
+        if value.isdigit():
+            return int(value)
+
+        match = re.match(
+            r'^-?(\d+(?:\.\d+)?)\s*(B|KB|MB|GB|TB)$',
+            value,
+            re.IGNORECASE
+        )
+        if not match:
+            raise optparse.OptionValueError(
+                f"option {opt}: invalid size format: {value!r}. "
+                "Expected format: '1024MB', '2GB', '512KB', or bytes as integer"
+            )
+        number, unit = match.groups()
+        number = float(number)
+        unit = unit.upper()
+
+        multipliers = {
+            'B': 1,
+            'KB': 1024,
+            'MB': 1024 ** 2,
+            'GB': 1024 ** 3,
+            'TB': 1024 ** 4,
+        }
+        return int(number * multipliers[unit])
 
     @classmethod
     def _check_path(cls, option, opt, value):
