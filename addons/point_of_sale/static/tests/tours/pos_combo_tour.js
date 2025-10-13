@@ -254,3 +254,28 @@ registry.category("web_tour.tours").add("test_combo_disallowLineQuantityChange_2
             Order.hasTotal("47.33"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_combo_item_image_display", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.checkImgAndSelect("Combo Product 2", true),
+            combo.checkImgAndSelect("Combo Product 4", true),
+            combo.checkImgAndSelect("Combo Product 6", true),
+            Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_item_image_not_display", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.checkImgAndSelect("Combo Product 2", false),
+            combo.checkImgAndSelect("Combo Product 4", false),
+            combo.checkImgAndSelect("Combo Product 6", false),
+            Dialog.confirm(),
+        ].flat(),
+});
