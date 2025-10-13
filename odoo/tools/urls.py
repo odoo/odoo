@@ -1,7 +1,12 @@
 import re
 import urllib.parse
-from urllib.parse import _WHATWG_C0_CONTROL_OR_SPACE
 
+try:
+    # For Python ≤3.10
+    from urllib.parse import _WHATWG_C0_CONTROL_OR_SPACE
+except ImportError:
+    # For Python 3.11+ (constant removed)
+    _WHATWG_C0_CONTROL_OR_SPACE = re.compile(r"[\x00-\x20]")
 __all__ = ['urljoin']
 
 
