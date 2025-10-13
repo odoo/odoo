@@ -3,10 +3,6 @@ declare module "models" {
 
     export interface DiscussApp extends DiscussAppClass {}
 
-    export interface DiscussChannel {
-        autoOpenChatWindowOnNewMessage: Readonly<boolean>;
-        inChathubOnNewMessage: Readonly<boolean>;
-    }
     export interface Store {
         action_discuss_id: number|undefined;
         discuss: DiscussApp;

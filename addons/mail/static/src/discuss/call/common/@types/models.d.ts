@@ -9,20 +9,6 @@ declare module "models" {
         rtc_inviting_session_id: RtcSession;
         rtcSession: RtcSession;
     }
-    export interface DiscussChannel {
-        activeRtcSession: RtcSession;
-        cancelRtcInvitationTimeout: number|undefined;
-        focusStack: RtcSession[];
-        hadSelfSession: boolean;
-        lastSessionIds: Set<number>;
-        promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
-        rtc_session_ids: RtcSession[];
-        showCallView: Readonly<boolean>;
-        useCameraByDefault: null;
-        videoCount: number;
-        videoCountNotSelf: number;
-        visibleCards: CardData[];
-    }
     export interface MailGuest {
         currentRtcSession: RtcSession;
     }
