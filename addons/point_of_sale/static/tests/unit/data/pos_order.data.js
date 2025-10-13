@@ -21,7 +21,7 @@ export class PosOrder extends models.ServerModel {
         return [];
     }
 
-    action_pos_order_cancel(self) {
+    cancel_order_from_pos(self) {
         const records = this.browse(self);
         const orderIds = [];
 
