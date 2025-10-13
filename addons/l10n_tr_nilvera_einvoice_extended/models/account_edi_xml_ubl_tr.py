@@ -79,6 +79,21 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if vals['invoice'].l10n_tr_is_export_invoice:
             document_node['cac:AccountingCustomerParty'] = {'cac:Party': self._get_ministry_party_node()}
 
+    def _add_invoice_monetary_total_nodes(self, document_node, vals):
+        """Extend invoice monetary total nodes for TR E-Invoicing.
+
+        For invoices registered as Export, the payable amount is set to the total amount
+        without tax, as required by Turkish e-invoicing regulations.
+
+        :param document_node: dict representing the invoice XML structure to modify.
+        :param vals: dict containing invoice-related values, including 'invoice'.
+        """
+        super()._add_invoice_monetary_total_nodes(document_node, vals)
+        if vals['invoice'].l10n_tr_gib_invoice_type == "IHRACKAYITLI":
+            document_node["cac:LegalMonetaryTotal"]["cbc:PayableAmount"]["_text"] = (
+                document_node["cac:LegalMonetaryTotal"]["cbc:TaxExclusiveAmount"]["_text"]
+            )
+
     @api.model
     def _get_ministry_party_node(self):
         """Return the fixed ministry (party) information required for TR E-invoicing.
