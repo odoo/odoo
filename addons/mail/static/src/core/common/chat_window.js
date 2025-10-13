@@ -59,7 +59,7 @@ export class ChatWindow extends Component {
         this.isMobileOS = isMobileOS();
 
         useChildSubEnv({
-            closeActionPanel: () => this.threadActions.activeAction?.close(),
+            closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
             messageHighlight: this.messageHighlight,
         });
     }
@@ -106,7 +106,7 @@ export class ChatWindow extends Component {
     onKeydown(ev) {
         const chatWindow = toRaw(this.props.chatWindow);
         if (ev.key === "Escape" && this.threadActions.activeAction) {
-            this.threadActions.activeAction.close();
+            this.threadActions.activeAction.actionPanelClose();
             ev.stopPropagation();
             return;
         }
@@ -149,7 +149,7 @@ export class ChatWindow extends Component {
             this.ui.isSmall ||
             this.state.editingName ||
             this.props.chatWindow.actionsDisabled ||
-            isEventHandled(ev, "ThreadAction.onSelected")
+            isEventHandled(ev, "Action.onSelected")
         ) {
             return;
         }

@@ -1,15 +1,14 @@
-import { toRaw, useComponent, useState } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
@@ -20,11 +19,7 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
 /** @typedef {import("models").Message} Message */
 /** @typedef {import("models").Thread} Thread */
 /**
- * @typedef {Object} MessageActionSpecificDefinition
- * @property {boolean|(comp: Component) => boolean} [condition=true]
- */
-/**
- * @typedef {ActionDefinition & MessageActionSpecificDefinition} MessageActionDefinition
+ * @typedef {ActionDefinition} MessageActionDefinition
  */
 /**
  * @param {string} id
@@ -239,18 +234,5 @@ class UseMessageActions extends UseActions {
  * @param {Thread|() => Thread} [thread] when set, the thread the message is being viewed
  */
 export function useMessageActions({ message, thread } = {}) {
-    const component = useComponent();
-    const transformedActions = messageActionsRegistry
-        .getEntries()
-        .map(
-            ([id, definition]) =>
-                new MessageAction({ owner: component, id, definition, message, thread })
-        );
-    for (const action of transformedActions) {
-        action.setup();
-    }
-    const state = useState(
-        new UseMessageActions(component, transformedActions, useService("mail.store"))
-    );
-    return state;
+    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, { message, thread });
 }

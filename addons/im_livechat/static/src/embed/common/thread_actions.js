@@ -9,7 +9,7 @@ registerThreadAction("restart", {
         thread?.chatbot?.canRestart && !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
-    open: ({ owner, thread }) => {
+    onSelected: ({ owner, thread }) => {
         thread.chatbot.restart();
         owner.props.chatWindow.open({ focus: true });
     },

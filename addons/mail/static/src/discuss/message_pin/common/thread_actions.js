@@ -7,11 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,
+    actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
     condition: ({ channel, owner }) =>
         channel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
-    panelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
     icon: "fa fa-fw fa-thumb-tack",
     name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
     sequence: 20,
@@ -19,14 +19,13 @@ registerThreadAction("pinned-messages", {
     setup() {
         useChildSubEnv({
             pinMenu: {
-                open: () => this.open(),
+                open: () => this.actionPanelOpen(),
                 close: () => {
                     if (this.isActive) {
-                        this.close();
+                        this.actionPanelClose();
                     }
                 },
             },
         });
     },
-    toggle: true,
 });

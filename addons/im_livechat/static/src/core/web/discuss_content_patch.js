@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussContent.prototype, {
     actionPanelAutoOpenFn() {
         if (!this.threadActions.activeAction) {
-            this.threadActions.actions.find((a) => a.id === "livechat-info")?.open();
+            this.threadActions.actions.find((a) => a.id === "livechat-info")?.actionPanelOpen();
         }
         super.actionPanelAutoOpenFn();
     },
