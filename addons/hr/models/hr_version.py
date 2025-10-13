@@ -411,7 +411,10 @@ class HrVersion(models.Model):
         """
         if not (self.contract_date_start and date_from and date_to):
             return False
-        return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
+        period_start = date_from or date.min
+        period_end = date_to or date.max
+        contract_end = self.date_end or date.max
+        return period_start <= contract_end and self.date_start <= period_end
 
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
