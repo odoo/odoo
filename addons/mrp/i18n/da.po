@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-10-03 23:40+0000\n"
+"PO-Revision-Date: 2025-10-13 15:51+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/mrp/da/"
 ">\n"
@@ -939,16 +939,17 @@ msgstr "Udskriv færdig produktionsordre automatisk"
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
 msgid "Auto Print Generated Lot/SN Label"
 msgstr ""
+"Automatisk udskrivning af etiketter med genererede parti- eller serienumre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_lot
 msgid "Auto Print Produced Lot Label"
-msgstr ""
+msgstr "Automatisk udskrivning af etiketter for færdigproducerede partier"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid "Auto Print Produced Product Labels"
-msgstr ""
+msgstr "Automatisk udskrivning af etiketter for færdigproducerede produkter"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
@@ -956,18 +957,20 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
+"Automatisk udskrivning af etiketter med knappen \"Opret et nyt parti- eller "
+"serienummer."
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "Availabilities"
-msgstr "Tilgængeligheder"
+msgstr "Lagerstatus"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Availabilities on products."
-msgstr ""
+msgstr "Produkter på lager."
 
 #. module: mrp
 #. odoo-javascript
@@ -975,12 +978,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Availability"
-msgstr "Til rådighed"
+msgstr "Lagerstatus"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr "Tilgængelighed tab"
+msgstr "anglende tilgængelighed på lager"
 
 #. module: mrp
 #. odoo-python
@@ -989,7 +992,7 @@ msgstr "Tilgængelighed tab"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__available
 msgid "Available"
-msgstr "Til rådighed"
+msgstr "Lagerstatus"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__produce_delay
@@ -999,13 +1002,17 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
+"Gennemsnitlig gennemløbstid i dage for fremstillingen af dette produkt. Ved "
+"flerstegs-styklister lægges komponenternes fremstillingstider sammen. Hvis "
+"produktet udliciteres til en underleverandør, kan denne tid bruges til at "
+"fastlægge, hvornår komponenterne skal sendes til underleverandøren."
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Avg Cost of Components per Unit"
-msgstr ""
+msgstr "Gennemsnitlige omkostninger pr. enhed for komponenterne"
 
 #. module: mrp
 #. odoo-javascript
@@ -1466,7 +1473,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr ""
+msgstr "Vælg, om du vil udskrive produkt- eller parti- og/eller serienumre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
@@ -2530,7 +2537,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
 msgid "Generated Lot/SN Label to Print"
-msgstr ""
+msgstr "Genererede parti- og/eller serienumre til udskrivning"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -2743,6 +2750,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
 msgstr ""
+"Hvis dette felt er markeret, udskriver Odoo automatisk etiketterne fra "
+"allokeringsrapporten for en produktionsordre, når den er afsluttet."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -2750,6 +2759,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
+"Hvis dette felt er markeret, udskriver Odoo automatisk allokeringsrapporten "
+"for en produktionsordre, når den er afsluttet og har tildelte bevægelser."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -2757,6 +2768,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
+"Hvis dette felt er markeret, udskriver Odoo automatisk parti- og "
+"serienummeretiketten for en produktionsordre, når den er afsluttet."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
@@ -2764,6 +2777,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a MO when it is done."
 msgstr ""
+"Hvis dette felt er markeret, udskriver Odoo automatisk produktetiketter for "
+"en produktionsordre, når den er afsluttet."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -2771,6 +2786,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
+"Hvis dette felt er markeret, udskriver Odoo automatisk produktionsordren, "
+"når den er afsluttet."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
