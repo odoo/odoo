@@ -30,7 +30,7 @@
                             </t>
                             <t t-else="">
                                 <div
-                                    class="o_date_item_cell o_datetime_button o_center o_cell_md cursor-pointer"
+                                    class="o_date_item_cell o_datetime_button o_center o_cell_md"
                                     t-att-class="{
                                         'o_selected': arInfo.isSelected,
                                         o_select_start: arInfo.isSelectStart,
@@ -38,6 +38,8 @@
                                         o_highlighted: arInfo.isHighlighted,
                                         'o_today fw-bolder text-decoration-underline': itemInfo.includesToday,
                                         [itemInfo.extraClass]: true,
+                                        'opacity-50': !itemInfo.isValid,
+                                        'cursor-pointer': itemInfo.isValid,
                                     }"
                                     t-att-disabled="!itemInfo.isValid"
                                     t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
@@ -84,6 +86,7 @@
                         o_select_end: arInfo.isSelectEnd,
                         o_highlighted: arInfo.isHighlighted,
                         o_today: itemInfo.includesToday,
+                        'opacity-50': !itemInfo.isValid,
                     }"
                     t-att-disabled="!itemInfo.isValid"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
