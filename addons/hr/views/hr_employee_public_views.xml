@@ -108,6 +108,7 @@
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
                 <list string="Employees" sample="1" expand="context.get('expand', False)">
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name"/>
                     <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
