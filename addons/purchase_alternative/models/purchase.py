@@ -126,9 +126,16 @@ class PurchaseOrder(models.Model):
                 product_to_best_price_unit[line.product_id] = line
             else:
                 price_subtotal = line.price_total_cc
-                price_unit = line.price_total_cc / line.product_qty
                 current_price_subtotal = product_to_best_price_line[line.product_id][0].price_total_cc
+
+                price_unit = line.uom_id._compute_price(line.price_total_cc / line.product_qty, line.product_id.uom_id)
+
                 current_price_unit = product_to_best_price_unit[line.product_id][0].price_total_cc / product_to_best_price_unit[line.product_id][0].product_qty
+                current_best_price_uom = product_to_best_price_unit[line.product_id][0].uom_id
+                current_price_unit = current_best_price_uom._compute_price(
+                                        current_price_unit,
+                                        line.product_id.uom_id
+                                    )
 
                 if current_price_subtotal > price_subtotal:
                     product_to_best_price_line[line.product_id] = line
