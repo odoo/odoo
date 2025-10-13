@@ -36,7 +36,7 @@ test("change the editingElement of sub widget through `applyTo` prop", async () 
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     await hover("[data-action-id='customAction']");
-    expect.verifySteps(["customAction a o-paragraph"]);
+    expect.verifySteps(["customAction a"]);
 });
 test("should propagate actionParam in the context", async () => {
     class CustomAction extends BuilderAction {
@@ -140,9 +140,7 @@ test("hide/display base on applyTo", async () => {
                 </BuilderButtonGroup>`,
     });
 
-    await setupHTMLBuilder(
-        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
-    );
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target").click();
     expect(".options-container .btn-group").toHaveCount(0);
 
@@ -164,9 +162,7 @@ test("hide/display base on applyTo - 2", async () => {
                 </BuilderButtonGroup>`,
     });
 
-    await setupHTMLBuilder(
-        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
-    );
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target").click();
     expect(".options-container .btn-group").not.toBeVisible();
 
@@ -182,17 +178,15 @@ test("click on BuilderButton with empty value should remove styleAction", async 
             <BuilderButton styleAction="'width'" styleActionValue="'25%'"/>
         </BuilderButtonGroup>`,
     });
-    const { contentEl } = await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    const { contentEl } = await setupHTMLBuilder(`<p class="test-options-target">b</p>`);
     await contains(":iframe .test-options-target").click();
     await contains("[data-style-action='width'][data-style-action-value='25%']").click();
     expect(contentEl).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph" style="width: 25% !important;">b</div>`
+        `<p class="test-options-target" style="width: 25% !important;">b</p>`
     );
 
     await contains("[data-style-action='width'][data-style-action-value='']").click();
-    expect(contentEl).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph" style="">b</div>`
-    );
+    expect(contentEl).toHaveInnerHTML(`<p class="test-options-target" style="">b</p>`);
 });
 
 test("button that matches with the highest priority should be active", async () => {

@@ -250,7 +250,7 @@ describe("Operation that will fail", () => {
         await contains("[data-action-id='testAction']").hover();
         await contains("[data-class-action='test']").click();
         expect(":iframe .test-options-target").toHaveOuterHTML(
-            '<div class="test-options-target o-paragraph test">b</div>'
+            '<div class="test-options-target test">b</div>'
         );
         expect.verifyErrors(["This action should crash"]);
     });
@@ -278,7 +278,7 @@ describe("Operation that will fail", () => {
         await contains("[data-action-id='testAction']").click();
         await contains("[data-class-action='test']").click();
         expect(":iframe .test-options-target").toHaveOuterHTML(
-            '<div class="test-options-target o-paragraph test">b</div>'
+            '<div class="test-options-target test">b</div>'
         );
         // preview + commit
         expect.verifyErrors(["This action should crash", "This action should crash"]);

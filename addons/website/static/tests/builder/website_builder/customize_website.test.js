@@ -533,8 +533,8 @@ test("BuilderButton with action “templatePreviewableWebsiteConfig”", async (
 
     await setupWebsiteBuilder(
         `<div class="test-options-target excluded-class">
-            <div class="target1"></div>
-            <div class="target2"></div>
+            <div class="target1">a</div>
+            <div class="target2">b</div>
         </div>`
     );
     await contains(":iframe .test-options-target").click();
