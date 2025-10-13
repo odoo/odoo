@@ -1124,7 +1124,7 @@ class PosOrder(models.Model):
         invoice_receivable_lines = invoice.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
         (payment_receivable_lines | invoice_receivable_lines).sudo().with_company(invoice.company_id).reconcile()
 
-    def action_pos_order_cancel(self):
+    def cancel_order_from_pos(self):
         if self.env.context.get('active_ids'):
             orders = self.browse(self.env.context.get('active_ids'))
             order_is_in_futur = any(order.preset_time and order.preset_time.date() > fields.Date.today() for order in orders)
@@ -1138,6 +1138,10 @@ class PosOrder(models.Model):
         return {
             'pos.order': self._load_pos_data_read(today_orders, self.config_id)
         }
+
+    def action_pos_order_cancel(self):
+        orders = self.browse(self.env.context.get('active_ids'))
+        orders.write({'state': 'cancel'})
 
     def _get_open_order(self, order):
         return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1, order='id desc')
