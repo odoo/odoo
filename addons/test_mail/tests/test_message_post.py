@@ -9,12 +9,13 @@ from itertools import product
 from markupsafe import escape, Markup
 from unittest.mock import patch
 
-from odoo import tools
+from odoo import tools, fields
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
+from odoo.fields import Command
 from odoo.service.model import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
@@ -625,6 +626,121 @@ class TestMessageNotify(TestMessagePostCommon):
                 'subtype': 'mail.mt_note',
             }],
         )
+
+
+class TestNotifyForward(TestMessagePostCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_admin.write({
+            "out_of_office_from": fields.Datetime.now() - timedelta(days=1),
+            "out_of_office_to": fields.Datetime.now() + timedelta(days=1),
+            "out_of_office_forward_to": cls.user_employee_2.id,
+        })
+        cls.user_employee_2.write({"notification_type": "inbox"})
+
+    @users("employee")
+    def test_notify_forward(self):
+        test_record = self.env["mail.test.simple"].browse(self.test_record.ids)
+        with self.assertSinglePostNotifications(
+                [
+                    {"partner": self.partner_employee_2, "type": "inbox"},
+                    {"partner": self.user_admin.partner_id, "type": "email"},
+                ],
+                message_info={
+                    "content": "Test mention @admin",
+                    "message_values": {
+                        "author_id": self.partner_employee,
+                        "message_type": "comment",
+                        "model": test_record._name,
+                        "res_id": test_record.id,
+                        "subtype_id": self.env.ref("mail.mt_comment"),
+                    },
+                },
+            ):
+            test_record.message_post(
+                body="Test mention @admin",
+                partner_ids=self.user_admin.partner_id.ids,
+                message_type="comment",
+                subtype_id=self.env.ref("mail.mt_comment").id,
+            )
+
+    @users("employee")
+    def test_notify_forward_discuss_channel(self):
+        test_record = self.env["discuss.channel"].create(
+            {
+                "name": "Test Channel",
+                "channel_type": "channel",
+                "channel_member_ids": [
+                    Command.create({
+                        "partner_id": self.partner_employee.id,
+                    }),
+                    Command.create({
+                        "partner_id": self.user_admin.partner_id.id,
+                    }),
+                ],
+            }
+
+        )
+        with self.assertSinglePostNotifications(
+            [
+                {"partner": self.partner_employee_2, "type": "inbox"},
+            ],
+            message_info={
+                "content": "Message in channel",
+                "message_values": {
+                    "author_id": self.partner_employee,
+                    "message_type": "comment",
+                    "model": "discuss.channel",
+                    "res_id": test_record.id,
+                    "subtype_id": self.env.ref("mail.mt_comment"),
+                },
+            },
+        ):
+            test_record.message_post(
+                body="Message in channel",
+                message_type="comment",
+                email_add_signature=True,
+                subtype_xmlid="mail.mt_comment",
+            )
+
+    @users("employee")
+    def test_notify_forward_no_access(self):
+        test_record = self.env["mail.test.simple"].browse(self.test_record.ids)
+
+        def _employee_2_no_access(records, operation):
+            if records.env.uid == self.user_employee_2.id and not records.env.su:
+                return (records, lambda: AccessError("No access allowed for employee 2"))
+            # bypass ACLs for other users
+            return None
+
+        with (
+            self.assertSinglePostNotifications(
+                [{"partner": self.user_admin.partner_id, "type": "email"}],
+                message_info={
+                    "content": "Test mention @admin",
+                    "message_values": {
+                        "author_id": self.partner_employee,
+                        "message_type": "comment",
+                        "model": test_record._name,
+                        "res_id": test_record.id,
+                        "subtype_id": self.env.ref("mail.mt_comment"),
+                    },
+                },
+            ),
+            patch.object(
+                MailTestSimple,
+                "_check_access",
+                autospec=True,
+                side_effect=_employee_2_no_access,
+            ),
+        ):
+            test_record.message_post(
+                body="Test mention @admin",
+                partner_ids=self.user_admin.partner_id.ids,
+                message_type="comment",
+                subtype_id=self.env.ref("mail.mt_comment").id,
+            )
 
 
 @tagged('mail_post')

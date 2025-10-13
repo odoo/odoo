@@ -938,6 +938,24 @@ class DiscussChannel(models.Model):
         self._bus_send("discuss.channel/new_message", payload)
         return rdata
 
+    def _get_all_notification_recipients_for_forward(
+        self, message, recipients_data, msg_vals=False
+    ):
+        """ Get all members of the channel to allow notification forwarding """
+        res = super()._get_all_notification_recipients_for_forward(
+            message, recipients_data, msg_vals=msg_vals
+        )
+        if (msg_vals or {}).get("res_model") == "discuss.channel" or isinstance(
+            message.channel_id, DiscussChannel
+        ):
+            channel = (
+                self.env["discuss.channel"].browse(msg_vals.get("res_id"))
+                if msg_vals
+                else message.channel_id
+            )
+            res.extend(channel.channel_member_ids.mapped("partner_id.main_user_id").ids)
+        return res
+
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False, force_record_name=False):
         payload = super()._notify_by_web_push_prepare_payload(
             message, msg_vals=msg_vals, force_record_name=force_record_name,

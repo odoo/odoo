@@ -3296,7 +3296,9 @@ class MailThread(models.AbstractModel):
         # check for automated content (OOO), before shortcutting if no recipients
         # as OOO may include more people (parent message author, responsible)
         self._notify_thread_with_out_of_office(message, recipients_data, msg_vals=msg_vals, **kwargs)
-
+        self._notify_thread_with_out_of_office_forward(
+            message, recipients_data, msg_vals=msg_vals, **kwargs
+        )
         if not recipients_data:
             return recipients_data
 
@@ -4445,6 +4447,96 @@ class MailThread(models.AbstractModel):
                 subtype_id=self.env.ref('mail.mt_comment').id,  # TDE check: note ? but what about portal / internal ?
             )
         return ooo_messages
+
+    def _get_all_notification_recipients_for_forward(
+        self, message, recipients_data, msg_vals=False
+    ):
+        """Return all user IDs being mentionned in a note
+        and all users following the thread in case of a comment."""
+        mentions_pids = (
+            msg_vals["partner_ids"]
+            if "partner_ids" in (msg_vals or {})
+            else message.partner_ids.ids
+        )
+        from_partner = self._message_compute_real_author(
+            (msg_vals or {}).get("author_id") or message.author_id.id
+        )
+        message_type = (
+            msg_vals["message_type"]
+            if "message_type" in (msg_vals or {})
+            else message.message_type,
+        )
+        message_subtype = (
+            msg_vals["subtype_id"] if "subtype_id" in (msg_vals or {}) else message.subtype_id.id
+        )
+        mt_note = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        return [
+            r["uid"]
+            for r in recipients_data
+            if (
+                r["active"]
+                and (
+                    r["id"] in mentions_pids
+                    or not (
+                        message_type == "comment"
+                        and message_subtype == mt_note
+                    )
+                )
+                and r["id"] not in from_partner.ids
+                and r["uid"]
+                and not r["share"]
+            )
+        ]
+
+    def _notify_thread_with_out_of_office_forward(
+        self, message, recipients_data, msg_vals=False, **kwargs
+    ):
+        """Forward message to OOO forward_to users."""
+        if not self or self._transient:
+            return
+        message_type = (
+            msg_vals["message_type"] if "message_type" in (msg_vals or {}) else message.message_type
+        )
+        if message_type not in ("comment", "email"):
+            return
+        recipient_uids = [r["uid"] for r in recipients_data if r["uid"]]
+        all_notification_recipients = self.env["res.users"].browse(
+            self._get_all_notification_recipients_for_forward(
+                message, recipients_data, msg_vals=msg_vals
+            )
+        )
+        # sudo: the current user does not need access to users data
+        # to forward their notifications
+        users_to_forward = all_notification_recipients.sudo().filtered(
+            lambda u: u.is_out_of_office
+            and u.out_of_office_forward_to
+            and u.out_of_office_forward_to.id not in recipient_uids
+        ).mapped("out_of_office_forward_to")
+        if not users_to_forward:
+            return
+        tmp = [
+            {
+                "active": user_forward.partner_id.active,
+                "email_normalized": user_forward.partner_id.email_normalized,
+                "id": user_forward.partner_id.id,
+                "is_follower": False,
+                "name": user_forward.partner_id.name,
+                "lang": user_forward.partner_id.lang,
+                "groups": set(user_forward.all_group_ids.ids or []),
+                "notif": user_forward.notification_type or "email",
+                "share": user_forward.partner_id.partner_share,
+                "type": "portal"
+                if user_forward.share
+                else "customer"
+                if user_forward.partner_id.partner_share
+                else "user",
+                "uid": user_forward.id,
+                "ushare": user_forward.share,
+            }
+            for user_forward in users_to_forward
+            if message.with_user(user_forward).has_access("read")
+        ]
+        recipients_data.extend(tmp)
 
     def _notify_thread_with_out_of_office_get_additional_users(self, message, recipients_data, ooo_author, msg_vals=False):
         """ Fetch additional users which should send their OOO message.
