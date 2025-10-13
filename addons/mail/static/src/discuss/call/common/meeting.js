@@ -54,14 +54,14 @@ export class Meeting extends Component {
                 openChat: () =>
                     this.threadActions.actions
                         .find((action) => action.id === "meeting-chat")
-                        ?.open(),
+                        ?.actionPanelOpen(),
             },
         });
         this.threadActions = useThreadActions({ thread: () => this.thread });
         this.messageHighlight = useMessageScrolling();
         this.messageSearch = useMessageSearch(this.thread);
         useChildSubEnv({
-            closeActionPanel: () => this.threadActions.activeAction?.close(),
+            closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
             messageHighlight: this.messageHighlight,
             messageSearch: this.messageSearch,
         });

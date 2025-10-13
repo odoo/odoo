@@ -10,7 +10,7 @@ registerThreadAction("call", {
     icon: "fa fa-fw fa-phone",
     name: ({ thread }) =>
         thread.rtc_session_ids.length > 0 ? _t("Join the Call") : _t("Start Call"),
-    open: ({ channel, store }) => store.rtc.toggleCall(channel),
+    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 10,
     sequenceQuick: 30,
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
@@ -23,7 +23,7 @@ registerThreadAction("camera-call", {
         thread.rtc_session_ids.length > 0
             ? _t("Join the Call with Camera")
             : _t("Start Video Call"),
-    open: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
     sequence: 5,
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
@@ -39,12 +39,11 @@ registerThreadAction("call-settings", {
     name: _t("Call Settings"),
     sequence: 20,
     sequenceGroup: 30,
-    toggle: true,
 });
 registerThreadAction("disconnect", {
     condition: ({ channel, owner, store }) =>
         store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
-    open: ({ channel, store }) => store.rtc.toggleCall(channel),
+    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     icon: "fa fa-fw fa-phone",
     name: _t("Disconnect"),
     sequence: 30,

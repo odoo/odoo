@@ -6,9 +6,14 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 registerThreadAction("show-threads", {
+    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: SubChannelList,
-    actionPanelComponentProps: ({ action }) => ({ close: () => action.close() }),
-    close: ({ action }) => action.popover?.close(),
+    actionPanelComponentProps: ({ action }) => ({ close: () => action.actionPanelClose() }),
+    actionPanelOpen({ owner, thread }) {
+        const channel = thread?.parent_channel_id || thread;
+        this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), { thread: channel });
+    },
+    actionPanelOuterClass: "bg-100 border border-secondary",
     condition: ({ owner, thread }) =>
         (thread?.hasSubChannelFeature || thread?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,
@@ -17,28 +22,22 @@ registerThreadAction("show-threads", {
     setup({ owner, store }) {
         if (owner.env.inDiscussApp && !store.env.isSmall) {
             this.popover = usePopover(SubChannelList, {
-                onClose: () => this.close(),
+                onClose: () => this.actionPanelClose(),
                 fixedPosition: true,
-                popoverClass: this.panelOuterClass,
+                popoverClass: this.actionPanelOuterClass,
             });
         }
-        useChildSubEnv({ subChannelMenu: { open: () => this.open() } });
+        useChildSubEnv({ subChannelMenu: { open: () => this.actionPanelOpen() } });
     },
-    open({ owner, thread }) {
-        const channel = thread?.parent_channel_id || thread;
-        this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), { thread: channel });
-    },
-    panelOuterClass: "bg-100 border border-secondary",
     sequence: ({ owner }) => (owner.props.chatWindow ? 40 : 5),
     sequenceGroup: 10,
-    toggle: true,
 });
 registerThreadAction("leave", {
     condition: ({ owner, thread }) =>
         (thread?.canLeave || thread?.canUnpin) && !owner.isDiscussContent,
     icon: "fa fa-fw fa-sign-out",
     name: ({ thread }) => (thread.canLeave ? _t("Leave Channel") : _t("Unpin Conversation")),
-    open: ({ thread }) => (thread.canLeave ? thread.leaveChannel() : thread.unpin()),
+    onSelected: ({ thread }) => (thread.canLeave ? thread.leaveChannel() : thread.unpin()),
     partition: ({ owner }) => owner.env.inChatWindow,
     sequence: 10,
     sequenceGroup: 40,

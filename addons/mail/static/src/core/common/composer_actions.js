@@ -4,8 +4,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action, UseActions } from "@mail/core/common/action";
-import { useService } from "@web/core/utils/hooks";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -14,7 +13,6 @@ export const composerActionsRegistry = registry.category("mail.composer/actions"
 /** @typedef {import("models").Composer} Composer */
 /**
  * @typedef {Object} ComposerActionSpecificDefinition
- * @property {boolean|(comp: Component) => boolean} [condition=true]
  * @property {boolean} [isPicker]
  * @property {string|(comp: Component) => string} [pickerName]
  */
@@ -179,6 +177,8 @@ export class ComposerAction extends Action {
 }
 
 class UseComposerActions extends UseActions {
+    ActionClass = ComposerAction;
+
     get partition() {
         const res = super.partition;
         const actions = this.transformedActions.filter((action) => action.condition);
@@ -198,19 +198,11 @@ class UseComposerActions extends UseActions {
  * @param {Composer|() => Composer} composer
  */
 export function useComposerActions({ composer } = {}) {
+    const actions = useAction(composerActionsRegistry, UseComposerActions, ComposerAction, {
+        composer,
+    });
     const component = useComponent();
-    const transformedActions = composerActionsRegistry
-        .getEntries()
-        .map(
-            ([id, definition]) => new ComposerAction({ owner: component, id, definition, composer })
-        );
-    for (const action of transformedActions) {
-        action.setup();
-    }
-    const state = useState(
-        new UseComposerActions(component, transformedActions, useService("mail.store"))
-    );
-    component.getActivePicker = () => state.activePicker;
-    component.setActivePicker = (newActivePicker) => (state.activePicker = newActivePicker);
-    return state;
+    component.getActivePicker = () => actions.activePicker;
+    component.setActivePicker = (newActivePicker) => (actions.activePicker = newActivePicker);
+    return actions;
 }

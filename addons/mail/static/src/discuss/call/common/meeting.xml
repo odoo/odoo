@@ -6,7 +6,7 @@
                 <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 o-min-width-0" t-att-class="{'d-none': ui.isSmall and threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': ui.isSmall}">
                     <Call hasOverlay="false" isPip="props.isPip"/>
                 </div>
-                <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0 rounded-2" t-att-class="{ 'w-100': ui.isSmall }">
+                <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0 rounded-2" t-att-class="{ 'w-100': ui.isSmall }">
                     <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps" thread="thread"/>
                 </div>
             </div>

@@ -9,7 +9,7 @@ registerThreadAction("open-hr-profile", {
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-id-card",
     name: _t("Open Profile"),
-    open: async ({ store, thread }) =>
+    onSelected: async ({ store, thread }) =>
         store.env.services.action.doAction({
             type: "ir.actions.act_window",
             res_id: thread.correspondent.partner_id?.employeeId,

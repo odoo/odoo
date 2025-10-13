@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 export const joinChannelAction = {
     condition: ({ channel, thread }) =>
         channel && !channel.self_member_id && !["chat", "group"].includes(channel.channel_type),
-    open: ({ channel, store }) =>
+    onSelected: ({ channel, store }) =>
         store.env.services.orm.call("discuss.channel", "add_members", [[channel.id]], {
             partner_ids: [store.self.id],
         }),
@@ -25,7 +25,7 @@ registerThreadAction("expand-discuss", {
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
-    open({ owner, store, thread }) {
+    onSelected({ owner, store, thread }) {
         store.env.services.action.doAction(
             {
                 type: "ir.actions.client",
@@ -42,7 +42,7 @@ registerThreadAction("expand-discuss", {
 });
 registerThreadAction("advanced-settings", {
     condition: ({ channel, owner }) => channel && owner.isDiscussSidebarChannelActions,
-    open: ({ channel, store }) => {
+    onSelected: ({ channel, store }) => {
         store.env.services.action.doAction({
             type: "ir.actions.act_window",
             res_model: "discuss.channel",

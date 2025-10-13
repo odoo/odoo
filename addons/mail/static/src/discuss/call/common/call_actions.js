@@ -1,9 +1,7 @@
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
-import { useComponent, useState } from "@odoo/owl";
+import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { QuickVoiceSettings } from "./quick_voice_settings";
 import { QuickVideoSettings } from "./quick_video_settings";
 import { attClassObjectToString } from "@mail/utils/common/format";
@@ -343,9 +341,5 @@ class UseCallActions extends UseActions {
  * @param {Thread|() => Thread} thread
  */
 export function useCallActions({ thread } = {}) {
-    const component = useComponent();
-    const transformedActions = callActionsRegistry
-        .getEntries()
-        .map(([id, definition]) => new CallAction({ owner: component, id, definition, thread }));
-    return useState(new UseCallActions(component, transformedActions, useService("mail.store")));
+    return useAction(callActionsRegistry, UseCallActions, CallAction, { thread });
 }
