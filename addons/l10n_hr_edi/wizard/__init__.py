@@ -1,0 +1,1 @@
+from . import l10n_hr_edi_mojeracun_reject_wizard
