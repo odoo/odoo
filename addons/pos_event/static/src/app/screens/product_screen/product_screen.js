@@ -245,29 +245,32 @@ patch(ProductScreen.prototype, {
                     registration_answer_ids: Object.entries({
                         ...textAnswer,
                         ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                    })
+                        .map(([questionId, answer]) => [
+                            "create",
+                            {
+                                question_id: this.pos.models["event.question"].get(
+                                    parseInt(questionId)
+                                ),
+                                value_text_box: answer,
+                            },
+                        ])
+                        .concat(
+                            Object.entries({
+                                ...simpleChoice,
+                                ...globalSimpleChoice,
+                            }).map(([questionId, answer]) => [
+                                "create",
+                                {
+                                    question_id: this.pos.models["event.question"].get(
+                                        parseInt(questionId)
+                                    ),
+                                    value_answer_id: this.pos.models["event.question.answer"].get(
+                                        parseInt(answer)
+                                    ),
+                                },
+                            ])
+                        ),
                 });
             }
         }
