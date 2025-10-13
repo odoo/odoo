@@ -12,7 +12,7 @@ import {
 import { Plugin } from "../../plugin";
 import { getAffineApproximation, getProjective } from "@html_editor/utils/perspective_utils";
 
-export const DEFAULT_IMAGE_QUALITY = "75";
+export const DEFAULT_IMAGE_QUALITY = "92";
 
 /**
  * @typedef { Object } ImagePostProcessShared
