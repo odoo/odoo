@@ -180,17 +180,96 @@ class MailAliasDomain(models.Model):
     @api.model
     def _find_aliases(self, email_list):
         """ Utility method to find both alias domains aliases (bounce, catchall
+<<<<<<< de2dd0932e677747a51ab7a4d8944116c14812b1
         or default from) and mail aliases from an email list. """
         if not email_list:
             return email_list
+||||||| 35998913de793b8cd22775ac2d51af01b2ce3f3b
+        or default from) and mail aliases from an email list.
+
+        :param email_list: list of normalized emails; normalization / removing
+            wrong emails is considered as being caller's job
+        """
+        if not email_list:
+            return email_list
+=======
+        or default from) and mail aliases from an email list.
+
+        :param email_list: list of normalized emails; normalization / removing
+            wrong emails is considered as being caller's job
+        """
+        filtered_emails = [e for e in email_list if e and '@' in e]
+        if not filtered_emails:
+            return filtered_emails
+>>>>>>> fee1ca9d91bb6911d92e79f6d6238b6ce4fc82fa
         all_domains = self.search([])
         aliases = all_domains.mapped('bounce_email') + all_domains.mapped('catchall_email') + all_domains.mapped('default_from_email')
+<<<<<<< de2dd0932e677747a51ab7a4d8944116c14812b1
+||||||| 35998913de793b8cd22775ac2d51af01b2ce3f3b
+
+        catchall_domains_allowed = list(filter(None, (self.env["ir.config_parameter"].sudo().get_param(
+            "mail.catchall.domain.allowed") or '').split(',')))
+        if catchall_domains_allowed:
+            catchall_domains_allowed += all_domains.mapped('name')
+            email_localparts_tocheck = [
+                email.partition('@')[0] for email in email_list if (
+                    email and email.partition('@')[2] in catchall_domains_allowed
+                )]
+        else:
+            email_localparts_tocheck = [email.partition('@')[0] for email in email_list if email]
+
+=======
+
+        catchall_domains_allowed = list(filter(None, (self.env["ir.config_parameter"].sudo().get_param(
+            "mail.catchall.domain.allowed") or '').split(',')))
+        if catchall_domains_allowed:
+            catchall_domains_allowed += all_domains.mapped('name')
+            email_localparts_tocheck = [
+                email.partition('@')[0] for email in filtered_emails if (
+                    email and email.partition('@')[2] in catchall_domains_allowed
+                )]
+        else:
+            email_localparts_tocheck = [email.partition('@')[0] for email in filtered_emails if email]
+
+>>>>>>> fee1ca9d91bb6911d92e79f6d6238b6ce4fc82fa
         # search on aliases using the proposed list, as we could have a lot of aliases
         # better than returning 'all alias emails'
+<<<<<<< de2dd0932e677747a51ab7a4d8944116c14812b1
         aliases += self.env['mail.alias'].search(
             [('alias_full_name', 'in', email_list)]
         ).mapped('alias_full_name')
         return [email for email in email_list if email in aliases]
+||||||| 35998913de793b8cd22775ac2d51af01b2ce3f3b
+        potential_aliases = self.env['mail.alias'].search([
+            '|',
+            ('alias_full_name', 'in', email_list),
+            '&', ('alias_name', 'in', email_localparts_tocheck), ('alias_incoming_local', '=', True),
+        ])
+        # global alias: email match
+        aliases += potential_aliases.filtered(lambda x: not x.alias_incoming_local).mapped('alias_full_name')
+        # compat-mode alias: left-part only (filter on allowed domains already done)
+        local_alias_names = potential_aliases.filtered(lambda x: x.alias_incoming_local).mapped('alias_name')
+        return [
+            email for email in email_list if (
+                email in aliases or
+                email.partition('@')[0] in local_alias_names
+            )]
+=======
+        potential_aliases = self.env['mail.alias'].search([
+            '|',
+            ('alias_full_name', 'in', filtered_emails),
+            '&', ('alias_name', 'in', email_localparts_tocheck), ('alias_incoming_local', '=', True),
+        ])
+        # global alias: email match
+        aliases += potential_aliases.filtered(lambda x: not x.alias_incoming_local).mapped('alias_full_name')
+        # compat-mode alias: left-part only (filter on allowed domains already done)
+        local_alias_names = potential_aliases.filtered(lambda x: x.alias_incoming_local).mapped('alias_name')
+        return [
+            email for email in filtered_emails if (
+                email in aliases or
+                email.partition('@')[0] in local_alias_names
+            )]
+>>>>>>> fee1ca9d91bb6911d92e79f6d6238b6ce4fc82fa
 
     @api.model
     def _migrate_icp_to_domain(self):
