@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <block name="fiscal_localization_setting_container" position="inside">
                     <setting string="Gulf Cooperation Council Format" company_dependent="1"
-                             invisible="not l10n_gcc_country_is_gcc"
+                             invisible="'GCC' not in company_country_group_codes"
                              help="Add Arabic as a secondary language to your invoices, credit notes, debit notes, vendor bills, and refund bills">
                         <field name="l10n_gcc_dual_language_invoice"/>
                     </setting>

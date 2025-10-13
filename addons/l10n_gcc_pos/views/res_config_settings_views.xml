@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <block id="pos_bills_and_receipts_section" position="inside">
                     <setting string="Gulf Cooperation Council Format"
-                             invisible="not company_id.l10n_gcc_country_is_gcc"
+                             invisible="'GCC' not in company_country_group_codes"
                              help="Add Arabic as a secondary language to your receipt">
                         <field name="l10n_gcc_dual_language_receipt"/>
                     </setting>

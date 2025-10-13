@@ -7,7 +7,10 @@
                     <t t-if="lang != 'ar_001'" t-set="lang_sec" t-value="o.env['res.lang']._get_code('ar_001')"/>
                     <t t-else="" t-set="lang_sec" t-value="o.env['res.lang']._get_code('en_US')"/>
                     <t t-set="o_sec" t-value="o.with_context(lang=lang_sec)"/>
-                    <t t-set="display_in_lang_sec" t-value="o.company_id.l10n_gcc_country_is_gcc and o.company_id.l10n_gcc_dual_language_invoice"/>
+                    <t t-set="display_in_lang_sec"
+                       t-value="o.company_id.country_id
+                                and 'GCC' in o.company_id.country_id.country_group_codes
+                                and o.company_id.l10n_gcc_dual_language_invoice"/>
                     <t t-set="display_in_ar" t-value="display_in_lang_sec and lang_sec == 'ar_001'"/>
                     <t t-set="display_in_en" t-value="display_in_lang_sec and lang_sec == 'en_US'"/>
                     <t t-set="invoice_gcc_title" t-value="o._l10n_gcc_get_invoice_title()"/>
