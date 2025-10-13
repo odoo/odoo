@@ -22,7 +22,8 @@
                                 productId="product.id"
                                 product="product"
                                 comboExtraPrice="formattedComboPrice(combo_item)"
-                                imageUrl="product.getImageUrl()"
+                                color="product.color || product.pos_categ_ids?.at(-1)?.color"
+                                imageUrl="pos.config.show_product_images and product.getImageUrl()"
                                 onClick="(ev) => this.onClickProduct({ product, combo_item }, ev)" />
                         </label>
                     </div>
