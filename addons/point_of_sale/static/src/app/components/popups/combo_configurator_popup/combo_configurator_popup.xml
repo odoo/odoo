@@ -19,12 +19,13 @@
                             t-att-class="{ 'selected': state.qty[combo.id][combo_item.id] and combo.qty_max == 1 }"
                             t-attf-for="combo-{{combo.id}}-combo_item-{{combo_item.id}}">
                             <ProductCard name="product.display_name"
-                                class="'flex-column h-100 border'"
+                                class="'flex-column h-100'"
                                 isComboPopup="true"
                                 productId="product.id"
                                 product="product"
                                 comboExtraPrice="formattedComboPrice(combo_item)"
-                                imageUrl="product.getImageUrl()"
+                                color="product.color || product.pos_categ_ids?.at(-1)?.color"
+                                imageUrl="pos.config.show_product_images and product.getImageUrl()"
                                 onClick="() => this.onClickProduct(product, combo_item)">
                                 <t t-if="this.showQuantityButtons(combo_item)" t-set-slot="quantityButtons">
                                     <QuantityButtons
