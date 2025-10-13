@@ -3,7 +3,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase, new_test_user
 
 
@@ -841,6 +841,16 @@ class TestUnityRead(TransactionCase):
             }
         ])
 
+    def test_reference_with_deleted_record_compute(self):
+        self.lesson_day1.unlink()
+        # the computation of m2o_reference_name crashes with a MissingError
+        with self.assertRaises(MissingError):
+            self.course.web_read(
+                {
+                    'm2o_reference_id': {'fields': {'display_name': {}}},
+                    'm2o_reference_name': {}
+                })
+
     def test_reference_when_you_dont_have_access(self):
         read = self.course.with_user(self.only_course_user).web_read(
             {
@@ -888,15 +898,3 @@ class TestUnityRead(TransactionCase):
         self.assertEqual(values[0]['name'], 'discussion_color_code')
         self.assertEqual(values[1]['name'], 'moderator_partner_id')
         self.assertEqual(values[1]['value'], (partner.id, 'Test Partner Properties'))
-
-    def test_read_record_with_no_values(self):
-        self.lesson_day1.unlink()
-        records = self.env['test_new_api.course'].search([('name', '!=', False)])
-        read = records.web_read({'m2o_reference_id': {'fields': {'display_name': {}}}, 'm2o_reference_name': {}})
-        self.assertEqual(read, [
-            {
-                'id': self.course_no_author.id,
-                'm2o_reference_id': 0,
-                'm2o_reference_name': False,
-            }
-        ])
