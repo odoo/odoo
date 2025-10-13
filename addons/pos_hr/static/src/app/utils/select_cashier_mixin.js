@@ -51,7 +51,7 @@ export class CashierSelector {
         return true;
     }
 
-    async selectCashier(pin = false, login = false, list = false, excludeCurrentCashier = true) {
+    async selectCashier(pin = false, login = false, list = false) {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
@@ -64,10 +64,9 @@ export class CashierSelector {
         };
 
         let employee = false;
-        const employeeList = list?.length ? list : this.pos.models["hr.employee"];
-        const allEmployees = excludeCurrentCashier
-            ? employeeList.filter((employee) => employee.id !== this.pos.getCashier()?.id)
-            : employeeList;
+        const allEmployees = this.pos.models["hr.employee"].filter(
+            (employee) => employee.id !== this.pos.getCashier()?.id
+        );
         const pinMatchEmployees = allEmployees.filter(
             (employee) => !pin || Sha1.hash(pin) === employee._pin
         );
@@ -84,13 +83,10 @@ export class CashierSelector {
         }
 
         if (pinMatchEmployees.length > 1 || list) {
-            employee =
-                allEmployees.length == 1
-                    ? allEmployees[0]
-                    : await makeAwaitable(this.dialog, CashierSelectionPopup, {
-                          currentCashier: this.pos.getCashier() || undefined,
-                          employees: this.getCashierSelectionList(allEmployees),
-                      });
+            employee = await makeAwaitable(this.dialog, CashierSelectionPopup, {
+                currentCashier: this.pos.getCashier() || undefined,
+                employees: this.getCashierSelectionList(allEmployees),
+            });
 
             if (!employee) {
                 return;
@@ -163,4 +159,15 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
     );
 
     return selector.selectCashier.bind(selector);
+}
+
+export function useCheckPin() {
+    const pos = usePos();
+    const cashierSelector = new CashierSelector(pos);
+    return async function checkPin(employee) {
+        if (employee && employee._pin && !(await cashierSelector.checkPin(employee))) {
+            return false;
+        }
+        return true;
+    };
 }

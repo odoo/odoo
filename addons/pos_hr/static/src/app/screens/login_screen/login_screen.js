@@ -1,4 +1,4 @@
-import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
+import { useCashierSelector, useCheckPin } from "@pos_hr/app/utils/select_cashier_mixin";
 import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
@@ -18,6 +18,7 @@ patch(LoginScreen.prototype, {
                 onScan: (employee) => employee && this.selectOneCashier(employee),
                 exclusive: true,
             });
+            this.checkPin = useCheckPin();
 
             useAutofocus();
             useExternalListener(window, "keypress", async (ev) => {
@@ -32,8 +33,11 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async selectCashier(pin = false, login = false, list = false, excludeCurrentCashier = true) {
+    async selectCashier(pin = false, login = false, list = false) {
         return await this.cashierSelector(pin, login, list);
+    },
+    async checkPin(employee = false) {
+        return await this.checkPin(...arguments);
     },
     openRegister() {
         if (this.pos.config.module_pos_hr) {
@@ -59,17 +63,9 @@ patch(LoginScreen.prototype, {
             const posUserEmployee = this.pos.models["hr.employee"].find(
                 (e) => e.user_id?.id === this.pos.user.id
             );
-            if (await this.selectCashier(false, false, [posUserEmployee])) {
+            if (await this.checkPin(posUserEmployee)) {
                 super.clickBack();
                 return;
-            } else if (employee) {
-                this.pos.notification.add(
-                    _t(
-                        "Only the cashier linked to the logged-in user (%s) can proceed to the Backend.",
-                        this.pos.user.name
-                    ),
-                    { type: "danger" }
-                );
             }
         }
     },
