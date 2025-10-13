@@ -1045,8 +1045,8 @@
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
                         <ul class="navbar-nav container d-grid h-100 px-3 o_grid_header_3_cols">
-                            <!-- Return empty placeholder if the element is not active to keep the right layout -->
-                            <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False"/>
+                            <!-- Return empty placeholder if the element is not active or if there is only one language to keep the right layout -->
+                            <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False or len(languages) == 1"/>
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
                                 <t t-set="_div_classes" t-valuef="d-flex align-items-center h-100"/>
@@ -2179,7 +2179,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="True">
     <xpath expr="." position="inside">
-        <li data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
+        <li t-if="len(languages) > 1" data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
             <t id="header_language_selector_call" t-call="portal.language_selector">
                 <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
             </t>
