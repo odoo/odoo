@@ -4014,3 +4014,25 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 28, "The carryover did not expire yet so the remaining leaves should be 28")
         allocation_data = leave_type.get_allocation_data(self.employee_emp, '2031-09-01')
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 23, "The carryover expired after 6 month so the remaining leaves should be 23")
+
+    def test_accrual_plan_cleared_when_switch_to_regular(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+        allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'allocation_type': 'accrual',
+            'holiday_status_id': self.leave_type.id,
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'number_of_days': 10,
+        })
+        self.assertEqual(allocation.accrual_plan_id, accrual_plan, "Accrual plan should initially be set.")
+
+        with Form(allocation) as alloc_form:
+            alloc_form.allocation_type = 'regular'
+        self.assertFalse(
+            allocation.accrual_plan_id,
+            "accrual_plan_id should be cleared automatically when type becomes 'regular'."
+        )
+        self.assertEqual(accrual_plan.employees_count, 0, "Accrual plan should not have any linked employees.")
