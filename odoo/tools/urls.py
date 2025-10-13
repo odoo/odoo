@@ -1,6 +1,5 @@
 import re
 import urllib.parse
-from urllib.parse import _WHATWG_C0_CONTROL_OR_SPACE
 
 try:
     # For Python ≤3.10
