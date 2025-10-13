@@ -1054,13 +1054,13 @@ class CrmLead(models.Model):
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self.env.context.get('default_team_id')
-        if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]
         if self.env.context.get('show_user_team_stages'):
             team_ids = self.env.user.crm_team_ids._ids
             if team_id:
                 team_ids += (team_id,)
             search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_ids)]
+        elif team_id:
+            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', [team_id])]
         else:
             search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
 
