@@ -3,7 +3,11 @@ import { BackgroundPositionOverlay } from "@html_builder/plugins/background_opti
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -404,7 +408,7 @@ test("remove background image removes color filter", async () => {
             <span class="s_parallax_bg_wrap">
                 <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
             </span>
-            <div class="o_we_bg_filter bg-black-50 o-paragraph"><br></div>
+            <div class="o_we_bg_filter bg-black-50"><br></div>
         </section>`);
     await contains(":iframe section").click();
     await contains("[data-action-id='toggleBgImage']").click();

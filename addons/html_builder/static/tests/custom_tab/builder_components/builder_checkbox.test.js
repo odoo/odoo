@@ -10,25 +10,21 @@ test("Click on checkbox", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
     });
-    const { getEditableContent } = await setupHTMLBuilder(
-        `<div class="test-options-target o-paragraph">b</div>`
-    );
+    const { getEditableContent } = await setupHTMLBuilder(`<p class="test-options-target">b</p>`);
     const editableContent = getEditableContent();
 
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target o-paragraph">b</div>`);
+    expect(editableContent).toHaveInnerHTML(`<p class="test-options-target">b</p>`);
 
     await contains(".o-checkbox").click();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(1);
-    expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target o-paragraph checkbox-action">b</div>`
-    );
+    expect(editableContent).toHaveInnerHTML(`<p class="test-options-target checkbox-action">b</p>`);
 
     await contains(".o-checkbox").click();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target o-paragraph">b</div>`);
+    expect(editableContent).toHaveInnerHTML(`<p class="test-options-target">b</p>`);
 });
 test("hide/display base on applyTo", async () => {
     addBuilderOption({
@@ -40,20 +36,20 @@ test("hide/display base on applyTo", async () => {
         template: xml`<BuilderCheckbox classAction="'checkbox-action'" applyTo="'.my-custom-class'"/>`,
     });
     const { getEditableContent } = await setupHTMLBuilder(
-        `<div class="parent-target"><div class="child-target b">b</div></div>`
+        `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
     const editableContent = getEditableContent();
 
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b o-paragraph">b</div></div>`
+        `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container .o-checkbox").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b o-paragraph my-custom-class">b</div></div>`
+        `<div class="parent-target"><p class="child-target b my-custom-class">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container .o-checkbox").toHaveCount(1);

@@ -459,7 +459,7 @@ export function getBasicSection(
     return unformat(
         `<section class="${classes}" data-snippet="${snippet}" ${
             name ? `data-name="${name}"` : ""
-        }><div class="test_a o-paragraph">${content}</div></section>`
+        }><div class="test_a">${content}</div></section>`
     );
 }
 
