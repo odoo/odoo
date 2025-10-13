@@ -485,7 +485,8 @@ class BaseCase(case.TestCase):
         old_uid = self.uid
         old_env = self.env
         try:
-            user = self.env['res.users'].sudo().search([('login', '=', login)])
+            # lowercase login to match case insensitively
+            user = self.env['res.users'].sudo().search([('login', '=', login.strip().lower())])
             assert user, "Login %s not found" % login
             # switch user
             self.uid = user.id
