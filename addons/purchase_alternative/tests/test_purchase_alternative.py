@@ -80,7 +80,16 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
         alt_po_2 = orig_po.alternative_po_ids.filtered(lambda po: po.id not in [alt_po_1.id, orig_po.id])
         self.assertEqual(len(alt_po_2.alternative_po_ids), 3, "All alternative POs should be auto-linked to each other")
 
-        # third flow: confirm one of the POs when alt POs are a mix of confirmed + RFQs
+        # third flow: check if best unit price computation is based on price per product unit and total price computation is based on purchase unit.
+        alt_po_1.order_line[0].uom_id = self.env.ref('uom.product_uom_unit')
+        alt_po_1.order_line[0].product_qty = 10
+        best_price_ids, best_date_ids, best_price_unit_ids = orig_po.get_tender_best_lines()
+        best_price_pol = self.env['purchase.order.line'].browse(best_price_ids)
+        best_unit_price_pol = self.env['purchase.order.line'].browse(best_price_unit_ids)
+        self.assertNotEqual(best_unit_price_pol.order_id.id, alt_po_1.id, "Best unit price PO line was not correctly calculated")
+        self.assertNotEqual(best_price_pol.order_id.id, alt_po_1.id, "Best price PO line was not correctly calculated")
+
+        # fourth flow: confirm one of the POs when alt POs are a mix of confirmed + RFQs
         alt_po_2.write({'state': 'purchase'})
         action = orig_po.button_confirm()
         warning_wiz = Form(self.env['purchase.alternative.warning'].with_context(**action['context']))
