@@ -7,7 +7,7 @@ import {
 } from "@web/../lib/hoot-dom/helpers/time";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { makeNetworkLogger } from "../core/logger";
-import { ensureArray, MIME_TYPE, MockEventTarget } from "../hoot_utils";
+import { ensureArray, isNil, MIME_TYPE, MockEventTarget } from "../hoot_utils";
 import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
 
 /**
@@ -32,8 +32,14 @@ const {
     document,
     fetch,
     Headers,
+    Map,
     Math: { floor: $floor, max: $max, min: $min, random: $random },
-    Object: { assign: $assign, create: $create, entries: $entries },
+    Object: {
+        assign: $assign,
+        create: $create,
+        defineProperty: $defineProperty,
+        entries: $entries,
+    },
     ProgressEvent,
     Request,
     Response,
@@ -41,6 +47,7 @@ const {
     URL,
     WebSocket,
 } = globalThis;
+const { parse: $parse, stringify: $stringify } = globalThis.JSON;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -87,6 +94,34 @@ async function dispatchMessage(target, data, transfer) {
 }
 
 /**
+ *
+ * @param {{ headers?: HeadersInit } | undefined} object
+ * @param {string} content
+ */
+function getHeaders(object, content) {
+    /** @type {Headers} */
+    let headers;
+    if (isInstanceOf(object?.headers, Headers)) {
+        headers = object.headers;
+    } else {
+        headers = new Headers(object?.headers);
+    }
+
+    if (content && !headers.has(HEADER.contentType)) {
+        if (typeof content === "string") {
+            headers.set(HEADER.contentType, MIME_TYPE.text);
+        } else if (isInstanceOf(content, Blob)) {
+            headers.set(HEADER.contentType, MIME_TYPE.blob);
+        } else if (isInstanceOf(content, FormData)) {
+            headers.set(HEADER.contentType, MIME_TYPE.formData);
+        } else {
+            headers.set(HEADER.contentType, MIME_TYPE.json);
+        }
+    }
+    return headers;
+}
+
+/**
  * @param {...NetworkInstance} instances
  */
 function isOpen(...instances) {
@@ -109,6 +144,37 @@ function markClosed(...instances) {
 function markOpen(instance) {
     openNetworkInstances.add(instance);
     return instance;
+}
+
+/**
+ * Helper used to parse JSON-RPC request/response parameters, and to make their
+ * "jsonrpc", "id" and "method" properties non-enumerable, as to make them more
+ * inconspicuous in console logs, effectively highlighting the 'params' or 'result'
+ * keys.
+ *
+ * @param {string} stringParams
+ */
+function parseJsonRpcParams(stringParams) {
+    const jsonParams = $assign($create(null), $parse(stringParams));
+    if (jsonParams && "jsonrpc" in jsonParams) {
+        $defineProperty(jsonParams, "jsonrpc", {
+            value: jsonParams.jsonrpc,
+            enumerable: false,
+        });
+        if ("id" in jsonParams) {
+            $defineProperty(jsonParams, "id", {
+                value: jsonParams.id,
+                enumerable: false,
+            });
+        }
+        if ("method" in jsonParams) {
+            $defineProperty(jsonParams, "method", {
+                value: jsonParams.method,
+                enumerable: false,
+            });
+        }
+    }
+    return jsonParams;
 }
 
 /**
@@ -201,26 +267,46 @@ export async function mockedFetch(input, init) {
     if (!mockFetchFn) {
         throw new Error("Can't make a request when fetch is not mocked");
     }
-    init ||= {};
-    const method = init.method?.toUpperCase() || (init.body ? "POST" : "GET");
-    const { logRequest, logResponse } = makeNetworkLogger(method, input);
-
     const controller = markOpen(new AbortController());
-    init.signal = controller.signal;
 
-    logRequest(() => (typeof init.body === "string" ? JSON.parse(init.body) : init));
+    init = { ...init };
+    init.headers = getHeaders(init, init.body);
+    init.method = init.method?.toUpperCase() || (isNil(init.body) ? "GET" : "POST");
+
+    // Allows 'signal' to not be logged with 'logRequest'.
+    $defineProperty(init, "signal", {
+        value: controller.signal,
+        enumerable: false,
+    });
+
+    const { logRequest, logResponse } = makeNetworkLogger(init.method, input);
+
+    logRequest(() => {
+        const readableInit = {
+            ...init,
+            // Make headers easier to read in the console
+            headers: new Map(init.headers),
+        };
+        if (init.headers.get(HEADER.contentType) === MIME_TYPE.json) {
+            return [parseJsonRpcParams(init.body), readableInit];
+        } else {
+            return [init.body, readableInit];
+        }
+    });
 
     if (getNetworkDelay) {
         await getNetworkDelay();
     }
 
+    // keep separate from 'error', as it can be null or undefined even though the
+    // callback has thrown an error.
     let failed = false;
-    let result;
+    let error, result;
     try {
         result = await mockFetchFn(input, init);
     } catch (err) {
-        result = err;
         failed = true;
+        error = err;
     }
     if (isOpen(controller)) {
         markClosed(controller);
@@ -228,33 +314,29 @@ export async function mockedFetch(input, init) {
         return ENDLESS_PROMISE;
     }
     if (failed) {
-        throw result;
+        throw error;
     }
 
-    /** @type {Headers} */
-    let headers;
-    if (result && isInstanceOf(result.headers, Headers)) {
-        headers = result.headers;
-    } else if (isInstanceOf(init.headers, Headers)) {
-        headers = init.headers;
-    } else {
-        headers = new Headers(init.headers);
-    }
-
-    let contentType = headers.get(HEADER.contentType);
+    // Result can be a request or the final request value
+    const responseHeaders = getHeaders(result, result);
 
     if (result instanceof MockResponse) {
         // Mocked response
-        logResponse(async () => {
+        logResponse(() => {
             const textValue = getSyncValue(result);
-            return contentType === MIME_TYPE.json ? JSON.parse(textValue) : textValue;
+            return [
+                responseHeaders.get(HEADER.contentType) === MIME_TYPE.json
+                    ? parseJsonRpcParams(textValue)
+                    : textValue,
+                result,
+            ];
         });
         return result;
     }
 
     if (isInstanceOf(result, Response)) {
         // Actual fetch
-        logResponse(() => "(go to network tab for request content)");
+        logResponse(() => ["(go to network tab for request content)", result]);
         return result;
     }
 
@@ -262,26 +344,19 @@ export async function mockedFetch(input, init) {
     // Determine the return type based on:
     // - the content type header
     // - or the type of the returned value
-    if (!contentType) {
-        if (typeof result === "string") {
-            contentType = MIME_TYPE.text;
-        } else if (isInstanceOf(result, Blob)) {
-            contentType = MIME_TYPE.blob;
-        } else {
-            contentType = MIME_TYPE.json;
-        }
-    }
 
-    if (contentType === MIME_TYPE.json) {
+    if (responseHeaders.get(HEADER.contentType) === MIME_TYPE.json) {
         // JSON response
-        const strBody = JSON.stringify(result ?? null);
-        logResponse(() => result);
-        return new MockResponse(strBody, { [HEADER.contentType]: contentType });
+        const strBody = $stringify(result ?? null);
+        const response = new MockResponse(strBody, { headers: responseHeaders });
+        logResponse(() => [parseJsonRpcParams(strBody), response]);
+        return response;
     }
 
     // Any other type (blob / text)
-    logResponse(() => result);
-    return new MockResponse(result, { [HEADER.contentType]: contentType });
+    const response = new MockResponse(result, { headers: responseHeaders });
+    logResponse(() => [result, response]);
+    return response;
 }
 
 /**
@@ -669,7 +744,7 @@ export class MockRequest extends Request {
     }
 
     async json() {
-        return JSON.parse(getSyncValue(this));
+        return $parse(getSyncValue(this));
     }
 
     async text() {
@@ -697,7 +772,7 @@ export class MockResponse extends Response {
     }
 
     async json() {
-        return JSON.parse(getSyncValue(this));
+        return $parse(getSyncValue(this));
     }
 
     async text() {
@@ -786,7 +861,7 @@ export class MockWebSocket extends MockEventTarget {
             markOpen(this);
 
             this._readyState = WebSocket.OPEN;
-            this._logger.logRequest(() => "connection open");
+            this._logger.logRequest(() => ["connection open"]);
 
             this.dispatchEvent(new Event("open"));
         });
@@ -806,7 +881,7 @@ export class MockWebSocket extends MockEventTarget {
         if (this.readyState !== WebSocket.OPEN) {
             return;
         }
-        this._logger.logRequest(() => data);
+        this._logger.logRequest(() => [data]);
         dispatchMessage(this._serverWs, data);
     }
 }
@@ -929,8 +1004,8 @@ export class MockXMLHttpRequest extends MockEventTarget {
                 this._response = await response.text();
             }
             this.dispatchEvent(new ProgressEvent("load"));
-        } catch (error) {
-            this.dispatchEvent(new ProgressEvent("error", { error }));
+        } catch {
+            this.dispatchEvent(new ProgressEvent("error"));
         }
 
         markClosed(this);
@@ -994,7 +1069,7 @@ export class ServerWebSocket extends MockEventTarget {
 
         this.addEventListener("close", (ev) => {
             dispatchClose(this._clientWs, ev);
-            this._logger.logResponse(() => "connection closed");
+            this._logger.logResponse(() => ["connection closed", ev]);
         });
 
         mockWebSocketConnection(this);
