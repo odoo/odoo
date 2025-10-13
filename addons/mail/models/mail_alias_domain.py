@@ -185,8 +185,9 @@ class MailAliasDomain(models.Model):
         :param email_list: list of normalized emails; normalization / removing
             wrong emails is considered as being caller's job
         """
-        if not email_list:
-            return email_list
+        filtered_emails = [e for e in email_list if e and '@' in e]
+        if not filtered_emails:
+            return filtered_emails
         all_domains = self.search([])
         aliases = all_domains.mapped('bounce_email') + all_domains.mapped('catchall_email') + all_domains.mapped('default_from_email')
 
@@ -195,17 +196,17 @@ class MailAliasDomain(models.Model):
         if catchall_domains_allowed:
             catchall_domains_allowed += all_domains.mapped('name')
             email_localparts_tocheck = [
-                email.partition('@')[0] for email in email_list if (
+                email.partition('@')[0] for email in filtered_emails if (
                     email and email.partition('@')[2] in catchall_domains_allowed
                 )]
         else:
-            email_localparts_tocheck = [email.partition('@')[0] for email in email_list if email]
+            email_localparts_tocheck = [email.partition('@')[0] for email in filtered_emails if email]
 
         # search on aliases using the proposed list, as we could have a lot of aliases
         # better than returning 'all alias emails'
         potential_aliases = self.env['mail.alias'].search([
             '|',
-            ('alias_full_name', 'in', email_list),
+            ('alias_full_name', 'in', filtered_emails),
             '&', ('alias_name', 'in', email_localparts_tocheck), ('alias_incoming_local', '=', True),
         ])
         # global alias: email match
@@ -213,7 +214,7 @@ class MailAliasDomain(models.Model):
         # compat-mode alias: left-part only (filter on allowed domains already done)
         local_alias_names = potential_aliases.filtered(lambda x: x.alias_incoming_local).mapped('alias_name')
         return [
-            email for email in email_list if (
+            email for email in filtered_emails if (
                 email in aliases or
                 email.partition('@')[0] in local_alias_names
             )]
