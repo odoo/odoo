@@ -3,8 +3,13 @@
     <t t-inherit="hr_holidays.TimeOffCalendarSidePanel" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_calendar_filter')]" position="inside">
             <div class="d-flex flex-column mt-4" t-if="leaveState.optionalHolidays.length">
-                <h5>Optional Holidays</h5>
-                <ul class="ps-0">
+                <h5 class="d-flex align-items-center mb-2">
+                    Optional Holidays
+                    <img class="o_calendar_filter_plain ms-2"
+                        src="/l10n_in_hr_holidays/static/src/img/icons/optional_holidays.svg"
+                        alt="Optional Holiday Icon"/>
+                </h5>
+                        <ul class="ps-0">
                     <li t-foreach="leaveState.optionalHolidays" t-as="optionalHoliday" t-key="optionalHoliday.id"
                         class="mt-2 list-unstyled">
                         <strong t-out="getFormattedDateSpan(optionalHoliday.start, optionalHoliday.end)"/>
