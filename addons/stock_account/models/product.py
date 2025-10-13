@@ -273,7 +273,7 @@ will update the cost of every lot/serial number in stock."),
             "value_svl": value_svl,
             "quantity_svl": quantity_sum,
             "avg_cost": avg_cost,
-            "total_value": avg_cost * self.sudo(False).qty_available
+            "total_value": avg_cost * self.sudo(False).qty_available if avg_cost else 0
         }
 
     @api.depends('stock_valuation_layer_ids')
@@ -801,12 +801,12 @@ will update the cost of every lot/serial number in stock."),
         refill_stock_svl_list = []
         lot_by_product = defaultdict(lambda: defaultdict(float))
         neg_lots = self.env['stock.quant']._read_group([
-            ('product_id', 'in', self.product_variant_ids.ids),
+            ('product_id', 'in', self.product_tmpl_id.product_variant_ids.ids),
             ('lot_id', '!=', False),
             ], ['product_id', 'location_id', 'lot_id'], ['quantity:sum'],
             having=[('quantity:sum', '<', 0)])
         lots = self.env['stock.quant']._read_group([
-            ('product_id', 'in', self.product_variant_ids.ids),
+            ('product_id', 'in', self.product_tmpl_id.product_variant_ids.ids),
             ('lot_id', '!=', False),
             ], ['product_id', 'location_id', 'lot_id'], ['quantity:sum'],
             having=[('quantity:sum', '>', 0)])
