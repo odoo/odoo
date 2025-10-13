@@ -804,7 +804,7 @@ class Survey(models.Model):
           - All the following questions are conditional AND were not triggered by previous answers,
             AND cannot be triggered by any answer given on the current page/question.
         """
-        if self.questions_layout == "one_page":
+        if self.questions_layout == "one_page" or not page_or_question:
             return True
         pages_or_questions = self._get_pages_or_questions(user_input)
         current_page_index = pages_or_questions.ids.index(page_or_question.id)
