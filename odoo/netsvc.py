@@ -188,43 +188,22 @@ def init_logger():
     showwarning = warnings.showwarning
     warnings.showwarning = showwarning_with_traceback
 
-    # enable deprecation warnings (disabled by default)
-    warnings.simplefilter('default', category=DeprecationWarning)
-    # https://github.com/urllib3/urllib3/issues/2680
-    warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
-    # ignore a bunch of warnings we can't really fix ourselves
-    for module in [
-        'babel.util', # deprecated parser module, no release yet
-        'zeep.loader',# zeep using defusedxml.lxml
-        'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
-        'ofxparse',# ofxparse importing ABC from collections
-        'astroid',  # deprecated imp module (fixed in 2.5.1)
-        'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
-    ]:
-        warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
+    if not sys.warnoptions:
+        # enable our deprecation warnings (disabled by default)
+        warnings.filterwarnings("default", module="odoo")
+        # the SVG guesser thing always compares str and bytes, ignore it
+        warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
+        # reportlab does a bunch of bytes/str mixing in a hashmap
+        warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
 
-    # rsjmin triggers this with Python 3.10+ (that warning comes from the C code and has no `module`)
-    warnings.filterwarnings('ignore', r'^PyUnicode_FromUnicode\(NULL, size\) is deprecated', category=DeprecationWarning)
-    # reportlab<4.0.6 triggers this in Py3.10/3.11
-    warnings.filterwarnings('ignore', r'the load_module\(\) method is deprecated', category=DeprecationWarning, module='importlib._bootstrap')
-    # the SVG guesser thing always compares str and bytes, ignore it
-    warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
-    # reportlab does a bunch of bytes/str mixing in a hashmap
-    warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
+        # This warning is triggered library only during the python precompilation which does not occur on readonly filesystem
+        warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
+        warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
 
-    # need to be adapted later but too muchwork for this pr.
-    warnings.filterwarnings('ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*', category=DeprecationWarning)
+        # Ignore unclosed sockets. The warning appears at random places, when the GC trigger.
+        # Cannot find where they are open...
+        warnings.filterwarnings("ignore", message=r'unclosed <socket\.socket \[closed\]', category=ResourceWarning)
 
-    # pkg_ressouce is used in google-auth < 1.23.0 (removed in https://github.com/googleapis/google-auth-library-python/pull/596)
-    # unfortunately, in ubuntu jammy and noble, the google-auth version is 1.5.1
-    # starting from noble, the default pkg_ressource version emits a warning on import, triggered when importing
-    # google-auth
-    warnings.filterwarnings('ignore', r'pkg_resources is deprecated as an API.+', category=DeprecationWarning)
-    warnings.filterwarnings('ignore', r'Deprecated call to \`pkg_resources.declare_namespace.+', category=DeprecationWarning)
-
-    # This warning is triggered library only during the python precompilation which does not occur on readonly filesystem
-    warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
-    warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
     from .tools.translate import resetlocale
     resetlocale()
 
