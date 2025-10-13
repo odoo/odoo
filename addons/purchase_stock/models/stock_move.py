@@ -154,7 +154,7 @@ class StockMove(models.Model):
         value = 0
         aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
-            if at_date and fields.Datetime.to_datetime(aml.date) > at_date:
+            if at_date and aml.date > at_date:
                 continue
             if aml.move_id.state != 'posted':
                 continue
