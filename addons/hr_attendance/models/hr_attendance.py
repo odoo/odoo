@@ -735,7 +735,7 @@ class HrAttendance(models.Model):
             to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
 
             # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-            to_check_out = to_verify_company.filtered(lambda a: (fields.Datetime.now() - a.check_in).seconds / 3600 + mapped_previous_duration[a.employee_id][check_in_tz(a).date()] - max_tol >
+            to_check_out = to_verify_company.filtered(lambda a: (fields.Datetime.now() - a.check_in).total_seconds() / 3600 + mapped_previous_duration[a.employee_id][check_in_tz(a).date()] - max_tol >
                                                                 (sum(a.employee_id.resource_calendar_id.attendance_ids.filtered(lambda att: att.dayofweek == str(check_in_tz(a).weekday()) and (not att.two_weeks_calendar or att.week_type == str(att.get_week_type(check_in_tz(a).date())))).mapped(lambda at: at.hour_to - at.hour_from))))
             body = _('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
 

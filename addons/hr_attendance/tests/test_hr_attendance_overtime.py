@@ -405,6 +405,12 @@ class TestHrAttendanceOvertime(TransactionCase):
             'employee_id': self.employee.id,
             'check_in': datetime(2024, 2, 1, 14, 0)
         })
+
+        # Attendance slightly older than 24 hours
+        attendance_old_pending = self.env['hr.attendance'].create({
+            'employee_id': self.honolulu_employee.id,
+            'check_in': datetime(2024, 1, 31, 18, 0),
+        })
         
         # Based on the employee's working calendar, they should be within the allotted hours.
         attendance_utc_pending_within_allotted_hours = self.env['hr.attendance'].create({
@@ -437,6 +443,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.env['hr.attendance']._cron_auto_check_out()
 
         self.assertEqual(attendance_utc_pending.check_out, datetime(2024, 2, 1, 19, 0))
+        self.assertEqual(attendance_old_pending.check_out, datetime(2024, 2, 1, 5, 0))
         self.assertEqual(attendance_utc_pending_within_allotted_hours.check_out, False)
         self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
         self.assertEqual(attendance_jpn_pending.check_out, datetime(2024, 2, 1, 21, 0))
