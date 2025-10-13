@@ -4,7 +4,7 @@
 from collections import defaultdict
 from odoo import _, api, Command, fields, models
 from odoo.fields import Domain
-from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
+from odoo.tools import float_is_zero, OrderedSet
 from odoo.exceptions import ValidationError
 
 
@@ -502,11 +502,7 @@ class StockMove(models.Model):
             else:
                 factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
             _dummy, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id, never_attribute_values=move.never_product_template_attribute_value_ids)
-            for bom_line, line_data in lines:
-                if move.product_uom.is_zero(move.product_uom_qty) or self.env.context.get('is_scrap'):
-                    phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
-                else:
-                    phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
+            phantom_moves_vals_list += move._generate_all_phantom_moves(lines)
             # delete the move with original product which is not relevant anymore
             moves_ids_to_unlink.add(move.id)
 
@@ -574,6 +570,19 @@ class StockMove(models.Model):
             'bom_line_id': bom_line.id,
             'description_picking': self.product_id.display_name,
         }
+
+    def _generate_all_phantom_moves(self, exploded_lines_data):
+        self.ensure_one()
+        phantom_moves_vals_list = []
+        for bom_line, line_data in exploded_lines_data:
+            if self.product_uom.is_zero(self.product_uom_qty) or self.env.context.get('is_scrap'):
+                vals = self._generate_move_phantom(bom_line, 0, line_data['qty'])
+            else:
+                vals = self._generate_move_phantom(bom_line, line_data['qty'], 0)
+            for val in vals:
+                val['cost_share'] = line_data.get('line_cost_share', 0.0)
+            phantom_moves_vals_list += vals
+        return phantom_moves_vals_list
 
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
         vals = []
