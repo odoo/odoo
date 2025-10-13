@@ -404,7 +404,7 @@ test("remove background image removes color filter", async () => {
     await setupWebsiteBuilder(`
         <section>
             <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
-            <div class="o_we_bg_filter bg-black-50 o-paragraph"><br></div>
+            <div class="o_we_bg_filter bg-black-50"><br></div>
         </section>`);
     await contains(":iframe section").click();
     await contains("[data-action-id='toggleBgImage']").click();

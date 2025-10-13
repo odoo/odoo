@@ -209,13 +209,13 @@ test("clean another action", async () => {
     await animationFrame();
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
-        "test-options-target o-paragraph my-custom-class1"
+        "test-options-target my-custom-class1"
     );
     await click("[data-class-action='my-custom-class2']");
     await animationFrame();
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
-        "test-options-target o-paragraph my-custom-class2"
+        "test-options-target my-custom-class2"
     );
 });
 test("clean should provide the next action value", async () => {
@@ -389,22 +389,22 @@ test("apply classAction on multi elements", async () => {
     });
     const { getEditableContent } = await setupHTMLBuilder(`
             <div class="test-options-target">
-                <div class="target-apply">a</div>
-                <div class="target-apply">b</div>
+                <p class="target-apply">a</p>
+                <p class="target-apply">b</p>
             </div>`);
     const editableContent = getEditableContent();
     await contains(":iframe .test-options-target").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply o-paragraph">a</div>
-                <div class="target-apply o-paragraph">b</div>
+                <p class="target-apply">a</p>
+                <p class="target-apply">b</p>
             </div>`);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply o-paragraph my-custom-class">a</div>
-                <div class="target-apply o-paragraph my-custom-class">b</div>
+                <p class="target-apply my-custom-class">a</p>
+                <p class="target-apply my-custom-class">b</p>
             </div>`);
 });
 test("hide/display base on applyTo", async () => {
@@ -422,19 +422,19 @@ test("hide/display base on applyTo", async () => {
     });
 
     const { getEditableContent } = await setupHTMLBuilder(
-        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
+        `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
+        `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target o-paragraph"><div class="child-target my-custom-class">b</div></div>`
+        `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(1);

@@ -227,13 +227,13 @@ describe("styleAction", () => {
         expect("[data-style-action-value='']").toHaveClass("active");
         expect("[data-style-action-value='50%']").not.toHaveClass("active");
         expect(":iframe .test-options-target").toHaveOuterHTML(
-            `<div class="test-options-target x o-paragraph"> a </div>`
+            `<div class="test-options-target x"> a </div>`
         );
 
         await contains("[data-style-action-value='50%']").click();
 
         expect(":iframe .test-options-target").toHaveOuterHTML(
-            `<div class="test-options-target x o-paragraph" style="width: 50% !important;"> a </div>`
+            `<div class="test-options-target x" style="width: 50% !important;"> a </div>`
         );
         expect("[data-style-action-value='']").not.toHaveClass("active");
         expect("[data-style-action-value='50%']").toHaveClass("active");
