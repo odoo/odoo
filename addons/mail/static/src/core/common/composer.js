@@ -472,7 +472,7 @@ export class Composer extends Component {
                 if (!this.env.inChatter && composer.text === "" && composer.thread) {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
-                        messageToEdit.enterEditMode(this.props.composer.thread);
+                        messageToEdit.enterEditModeAsync(this.props.composer.thread);
                     }
                 }
                 break;

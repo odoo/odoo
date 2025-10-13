@@ -589,6 +589,25 @@ export class Message extends Record {
         };
     }
 
+    // Async enterEditMode that fetches mentioned channels from the message body.
+    async enterEditModeAsync(thread) {
+        this.enterEditMode(thread);
+        const doc = createDocumentFragmentFromContent(this.body);
+        const validChannels = (
+            await Promise.all(
+                Array.from(
+                    doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
+                ).map(async (el) =>
+                    this.store.Thread.getOrFetch({
+                        id: el.dataset.oeId,
+                        model: "discuss.channel",
+                    })
+                )
+            )
+        ).filter((channel) => channel?.exists());
+        this.composer.mentionedChannels = validChannels;
+    }
+
     /** @param {import("models").Thread} thread the thread where the message is being viewed when stopping edition */
     exitEditMode(thread) {
         const threadAsInEdition = this.threadAsInEdition;
