@@ -171,11 +171,11 @@ export class ImageSavePlugin extends Plugin {
                     canvas.height
                 );
                 altData[size] = {
-                    "image/jpeg": canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                    "image/jpeg": canvas.toDataURL("image/jpeg").split(",")[1],
                 };
                 if (size !== originalSize) {
                     altData[size]["image/webp"] = canvas
-                        .toDataURL("image/webp", 0.75)
+                        .toDataURL("image/webp")
                         .split(",")[1];
                 }
             }

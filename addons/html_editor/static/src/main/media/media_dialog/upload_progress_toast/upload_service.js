@@ -147,7 +147,7 @@ export const uploadService = {
                                 ctx.fillStyle = "rgb(255, 255, 255)";
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                                 ctx.drawImage(image, 0, 0);
-                                const altDataURL = canvas.toDataURL("image/jpeg", 0.75);
+                                const altDataURL = canvas.toDataURL("image/jpeg");
                                 await rpc(
                                     "/html_editor/attachment/add_data",
                                     {
