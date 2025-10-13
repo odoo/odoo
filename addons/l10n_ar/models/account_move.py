@@ -340,6 +340,15 @@ class AccountMove(models.Model):
         if vat_base_0:
             res += [{'Id': '3', 'BaseImp': sign * vat_base_0, 'Importe': 0.0}]
 
+        # If VAT taxes added to the lines but not prepare in res then the baseimp is two small.
+        # In that case we force to send one line IVA 0 to reflect the base as taxed amount but without tax amount.
+        if not res and any(x.tax_group_id.l10n_ar_vat_afip_code for x in self.invoice_line_ids.mapped('tax_ids')):
+            base_imp = sum(
+                self.invoice_line_ids.filtered(
+                    lambda x: x.tax_ids.filtered(
+                        lambda y: y.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'])).mapped('price_subtotal'))
+            res += [{'Id': '3', 'BaseImp': sign * base_imp, 'Importe': 0.0}]
+
         return res if res else []
 
     def _get_name_invoice_report(self):
