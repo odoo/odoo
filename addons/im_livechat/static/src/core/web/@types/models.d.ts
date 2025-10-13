@@ -1,13 +1,4 @@
 declare module "models" {
-    export interface DiscussChannel {
-        hasFetchedLivechatSessionData: boolean;
-        livechat_expertise_ids: LivechatExpertise[];
-        livechat_note: ReturnType<import("@odoo/owl").markup>|string;
-        livechat_outcome: "no_answer"|"no_agent"|"no_failure"|"escalated"|undefined;
-        livechat_status: "in_progress"|"waiting"|"need_help"|undefined;
-        livechatNoteText: string|undefined;
-        livechatStatusLabel: Readonly<string>;
-    }
     export interface LivechatChannel {
         join: (param0: { notify: boolean }) => Promise<void>;
         joinTitle: Readonly<string>;
