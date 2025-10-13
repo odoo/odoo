@@ -20,7 +20,7 @@ import {
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
-import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
+import { mockSendBeacon } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -30,8 +30,6 @@ import {
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
-
-import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -59,6 +57,7 @@ test("basic rendering", async () => {
     await contains("[title='More']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("[title='More']");
+<<<<<<< 3050fe2cef33879dc867aed237a11e7e4c00edb0
     await contains(".o-dropdown-item", { count: 2 });
     await contains(".o-dropdown-item:contains('Raise Hand')");
     await contains(".o-dropdown-item:contains('Disable speaker autofocus')");
@@ -77,6 +76,17 @@ test("mobile UI", async () => {
     await contains(".o-discuss-Call");
     expect(isMobileOS()).toBe(true);
     await contains("[title='Share Screen']", { count: 0 });
+||||||| 44c993129241313c2011c6fff39478cc6791ae0f
+    await contains("[title='Raise Hand']");
+    await contains("[title='Enter Full Screen']");
+    // screen sharing not available in mobile OS
+    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    expect(isMobileOS()).toBe(true);
+    await contains("[title='Share Screen']", { count: 0 });
+=======
+    await contains("[title='Raise Hand']");
+    await contains("[title='Enter Full Screen']");
+>>>>>>> f1aa25dc79fd6d75ce5f84838c438f7f0064ad31
 });
 
 test("keep the `more` popover active when hovering it", async () => {
