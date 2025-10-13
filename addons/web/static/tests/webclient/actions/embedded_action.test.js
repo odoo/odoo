@@ -676,3 +676,25 @@ test("custom embedded action loaded first", async () => {
         message: "'Favorite Ponies' view should be loaded",
     });
 });
+
+test("test get_embedded_actions_settings rpc args", async () => {
+    onRpc("res.users.settings", "get_embedded_actions_settings", ({ args, kwargs }) => {
+        expect(args.length).toBe(1, {
+            message: "Should have one positional argument, which is the id of the user setting.",
+        });
+        expect(args[0]).toBe(1, { message: "The id of the user setting should be 1." });
+        expect(kwargs.context.res_id).toBe(5, {
+            message: "The context should contain the res_id passed to the action.",
+        });
+        expect(kwargs.context.res_model).toBe("partner", {
+            message: "The context should contain the res_model passed to the action.",
+        });
+        expect.step("get_embedded_actions_settings");
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1, {
+        additionalContext: { active_id: 5 },
+    });
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    expect.verifySteps(["get_embedded_actions_settings"]);
+});
