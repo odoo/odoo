@@ -232,8 +232,10 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
-        return this.channel?.channel_member_ids.filter(
-            (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
+        return (
+            this.channel?.channel_member_ids.filter(
+                (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
+            ) ?? []
         );
     },
     get areAllMembersLoaded() {
