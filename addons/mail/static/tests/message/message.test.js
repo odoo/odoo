@@ -175,6 +175,16 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-Message-content", { text: "other bye (edited)" });
     await click(".o_channel_redirect", { text: "other" });
     await contains(".o-mail-Discuss-threadName", { value: "other" });
+    // Test editing via arrow up shortcut
+    await click(".o-mail-DiscussSidebarChannel", { text: "general" });
+    await contains(".o-mail-Message");
+    await press("ArrowUp");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other bye" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "#other hello", { replace: true });
+    await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "other hello (edited)" });
+    await click(".o_channel_redirect", { text: "other" });
+    await contains(".o-mail-Discuss-threadName", { value: "other" });
 });
 
 test("Can edit message comment in chatter", async () => {
