@@ -21,3 +21,4 @@ Carlos Reyes carlos@studio73.es https://github.com/reyes4711-s73
 Miguel Gandia miguel@studio73.es https://github.com/miguel-s73
 Roger Amorós roger@studio73.es https://github.com/rabbitjon-s73
 Guillermo Llinares guillermo@studio73.es https://github.com/willerr-mo-s73
+David López david.lopez@studio73.es https://github.com/david-s73
