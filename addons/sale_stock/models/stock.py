@@ -170,7 +170,7 @@ class StockPicking(models.Model):
 
     def _set_sale_id(self):
         if self.reference_ids and self.sale_id:
-            self.reference_ids.sale_ids = Command.link(self.sale_id)
+            self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
         else:
             if self.sale_id:
                 self.env['stock.reference'].create({

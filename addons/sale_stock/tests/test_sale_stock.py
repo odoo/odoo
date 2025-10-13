@@ -2283,3 +2283,25 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'location_id': loc_perso.id, 'location_dest_id': out_location.id, 'quantity': 1},
             {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'quantity': 1},
         ])
+
+    def test_change_sale_order_in_delivery_picking(self):
+        """Test changing sale order reference in delivery picking."""
+        def create_sale_order():
+            return self.env['sale.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                    'price_unit': self.product_a.list_price,
+                })],
+            })
+        so1 = create_sale_order()
+        so2 = create_sale_order()
+
+        so1.action_confirm()
+        picking = so1.picking_ids[0]
+        self.assertEqual(picking.sale_id, so1)
+        picking.sale_id = so2
+        self.assertEqual(picking.sale_id, so2)
+        self.assertFalse(so1.picking_ids)
