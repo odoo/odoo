@@ -4087,6 +4087,8 @@ class BaseModel(metaclass=MetaModel):
                 try:
                     vals[name] = convert(record[name], record, use_display_name)
                 except MissingError:
+                    if record.exists():
+                        raise
                     vals.clear()
         result = [vals for record, vals in data if vals]
 
