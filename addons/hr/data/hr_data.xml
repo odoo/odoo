@@ -6,14 +6,6 @@
             <field name="name">Administration</field>
         </record>
 
-        <record id="employee_admin" model="hr.employee" forcecreate="0">
-            <field name="name" eval="obj(ref('base.partner_admin')).name" model="res.partner"/>
-            <field name="department_id" ref="dep_administration"/>
-            <field name="user_id" ref="base.user_admin"/>
-            <field name="address_id" ref="base.main_partner"/>
-            <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
-        </record>
-
         <record id="onboarding_plan" model="mail.activity.plan">
             <field name="name">Onboarding</field>
             <field name="res_model">hr.employee</field>
@@ -193,6 +185,16 @@
             <field name="country_id" ref="base.be"/>
         </record>
 
+        <!-- Employee -->
+        <record id="employee_admin" model="hr.employee" forcecreate="0">
+            <field name="name" eval="obj(ref('base.partner_admin')).name" model="res.partner"/>
+            <field name="department_id" ref="dep_administration"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="address_id" ref="base.main_partner"/>
+            <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
+            <field name="structure_type_id" ref="hr.structure_type_employee"/>
+        </record>
+
         <!-- Contract-related subtypes for messaging / Chatter -->
         <record id="mt_contract_pending" model="mail.message.subtype">
             <field name="name">To Renew</field>
@@ -215,11 +217,6 @@
             <field name="parent_id" ref="mt_contract_pending"/>
             <field name="relation_field">department_id</field>
             <field name="description">Contract about to expire</field>
-        </record>
-
-        <!-- Add default Structure to employee admin -->
-        <record id="employee_admin" model="hr.employee">
-            <field name="structure_type_id" ref="hr.structure_type_employee"/>
         </record>
     </data>
 </odoo>
