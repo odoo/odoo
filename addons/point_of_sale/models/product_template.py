@@ -217,7 +217,7 @@ class ProductTemplate(models.Model):
 
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
-                                    or product.sudo().company_id == self.company_id
+                                    or product.sudo().company_id == self.env.company
                 )
         products += special_products.product_tmpl_id
         if config.tip_product_id:
