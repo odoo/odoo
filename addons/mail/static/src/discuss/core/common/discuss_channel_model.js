@@ -9,7 +9,7 @@ export class DiscussChannel extends Record {
     id = fields.Attr(undefined, {
         onUpdate() {
             const busService = this.store.env.services.bus_service;
-            if (!busService.isActive && !this.thread.isTransient) {
+            if (!busService.isActive && !this.isTransient) {
                 busService.start();
             }
         },
