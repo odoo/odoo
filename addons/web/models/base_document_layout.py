@@ -119,7 +119,7 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
 
-    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details', 'vat')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
         styles = self._get_asset_style()
@@ -147,6 +147,7 @@ class BaseDocumentLayout(models.TransientModel):
             'company': self,
             'preview_css': preview_css,
             'is_html_empty': is_html_empty,
+            'forced_vat': self.vat,
         }
 
     @api.onchange('company_id')
