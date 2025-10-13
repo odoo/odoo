@@ -218,7 +218,7 @@
         </record>
 
         <!-- Add default Structure to employee admin -->
-        <record id="employee_admin" model="hr.employee">
+        <record id="employee_admin" model="hr.employee" forcecreate="0">
             <field name="structure_type_id" ref="hr.structure_type_employee"/>
         </record>
     </data>
