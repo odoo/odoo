@@ -40,6 +40,40 @@ class AccountTax(models.Model):
                         tax.l10n_in_tax_type = tag_code
                         break
 
+    def _compute_price_include(self):
+        """
+            override to manage zero effect tax with price_include.
+            (ex: tax with 100% and -100% repartition lines)
+            In that case, we force the computation of tax with exclude_in_price to avoid miscomputation.
+            For Example:
+            - Product price 100q + IGST 18% EXP (price_include)
+            - With IGST 18% EXP defined with 2 repartition lines (100% and -100%)
+
+            journal item without this override:
+            Account             | Credit | Debit
+            --------------------|--------|--------
+            Product Revenue     | 100    |
+            IGST Payable        | 15.25  |
+            IGST Receivable     |        | 15.25
+            Customer Receivable |        | 100
+
+            journal item with this override:
+            Account             | Credit | Debit
+            --------------------|--------|--------
+            Product Revenue     | 100    |
+            IGST Payable        | 18     |
+            IGST Receivable     |        | 18
+            Customer Receivable |        | 100
+
+            This is needed becosue when we send for EDI filing, the tax amount is re-computed based rate.
+        """
+        res = super()._compute_price_include()
+        in_taxes = self.filtered(lambda tax: tax.country_code == 'IN')
+        for tax in in_taxes:
+            if sum(rep.factor for rep in tax.repartition_line_ids if rep.repartition_type == 'tax') == 0:
+                tax.price_include = False
+        return res
+
     # -------------------------------------------------------------------------
     # HELPERS IN BOTH PYTHON/JAVASCRIPT (hsn_summary.js / account_tax.py)
 
