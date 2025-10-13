@@ -462,8 +462,9 @@ class PosPaymentMethod(models.Model):
                 if not prefix:
                     raise UserError(
                         _(
-                            "Configure the API URL prefix on the payment method to perform the Adyen '%s' operation."
-                        ) % operation,
+                            "Configure the API URL prefix on the payment method to perform the Adyen '%(operation)s' operation.",
+                            operation=operation,
+                        ),
                     )
                 base_url = (
                     f"https://{prefix}-checkout-live.adyenpayments.com/checkout/v71"
