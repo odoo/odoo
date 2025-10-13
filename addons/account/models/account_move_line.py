@@ -1591,6 +1591,7 @@ class AccountMoveLine(models.Model):
         move_container = {'records': moves}
         with moves._check_balanced(move_container),\
              ExitStack() as exit_stack,\
+             self.env.protecting(self.env['account.move']._get_protected_vals({}, moves)), \
              moves._sync_dynamic_lines(move_container),\
              self._sync_invoice(container):
             lines = super().create([self._sanitize_vals(vals) for vals in vals_list])
