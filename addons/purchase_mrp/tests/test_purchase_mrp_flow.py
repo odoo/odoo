@@ -223,7 +223,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             self.component_c,
         ]
 
-        self.assertEqual(sum([k.standard_price * k.qty_available for k in components]), 120 * 1260)
+        self.assertAlmostEqual(sum(k.standard_price * k.qty_available for k in components), 120 * 1260, delta=0.5)
 
     def test_kit_component_cost_multi_currency(self):
         # Set kit and component product to automated FIFO

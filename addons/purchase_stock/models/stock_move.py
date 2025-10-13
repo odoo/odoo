@@ -221,6 +221,10 @@ class StockMove(models.Model):
             bills=account_moves.mapped('display_name'))
         return valuation_data
 
+    def _get_cost_ratio(self, quantity):
+        self.ensure_one()
+        return quantity
+
     def _get_value_from_quotation(self, quantity, at_date=None):
         # TODO: Start from global value
         if not self.purchase_line_id:
@@ -228,7 +232,8 @@ class StockMove(models.Model):
         price_unit = self.purchase_line_id._get_stock_move_price_unit(self.date)
         uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
         quantity = min(quantity, uom_quantity)
-        value = price_unit * quantity
+        cost_ratio = self._get_cost_ratio(quantity)
+        value = price_unit * cost_ratio
         return {
             'value': value,
             'quantity': quantity,
