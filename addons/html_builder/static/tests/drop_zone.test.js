@@ -32,8 +32,6 @@ test("drop beside dropzone inserts the snippet", async () => {
     await waitForEndOfOperation();
     expect(contentEl)
         .toHaveInnerHTML(`<section class="s_test" data-snippet="s_test" data-name="Test">
-    <div class="test_a o-paragraph">
-        <br>
-    </div>
-</section>`);
+    <div class="test_a"></div>
+    </section>`);
 });
