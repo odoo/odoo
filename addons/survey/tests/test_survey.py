@@ -774,6 +774,52 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
 
+    @users('survey_manager')
+    def test_get_survey_last_triggering_answers(self):
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test Conditional',
+            'questions_layout': 'page_per_question',
+        })
+        q1, q2, q3, q4 = [
+            self._add_question(
+                self.page_0, f'Q{i}', 'simple_choice', survey_id=test_survey.id, sequence=i,
+                labels=[{'value': 'A1'}, {'value': 'A2'}],
+            ) for i in range(1, 5)
+        ]
+        user_input = self._add_answer(test_survey, self.survey_user.partner_id)
+
+        def last_triggering(page_or_question):
+            trigger_q, trigger_a, _ = user_input._get_conditional_values()
+            return test_survey._get_survey_last_triggering_answers(user_input, page_or_question, trigger_q, trigger_a)
+
+        # 1. Multiple triggers: Q3 and Q4 are conditional on different answers of Q2.
+        q3.triggering_answer_ids = q2.suggested_answer_ids[0]
+        q4.triggering_answer_ids = q2.suggested_answer_ids[1]
+        self.assertCountEqual(last_triggering(q2), q2.suggested_answer_ids.ids)
+
+        # 2. Unconditional question follows: Q4 has no triggers.
+        q4.triggering_answer_ids = [Command.clear()]
+        self.assertEqual(last_triggering(q2), [], "Q4 is always visible, so Q2 is never the last page.")
+
+        # 3. Triggered by a previous page: Q3 is conditional on Q1, and the user already selected the triggering answer.
+        q4.triggering_answer_ids = q2.suggested_answer_ids[0]
+        q3.triggering_answer_ids = q1.suggested_answer_ids[0]
+        q1_line = self._add_answer_line(q1, user_input, q1.suggested_answer_ids[0].id)
+        self.assertEqual(last_triggering(q2), [], "Q3 is already triggered by Q1, so Q2 is never the last page.")
+        q1_line.unlink()
+
+        # 4. Ignore current page answers: The user selected the triggering answer on Q2, but they can still change it.
+        q3.triggering_answer_ids = q2.suggested_answer_ids[0]
+        q2_line = self._add_answer_line(q2, user_input, q2.suggested_answer_ids[0].id)
+        self.assertEqual(last_triggering(q2), q2.suggested_answer_ids[0].ids, "Answers recorded on the current page are deliberately ignored.")
+        q2_line.unlink()
+
+        # 5. General edge cases
+        self.assertEqual(last_triggering(q4), [], "No following questions exist.")
+        test_survey.questions_layout = 'one_page'
+        self.assertEqual(last_triggering(q2), [], "Feature does not apply to 'one_page' layout.")
+        test_survey.questions_layout = 'page_per_question'
+
     def test_survey_session_leaderboard(self):
         """Check leaderboard rendering with small (max) scores values."""
         start_time = fields.datetime(2023, 7, 7, 12, 0, 0)

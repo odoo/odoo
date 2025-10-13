@@ -274,8 +274,8 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+        triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
         if survey_sudo.questions_layout != 'page_per_question':
-            triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
                 'triggering_answers_by_question': {
                     question.id: triggering_answers.ids
@@ -308,6 +308,11 @@ class Survey(http.Controller):
                 'has_answered': answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == new_previous_id),
                 'can_go_back': survey_sudo._can_go_back(answer_sudo, page_or_question),
             })
+            survey_last_triggering_answers = survey_sudo._get_survey_last_triggering_answers(
+                answer_sudo, page_or_question, triggering_answers_by_question, triggered_questions_by_answer
+            )
+            if survey_last_triggering_answers:
+                data['survey_last_triggering_answers'] = survey_last_triggering_answers
             return data
 
         if answer_sudo.state == 'in_progress':
@@ -330,7 +335,17 @@ class Survey(http.Controller):
                         survey_last = answer_sudo._is_last_skipped_page_or_question(next_page_or_question)
                     else:
                         survey_last = survey_sudo._is_last_page_or_question(answer_sudo, next_page_or_question)
-                    data.update({'survey_last': survey_last})
+
+                    survey_last_triggering_answers = survey_sudo._get_survey_last_triggering_answers(
+                        answer_sudo, next_page_or_question, triggering_answers_by_question, triggered_questions_by_answer
+                    )
+                    if survey_last_triggering_answers:
+                        data['survey_last_triggering_answers'] = survey_last_triggering_answers
+                    # Stable workaround until 18.4: force 'survey_last' to True for potentially final questions.
+                    # Since 'survey_last_triggering_answers' cannot be passed to the template on initial load,
+                    # defaulting to 'Submit' acts as a fail-safe. It prevents premature submissions in case
+                    # the user navigates back and selects a non-triggering answer.
+                    data.update({'survey_last': survey_last or bool(survey_last_triggering_answers)})
 
             if answer_sudo.is_session_answer and next_page_or_question.is_time_limited:
                 data.update({
@@ -390,13 +405,18 @@ class Survey(http.Controller):
         elif 'page' in survey_data:
             background_image_url = survey_data['page'].background_image_url
 
-        return {
+        data = {
             'has_skipped_questions': any(answer_sudo._get_skipped_questions()),
             'survey_content': survey_content,
             'survey_progress': survey_progress,
             'survey_navigation': request.env['ir.qweb']._render('survey.survey_navigation', survey_data),
             'background_image_url': background_image_url
         }
+
+        if 'survey_last_triggering_answers' in survey_data:
+            data['survey_last_triggering_answers'] = survey_data['survey_last_triggering_answers']
+
+        return data
 
     @http.route([
         '/survey/<string:survey_token>',
