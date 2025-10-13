@@ -129,6 +129,7 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         if (
             !this.rtcSession ||
+            !this.rtc.isHost ||
             !this.isOfActiveCall ||
             HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
         ) {
