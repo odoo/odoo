@@ -50,19 +50,19 @@ test("hide/display base on applyTo", async () => {
         template: xml`<BuilderColorPicker applyTo="'.my-custom-class'" styleAction="'background-color'"/>`,
     });
     const { getEditableContent } = await setupHTMLBuilder(
-        `<div class="parent-target"><div class="child-target b">b</div></div>`
+        `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b o-paragraph">b</div></div>`
+        `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container .o_we_color_preview").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b o-paragraph my-custom-class">b</div></div>`
+        `<div class="parent-target"><p class="child-target b my-custom-class">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container .o_we_color_preview").toHaveCount(1);
