@@ -7,7 +7,7 @@ import {
     mockWebSocket,
     registerDebugInfo,
 } from "@odoo/hoot";
-import { RPCError } from "@web/core/network/rpc";
+import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
@@ -189,6 +189,27 @@ function getCurrentMockServer() {
 }
 
 /**
+ * @param {RequestInit} init
+ */
+function getJsonRpcParams({ headers, body }) {
+    if (headers.get("Content-Type") !== "application/json" || typeof body !== "string") {
+        return null;
+    }
+    try {
+        const parsedParams = JSON.parse(body);
+        return {
+            id: parsedParams.id,
+            jsonrpc: parsedParams.jsonrpc,
+        };
+    } catch {
+        return {
+            id: nextJsonRpcId++,
+            jsonrpc: "2.0",
+        };
+    }
+}
+
+/**
  * @param {MockServer["_models"]}
  * @returns {MockServerEnvironment}
  */
@@ -225,12 +246,9 @@ function match(target, matchers) {
  * @param {string} modelName
  */
 function modelNotFoundError(modelName, consequence) {
-    let message = `cannot find a definition for model "${modelName}"`;
-    if (consequence) {
-        message += `: ${consequence}`;
-    }
-    message += ` (did you forget to use \`defineModels()?\`)`;
-    return new MockServerError(message);
+    return new MockServerError(
+        `Cannot find a definition for model "${modelName}": ${consequence} (did you forget to use \`defineModels()?\`)`
+    );
 }
 
 /**
@@ -352,6 +370,8 @@ const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
 const mockServers = new WeakMap();
 /** @type {WeakSet<typeof Model>} */
 const seenModels = new WeakSet();
+
+let nextJsonRpcId = 1e9;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -592,7 +612,7 @@ export class MockServer {
             }
         }
 
-        throw new MockServerError(`unimplemented ORM method: ${modelName}.${method}`);
+        throw new MockServerError(`Unimplemented ORM method: ${modelName}.${method}`);
     }
 
     /**
@@ -729,7 +749,7 @@ export class MockServer {
             default: {
                 if (!(action.type in ACTION_TYPES)) {
                     throw new MockServerError(
-                        `invalid action type "${action.type}" in action ${id}`
+                        `Invalid action type "${action.type}" in action ${id}`
                     );
                 }
             }
@@ -759,50 +779,71 @@ export class MockServer {
      * @param {RequestInit} init
      */
     async _handleRequest(url, init) {
-        const method = init?.method?.toUpperCase() || (init?.body ? "POST" : "GET");
-        const request = new Request(url, { method, ...(init || {}) });
-
+        const request = new Request(url, init);
         const route = new URL(request.url).pathname;
+        let jsonRpcParams = getJsonRpcParams(init);
+        let error = null;
+        let result = null;
+
         const listeners = this._findRouteListeners(route);
         if (!listeners.length) {
-            throw new MockServerError(`unimplemented server route: ${route}`);
+            error = new MockServerError(`Unimplemented server route: ${route}`);
+        } else {
+            for (const [callback, routeParams, { final, pure }] of listeners) {
+                try {
+                    const callbackResult = await callback.call(this, request, routeParams);
+                    if (result instanceof Error) {
+                        error = callbackResult;
+                    } else {
+                        result = callbackResult;
+                    }
+                } catch (err) {
+                    error = err instanceof Error ? err : new Error(err);
+                }
+                if (final || error || (result !== null && result !== undefined)) {
+                    if (pure) {
+                        jsonRpcParams = null;
+                    }
+                    break;
+                }
+            }
         }
 
-        let result = null;
-        for (const [callback, routeParams, routeOptions] of listeners) {
-            const { final, pure } = routeOptions;
-            try {
-                result = await callback.call(this, request, routeParams);
-            } catch (error) {
-                if (pure) {
-                    throw error;
-                }
-                result = error instanceof Error ? error : new Error(error);
-            }
-            if (final || (result !== null && result !== undefined)) {
-                if (pure) {
-                    return result;
-                }
-                if (result instanceof RPCError) {
-                    return { error: result, result: null };
-                }
-                if (result instanceof Error) {
-                    return {
-                        error: {
-                            code: 418,
-                            data: result,
-                            message: result.message,
-                            type: result.name,
-                        },
-                        result: null,
+        // We have several scenarios at this point:
+        //
+        // - either the request is considered to be a JSON-RPC:
+        //  -> the response is formatted accordingly (i.e. { error, result })
+        //
+        // - in other cases:
+        //  -> the response is returned or thrown as-is.
+        if (jsonRpcParams) {
+            if (error) {
+                if (error instanceof RPCError) {
+                    jsonRpcParams.error = { ...error };
+                } else {
+                    jsonRpcParams.error = {
+                        ...makeErrorFromResponse({
+                            code: 200,
+                            data: {
+                                name: error.name,
+                                message: error.message,
+                                subType: error.type,
+                            },
+                            message: error.message,
+                            type: error.name,
+                        }),
                     };
                 }
-                return { error: null, result };
+                return jsonRpcParams;
+            } else {
+                jsonRpcParams.result = result;
+                return jsonRpcParams;
             }
+        } else if (error) {
+            throw error;
+        } else {
+            return result;
         }
-
-        // There was a matching controller that wasn't call_kw but it didn't return anything: treat it as JSON
-        return { error: null, result };
     }
 
     /**
@@ -882,7 +923,7 @@ export class MockServer {
             if (model._rec_name) {
                 if (!(model._rec_name in model._fields)) {
                     throw new MockServerError(
-                        `invalid _rec_name "${model._rec_name}" on model "${model._name}": field does not exist`
+                        `Invalid _rec_name "${model._rec_name}" on model "${model._name}": field does not exist`
                     );
                 }
             } else if ("name" in model._fields) {
@@ -902,7 +943,7 @@ export class MockServer {
                 Object.setPrototypeOf(Object.getPrototypeOf(model), existingModel);
             } else if (model._name in this.env) {
                 throw new MockServerError(
-                    `cannot register model "${model._name}": a server environment property with the same name already exists`
+                    `Cannot register model "${model._name}": a server environment property with the same name already exists`
                 );
             }
 
@@ -963,7 +1004,7 @@ export class MockServer {
                         computeFn = model[computeFn];
                         if (typeof computeFn !== "function") {
                             throw new MockServerError(
-                                `could not find compute function "${computeFn}" on model "${model._name}"`
+                                `Could not find compute function "${computeFn}" on model "${model._name}"`
                             );
                         }
                     }
@@ -983,7 +1024,7 @@ export class MockServer {
                 for (const fieldName in record) {
                     if (!(fieldName in model._fields)) {
                         throw new MockServerError(
-                            `unknown field "${fieldName}" on ${getRecordQualifier(
+                            `Unknown field "${fieldName}" on ${getRecordQualifier(
                                 record
                             )} in model "${model._name}"`
                         );
@@ -992,7 +1033,7 @@ export class MockServer {
                 if (record.id) {
                     if (seenIds.has(record.id)) {
                         throw new MockServerError(
-                            `duplicate ID ${record.id} in model "${model._name}"`
+                            `Duplicate ID ${record.id} in model "${model._name}"`
                         );
                     }
                     seenIds.add(record.id);
@@ -1067,7 +1108,9 @@ export class MockServer {
         const model = ensureArray(args.pop() || "*");
 
         if (typeof callback !== "function") {
-            throw new Error(`onRpc: expected callback to be a function, got: ${callback}`);
+            throw new MockServerError(
+                `onRpc: expected callback to be a function, got: ${callback}`
+            );
         }
 
         this._ormListeners.push([model, method, callback]);
@@ -1199,11 +1242,13 @@ export class MockServer {
                 }
             } else if (model) {
                 if (!resId) {
-                    throw new Error("Actions with a 'model' should also have a 'resId'");
+                    throw new MockServerError("Actions with a 'model' should also have a 'resId'");
                 }
                 displayName = this.env[model].browse(resId)[0].display_name;
             } else {
-                throw new Error("Actions should have either an 'action' (ID or path) or a 'model'");
+                throw new MockServerError(
+                    "Actions should have either an 'action' (ID or path) or a 'model'"
+                );
             }
             return { display_name: displayName };
         });
@@ -1266,7 +1311,7 @@ export class MockServer {
         }
         const missingMenuIds = [...allChildIds].filter((id) => !(id in menuDict));
         if (missingMenuIds.length) {
-            throw new MockServerError(`missing menu ID(s): ${missingMenuIds.join(", ")}`);
+            throw new MockServerError(`Missing menu ID(s): ${missingMenuIds.join(", ")}`);
         }
         return menuDict;
     }
