@@ -101,6 +101,12 @@ class AccountReport(models.Model):
         precompute=True,
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
+    use_fiscal_periods = fields.Boolean(
+        string="Fiscal Periods",
+        compute=lambda x: x._compute_report_option_filter('use_fiscal_periods', True),
+        precompute=True, readonly=False, store=True,
+        depends=['root_report_id', 'section_main_report_ids'],
+    )
 
     currency_translation = fields.Selection(
         string="Currency Translation",
