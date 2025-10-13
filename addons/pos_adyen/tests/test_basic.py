@@ -53,7 +53,6 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
                         0,
                         {
                             "name": "Adyen",
-                            "use_payment_terminal": True,
                             "adyen_api_key": "my_adyen_api_key",
                             "adyen_terminal_identifier": "my_adyen_terminal",
                             "adyen_test_mode": False,

@@ -90,7 +90,7 @@ class PosPaymentMethod(models.Model):
             if not payment_method.adyen_terminal_identifier:
                 continue
             # sudo() to search all companies
-            existing_payment_method = self.sudo().search(
+            existing_payment_method = self.env[self._name].sudo().search(
                 [
                     ("id", "!=", payment_method.id),
                     (
@@ -415,7 +415,7 @@ class PosPaymentMethod(models.Model):
         return {
             "tenderOption": "AskGratuity",
             "authorisationType": "PreAuth",
-            **{key: value for key, value in self.APPLICATION_INFO_PARAMS},
+            **dict(self.APPLICATION_INFO_PARAMS),
         }
 
     @api.model
@@ -450,7 +450,7 @@ class PosPaymentMethod(models.Model):
             payment_psp_reference = data.get("paymentPspReference")
             if not payment_psp_reference:
                 raise UserError(
-                    _("Missing paymentPspReference for Adyen %s request") % operation,
+                    _("Missing paymentPspReference for Adyen %(operation)s request", operation=operation),
                 )
             environment = "test" if self.sudo().adyen_test_mode else "live"
             if environment == "test":
@@ -462,8 +462,8 @@ class PosPaymentMethod(models.Model):
                 if not prefix:
                     raise UserError(
                         _(
-                            "Configure the API URL prefix on the payment method to perform the Adyen '%s' operation." % operation,
-                        ),
+                            "Configure the API URL prefix on the payment method to perform the Adyen '%s' operation."
+                        ) % operation,
                     )
                 base_url = (
                     f"https://{prefix}-checkout-live.adyenpayments.com/checkout/v71"
