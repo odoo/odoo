@@ -148,11 +148,6 @@ class MigrationManager:
 
     def migrate_module(self, pkg: module_graph.ModuleNode, stage: typing.Literal['pre', 'post', 'end']) -> None:
         assert stage in ('pre', 'post', 'end')
-        stageformat = {
-            'pre': '[>%s]',
-            'post': '[%s>]',
-            'end': '[$%s]',
-        }
         if pkg.load_state != 'to upgrade' and pkg.name not in Registry(self.cr.dbname)._force_upgrade_scripts:
             return
 
@@ -217,7 +212,7 @@ class MigrationManager:
         for version in versions:
             if compare(version):
                 for pyfile in _get_migration_files(pkg, version, stage):
-                    exec_script(self.cr, installed_version, pyfile, pkg.name, stage, stageformat[stage] % version)
+                    exec_script(self.cr, installed_version, pyfile, pkg.name, stage, version)
 
 
 VALID_MIGRATE_PARAMS = list(itertools.product(
@@ -227,25 +222,26 @@ VALID_MIGRATE_PARAMS = list(itertools.product(
 
 def exec_script(cr, installed_version, pyfile, addon, stage, version=None):
     version = version or installed_version
+    fmt_version = {
+        'pre': f'[>{version}]',
+        'post': f'[{version}>]',
+        'end': f'[${version}]',
+    }[stage]
     name, ext = os.path.splitext(os.path.basename(pyfile))
     if ext.lower() != '.py':
         return
     try:
-        mod = load_script(pyfile, name)
+        mod = load_script(pyfile, f"odoo.upgrade.{addon}.{version}.{name}")
     except ImportError as e:
-        raise ImportError('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(locals(), file=pyfile)) from e
+        raise ImportError(f'module {addon}: Unable to load {stage}-upgrade file {pyfile}') from e
 
     if not hasattr(mod, 'migrate'):
-        raise AttributeError(
-            'module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function, not found in %(file)s' % dict(
-                locals(),
-                file=pyfile,
-            ))
+        raise AttributeError(f'module {addon}: Each {stage}-upgrade file must have a "migrate(cr, installed_version)" function, not found in {pyfile}')
 
     try:
         sig = inspect.signature(mod.migrate)
     except TypeError as e:
-        raise TypeError("module %(addon)s: `migrate` needs to be a function, got %(migrate)r" % dict(locals(), migrate=mod.migrate)) from e
+        raise TypeError(f"module {addon}: `migrate` needs to be a function, got {mod.migrate!r}") from e
 
     if not (
             tuple(sig.parameters.keys()) in VALID_MIGRATE_PARAMS
@@ -253,5 +249,5 @@ def exec_script(cr, installed_version, pyfile, addon, stage, version=None):
     ):
         raise TypeError("module %(addon)s: `migrate`'s signature should be `(cr, version)`, %(func)s is %(sig)s" % dict(locals(), func=mod.migrate, sig=sig))
 
-    _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(locals(), name=mod.__name__))  # noqa: G002
+    _logger.info('module %(addon)s: Running upgrade %(fmt_version)s %(name)s', locals())
     mod.migrate(cr, installed_version)
