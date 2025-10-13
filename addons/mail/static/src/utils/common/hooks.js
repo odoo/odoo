@@ -14,6 +14,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { convertBrToLineBreak } from "./format";
 
@@ -442,6 +443,8 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
 }
 
 export function useMessageEdition() {
+    /** @type {import("models").Store} */
+    const store = useService("mail.store");
     const state = useState({
         /** @type {import('@mail/core/common/composer').Composer} */
         composerOfThread: null,
@@ -460,6 +463,22 @@ export function useMessageEdition() {
                 },
             };
             state.editingMessage = message;
+        },
+        // Async enterEditMode that fetches mentioned channels from the message body.
+        async enterEditModeAsync(message) {
+            this.enterEditMode(message);
+            const rawMsg = toRaw(message);
+            const doc = createDocumentFragmentFromContent(rawMsg.body);
+            const validChannels = (
+                await Promise.all(
+                    Array.from(
+                        doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
+                    ).map(async (el) =>
+                        store.Thread.getOrFetch({ id: el.dataset.oeId, model: "discuss.channel" })
+                    )
+                )
+            ).filter((channel) => channel?.exists());
+            rawMsg.composer.mentionedChannels = validChannels;
         },
         exitEditMode() {
             if (state.editingMessage) {

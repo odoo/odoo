@@ -91,7 +91,7 @@ messageActionsRegistry
         icon: "fa fa-pencil",
         title: _t("Edit"),
         onClick: (component) => {
-            component.props.messageEdition.enterEditMode(component.props.message);
+            component.props.messageEdition.enterEditModeAsync(component.props.message);
             component.optionsDropdown?.close();
         },
         sequence: 80,
