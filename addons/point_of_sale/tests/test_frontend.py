@@ -3115,6 +3115,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_preset_customer_selection')
 
+    def test_product_info_product_inventory(self):
+        """ Test that the product variant inventory info is correctly displayed in the POS. """
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'value_ids': [
+                Command.create({'name': 'Small'}),
+                Command.create({'name': 'Large'})
+            ],
+            'create_variant': 'always',
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [Command.link(id) for id in size_attribute.value_ids.ids]
+                })
+            ]
+        })
+
+        for variant in range(len(product_template.product_variant_ids)):
+            self.env['stock.quant']._update_available_quantity(product_template.product_variant_ids[variant], self.main_pos_config.warehouse_id.lot_stock_id, (variant + 1) * 100)
+            product_template.product_variant_ids[variant].write({'barcode': f'product_variant_{variant}'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_product_info_product_inventory')
+
     def test_pos_large_amount_confirmation_dialog(self):
         """Test that the Large amount confirmation dialog appears
         and closes properly after clicking 'OK'."""
