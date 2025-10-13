@@ -742,8 +742,8 @@ export class PosStore extends WithLazyGetterTrap {
             return "flex-row-reverse justify-content-between m-1";
         }
     }
-    async onProductInfoClick(productTemplate) {
-        const info = await this.getProductInfo(productTemplate, 1);
+    async onProductInfoClick(productTemplate, productProduct = false) {
+        const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
         this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
     getProductPriceFormatted(productTemplate) {
