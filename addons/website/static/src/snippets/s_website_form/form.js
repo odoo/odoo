@@ -232,9 +232,10 @@ export class Form extends Interaction {
         // default values...)
         if (dataForValues || Object.keys(this.preFillValues).length) {
             dataForValues = dataForValues || {};
-            const fieldNames = [...this.el.querySelectorAll("[name]")].map(
-                (el) => el.name
-            );
+            const fieldNames = [...this.el.querySelectorAll("[name]")]
+            .filter(el => !(["submit", "button", "image", "reset", "file"].includes(el.type)))
+            .map(el => el.name);
+
             // All types of inputs do not have a value property (eg:hidden),
             // for these inputs any function that is supposed to put a value
             // property actually puts a HTML value attribute. Because of
