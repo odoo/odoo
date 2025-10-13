@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import _, models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -30,5 +30,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tr_p_20',
                 'expense_account_id': 'tr150',
                 'income_account_id': 'tr600',
+            },
+        }
+
+    @template('tr', 'account.journal')
+    def _get_tr_account_journal(self):
+        return {
+            'cash': {
+                'name': _("Cash"),
+                'type': 'cash',
+                'show_on_dashboard': True,
             },
         }
