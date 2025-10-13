@@ -430,7 +430,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         peppol_partner = self.env['res.partner'].create({
             'name': 'Peppol partner',
             'country_id': self.env.ref('base.be').id,
-            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
         })
         self.assertRecordValues(peppol_partner, [{
             'peppol_verification_state': 'not_verified',
