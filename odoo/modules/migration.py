@@ -225,13 +225,14 @@ VALID_MIGRATE_PARAMS = list(itertools.product(
     ['version', '_version'],
 ))
 
+
 def exec_script(cr, installed_version, pyfile, addon, stage, version=None):
     version = version or installed_version
     name, ext = os.path.splitext(os.path.basename(pyfile))
     if ext.lower() != '.py':
         return
     try:
-        mod = load_script(pyfile, name)
+        mod = load_script(pyfile, f"odoo.upgrade.{addon}.{version}.{name}")
     except ImportError as e:
         raise ImportError('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(locals(), file=pyfile)) from e
 
