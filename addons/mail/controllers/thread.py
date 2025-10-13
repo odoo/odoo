@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
+import json
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo import http
+from odoo import http, fields
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
@@ -191,7 +192,16 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
+    def mail_message_post(
+        self,
+        thread_model,
+        thread_id,
+        post_data,
+        context=None,
+        *,
+        create_pending=False,
+        **kwargs,
+    ):
         store = Store()
         request.update_context(message_post_store=store)
         if context:
@@ -215,10 +225,38 @@ class ThreadController(http.Controller):
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
+        message_data = self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs)
+        if create_pending and not request.env.user._is_public():
+            notification_parameters = {}
+            for key in list(message_data.keys()):
+                if key not in self.env["mail.scheduled.message"]._fields:
+                    param = message_data.pop(key)
+                    if (
+                        key
+                        in self.env["mail.scheduled.message"]._notification_parameters_whitelist()
+                    ):
+                        notification_parameters[key] = param
+            message_data["author_id"], email_from = self.env["mail.thread"]._message_compute_author(
+                message_data.get("author_id"), notification_parameters.get("email_from")
+            )
+            message_data["scheduled_date"] = fields.Datetime.now() + timedelta(
+                seconds=create_pending if isinstance(create_pending, (int, float)) else 30
+            )
+            if notification_parameters:
+                notification_parameters["email_from"] = email_from
+                message_data["notification_parameters"] = json.dumps(notification_parameters)
+            # sudo: mail.scheduled.message - users can schedule messages on accessible threads
+            scheduled_message = self.env["mail.scheduled.message"].sudo().create({
+                "model": thread_model,
+                "res_id": thread_id,
+                **message_data,
+            })
+            return {
+                "store_data": store.add(scheduled_message).get_result(),
+                "scheduled_message_id": scheduled_message.id,
+            }
         # sudo: mail.thread - users can post on accessible threads
-        message = thread.sudo().message_post(
-            **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
-        )
+        message = thread.sudo().message_post(**message_data)
         return {
             "store_data": store.add(message).get_result(),
             "message_id": message.id,

@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon
 from odoo.addons.test_mail.models.mail_test_lead import MailTestTLead
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -239,3 +241,35 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             'sent',
             author=self.env.user.partner_id,
         )
+
+
+@tagged("-at_install", "post_install", "mail_controller")
+class TestMailPendingMessagePost(MailControllerThreadCommon, TestRecipients):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+    def test_mail_pending_message(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        self.test_record = self.env["mail.test.ticket"].with_context(self._test_context).create([{
+            "name": "Test Record",
+            "customer_id": self.partner_1.id,
+            "user_id": self.user_employee.id,
+        }])
+        response = self.make_jsonrpc_request(
+            "/mail/message/post",
+            {
+                "thread_model": self.test_record._name,
+                "thread_id": self.test_record.id,
+                "create_pending": True,
+                "post_data": {"body": "A pending message"},
+            },
+        )
+        self.assertIn("mail.scheduled.message", response["store_data"])
+        self.assertTrue(response["pending"])
+        scheduled_message = self.env["mail.scheduled.message"].search(
+            [("id", "=", response["message_id"])]
+        )
+        self.assertEqual(scheduled_message.model, self.test_record._name)
+        self.assertEqual(scheduled_message.res_id, self.test_record.id)
+        self.assertEqual(scheduled_message.body, Markup("<p>A pending message</p>"))

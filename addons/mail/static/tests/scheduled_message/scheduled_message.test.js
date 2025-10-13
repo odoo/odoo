@@ -186,7 +186,7 @@ test("Send a scheduled message", async () => {
         scheduled_date: "2024-10-20 12:00:00",
     });
     onRpc("mail.scheduled.message", "post_message", ({ args }) => {
-        expect(args).toEqual([scheduledMessageId]);
+        expect(args[0]).toEqual(scheduledMessageId);
         pyEnv["mail.message"].create({
             body: "Test Body",
             model: "res.partner",

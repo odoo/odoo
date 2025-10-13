@@ -160,10 +160,10 @@ class MailScheduledMessage(models.Model):
             'res_id': self.id,
         }
 
-    def post_message(self):
+    def post_message(self, send_bus_notification=True):
         self.ensure_one()
         if self.env.is_admin() or self.create_uid.id == self.env.uid:
-            self._post_message()
+            self._post_message(send_bus_notification=send_bus_notification)
         else:
             raise UserError(_("You are not allowed to send this scheduled message"))
 
@@ -171,7 +171,7 @@ class MailScheduledMessage(models.Model):
         """Hook called after scheduled messages have been posted."""
         self.ensure_one()
 
-    def _post_message(self, raise_exception=True):
+    def _post_message(self, raise_exception=True, send_bus_notification=True):
         """ Post the scheduled messages.
             They are posted using their creator as user so that one can check that the creator has
             still post permission on the related record, and to allow for the attachments to be
@@ -225,7 +225,20 @@ class MailScheduledMessage(models.Model):
                     _logger.exception("The notification about the failed scheduled message could not be sent")
                     if auto_commit:
                         self.env.cr.rollback()
+
+        if send_bus_notification:
+            for author_id, scheduled_messages in self.grouped("author_id").items():
+                bus_channel = author_id._bus_channel()
+                for scheduled_message in scheduled_messages:
+                    bus_channel._bus_send("mail.scheduled_message/posted", {
+                        "res_model": scheduled_message.model,
+                        "res_id": scheduled_message.res_id,
+                    })
         self.unlink()
+
+    def reset_attachments_in_composer(self):
+        self.attachment_ids.write({"res_model": "mail.compose.message", "res_id": None})
+        self.attachment_ids = False
 
     # ------------------------------------------------------
     # Business Methods

@@ -13,6 +13,7 @@ export const SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD = 50; // arbitrary, ~ 1 line o
 export class ScheduledMessage extends Component {
     static props = {
         onScheduledMessageChanged: Function,
+        beforeScheduledMessageCancel: Function,
         scheduledMessage: Object,
     };
     static template = "mail.ScheduledMessage";
@@ -53,6 +54,7 @@ export class ScheduledMessage extends Component {
 
     async cancel() {
         const thread = this.props.scheduledMessage.thread;
+        await this.props.beforeScheduledMessageCancel(thread, this.props.scheduledMessage);
         await this.props.scheduledMessage.cancel();
         this.props.onScheduledMessageChanged(thread);
     }

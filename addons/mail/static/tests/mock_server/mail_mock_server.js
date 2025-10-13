@@ -640,8 +640,10 @@ export async function mail_message_post(request) {
     const MailThread = this.env["mail.thread"];
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
+    /** @type {import("mock_models").MailPendingMessage} */
+    const MailScheduledMessage = this.env["mail.scheduled.message"];
 
-    const { context, post_data, thread_id, thread_model, canned_response_ids } =
+    const { context, post_data, thread_id, thread_model, canned_response_ids, create_pending } =
         await parseRequestParams(request);
     if (canned_response_ids) {
         for (const cannedResponseId of canned_response_ids) {
@@ -688,7 +690,40 @@ export async function mail_message_post(request) {
     }
     const kwargs = makeKwArgs({ ...finalData, context });
     let messageIds;
-    if (thread_model === "discuss.channel") {
+    let store_data;
+    if (create_pending) {
+        const notification_parameters = {};
+        for (const field of Object.keys(finalData)) {
+            if (!(field in MailScheduledMessage._fields)) {
+                notification_parameters[field] = finalData[field];
+                delete finalData[field];
+            }
+        }
+        if (Object.keys(notification_parameters).length) {
+            finalData.notification_parameters = JSON.stringify(notification_parameters);
+        }
+        if (!("author_id" in finalData)) {
+            finalData.author_id = this.env.user.partner_id;
+        }
+        if (!("scheduled_date" in finalData)) {
+            finalData.scheduled_date = serializeDateTime(
+                DateTime.now().plus({
+                    second: typeof create_pending === "number" ? create_pending : 30,
+                })
+            );
+        }
+        messageIds = MailScheduledMessage.create([
+            {
+                model: thread_model,
+                res_id: thread_id,
+                ...finalData,
+            },
+        ]);
+        store_data = new mailDataHelpers.Store(
+            MailScheduledMessage.browse(messageIds[0]),
+            makeKwArgs({ for_current_user: true })
+        ).get_result();
+    } else if (thread_model === "discuss.channel") {
         messageIds = DiscussChannel.message_post(thread_id, kwargs);
     } else {
         const model = this.env[thread_model];
@@ -699,10 +734,13 @@ export async function mail_message_post(request) {
     }
     return {
         message_id: messageIds[0],
-        store_data: new mailDataHelpers.Store(
-            MailMessage.browse(messageIds[0]),
-            makeKwArgs({ for_current_user: true })
-        ).get_result(),
+        store_data:
+            store_data ??
+            new mailDataHelpers.Store(
+                MailMessage.browse(messageIds[0]),
+                makeKwArgs({ for_current_user: true })
+            ).get_result(),
+        pending: !!create_pending,
     };
 }
 

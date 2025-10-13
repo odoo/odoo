@@ -8,6 +8,7 @@ import {
     dropFiles,
     insertText,
     listenStoreFetch,
+    onRpcAfter,
     onRpcBefore,
     openFormView,
     patchUiSize,
@@ -24,6 +25,7 @@ import {
     getService,
     mockService,
     serverState,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
@@ -90,6 +92,7 @@ test("can post a message on a record thread", async () => {
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
             },
+            create_pending: true,
             thread_id: partnerId,
             thread_model: "res.partner",
         };
@@ -104,8 +107,87 @@ test("can post a message on a record thread", async () => {
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message");
     await expect.waitForSteps(["/mail/message/post"]);
+});
+
+test("pending message is refreshed by bus notification", async () => {
+    const pyEnv = await startServer();
+    let message_id;
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+        const expected = {
+            context: args.context,
+            post_data: {
+                body: "hey",
+                email_add_signature: true,
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            create_pending: true,
+            thread_id: partnerId,
+            thread_model: "res.partner",
+        };
+        expect(args).toEqual(expected);
+    });
+    onRpcAfter("/mail/message/post", async (handler) => {
+        message_id = (await handler).message_id;
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button", { text: "Send message" });
+    await contains(".o-mail-Composer", { count: 0 });
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Composer");
+    await insertText(".o-mail-Composer-input", "hey");
+    await contains(".o-mail-Message", { count: 0 });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await contains(".o-mail-Scheduled-Message");
+    await expect.waitForSteps(["/mail/message/post"]);
+    pyEnv["mail.scheduled.message"].post_message(message_id);
+    await contains(".o-mail-Message");
+});
+
+test("can cancel a pending message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+        const expected = {
+            context: args.context,
+            post_data: {
+                body: "hey",
+                email_add_signature: true,
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            create_pending: true,
+            thread_id: partnerId,
+            thread_model: "res.partner",
+        };
+        expect(args).toEqual(expected);
+    });
+    onRpc("mail.scheduled.message", "unlink", ({ args: [ids] }) => {
+        expect.step("mail.scheduled.message/unlink");
+        pyEnv["mail.scheduled.message"].unlink(ids);
+        return [];
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button", { text: "Send message" });
+    await contains(".o-mail-Composer", { count: 0 });
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Composer");
+    await insertText(".o-mail-Composer-input", "hey");
+    await contains(".o-mail-Message", { count: 0 });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn", { text: "Cancel" });
+    await click(".modal-dialog .modal-footer .btn-primary");
+    await expect.waitForSteps(["/mail/message/post", "mail.scheduled.message/unlink"]);
+    await contains(".o-mail-Message", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "hey" });
 });
 
 test("can post a note on a record thread", async () => {
@@ -286,6 +368,7 @@ test('post message with "CTRL-Enter" keyboard shortcut in chatter', async () => 
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message");
 });
 
@@ -586,6 +669,7 @@ test("chatter message actions appear only after saving the form", async () => {
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "hey");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message-actions");
 });
 
@@ -603,6 +687,7 @@ test("post message on draft record", async () => {
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "Test" });
 });

@@ -209,6 +209,7 @@ test("update email for the partner on the fly", async () => {
 
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message");
     await contains(".o-mail-Followers-counter", { text: "0" });
 });
@@ -227,6 +228,7 @@ test("suggested recipients should not be added as follower when posting a messag
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Scheduled-Message-buttons .btn:contains('Send')");
     await contains(".o-mail-Message");
     await contains(".o-mail-Followers-counter", { text: "0" });
 });
