@@ -57,12 +57,8 @@ const messagePatch = {
      * @override
      */
     async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        const validChannels = (await Promise.all(this.mentionedChannelPromises)).filter(
-            (channel) => channel !== undefined
-        );
-        const allChannels = this.store.Thread.insert([...validChannels, ...mentionedChannels]);
         return await super.edit(body, attachments, {
-            mentionedChannels: allChannels,
+            mentionedChannels,
             mentionedPartners,
         });
     },
