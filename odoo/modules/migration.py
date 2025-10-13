@@ -147,11 +147,6 @@ class MigrationManager(object):
 
     def migrate_module(self, pkg, stage):
         assert stage in ('pre', 'post', 'end')
-        stageformat = {
-            'pre': '[>%s]',
-            'post': '[%s>]',
-            'end': '[$%s]',
-        }
         state = pkg.state if stage in ('pre', 'post') else getattr(pkg, 'load_state', None)
 
         if not (hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
@@ -218,23 +213,29 @@ class MigrationManager(object):
         for version in versions:
             if compare(version):
                 for pyfile in _get_migration_files(pkg, version, stage):
-                    exec_script(self.cr, installed_version, pyfile, pkg.name, stage, stageformat[stage] % version)
+                    exec_script(self.cr, installed_version, pyfile, pkg.name, stage, version)
+
 
 def exec_script(cr, installed_version, pyfile, addon, stage, version=None):
     version = version or installed_version
+    fmt_version = {
+        'pre': '[>%s]',
+        'post': '[%s>]',
+        'end': '[$%s]',
+    }[stage] % version
     name, ext = os.path.splitext(os.path.basename(pyfile))
     if ext.lower() != '.py':
         return
     mod = None
     try:
-        mod = load_script(pyfile, name)
-        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(locals(), name=mod.__name__))
+        mod = load_script(pyfile, f"odoo.upgrade.{addon}.{version}.{name}")
+        _logger.info('module %(addon)s: Running upgrade %(fmt_version)s %(name)s', locals())
         migrate = mod.migrate
     except ImportError:
-        _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(locals(), file=pyfile))
+        _logger.exception('module %(addon)s: Unable to load %(stage)s-upgrade file %(pyfile)s', locals())
         raise
     except AttributeError:
-        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % locals())
+        _logger.error('module %(addon)s: Each %(stage)s-upgrade file must have a "migrate(cr, installed_version)" function', locals())
     else:
         migrate(cr, installed_version)
     finally:
