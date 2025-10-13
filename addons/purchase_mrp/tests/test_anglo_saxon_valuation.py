@@ -1,15 +1,15 @@
 from unittest import skip
 
-from odoo.fields import Date
+from odoo.fields import Command, Date
 from odoo.tools import float_is_zero, mute_logger
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
+    @skip('Temporary to fast merge new valuation')
     def test_kit_anglo_saxo_price_diff(self):
         """
         Suppose an automated-AVCO configuration and a Price Difference Account defined on
@@ -55,6 +55,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         input_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
         self.assertEqual(sum(input_amls.mapped('balance')), 0)
 
+    @skip('Temporary to fast merge new valuation')
     def test_buy_deliver_and_return_kit_with_auto_avco_components(self):
         """
         A kit K with two AVCO components
@@ -161,6 +162,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
         self.assertEqual(component02.stock_valuation_layer_ids.mapped('value'), [75, -75, 75])
 
+    @skip('Temporary to fast merge new valuation')
     def test_valuation_multicurrency_with_kits(self):
         """ Purchase a Kit in multi-currency and verify that the amount_currency is correctly computed.
         """
@@ -210,6 +212,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.assertEqual(input_aml.amount_currency, 100)  # EUR
         self.assertEqual(input_aml.balance, 50)  # USD
 
+    @skip('Temporary to fast merge new valuation')
     def test_fifo_cost_adjust_mo_quantity(self):
         """ An MO using a FIFO cost method product as a component should not zero-out the std cost
         of the product if we unlock it once it is in a validated state and adjust the quantity of
@@ -251,6 +254,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         self.assertEqual(self.product_a.standard_price, 100)
 
+    @skip('Temporary to fast merge new valuation')
     def test_average_cost_unbuild_valuation(self):
         """ Ensure that an unbuild for some avg cost product won't leave the `Cost of Production`
         journal in an imbalanced state if the std price of that product has changed since the MO
@@ -322,3 +326,133 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ]).mapped('balance')),
             precision_rounding=self.env.company.currency_id.rounding
         ))
+
+    def test_avco_purchase_nested_kit_explode_cost_share(self):
+        """
+        Test the cost share calculation when purchasing a nested kit with several levels of BoMs
+
+        Giga Kit:
+            - C01, cost share 0%
+            - Super Kit, cost share 100%:
+                - C02, cost share 10%
+                - Kit, cost share 60%:
+                    - C02, cost share 25%
+                    - C03, cost share 25%
+                    - Sub Kit, cost share 50%
+                        - C04, cost share 0%
+                        - C05, cost share 0%
+                - Sub Kit, cost share 20%
+                    - C04, cost share 0%
+                    - C05, cost share 0%
+                - Phantom Kit, cost share 0%
+                    - C05, cost share 100%
+                - Triple Kit, cost share 10%
+                    - C01, cost share 0%
+                    - C02, cost share 0%
+                    - C03, cost share 0% (Last line should round to reach 100%)
+        Buy and receive 1 kit Giga Kit @ 1000
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        component01, component02, component03, component04, component05 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'categ_id': avco_category.id,
+        } for name in ('01', '02 ', '03', '04', '05')])
+
+        giga_kit, super_kit, kit, sub_kit, phantom_kit, triple_kit = self.env['product.product'].create([{
+            'name': name,
+        } for name in ('Giga Kit', 'Super Kit', 'Kit', 'Sub Kit', 'Phantom Kit', 'Triple Kit')])
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': giga_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component01.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': super_kit.id, 'product_qty': 1, 'cost_share': 100}),
+            ],
+        }, {
+            'product_tmpl_id': super_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component02.id, 'product_qty': 1, 'cost_share': 10}),
+                Command.create({'product_id': kit.id, 'product_qty': 1, 'cost_share': 60}),
+                Command.create({'product_id': sub_kit.id, 'product_qty': 1, 'cost_share': 20}),
+                Command.create({'product_id': phantom_kit.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': triple_kit.id, 'product_qty': 2, 'cost_share': 10}),
+            ],
+        }, {
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component02.id, 'product_qty': 1, 'cost_share': 25}),
+                Command.create({'product_id': component03.id, 'product_qty': 1, 'cost_share': 25}),
+                Command.create({'product_id': sub_kit.id, 'product_qty': 1, 'cost_share': 50}),
+            ],
+        }, {
+            'product_tmpl_id': sub_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component04.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': component05.id, 'product_qty': 1, 'cost_share': 0}),
+            ],
+        }, {
+            'product_tmpl_id': phantom_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component05.id, 'product_qty': 1, 'cost_share': 100}),
+            ],
+        }, {
+            'product_tmpl_id': triple_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component01.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': component02.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': component03.id, 'product_qty': 2, 'cost_share': 0}),
+            ],
+        }])
+        vendor = self.env['res.partner'].create({'name': 'Super vendor'})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [
+                Command.create({'product_id': super_kit.id, 'product_qty': 1, 'price_unit': 1000})
+            ],
+        })
+        purchase_order.button_confirm()
+
+        # Actual cost shares:
+        # Component01:
+        #   0 -> No stock valuation for that line
+        #   1.0 * 0.1 * 0.333... (O%) = 0.0333... -> 3.33%
+        # Component02:
+        #   1.0 * 0.1  = 0.1 -> 10%
+        #   1.0 * 0.6 * 0.25 = 0.15 -> 15%
+        #   1.0 * 0.1 * 0.333... (O%) = 0.0333... -> 3.33%
+        # Component03:
+        #   1.0 * 0.6 * 0.25 = 0.15 -> 15%
+        #   1.0 * 0.1 * 0.333... (O%) = 0.0333... -> 3.34% (last exploded line rounded)
+        # Component04:
+        #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
+        #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
+        # Component05:
+        #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
+        #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
+        #   1.0 * 0.0 * 1.0 = 0.0 -> 0%
+        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 100.0)
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), [
+            {'product_id': component01.id, 'cost_share': 3.33, 'value': 33.3},
+            {'product_id': component02.id, 'cost_share': 3.33, 'value': 33.3},
+            {'product_id': component02.id, 'cost_share': 10.0, 'value': 100.0},
+            {'product_id': component02.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component03.id, 'cost_share': 3.34, 'value': 33.4},
+            {'product_id': component03.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component04.id, 'cost_share': 10.0, 'value': 100.0},
+            {'product_id': component04.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component05.id, 'cost_share': 0.0, 'value': 0.0},
+            {'product_id': component05.id, 'cost_share': 10.0, 'value': 100.0},
+            {'product_id': component05.id, 'cost_share': 15.0, 'value': 150.0},
+        ])

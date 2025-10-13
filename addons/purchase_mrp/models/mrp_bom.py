@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero, float_round
 
 
 class MrpBom(models.Model):
@@ -21,6 +21,13 @@ class MrpBom(models.Model):
                 raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
 
+    @api.model
+    def _round_last_line_done(self, lines_done):
+        result = super()._round_last_line_done(lines_done)
+        if result:
+            result[-1][1]['line_cost_share'] = float_round(100.0 - sum(vals.get('line_cost_share', 0.0) for _, vals in result[:-1]), precision_digits=2)
+        return result
+
 
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
@@ -32,8 +39,26 @@ class MrpBomLine(models.Model):
 
     def _get_cost_share(self):
         self.ensure_one()
-        if self.cost_share:
+        if self.cost_share or not all(float_is_zero(bom_line.cost_share, precision_digits=2) for bom_line in self.bom_id.bom_line_ids):
             return self.cost_share / 100
         bom = self.bom_id
         bom_lines_without_cost_share = bom.bom_line_ids.filtered(lambda bl: not bl.cost_share)
         return 1 / len(bom_lines_without_cost_share)
+
+    def _prepare_bom_done_values(self, quantity, product, original_quantity, boms_done):
+        result = super()._prepare_bom_done_values(quantity, product, original_quantity, boms_done)
+        result['bom_cost_share'] = self._get_line_cost_share(boms_done)
+        return result
+
+    def _prepare_line_done_values(self, quantity, product, original_quantity, parent_line, boms_done):
+        result = super()._prepare_line_done_values(quantity, product, original_quantity, parent_line, boms_done)
+        result['line_cost_share'] = float_round(self._get_line_cost_share(boms_done), precision_digits=2)
+        return result
+
+    def _get_line_cost_share(self, boms_done):
+        if not self:
+            return 100.0
+        self.ensure_one()
+        parent_cost_share = next((vals.get('bom_cost_share', 100.0) for bom, vals in reversed(boms_done) if bom == self.bom_id), 100)
+        line_cost_share = parent_cost_share * self._get_cost_share()
+        return line_cost_share
