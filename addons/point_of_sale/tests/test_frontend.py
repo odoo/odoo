@@ -2917,6 +2917,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_cross_exclusion_attribute_values')
 
+    def test_free_text_custom_attribute_on_receipt(self):
+        """ Test that free text (custom) attribute values are correctly shown on the PoS receipt screen. """
+        configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
+        configurable_product.attribute_line_ids[:2].unlink()
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_free_text_custom_attribute_on_receipt', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

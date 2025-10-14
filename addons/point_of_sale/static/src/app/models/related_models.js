@@ -906,6 +906,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const results = {};
             const oldStates = {};
             const ignoreConnection = {};
+            const modelToSetup = [];
 
             for (const model in rawData) {
                 ignoreConnection[model] = [];
@@ -970,9 +971,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
 
                         oldRecord.update(vals, { silent: true });
-                        oldRecord.setup(vals);
+                        modelToSetup.push({ raw: vals, record: oldRecord });
                         ignoreConnection[model].push(vals.id);
                         results[model].push(oldRecord);
+                        oldRecord.setup(vals);
                         continue;
                     }
 
@@ -990,7 +992,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             }
 
             const alreadyLinkedSet = new Set();
-            const modelToSetup = [];
 
             // link the related records
             for (const modelName in rawData) {
