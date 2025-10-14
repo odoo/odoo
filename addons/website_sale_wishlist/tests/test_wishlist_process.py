@@ -7,8 +7,12 @@ from odoo.tests import HttpCase, tagged
 @tagged('-at_install', 'post_install')
 class TestWishlistProcess(HttpCase):
 
-    def test_01_wishlist_tour(self):
-        self.env['product.template'].search([]).write({'website_published': False})
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['product.template'].search([]).write({'website_published': False})
+
+    def test_wishlist_ui(self):
         # Setup attributes and attributes values
         attributes = self.env['product.attribute'].create([
             {
@@ -56,4 +60,35 @@ class TestWishlistProcess(HttpCase):
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
-        self.start_tour("/", 'shop_wishlist', timeout=120)
+        self.start_tour('/', 'website_sale_wishlist.wishlist_updates', timeout=120)
+
+    def test_wishlist_dynamic_attributes(self):
+
+        dynamic_color = self.env['product.attribute'].create({
+            'name': "color",
+            'display_type': 'color',
+            'create_variant': 'dynamic',
+            'value_ids': [
+                Command.create({'name': 'red'}),
+                Command.create({'name': 'blue'}),
+                Command.create({'name': 'black'}),
+            ]
+        })
+        bottle = self.env['product.template'].create({
+            'name': "Bottle",
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': dynamic_color.id,
+                    'value_ids': [Command.set(dynamic_color.value_ids.ids)]
+                })
+            ],
+            'website_published': True,
+        })
+        self.start_tour("/", 'website_sale_wishlist.dynamic_variants')
+        bottle.product_variant_ids[:1].action_archive()
+        self.start_tour("/", 'website_sale_wishlist.archived_variant')
+        bottle.product_variant_ids.action_archive()
+        self.start_tour(
+            bottle.website_url,
+            'website_sale_wishlist.no_valid_combination'
+        )
