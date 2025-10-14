@@ -137,6 +137,7 @@ describe("Selection collapsed", () => {
                 // highlighted and the focus is in the textarea.
                 await animationFrame();
             };
+
             beforeEach(patchPrism);
 
             test("should insert a line break within the pre", async () => {
@@ -146,7 +147,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abcd" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testEnterInCodeBlock(2), // "ab[]cd"
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
@@ -154,7 +155,7 @@ describe("Selection collapsed", () => {
                             value: "ab\ncd",
                             textareaRange: 3, // "ab\n[]cd"
                         }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">ab<br>cd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -166,7 +167,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abc" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testEnterInCodeBlock(3), // "abc[]"
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
@@ -175,7 +176,7 @@ describe("Selection collapsed", () => {
                             preHtml: "abc<br><br>",
                             textareaRange: 4, // "abc\n[]"
                         }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abc<br><br></pre>[]`,
                     config: configWithEmbeddings,
                 });
