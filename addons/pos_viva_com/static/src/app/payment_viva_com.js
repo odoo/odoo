@@ -17,6 +17,23 @@ export class PaymentVivaCom extends PaymentInterface {
 
     setup() {
         super.setup(...arguments);
+        this.connectWebSocket("VIVA_COM_LATEST_RESPONSE", (payload) => {
+            if (payload.config_id === this.pos.config.id) {
+                const paymentLine = this.pos.models["pos.payment"].find(
+                    (line) => line.uiState.vivaSessionId === payload.session_id
+                );
+
+                if (
+                    paymentLine &&
+                    !paymentLine.isDone() &&
+                    paymentLine.getPaymentStatus() !== "retry"
+                ) {
+                    paymentLine.payment_method_id.payment_terminal.handleVivaComStatusResponse(
+                        paymentLine
+                    );
+                }
+            }
+        });
         this.paymentLineResolvers = {};
     }
     sendPaymentRequest(uuid) {
@@ -74,7 +91,7 @@ export class PaymentVivaCom extends PaymentInterface {
         var data = {
             sessionId: line.uiState.vivaSessionId,
             terminalId: line.payment_method_id.viva_com_terminal_id,
-            cashRegisterId: this.pos.getCashier().name,
+            cashRegisterId: this.pos.config.uuid,
             amount: roundPrecision(Math.abs(line.amount * 100)),
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.uiState.vivaSessionId + "/" + this.pos.session.id,
@@ -97,7 +114,7 @@ export class PaymentVivaCom extends PaymentInterface {
 
         var data = {
             sessionId: line.uiState.vivaSessionId,
-            cashRegisterId: this.pos.getCashier().name,
+            cashRegisterId: this.pos.config.uuid,
         };
         return this._call_viva_com(data, "viva_com_send_payment_cancel", line).then((data) => {
             if (data.error) {
@@ -112,11 +129,9 @@ export class PaymentVivaCom extends PaymentInterface {
      * confirmation from Viva.com is received via the webhook and confirmed in the retrieve_session_id.
      */
     async handleVivaComStatusResponse(paymentLine) {
-        const notification = await this.env.services.orm.silent.call(
-            "pos.payment.method",
-            "get_latest_viva_com_status",
-            [[this.payment_method_id.id]]
-        );
+        const notification = await this.callPaymentMethod("get_latest_viva_com_status", [
+            [this.payment_method_id.id],
+        ]);
 
         if (!notification) {
             this._handleOdooConnectionFailure(paymentLine);

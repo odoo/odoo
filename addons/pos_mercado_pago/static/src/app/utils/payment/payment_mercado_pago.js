@@ -17,46 +17,55 @@ export class PaymentMercadoPago extends PaymentInterface {
             },
         };
         // mp_payment_intent_create will call the Mercado Pago api
-        return await this.env.services.orm.silent.call(
-            "pos.payment.method",
-            "mp_payment_intent_create",
-            [[line.payment_method_id.id], infos]
-        );
+        return await this.callPaymentMethod("mp_payment_intent_create", [
+            [line.payment_method_id.id],
+            infos,
+        ]);
     }
     async getLastStatusPaymentIntent() {
         const line = this.pos.getOrder().getSelectedPaymentline();
         // mp_payment_intent_get will call the Mercado Pago api
-        return await this.env.services.orm.silent.call(
-            "pos.payment.method",
-            "mp_payment_intent_get",
-            [[line.payment_method_id.id], this.payment_intent.id]
-        );
+        return await this.callPaymentMethod("mp_payment_intent_get", [
+            [line.payment_method_id.id],
+            this.payment_intent.id,
+        ]);
     }
 
     async cancelPaymentIntent() {
         const line = this.pos.getOrder().getSelectedPaymentline();
         // mp_payment_intent_cancel will call the Mercado Pago api
-        return await this.env.services.orm.silent.call(
-            "pos.payment.method",
-            "mp_payment_intent_cancel",
-            [[line.payment_method_id.id], this.payment_intent.id]
-        );
+        return await this.callPaymentMethod("mp_payment_intent_cancel", [
+            [line.payment_method_id.id],
+            this.payment_intent.id,
+        ]);
     }
 
     async getPayment(payment_id) {
         const line = this.pos.getOrder().getSelectedPaymentline();
         // mp_get_payment_status will call the Mercado Pago api
-        return await this.env.services.orm.silent.call(
-            "pos.payment.method",
-            "mp_get_payment_status",
-            [[line.payment_method_id.id], payment_id]
-        );
+        return await this.callPaymentMethod("mp_get_payment_status", [
+            [line.payment_method_id.id],
+            payment_id,
+        ]);
     }
 
     setup() {
         super.setup(...arguments);
         this.webhook_resolver = null;
         this.payment_intent = {};
+
+        this.connectWebSocket("MERCADO_PAGO_LATEST_MESSAGE", (payload) => {
+            if (
+                payload.config_id === this.pos.config.id &&
+                payload.payment_method_id === this.payment_method_id.id
+            ) {
+                const pendingLine = this.getPendingPaymentLine("mercado_pago");
+
+                if (pendingLine) {
+                    pendingLine.payment_method_id.payment_terminal.handleMercadoPagoWebhook();
+                }
+            }
+        });
     }
 
     async sendPaymentRequest(cid) {
