@@ -541,25 +541,27 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _get_demo_data_attachment(self, company=False):
         if company.account_fiscal_country_id.code == "IN":
-            return{
+            with file_open('l10n_in/static/demo/in_invoice_demo_1.pdf', 'rb') as f1:
+                pdf1 = f1.read()
+
+            with file_open('l10n_in/static/demo/in_invoice_demo_2.pdf', 'rb') as f2:
+                pdf2 = f2.read()
+
+            return {
                 'ir_attachment_in_invoice_1': {
                     'type': 'binary',
                     'name': 'in_invoice_demo_1.pdf',
                     'res_model': 'account.move',
                     'res_id': 'demo_invoice_to_extract',
-                    'raw': file_open(
-                        'l10n_in/static/demo/in_invoice_demo_1.pdf', 'rb'
-                    ).read()
+                    'raw': pdf1,
                 },
                 'ir_attachment_in_invoice_2': {
                     'type': 'binary',
                     'name': 'in_invoice_demo_2.pdf',
                     'res_model': 'account.move',
                     'res_id': 'demo_invoice_service',
-                    'raw': file_open(
-                        'l10n_in/static/demo/in_invoice_demo_2.pdf', 'rb'
-                    ).read()
-                }
+                    'raw': pdf2,
+                },
             }
         else:
             return super()._get_demo_data_attachment(company)

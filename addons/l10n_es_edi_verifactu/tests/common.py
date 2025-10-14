@@ -5,7 +5,7 @@ import requests
 from unittest import mock
 
 from odoo import _, release, Command
-from odoo.tools import file_open, html_sanitize, misc, zeep
+from odoo.tools import file_open, html_sanitize, zeep
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -28,7 +28,7 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
         certificate_path = 'l10n_es_edi_verifactu/demo/certificates/Certificado_RPJ_A39200019_CERTIFICADO_ENTIDAD_PRUEBAS_5_Pre.p12'
         cls.certificate = cls.env['certificate.certificate'].create({
-            'content': base64.encodebytes(misc.file_open(certificate_path, 'rb').read()),
+            'content': base64.encodebytes(cls._read_file(certificate_path, 'rb')),
             'pkcs12_password': '1234',
             'scope': 'verifactu',
         })

@@ -16,6 +16,8 @@ from odoo.addons.l10n_ro_edi.models.account_move import HOLDING_DAYS
 
 
 def _patch_request_ciusro_download_answer(company, key_download, session):
+    with file_open("l10n_ro_edi/tests/test_files/from_odoo/ciusro_in_invoice.xml") as f:
+        invoice = f.read()
     answer_data = {
         '3029027561': {
             'signature': {
@@ -58,7 +60,7 @@ def _patch_request_ciusro_download_answer(company, key_download, session):
                 'amount_total': '1785.0',
                 'seller_vat': '8001011234567',
                 'date': datetime.date(2017, 1, 1),
-                'attachment_raw': file_open("l10n_ro_edi/tests/test_files/from_odoo/ciusro_in_invoice.xml").read(),
+                'attachment_raw': invoice,
             },
         },
         '3029027563': {

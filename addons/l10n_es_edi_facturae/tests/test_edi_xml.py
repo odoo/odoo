@@ -103,10 +103,12 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         cls.certificate_module = "odoo.addons.certificate.models.certificate"
         cls.move_module = "odoo.addons.l10n_es_edi_facturae.models.account_move"
+        with file_open('l10n_es_edi_facturae/tests/data/certificate_test.pfx', 'rb') as f:
+            pfx = f.read()
         with freeze_time(cls.frozen_today), patch(f"{cls.certificate_module}.fields.Datetime.now", lambda x=None: cls.frozen_today):
             cls.certificate = cls.env["certificate.certificate"].create({
                 'name': 'Test ES certificate',
-                'content': b64encode(file_open('l10n_es_edi_facturae/tests/data/certificate_test.pfx', 'rb').read()),
+                'content': b64encode(pfx),
                 'pkcs12_password': 'test',
                 'company_id': cls.company_data['company'].id,
                 'scope': 'facturae',

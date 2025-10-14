@@ -33,8 +33,10 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
             </div>"""
 
         # Load pdf and img contents
-        pdf_content = base64.b64encode(file_open('website_slides/static/src/img/presentation.pdf', "rb").read())
-        img_content = base64.b64encode(file_open('website_slides/static/src/img/slide_demo_gardening_1.jpg', "rb").read())
+        with file_open('website_slides/static/src/img/presentation.pdf', "rb") as pdf:
+            pdf_content = base64.b64encode(pdf.read())
+        with file_open('website_slides/static/src/img/slide_demo_gardening_1.jpg', "rb") as img:
+            img_content = base64.b64encode(img.read())
 
         self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',

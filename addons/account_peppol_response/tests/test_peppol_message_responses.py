@@ -65,7 +65,8 @@ class TestPeppolMessageResponse(TestPeppolMessage):
             results = response.json()['result']
             body = json.loads(r.body)
             uuids = body['params']['message_uuids']
-            enc_key = file_open(f'{RESPONSE_FILE_PATH}/enc_key', mode='rb').read()
+            with file_open(f'{RESPONSE_FILE_PATH}/enc_key', mode='rb') as f:
+                enc_key = f.read()
             results.update({
                 **{
                     FAKE_OUTGOING_RESPONSE_UUID[code]: {

@@ -128,7 +128,8 @@ class TestReports(odoo.tests.TransactionCase):
             'model': 'res.partner',
         })
 
-        minimal_pdf_content = io.BytesIO(tools.file_open('base/tests/minimal.pdf', 'rb').read())
+        with tools.file_open('base/tests/minimal.pdf', 'rb') as f:
+            minimal_pdf_content = io.BytesIO(f.read())
         malformed_pdf_content = io.BytesIO(b'not a pdf')
 
         with self.assertRaises(UserError, msg="Odoo is unable to merge the generated PDFs."):

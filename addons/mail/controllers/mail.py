@@ -322,7 +322,8 @@ class MailController(http.Controller):
         # Initialize font
         if font.startswith('/'):
             font = font[1:]
-        font_obj = ImageFont.truetype(file_open(font, 'rb'), height)
+        with file_open(font, 'rb') as ff:
+            font_obj = ImageFont.truetype(ff, height)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon

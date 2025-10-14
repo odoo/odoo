@@ -81,7 +81,9 @@ class TestProductConfiguratorCommon(UomCommon, HttpCase):
 
         # Setup a first optional product
         img_path = 'product/static/img/product_product_11-image.jpg'
-        img_content = base64.b64encode(file_open(img_path, "rb").read())
+        with file_open(img_path, "rb") as img:
+            img_content = base64.b64encode(img.read())
+
         cls.product_product_conf_chair = cls.env['product.template'].create({
             'name': 'Conference Chair (TEST)',
             'image_1920': img_content,

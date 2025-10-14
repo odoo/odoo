@@ -1,10 +1,11 @@
 from base64 import b64encode
+from pathlib import Path
 
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged, freeze_time
 from odoo.tests.form import Form
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_path
 
 from odoo.addons.account_peppol.tests.common import PeppolConnectorCommon
 
@@ -18,7 +19,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         super().setUpClass()
         cls.private_key = cls.env['certificate.key'].create([{
             'name': 'Test key PEPPOL',
-            'content': b64encode(file_open('account_peppol/tests/assets/private_key.pem', 'rb').read()),
+            'content': b64encode(Path(file_path('account_peppol/tests/assets/private_key.pem')).read_bytes()),
         }])
 
         cls.env.company.write({

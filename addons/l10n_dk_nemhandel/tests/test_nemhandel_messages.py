@@ -38,9 +38,11 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
         })
 
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'nemhandel')
+        with file_open(f'{FILE_PATH}/private_key.pem', 'rb') as f:
+            content = f.read()
         cls.private_key = cls.env['certificate.key'].create({
             'name': 'Test key Nemhandel',
-            'content': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
+            'content': b64encode(content),
         })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
@@ -94,6 +96,10 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
 
     @classmethod
     def _get_mock_data(cls, error=False, nr_invoices=1):
+        with file_open(f'{FILE_PATH}/enc_key', mode='rb') as f:
+            key = f.read()
+        with file_open(f'{FILE_PATH}/document', mode='rb') as f:
+            doc = f.read()
         proxy_documents = {
             FAKE_UUID[0]: {
                 'accounting_supplier_party': False,
@@ -108,8 +114,8 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             FAKE_UUID[1]: {
                 'accounting_supplier_party': '0184:16356706',
                 'filename': 'test_incoming',
-                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
-                'document': b64encode(file_open(f'{FILE_PATH}/document', mode='rb').read()),
+                'enc_key': key,
+                'document': b64encode(doc),
                 'state': 'done' if not error else 'error',
                 'direction': 'incoming',
                 'document_type': 'Invoice',

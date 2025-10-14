@@ -25,11 +25,12 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         cls.maxDiff = None
 
         # ==== Config ====
+        with misc.file_open("l10n_es_edi_sii/demo/certificates/aeat_1234.p12", 'rb') as fp:
+            content = fp.read()
 
         cls.certificate = cls.env['certificate.certificate'].create({
             'name': 'Test ES certificate',
-            'content': base64.b64encode(
-                misc.file_open("l10n_es_edi_sii/demo/certificates/aeat_1234.p12", 'rb').read()),
+            'content': base64.b64encode(content),
             'pkcs12_password': '1234',
             'scope': 'sii',
             'company_id': cls.company_data['company'].id,

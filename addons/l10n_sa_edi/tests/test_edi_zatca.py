@@ -23,7 +23,8 @@ class TestEdiZatca(TestSaEdiCommon):
         """
         with freeze_time(freeze_time_at):
             # Load expected XML
-            expected_xml = misc.file_open(test_file_path, 'rb').read()
+            with misc.file_open(test_file_path, 'rb') as f:
+                expected_xml = f.read()
             expected_tree = self.get_xml_tree_from_string(expected_xml)
             expected_tree = self.with_applied_xpath(expected_tree, expected_xpath)
 

@@ -2,6 +2,7 @@
 import base64
 import mimetypes
 
+from pathlib import Path
 from urllib.parse import unquote, urlencode
 
 from odoo import http, modules
@@ -95,7 +96,7 @@ class WebManifest(http.Controller):
     def offline(self):
         """ Returns the offline page delivered by the service worker """
         return request.render('web.webclient_offline', {
-            'odoo_icon': base64.b64encode(file_open(self._icon_path(), 'rb').read())
+            'odoo_icon': base64.b64encode(Path(file_path(self._icon_path())).read_bytes())
         })
 
     @http.route('/scoped_app', type='http', auth='public', methods=['GET'])

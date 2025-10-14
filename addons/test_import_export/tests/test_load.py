@@ -1362,14 +1362,16 @@ class test_realworld(SavepointCaseWithUserDemo):
         cls._load_partners_set()
 
     def test_bigfile(self):
-        data = json.loads(file_open('test_import_export/data/contacts_big.json', 'rt').read())
+        with file_open('test_import_export/data/contacts_big.json', 'rt') as f:
+            data = json.load(f)
         result = self.env['res.partner'].load(['name', 'phone', 'email', 'image_1920'], data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
 
     def test_backlink(self):
         fnames = ["name", "type", "street", "city", "country_id", "category_id", "is_company", "parent_id"]
-        data = json.loads(file_open('test_import_export/data/contacts.json', 'rt').read())
+        with file_open('test_import_export/data/contacts.json', 'rt') as f:
+            data = json.load(f)
         result = self.env['res.partner'].load(fnames, data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))

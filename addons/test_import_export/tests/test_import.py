@@ -469,7 +469,8 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
-        file_content = file_open('test_import_export/data/test_import.xls', 'rb').read()
+        with file_open('test_import_export/data/test_import.xls', 'rb') as f:
+            file_content = f.read()
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
             'file': file_content,
@@ -492,7 +493,8 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd.xlsx') or can_import('openpyxl'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
-        file_content = file_open('test_import_export/data/test_import.xlsx', 'rb').read()
+        with file_open('test_import_export/data/test_import.xlsx', 'rb') as f:
+            file_content = f.read()
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
             'file': file_content,
@@ -515,7 +517,8 @@ class TestPreview(TransactionCase):
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
-        file_content = file_open('test_import_export/data/test_import.ods', 'rb').read()
+        with file_open('test_import_export/data/test_import.ods', 'rb') as f:
+            file_content = f.read()
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'import.preview',
             'file': file_content,

@@ -27,5 +27,6 @@ class TestFontToImg(HttpCase):
             "Looks strange regarding request but this is the current result",
         )
         # Image is a play button
-        img_reference = Image.open(file_open("mail/tests/play.png", "rb"))
-        self.assertEqual(img, img_reference, "Result image should be the play button")
+        with file_open("mail/tests/play.png", "rb") as png:
+            img_reference = Image.open(png)
+            self.assertEqual(img, img_reference, "Result image should be the play button")

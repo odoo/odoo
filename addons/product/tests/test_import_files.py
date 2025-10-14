@@ -14,7 +14,8 @@ class TestImportFiles(TransactionCase):
         if filepath is None:
             model_str = model.replace(".", "_")
             filepath = f"product/static/xls/{model_str}.xls"
-        file_content = file_open(filepath, "rb").read()
+        with file_open(filepath, "rb") as f:
+            file_content = f.read()
         import_wizard = self.env["base_import.import"].create(  # noqa: OLS03001
             {
                 "res_model": model,

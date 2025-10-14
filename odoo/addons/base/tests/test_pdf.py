@@ -13,7 +13,8 @@ class TestPdf(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.file = file_open('base/tests/minimal.pdf', 'rb').read()
+        with file_open('base/tests/minimal.pdf', 'rb') as f:
+            self.file = f.read()
         self.minimal_reader_buffer = io.BytesIO(self.file)
         self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
 

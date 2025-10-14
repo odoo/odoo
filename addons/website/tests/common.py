@@ -29,13 +29,15 @@ class HttpCaseWithWebsiteUser(HttpCase):
             "phone": "+1(492)-563-3759",
         }
         cls.partner_website_user = cls.env["res.partner"].create(partner_vals)
+        with file_open("website/static/src/img/user-restricted-image.png", "rb") as img:
+            img_content = base64.b64encode(img.read())
         cls.user_website_user = cls.env["res.users"].create({
             "partner_id": cls.partner_website_user.id,
             "login": "website_user",
             "password": "website_user",
             "signature": "<span>-- <br/>+Mr Restricted</span>",
             "company_id": company.id,
-            "image_1920": base64.b64encode(file_open("website/static/src/img/user-restricted-image.png", "rb").read()),
+            "image_1920": img_content,
             "group_ids": [
                 Command.unlink(cls.env.ref("website.group_website_designer").id),
                 Command.link(cls.env.ref("website.group_website_restricted_editor").id),

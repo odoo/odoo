@@ -112,20 +112,26 @@ class TestCommand(BaseCase):
 
         main, child = os.openpty()
 
-        shell = self.popen_command(
+        with self.popen_command(
             'shell',
             '--shell-interface=python',
             '--shell-file', file_path('base/tests/shell_file.txt'),
             stdin=main,
             close_fds=True,
-        )
-        with os.fdopen(child, 'w', encoding="utf-8") as stdin_file:
-            stdin_file.write(
-                'print(message)\n'
-                'exit()\n'
-            )
-        self.assertFalse(shell.wait(), "exited with a non 0 code")
+        ) as shell:
+            with os.fdopen(child, 'w', encoding="utf-8") as stdin_file:
+                stdin_file.write(
+                    'print(message)\n'
+                    'exit()\n'
+                )
+            try:
+                stdout, _ = shell.communicate(timeout=5)
+            except sp.TimeoutExpired:
+                shell.kill()
+                stdout, _ = shell.communicate()
+
+        self.assertEqual(shell.returncode, 0, "exited with a non 0 code")
 
         # we skip local variables as they differ based on configuration (e.g.: if a database is specified or not)
-        lines = [line for line in shell.stdout.read().splitlines() if line.startswith('>>>')]
+        lines = [line for line in stdout.splitlines() if line.startswith('>>>')]
         self.assertEqual(lines, [">>> Hello from Python!", '>>> '])

@@ -110,9 +110,11 @@ class TestItEdi(AccountTestInvoicingCommon):
         })
 
         # We create this because we are unable to post without a proxy user existing
+        with file_open('l10n_it_edi/data/pkey.key', 'rb') as fp:
+            key = fp.read()
         cls.private_key_id = cls.env['certificate.key'].create({
             'name': 'IT test key',
-            'content': base64.b64encode(file_open('l10n_it_edi/data/pkey.key', 'rb').read()),
+            'content': base64.b64encode(key),
         })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'proxy_type': 'l10n_it_edi',

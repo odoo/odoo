@@ -2154,7 +2154,8 @@ class TestQWebBasic(TransactionCase):
         self.env['ir.qweb'].with_context(lang='pt_BR')._render(view1.id, {})  # should not crash
 
     def test_render_template_from_file(self):
-        expected_result = etree.fromstring(file_open('base/tests/file_template/file_expected_render.xml').read())
+        with file_open('base/tests/file_template/file_expected_render.xml') as f:
+            expected_result = etree.fromstring(f.read())
         rendered_result = self.env['ir.qweb']._render('base/tests/file_template/templates/file_template.xml', values={
             'document_name': 'Test Document',
             'partner': {

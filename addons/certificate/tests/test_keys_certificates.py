@@ -87,7 +87,8 @@ class TestKeysCertificates(TransactionCase):
     def test_key_loading_wrong_password(self):
         correct_password = 'foobar'
         wrong_password = 'barfoo'
-        content = file_open('certificate/tests/data/encrypted_private.key', 'rb').read()
+        with file_open('certificate/tests/data/encrypted_private.key', 'rb') as key:
+            content = key.read()
         key = self.env['certificate.key'].create({
             'content': base64.b64encode(content),
             'password': wrong_password,
@@ -115,10 +116,13 @@ class TestKeysCertificates(TransactionCase):
         self.assertEqual(certificate.content_format, 'pem')
 
     def test_pfx_certificate(self):
+        with file_open('certificate/tests/data/cert.pfx', 'rb') as pfx:
+            content = pfx.read()
+
         certificate = self.env['certificate.certificate'].create({
             'name': 'Test PKCS12 Certificate',
             'pkcs12_password': 'example',
-            'content': base64.b64encode(file_open('certificate/tests/data/cert.pfx', 'rb').read()),
+            'content': base64.b64encode(content),
         })
         self.assertEqual(certificate.content_format, 'pkcs12')
 

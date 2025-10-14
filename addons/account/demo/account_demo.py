@@ -525,6 +525,11 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_attachment(self, company=False):
+
+        def read(filename):
+            with file_open(filename, 'rb') as f:
+                return f.read()
+
         return {
             'ir_attachment_in_invoice_1': {
                 'type': 'binary',
@@ -532,9 +537,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'res_model': 'account.move',
                 'res_id': 'demo_invoice_8',
                 'res_field': 'invoice_pdf_report_file',
-                'raw': file_open(
-                    'account/static/demo/in_invoice_yourcompany_demo_1.pdf', 'rb'
-                ).read()
+                'raw': read('account/static/demo/in_invoice_yourcompany_demo_1.pdf'),
             },
             'ir_attachment_in_invoice_2': {
                 'type': 'binary',
@@ -542,27 +545,21 @@ class AccountChartTemplate(models.AbstractModel):
                 'res_model': 'account.move',
                 'res_id': 'demo_invoice_equipment_purchase',
                 'res_field': 'invoice_pdf_report_file',
-                'raw': file_open(
-                    'account/static/demo/in_invoice_yourcompany_demo_2.pdf', 'rb'
-                ).read()
+                'raw': read('account/static/demo/in_invoice_yourcompany_demo_2.pdf'),
             },
             'ir_attachment_bank_statement_1': {
                 'type': 'binary',
                 'name': 'bank_opening_statement.pdf',
                 'res_model': 'account.bank.statement',
                 'res_id': 'demo_bank_statement_1',
-                'raw': file_open(
-                    'account/static/demo/bank_opening_statement.pdf', 'rb'
-                ).read()
+                'raw': read('account/static/demo/bank_opening_statement.pdf'),
             },
             'ir_attachment_bank_statement_2': {
                 'type': 'binary',
                 'name': 'bank_statement_one_month_old.pdf',
                 'res_model': 'account.bank.statement',
                 'res_id': 'demo_bank_statement_2',
-                'raw': file_open(
-                    'account/static/demo/bank_statement_one_month_old.pdf', 'rb'
-                ).read()
+                'raw': read('account/static/demo/bank_statement_one_month_old.pdf'),
             },
         }
 

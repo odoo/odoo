@@ -458,12 +458,15 @@ class TestImportModule(odoo.tests.TransactionCase):
         ):
             zip_files.extract('foo/__manifest__.py', tmp_dir)
             zip_files.extract('foo/__manifest__.py', other_tmp_dir)
-            self.assertIn('"name": "foo"', file_open(tmp_dir + '/foo/__manifest__.py', 'r', env=self.env).read())
-            self.assertIn('"name": "foo"', file_open(other_tmp_dir + '/foo/__manifest__.py', 'r', env=self.env).read())
+            with file_open(tmp_dir + '/foo/__manifest__.py', 'r', env=self.env) as manifest:
+                self.assertIn('"name": "foo"', manifest.read())
+            with file_open(other_tmp_dir + '/foo/__manifest__.py', 'r', env=self.env) as manifest:
+                self.assertIn('"name": "foo"', manifest.read())
             tmp_folder = tmp_dir
         self.assertFalse(self.env.transaction._Transaction__file_open_tmp_paths)
         with self.assertRaises(FileNotFoundError):
-            file_open(tmp_folder + '/foo/__manifest__.py', 'r', env=self.env)
+            with file_open(tmp_folder + '/foo/__manifest__.py', 'r', env=self.env) as _manifest:
+                pass
 
 
 class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):

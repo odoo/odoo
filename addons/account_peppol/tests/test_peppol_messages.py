@@ -1,16 +1,17 @@
 import json
 from base64 import b64encode
 from contextlib import contextmanager
-from lxml import etree
+from pathlib import Path
 from unittest.mock import patch
 from urllib import parse
 
+from lxml import etree
 from requests import PreparedRequest, Response, Session
 
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, freeze_time
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_path
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.mail.tests.common import MailCommon
@@ -40,7 +41,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
         cls.private_key = cls.env['certificate.key'].create({
             'name': 'Test key PEPPOL',
-            'content': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
+            'content': b64encode(Path(file_path(f'{FILE_PATH}/private_key.pem')).read_bytes()),
         })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
@@ -211,8 +212,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 response_content = {
                     'accounting_supplier_party': '0198:dk16356706',
                     'filename': 'test_incoming',
-                    'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
-                    'document': b64encode(file_open(f'{FILE_PATH}/{cls.mocked_incoming_invoice_fname}', mode='rb').read()),
+                    'enc_key': Path(file_path(f'{FILE_PATH}/enc_key')).read_bytes(),
+                    'document': b64encode(Path(file_path(f'{FILE_PATH}/{cls.mocked_incoming_invoice_fname}')).read_bytes()),
                     'state': 'done' if not cls.env.context.get('error') else 'error',
                     'direction': 'incoming',
                     'document_type': 'Invoice',
