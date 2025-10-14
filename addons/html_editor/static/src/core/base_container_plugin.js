@@ -164,9 +164,10 @@ export class BaseContainerPlugin extends Plugin {
      * oe_unbreakable) => it stays unsplittable.
      */
     isCandidateForBaseContainerAllowUnsplittable(element) {
-        const predicates = new Set(this.getResource("invalid_for_base_container_predicates"));
-        predicates.delete(this.isUnsplittablePredicate);
-        for (const predicate of predicates) {
+        for (const predicate of this.getResource("invalid_for_base_container_predicates")) {
+            if (predicate === this.isUnsplittablePredicate) {
+                continue;
+            }
             if (predicate(element)) {
                 return false;
             }
@@ -182,9 +183,11 @@ export class BaseContainerPlugin extends Plugin {
      * compute childNodes multiple times in more complex operations.
      */
     shallowIsCandidateForBaseContainer(element) {
-        const predicates = new Set(this.getResource("invalid_for_base_container_predicates"));
-        predicates.delete(this.hasNonPhrasingContentPredicate);
+        const predicates = this.getResource("invalid_for_base_container_predicates");
         for (const predicate of predicates) {
+            if (predicate === this.hasNonPhrasingContentPredicate) {
+                continue;
+            }
             if (predicate(element)) {
                 return false;
             }
