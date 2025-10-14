@@ -110,10 +110,6 @@
             <search>
                 <field name="name"/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
-                <filter
-                    string="Documents of this variant"
-                    name="context_variant"
-                    domain="[('res_model', '=', 'product.product'), ('res_id', '=', context.get('default_res_id'))]"/>
                 <filter name="all" string="All" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
             </search>
         </field>
