@@ -725,6 +725,8 @@ class TestSaleOrder(SaleCommon):
             },
         ])
 
+        group_warning_sale = self.env.ref('sale.group_warning_sale')
+        self.group_user.implied_ids = [Command.link(group_warning_sale.id)]
         sale_order2.action_confirm()
         sale_order2._create_invoices()
         invoice = Form(sale_order2.invoice_ids[0])
@@ -738,6 +740,13 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(sale_order.sale_warning_text, '\n'.join(expected_warnings))
         self.assertEqual(sale_order2.sale_warning_text, '\n'.join(expected_warnings_for_sale_order2))
         self.assertEqual(invoice.sale_warning_text, '\n'.join(expected_warnings_for_sale_order2))
+
+        # without warning group, there should be no warning
+        self.group_user.implied_ids = [Command.unlink(group_warning_sale.id)]
+        self.assertEqual(sale_order.sale_warning_text, '')
+        self.assertEqual(sale_order2.sale_warning_text, '')
+        invoice = Form(sale_order2.invoice_ids[0])
+        self.assertEqual(invoice.sale_warning_text, '')
 
     def test_sale_order_email_subtitle(self):
         """Test email notification subtitle for Sale Order with and without partner name."""

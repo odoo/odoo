@@ -50,6 +50,9 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'invoice_line_ids.product_id.sale_line_warn_msg', 'invoice_line_ids.product_id.display_name')
     def _compute_sale_warning_text(self):
+        if not self.env.user.has_group('sale.group_warning_sale'):
+            self.sale_warning_text = ''
+            return
         for move in self:
             if move.move_type != 'out_invoice':
                 move.sale_warning_text = ''
