@@ -13,7 +13,7 @@
                         <field name="l10n_fr_reference_leave_type"
                             class="o_light_label"
                             domain="[('company_id', 'in', [company_id, False])]"
-                            context="{'default_company_id': company_id}"/>
+                            context="{'default_company_id': company_id}" required="company_country_code == 'FR'"/>
                     </setting>
                 </block>
             </block>
