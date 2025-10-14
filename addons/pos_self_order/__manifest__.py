@@ -90,6 +90,8 @@
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/utils/use_timed_press.js',
             "point_of_sale/static/src/app/services/render_service.js",
+            "pos_self_order/static/lib/**/*",
+            "pos_self_order/static/src/app/kioskboard_preview.scss",
             "pos_self_order/static/src/app/**/*",
             "web/static/src/core/utils/render.js",
             "pos_self_order/static/src/app/store/order_change_receipt_template.xml",

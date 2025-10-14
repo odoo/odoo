@@ -1,5 +1,7 @@
 import { Component } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Router } from "@pos_self_order/app/router";
 import { LandingPage } from "@pos_self_order/app/pages/landing_page/landing_page";
@@ -16,6 +18,8 @@ import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/l
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { init as initDebugFormatters } from "@point_of_sale/app/utils/debug-formatter";
 import { insertKioskStyle } from "./kiosk_style";
+
+import { layouts } from "@pos_self_order/app/layouts";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -39,6 +43,14 @@ export class selfOrderIndex extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         window.posmodel = this.selfOrder;
+        window.KioskBoard.init({
+            keysArrayOfObjects: layouts[this.keyBoardByRegion()],
+            capsLockActive: false,
+            allowRealKeyboard: true,
+            allowMobileKeyboard: true,
+            keysSpacebarText: _t("Space"),
+            keysEnterText: _t("Enter"),
+        });
 
         // Disable cursor on touch devices (required on IoT Box Kiosk)
         if (hasTouch()) {
@@ -57,5 +69,30 @@ export class selfOrderIndex extends Component {
     }
     get selfIsReady() {
         return this.selfOrder.models["product.product"].length > 0;
+    }
+
+    keyBoardByRegion() {
+        const code = (localization.code || "").toLowerCase();
+
+        switch (true) {
+            case code.includes("fr_"):
+                return "azerty";
+            case code.includes("de_"):
+                return "de";
+            case code.includes("hu_"):
+                return "hu";
+            case code.includes("fa_"):
+                return "pe";
+            case code.includes("ar_"):
+                return "ar";
+            case code.includes("ru_"):
+                return "ru";
+            case code.includes("es_"):
+                return "es";
+            case code.includes("tr_"):
+                return "tr";
+            default:
+                return "qwerty";
+        }
     }
 }

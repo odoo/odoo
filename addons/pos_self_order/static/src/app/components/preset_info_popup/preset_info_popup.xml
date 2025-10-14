@@ -37,19 +37,25 @@
                     class="form-control form-control-lg"
                     placeholder="Name"
                     t-model="state.name"
-                    t-att-disabled="partnerIsSelected" />
+                    t-att-disabled="partnerIsSelected"
+                    data-kioskboard-type="all"
+                    t-att-readonly="selfOrder.kioskMode ? 'readonly' : null"/>
                 <input t-if="preset.needsEmail || preset.needsPartner"
                     type="text"
                     class="form-control form-control-lg"
                     placeholder="Email"
                     t-model="state.email"
-                    t-att-disabled="partnerIsSelected" />
+                    t-att-disabled="partnerIsSelected" 
+                    data-kioskboard-type="all" 
+                    t-att-readonly="selfOrder.kioskMode ? 'readonly' : null"/>
                 <t t-if="preset.needsPartner">
                     <input type="text"
                         class="form-control form-control-lg"
                         placeholder="Phone"
                         t-model="state.phone"
-                        t-att-disabled="partnerIsSelected"/>
+                        t-att-disabled="partnerIsSelected" 
+                        data-kioskboard-type="numpad" 
+                        t-att-readonly="selfOrder.kioskMode ? 'readonly' : null"/>
                     <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
                         <option value="">
                             Select a country
@@ -63,13 +69,17 @@
                             class="form-control form-control-lg w-75"
                             placeholder="Street and Number"
                             t-model="state.street"
-                            t-att-disabled="partnerIsSelected"/>
+                            t-att-disabled="partnerIsSelected" 
+                            data-kioskboard-type="all" 
+                            t-att-readonly="selfOrder.kioskMode ? 'readonly' : null"/>
                         <input
                             type="text"
                             class="form-control form-control-lg w-25"
                             placeholder="Zip"
                             t-model="state.zip"
-                            t-att-disabled="partnerIsSelected"/>
+                            t-att-disabled="partnerIsSelected" 
+                            data-kioskboard-type="numpad" 
+                            t-att-readonly="selfOrder.kioskMode ? 'readonly' : null"/>
                     </div>
                     <div class="d-flex gap-3">
                         <t t-set="availableState" t-value="this.states" />
@@ -85,7 +95,9 @@
                             class="form-control form-control-lg"
                             placeholder="City"
                             t-model="state.city"
-                            t-att-disabled="partnerIsSelected"/>
+                            t-att-disabled="partnerIsSelected" 
+                            data-kioskboard-type="all" 
+                            t-att-readonly="selfOrder.kioskMode ? 'readonly' : null"/>
                     </div>
                 </t>
             </div>

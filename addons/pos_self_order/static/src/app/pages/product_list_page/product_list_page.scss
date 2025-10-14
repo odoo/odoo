@@ -78,6 +78,21 @@
     gap: 0.85rem;
   }
 
+  .o-custom-scrollbar {
+    scrollbar-width: auto; 
+    scrollbar-color: $o-enterprise-color transparent;
+
+    &::-webkit-scrollbar {
+      width: 6px;   /* vertical */
+      height: 6px;  /* horizontal */
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+  }
+
   .product_descr{
      overflow: hidden;
     -webkit-line-clamp: 2;

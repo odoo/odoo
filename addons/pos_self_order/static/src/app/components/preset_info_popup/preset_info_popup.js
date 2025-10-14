@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { isValidEmail } from "@point_of_sale/utils";
@@ -25,6 +25,13 @@ export class PresetInfoPopup extends Component {
 
         onWillStart(async () => {
             await this.selfOrder.syncPresetSlotAvaibility(this.preset);
+        });
+
+        onMounted(() => {
+            const inputs = document.querySelectorAll("input");
+            if (this.selfOrder.kioskMode && inputs.length) {
+                window.KioskBoard.run("input");
+            }
         });
     }
 

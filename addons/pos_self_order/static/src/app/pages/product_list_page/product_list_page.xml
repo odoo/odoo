@@ -50,7 +50,7 @@
             </div>
 
             <!-- Products -->
-            <div class="d-flex flex-grow-1 overflow-y-auto o_self_fade position-relative" t-ref="product_list">
+            <div class="d-flex flex-grow-1 overflow-y-auto o_self_fade position-relative o-custom-scrollbar" t-ref="product_list">
                 <div class="product_container container o_self_container">
                      <section t-foreach="productCategories" t-as="category" t-key="category.id" t-att-data-category="category.id" class="pb-sm-3 pb-lg-4">
                          <div class="fs-2 fw-bold ps-3 ps-sm-0 py-2 py-sm-3 py-lg-4" t-esc="category.name" t-if="!selfOrder.kioskMode"/>
