@@ -25,6 +25,12 @@ declare module "models" {
     export interface DataResponse {
         chatbot_step: ChatbotStep;
     }
+    export interface DiscussChannel {
+        livechat_channel_id: LivechatChannel;
+    }
+    export interface LivechatChannel {
+        channel_ids: DiscussChannel[];
+    }
     export interface Message {
         chatbotStep: ChatbotStep;
     }

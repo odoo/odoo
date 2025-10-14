@@ -20,25 +20,24 @@ const storePatch = {
             this.livechatChannels.fetch();
         }
     },
-    /** @returns {boolean} Whether the livechat thread changed. */
     goToOldestUnreadLivechatThread() {
-        const [oldestUnreadThread] = this.discuss.livechats
-            .filter((thread) => thread.isUnread)
+        const [oldestUnreadConversation] = this.discuss.livechats
+            .filter((conversation) => conversation.isUnread)
             .sort(
-                (t1, t2) =>
-                    !t2.livechat_end_dt - !t1.livechat_end_dt ||
-                    compareDatetime(t1.lastInterestDt, t2.lastInterestDt) ||
-                    t1.id - t2.id
+                (c1, c2) =>
+                    !c2.livechat_end_dt - !c1.livechat_end_dt ||
+                    compareDatetime(c1.lastInterestDt, c2.lastInterestDt) ||
+                    c1.id - c2.id
             );
-        if (!oldestUnreadThread) {
+        if (!oldestUnreadConversation) {
             return false;
         }
         if (this.discuss.isActive) {
-            oldestUnreadThread.setAsDiscussThread();
+            oldestUnreadConversation.setAsDiscussThread();
             return true;
         }
         this.store.chatHub.initPromise.then(() => {
-            const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
+            const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadConversation.thread });
             chatWindow.open({ focus: true, jumpToNewMessage: true });
         });
         return true;

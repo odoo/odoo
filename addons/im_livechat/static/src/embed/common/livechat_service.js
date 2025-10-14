@@ -129,14 +129,14 @@ export class LivechatService {
             return;
         }
         this.store.insert(store_data);
-        const thread = this.store["mail.thread"].get({ id: channel_id, model: "discuss.channel" });
+        const channel = this.store["discuss.channel"].get(channel_id);
         const ONE_DAY_TTL = 60 * 60 * 24;
         expirableStorage.setItem(
             "im_livechat_previous_operator",
-            thread.livechat_operator_id.id,
+            channel.livechat_operator_id.id,
             ONE_DAY_TTL * 7
         );
-        return thread;
+        return channel.thread;
     }
 
     getSessionExtraParams(thread, options) {

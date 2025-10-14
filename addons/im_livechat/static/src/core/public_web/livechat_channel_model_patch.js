@@ -20,7 +20,6 @@ const livechatChannelPatch = {
             eager: true,
             inverse: "livechat_channel_id",
         });
-        this.threads = fields.Many("mail.thread", { inverse: "livechat_channel_id" });
     },
 };
 patch(LivechatChannel.prototype, livechatChannelPatch);

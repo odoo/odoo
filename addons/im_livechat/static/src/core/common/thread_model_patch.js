@@ -14,7 +14,7 @@ patch(Thread.prototype, {
                 if (this.channel?.channel_type !== "livechat") {
                     return;
                 }
-                // For livechat threads, the correspondent is the first
+                // For live chat conversation, the correspondent is the first
                 // channel member that is not the operator.
                 const orderedChannelMembers = [...this.channel.channel_member_ids].sort(
                     (a, b) => a.id - b.id
