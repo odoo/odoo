@@ -10,6 +10,7 @@
 
       <!-- BODY -->
       <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}" t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+      <!-- Debut du contenue header inclus dans body--> 
         <table style="width:100%;box-shadow: none !important; border-collapse: collapse !important; border:1px solid transparent;">
           <tr>
             <!-- Colonne gauche : Infos facture et client -->
@@ -67,8 +68,7 @@
                     </td>
                     <td style="border: 1px solid black; padding: 2px; margin-top: 0px;">
                       <t t-if="report_type == 'pdf'">
-                        <span class="page"/>
-1 <span class="topage"/>
+                        <span class="page"/>1 <span class="topage"/>
                       </t>
                       <t t-else="">1</t>
                     </td>
@@ -105,8 +105,7 @@
                       </div>
                     </li>
                     <li t-if="forced_vat">
-                      <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
-:
+                      <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
                       <span t-esc="forced_vat"/>
                     </li>
                   </ul>
@@ -115,6 +114,7 @@
             </td>
           </tr>
         </table>
+      <!-- Fin du contenue header inclus dans body-->
 
         <!-- Conteneur avec espacement réduit pour rapprocher le contenu du rectangle des totaux -->
         <div class="container" t-attf-style="margin-top: {{ report_type == 'pdf' and '15px' or '30px' }}; margin-bottom: 20px; font-size: 14px; border: none;">
@@ -123,10 +123,14 @@
           <div style="margin-bottom: 10px;">
             <t t-out="0"/>
           </div>
+        </div>
 
-          <!-- Signature et Date au-dessus du cadre - Réduction de l'espacement -->
-          <div style="width: 100%; margin-top: 10px; margin-bottom: 5px;">
-            <table style="width: 100%; border: none; border-collapse: collapse;">
+        <!-- Section finale avec totaux - SÉPARÉE pour éviter les coupures de page -->
+        <div class="container" style="page-break-inside: avoid; break-inside: avoid; margin-top: 20px; margin-bottom: 20px; font-size: 14px; border: none;" t-if="o">
+
+          <!-- Signature et Date au-dessus du cadre -->
+          <div style="width: 100%; margin-top: 0px; margin-bottom: 5px;"> <!-- reduction de l'espace entre le contenue principale et le cadre, augmente le margin-top-->
+            <table style="width: 100%; border: 1px solid white; border-collapse: collapse;">
               <tr>
                 <td style="border: none; padding: 0; width: 35%; vertical-align: top;">
                   <strong>Signature:</strong>
@@ -140,31 +144,31 @@
             </table>
           </div>
 
-          <!-- FUSION: Rectangle intégré avec le tableau des totaux - Marge top supprimée -->
-          <div style="width: 100%; margin-top: 0px;" t-if="o">
+          <!-- FUSION: Rectangle intégré avec le tableau des totaux -->
+          <div style="width: 100%; margin-top: -5px; page-break-inside: avoid; break-inside: avoid;">
             <!-- Conteneur principal avec bordure -->
-            <div style="border: 2px solid black;">
+            <div style="border: 2px solid black; min-height: 100px;">
 
               <!-- Disposition horizontale -->
-              <table style="width: 100%; border-collapse: collapse; border: none;">
+              <table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;">
                 <tr>
                   <!-- Section Delivery/Address à gauche -->
                   <td style="border: none; padding: 10px; vertical-align: top; width: 60%;">
                     <!-- Informations Delivery/Address (sans signature/date) -->
-                    <table style="border: none; border-collapse: collapse; width: 100%;">
+                    <table style="border: none; border-collapse: collapse; width: 100%; table-layout: fixed;">
                       <tr>
-                        <td style="border: none; padding: 0; padding-right: 20px; vertical-align: top; width: 80px;">
+                        <td style="border: 1px solid white; padding: 0; padding-right: 20px; vertical-align: top; width: 80px;">
                           <strong>Delivery:</strong>
                         </td>
-                        <td style="border: none; padding: 0; vertical-align: top;">
+                        <td style="border: 1px solid white; padding: 0; vertical-align: top; word-wrap: break-word;">
                           <span t-if="o.partner_id" t-esc="o.partner_id.name"/>
                         </td>
                       </tr>
                       <tr>
-                        <td style="border: none; padding: 0; padding-right: 20px; vertical-align: top; padding-top: 5px; width: 80px;">
+                        <td style="border: 1px solid white; padding: 0; padding-right: 20px; vertical-align: top; padding-top: 5px; width: 80px;">
                           <strong>Address:</strong>
                         </td>
-                        <td style="border: none; padding: 0; vertical-align: top; padding-top: 5px;">
+                        <td style="border: 1px solid white; padding: 0; vertical-align: top; padding-top: 5px; word-wrap: break-word;">
                           <span t-if="o.partner_shipping_id and o.partner_shipping_id != o.partner_id">
                             <span t-esc="o.partner_shipping_id.city"/>
                           </span>
@@ -177,8 +181,10 @@
                   </td>
 
                   <!-- Section totaux à droite -->
-                  <td style="border: none; border-left: 1px solid black; padding: 0px; vertical-align: top; width: 40%;">
-                    <!-- Tableau des totaux avec bordures bien définies - CLASSE CUSTOM
+                  <td style="border: none; border-left: 1px solid black; padding: 0px; vertical-align: top; width: 80%;">
+                    <!-- Tableau des totaux avec bordures bien définies - CLASSE CUSTOM-->
+                    <table class="custom-totals" style="width: 100%; border-collapse: collapse; table-layout: fixed">
+
                       <!-- Ligne Sous-Total : 3 colonnes (Libellé + Vide + Montant) -->
                       <tr t-if="o._fields.get('amount_untaxed') and o.amount_untaxed">
                         <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
@@ -190,7 +196,7 @@
                         </td>
                         <!-- Colonne montant -->
                         <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
-                          <span t-esc="'{:,.0f}'.format(o.amount_untaxed).replace(',', ' ')"/>
+                          <span t-esc="'{:,.2f}'.format(o.amount_untaxed).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                         </td>
                       </tr>
 
@@ -205,7 +211,7 @@
                         </td>
                         <!-- Colonne montant TVA -->
                         <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
-                          <span t-esc="'{:,.0f}'.format(o.amount_tax).replace(',', ' ')"/>
+                          <span t-esc="'{:,.2f}'.format(o.amount_tax).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                         </td>
                       </tr>
 
@@ -224,7 +230,7 @@
                                 </td>
                                 <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
                                   <!-- MONTANT BIC FORMATÉ -->
-                                  <t t-set="formatted_bic_tax" t-value="'{:,}'.format(int(tax_group.get('tax_amount_currency', 0))).replace(',', ' ')"/>
+                                  <t t-set="formatted_bic_tax" t-value="'{:,.2f}'.format(float(tax_group.get('tax_amount_currency', 0))).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                                   <span t-out="formatted_bic_tax"/>
                                 </td>
                               </tr>
@@ -273,7 +279,7 @@
                         <!-- Colonne montant total -->
                         <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
                           <strong>
-                            <span t-esc="'{:,.0f}'.format(o.amount_total).replace(',', ' ')"/>
+                            <span t-esc="'{:,.2f}'.format(o.amount_total).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                           </strong>
                         </td>
                       </tr>
@@ -285,35 +291,30 @@
           </div>
 
           <!-- Montant en lettres centré -->
-          <t t-if="o">
-            <div style="width: 100%; margin-top: 15px; text-align: center; font-size: 14px;">
-              <p>
-                <strong>
-                  <t t-if="o._name == 'account.move'">
-                    <t t-if="o._fields.get('amount_total') and o.amount_total">
-                      ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE 
-                      <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
-CFA.
-                    </t>
-                    <t t-else="">
-                      ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE ZERO CFA.
-                    </t>
+          <div style="width: 100%; margin-top: 15px; text-align: center; font-size: 11px; page-break-inside: avoid; break-inside: avoid;">
+            <p>
+              <strong>
+                <t t-if="o._name == 'account.move'">
+                  <t t-if="o._fields.get('amount_total') and o.amount_total">
+                    ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE 
+                    <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>CFA.
                   </t>
-                  <t t-elif="o._name == 'sale.order'">
-                    <t t-if="o._fields.get('amount_total') and o.amount_total">
-                      ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE 
-                      <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
-CFA.
-                    </t>
-                    <t t-else="">
-                      ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE ZERO CFA.
-                    </t>
+                  <t t-else="">
+                    ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE ZERO CFA.
                   </t>
-                </strong>
-              </p>
-            </div>
-          </t>
-
+                </t>
+                <t t-elif="o._name == 'sale.order'">
+                  <t t-if="o._fields.get('amount_total') and o.amount_total">
+                    ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE 
+                    <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>CFA.
+                  </t>
+                  <t t-else="">
+                    ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE ZERO CFA.
+                  </t>
+                </t>
+              </strong>
+            </p>
+          </div>
         </div>
       </div>
     </t>
