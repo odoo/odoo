@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-10-11 02:16+0000\n"
 "PO-Revision-Date: 2025-09-18 17:22+0000\n"
 "Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-18/"
@@ -50,6 +50,12 @@ msgid "+ %d day(s)"
 msgstr "+%d יום(ימים)"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
 msgstr "<span class=\"o_stat_text\">שיעור ההגעה בזמן</span>"
@@ -66,10 +72,11 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
-"<span invisible=\"on_time_rate &gt;= 0\">לא קיימים נתונים עבור אספקה "
-"במועד</span>"
+"<span invisible=\"on_time_rate &gt;= 0\">לא קיימים נתונים עבור אספקה במועד</"
+"span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -105,11 +112,13 @@ msgstr "מוצר מנוהל מלאי הוא מוצר שאתה מנהל עבור�
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"בהתאם להגדרות המוצר, ניתן לחשב את הכמות שהתקבלה באופן אוטומטי באמצעות מנגנון:\n"
+"בהתאם להגדרות המוצר, ניתן לחשב את הכמות שהתקבלה באופן אוטומטי באמצעות "
+"מנגנון:\n"
 "ידני: הכמות מוזנת באופן ידני בשורה\n"
 "תנועות מלאי: הכמות נלקחת מהשילוחים המאושרים (ליקוטים)\n"
 
@@ -381,12 +390,12 @@ msgstr "ייתכן ויידרשו פעולות ידניות."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "מרווח השגיאה עבור זמני האספקה של הספק. כאשר המערכת מייצרת הזמנות רכש לרכישת "
-"מוצרים מחדש, הן יתוזמנו ימים רבים לפני כדי להתמודד עם עיכובים בלתי צפויים של"
-" הספק."
+"מוצרים מחדש, הן יתוזמנו ימים רבים לפני כדי להתמודד עם עיכובים בלתי צפויים של "
+"הספק."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -402,6 +411,12 @@ msgstr "הזז קדימה את התאריך המבוקש ב"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr "ההעברות הבאות השפיעו:"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -422,8 +437,8 @@ msgstr "לא התקבל"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo לא תומכה ב Anglo-Saxon Accounting. הערכת השווי הכוללת של %s הנה 0."
 
@@ -466,13 +481,13 @@ msgstr "נקודת הזמנה"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"לאורך ה־X ימים , מחושב היחס בין כמות המוצרים שהתקבלה במועד לבין כמות המוצרים"
-" שהוזמנה.הערך X מוגדר בפרמטר המערכת purchase_stock.on_time_delivery_days, "
-"ואם לא הוגדר, אז ברירת המחדל היא 365 ימים."
+"לאורך ה־X ימים , מחושב היחס בין כמות המוצרים שהתקבלה במועד לבין כמות המוצרים "
+"שהוזמנה.הערך X מוגדר בפרמטר המערכת purchase_stock.on_time_delivery_days, ואם "
+"לא הוגדר, אז ברירת המחדל היא 365 ימים."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -598,8 +613,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
-"הזן כתובת אם ברצונך לשלוח ישירות מהספק ללקוח. אחרת, השאר ריק כדי לשלוח לחברה"
-" שלך."
+"הזן כתובת אם ברצונך לשלוח ישירות מהספק ללקוח. אחרת, השאר ריק כדי לשלוח לחברה "
+"שלך."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -777,8 +792,8 @@ msgstr "הכמויות בהזמנת הרכש שלך נמוכות מהכמויו�
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
 "המחסן המשויך לסוג הפעולה (%(operation_type)s) לא תואם למיקום (%(location)s) "
 "לכלל הזמנה מחדש (%(reordering_rule)s) למוצר%(product)s. תשנה את סוג הפעולה "
@@ -788,9 +803,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "אין מחיר ספק תואם כדי ליצור את הזמנת הרכש למוצר %s (לא מוגדר ספק, כמות "
 "מינימלית שלא הושגה, תאריכים לא תקפים, ...). עבור לטופס המוצר והשלם את רשימת "
@@ -812,21 +827,20 @@ msgstr ""
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
-msgstr ""
-"חשבון זה ישמש להערכת הפרש המחירים בין מחיר הרכישה לבין העלות חשבונאית."
+msgstr "חשבון זה ישמש להערכת הפרש המחירים בין מחיר הרכישה לבין העלות חשבונאית."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 " זה מוסיף מסלול דרופשיפינג להחלה על מוצרים כדי לבקש מהספקים להעביר ללקוחות "
-"שלך. מוצר דרופשיפינג ייצור בקשה להצעת מחיר לרכש בעת אישור הזמנת הלקוח. תהליך"
-" זה מתרחש בעת דרישה. כתובת המשלוח המבוקשת תהיה כתובת המשלוח של הלקוח ולא "
+"שלך. מוצר דרופשיפינג ייצור בקשה להצעת מחיר לרכש בעת אישור הזמנת הלקוח. תהליך "
+"זה מתרחש בעת דרישה. כתובת המשלוח המבוקשת תהיה כתובת המשלוח של הלקוח ולא "
 "המחסן שלך. "
 
 #. module: purchase_stock
@@ -930,11 +944,11 @@ msgstr "כאשר המוצרים נרכשים, הם יכולים להיות מו�
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
-"כאשר צריך את המוצרים <b>%s</b>, <br/> בקשה להצעת מחיר נוצרת להשלים את הדרישה"
-" למוצר .שים לב : הכלל מתבצע ביחד עם הכלל<br/>מסלול הקבלה "
+"כאשר צריך את המוצרים <b>%s</b>, <br/> בקשה להצעת מחיר נוצרת להשלים את הדרישה "
+"למוצר .שים לב : הכלל מתבצע ביחד עם הכלל<br/>מסלול הקבלה "
 
 #. module: purchase_stock
 #. odoo-python

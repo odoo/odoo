@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-10-11 02:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -31,6 +32,12 @@ msgstr "% Livrare la timp"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
 msgstr "+ %d zi(le)"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -49,10 +56,11 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
-msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgid ""
+"<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
-"<span invisible=\"on_time_rate &gt;= 0\">Nu există date de livrare la "
-"timp</span>"
+"<span invisible=\"on_time_rate &gt;= 0\">Nu există date de livrare la timp</"
+"span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -88,11 +96,13 @@ msgstr "Un produs stocabil este un produs pentru care gestionați stocul."
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Conform configurației produsului, cantitatea primită poate fi calculată automat de mecanism:\n"
+"Conform configurației produsului, cantitatea primită poate fi calculată "
+"automat de mecanism:\n"
 "  - Manual: cantitatea este setată manual pe linie\n"
 "  - Mișcările de stoc: cantitatea provine din recepțiile confirmate\n"
 
@@ -211,8 +221,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"În funcție de modulele instalate, acest lucru vă va permite să definiți ruta"
-" produsului: dacă va fi cumpărat, fabricat, completat la comandă, etc."
+"În funcție de modulele instalate, acest lucru vă va permite să definiți ruta "
+"produsului: dacă va fi cumpărat, fabricat, completat la comandă, etc."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -290,8 +300,7 @@ msgstr "Generează factura furnizor ciornă."
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr ""
-"Reveniți la comanda de achiziție pentru a genera factura furnizorului."
+msgstr "Reveniți la comanda de achiziție pentru a genera factura furnizorului."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -367,8 +376,8 @@ msgstr "Pot fi necesare acțiuni manuale."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Marja de eroare pentru termenele de livrare ale furnizorului. Când sistemul "
 "generează comenzi de achiziție pentru reaprovizionarea produselor, acestea "
@@ -391,6 +400,12 @@ msgid "Next transfer(s) impacted:"
 msgstr "Următorul(e) transfer(uri) afectat(e):"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "No data yet"
 msgstr "Nu există date încă"
@@ -409,11 +424,11 @@ msgstr "Neprimit"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
-"Odoo nu poate genera înregistrările anglo-saxone. Evaluarea totală a %s este"
-" zero."
+"Odoo nu poate genera înregistrările anglo-saxone. Evaluarea totală a %s este "
+"zero."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -454,8 +469,8 @@ msgstr "Punct de comandă"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "În ultimele x zile; numărul de produse primite la timp împărțit la numărul "
@@ -759,16 +774,16 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"Cantitățile din comanda dvs. de achiziție indică mai puțin decât facturatul."
-" Ar trebui să solicitați o rambursare."
+"Cantitățile din comanda dvs. de achiziție indică mai puțin decât facturatul. "
+"Ar trebui să solicitați o rambursare."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
 "Depozitul de tip operațiune (%(operation_type)s) nu este consistent cu "
 "locația (%(location)s) regulii de reaprovizionare (%(reordering_rule)s) "
@@ -779,9 +794,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "Nu există niciun preț de furnizor potrivit pentru a genera comanda de "
 "achiziție pentru produsul %s (nu este definit niciun furnizor, cantitatea "
@@ -796,8 +811,8 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
-"Acest cont este folosit în evaluarea automată a stocului pentru a înregistra"
-" diferența de preț între o comandă de achiziție și factura furnizorului "
+"Acest cont este folosit în evaluarea automată a stocului pentru a înregistra "
+"diferența de preț între o comandă de achiziție și factura furnizorului "
 "aferentă la validarea acesteia."
 
 #. module: purchase_stock
@@ -812,11 +827,11 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Aceasta adaugă o rută de livrare directă ce se aplică produselor pentru a "
 "solicita furnizorilor să livreze clienților dvs. Un produs cu livrare "
@@ -927,8 +942,8 @@ msgstr "Când produsele sunt cumpărate, pot fi livrate către acest depozit"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Când produsele sunt necesare în <b>%s</b>, <br/>se creează o cerere de "
 "ofertă pentru a acoperi necesarul.<br/>Notă: Această regulă va fi folosită "

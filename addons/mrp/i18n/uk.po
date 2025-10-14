@@ -1,38 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp
-# 
+#
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-13 18:36+0000\n"
+"POT-Creation-Date: 2025-10-11 02:15+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
 msgid ""
 " * Draft: The MO is not confirmed yet.\n"
-" * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+" * Confirmed: The MO is confirmed, the stock rules and the reordering of the "
+"components are trigerred.\n"
 " * In Progress: The production has started (on the MO or on the WO).\n"
 " * To Close: The production is done, the MO has to be closed.\n"
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * Чернетка: MO ще не підтверджено.\n"
-" * Підтверджено: MO підтверджено, складські правила та дозамовлення компонентів запущені.\n"
+" * Підтверджено: MO підтверджено, складські правила та дозамовлення "
+"компонентів запущені.\n"
 " * В процесі: Виробництво розпочате (на MO або на WO).\n"
 " * До закриття: Виробництво виконане, MO потрібно закрити.\n"
 " * Готово: MO закрите, складські переміщення опубліковано. \n"
@@ -48,9 +53,8 @@ msgstr " <br/><br/> Компоненти будуть взяті з <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 
 #. module: mrp
@@ -184,6 +188,12 @@ msgid "+ %d day(s)"
 msgstr "+ %d дні"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
 msgstr "- Огляд"
@@ -202,7 +212,8 @@ msgstr ""
 msgid ""
 "1 Step: Consume components from stock and produce.\n"
 "              2 Steps: Pick components from stock and then produce.\n"
-"              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock."
+"              3 Steps: Pick components from stock, produce, and then move "
+"final product(s) from production area to stock."
 msgstr ""
 
 #. module: mrp
@@ -264,18 +275,23 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgid ""
+"<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgstr ""
+"<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
+msgid ""
+"<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgid ""
+"<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgstr ""
+"<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
 #. odoo-python
@@ -284,13 +300,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Upload files to your product\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings or specifications.\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Завантажте файли на ваш товар\n"
 "                    </p><p>\n"
-"                        Використовуйте цю функцію для зберігання будь-яких файлів, таких як креслення або специфікації.\n"
+"                        Використовуйте цю функцію для зберігання будь-яких "
+"файлів, таких як креслення або специфікації.\n"
 "                    </p>"
 
 #. module: mrp
@@ -410,8 +428,8 @@ msgstr "<span class=\"o_stat_text\">Розібрані</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid ""
 "<span class=\"text-muted\">Modifying the quantity to produce will also "
-"modify the quantities of components to consume for this manufacturing "
-"order.</span>"
+"modify the quantities of components to consume for this manufacturing order."
+"</span>"
 msgstr ""
 "<span class=\"text-muted\">Зміна кількості виробництва також змінить "
 "кількість компонентів, які потрібно споживати для цього виробничого "
@@ -584,10 +602,13 @@ msgstr "? Може призвести до невідопівдностей на
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
-"                                Instead, it is used to decompose a BoM into its components when:"
+"                                Instead, it is used to decompose a BoM into "
+"its components when:"
 msgstr ""
-"Специфікація типу комплектування не виробляється разом із виробничим замовленням.<br/>\n"
-"                                Замість цього він використовується для декомпозиції специфікації на компоненти, коли:"
+"Специфікація типу комплектування не виробляється разом із виробничим "
+"замовленням.<br/>\n"
+"                                Замість цього він використовується для "
+"декомпозиції специфікації на компоненти, коли:"
 
 #. module: mrp
 #. odoo-python
@@ -716,11 +737,13 @@ msgstr "Рядок усіх переміщень"
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs!"
 msgstr ""
 "Усі кількості товарів мають бути більше або дорівнювати 0.\n"
 "Рядки з 0 величинами можна використовувати як додаткові рядки.\n"
-"Вам слід встановити модуль mrp_byproduct, якщо ви хочете керувати додатковими товарами на специфікації!"
+"Вам слід встановити модуль mrp_byproduct, якщо ви хочете керувати "
+"додатковими товарами на специфікації!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -798,8 +821,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
-"Альтернативні робочі центри, які можуть бути замінені на цей, щоб відправити"
-" виробництво"
+"Альтернативні робочі центри, які можуть бути замінені на цей, щоб відправити "
+"виробництво"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -954,8 +977,8 @@ msgstr "Аватар"
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added. In "
-"case the product is subcontracted, this can be used to determine the date at"
-" which components should be sent to the subcontractor."
+"case the product is subcontracted, this can be used to determine the date at "
+"which components should be sent to the subcontractor."
 msgstr ""
 "Середній час виготовлення цього товару у днях. У разі багаторівневої "
 "специфікації буде додано терміни виготовлення компонентів. Якщо товар "
@@ -1046,8 +1069,7 @@ msgstr "Послідовність дозамовлення"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
-msgid ""
-"Backorder sequence, if equals to 0 means there is not related backorder"
+msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
 "Послідовність дозамовлення, якщо дорівнює 0, це означає, що немає "
 "пов'язаного дозамовлення"
@@ -1128,8 +1150,8 @@ msgstr "Специфікації"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__mo_bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_bom_id
 msgid ""
-"Bills of Materials, also called recipes, are used to autocomplete components"
-" and work order instructions."
+"Bills of Materials, also called recipes, are used to autocomplete components "
+"and work order instructions."
 msgstr ""
 "Специфікації, так звані технологічні карти, використовуються для "
 "автоматичного заповнення компонентів і інструкцій робочого замовлення."
@@ -1138,7 +1160,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
 "                order or a pack of products."
 msgstr ""
 "Законопроекти дозволяють визначити перелік необхідної сировини\n"
@@ -1536,13 +1559,13 @@ msgstr "Обчислення на основі записаного часу"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
-"buying or manufacturing the components and/or subassemblies."
-"                                                       Also note that "
-"purchase security lead times will be added when appropriate."
+"buying or manufacturing the components and/or "
+"subassemblies.                                                       Also "
+"note that purchase security lead times will be added when appropriate."
 msgstr ""
 "Обчисліть дні, необхідні для поповнення всіх компонентів зі специфікації, "
-"купуючи або виготовляючи компоненти та/або вузли. Також зауважте, що терміни"
-" виконання закупівлі будуть додані, коли це необхідно."
+"купуючи або виготовляючи компоненти та/або вузли. Також зауважте, що терміни "
+"виконання закупівлі будуть додані, коли це необхідно."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1621,8 +1644,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку,"
-" якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку, "
+"якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
 "здійснюватися на основі співвідношення."
 
 #. module: mrp
@@ -1665,8 +1688,8 @@ msgstr ""
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on related replenishments. Otherwise cost from product form"
 msgstr ""
-"Вартість на основі відповідних поповнень. В іншому випадку вартість з картки"
-" товару"
+"Вартість на основі відповідних поповнень. В іншому випадку вартість з картки "
+"товару"
 
 #. module: mrp
 #. odoo-javascript
@@ -1729,8 +1752,8 @@ msgstr "Створіть дозамовлення"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid ""
-"Create a backorder if you expect to process the remaining products later. Do"
-" not create a backorder if you will not process the remaining products."
+"Create a backorder if you expect to process the remaining products later. Do "
+"not create a backorder if you will not process the remaining products."
 msgstr ""
 "Створіть дозамовлення, якщо ви очікуєте обробити решту товарів пізніше. Не "
 "створюйте дозамовлення, якщо ви не будете обробляти решту товарів."
@@ -1755,10 +1778,13 @@ msgstr "Створіть нову продуктивність робочих з
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Create and confirm Manufacturing Orders this many days in advance, to have "
+"enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Створюйте та підтверджуйте замовлення на виробництво за багато днів наперед, щоб мати достатньо часу для поповнення компонентів або виробництва напівфабрикатів.\n"
+"Створюйте та підтверджуйте замовлення на виробництво за багато днів наперед, "
+"щоб мати достатньо часу для поповнення компонентів або виробництва "
+"напівфабрикатів.\n"
 "Зауважте, що безпекові терміни також розглядатимуться, коли це доречно."
 
 #. module: mrp
@@ -1780,9 +1806,9 @@ msgid ""
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
 msgstr ""
-"Створіть залежності рівня операцій, які впливатимуть як на планування, так і"
-" на статус робочих нарядів після підтвердження MO. Якщо ця функція позначена"
-" галочкою, і нічого не вказано, Odoo вважатиме, що всі операції можна "
+"Створіть залежності рівня операцій, які впливатимуть як на планування, так і "
+"на статус робочих нарядів після підтвердження MO. Якщо ця функція позначена "
+"галочкою, і нічого не вказано, Odoo вважатиме, що всі операції можна "
 "розпочати одночасно."
 
 #. module: mrp
@@ -1858,15 +1884,22 @@ msgstr "Валюта"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Поточна кількість товару.\n"
-"В контексті розташування запасів буде включено запаси по цьому розташуванню та по всіх підпорядкованих розташуваннях.\n"
-"В контексті складу, буде включено запаси на всіх розташуваннях запасів цього складу та на всіх підпорядкованих до нього.\n"
-"В інших випадках включені товари складуються на будь-якому місцехнаходженні складу з типом 'Внутрішній'."
+"В контексті розташування запасів буде включено запаси по цьому розташуванню "
+"та по всіх підпорядкованих розташуваннях.\n"
+"В контексті складу, буде включено запаси на всіх розташуваннях запасів цього "
+"складу та на всіх підпорядкованих до нього.\n"
+"В інших випадках включені товари складуються на будь-якому місцехнаходженні "
+"складу з типом 'Внутрішній'."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -1908,8 +1941,8 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
-"Дата, коли ви плануєте почати виробництво, або дата, коли ви фактично почали"
-" виробництво."
+"Дата, коли ви плануєте почати виробництво, або дата, коли ви фактично почали "
+"виробництво."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1955,15 +1988,15 @@ msgstr "Час виробництва за замовчуванням"
 msgid ""
 "Default number of pieces (in product UoM) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
-"you need to produce 10 units, then the operation time listed on the BOM will"
-" be multiplied by two. However, note that both time before and after "
+"you need to produce 10 units, then the operation time listed on the BOM will "
+"be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
 "Кількість штук за замовчуванням (в одиниці вимірювання товару), які можна "
 "виготовляти паралельно (одночасно) у цьому робочому центрі. Наприклад: "
 "потужність становить 5, а вам потрібно виготовити 10 одиниць, тоді час "
-"роботи, зазначений у специфікації, буде помножено на два. Однак зауважте, що"
-" як час до, так і після виробництва буде зараховано лише один раз."
+"роботи, зазначений у специфікації, буде помножено на два. Однак зауважте, що "
+"як час до, так і після виробництва буде зараховано лише один раз."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -1992,11 +2025,16 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
 msgid ""
-"Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+"Defines if you can consume more or less components than the quantity defined "
+"on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
-"  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
-"  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
+"  * Allowed with warning: allowed for all manufacturing users with summary "
+"of consumption differences when closing the manufacturing order.\n"
+"  Note that in the case of component Highlight Consumption, where "
+"consumption is registered manually exclusively, consumption warnings will "
+"still be issued when appropriate also.\n"
+"  * Blocked: only a manager can close a manufacturing order when the BoM "
+"consumption is not respected."
 msgstr ""
 
 #. module: mrp
@@ -2391,14 +2429,21 @@ msgstr "Звіт прогнозу"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
-"Прогнозована кількість (обчислена як кількість в наявності - вихідна + вхідна)\n"
-"У контексті, що складається з одного місця розташування складу, це включає товари, що зберігаються в цьому місці, або будь-яких його філій.\n"
-"У контексті із складом всередині це включає товари, що зберігаються всередині цього складу або будь-якого з його філій.\n"
-"В іншому випадку це включає товари, що зберігаються в будь-якому розташуванні складу з \"внутрішнім\" типом."
+"Прогнозована кількість (обчислена як кількість в наявності - вихідна + "
+"вхідна)\n"
+"У контексті, що складається з одного місця розташування складу, це включає "
+"товари, що зберігаються в цьому місці, або будь-яких його філій.\n"
+"У контексті із складом всередині це включає товари, що зберігаються "
+"всередині цього складу або будь-якого з його філій.\n"
+"В іншому випадку це включає товари, що зберігаються в будь-якому "
+"розташуванні складу з \"внутрішнім\" типом."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2675,8 +2720,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" кадрів, не видаливши його."
+"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис "
+"кадрів, не видаливши його."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
@@ -2693,8 +2738,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
-"Якщо цей чекбокс позначено, Odoo автоматично роздрукує звіт про розподіл MO,"
-" коли він буде готовий і має призначені переміщення."
+"Якщо цей чекбокс позначено, Odoo автоматично роздрукує звіт про розподіл MO, "
+"коли він буде готовий і має призначені переміщення."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -2702,14 +2747,14 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
-"Якщо цей чекбокс позначено, Odoo автоматично надрукує етикетку "
-"партії/серійного номера MO, коли це буде зроблено."
+"Якщо цей чекбокс позначено, Odoo автоматично надрукує етикетку партії/"
+"серійного номера MO, коли це буде зроблено."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels"
-" of a MO when it is done."
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a MO when it is done."
 msgstr ""
 "Якщо цей чекбокс позначено, Odoo автоматично надрукує етикетки товару MO, "
 "коли його буде зроблено."
@@ -2738,11 +2783,9 @@ msgstr "Імпортувати шаблон для специфікацій"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"Impossible to plan the workorder. Please check the workcenter "
-"availabilities."
+"Impossible to plan the workorder. Please check the workcenter availabilities."
 msgstr ""
-"Неможливо запланувати робоче замовлення. Перевірте наявність робочих "
-"центрів."
+"Неможливо запланувати робоче замовлення. Перевірте наявність робочих центрів."
 
 #. module: mrp
 #. odoo-python
@@ -2794,8 +2837,7 @@ msgstr "Складські переміщення"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
-msgid ""
-"Inventory moves for which you must scan a lot number at this work order"
+msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 "Складське переміщення, для якого потрібно сканувати партійні номери у цьому "
 "робочому замовленні"
@@ -3024,7 +3066,8 @@ msgstr "Відпустка"
 #: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
 msgid ""
 "Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material."
+"Select Bill of Materials to visualise this document as a product attachment "
+"when this product is in a bill of material."
 msgstr ""
 
 #. module: mrp
@@ -3403,21 +3446,29 @@ msgstr "Відображення днів виробництва"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc."
 msgstr ""
-"Операції виробництва виконуються на Робочих центрах. Робочий центр може складатися з\n"
-"робітників та/або машин, вони використовуються для калькуляції витрат, складання графіка, планування потужностей тощо."
+"Операції виробництва виконуються на Робочих центрах. Робочий центр може "
+"складатися з\n"
+"робітників та/або машин, вони використовуються для калькуляції витрат, "
+"складання графіка, планування потужностей тощо."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"Замовлення на виробництво виконуються на Робочих центрах. Робочий центр може складатися\n"
-"з робітників та/або машин, вони використовуються для калькуляції витрат, складання графіків, планування потужностей тощо.\n"
+"Замовлення на виробництво виконуються на Робочих центрах. Робочий центр може "
+"складатися\n"
+"з робітників та/або машин, вони використовуються для калькуляції витрат, "
+"складання графіків, планування потужностей тощо.\n"
 "Їх можна визначити за допомогою меню налаштування."
 
 #. module: mrp
@@ -3426,9 +3477,11 @@ msgstr ""
 msgid ""
 "Manufacturing readiness for this MO, as per bill of material configuration:\n"
 "            * Ready: The material is available to start the production.\n"
-"            * Waiting: The material is not available to start the production.\n"
+"            * Waiting: The material is not available to start the "
+"production.\n"
 msgstr ""
-"Виробнича готовність до цього MO відповідно до конфігурації технічної документації:\n"
+"Виробнича готовність до цього MO відповідно до конфігурації технічної "
+"документації:\n"
 "            * Готовий: Матеріал доступний для початку виробництва.\n"
 "            * Очікування: Матеріал недоступний для початку виробництва.\n"
 
@@ -3609,6 +3662,12 @@ msgstr "Тип наступної дії"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
 msgstr "Немає дозамовлення"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "No BoM Found"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -3814,11 +3873,15 @@ msgstr "Ціль OEE"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
-"                                install the IoT App on a computer that is on the same local network as the\n"
-"                                barcode operator and configure the routing of the reports."
+"                                install the IoT App on a computer that is on "
+"the same local network as the\n"
+"                                barcode operator and configure the routing "
+"of the reports."
 msgstr ""
-"Odoo за замовчуванням відкриває попередній перегляд PDF. Якщо ви хочете друкувати миттєво, \n"
-"інсталюйте додаток IoT на комп’ютері, який знаходиться в тій самій локальній мережі, що й оператор штрих-коду, \n"
+"Odoo за замовчуванням відкриває попередній перегляд PDF. Якщо ви хочете "
+"друкувати миттєво, \n"
+"інсталюйте додаток IoT на комп’ютері, який знаходиться в тій самій локальній "
+"мережі, що й оператор штрих-коду, \n"
 "і налаштуйте маршрутизацію звітів."
 
 #. module: mrp
@@ -3886,10 +3949,12 @@ msgstr "Тип операції"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
-"                Each operation is done at a specific Work Center and has a specific duration."
+"                Each operation is done at a specific Work Center and has a "
+"specific duration."
 msgstr ""
 "Операції визначають, що необхідно зробити, щоб реалізувати Робочий наказ.\n"
-"                Кожна операція виконується на конкретному робочому центрі та  має конкретну тривалість."
+"                Кожна операція виконується на конкретному робочому центрі "
+"та  має конкретну тривалість."
 
 #. module: mrp
 #. odoo-python
@@ -4798,8 +4863,7 @@ msgstr "Референс повинен бути унікальний на ко�
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
-msgid ""
-"Reference of the document that generated this production order request."
+msgid "Reference of the document that generated this production order request."
 msgstr ""
 "Довідка про документ, який сформував цей запит на замовлення на виробництво."
 
@@ -4935,8 +4999,8 @@ msgstr ""
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Заплановано до поперелнього робочого замовлення, заплановано з %(start)s до "
-"%(end)s"
+"Заплановано до поперелнього робочого замовлення, заплановано з %(start)s до %"
+"(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -5154,8 +5218,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
-"Деякі ваші побічні товари відстежуються, вам необхідно вказати замовлення на"
-" виробництво, щоби отримати правильні побічні товари."
+"Деякі ваші побічні товари відстежуються, вам необхідно вказати замовлення на "
+"виробництво, щоби отримати правильні побічні товари."
 
 #. module: mrp
 #. odoo-python
@@ -5171,11 +5235,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders are already done, so you cannot unplan this manufacturing order.\n"
+"Some work orders are already done, so you cannot unplan this manufacturing "
+"order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Деякі робочі замовлення вже виконано, тому ви не можете відмінити це замовлення на виробництво.\n"
+"Деякі робочі замовлення вже виконано, тому ви не можете відмінити це "
+"замовлення на виробництво.\n"
 "\n"
 "Було б прикро марнувати весь цей прогрес, правда?"
 
@@ -5183,11 +5249,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders have already started, so you cannot unplan this manufacturing order.\n"
+"Some work orders have already started, so you cannot unplan this "
+"manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Деякі робочі замовлення вже розпочато, тому ви не можете відмінити це замовлення на виробництво.\n"
+"Деякі робочі замовлення вже розпочато, тому ви не можете відмінити це "
+"замовлення на виробництво.\n"
 "\n"
 "Було б прикро марнувати весь цей прогрес, чи не так?"
 
@@ -5208,10 +5276,8 @@ msgstr "Конкретні потужності"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
-msgid ""
-"Specific number of pieces that can be produced in parallel per product."
-msgstr ""
-"Конкретна кількість одиниць, які можна виготовити паралельно на товар."
+msgid "Specific number of pieces that can be produced in parallel per product."
+msgstr "Конкретна кількість одиниць, які можна виготовити паралельно на товар."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -5551,8 +5617,8 @@ msgid ""
 "share must be less than or equal to 100."
 msgstr ""
 "Відсоток вартості готової продукції для цього рядка побічних товарів "
-"(поділений на кількість виробленої продукції). Загальна частка витрат на всі"
-" побічні товари має бути меншою або дорівнювати 100."
+"(поділений на кількість виробленої продукції). Загальна частка витрат на всі "
+"побічні товари має бути меншою або дорівнювати 100."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
@@ -5570,8 +5636,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
-"Запланована кінцева дата робочого замовлення не може бути пріоритетнішою ніж"
-" запланована дата початку. Виправте це, щоби зберегти робоче замовлення."
+"Запланована кінцева дата робочого замовлення не може бути пріоритетнішою ніж "
+"запланована дата початку. Виправте це, щоби зберегти робоче замовлення."
 
 #. module: mrp
 #. odoo-python
@@ -5608,11 +5674,11 @@ msgstr "Кількість до розбирання має бути позит�
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"The serial number %(number)s used for byproduct %(product_name)s has already"
-" been produced"
+"The serial number %(number)s used for byproduct %(product_name)s has already "
+"been produced"
 msgstr ""
-"Серійний номер %(number)s, що викорстовується для побічного товару, "
-"%(product_name)s вже виготовлено"
+"Серійний номер %(number)s, що викорстовується для побічного товару, %"
+"(product_name)s вже виготовлено"
 
 #. module: mrp
 #. odoo-python
@@ -5621,8 +5687,8 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
-"Серійний номер %(number)s, що використовується для компоненту %(component)s,"
-" вже спожито"
+"Серійний номер %(number)s, що використовується для компоненту %(component)s, "
+"вже спожито"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
@@ -5732,11 +5798,15 @@ msgstr "Це вартість, визначена на товарі."
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid ""
-"This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                You can filter on the product to see all the past movements for the product."
+"This menu gives you the full traceability of inventory operations on a "
+"specific product.\n"
+"                You can filter on the product to see all the past movements "
+"for the product."
 msgstr ""
-"Це меню дає вам повну можливість відстеження операцій інвентаризації щодо певного товару.\n"
-"                Ви можете відфільтрувати товар, щоби побачити всі його минулі перемщення."
+"Це меню дає вам повну можливість відстеження операцій інвентаризації щодо "
+"певного товару.\n"
+"                Ви можете відфільтрувати товар, щоби побачити всі його "
+"минулі перемщення."
 
 #. module: mrp
 #. odoo-python
@@ -5809,8 +5879,8 @@ msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
 "first time when there aren't any work orders yet"
 msgstr ""
-"Час у хвилинах:- В ручному режимі, використаний час- В автоматичному режимі,"
-" передбачається вперше, коли ще немає замовлень на роботу"
+"Час у хвилинах:- В ручному режимі, використаний час- В автоматичному режимі, "
+"передбачається вперше, коли ще немає замовлень на роботу"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6018,8 +6088,7 @@ msgstr "Тип дії виключення на записі."
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Unable to split with more than the quantity to produce."
-msgstr ""
-"Неможливо розділити кількість, що перевищує необхідну для виробництва."
+msgstr "Неможливо розділити кількість, що перевищує необхідну для виробництва."
 
 #. module: mrp
 #. odoo-javascript
@@ -6229,8 +6298,8 @@ msgstr "Підтвердити"
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 msgid ""
 "Values cannot be set and validated because a Lot/Serial Number needs to be "
-"specified for a tracked product that is having its consumed amount "
-"increased:%(products)s"
+"specified for a tracked product that is having its consumed amount increased:"
+"%(products)s"
 msgstr ""
 
 #. module: mrp
@@ -6293,8 +6362,7 @@ msgstr "Очікує компонентів"
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Очікує попереднього робочого замовлення, запланованого з %(start)s до "
-"%(end)s"
+"Очікує попереднього робочого замовлення, запланованого з %(start)s до %(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6349,8 +6417,8 @@ msgstr "Історія бесіди на сайті"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a operation type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same"
-" operation type. That allows to define stock rules which trigger different "
+"try to create a Manufacturing Order for that product using a BoM of the same "
+"operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
 "Коли у закупівлі є маршрут \"виробляти\" з набором типів операцій, він "
@@ -6363,11 +6431,15 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
 msgid ""
-"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+"When activated, then the registration of consumption for that component is "
+"recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually "
+"on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
-"Якщо активовано, реєстрація споживання для цього компонента реєструється виключно вручну.\n"
-"Якщо не активовано, а споживання будь-якого з компонентів редагується вручну під час замовлення на виробництво, Odoo також припускає споживання вручну."
+"Якщо активовано, реєстрація споживання для цього компонента реєструється "
+"виключно вручну.\n"
+"Якщо не активовано, а споживання будь-якого з компонентів редагується вручну "
+"під час замовлення на виробництво, Odoo також припускає споживання вручну."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6410,8 +6482,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
-"Помічник у разі споживання конкретного компоненту або при попередженні, який"
-" був використаний для MO (пов'язаного зі специфікацією)"
+"Помічник у разі споживання конкретного компоненту або при попередженні, який "
+"був використаний для MO (пов'язаного зі специфікацією)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6571,10 +6643,13 @@ msgstr "Робочий центр"
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+"                    Operations are defined in the bill of materials or added "
+"in the manufacturing order directly."
 msgstr ""
-"Робочі замовлення - це операції, що виконуються як частина замовлення на виробництво.\n"
-"                   Операції визначаються у специфікації або додаються безпосередньо до замовлення на виробництво."
+"Робочі замовлення - це операції, що виконуються як частина замовлення на "
+"виробництво.\n"
+"                   Операції визначаються у специфікації або додаються "
+"безпосередньо до замовлення на виробництво."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6583,10 +6658,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"            Operations are defined in the bill of materials or added in the manufacturing order directly."
+"            Operations are defined in the bill of materials or added in the "
+"manufacturing order directly."
 msgstr ""
-"Робочі замовлення - це операції, які виконуються як частина замовлення на виробництво.\n"
-"            Операції визначаються в специфікаціях або додаються безпосередньо у замовленні на виробництво."
+"Робочі замовлення - це операції, які виконуються як частина замовлення на "
+"виробництво.\n"
+"            Операції визначаються в специфікаціях або додаються "
+"безпосередньо у замовленні на виробництво."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6713,7 +6791,8 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"Ви не можете видалити специфікацію із запущеними замовленнями на виробництво.\n"
+"Ви не можете видалити специфікацію із запущеними замовленнями на "
+"виробництво.\n"
 "Будь ласка, закрийте або скасуйте це спочатку."
 
 #. module: mrp
@@ -6751,8 +6830,7 @@ msgstr "Ви можете об'єднати виробництво лише з �
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"You cannot change the workcenter of a work order that is in progress or "
-"done."
+"You cannot change the workcenter of a work order that is in progress or done."
 msgstr ""
 "Ви не можете змінити робочий центр чи робоче замовлення, яке перебуває в "
 "процесі чи вже виконане."
@@ -6774,7 +6852,8 @@ msgstr "Ви не можете створити циклічну залежні�
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Ви не можете видалити замовлення на розбирання, якщо стан - \"Готово\"."
+msgstr ""
+"Ви не можете видалити замовлення на розбирання, якщо стан - \"Готово\"."
 
 #. module: mrp
 #. odoo-python
@@ -6835,19 +6914,26 @@ msgid ""
 "                            Please confirm it has been done on purpose.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Please review your component consumption or ask a manager to validate\n"
-"                            <span invisible=\"mrp_production_count != 1\">this manufacturing order</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
+"                            Please review your component consumption or ask "
+"a manager to validate\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">this manufacturing order</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
-"Ви спожили кількість, яка відрізняється від очікуваної для наступних товарів.\n"
+"Ви спожили кількість, яка відрізняється від очікуваної для наступних "
+"товарів.\n"
 "                        <b invisible=\"consumption == 'strict'\">\n"
 "                            Підтвердіть, що це було зроблено навмисно.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Будь ласка, перевірте споживання компонентів або попросіть менеджера перевірити\n"
-"                            <span invisible=\"mrp_production_count != 1\">це замовлення на виробництво</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">ці замовлення на виробництво</span>.\n"
+"                            Будь ласка, перевірте споживання компонентів або "
+"попросіть менеджера перевірити\n"
+"                            <span invisible=\"mrp_production_count != 1\">це "
+"замовлення на виробництво</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">ці "
+"замовлення на виробництво</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -6865,20 +6951,20 @@ msgid ""
 "Productivity Losses."
 msgstr ""
 "Потрібно визначити щонайменше одну втрату продуктивності в категорії "
-"\"Продуктивність\". Створіть його з додатку Виробництво, меню: "
-"Налаштування/Втрати продуктивності."
+"\"Продуктивність\". Створіть його з додатку Виробництво, меню: Налаштування/"
+"Втрати продуктивності."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
-" Productivity Losses."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
 msgstr ""
 "Потрібно визначити принаймні одну втрату продуктивності в категорії "
-"\"Продуктивність\". Створіть його з додатку Виробництво, меню: "
-"Налаштування/Втрати продуктивності."
+"\"Продуктивність\". Створіть його з додатку Виробництво, меню: Налаштування/"
+"Втрати продуктивності."
 
 #. module: mrp
 #. odoo-python
@@ -6902,8 +6988,8 @@ msgstr "Вам необхідно надати партію для готово�
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
 
 #. module: mrp

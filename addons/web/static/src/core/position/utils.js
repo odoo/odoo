@@ -129,10 +129,12 @@ function computePosition(popper, target, { container, margin, position }) {
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
+        const result = { direction: DIRECTIONS[d], variant: VARIANTS[v] };
         const vertical = ["t", "b"].includes(d);
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
-        const variantValue = variantsData[variantPrefix + v];
+        let variantValue = variantsData[variantPrefix + v];
+        let malus = null;
 
         if (containerRestricted) {
             const [directionSize, variantSize] = vertical
@@ -155,46 +157,57 @@ function computePosition(popper, target, { container, margin, position }) {
                 }
             }
 
-            // Abort if outside container boundaries
-            const directionOverflow =
-                Math.ceil(directionValue) < Math.floor(directionMin) ||
-                Math.floor(directionValue + directionSize) > Math.ceil(directionMax);
-            const variantOverflow =
-                Math.ceil(variantValue) < Math.floor(variantMin) ||
-                Math.floor(variantValue + variantSize) > Math.ceil(variantMax);
-            if (directionOverflow || variantOverflow) {
-                return null;
+            // Compute overflows
+            let directionOverflow = 0;
+            if (Math.floor(directionValue) < Math.ceil(directionMin)) {
+                directionOverflow = Math.floor(directionValue) - Math.ceil(directionMin);
+            } else if (Math.ceil(directionValue + directionSize) > Math.floor(directionMax)) {
+                directionOverflow =
+                    Math.ceil(directionValue + directionSize) - Math.floor(directionMax);
             }
+            let variantOverflow = 0;
+            if (Math.floor(variantValue) < Math.ceil(variantMin)) {
+                variantOverflow = Math.floor(variantValue) - Math.ceil(variantMin);
+            } else if (Math.ceil(variantValue + variantSize) > Math.floor(variantMax)) {
+                variantOverflow = Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
+            }
+
+            // All non zero values of variantOverflow lead to the
+            // same malus value since it can be corrected by shifting
+            malus = Math.abs(directionOverflow) + (variantOverflow && 1);
+
+            // Apply variant offset
+            variantValue -= variantOverflow;
+            result.variantOffset = -variantOverflow;
         }
 
         const positioning = vertical
             ? { top: directionValue, left: variantValue }
             : { top: variantValue, left: directionValue };
-        return {
-            // Subtract the offsets of the containing block (relative to the
-            // viewport). It can be done like that because the style top and
-            // left were reset to 0px in `reposition`
-            // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
-            top: positioning.top - popBox.top,
-            left: positioning.left - popBox.left,
-            direction: DIRECTIONS[d],
-            variant: VARIANTS[v],
-        };
+        // Subtract the offsets of the containing block (relative to the
+        // viewport). It can be done like that because the style top and
+        // left were reset to 0px in `reposition`
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
+        result.top = positioning.top - popBox.top;
+        result.left = positioning.left - popBox.left;
+        return { result, malus };
     }
 
     // Find best solution
+    const matches = [];
     for (const d of directions) {
         for (const v of variants) {
             const match = getPositioningData(d, v, true);
-            if (match) {
-                // Position match have been found.
-                return match;
+            if (!match.malus) {
+                // A perfect position match has been found.
+                return match.result;
             }
+            matches.push(match);
         }
     }
 
-    // Fallback to default position if no best solution found
-    return getPositioningData();
+    // Settle for the first match with the least malus
+    return matches.sort((a, b) => a.malus - b.malus)[0].result;
 }
 
 /**

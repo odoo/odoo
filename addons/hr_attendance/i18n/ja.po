@@ -1,30 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_attendance
-# 
+#
 # Translators:
 # Junko Augias, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-10-11 02:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "\"チェックアウト\"時間は\"チェックイン\"時間より早くすることはできません。"
+msgstr ""
+"\"チェックアウト\"時間は\"チェックイン\"時間より早くすることはできません。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -40,7 +41,9 @@ msgstr "'ドキュメンテーション'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
-msgid "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
+"title=\"Period\"/>"
 msgstr ""
 "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
 "title=\"Period\"/>"
@@ -62,10 +65,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Not available\">\n"
 "                                    </span>"
 
 #. module: hr_attendance
@@ -148,10 +153,12 @@ msgstr "有効な従業員"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid ""
-"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"Add a few employees to be able to select an employee here and perform his "
+"check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"ここで従業員を選択し、チェックイン/チェックアウトを実行できるように、何名かの従業員を追加します。\n"
+"ここで従業員を選択し、チェックイン/チェックアウトを実行できるように、何名かの"
+"従業員を追加します。\n"
 "従業員を作成するには、従業員メニューに移動します。"
 
 #. module: hr_attendance
@@ -186,7 +193,9 @@ msgstr "ユーザがOdooからチェックイン/アウトできるようにし�
 msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "counted, in benefit of the company"
-msgstr "会社の利益のために、時間外労働がカウントされない時間（就業時間前後）を設ける。"
+msgstr ""
+"会社の利益のために、時間外労働がカウントされない時間（就業時間前後）を設け"
+"る。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -368,7 +377,9 @@ msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
 "additional tolerance. Does not apply to employees with a flexible working "
 "schedule."
-msgstr "従業員の勤務スケジュールに基づく自動退勤。フレックスタイム制の従業員には適用されません。"
+msgstr ""
+"従業員の勤務スケジュールに基づく自動退勤。フレックスタイム制の従業員には適用"
+"されません。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -453,7 +464,9 @@ msgstr "休暇として変換可能　(休暇設定参照)"
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
-msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s以降にチェックアウトしていません"
+msgstr ""
+"%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s以降に"
+"チェックアウトしていません"
 
 #. module: hr_attendance
 #. odoo-python
@@ -461,7 +474,9 @@ msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業�
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
-msgstr "%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s にすでに出勤しています。"
+msgstr ""
+"%(empl_name)sの新しい勤怠記録を作成できません。従業員は%(datetime)s にすでに"
+"出勤しています。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -471,7 +486,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"%(empl_name)sで退勤を実行できません。対応する出勤が見つかりませんでした。あなたの勤怠はおそらく人事によって手動で変更されています。"
+"%(empl_name)sで退勤を実行できません。対応する出勤が見つかりませんでした。あな"
+"たの勤怠はおそらく人事によって手動で変更されています。"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -665,12 +681,8 @@ msgid "Define the way the user will be identified by the application."
 msgstr "アプリケーションでユーザを識別する方法を定義"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Departement"
-msgstr "部門"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
 msgstr "部門"
 
@@ -713,7 +725,8 @@ msgstr "表示時間"
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
 "Do not have access, user cannot edit the attendances that are not his own."
-msgstr "アクセス権がない場合、ユーザは自分以外の勤怠を編集することはできません。"
+msgstr ""
+"アクセス権がない場合、ユーザは自分以外の勤怠を編集することはできません。"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -926,9 +939,11 @@ msgstr "手動で選択"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
-"If checked, days not covered by an attendance will be visible in the Report."
-" Does not apply to employees with a flexible working schedule."
-msgstr "チェックした場合、出勤日数以外の日数がレポートに表示されます。フレックスタイム制の社員には適用されません。"
+"If checked, days not covered by an attendance will be visible in the Report. "
+"Does not apply to employees with a flexible working schedule."
+msgstr ""
+"チェックした場合、出勤日数以外の日数がレポートに表示されます。フレックスタイ"
+"ム制の社員には適用されません。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1439,21 +1454,26 @@ msgstr "従業員の残業記録がここに表示されます。"
 msgid ""
 "The user set in Attendance will access the attendance of the employee "
 "through the dedicated app and will be able to edit them."
-msgstr "勤怠に設定されたユーザは、専用アプリから従業員の勤怠にアクセスし、編集することができます。"
+msgstr ""
+"勤怠に設定されたユーザは、専用アプリから従業員の勤怠にアクセスし、編集するこ"
+"とができます。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
 msgid ""
 "The user will have access to his own attendances on his user / employee "
 "profile"
-msgstr "ユーザは、ユーザ/従業員プロファイルで自分の出勤記録にアクセスできます。"
+msgstr ""
+"ユーザは、ユーザ/従業員プロファイルで自分の出勤記録にアクセスできます。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
 msgid ""
 "The user will have access to the attendance records and reporting of "
 "employees where he's set as an attendance manager"
-msgstr "ユーザは、勤怠管理者として設定された従業員の勤怠記録とレポートにアクセスできます。"
+msgstr ""
+"ユーザは、勤怠管理者として設定された従業員の勤怠記録とレポートにアクセスでき"
+"ます。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1461,14 +1481,16 @@ msgstr "ユーザは、勤怠管理者として設定された従業員の勤怠
 msgid ""
 "This attendance was automatically checked out because the employee exceeded "
 "the allowed time for their scheduled work hours."
-msgstr "この出退勤記録は、従業員が予定された勤務時間の許容範囲を超えたため、自動的に退勤処理されました。"
+msgstr ""
+"この出退勤記録は、従業員が予定された勤務時間の許容範囲を超えたため、自動的に"
+"退勤処理されました。"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
-"This attendance was automatically created to cover an unjustified absence on"
-" that day."
+"This attendance was automatically created to cover an unjustified absence on "
+"that day."
 msgstr "この勤務は、その日の無断欠席を補うために自動的に作成されました。"
 
 #. module: hr_attendance
@@ -1685,3 +1707,6 @@ msgstr "または"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "オプションPINコードで"
+
+#~ msgid "Departement"
+#~ msgstr "部門"
