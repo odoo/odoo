@@ -7,6 +7,7 @@
             <list editable="bottom" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name" placeholder="e.g. Developer"/>
+                <field name="user_ids" widget="many2many_avatar_user"/>
                 <field name="color" widget="color_picker" optional="show"/>
             </list>
         </field>
@@ -22,6 +23,7 @@
                     <group>
                         <field name="active" invisible="1"/>
                         <field name="name"/>
+                        <field name="user_ids" widget="many2many_avatar_user"/>
                         <field name="color" widget="color_picker"/>
                     </group>
                 </sheet>
@@ -54,7 +56,11 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="user_ids"/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="groupby_team_members" string="Team Members" context="{'group_by': 'user_ids'}"/>
+                </group>
             </search>
         </field>
     </record>
