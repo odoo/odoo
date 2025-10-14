@@ -277,6 +277,22 @@ $-o-bg-colors-custom: null;
     margin-bottom: var(--alert-margin-bottom, $alert-margin-bottom);
 }
 
+// Checkboxes and Radios - transitions and animations
+// ============================================================================
+.form-check-input {
+    transition: background-color 250ms ease, border-color 200ms ease;
+}
+
+.form-check-input[type="checkbox"]:checked {
+    background-size: 100% 100%;
+    animation: check-grow 300ms ease-in-out;
+}
+
+@keyframes check-grow {
+    from { background-size: 0 0; }
+    to { background-size: 100% 100%; }
+}
+
 // Switches
 // ============================================================================
 .form-switch {
