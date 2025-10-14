@@ -1000,6 +1000,9 @@ class StockPicking(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.parent_id.name')
     def _compute_picking_warning_text(self):
+        if not self.env.user.has_group('stock.group_warning_stock'):
+            self.picking_warning_text = ''
+            return
         for picking in self:
             text = ''
             if partner_msg := picking.partner_id.picking_warn_msg:
