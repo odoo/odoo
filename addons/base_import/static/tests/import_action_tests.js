@@ -315,6 +315,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
     QUnit.test("Import view: UI before file upload", async function (assert) {
         const templateURL = "/myTemplateURL.xlsx";
+        const secondTemplateURL = "/mySecondTemplateURL.xlsx";
 
         await createImportAction({
             "partner/get_import_templates": (route, args) => {
@@ -324,6 +325,10 @@ QUnit.module("Base Import Tests", (hooks) => {
                         label: "Some Import Template",
                         template: templateURL,
                     },
+                    {
+                        label: "Another Import Template",
+                        template: secondTemplateURL,
+                    }
                 ]);
             },
             "base_import.import/create": (route, args) => {
@@ -334,13 +339,27 @@ QUnit.module("Base Import Tests", (hooks) => {
 
         assert.containsOnce(target, ".o_import_action", "import view is displayed");
         assert.strictEqual(
-            target.querySelector(".o_nocontent_help .btn-outline-primary").textContent,
+            target.querySelectorAll(".o_nocontent_help .btn-outline-primary").length,
+            2,
+            "there are two import template buttons"
+        )
+        assert.strictEqual(
+            target.querySelectorAll(".o_nocontent_help .btn-outline-primary")[0].textContent,
             " Some Import Template"
         );
         assert.strictEqual(
-            target.querySelector(".o_nocontent_help .btn-outline-primary").href,
+            target.querySelectorAll(".o_nocontent_help .btn-outline-primary")[0].href,
             window.location.origin + templateURL,
-            "button has the right download url"
+            "1st button has the right download url"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_nocontent_help .btn-outline-primary")[1].textContent,
+            " Another Import Template"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_nocontent_help .btn-outline-primary")[1].href,
+            window.location.origin + secondTemplateURL,
+            "2nd button has the right download url"
         );
         assert.verifySteps(["partner/get_import_templates", "base_import.import/create"]);
         // Contains invisible mobile buttons
