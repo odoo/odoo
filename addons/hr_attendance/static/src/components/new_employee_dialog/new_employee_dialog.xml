@@ -12,7 +12,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Select Employee Without Badge</label>
-                    <div class="o_select_employee">
+                    <div class="o_select_employee align-items-start">
                         <div class="o_select_employee_display form-control">
                             <img t-if="state.value" class="d-flex rounded" t-attf-src="/web/image/hr.employee.public/{{state.value.id}}/avatar_128"/>
                             <div class="o_select_employee_option p-0">
@@ -20,7 +20,23 @@
                             </div>
                         </div>
                         <input type="text" t-model="state.badgeId" class="form-control" placeholder="Enter Badge Number"/>
-                        <button class="btn btn-primary" style="min-width: fit-content;" t-on-click="onSetBadge">Set the Badge</button>
+                        <div class="d-flex flex-column gap-2">
+                            <button class="btn btn-primary"
+                                style="min-width: max-content;"
+                                t-on-click="onSetBadge">
+                                Set the Badge
+                            </button>                            
+                            <a
+                                title="Print"
+                                role="button"
+                                class="btn btn-secondary w-100"
+                                t-att-href="`/hr_attendance/print_badge?employee_id=${state.value?.id}&amp;token=${props.token}`"
+                                target="_self"
+                                t-if="state.value and state.employeeHasBadge"
+                            >
+                                Print It
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
