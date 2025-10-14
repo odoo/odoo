@@ -203,3 +203,16 @@ registry.category("web_tour.tours").add("test_cross_exclusion_attribute_values",
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_custom_attribute_alone_displayed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Only Custom"),
+            ProductConfigurator.fillCustomAttribute("Filling"),
+            ProductConfigurator.selectedCustomAttribute("Filling"),
+            Dialog.confirm(),
+            Chrome.endTour(),
+        ].flat(),
+});
