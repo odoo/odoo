@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-15 18:36+0000\n"
-"PO-Revision-Date: 2025-08-27 06:20+0000\n"
+"PO-Revision-Date: 2025-10-14 10:36+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
 "website_slides/ru/>\n"
@@ -194,6 +194,14 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Здравствуйте!<br/><br/>\n"
+"        Вы были зачислены на новый курс: <t t-out="
+"\"object.channel_id.name or ''\">Основы садоводства</t>.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
@@ -207,6 +215,14 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Здравствуйте!<br/><br/>\n"
+"        Вас пригласили пройти курс: <t t-out=\"object.channel_id.name or ''\""
+">Основы садоводства</t>.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_completed
@@ -820,6 +836,8 @@ msgid ""
 "<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
 "check\"/> Completed</span></small>"
 msgstr ""
+"<small><span class=\"badge text-bg-success fw-normal\"><i class="
+"\"fa fa-check\"/> Завершено</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -828,12 +846,17 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-flag\"/> 10 xp\n"
 "                        </span>"
 msgstr ""
+"<span class=\"badge fw-bold m-1 text-bg-warning\">\n"
+"                            <i class=\"fa fa-fw fa-flag\"/> 10 XP\n"
+"                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid ""
 "<span class=\"badge text-bg-info badge-arrow-right fw-normal m-1\">New</span>"
 msgstr ""
+"<span class=\"badge text-bg-info badge-arrow-right fw-normal m-1\""
+">Новый</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -841,6 +864,8 @@ msgid ""
 "<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Add Quiz</"
 "span>"
 msgstr ""
+"<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Добавить "
+"тест</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -848,11 +873,13 @@ msgid ""
 "<span class=\"badge text-bg-success fw-normal m-1\"><span>Preview</span></"
 "span>"
 msgstr ""
+"<span class=\"badge text-bg-success fw-normal m-1\""
+"><span>Предпросмотр</span></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"badge text-bg-success fw-normal m-1\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-success fw-normal m-1\">Предпросмотр</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -860,6 +887,8 @@ msgid ""
 "<span class=\"badge text-bg-success pull-right\"><i class=\"fa fa-check\"/> "
 "Completed</span>"
 msgstr ""
+"<span class=\"badge text-bg-success pull-right\"><i class=\"fa fa-check\"/> "
+"Завершено</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -926,6 +955,8 @@ msgid ""
 "<span class=\"o_wslides_arrow badge bg-secondary mt-2 ms-2\">New Content</"
 "span>"
 msgstr ""
+"<span class=\"o_wslides_arrow badge bg-secondary mt-2 ms-2\">Новый "
+"материал</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -975,6 +1006,8 @@ msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Invited\">Invited</"
 "span>"
 msgstr ""
+"<span class=\"text-muted text-truncate mw-100\" title=\"Invited\""
+">Приглашен</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -982,12 +1015,15 @@ msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Ongoing\">Ongoing</"
 "span>"
 msgstr ""
+"<span class=\"text-muted text-truncate mw-100\" title=\"Ongoing\">В "
+"процессе</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Total\">Total</span>"
 msgstr ""
+"<span class=\"text-muted text-truncate mw-100\" title=\"Total\">Всего</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -1056,6 +1092,16 @@ msgid ""
 ">\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
+"label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>"
+"\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class="
+"\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>"
+"\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -1063,6 +1109,8 @@ msgid ""
 "<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
 "mw-100\" title=\"Finished\">Finished</span>"
 msgstr ""
+"<span name=\"done_members_count_label\" class=\"text-muted text-truncate mw-"
+"100\" title=\"Finished\">Завершено</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1155,6 +1203,8 @@ msgstr "<strong>Посетителей пока нет!</strong>"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<strong>Sharing is caring!</strong> Your email(s) will arrive shortly."
 msgstr ""
+"<strong>Спасибо, что поделились!</strong> Письма скоро придут на указанный "
+"адрес."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -1631,7 +1681,7 @@ msgstr "Вы уверены, что хотите удалить эту кате�
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 msgid "Are you sure you want to delete this question \"<strong>%s</strong>\"?"
-msgstr ""
+msgstr "Вы действительно хотите удалить вопрос «<strong>%s</strong>»?"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2333,7 +2383,7 @@ msgstr "Скопировано"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.js:0
 msgid "Copy Embed Code"
-msgstr ""
+msgstr "Скопировать код для вставки"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2560,13 +2610,13 @@ msgstr "Свойства обложки"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Create New Category \""
-msgstr ""
+msgstr "Создать новую категорию «"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Create New Tag \""
-msgstr ""
+msgstr "Создать новый тег «"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_tag
@@ -2593,13 +2643,13 @@ msgstr "Создание нового контента для вашего эл�
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 msgid "Create this tag \""
-msgstr ""
+msgstr "Создать следующий тег «"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml:0
 msgid "Create this tag group\""
-msgstr ""
+msgstr "Создать следующую группу тегов «"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
@@ -2656,7 +2706,7 @@ msgstr "Дата (от старой до новой)"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "Default training image"
-msgstr ""
+msgstr "Изображение по умолчанию"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_gamification_challenge__challenge_category
@@ -2812,7 +2862,7 @@ msgstr "Как вы думаете, хорошее ли имя у Гарри Г�
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.js:0
 msgid "Do you want to install \"%s\"?"
-msgstr ""
+msgstr "Установить «%s»?"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_5_3_question_0
@@ -3493,7 +3543,7 @@ msgstr "Как найти качественную древесину"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
 msgid "How to plant a potted.list"
-msgstr ""
+msgstr "Как сажать комнатные растения"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3727,7 +3777,7 @@ msgstr "Установите"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.js:0
 msgid "Installing \"%s\"..."
-msgstr ""
+msgstr "Устанавливается «%s»..."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_0
@@ -3737,7 +3787,7 @@ msgstr "Интересные факты"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
 msgid "Interesting List Facts"
-msgstr ""
+msgstr "Интересные факты о списках"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
@@ -4133,12 +4183,12 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "List Infographic"
-msgstr ""
+msgstr "Инфографика списка"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
 msgid "List planting in hanging bottles on wall"
-msgstr ""
+msgstr "Список для посадки растений в подвесных бутылках на стене"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5267,7 +5317,7 @@ msgstr "Сохранить"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Save and Publish"
-msgstr ""
+msgstr "Сохранить и опубликовать"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5354,25 +5404,25 @@ msgstr "Выберите вручную"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Select or create a category"
-msgstr ""
+msgstr "Выберите или создайте категорию"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js:0
 msgid "Select or create a tag"
-msgstr ""
+msgstr "Выберите или создайте тег"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js:0
 msgid "Select or create a tag group"
-msgstr ""
+msgstr "Выберите или создайте группу тегов"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.xml:0
 msgid "Select or create tags"
-msgstr ""
+msgstr "Выберите или создайте теги"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5530,19 +5580,19 @@ msgstr "Поделиться в WhatsApp"
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 msgid "Share on X"
-msgstr ""
+msgstr "Поделиться в X"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 msgid "Share this Content"
-msgstr ""
+msgstr "Поделиться материалом"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 msgid "Share this Course"
-msgstr ""
+msgstr "Поделиться курсом"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5697,7 +5747,7 @@ msgstr "Начать курс"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml:0
 msgid "Start at Page"
-msgstr ""
+msgstr "Начать со страницы"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -5991,6 +6041,7 @@ msgid ""
 "The video link to input here can be obtained by using the 'share' button in "
 "the Vimeo interface."
 msgstr ""
+"Ссылку на видео можно получить, нажав кнопку «Поделиться» в интерфейсе Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -6145,6 +6196,10 @@ msgid ""
 "            Including regular documents (Google Doc, .docx), Sheets (Google "
 "Sheet, .xlsx), PowerPoints, ..."
 msgstr ""
+"Через Google Drive поддерживаются наиболее распространенные типы документов."
+"\n"
+"            Включая текстовые документы (Google Docs, .docx), таблицы ("
+"Google Sheets, .xlsx), презентации (PowerPoint) и др."
 
 #. module: website_slides
 #. odoo-javascript
@@ -6939,7 +6994,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "Your email(s) will arrive shortly."
-msgstr ""
+msgstr "Ваше письмо скоро придет."
 
 #. module: website_slides
 #. odoo-python
@@ -7033,7 +7088,7 @@ msgstr "копировать"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "course"
-msgstr ""
+msgstr "курс"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -7202,6 +7257,10 @@ msgid ""
 "                Your video will never come up in the search results nor on "
 "your channel."
 msgstr ""
+"Настройка конфиденциальности Vimeo «Приватное» означает, что это видео может "
+"быть просмотрено только пользователями, у которых есть ссылка на него.\n"
+"                Ваше видео не будет отображаться в результатах поиска или на "
+"вашем канале."
 
 #. module: website_slides
 #. odoo-javascript
