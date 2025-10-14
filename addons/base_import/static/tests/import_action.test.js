@@ -256,12 +256,16 @@ describe("Import view", () => {
     test.tags("desktop");
     test("UI before file upload", async () => {
         const templateURL = "/myTemplateURL.xlsx";
+        const secondTemplateURL = "/mySecondTemplateURL.xlsx";
 
         redirect("/odoo");
 
         onRpc("partner", "get_import_templates", ({ route }) => {
             expect.step(route);
-            return [{ label: "Some Import Template", template: templateURL }];
+            return [
+              { label: "Some Import Template", template: templateURL },
+              { label: "Another Import Template", template: secondTemplateURL },
+            ];
         });
         onRpc("base_import.import", "create", ({ route }) => expect.step(route));
         await mountWebClient();
@@ -278,11 +282,19 @@ describe("Import view", () => {
             }
         );
         expect(".o_import_action").toHaveCount(1);
-        expect(".o_nocontent_help .btn-outline-primary").toHaveText("Some Import Template");
-        expect(".o_nocontent_help .btn-outline-primary").toHaveProperty(
-            "href",
-            "https://www.hoot.test" + templateURL
-        );
+        expect(".o_nocontent_help .btn-outline-primary").toHaveCount(2);
+        expect(
+          ".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary"
+        ).toHaveText("Some Import Template");
+        expect(
+          ".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary"
+        ).toHaveProperty("href", "https://www.hoot.test" + templateURL);
+        expect(
+          ".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary"
+        ).toHaveText("Another Import Template");
+        expect(
+          ".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary"
+        ).toHaveProperty("href", "https://www.hoot.test" + secondTemplateURL);
         expect(".o_control_panel button").toHaveCount(2);
     });
 
