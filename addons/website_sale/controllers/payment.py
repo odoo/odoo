@@ -61,12 +61,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         if not kwargs.get('amount'):
-            kwargs['amount'] = order_sudo.amount_total
+            kwargs['amount'] = order_sudo._get_amount_to_pay()
 
         compare_amounts = order_sudo.currency_id.compare_amounts
-        if compare_amounts(kwargs['amount'], order_sudo.amount_total):
+        if compare_amounts(kwargs['amount'], order_sudo._get_amount_to_pay()):
             raise ValidationError(_("The cart has been updated. Please refresh the page."))
-        if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
+        if compare_amounts(order_sudo.amount_paid, order_sudo._get_amount_to_pay()) == 0:
             raise UserError(_("The cart has already been paid. Please refresh the page."))
 
         if delay_token_charge := kwargs.get('flow') == 'token':

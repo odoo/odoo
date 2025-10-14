@@ -417,6 +417,11 @@
             t-if="website_sale_order and website_sale_order.website_order_line"
             t-attf-class="o_cart_total #{_cart_total_classes}"
         >
+            <div id="website_sale_checkout_amounts">
+                <t t-set="amount_total" t-value="website_sale_order.amount_total"/>
+                <t t-set="amount_untaxed" t-value="website_sale_order.amount_untaxed"/>
+                <t t-set="amount_tax" t-value="website_sale_order.amount_tax"/>
+            </div>
             <table class="table mb-0">
                 <tr
                     t-if="website_sale_order._has_deliverable_products()"
@@ -448,7 +453,7 @@
                         Subtotal
                     </td>
                     <td class="text-end border-0 pb-2 pe-0 pt-0">
-                        <span t-field="website_sale_order.amount_untaxed"
+                        <span t-out="amount_untaxed"
                               class="monetary_field"
                               style="white-space: nowrap;"
                               t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -457,7 +462,7 @@
                 <tr name="o_order_total_taxes">
                     <td colspan="2" class="text-muted border-0 p-0 pe-3 pb-2">Taxes</td>
                     <td class="text-end border-0 p-0 ps-3 pb-2">
-                        <span t-field="website_sale_order.amount_tax"
+                        <span t-out="amount_tax"
                               class="monetary_field"
                               style="white-space: nowrap;"
                               t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -466,7 +471,7 @@
                 <tr name="o_order_total" class="border-top">
                     <td colspan="2" class="border-0 ps-0 pt-2"><strong>Total</strong></td>
                     <td class="text-end border-0 px-0 pt-2">
-                        <strong t-field="website_sale_order.amount_total"
+                        <strong t-out="amount_total"
                                 class="monetary_field text-end p-0"
                                 t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                     </td>
