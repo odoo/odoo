@@ -50,6 +50,24 @@ export class PaymentPage extends Component {
     async startPayment() {
         this.selfOrder.paymentError = false;
         try {
+            if (this.selectedPaymentMethod.payment_terminal) {
+                const result = this.selfOrder.currentOrder.addPaymentline(
+                    this.selectedPaymentMethod
+                );
+                if (!result.status) {
+                    throw new Error(`Adding payment line failed: ${result.data}`);
+                }
+                const newPaymentLine = result.data;
+                try {
+                    const paymentSuccessful = await newPaymentLine.pay();
+                    if (!paymentSuccessful) {
+                        throw new Error("Payment terminal payment failed");
+                    }
+                } catch (err) {
+                    this.selfOrder.currentOrder.removePaymentline(newPaymentLine);
+                    throw err;
+                }
+            }
             await rpc(`/kiosk/payment/${this.selfOrder.config.id}/kiosk`, {
                 order: this.selfOrder.currentOrder.serializeForORM(),
                 access_token: this.selfOrder.access_token,

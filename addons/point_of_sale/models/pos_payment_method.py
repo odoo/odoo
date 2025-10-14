@@ -219,6 +219,14 @@ class PosPaymentMethod(models.Model):
             except UserError:
                 pm.default_qr = False
 
+    @api.model
+    def _allowed_methods_in_self_order(self):
+        # This method is overridden by payment terminal modules to
+        # allow their methods to be called from the Self Order Kiosk.
+        # It is defined here rather than in `pos_self_order` so that
+        # the payment terminal modules don't need to depend on it.
+        return []
+
     def get_qr_code(self, amount, free_communication, structured_communication, currency, debtor_partner):
         """ Generates and returns a QR-code
         """

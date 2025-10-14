@@ -1,6 +1,8 @@
 import { test, describe, expect } from "@odoo/hoot";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
+import { registry } from "@web/core/registry";
+import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
@@ -74,6 +76,32 @@ describe("initProducts", () => {
         store.computeAvailableCategories();
         expect(store.availableCategories).toHaveLength(4);
         expect(store.isCategoryAvailable(unAvailableCatg)).toBeEmpty();
+    });
+});
+
+describe("initHardware", () => {
+    test("adds kitchen printers", async () => {
+        const store = await setupSelfPosEnv();
+        store.kitchenPrinters = [];
+
+        store.initHardware();
+
+        expect(store.kitchenPrinters).toHaveLength(1);
+        expect(store.kitchenPrinters[0]).toBeInstanceOf(BasePrinter);
+    });
+
+    test("adds payment terminals", async () => {
+        const store = await setupSelfPosEnv();
+        const models = store.models;
+        const mockTerminalMethod = models["pos.payment.method"].create({
+            use_payment_terminal: "mock_terminal",
+        });
+        class MockTerminal {}
+        registry.category("electronic_payment_interfaces").add("mock_terminal", MockTerminal);
+
+        store.initHardware();
+
+        expect(mockTerminalMethod.payment_terminal).toBeInstanceOf(MockTerminal);
     });
 });
 
