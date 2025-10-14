@@ -197,17 +197,6 @@ class StockMove(models.Model):
         total_qty = sum(m._get_valued_qty() for m in self)
         return total_value / total_qty if total_qty else self.product_id.standard_price
 
-    @api.model
-    def _get_valued_types(self):
-        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
-        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
-        valued.
-
-        :returns: a list of `valued_type`
-        :rtype: list
-        """
-        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
-
     def _set_value(self, correction_quantity=None):
         """Set the value of the move.
 
