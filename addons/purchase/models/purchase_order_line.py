@@ -520,7 +520,8 @@ class PurchaseOrderLine(models.Model):
         if seller and (seller.product_uom_id or seller.product_tmpl_id.uom_id) != product_uom:
             uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
-        product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
+        tax_domain = self.env['account.tax']._check_company_domain(company_id)
+        product_taxes = product_id.supplier_taxes_id.filtered_domain(tax_domain)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
         if seller:
