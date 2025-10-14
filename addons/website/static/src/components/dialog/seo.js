@@ -492,6 +492,8 @@ export class OptimizeSEODialog extends Component {
                 'website_id': this.website.currentWebsite.id,
             },
         });
-        this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
+        this.website.goToWebsite({
+            path: data.seo_name ? this.url.replace(this.previousSeoName || this.seoNameDefault, data.seo_name) : this.url
+        });
     }
 }
