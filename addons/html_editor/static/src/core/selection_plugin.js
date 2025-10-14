@@ -207,6 +207,9 @@ export class SelectionPlugin extends Plugin {
         is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
 
+    callBacks = [];
+    frame = null;
+
     setup() {
         this.resetSelection();
         this.addGlobalDomListener("selectionchange", () => {
@@ -457,7 +460,12 @@ export class SelectionPlugin extends Plugin {
         const documentSelection =
             selection?.anchorNode && selection?.focusNode
                 ? Object.freeze({
-                      isCollapsed: selection.isCollapsed,
+                      get isCollapsed() {
+                          if (this.collapsed === undefined) {
+                              this.collapsed = selection.isCollapsed;
+                          }
+                          return this.collapsed;
+                      },
                       anchorNode: selection.anchorNode,
                       anchorOffset: selection.anchorOffset,
                       focusNode: selection.focusNode,
@@ -554,6 +562,21 @@ export class SelectionPlugin extends Plugin {
         );
     }
 
+    onNextFrame(callback) {
+        this.callBacks.push(callback);
+        if (!this.frame) {
+            this.frame = requestAnimationFrame(() => {
+                if (this.isDestroyed) {
+                    return;
+                }
+                this.frame = null;
+                const callBacks = this.callBacks;
+                this.callBacks = [];
+                callBacks.forEach((cb) => cb());
+            });
+        }
+    }
+
     /**
      * Set the selection in the editor.
      *
@@ -593,8 +616,21 @@ export class SelectionPlugin extends Plugin {
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (selection) {
             if (documentSelectionIsInEditable || selection.anchorNode === null) {
-                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-                this.activeSelection = this.makeActiveSelection(selection, true);
+                this.onNextFrame(() => {
+                    selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+                });
+                const range = new Range();
+                range.setStart(anchorNode, anchorOffset);
+                range.setEnd(focusNode, focusOffset);
+                this.activeSelection = this.makeActiveSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                    getRangeAt: () => range,
+                    rangeCount: 1,
+                });
+                // this.activeSelection = this.makeActiveSelection(selection, true);
             } else {
                 let range = new Range();
                 range.setStart(anchorNode, anchorOffset);
@@ -1037,7 +1073,10 @@ export class SelectionPlugin extends Plugin {
 
         const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
         // If selection includes a non-editable element, focusing editor will move cursor to different position.
-        if (!closestNonEditable(editableSelection.anchorNode) && !closestNonEditable(editableSelection.focusNode)) {
+        if (
+            !closestNonEditable(editableSelection.anchorNode) &&
+            !closestNonEditable(editableSelection.focusNode)
+        ) {
             // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
             this.editable.focus({ preventScroll: true });
         }

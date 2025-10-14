@@ -44,7 +44,7 @@ const blockTagNames = [
     "TH",
 ];
 
-const computedStyles = new WeakMap();
+const computedStyleDisplay = new WeakMap();
 
 /**
  * Return true if the given node is a block-level element, false otherwise.
@@ -70,13 +70,14 @@ export function isBlock(node) {
         return blockTagNames.includes(tagName);
     }
     // We won't call `getComputedStyle` more than once per node.
-    let style = computedStyles.get(node);
-    if (!style) {
-        style = node.ownerDocument.defaultView.getComputedStyle(node);
-        computedStyles.set(node, style);
+    let display = computedStyleDisplay.get(node);
+    if (display === undefined) {
+        const style = node.ownerDocument.defaultView.getComputedStyle(node);
+        display = style.display;
+        computedStyleDisplay.set(node, display);
     }
-    if (style.display) {
-        return !style.display.includes("inline") && style.display !== "contents";
+    if (display) {
+        return !display.includes("inline") && display !== "contents";
     }
     return blockTagNames.includes(tagName);
 }
