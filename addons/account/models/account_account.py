@@ -1637,7 +1637,7 @@ class AccountGroup(models.Model):
 
         self.flush_model()
         query = SQL("""
-            WITH relation AS (
+            WITH relation AS MATERIALIZED (
                 SELECT DISTINCT ON (child.id)
                        child.id AS child_id,
                        parent.id AS parent_id
