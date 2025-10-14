@@ -6430,7 +6430,7 @@ class AccountMove(models.Model):
             # No eligible method could be found; we can't generate the QR-code
             return None
 
-        unstruct_ref = self.ref if self.ref else self.name
+        unstruct_ref = self.payment_reference or self.name
         rslt = self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
 
         # We only set qr_code_method after generating the url; otherwise, it
