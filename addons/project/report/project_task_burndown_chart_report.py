@@ -66,7 +66,6 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         # to be able to reduce the number of treated records in the query by limiting them to the one corresponding to
         # the ids that are returned from this sub query.
         project_task_query = self.env['project.task']._search(task_specific_domain, **kwargs)
-        self.env.flush_query(project_task_query.subselect())
 
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
         # on `ir_model_fields` table.

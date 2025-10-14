@@ -252,8 +252,7 @@ class Query:
         self._ids = ids
 
     def __str__(self) -> str:
-        sql = self.select()
-        return f"<Query: {sql.code!r} with params: {sql.params!r}>"
+        return f"<Query: {self.select()!r}>"
 
     def __bool__(self):
         return bool(self.get_result_ids())

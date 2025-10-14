@@ -553,7 +553,10 @@ class BaseCase(case.TestCase):
         Cursor_execute = Cursor.execute
 
         def execute(self, query, params=None, log_exceptions=None):
-            actual_queries.append(query.code if isinstance(query, SQL) else query)
+            if isinstance(query, SQL):
+                assert params is None
+                query, params, _ = query._sql_tuple
+            actual_queries.append(query)
             return Cursor_execute(self, query, params, log_exceptions)
 
         if flush:

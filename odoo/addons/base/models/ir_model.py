@@ -89,8 +89,9 @@ def query_insert(cr, table, rows):
         SQL.identifier(table),
         SQL(",").join(map(SQL.identifier, cols)),
     )
-    assert not query.params
-    str_query = query.code + " VALUES %s RETURNING id"
+    str_query, params, _to_flush = query._sql_tuple
+    assert not params
+    str_query += " VALUES %s RETURNING id"
     params = [tuple(row[col] for col in cols) for row in rows]
     cr.execute_values(str_query, params)
     return [row[0] for row in cr.fetchall()]

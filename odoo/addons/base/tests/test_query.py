@@ -18,9 +18,9 @@ class QueryTestCase(BaseCase):
         alias = query.left_join("product_product", "user_id", "res_user", "id", "user_id")
         self.assertEqual(alias, 'product_product__user_id')
 
-        self.assertEqual(query.from_clause.code,
+        self.assertEqual(query.from_clause._sql_tuple[0],
             '"product_product" JOIN "product_template" AS "product_product__template" ON ("product_product"."product_template_id" = "product_product__template"."id") LEFT JOIN "res_user" AS "product_product__user_id" ON ("product_product"."user_id" = "product_product__user_id"."id")')
-        self.assertEqual(query.where_clause.code,
+        self.assertEqual(query.where_clause._sql_tuple[0],
             "1=1")
 
     def test_query_chained_explicit_joins(self):
@@ -32,9 +32,9 @@ class QueryTestCase(BaseCase):
         alias = query.left_join("product_product__template", "user_id", "res_user", "id", "user_id")
         self.assertEqual(alias, 'product_product__template__user_id')
 
-        self.assertEqual(query.from_clause.code,
+        self.assertEqual(query.from_clause._sql_tuple[0],
             '"product_product" JOIN "product_template" AS "product_product__template" ON ("product_product"."product_template_id" = "product_product__template"."id") LEFT JOIN "res_user" AS "product_product__template__user_id" ON ("product_product__template"."user_id" = "product_product__template__user_id"."id")')
-        self.assertFalse(query.where_clause.code)
+        self.assertFalse(query.where_clause._sql_tuple[0])
 
     def test_raise_missing_lhs(self):
         query = Query(None, 'product_product', SQL.identifier('product_product'))
@@ -61,16 +61,16 @@ class QueryTestCase(BaseCase):
 
     def test_table_expression(self):
         query = Query(None, 'foo', SQL.identifier('foo'))
-        from_clause = query.from_clause.code
+        from_clause = query.from_clause._sql_tuple[0]
         self.assertEqual(from_clause, '"foo"')
 
         query = Query(None, 'bar', SQL('(SELECT id FROM foo)'))
-        from_clause = query.from_clause.code
+        from_clause = query.from_clause._sql_tuple[0]
         self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
 
         query = Query(None, 'foo', SQL.identifier('foo'))
         query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
-        from_clause = query.from_clause.code
+        from_clause = query.from_clause._sql_tuple[0]
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
 
     def test_empty_set_result_ids(self):
@@ -78,7 +78,7 @@ class QueryTestCase(BaseCase):
         query.set_result_ids([])
         self.assertEqual(query.get_result_ids(), ())
         self.assertTrue(query.is_empty())
-        self.assertIn('SELECT', query.subselect().code, "subselect must contain SELECT")
+        self.assertIn('SELECT', query.subselect()._sql_tuple[0], "subselect must contain SELECT")
 
         query.add_where(SQL("x > 0"))
         self.assertTrue(query.is_empty(), "adding where clauses keeps the result empty")

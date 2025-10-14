@@ -397,7 +397,7 @@ class Cursor(BaseCursor):
     def mogrify(self, query, params=None) -> bytes:
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
-            query, params = query.code, query.params
+            query, params, _fields = query._sql_tuple
         return self._obj.mogrify(query, params)
 
     def execute(self, query, params=None, log_exceptions: bool = True) -> None:
@@ -405,9 +405,8 @@ class Cursor(BaseCursor):
 
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
-            query, params = query.code, query.params
-
-        if params and not isinstance(params, (tuple, list, dict)):
+            query, params, _fields = query._sql_tuple
+        elif params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
 
