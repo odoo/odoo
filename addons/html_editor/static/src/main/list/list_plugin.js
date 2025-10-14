@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     removeClass,
+    removeStyle,
     toggleClass,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -35,7 +36,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getTextColorOrClass } from "@html_editor/utils/color";
+import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
@@ -1098,9 +1099,14 @@ export class ListPlugin extends Plugin {
                         (n) => isElement(n) && closestElement(n, "LI") === listItem
                     ),
                 ]) {
-                    removeClass(node, "o_default_color");
+                    // Remove any color-related classes.
+                    const classesToRemove = [...node.classList].filter(
+                        (cls) => cls === "o_default_color" || TEXT_CLASSES_REGEX.test(cls)
+                    );
+                    removeClass(node, ...classesToRemove);
+
                     if (node.style.color) {
-                        node.style.color = "";
+                        removeStyle(node, "color");
                     }
                 }
 
@@ -1111,7 +1117,11 @@ export class ListPlugin extends Plugin {
                         list.classList.add("o_default_color");
                     }
                 }
-            } else if (color === "" && listItem.style.color) {
+            } else if (
+                color === "" &&
+                (listItem.style.color ||
+                    [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
+            ) {
                 const textNodes = targetedNodes.filter(
                     (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
                 );
