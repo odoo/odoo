@@ -67,7 +67,7 @@ test("simple click on Image", async () => {
     await click(":iframe img.a_nice_img");
     await waitFor("div.o-tooltip");
     expect("div.o-tooltip").toHaveCount(1);
-    await advanceTime(1600);
+    await advanceTime(3100);
     expect("div.o-tooltip").toHaveCount(0);
 });
 
