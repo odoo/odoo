@@ -72,13 +72,6 @@ patch(Thread.prototype, {
             },
             eager: true,
         });
-        this.storeAsActiveLivechats = fields.One("Store", {
-            compute() {
-                return this.channel?.channel_type === "livechat" && !this.livechat_end_dt
-                    ? this.store
-                    : null;
-            },
-        });
         this.requested_by_operator = false;
         this._prevComposerDisabled = false;
     },

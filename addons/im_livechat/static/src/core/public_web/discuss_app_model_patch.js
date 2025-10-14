@@ -20,6 +20,6 @@ patch(DiscussApp.prototype, {
             },
             eager: true,
         });
-        this.livechats = fields.Many("mail.thread", { inverse: "appAsLivechats" });
+        this.livechats = fields.Many("discuss.channel", { inverse: "appAsLivechats" });
     },
 });

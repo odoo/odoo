@@ -175,7 +175,7 @@ test("No counter if category is folded and without unread messages", async () =>
     await contains(".o-mail-DiscussSidebarCategory-livechat .o-discuss-badge", { count: 0 });
 });
 
-test("Counter should have correct value of unread threads if category is folded and with unread messages", async () => {
+test("Counter should have count of unread conversations if category is folded and with unread messages", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
