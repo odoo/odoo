@@ -143,7 +143,7 @@ const MIN_SIZE_FOR_COMPACT = 7;
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
     static dependencies = ["overlay", "selection", "userCommand"];
-    static shared = ["getToolbarInfo"];
+    static shared = ["getToolbarInfo", "getIsToolbarOpen"];
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         selection_leave_handlers: () => this.closeToolbar(),
@@ -326,6 +326,10 @@ export class ToolbarPlugin extends Plugin {
         return {
             buttonGroups: this.buttonGroups,
         };
+    }
+
+    getIsToolbarOpen() {
+        return this.overlay.isOpen;
     }
 
     handleSelectionChange(selectionData) {
