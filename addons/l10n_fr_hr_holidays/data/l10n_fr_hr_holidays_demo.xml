@@ -70,7 +70,7 @@
 
     <function model="res.company" name="write">
         <value eval="[ref('base.demo_company_fr')]"/>
-        <value eval="{'l10n_fr_reference_leave_type': [(4, ref('l10n_fr_holiday_status_cl'))]}"/>
+        <value eval="{'l10n_fr_reference_leave_type': ref('l10n_fr_holiday_status_cl')}"/>
     </function>
 
     <function model="res.users" name="write">
