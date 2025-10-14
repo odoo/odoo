@@ -755,12 +755,12 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abcd" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]cd"
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abd", textareaRange: 2 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -773,12 +773,12 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     abcd" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(7), // "     ab[]cd"
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     abd", textareaRange: 7 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">     abd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -791,12 +791,12 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abcd     " }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]cd     "
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abd     ", textareaRange: 2 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -809,12 +809,12 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     abcd     " }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(7), // "     ab[]cd     "
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     abd     ", textareaRange: 7 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">     abd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -827,12 +827,12 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     ab" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "  []   ab"
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "    ab", textareaRange: 2 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">    ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -845,12 +845,12 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "ab\ncd" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testDeleteInCodeBlock(2), // "ab[]\ncd"
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abcd", textareaRange: 2 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -863,7 +863,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     ab" }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: async (editor) => {
                         await testDeleteInCodeBlock(0)(editor); // "[]     ab"
                         await testDeleteInCodeBlock(0)(editor); // "[]    ab"
@@ -874,7 +874,7 @@ describe("Selection collapsed", () => {
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "ab", textareaRange: 0 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -887,7 +887,7 @@ describe("Selection collapsed", () => {
                     contentBeforeEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "ab     " }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: async (editor) => {
                         await testDeleteInCodeBlock(2)(editor); // "ab[]     "
                         await testDeleteInCodeBlock(2)(editor); // "ab[]    "
@@ -898,7 +898,7 @@ describe("Selection collapsed", () => {
                     contentAfterEdit:
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "ab", textareaRange: 2 }) +
-                        '<p data-selection-placeholder=""><br></p>',
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
