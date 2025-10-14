@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
     from typing import LiteralString
+    from .fields import Field
     from .models import BaseModel
 
 from odoo.tools.sql import SQL, make_identifier
@@ -49,11 +50,7 @@ def _generate_table_alias(src_table_alias: str, link: str) -> str:
 class Query:
     """ Simple implementation of a query object, managing tables with aliases,
     join clauses (with aliases, condition and parameters), where clauses (with
-    parameters), order, limit and offset.
-
-    :param env: model environment (for lazy evaluation)
-    :param alias: name or alias of the table
-    :param table: a table expression (``str`` or ``SQL`` object), optional
+    parameters), group by, order, limit and offset.
     """
 
     def __init__(self, model: BaseModel | None, alias: (str | None) = None, table: (SQL | None) = None):
@@ -90,11 +87,16 @@ class Query:
         """ Return an alias based on ``alias`` and ``link``. """
         return _generate_table_alias(alias, link)
 
-    def add_join(self, kind: str, alias: str, table: str | SQL | None, condition: SQL):
+    def add_join(self, kind: str, alias: str | TableSQL, table: str | SQL | None, condition: SQL):
         """ Add a join clause with the given alias, table and condition. """
         sql_kind = _SQL_JOINS.get(kind.upper())
         assert sql_kind is not None, f"Invalid JOIN type {kind!r}"
-        table = table or alias
+        if isinstance(alias, TableSQL):
+            if table is None and alias._model is not None:
+                table = alias._model._table_sql
+            alias = alias._alias
+        elif table is None:
+            table = alias
         if isinstance(table, str):
             table = SQL.identifier(table)
 
@@ -269,3 +271,93 @@ class Query:
 
     def __iter__(self) -> Iterator[int]:
         return iter(self.get_result_ids())
+
+
+class TableSQL(SQL):
+    """An alias of a table in a Query."""
+    __slots__ = ('_alias', '_model', '_query')
+
+    def __init__(self, alias: str, model: BaseModel | None, query: Query):
+        assert isinstance(alias, str)
+        self._alias = alias
+        self._model = model
+        self._query = query
+
+    @property
+    def _sql_tuple(self):
+        return SQL.identifier(self._alias)._sql_tuple
+
+    def __getitem__(self, field_name: str) -> SQL:
+        if (model := self._model) is None:
+            return SQL.identifier(self._alias, field_name)
+        field = model._fields.get(field_name)
+        if field is None:
+            raise ValueError(f"Invalid field {field_name!r} on model {model._name!r}")
+        return FieldSQL(self, field)
+
+    __getattr__ = __getitem__
+
+    def __repr__(self):
+        return f"TableSQL({self._alias!r}, {self._model._name if self._model else '-'}, {self._query!r})"
+
+    def _with_model(self, model: BaseModel) -> TableSQL:
+        """ Bind a model to a new instance. """
+        assert self._model is None or self._model._name == model._name
+        return TableSQL(self._alias, model, self._query)
+
+    def _sudo(self, flag: bool = True) -> TableSQL:
+        """ Like `_with_model`, just sudo existing model. """
+        if self._model is None or self._model.env.su == flag:
+            return self
+        return self._with_model(self._model.sudo(flag))
+
+    def _make_alias(self, link: str, model: BaseModel | None = None) -> TableSQL:
+        """ Generate a new table/alias using this as source. """
+        return TableSQL(_generate_table_alias(self._alias, link), model, self._query)
+
+    def _join(
+        self,
+        field_name: str,
+        **kw,
+    ) -> TableSQL:
+        """ Join a table.
+
+        Given a field, use its `Field.join` to join to another model.
+        """
+        model = self._model
+        if model is None:
+            raise ValueError(f"Cannot {self}._join() without a model")
+        field = model._fields.get(field_name)
+        if not field:
+            raise ValueError(f"Invalid field {field_name!r} on model {model._name!r}")
+        if field.type == 'many2one':
+            return field.join(self, **kw)
+        raise ValueError(f"Invalid field {field_name}: _join() not possible")
+
+
+class FieldSQL(SQL):
+    """ An SQL object that represents the expression of a field.
+
+    Accessing an attribute builds the SQL for the property of the field.
+    """
+    __slots__ = ('__sql_tuple', '_field', '_table')
+
+    def __init__(self, table: TableSQL, field: Field):
+        self._table = table
+        self._field = field
+        # Generate the SQL eagerly, it may be used multiple times and is easier
+        # to debug than generating it lazily.
+        self.__sql_tuple = table._model._field_to_sql(table._alias, field.name, table._query)._sql_tuple
+
+    @property
+    def _sql_tuple(self):
+        return self.__sql_tuple
+
+    def __getitem__(self, name: str) -> SQL:
+        table = self._table
+        return self._field.property_to_sql(self, name, table._model, table._alias, table._query)
+
+    __getattr__ = __getitem__
+
+    def __repr__(self):
+        return f"{self._table!r}.{self._field.name}"

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.models import Query
+from odoo.models import Query, TableSQL
 from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import SQL
 
@@ -122,3 +122,63 @@ class TestQuery(TransactionCase):
         self.assertEqual(list(query), records.ids)
         self.cr.execute(query.select())
         self.assertEqual([row[0] for row in self.cr.fetchall()], records.ids)
+
+    def test_raw_aliases(self):
+        query = Query(None, 'foo', SQL('SELECT id FROM table'))
+        table = TableSQL(query.table, None, query)
+        self.assertEqual(table._alias, 'foo')
+        self.assertIsInstance(table, SQL)
+        self.assertEqual(table._sql_tuple[0], '"foo"')
+
+        column = table.stuff
+        self.assertIsInstance(column, SQL)
+        self.assertEqual(column._sql_tuple[0], '"foo"."stuff"')
+
+        # make sure that on instance identifier is a property (not the static function)
+        column = table.identifier
+        self.assertIsInstance(column, SQL, "identifier should only be at class-level")
+
+        # _with_model should work with any model
+        category = self.env['res.partner.category']
+        self.assertIs(table._with_model(category)._model, category)
+
+    def test_model_aliases(self):
+        model = self.env['res.partner.category']
+        query = Query(model)
+        category = TableSQL(query.table, model, query)
+        self.assertIsInstance(category, SQL)
+        self.assertEqual(category._alias, model._table)
+        self.assertIs(category._model, model)
+        self.assertIs(category._query, query)
+        self.assertEqual(category._sql_tuple[0], '"res_partner_category"')
+
+        code, params, to_flush = category.active._sql_tuple
+        self.assertEqual(code, '"res_partner_category"."active"')
+        self.assertFalse(params)
+        self.assertIn(model._fields['active'], to_flush)
+
+        # name is translated, check that 'category' delegates to the field
+        self.assertTrue(model._fields['name'].translate)
+        code, params, to_flush = category.name._sql_tuple
+        self.assertEqual(code, '"res_partner_category"."name"->>%s')
+        code, params, to_flush = category._with_model(category._model.with_context(prefetch_langs=True)).name._sql_tuple
+        self.assertEqual(code, '"res_partner_category"."name"')
+
+        model = self.env['res.partner']
+        query = Query(model)
+        partner = TableSQL(query.table, model, query)
+
+        field = partner.company_id
+        code, params, to_flush = field._sql_tuple
+        self.assertEqual(code, '"res_partner"."company_id"')
+        self.assertEqual(len(query._joins), 1, "not yet joined on company")
+
+        # there's nothing else beyond a many2one field
+        with self.assertRaisesRegex(ValueError, "Invalid field property 'name' on res.partner.company_id"):
+            field.name
+
+        # not for x2many fields, because they change the result's cardinality
+        with self.assertRaisesRegex(ValueError, "Cannot convert res.partner.child_ids to SQL because it is not stored"):
+            partner.child_ids
+        with self.assertRaisesRegex(ValueError, "Cannot convert res.partner.category_id to SQL because it is not stored"):
+            partner.category_id
