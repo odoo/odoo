@@ -20,7 +20,7 @@ from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
 
-from lxml import etree
+from lxml import etree, html
 from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
@@ -4926,12 +4926,26 @@ class MailThread(models.AbstractModel):
 
         msg_values = {}
         if body is not None:
-            msg_values["body"] = (
-                # keep html if already Markup, otherwise escape
-                escape(body) + Markup("<span class='o-mail-Message-edited'/>")
-                if body or not message._filter_empty()
-                else ""
-            )
+            if body or not message._filter_empty():
+                tree = html.fragment_fromstring(escape(body), create_parent="div")
+                children = tree.getchildren()
+                if len(children) > 0:  # body is a valid html
+                    # If the last element is a div or p, add the edited span inside it to avoid the edit markup
+                    # to be on its own line. Otherwise, append it to the end of the last element.
+                    last_div_element = (
+                        children[-1] if children[-1].tag in ["div", "p"] else tree
+                    )
+                    last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
+                    etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
+                    msg_values["body"] = (
+                        # markup: it is considered safe, as coming from html.fragment_fromstring
+                        Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
+                    )
+                else:  # body is plain text
+                    # keep html if already Markup, otherwise escape
+                    msg_values["body"] = escape(body) + Markup("<span class='o-mail-Message-edited'/>")
+            else:
+                msg_values["body"] = ""
         if attachment_ids:
             msg_values.update(
                 self._process_attachments_for_post([], attachment_ids, {
