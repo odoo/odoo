@@ -122,6 +122,9 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'invoice_line_ids.product_id.purchase_line_warn_msg', 'invoice_line_ids.product_id.display_name')
     def _compute_purchase_warning_text(self):
+        if not self.env.user.has_group('purchase.group_warning_purchase'):
+            self.purchase_warning_text = ''
+            return
         for move in self:
             if move.move_type != 'in_invoice':
                 move.purchase_warning_text = ''
@@ -518,7 +521,7 @@ class AccountMoveLine(models.Model):
     is_downpayment = fields.Boolean()
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
-    purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
+    purchase_line_warn_msg = fields.Text(compute='_compute_purchase_line_warn_msg')
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
@@ -543,3 +546,9 @@ class AccountMoveLine(models.Model):
         if self.purchase_line_id and not self.analytic_distribution:
             vals |= self.purchase_line_id.analytic_distribution or {}
         return vals
+
+    @api.depends('product_id.purchase_line_warn_msg')
+    def _compute_purchase_line_warn_msg(self):
+        has_group = self.env.user.has_group('purchase.group_warning_purchase')
+        for line in self:
+            line.purchase_line_warn_msg = line.product_id.purchase_line_warn_msg if has_group else ""
