@@ -133,9 +133,20 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     refreshOverlays() {
-        this.overlays.forEach((overlay) => {
-            overlay.refreshPosition();
-            overlay.refreshHandles();
+        if (this.frame) {
+            return;
+        }
+        this.frame = requestAnimationFrame(() => {
+            setTimeout(() => {
+                if (this.isDestroyed) {
+                    return;
+                }
+                this.overlays.forEach((overlay) => {
+                    overlay.refreshPosition();
+                    overlay.refreshHandles();
+                });
+                this.frame = null;
+            }, 0);
         });
     }
 
