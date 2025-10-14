@@ -440,7 +440,6 @@ export class DomPlugin extends Plugin {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
-        // TODO: check if position is editable?
         this.dependencies.selection.setSelection(
             { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
             { normalize: false }
