@@ -30,6 +30,8 @@ import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { WebsiteBuilder } from "@website/builder/website_builder";
+import { patch } from "@web/core/utils/patch";
 
 defineWebsiteModels();
 
@@ -506,6 +508,33 @@ describe("Add Language", () => {
 });
 
 test("attempt to prevent closing window with unsaved changes", async () => {
+    patchWithCleanup(WebsiteBuilder.prototype, {
+        setup() {
+            expect.step("setup WebsiteBuilder - start");
+            super.setup();
+            expect.step("setup WebsiteBuilder - end");
+        },
+        onBeforeUnload(event) {
+            expect.step("onBeforeUnload - start");
+            const unpatchEvent = patch(event, {
+                preventDefault() {
+                    expect.step("onBeforeUnload - preventDefault");
+                    super.preventDefault();
+                },
+            });
+            try {
+                super.onBeforeUnload(event);
+            } finally {
+                unpatchEvent();
+            }
+            expect.step("onBeforeUnload - end");
+        },
+        async save() {
+            expect.step("save - start");
+            await super.save();
+            expect.step("save - end");
+        },
+    });
     const deferSave = new Deferred();
     addPlugin(
         class extends Plugin {
@@ -519,26 +548,54 @@ test("attempt to prevent closing window with unsaved changes", async () => {
     let event;
 
     event = new Event("beforeunload", { cancelable: true });
-    window.dispatchEvent(event);
-    expect(event.defaultPrevented).toBe(false, {
-        message: "allow unload when nothing to save",
-    });
+    if (!window.dispatchEvent(event)) {
+        expect.step("cancelled when nothing to save");
+    }
+    if (event.defaultPrevented) {
+        expect.step("defaultPrevented when nothing to save");
+    }
+    expect.verifySteps([
+        "setup WebsiteBuilder - start",
+        "setup WebsiteBuilder - end",
+        "onBeforeUnload - start",
+        "onBeforeUnload - end",
+    ]);
 
     await modifyText(getEditor(), getEditableContent());
 
     event = new Event("beforeunload", { cancelable: true });
-    window.dispatchEvent(event);
-    expect(event.defaultPrevented).toBe(true, {
-        message: "prevent unload when there is an unsaved modification",
-    });
+    if (!window.dispatchEvent(event)) {
+        expect.step("cancelled when there is an unsaved modification");
+    }
+    if (event.defaultPrevented) {
+        expect.step("defaultPrevented when there is an unsaved modification");
+    }
+    expect.verifySteps([
+        "onBeforeUnload - start",
+        "onBeforeUnload - preventDefault",
+        "onBeforeUnload - end",
+        "cancelled when there is an unsaved modification",
+        "defaultPrevented when there is an unsaved modification",
+    ]);
 
     await contains("button[data-action=save]").click();
 
     event = new Event("beforeunload", { cancelable: true });
-    window.dispatchEvent(event);
-    expect(event.defaultPrevented).toBe(true, {
-        message: "prevent unload during saving",
-    });
+    if (!window.dispatchEvent(event)) {
+        expect.step("cancelled when during saving");
+    }
+    if (event.defaultPrevented) {
+        expect.step("defaultPrevented when during saving");
+    }
+    expect.verifySteps([
+        "save - start",
+        "onBeforeUnload - start",
+        "onBeforeUnload - preventDefault",
+        "onBeforeUnload - end",
+        "cancelled when during saving",
+        "defaultPrevented when during saving",
+    ]);
 
     deferSave.resolve();
+    await expect.waitForSteps(["save - end"]);
 });
