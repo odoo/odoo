@@ -63,8 +63,8 @@
                         <div class="mt16 mb4">
                             Need Help? <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Import FAQ"/>
                         </div>
-                        <div t-foreach="importTemplates" t-as="template" t-key="template">
-                            <a class="btn btn-outline-primary mb32 mt8" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
+                        <div t-foreach="importTemplates" t-as="template" t-key="template.template">
+                            <a class="btn btn-outline-primary my8" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
                                 <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
                             </a>
                         </div>
