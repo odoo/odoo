@@ -197,7 +197,7 @@
                                 <group name="advanced_booleans">
                                     <field name="price_include" invisible="1"/>
                                     <field name="price_include_override"
-                                           invisible="amount_type == 'group'"
+                                           invisible="amount_type == 'group' or has_negative_factor"
                                            placeholder="Default"
                                     />
                                     <field name="include_base_amount" invisible="amount_type == 'group'"/>

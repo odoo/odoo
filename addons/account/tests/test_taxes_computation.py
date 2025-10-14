@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account.tests.common import TestTaxCommon
 from odoo.tests import tagged
 
@@ -488,6 +489,40 @@ class TestTaxesComputation(TestTaxCommon):
                 ),
             },
         )
+        self._run_js_tests()
+
+    def test_random_case_10_reverse_charge(self):
+        """ Reverse charge taxes are always price-excluded. """
+        tax = self.percent_tax(
+            21.0,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        )
+
+        expected_values = [
+            tax,
+            100.0,
+            {
+                'total_included': 100.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 21.0),
+                    (100.0, -21.0),
+                ),
+            },
+        ]
+
+        self.assert_taxes_computation(*expected_values)
+        tax.price_include_override = 'tax_included'
+        self.assert_taxes_computation(*expected_values)
         self._run_js_tests()
 
     def test_fixed_tax_price_included_affect_base_on_0(self):
