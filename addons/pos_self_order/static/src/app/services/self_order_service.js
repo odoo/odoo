@@ -339,30 +339,39 @@ export class SelfOrder extends Reactive {
     }
 
     get currentOrder() {
-        const orderAvailable = (o) => {
-            const isDraft = o.state === "draft";
-            const isPaid = o.state === "paid";
-            const isZeroAmount = o.amount_total === 0;
-            const isKiosk = this.config.self_ordering_mode === "kiosk";
-
-            return (
-                isDraft ||
-                (isPaid && isZeroAmount && isKiosk) ||
-                (isPaid && this.router.activeSlot === "confirmation")
-            );
-        };
-
-        const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
-        if (order && orderAvailable(order)) {
-            return order;
+        const currentOrder = this.getOrder();
+        if (currentOrder) {
+            return currentOrder;
         }
 
-        const existingOrder = this.models["pos.order"].find((o) => orderAvailable(o));
+        const existingOrder = this.models["pos.order"].find((o) => this.isOrderAvailable(o));
         if (existingOrder) {
             this.selectedOrderUuid = existingOrder.uuid;
             return existingOrder;
         }
         return this.createNewOrder();
+    }
+
+    isOrderAvailable(order) {
+        const isDraft = order.state === "draft";
+        const isPaid = order.state === "paid";
+        const isZeroAmount = order.amount_total === 0;
+        const isKiosk = this.config.self_ordering_mode === "kiosk";
+
+        return (
+            isDraft ||
+            (isPaid && isZeroAmount && isKiosk) ||
+            (isPaid && this.router.activeSlot === "confirmation")
+        );
+    }
+
+    getOrder() {
+        const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+        if (order && this.isOrderAvailable(order)) {
+            return order;
+        } else {
+            return null;
+        }
     }
 
     createNewOrder() {
@@ -430,10 +439,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    initData() {
-        this.initProducts();
-        this._initLanguages();
-
+    initHardware() {
         for (const printerConfig of this.models["pos.printer"].getAll()) {
             const printer = this.createPrinter(printerConfig);
             if (printer) {
@@ -441,6 +447,21 @@ export class SelfOrder extends Reactive {
                 this.kitchenPrinters.push(printer);
             }
         }
+
+        for (const pm of this.models["pos.payment.method"].getAll()) {
+            const PaymentInterface = registry
+                .category("electronic_payment_interfaces")
+                .get(pm.use_payment_terminal, null);
+            if (PaymentInterface) {
+                pm.payment_terminal = new PaymentInterface(this, pm);
+            }
+        }
+    }
+
+    initData() {
+        this.initProducts();
+        this._initLanguages();
+        this.initHardware();
     }
 
     _initLanguages() {
@@ -864,6 +885,18 @@ export class SelfOrder extends Reactive {
 
     hasPresets() {
         return this.config.use_presets && this.models["pos.preset"].length > 1;
+    }
+
+    getPendingPaymentLine(terminalName) {
+        const currentPaymentLine = this.getOrder()?.getSelectedPaymentline();
+        if (
+            currentPaymentLine &&
+            currentPaymentLine.payment_method_id.use_payment_terminal === terminalName
+        ) {
+            return currentPaymentLine;
+        } else {
+            return null;
+        }
     }
 
     get kioskBackgroundImageUrl() {

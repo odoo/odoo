@@ -1,8 +1,9 @@
 from odoo import http, fields
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.service.model import call_kw
 from odoo.tools import float_round
-from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
 from odoo.tools import consteq
 
@@ -207,6 +208,17 @@ class PosSelfOrderController(http.Controller):
             raise BadRequest("Something went wrong")
 
         return {'order': self.env['pos.order']._load_pos_self_data_read(order_sudo, pos_config), 'payment_status': status}
+
+    @http.route("/kiosk/payment_method_action/<action>", auth="public", type="jsonrpc", website=True)
+    def pos_self_order_kiosk_payment_method_action(self, access_token, action, args, kwargs):
+        pos_config = self._verify_pos_config(access_token)
+        payment_method = pos_config.env["pos.payment.method"].search([("id", "=", args[0]), ("config_ids", "in", pos_config.id)])
+        if not payment_method:
+            raise NotFound("Payment method not found in config")
+        if action not in payment_method._allowed_methods_in_self_order():
+            raise Forbidden(f"Method '{action}' is forbidden in the self order kiosk")
+
+        return call_kw(pos_config.env["pos.payment.method"], action, args, kwargs)
 
     @http.route('/pos_self_order/kiosk/increment_nb_print/', auth='public', type='jsonrpc', website=True)
     def pos_kiosk_increment_nb_print(self, access_token, order_id, order_access_token):
