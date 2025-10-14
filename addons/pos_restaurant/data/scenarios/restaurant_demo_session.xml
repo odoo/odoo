@@ -33,6 +33,7 @@
             <field name="amount_return">0.0</field>
             <field name="ticket_code">cs24t</field>
             <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="date_order" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
 
         <record id="pos_closed_orderline_3_1_1" model="pos.order.line" forcecreate="False">
@@ -69,6 +70,7 @@
             <field name="amount_return">0.0</field>
             <field name="ticket_code">bg3yt</field>
             <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="date_order" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
 
         <record id="pos_closed_orderline_3_2_1" model="pos.order.line" forcecreate="False">
@@ -111,6 +113,7 @@
             <field name="amount_return">0.0</field>
             <field name="ticket_code">kq9ty</field>
             <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="date_order" eval="(DateTime.today() + relativedelta(hours=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
 
         <record id="pos_closed_orderline_4_1_1" model="pos.order.line" forcecreate="False">
@@ -147,6 +150,7 @@
             <field name="amount_return">0.0</field>
             <field name="ticket_code">ij0ty</field>
             <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="date_order" eval="(DateTime.today() + relativedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
 
         <record id="pos_closed_orderline_4_2_1" model="pos.order.line" forcecreate="False">
@@ -163,6 +167,45 @@
             <field name="payment_method_id" ref="pos_restaurant.payment_method" />
             <field name="pos_order_id" ref="pos_closed_order_4_2" />
             <field name="amount">28.0</field>
+        </record>
+
+        <record id="pos_closed_order_4_3" model="pos.order" forcecreate="False">
+            <field name="session_id" ref="pos_closed_session_4" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="state">paid</field>
+            <field name="amount_total">6.60</field>
+            <field name="amount_tax">0.0</field>
+            <field name="amount_paid">6.60</field>
+            <field name="amount_return">0.0</field>
+            <field name="ticket_code">rp28c</field>
+            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="date_order" eval="(DateTime.today() + relativedelta(hours=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        </record>
+
+        <record id="pos_closed_orderline_4_3_1" model="pos.order.line" forcecreate="False">
+            <field name="product_id" ref="coke" />
+            <field name="price_subtotal">2.20</field>
+            <field name="price_subtotal_incl">2.20</field>
+            <field name="price_unit">2.20</field>
+            <field name="qty">1</field>
+            <field name="order_id" ref="pos_closed_order_4_3" />
+            <field name="full_product_name">Coca-Cola</field>
+        </record>
+
+        <record id="pos_closed_orderline_4_3_2" model="pos.order.line" forcecreate="False">
+            <field name="product_id" ref="minute_maid" />
+            <field name="price_subtotal">4.40</field>
+            <field name="price_subtotal_incl">4.40</field>
+            <field name="price_unit">2.20</field>
+            <field name="qty">2</field>
+            <field name="order_id" ref="pos_closed_order_4_3" />
+            <field name="full_product_name">Coca-Cola</field>
+        </record>
+
+        <record id="pos_payment_5" model="pos.payment" forcecreate="False">
+            <field name="payment_method_id" ref="pos_restaurant.payment_method" />
+            <field name="pos_order_id" ref="pos_closed_order_4_3" />
+            <field name="amount">6.60</field>
         </record>
 
         <function model="pos.session" name="action_pos_session_closing_control"
