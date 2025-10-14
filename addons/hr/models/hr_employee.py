@@ -1664,10 +1664,14 @@ We can redirect you to the public employee list."""
         return all_employees._get_versions_with_contract_overlap_with_period(date_from, date_to)
 
     def _get_unusual_days(self, date_from, date_to=None):
+        HrVersion = self.env['hr.version']
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
         date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
-        employee_versions = self.env['hr.version'].sudo().search([('employee_id', '=', self.id)]).filtered(
-            lambda v: v._is_overlapping_period(date_from_date, date_to_date))
+        employee_versions_domain = Domain.AND([
+            [('employee_id', '=', self.id)],
+            HrVersion._is_overlapping_period_domain(date_from_date, date_to_date)
+        ])
+        employee_versions = HrVersion.sudo().search(employee_versions_domain)
         if not employee_versions:
             # Checking the calendar directly allows to not grey out the leaves taken
             # by the employee or fallback to the company calendar
