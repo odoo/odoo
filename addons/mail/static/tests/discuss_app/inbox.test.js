@@ -86,6 +86,7 @@ test("reply: discard on pressing escape", async () => {
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer");
     await click(".o-mail-Composer-input").catch(() => {});
+    await contains(".o-mail-Composer.o-focused");
     triggerHotkey("Escape");
     await contains(".o-mail-Composer", { count: 0 });
 });
