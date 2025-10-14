@@ -190,7 +190,7 @@ export class X2ManyField extends Component {
             archInfo,
             list: this.list,
             openRecord: this.openRecord.bind(this),
-            readonly: this.props.readonly,
+            readonly: this.props.readonly || !this.activeActions.write,
         };
 
         if (this.props.viewMode === "kanban") {
