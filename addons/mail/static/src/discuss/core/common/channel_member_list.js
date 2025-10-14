@@ -34,7 +34,7 @@ export class ChannelMemberList extends Component {
 
     get offlineSectionText() {
         return _t("Offline - %(offline_count)s", {
-            offline_count: this.props.thread.offlineMembers.length,
+            offline_count: this.props.thread.channel.offlineMembers.length,
         });
     }
 

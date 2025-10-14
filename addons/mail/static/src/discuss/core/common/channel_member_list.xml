@@ -12,12 +12,12 @@
                     <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
                 </div>
             </t>
-            <t name="offlineMembers" t-if="props.thread.offlineMembers.length > 0">
+            <t name="offlineMembers" t-if="props.thread.channel.offlineMembers.length > 0">
                 <t t-call="discuss.ChannelMemberList.section">
                     <t t-set="sectionName" t-value="offlineSectionText"/>
                 </t>
                 <div class="d-flex flex-column bg-inherit gap-1">
-                    <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member">
+                    <t t-foreach="props.thread.channel.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member">
                         <t t-set="offline" t-value="1"/>
                     </t>
                 </div>

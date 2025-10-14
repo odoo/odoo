@@ -198,13 +198,6 @@ const threadPatch = {
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
-        this.offlineMembers = fields.Many("discuss.channel.member", {
-            compute() {
-                return this._computeOfflineMembers().sort(
-                    (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-                );
-            },
-        });
         this.otherTypingMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
@@ -229,12 +222,6 @@ const threadPatch = {
             },
         });
         this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
-    },
-    /** @returns {import("models").ChannelMember[]} */
-    _computeOfflineMembers() {
-        return this.channel?.channel_member_ids.filter(
-            (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
-        );
     },
     get areAllMembersLoaded() {
         return this.member_count === this.channel?.channel_member_ids.length;
