@@ -40,7 +40,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertFalse(work_entry[:1].active, "It should have been archived")
 
         leave_work_entry = self.env['hr.work.entry'].search([('leave_id', '=', leave.id)])
-        self.assertTrue(leave_work_entry.work_entry_type_id.is_leave, "It should have created a leave work entry")
+        self.assertEqual(leave_work_entry.work_entry_type_id.category, 'absence', "It should have created an absence work entry")
         self.assertNotEqual(leave_work_entry[:1].state, 'conflict', "The leave work entry should not conflict")
 
     def test_refuse_approved_leave(self):
@@ -128,8 +128,8 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
     def test_split_leaves_by_entry_type(self):
         entry_type_paid, entry_type_unpaid = self.env['hr.work.entry.type'].create([
-            {'name': 'Paid leave', 'code': 'PAID', 'is_leave': True},
-            {'name': 'Unpaid leave', 'code': 'UNPAID', 'is_leave': True},
+            {'name': 'Paid leave', 'code': 'PAID', 'category': 'absence'},
+            {'name': 'Unpaid leave', 'code': 'UNPAID', 'category': 'absence'},
         ])
 
         leave_type_paid, leave_type_unpaid = self.env['hr.leave.type'].create([{
@@ -175,7 +175,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
     def test_create_work_entry_for_flexible_employee_leave(self):
         entry_type_paid = self.env['hr.work.entry.type'].create([
-            {'name': 'Paid leave', 'code': 'PAID', 'is_leave': True},
+            {'name': 'Paid leave', 'code': 'PAID', 'category': 'absence'},
         ])
 
         leave_type_paid = self.env['hr.leave.type'].create({
