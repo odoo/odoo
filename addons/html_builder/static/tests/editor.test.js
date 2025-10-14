@@ -109,7 +109,7 @@ test("should preserve iframe in the toolbar's font size input", async () => {
         focusNode: p2.firstChild,
         focusOffset: 9,
     });
-    await waitFor(".o-we-toolbar");
+    await waitFor(".o-we-toolbar [name='font_size_selector'] iframe");
     // Get the font size selector input.
     let iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     let inputEl = iframeEl.contentWindow.document?.querySelector("input");
