@@ -1315,6 +1315,24 @@
         <field name="country_id" ref="base.jo"/>
         <field name="amount_rate">1</field>  <!-- Unpaid, but treated in a separate rule -->
     </record>
+    <record id="l10n_jo_work_entry_type_rest_days_overtime" model="hr.work.entry.type">
+        <field name="name">Rest Days Overtime</field>
+        <field name="code">JOROVT</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+    <record id="l10n_jo_work_entry_type_week_days_overtime" model="hr.work.entry.type">
+        <field name="name">Week Days Overtime</field>
+        <field name="code">JOWOVT</field>
+        <field name="color">4</field>
+        <field name="category" eval="'working_time'"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.25</field>
+        <field name="country_id" ref="base.jo"/>
+    </record>
 
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_work_entry_type_situational_unemployment" model="hr.work.entry.type">
