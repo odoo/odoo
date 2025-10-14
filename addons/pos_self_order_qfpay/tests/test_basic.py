@@ -44,8 +44,8 @@ class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCom
         self.assertEqual(len(pm), 1, 'Only one payment method should be loaded')
         self.assertEqual(pm[0]['name'], 'Qfpay', 'The loaded payment method should be Qfpay')
 
-        after_pay_kds = self.env['pos.config']._supported_kiosk_payment_terminal()
-        self.assertTrue('qfpay' in after_pay_kds, 'The orders payed with qfpay should be sent to Kitchen Display/Printer only after being paid')
+        qfpay_is_valid_self_payment_method = self.pos_config.has_valid_self_payment_method()
+        self.assertTrue(qfpay_is_valid_self_payment_method, 'The orders payed with qfpay should be sent to Kitchen Display/Printer only after being paid')
 
     def test_tour_kiosk_qfpay_order(self):
         self.pos_config.with_user(self.pos_user).open_ui()
