@@ -651,9 +651,29 @@ class TestTaxesComputation(TestTaxCommon):
 
         # tax       price_incl      incl_base_amount    is_base_affected
         # ----------------------------------------------------------------
+        # tax1      T               T
+        # tax2      T               T
+        tax1.is_base_affected = False
+        self.assert_taxes_computation(
+            tax1 + tax2,
+            200.0,
+            {
+                'total_included': 200.0,
+                'total_excluded': 178.571429,
+                'taxes_data': (
+                    (178.571429, 10.714286),
+                    (178.571429, 10.714286),
+                ),
+            },
+            rounding_method='round_globally',
+        )
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
         # tax1      T               T                   T
         # tax2
         # tax3                                          T
+        tax1.is_base_affected = True
         tax2.price_include = False
         tax2.include_base_amount = False
         self.assert_taxes_computation(
