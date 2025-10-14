@@ -26,6 +26,7 @@
                     <list create="0" delete="0" no_open="1" editable="bottom">
                         <field name="role_id" force_save="1" readonly="1" options="{'no_open': True}"/>
                         <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True, 'no_quick_create': True}"/>
+                        <field name="role_user_ids" column_invisible="1"/> <!-- Needed to compute the domain of user_ids -->
                     </list>
                 </field>
                 <footer>
