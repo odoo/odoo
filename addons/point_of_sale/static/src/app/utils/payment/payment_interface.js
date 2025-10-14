@@ -88,4 +88,30 @@ export class PaymentInterface {
      * progress payments.
      */
     close() {}
+
+    /**
+     * This method is a helper for the payment terminal to
+     * subscribe to its corresponding bus messages in the backend,
+     * enabling webhook payment confirmations.
+     *
+     * @param {string} channel - The message channel to subscribe to
+     * @param {(message) => void} callback - The callback to run
+     */
+    connectWebSocket(channel, callback) {
+        if (!this.pos.data.channels.some((channelInfo) => channelInfo.channel === channel)) {
+            this.pos.data.connectWebSocket(channel, callback);
+        }
+    }
+
+    /**
+     * This wraps calls to actions on the `pos.payment.method` model.
+     * It should always be used instead of calling the ORM directly, so
+     * that it can be overridden in e.g. `pos_self_order`.
+     *
+     * @param {string} method - The action to call on `pos.payment.method`
+     * @param {any[]} params - The action params to send
+     */
+    async callPaymentMethod(method, params) {
+        return await this.env.services.orm.silent.call("pos.payment.method", method, params);
+    }
 }

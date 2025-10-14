@@ -448,12 +448,14 @@ export class SelfOrder extends Reactive {
             }
         }
 
-        for (const pm of this.models["pos.payment.method"].getAll()) {
-            const PaymentInterface = registry
-                .category("electronic_payment_interfaces")
-                .get(pm.use_payment_terminal, null);
-            if (PaymentInterface) {
-                pm.payment_terminal = new PaymentInterface(this, pm);
+        if (this.config.self_ordering_mode === "kiosk") {
+            for (const pm of this.models["pos.payment.method"].getAll()) {
+                const PaymentInterface = registry
+                    .category("electronic_payment_interfaces")
+                    .get(pm.use_payment_terminal, null);
+                if (PaymentInterface) {
+                    pm.payment_terminal = new PaymentInterface(this, pm);
+                }
             }
         }
     }
@@ -889,14 +891,9 @@ export class SelfOrder extends Reactive {
 
     getPendingPaymentLine(terminalName) {
         const currentPaymentLine = this.getOrder()?.getSelectedPaymentline();
-        if (
-            currentPaymentLine &&
-            currentPaymentLine.payment_method_id.use_payment_terminal === terminalName
-        ) {
-            return currentPaymentLine;
-        } else {
-            return null;
-        }
+        return currentPaymentLine?.payment_method_id?.use_payment_terminal === terminalName
+            ? currentPaymentLine
+            : null;
     }
 
     get kioskBackgroundImageUrl() {
