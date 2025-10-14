@@ -17,31 +17,29 @@
             placeholder.translate="Title tag" />
     </BuilderRow>
     <BuilderRow label.translate="Transform" preview="false">
-        <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-        <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')">Reset</BuilderButton>
+        <div class="btn-group o-hb-button-group">
+            <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
+            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
+        </div>
         <ImageTransformOption t-if="!state.isImageAnimated" />
     </BuilderRow>
     <ImageFilterOption />
-    <BuilderRow label.translate="Size">
-        <BuilderButtonGroup styleAction="'width'">
-            <BuilderButton styleActionValue="''" title.translate="Resize Default">Default</BuilderButton>
-            <BuilderButton styleActionValue="'25%'" title.translate="Resize Quarter">25%</BuilderButton>
-            <BuilderButton styleActionValue="'50%'" title.translate="Resize Half">50%</BuilderButton>
-            <BuilderButton styleActionValue="'100%'" title.translate="Resize Full">100%</BuilderButton>
-        </BuilderButtonGroup>
-    </BuilderRow>
+    <t t-if="!state.isGridMode">
+        <BuilderRow label.translate="Size">
+            <BuilderSelect styleAction="'width'">
+                <BuilderSelectItem styleActionValue="''" title.translate="Resize Default">Default</BuilderSelectItem>
+                <BuilderSelectItem styleActionValue="'100%'" title.translate="Resize Full">100%</BuilderSelectItem>
+                <BuilderSelectItem styleActionValue="'75%'" title.translate="Resize 75%">75%</BuilderSelectItem>
+                <BuilderSelectItem styleActionValue="'50%'" title.translate="Resize Half">50%</BuilderSelectItem>
+                <BuilderSelectItem styleActionValue="'25%'" title.translate="Resize Quarter">25%</BuilderSelectItem>
+                <BuilderSelectItem styleActionValue="'10%'" title.translate="Resize 10%">10%</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
     <ImageFormatOption />
 </t>
 
 <t t-name="html_builder.ImageAndFaOption">
-    <BuilderRow label.translate="Alignment">
-        <BuilderSelect>
-            <BuilderSelectItem classAction="''" title.translate="Unalign">None</BuilderSelectItem>
-            <BuilderSelectItem classAction="'me-auto float-start'" title.translate="Align Left">Left</BuilderSelectItem>
-            <BuilderSelectItem classAction="'mx-auto d-block'" title.translate="Align Center">Center</BuilderSelectItem>
-            <BuilderSelectItem classAction="'ms-auto float-end'" title.translate="Align Right">Right</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
     <BuilderRow label.translate="Style">
         <BuilderButton icon="'fa-square'" classAction="'rounded'" title.translate="Shape: Rounded"/>
         <BuilderButton icon="'fa-circle-o'" classAction="'rounded-circle'" title.translate="Shape: Circle"/>

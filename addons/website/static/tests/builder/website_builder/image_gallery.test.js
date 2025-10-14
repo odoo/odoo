@@ -247,3 +247,34 @@ test("Cloning an image gallery should produce a unique ID", async () => {
     const imageCarousels = queryAll(":iframe .s_image_gallery .carousel");
     expect(imageCarousels[0].id).not.toEqual(imageCarousels[1].id);
 });
+
+test("Changing layout of an image gallery to grid should remove size option on images", async () => {
+    await setupWebsiteBuilder(
+        `
+        <section class="s_image_gallery o_masonry" data-columns="2">
+            <div class="container">
+                <div class="o_masonry_col col-lg-6">
+                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
+                </div>
+                <div class="o_masonry_col col-lg-6">
+                    <img class="second_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
+                </div>
+            </div>
+        </section>
+        `
+    );
+    await contains(":iframe .first_img").click();
+    await waitFor("[data-label='Mode']");
+    expect("[data-label='Mode']").toHaveCount(1);
+    expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Masonry");
+    expect("[data-label='Size']").toHaveCount(1);
+    await contains("[data-label='Mode'] .dropdown-toggle").click();
+
+    await contains("[data-action-param='grid']").click();
+    await waitFor(":iframe .o_grid");
+    expect(":iframe .o_grid").toHaveCount(1);
+    expect(":iframe .o_masonry_col").toHaveCount(0);
+    expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Grid");
+    await contains(":iframe .first_img").click();
+    expect("[data-label='Size']").toHaveCount(0);
+});
