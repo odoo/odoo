@@ -9,7 +9,7 @@ from odoo.fields import Command
 from odoo.tests import Form
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -1772,3 +1772,37 @@ class TestPointOfSaleFlow(CommonPosTest):
         order_line = order.lines[0]
         self.env.invalidate_all()
         order_line.with_user(user).with_company(branch)._compute_total_cost(None)
+
+    def test_delete_res_partner_linked_to_pos_order(self):
+        """ Test that a partner linked to a pos order cannot be deleted. """
+        partner = self.env['res.partner'].create({
+            'name': 'Partner test',
+        })
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+
+        self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': partner.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            'amount_paid': 450.0,
+            'amount_total': 450.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+
+        with self.assertRaises(ValidationError, msg='You cannot delete a customer that has point of sales orders. You can archive it instead.'):
+            partner.unlink()
