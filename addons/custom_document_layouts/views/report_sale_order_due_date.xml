@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="sale_order_portal_content_remove_due_date" inherit_id="sale.sale_order_portal_content">
+    <xpath expr="//span[@t-field='sale_order.validity_date']/ancestor::tr" position="replace"/>
+  </template>
+</odoo>

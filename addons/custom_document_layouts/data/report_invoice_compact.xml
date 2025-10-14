@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <!-- Vue héritée pour compacter les lignes de facture -->
-  <template id="report_invoice_compact"
-            inherit_id="account.report_invoice_document">
+  <template id="report_invoice_compact" inherit_id="account.report_invoice_document">
 
     <!-- 1️⃣  Compter le nb de lignes (juste avant d’en avoir besoin) -->
     <xpath expr="//t[@t-set='display_discount']" position="before">
       <!-- len(o.invoice_line_ids) ⇒ nombre de lignes produits  -->
       <t t-set="line_count" t-value="len(o.invoice_line_ids)"/>
       <!-- Seuil : 10 lignes ; ajuste à ta convenance -->
-      <t t-set="need_compact" t-value="line_count > 15"/>
+      <t t-set="need_compact" t-value="line_count >= 1000"/>
     </xpath>
 
     <!-- 2️⃣  Injecter le CSS juste avant le tableau -->
@@ -18,9 +17,9 @@
         <style>
           /* Réduction padding + police pour le tableau compact */
           .o_main_table.compact th,
-          .o_main_table.compact td{
-            padding: 2px 4px !important;   /* haut/bas 2px – gauche/droite 4px */
-            font-size: 9px !important;
+          .o_main_table.compact td {
+            padding: 2px 4px !important;
+            font-size: 11px !important;                      <!-- ou 11px si tu veux un peu plus grand -->
             line-height: 1.1 !important;
           }
         </style>

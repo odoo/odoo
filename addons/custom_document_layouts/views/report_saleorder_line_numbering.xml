@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <template id="report_saleorder_document_inherit_numbering" inherit_id="sale.report_saleorder_document" priority="20">
+
+    <!-- Ajout de styles pour supprimer les bordures à l'impression -->
+    <xpath expr="//div[hasclass('page')]" position="before">
+      <style>
+            @media print {
+                .o_company_document_layout table,
+                .o_company_document_layout td,
+                .o_company_document_layout tr {
+                    border: none !important;
+                }
+                
+                .address table,
+                .address td,
+                .address tr {
+                    border: none !important;
+                }
+                
+                /* Suppression des bordures générales */
+                table.table-borderless,
+                table.table-borderless td,
+                table.table-borderless tr,
+                table.table-borderless th {
+                    border: none !important;
+                }
+            }
+      </style>
+    </xpath>
+
     <!-- 1. Insérer la colonne "N°" avant "Description" dans l'en-tête -->
     <xpath expr="//thead/tr/th[@name='th_description']" position="before">
       <th class="text-end" style="width:3%;">N°</th>
-
-      <!-- Ajout colonne Référence avant Description -->
       <th class="text-start" style="width: 25mm;">Code</th>
     </xpath>
 
-    <!-- 2. Remplacement du tbody pour ajouter les colonnes numéro et référence dans chaque ligne -->
+    <xpath expr="//thead/tr/th[@name='th_priceunit']" position="after">
+      <!-- Déplacement de la colonne TVA ici -->
+      <th class="text-end" style="width: 8%;">TVA</th>
+    </xpath>
+
+    <!-- Modification du titre de la colonne Amount -->
+    <xpath expr="//thead/tr/th[@name='th_subtotal']" position="replace">
+      <th class="text-end" name="th_subtotal">
+        <span>Montant HT</span>
+      </th>
+    </xpath>
+
+    <!-- Suppression de la colonne TVA d'origine -->
+    <xpath expr="//thead/tr/th[@name='th_taxes']" position="replace">
+      <!-- On remplace la colonne d'origine par rien -->
+    </xpath>
+
+    <!-- 2. Remplacement du tbody pour ajouter les colonnes numéro, référence et TVA dans chaque ligne -->
     <xpath expr="//tbody[@class='sale_tbody']" position="replace">
       <tbody class="sale_tbody">
         <t t-set="current_subtotal" t-value="0"/>
@@ -18,85 +61,102 @@
 
           <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
-          <tr
-            t-att-class="'fw-bold o_line_section' if (line.display_type == 'line_section' or line.product_type == 'combo') else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''"
-          >
+          <tr t-att-class="'fw-bold o_line_section' if (line.display_type == 'line_section' or line.product_type == 'combo') else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
             <!-- Nouvelle colonne N° -->
-            <td class="text-end" style="width:3%;"><t t-esc="line_index + 1"/></td>
+            <td class="text-end" style="width:3%;">
+              <t t-esc="line_index + 1"/>
+            </td>
 
             <!-- Nouvelle colonne Référence -->
             <td class="text-start" style="width: 25mm;">
               <span t-esc="line.product_id and line.product_id.default_code or ''"/>
             </td>
 
-            <t t-if="not line.display_type and line.product_type != 'combo'">
-              <td name="td_name"><span t-field="line.name"/></td>
-              <td class="text-end">
-                <span t-field="line.product_uom_qty"/>
-                <span t-field="line.product_uom"/><!--Pour unité de la quantité, en fonction de la version mettre id pour les versions plus recente-->
-                <span> </span>
-              </td>
-              
-
-              <td name="td_priceunit" class="text-end text-nowrap">
-                <span t-field="line.price_unit"/>
-              </td>
-
-              <td t-if="display_discount" class="text-end">
-                <span t-field="line.discount"/>
-              </td>
-<!--Pour les taxes, certains orderline requiert un (s) aux id en cas d'erreur toujours verifier dans les parametres/Technique/sale.order.line et tu verifie le champs tax_id/tax_ids-->
-              
-              <t t-if="line.tax_id">
-                  <td name="td_taxes" class="text-end text-nowrap">
-                      <span t-field="line.tax_id"/>
-                  </td>
+            <!-- Colonne Description sans référence -->
+            <td name="td_name">
+              <span t-field="line.product_id.name"/>
+            </td>
+            <!--pour line.product_uom pour les version plus recente d'odoo ajouter id-->
+            <td class="text-end">
+              <span t-out="line.product_uom_qty" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+              <span t-field="line.product_uom_id"/>
+              <span></span>
+            </td>
+            <td name="td_priceunit" class="text-end text-nowrap">
+              <span t-out="line.price_unit" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+            </td>
+            <!-- TVA déplacé ici -->
+            <!-- pour les version plus recente d'odoo ajouter un s à tax_id-->
+            <td class="text-end" style="width: 8%;">
+              <t t-if="line.tax_ids and line.price_unit">
+                <t t-set="tax_amount" t-value="sum([line.product_uom_qty * line.price_unit * tax.amount / 100 for tax in line.tax_ids])"/>
+                <span t-out="tax_amount" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
               </t>
               <t t-else="">
-                  <td name="td_taxes" class="text-end text-muted"> </td>
+                <span class="text-muted">-</span>
               </t>
-
-
-              <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                <span t-field="line.price_subtotal"/>
-              </td>
-            </t>
-
-            <t t-elif="line.display_type == 'line_section' or line.product_type == 'combo'">
-              <td name="td_section_line" colspan="99"><span t-field="line.name"/></td>
-              <t t-set="current_section" t-value="line"/>
-              <t t-set="current_subtotal" t-value="0"/>
-            </t>
-
-            <t t-elif="line.display_type == 'line_note'">
-              <td name="td_note_line" colspan="99"><span t-field="line.name"/></td>
-            </t>
+            </td>
+            <td t-if="display_discount" class="text-end">
+              <span t-field="line.discount"/>
+            </td>
+            <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
+              <span t-out="line.price_subtotal" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+            </td>
           </tr>
 
-          <t
-            t-if="current_section and (
+          <t t-if="current_section and (
               line_index + 1 == len(lines_to_report)
               or lines_to_report[line_index+1].display_type == 'line_section'
               or lines_to_report[line_index+1].product_type == 'combo'
               or (
                 line.combo_item_id and not lines_to_report[line_index+1].combo_item_id
               )
-            ) and not line.is_downpayment"
-          >
+            ) and not line.is_downpayment">
             <t t-set="current_section" t-value="None"/>
             <tr class="is-subtotal text-end">
               <td name="td_section_subtotal" colspan="99">
                 <strong class="mr16">Subtotal</strong>
-                <span
-                  t-out="current_subtotal"
-                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
-                />
+                <span t-out="current_subtotal" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
               </td>
             </tr>
           </t>
 
         </t>
       </tbody>
+    </xpath>
+
+    <!-- Override des totaux pour afficher Montant hors taxes, T.V.A. et Total -->
+    <xpath expr="//div[@class='clearfix']//div[@id='total']" position="replace">
+      <div id="total" class="row">
+        <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+          <table class="table table-sm" style="page-break-inside: avoid; border: 2px solid #000; border-collapse: collapse; font-weight: bold;">
+            <tr style="border: 2px solid #000;">
+              <td style="border: 2px solid #000;">
+                <strong>Montant hors taxes</strong>
+              </td>
+              <td class="text-end" style="border: 2px solid #000;">
+                <span t-out="doc.amount_untaxed" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+              </td>
+            </tr>
+            <tr style="border: 2px solid #000;">
+              <td style="border: 2px solid #000;">
+                <strong>T.V.A. <span t-out="doc.amount_tax / doc.amount_untaxed * 100 if doc.amount_untaxed else 0" t-options="{'widget': 'float', 'precision': 0}"/>%</strong>
+              </td>
+              <td class="text-end" style="border: 2px solid #000;">
+                <span t-out="doc.amount_tax" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+              </td>
+            </tr>
+            <tr style="border: 2px solid #000;">
+              <td style="border: 2px solid #000;">
+                <strong>Total TTC</strong>
+              </td>
+              <td class="text-end" style="border: 2px solid #000;">
+                <span t-out="doc.amount_total" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </xpath>
 
   </template>

@@ -7,7 +7,7 @@
     <!-- 1️⃣ Définir le seuil compact -->
     <xpath expr="//t[@t-set='display_discount']" position="before">
       <t t-set="line_count" t-value="len(lines_to_report)"/>
-      <t t-set="need_compact" t-value="line_count &gt; 15"/>
+      <t t-set="need_compact" t-value="line_count &gt; 1000"/>
 
     </xpath>
 
@@ -18,7 +18,7 @@
           .o_main_table.compact th,
           .o_main_table.compact td {
             padding: 2px 4px !important;
-            font-size: 9px !important;
+            font-size: 11px !important;
             line-height: 1.1 !important;
           }
         </style>

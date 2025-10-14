@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Masquer les totaux dans les bons de commande en ciblant votre template personnalisé -->
+        <template id="hide_sale_order_totals_custom" inherit_id="custom_document_layouts.report_saleorder_document_inherit_numbering">
+            <xpath expr="//div[@id='total']" position="replace">
+                <!-- Section des totaux complètement supprimée -->
+            </xpath>
+        </template>
+
+        <!-- Alternative avec CSS pour être sûr -->
+        <template id="hide_sale_order_totals_css" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@class='page']" position="inside">
+                <style>
+                    /* Masquer les totaux personnalisés */
+                    #total, div[id='total'], .table.table-sm[style*="border: 2px solid #000"], table[style*="page-break-inside: avoid; border: 2px solid #000"] {
+                        display: none !important;
+                    }
+                </style>
+            </xpath>
+        </template>
+    </data>
+</odoo>

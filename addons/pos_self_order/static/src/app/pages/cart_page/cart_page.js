@@ -72,8 +72,9 @@ export class CartPage extends Component {
         }
 
         this.selfOrder.rpcLoading = true;
-        await this.selfOrder.confirmOrder();
-        this.selfOrder.rpcLoading = false;
+        await this.selfOrder.confirmOrder();// reçu s'affiche ici dans card
+        this.selfOrder.rpcLoading = false; 
+       
     }
 
     selectTable(table) {

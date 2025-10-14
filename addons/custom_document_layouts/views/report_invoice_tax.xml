@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Héritage du template de facture pour ajouter la colonne des taxes -->
+    <template id="report_invoice_document_with_tax" inherit_id="account.report_invoice_document">
+
+        <!-- Ajouter l'en-tête de colonne pour les taxes avant Amount -->
+        <xpath expr="//table[@name='invoice_line_table']//thead//tr//th[@name='th_subtotal']" position="before">
+            <th class="text-end" style="width: 12%; font-weight: bold;">TVA</th>
+        </xpath>
+
+        <!-- Ajouter la colonne des taxes dans le corps du tableau avant Amount -->
+        <xpath expr="//table[@name='invoice_line_table']//tbody//tr//td[@name='td_subtotal']" position="before">
+            <td class="text-end" style="width: 12%; white-space: nowrap;">
+                <t t-if="line.tax_ids and line.price_unit">
+                    <t t-set="tax_amount" t-value="int(line.price_total - line.price_subtotal)"/>
+                    <t t-set="formatted_tax" t-value="'{:,}'.format(tax_amount).replace(',', ' ')"/>
+                    <span t-out="formatted_tax"/>
+                </t>
+                <t t-else="">
+                    <span class="text-muted">-</span>
+                </t>
+            </td>
+        </xpath>
+
+        <!-- Styles CSS pour masquer certaines colonnes et supprimer les bordures -->
+        <xpath expr="//table[@name='invoice_line_table']" position="before">
+            <style>
+                /* Masquer la 6ème colonne (ancienne colonne taxes) */ table[name='invoice_line_table'] th:nth-child(6), table[name='invoice_line_table'] td:nth-child(6) {
+                    display: none !important;
+                }
+                
+                /* Supprimer toutes les bordures des tableaux principaux */
+                .table th,
+                .table td {
+                    border: none !important;
+                }
+                
+                /* Supprimer les bordures des pieds de page des totaux */
+                .oe_subtotal_footer th,
+                .oe_subtotal_footer td {
+                    border: none !important;
+                }
+                
+                /* Supprimer les traits horizontaux des en-têtes */
+                .table thead th {
+                    border-bottom: none !important;
+                }
+            </style>
+        </xpath>
+
+        <!-- Remplacer la section des totaux avec tableau élargi et bordures -->
+        <xpath expr="//div[@id='total']" position="replace">
+            <div id="total" class="row">
+                <!-- Utilisation de col-12 pour occuper toute la largeur disponible -->
+                <div class="col-12" style="padding-left: 0; padding-right: 0;">
+                    <!-- Tableau des totaux avec bordures horizontales et verticales -->
+                    <table class="table table-sm" style="page-break-inside: avoid; width: 100%; border: 2px solid black !important; margin: 0; border-collapse: collapse;">
+                        <!-- Ligne: Montant hors taxes -->
+                        <tr class="o_subtotal" style="border-top: 2px solid black !important; border-bottom: 1px solid black !important;">
+                            <td style="white-space: nowrap; width: 70%; font-weight: bold; padding: 8px 15px; border-left: 2px solid black !important; border-right: 1px solid black !important; margin: 0;">
+                                <strong>Montant hors taxes</strong>
+                            </td>
+                            <td class="text-end" style="white-space: nowrap; width: 30%; font-weight: bold; padding: 8px 15px; border-right: 2px solid black !important; margin: 0;">
+                                <t t-set="formatted_untaxed" t-value="'{:,}'.format(int(o.amount_untaxed)).replace(',', ' ')"/>
+                                <span t-out="formatted_untaxed" style="font-size: 14px; font-weight: bold;"/>
+                            </td>
+                        </tr>
+                        <!-- Ligne: T.V.A. 18% -->
+                        <tr class="o_tax_line" style="border-bottom: 1px solid black !important;">
+                            <td style="white-space: nowrap; width: 70%; font-weight: bold; padding: 8px 15px; border-left: 2px solid black !important; border-right: 1px solid black !important; margin: 0;">
+                                <strong>T.V.A. 18%</strong>
+                            </td>
+                            <td class="text-end o_price_total" style="white-space: nowrap; width: 30%; font-weight: bold; padding: 8px 15px; border-right: 2px solid black !important; margin: 0;">
+                                <t t-set="formatted_tax" t-value="'{:,}'.format(int(o.amount_tax)).replace(',', ' ')"/>
+                                <span t-out="formatted_tax" style="font-size: 14px; font-weight: bold;"/>
+                            </td>
+                        </tr>
+
+                        <!-- Boucle pour afficher toutes les autres taxes (incluant BIC) -->
+                        <t t-if="o.tax_totals">
+                            <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
+                                <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
+                                    <t t-if="'BIC' in tax_group.get('group_name', '').upper()">
+                                        <tr class="o_tax_line" style="border-bottom: 1px solid black !important;">
+                                            <td style="white-space: nowrap; width: 70%; font-weight: bold; padding: 8px 15px; border-left: 2px solid black !important; border-right: 1px solid black !important; margin: 0;">
+                                                <strong t-out="tax_group.get('group_name', 'BIC')"/>
+                                            </td>
+                                            <td class="text-end o_price_total" style="white-space: nowrap; width: 30%; font-weight: bold; padding: 8px 15px; border-right: 2px solid black !important; margin: 0;">
+                                                <t t-set="formatted_bic_tax" t-value="'{:,}'.format(int(tax_group.get('tax_amount_currency', 0))).replace(',', ' ')"/>
+                                                <span t-out="formatted_bic_tax" style="font-size: 14px; font-weight: bold;"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+
+                        <!-- Ligne: Total TTC -->
+                        <tr class="o_total" style="border-bottom: 2px solid black !important;">
+                            <td style="white-space: nowrap; width: 70%; font-weight: bold; padding: 8px 15px; border-left: 2px solid black !important; border-right: 1px solid black !important; margin: 0;">
+                                <strong>Total TTC</strong>
+                            </td>
+                            <td class="text-end" style="white-space: nowrap; width: 30%; font-weight: bold; padding: 8px 15px; border-right: 2px solid black !important; margin: 0;">
+                                <t t-set="formatted_total" t-value="'{:,}'.format(int(o.amount_total)).replace(',', ' ')"/>
+                                <span t-out="formatted_total" style="font-size: 14px; font-weight: bold;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>
