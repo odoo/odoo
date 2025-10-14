@@ -90,6 +90,8 @@ function stackTemplate(label, owner) {
     `;
 }
 
+const DOC_URL = `https://www.odoo.com/documentation/18.0/developer/reference/frontend/unit_testing/hoot.html#`;
+
 const ERROR_TEMPLATE = /* xml */ `
     <div class="text-rose flex items-center gap-1 px-2 truncate">
         <i class="fa fa-exclamation" />
@@ -114,8 +116,12 @@ const EVENT_TEMPLATE = /* xml */ `
         <t t-else="">
             <i class="fa" t-att-class="eventIcon" />
         </t>
-        <!-- TODO: add documentation links once they exist -->
-        <a href="#" class="hover:text-primary flex gap-1 items-center" t-att-class="{ 'text-cyan': sType === 'assertion' }">
+        <a
+            class="hover:text-primary flex gap-1 items-center"
+            t-att-class="{ 'text-cyan': sType === 'assertion' }"
+            t-att-href="DOC_URL + (event.docLabel or event.label)"
+            target="_blank"
+        >
             <t t-if="event.flags">
                 <i t-if="event.hasFlag('rejects')" class="fa fa-times" />
                 <i t-elif="event.hasFlag('resolves')" class="fa fa-arrow-right" />
@@ -306,6 +312,7 @@ export class HootTestResult extends Component {
     `;
 
     CASE_EVENT_TYPES = CASE_EVENT_TYPES;
+    DOC_URL = DOC_URL;
 
     Tag = Tag;
     formatHumanReadable = formatHumanReadable;
