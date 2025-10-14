@@ -6,6 +6,15 @@ class ResUsers(models.Model):
 
     favorite_project_ids = fields.Many2many('project.project', 'project_favorite_user_rel', 'user_id', 'project_id',
                                             string='Favorite Projects', export_string_translation=False, copy=False)
+    project_role_ids = fields.Many2many(
+        'project.role',
+        'project_role_res_users_rel',
+        'res_users_id',
+        'project_role_id',
+        string='Project Roles',
+        export_string_translation=False,
+        copy=False,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
