@@ -2,21 +2,18 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 
 export class ProductVariantPreview extends Interaction {
-    static selector = '.o_wsale_attribute_previewer';
+    static selector = "#o_wsale_products_grid";
+
     dynamicContent = {
         _window: {
-            't-on-resize': this.debounced(this._updateVariantPreview, 250),
+            "t-on-resize": this.debounced(this.updateVariantPreview, 250),
         },
     };
 
     setup() {
-        this.ptavs = this.el.querySelectorAll('.o_product_variant_preview');
-        this.hiddenCountSpan = this.el.querySelector('span[name="hidden_ptavs_count"]');
-        this.ptavCount = this.ptavs.length + Number(this.el.dataset.hiddenPtavCount ?? 0);
-        this.displayedPTAVCount = 0;
         // Class `gap-1` on parent adds 4px margin for each ptav.
         this.margin = 4;
-        this._updateVariantPreview();
+        this.updateVariantPreview();
     }
 
     /**
@@ -27,23 +24,10 @@ export class ProductVariantPreview extends Interaction {
      *
      * @returns {void}
      */
-    _resetDisplay() {
-        for (const child of this.el.children) {
+    _resetDisplay(attributePreviewer) {
+        for (const child of attributePreviewer.children) {
             child.classList.add('d-none');
         }
-    }
-
-    /**
-     * Updates the span to include the correct number of hidden PTAVs and return the
-     * new width of the element.
-     *
-     * @returns {Number}
-     */
-    _updateAndGetHiddenPTAVsWidth() {
-        const hiddenPTAVCount = this.ptavCount - this.displayedPTAVCount;
-        this.hiddenCountSpan.firstElementChild.textContent = `+${hiddenPTAVCount}`;
-        this.hiddenCountSpan.classList.remove('d-none');
-        return this.hiddenCountSpan.offsetWidth + this.margin * 2;
     }
 
     /**
@@ -55,16 +39,24 @@ export class ProductVariantPreview extends Interaction {
      *
      * @returns {void}
      */
-    _showHiddenPTAVsElement(currentPTAV, remainingSpace) {
-        let hiddenCountSpanWidth = this._updateAndGetHiddenPTAVsWidth();
+    _showHiddenPTAVsElement(
+        attributePreviewerValues, currentPTAV, remainingSpace, displayedPTAVCount
+    ) {
+        const {
+            ptavCount,
+            offsetWidthPTAVS,
+            hiddenCountSpan,
+            hiddenCountSpanWidth,
+        } = attributePreviewerValues;
         while (currentPTAV && hiddenCountSpanWidth >= remainingSpace) {
-            const currentPTAVWidth = currentPTAV.offsetWidth;
             currentPTAV.classList.add("d-none");
-            this.displayedPTAVCount--;
-            hiddenCountSpanWidth = this._updateAndGetHiddenPTAVsWidth();
-            remainingSpace += currentPTAVWidth;
+            displayedPTAVCount--;
+            remainingSpace += offsetWidthPTAVS.get(currentPTAV);
             currentPTAV = currentPTAV.previousElementSibling;
         }
+        const hiddenPTAVCount = ptavCount - displayedPTAVCount;
+        hiddenCountSpan.firstElementChild.textContent = `+${hiddenPTAVCount}`;
+        hiddenCountSpan.classList.remove("d-none");
     }
 
     /**
@@ -75,24 +67,94 @@ export class ProductVariantPreview extends Interaction {
      *
      * @returns {void}
      */
-    _updateVariantPreview() {
-        this._resetDisplay();
-        const containerWidth = this.el.offsetWidth;
+    _updateVariantPreview(attributePreviewer, attributePreviewerValues) {
+        const { containerWidth, ptavs, ptavCount, offsetWidthPTAVS } = attributePreviewerValues;
+        this._resetDisplay(attributePreviewer);
         let usedWidth = 0;
-        this.displayedPTAVCount = 0;
-        for (const ptav of this.ptavs) {
-            // Remove d-none to be able to get width.
+        let displayedPTAVCount = 0;
+        for (const ptav of ptavs) {
             ptav.classList.remove('d-none');
-            usedWidth += ptav.offsetWidth + this.margin;
-            this.displayedPTAVCount++;
+            usedWidth += offsetWidthPTAVS.get(ptav) + this.margin;
+            displayedPTAVCount++;
             const remainingSpace = containerWidth - usedWidth;
-            const isLastPTAV = ptav === this.ptavs[this.ptavs.length - 1];
-            const hasHiddenPtavs = isLastPTAV && this.ptavCount > this.displayedPTAVCount;
+            const isLastPTAV = ptav === ptavs[ptavs.length - 1];
+            const hasHiddenPtavs = isLastPTAV && ptavCount > displayedPTAVCount;
             if (usedWidth >= containerWidth || hasHiddenPtavs) {
-                this._showHiddenPTAVsElement(ptav, remainingSpace);
+                this._showHiddenPTAVsElement(
+                    attributePreviewerValues, ptav, remainingSpace, displayedPTAVCount,
+                );
                 break;
             }
         }
+    }
+
+    /**
+     * Triggered on the parent element of the '.o_wsale_attribute_previewer' elements to run the
+     * interaction once instead of multiple times depending on how many elements exist on the page.
+     *
+     * Schedules and batches updates for all active '.o_wsale_attribute_previewer' elements
+     * to refresh their variant previews efficiently.
+     *
+     * Uses `requestAnimationFrame` to ensure that updates occur in sync with the browser’s
+     * rendering cycle, preventing redundant or frequent recalculations (trigger by offsetWidth).
+     */
+    updateVariantPreview() {
+        const attributePreviewers = this.el.querySelectorAll(".o_wsale_attribute_previewer");
+        const updateAllVariantPreview = this.protectSyncAfterAsync(() => {
+            const attributePreviewerValues = new Map();
+
+            // Initiate the values needed for each attribute previewer.
+            for (const attributePreviewer of attributePreviewers) {
+                this._resetDisplay(attributePreviewer);
+                const ptavs = attributePreviewer.querySelectorAll(".o_product_variant_preview");
+                // Set the hiddenCountSpan to the maximum number of ptavs there is to assume
+                // the worst case space it needs.
+                const hiddenCountSpan = attributePreviewer.querySelector(
+                    "span[name='hidden_ptavs_count']");
+                const ptavCount = ptavs.length + Number(
+                    attributePreviewer.dataset.hiddenPtavCount ?? 0);
+                hiddenCountSpan.firstElementChild.textContent = `+${ptavCount}`;
+                hiddenCountSpan.classList.remove("d-none");
+                attributePreviewerValues.set(
+                    attributePreviewer,
+                    {
+                        containerWidth: attributePreviewer.offsetWidth,
+                        ptavs,
+                        hiddenCountSpan,
+                        ptavCount,
+                        offsetWidthPTAVS: new Map(),
+                        hiddenCountSpanWidth: 0,
+                    },
+                );
+            }
+
+            // Display all hidden elements to get the correct width.
+            for (const attributePreviewer of attributePreviewers) {
+                const currentValues = attributePreviewerValues.get(attributePreviewer);
+                for (const ptav of currentValues.ptavs) {
+                    ptav.classList.remove("d-none");
+                }
+            }
+
+            // A recalculation of the styles is triggered every time offsetWidth is called.
+            // Get all offsetWidths in one step to avoid recalculation for each element separately.
+            for (const attributePreviewer of attributePreviewers) {
+                const currentValues = attributePreviewerValues.get(attributePreviewer);
+                for (const ptav of currentValues.ptavs) {
+                    currentValues.offsetWidthPTAVS.set(ptav, ptav.offsetWidth);
+                }
+                currentValues.hiddenCountSpanWidth = (
+                    currentValues.hiddenCountSpan.offsetWidth + this.margin * 2
+                );
+            }
+
+            for (const attributePreviewer of attributePreviewers) {
+                this._updateVariantPreview(
+                    attributePreviewer, attributePreviewerValues.get(attributePreviewer)
+                );
+            }
+        });
+        requestAnimationFrame(updateAllVariantPreview);
     }
 }
 
