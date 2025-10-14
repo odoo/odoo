@@ -1608,7 +1608,7 @@ def _operator_hierarchy(condition, model):
     if isinstance(result, Domain):
         if field.name == 'id':
             return result
-        return DomainCondition(field.name, 'any', result)
+        return DomainCondition(field.name, 'in', comodel_sudo._search(result))
     return DomainCondition(field.name, 'in', result)
 
 
