@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 class ResPartner(models.Model):
@@ -101,13 +101,6 @@ class ResPartner(models.Model):
         }
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_contains_pos_orders(self):
-        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
-        partners_with_pos_orders = self.filtered(lambda p: p.pos_order_ids and p.pos_order_count > 0)
-        if partners_with_pos_orders and open_pos_sessions:
-            raise UserError(_(
-                "The following contacts %(partner_name)s have PoS orders and there is at least one open PoS session.\n"
-                "Please close the open sessions %(session_name)s before deleting them, or archive the contacts instead.",
-                partner_name=partners_with_pos_orders.mapped('name'),
-                session_name=open_pos_sessions.mapped('name')
-            ))
+    def _unlink_if_pos_no_orders(self):
+        if any(self.mapped('pos_order_ids')):
+            raise ValidationError(_('You cannot delete a customer that has point of sales orders. You can archive it instead.'))
