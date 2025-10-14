@@ -211,11 +211,13 @@ class DeliveryCarrier(models.Model):
             unit_quantity = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = line.product_id.country_of_origin.code or order.warehouse_id.partner_id.country_id.code
+            weight = float_round(line.product_id.weight * line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Stock Weight'))
             commodities.append(DeliveryCommodity(
                 line.product_id,
                 amount=rounded_qty,
                 monetary_value=line.price_reduce_taxinc,
                 country_of_origin=country_of_origin,
+                weight=weight,
             ))
 
         return commodities
@@ -233,7 +235,8 @@ class DeliveryCarrier(models.Model):
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
             unit_price = sum(line.sale_price for line in lines) / rounded_qty
-            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
+            weight = float_round(sum(line.product_id.weight * line.quantity_product_uom for line in lines), precision_digits=self.env['decimal.precision'].precision_get('Stock Weight'))
+            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin, weight=weight))
 
         return commodities
 

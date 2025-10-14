@@ -23,8 +23,9 @@ class DeliveryPackage:
 
 class DeliveryCommodity:
     """ Commodities information are needed for Commercial invoices with each provider. """
-    def __init__(self, product, amount, monetary_value, country_of_origin):
+    def __init__(self, product, amount, monetary_value, country_of_origin, weight):
         self.product_id = product
         self.qty = amount
         self.monetary_value = monetary_value  # based on company currency
         self.country_of_origin = country_of_origin
+        self.weight = weight
