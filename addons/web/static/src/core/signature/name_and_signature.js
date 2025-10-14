@@ -140,7 +140,8 @@ export class NameAndSignature extends Component {
      * @returns {string} cleaned name
      */
     getCleanedName() {
-        const text = this.props.signature.name;
+        // This replaces non-breaking spaces with breaking spaces
+        const text = this.props.signature.name.replace(/ /g, " ");
         if (this.props.signatureType === "initial" && text) {
             return (
                 text
