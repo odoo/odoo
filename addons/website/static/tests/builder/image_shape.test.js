@@ -44,6 +44,60 @@ test("Should set a shape on an image", async () => {
     );
     expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
 });
+
+test("Should set a shape on a GIF", async () => {
+    // Define the img tag using the specified GIF path.
+    const testGif = `<img
+        src="/web/image/456-test/test.gif"
+        class="img-fluid o_we_custom_image"
+    >`;
+
+    // Set up the website builder with the test GIF.
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testGif}
+        </div>
+        `);
+    const editor = getEditor();
+
+    // Click the GIF to activate the image options in the sidebar.
+    await contains(":iframe .test-options-target img").click();
+
+    // Select and apply a shape.
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    // Wait for the editor to process the change.
+    await editor.shared.operation.next(() => {});
+
+    const gif = queryFirst(":iframe .test-options-target img");
+
+    // ## Assertions: Verify the shape was applied correctly.
+
+    // 1. The image source should now be an SVG mask, not the original GIF path.
+    expect(gif.src.startsWith("data:image/svg+xml;base64,")).toBe(true);
+
+    // 2. The new MIME type for the element is 'image/svg+xml'.
+    expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/svg+xml");
+
+    // 3. The system correctly remembers the original source was a GIF.
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-mimetype-before-conversion",
+        "image/gif"
+    );
+
+    // 4. The original source path is preserved in 'data-original-src'.
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-original-src",
+        "/website/static/src/img/snippets_options/header_effect_fade_out.gif"
+    );
+
+    // 5. The shape data attribute is correctly set.
+    expect(":iframe .test-options-target img").toHaveAttribute(
+        "data-shape",
+        "html_builder/geometric/geo_shuriken"
+    );
+});
+
 test("Should change the shape color of an image", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div class="test-options-target">
