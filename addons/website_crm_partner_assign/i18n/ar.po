@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 13:43+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "website_crm_partner_assign/ar/>\n"
 "Language: ar\n"
@@ -37,7 +38,7 @@ msgstr "فرصة %s"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -46,6 +47,9 @@ msgid ""
 "                There are no matching partners found for the selected "
 "country. Displaying results across all countries instead."
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                لم يتم العثور على وكلاء مطابقين للدولة المحددة. سيتم عرض "
+"النتائج لكافة الدول عوضاً عن ذلك."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -53,6 +57,8 @@ msgid ""
 "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
 "title=\"Open map\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" title="
+"\"فتح الخريطة \"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -62,7 +68,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>تحرير"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to resellers"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left me-2\"/>العودة إلى الوكلاء"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -100,6 +106,11 @@ msgid ""
 "calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"input-group-text o_input_group_date_icon\">\n"
+"                                                        <span class="
+"\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"التقويم \"/>"
+"\n"
+"                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -109,11 +120,15 @@ msgid ""
 "calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"input-group-text o_input_group_date_icon\">\n"
+"                                                        <span class="
+"\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
+"                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_view_kanban
 msgid "<span class=\"me-1\">Partner:</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">الشريك:</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -122,6 +137,9 @@ msgid ""
 "                                    <span class=\"opacity-50\" "
 "invisible=\"partner_latitude &gt;= 0\">S </span>"
 msgstr ""
+"<span class=\"opacity-50\" invisible=\"partner_latitude &lt;= 0\">ش </span>\n"
+"                                    <span class=\"opacity-50\" invisible="
+"\"partner_latitude &gt;= 0\">ج </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -132,11 +150,16 @@ msgid ""
 "invisible=\"partner_longitude &gt;= 0\">W </span>\n"
 "                                    <span class=\"opacity-50 ps-1\">) </span>"
 msgstr ""
+"<span class=\"opacity-50\" invisible=\"partner_longitude &lt;= 0\">ق </span>"
+"\n"
+"                                    <span class=\"opacity-50\" invisible="
+"\"partner_longitude &gt;= 0\">غ </span>\n"
+"                                    <span class=\"opacity-50 ps-1\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "<span class=\"opacity-50\">( </span>"
-msgstr ""
+msgstr "<span class=\"opacity-50\">( </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -331,6 +354,146 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">عملاؤك المهتمون</span><"
+"br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if="
+"\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ user.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
+"\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            مرحباً،<br/>\n"
+"                            لقد تواصل معنا بعض العملاء المتوقعون من منطقتك، "
+"وبالتالي، تم إسناد العملاء المهتمين التالين إلى <t t-out="
+"\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"                            <ol>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as="
+"\"lead\"><a t-att-href=\"lead['lead_link']\" t-out="
+"\"lead['lead_id'].name or 'Subject Undefined'\">الموضوع غير محدد</a>، <t "
+"t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or "
+"'Contact Name Undefined'\">اسم جهة الاتصال غير محدد</t>، <t t-out=\"lead"
+"['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country "
+"Undefined'\">الدولة غير محددة</t>، <t t-out=\"lead['lead_id'].email_from or "
+"'Email Undefined' or ''\">البريد الإلكتروني غير محدد</t>، <t t-out=\"lead"
+"['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
+"                            </ol>\n"
+"                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
+"                                يرجى الاتصال بـ <a t-att-href="
+"\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">بوابة "
+"الشركاء</a> للحصول على التفاصيل. لكل عميل مهتم زران في الزاوية العليا إلى "
+"اليسار عليك الضغط عليهما بعد التواصل مع العميل المهتم: \"أنا مهتم\" و "
+"\"أنا غير مهتم\".<br/>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                لا تملك صلاحية الوصول إلى قاعدة البيانات عبر "
+"البوابة بعد. يرجى التواصل\n"
+"                                <t t-out=\"ctx['partner_id'].user_id and ctx"
+"['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx"
+"['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\""
+">معنا</t>.<br/>\n"
+"                            </t>\n"
+"                            سوف يتم إرسال العميل المهتم إلى شريك آخر إذا لم "
+"تقم بالتواصل مع العميل المهتم في غضون 20 يوم.<br/><br/>\n"
+"                            شكراً لك،<br/>\n"
+"                            <t t-out="
+"\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>"
+"\n"
+"                            <br/>\n"
+"                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
+"                                ملاحظة: يبدو أنك لا تملك مدير حسابات مسند "
+"إليك. يرجى التواصل معنا.\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">شركتك</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style="
+"\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and ("
+"user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <a t-if=\"user.company_id.email\" t-att-href="
+"\"'mailto:%s' % user.company_id.email\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if="
+"\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <a t-if=\"user.company_id.website\" t-att-href="
+"\"'%s' % user.company_id.website\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>"
+"\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
+" 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        مشغل بواسطة <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" t-attf-style="
+"\"color: {{user.company_id.email_secondary_color or '#875A7B'}};\">أودو</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -364,7 +527,7 @@ msgstr "العنوان"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Address:"
-msgstr ""
+msgstr "العنوان:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -380,7 +543,7 @@ msgstr "كافة الدول"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "All Industries"
-msgstr ""
+msgstr "كافة المجالات"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -421,7 +584,7 @@ msgstr "محتويات HTML المنقحة تلقائيًا"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "Back to resellers list"
-msgstr ""
+msgstr "العودة إلى قائمة الباعة الوسطاء"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
@@ -431,7 +594,7 @@ msgstr "تحليل شراكة إدارة علاقات العملاء"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Campaign:"
-msgstr ""
+msgstr "حملة:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__can_publish
@@ -464,7 +627,7 @@ msgstr "إغلاق"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Communication history"
-msgstr ""
+msgstr "سجل التواصل"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -516,7 +679,7 @@ msgstr "إنشاء فرصة"
 #. module: website_crm_partner_assign
 #: model:ir.model,website_form_label:website_crm_partner_assign.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Create a Customer"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
@@ -526,7 +689,7 @@ msgstr "إنشاء تفعيل الشريك"
 #. module: website_crm_partner_assign
 #: model:ir.model,website_form_label:website_crm_partner_assign.model_crm_lead
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "إنشاء فرصة"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
@@ -560,12 +723,12 @@ msgstr "اسم العميل"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Customer:"
-msgstr ""
+msgstr "العميل:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
-msgstr ""
+msgstr "قم بإفلات الكتل الإنشائية هنا لجعلها متاحة لكافة الباعة الوسطاء"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -618,7 +781,7 @@ msgstr "تحرير الفرصة"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Edit to add a short description"
-msgstr ""
+msgstr "قم بالتحرير لإضافة وصف قصير"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -652,37 +815,37 @@ msgstr "الإيرادات المتوقعة"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by category"
-msgstr ""
+msgstr "التصفية حسب الفئة"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by country"
-msgstr ""
+msgstr "الفلترة حسب الدولة"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "Filter by industry"
-msgstr ""
+msgstr "التصفية حسب قطاع العمل"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filters"
-msgstr ""
+msgstr "عوامل التصفية"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Find a reseller"
-msgstr ""
+msgstr "اعثر على بائع وسيط"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your leads"
-msgstr ""
+msgstr "قم بمتابعة وتحويل عملائك المهتمين"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your opportunities"
-msgstr ""
+msgstr "قم بمتابعة وتحويل فرصك"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
@@ -708,7 +871,7 @@ msgstr "الإرسال إلى الشريك"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Future Activities"
-msgstr ""
+msgstr "الأنشطة المستقبلية"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
@@ -745,7 +908,7 @@ msgstr "يعطي احتمالية إسناد عميل مهتم إلى هذا ا�
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Go to reseller"
-msgstr ""
+msgstr "الذهاب إلى البائع الوسيط"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
@@ -778,12 +941,12 @@ msgstr "تواصلت مع العميل"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I'm interested"
-msgstr ""
+msgstr "أنا مهتم"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I'm not interested"
-msgstr ""
+msgstr "لست مهتماً"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__id
@@ -848,7 +1011,7 @@ msgstr "آخر تاريخ تم فيه إرسال هذه الحالة أو تكل
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Late Activities"
-msgstr ""
+msgstr "الأنشطة المتأخرة"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
@@ -859,7 +1022,7 @@ msgstr "آخر مراجعة للشريك"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Review"
-msgstr ""
+msgstr "آخر تقييم"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -926,7 +1089,7 @@ msgstr "ضائع"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Medium:"
-msgstr ""
+msgstr "متوسط:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
@@ -966,13 +1129,13 @@ msgstr "تاريخ النشاط التالي"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Review"
-msgstr ""
+msgstr "التقييم التالي"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "No Activities"
-msgstr ""
+msgstr "لا توجد أنشطة"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.action_report_crm_partner_assign
@@ -987,7 +1150,7 @@ msgstr "لا يوجد المزيد من الشركاء المتاحين"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No results found for \""
-msgstr ""
+msgstr "لم يتم العثور على نتائج لـ\""
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1006,7 +1169,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "Open industries dropdown"
-msgstr ""
+msgstr "فتح القائمة المنسدلة لمجالات العمل"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1028,7 +1191,7 @@ msgstr "الفرصة"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Opportunity -"
-msgstr ""
+msgstr "الفرصة -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__partner_id
@@ -1183,12 +1346,12 @@ msgstr "التقييم: 3 من 3"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Rating: {{0}} on 3"
-msgstr ""
+msgstr "التقييم: {{0}} من 3"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: {{0}} on 4"
-msgstr ""
+msgstr "التقييم: {{0}} من 4"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.references_block
@@ -1206,7 +1369,7 @@ msgstr "الباعة الوسطاء"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Sales Team:"
-msgstr ""
+msgstr "فريق المبيعات:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -1216,7 +1379,7 @@ msgstr "مندوب المبيعات"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Salesperson:"
-msgstr ""
+msgstr "مندوب المبيعات:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1231,22 +1394,22 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See all resellers"
-msgstr ""
+msgstr "ألقِ نظرة على كافة الباعة الوسطاء"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See categories filters"
-msgstr ""
+msgstr "ألقِ نظرة على عوامل تصفية الفئات"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See countries filters"
-msgstr ""
+msgstr "ألقِ نظرة على عوامل تصفية الدول"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "See industries filters"
-msgstr ""
+msgstr "ألقِ نظرة على عوامل تصفية مجالات العمل"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1302,7 +1465,7 @@ msgstr "المرحلة"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Stage:"
-msgstr ""
+msgstr "المرحلة:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1328,12 +1491,12 @@ msgstr "قالب البريد الإلكتروني المرسل غير موجو�
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "رابطURL الكامل المطلق للوصول إلى المستند من خلال الموقع الإلكتروني."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "رابطURL الكامل ذو الصلة للوصول إلى المستند من خلال الموقع الإلكتروني."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1412,7 +1575,7 @@ msgstr "الموقع الإلكتروني"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "رابط URL المطلق للموقع الإلكتروني"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
@@ -1456,13 +1619,13 @@ msgstr "شريك واحد: دليل اختيار شريك"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "activity_date_deadline"
-msgstr ""
+msgstr "activity_date_deadline"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "activity_ids"
-msgstr ""
+msgstr "activity_ids"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1472,7 +1635,7 @@ msgstr "في"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "in"
-msgstr ""
+msgstr "في"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
@@ -1492,12 +1655,12 @@ msgstr "في"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "reference"
-msgstr ""
+msgstr "المرجع"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "references"
-msgstr ""
+msgstr "المراجع"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned
@@ -1510,13 +1673,13 @@ msgstr "عدة شركاء: الإسناد التلقائي، باستخدام إ
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "user_id"
-msgstr ""
+msgstr "user_id"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "won_status"
-msgstr ""
+msgstr "won_status"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-arrow-circle-right\" aria-label=\"Assigned Partner\" "

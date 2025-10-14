@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 02:33+0000\n"
+"PO-Revision-Date: 2025-10-13 10:05+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "event_booth_sale/de/>\n"
@@ -355,6 +355,10 @@ msgid ""
 "Category, %(event_booth_category_name)s. The service_tracking must remain "
 "\"Event Booth\"."
 msgstr ""
+"„service_tracking“ für die Produktvorlage %(product_template_name)s kann "
+"nicht geändert werden, weil eine ihrer Varianten der "
+"Veranstaltungsstandkategorie %(event_booth_category_name)s zugewiesen ist. "
+"Die service_tracking muss „Veranstaltungsstand“ bleiben."
 
 #. module: event_booth_sale
 #. odoo-python
@@ -373,6 +377,8 @@ msgid ""
 "The product, %(product_name)s , is used for Event Booth, it must have "
 "service_tracking set to \"Event Booth\"."
 msgstr ""
+"Das Produkt %(product_name)s wird für Veranstaltungsstände verwendet. Die "
+"service_tracking muss auf „Veranstaltungsstand“ eingestellt sein."
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -410,6 +416,9 @@ msgid ""
 "because it is already assigned to %(booth_category_name)s. The "
 "service_tracking must remain 'event_booth'."
 msgstr ""
+"Sie können die service_tracking des Produkts %(product_name)s nicht ändern, "
+"weil es bereits %(booth_category_name)s zugewiesen ist. Die service_tracking "
+"muss „event_booth“ bleiben."
 
 #. module: event_booth_sale
 #. odoo-python

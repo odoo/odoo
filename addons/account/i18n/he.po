@@ -39,8 +39,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-13 02:30+0000\n"
-"Last-Translator: or balmas <or@laylinetech.com>\n"
+"PO-Revision-Date: 2025-10-13 08:17+0000\n"
+"Last-Translator: Yael Terner <yael@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/account/"
 "he/>\n"
 "Language: he\n"
@@ -62,6 +62,13 @@ msgid ""
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
 msgstr ""
+"\n"
+"        בחר \"מכירות\" עבור יומני חשבוניות לקוחות.\n"
+"        בחר \"רכישות\" עבור יומני חשבוניות ספקים.\n"
+"        בחר \"מזומן (Cash)\", \"בנק\" או \"כרטיס אשראי\" עבור יומנים המשמשים "
+"לתשלומים מלקוחות או לספקים.\n"
+"        בחר \"כללי\" עבור יומני פקודות יומן שונות / פעולות שונות.\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -149,6 +156,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (נותק ע\"י  %(user)s בתאריך "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -156,6 +165,8 @@ msgstr ""
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
+"%(auto_post_name)s הופעלה השלמה אוטומטית עבור. תאריך הנה\"ח הבא: "
+"%(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -185,6 +196,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s חויבו, %(quantity_received)s "
+"התקבלו ב %(unit_price)s כל אחד"
 
 #. module: account
 #. odoo-python
@@ -193,6 +206,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s חויבו, "
+"%(quantity_delivered)s נשלחו ב %(unit_price)s כל אחד"
 
 #. module: account
 #. odoo-python
@@ -220,6 +235,9 @@ msgid ""
 "(receivable)s\" or \"%(payable)s\" with both options \"%"
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) צריך להיות חשבון מסוג\"%(receivable)s\" "
+"או \"%(payable)s\" עם שתי האפשרויות \"%(allow_reconciliation)s\"ו "
+"\"%(non_trade)s\" פעיל."
 
 #. module: account
 #. odoo-python
@@ -258,7 +276,7 @@ msgstr "%s - חלק פרטי"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part (taxes)"
-msgstr ""
+msgstr "%s - חלק פרטי (מיסים)"
 
 #. module: account
 #. odoo-python
@@ -276,13 +294,13 @@ msgstr "%s מיסים"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "%s, or / if not applicable"
-msgstr ""
+msgstr "%s, או / אם לא רלוונטי"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s, או לא רלוונטי"
 
 #. module: account
 #. odoo-python
@@ -294,12 +312,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (סוג=%(type)s)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
 msgid "(Un)Block Payment"
-msgstr ""
+msgstr "חסום / ביטל חסימה לתשלום"
 
 #. module: account
 #. odoo-python
@@ -401,12 +419,12 @@ msgstr "... (הצג הכל)"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "/ if not applicable"
-msgstr ""
+msgstr "/ אם לא רלוונטי"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "0% Eייצור"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template

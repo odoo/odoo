@@ -14,27 +14,28 @@
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 17:25+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 14:57+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/project/"
 "es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid " All internal users and invited portal users"
-msgstr ""
+msgstr " Todos los usuarios internos y los usuarios invitados del portal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -2293,6 +2294,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"Otorga acceso a los usuarios al añadirlos como seguidores, ya sea al "
+"proyecto o a tareas individuales. Los usuarios internos obtienen acceso "
+"automáticamente a las tareas a las cuales se les ha asignado."
 
 #. module: project
 #. odoo-javascript
@@ -2573,12 +2577,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "Usuarios invitados internos y del portal"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "Usuarios internos invitados"
 
 #. module: project
 #. odoo-javascript
@@ -3760,6 +3764,31 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Visibilidad del proyecto y de las tareas:\n"
+"- Usuarios internos invitados: solo pueden acceder al proyecto o a las "
+"tareas que siguen. Los responsables o asignados obtienen acceso "
+"automáticamente.\n"
+"- Usuarios invitados internos y del portal: lo mismo que la opción anterior, "
+"pero también aplica a los usuarios del portal.\n"
+"- Todos los usuarios internos: acceso completo al proyecto y a todas sus "
+"tareas.\n"
+"- Todos los usuarios invitados, internos y del portal: los usuarios internos "
+"tienen acceso completo. Los usuarios del portal solo pueden acceder al "
+"proyecto o tareas que ellos mismos siguen.\n"
+"\n"
+"Niveles de acceso del portal:\n"
+"- Solo lectura: los usuarios del portal pueden ver las tareas a través de su "
+"portal, pero no pueden editarlas.\n"
+"- Edición (limitada): los usuarios del portal pueden acceder a las vistas "
+"kanban y lista y editar algunos campos limitados de las tareas que siguen.\n"
+"- Edición: lo mismo que la opción anterior, pero con acceso a todas las "
+"tareas.\n"
+"\n"
+"Otras reglas:\n"
+"- Los usuarios internos pueden abrir una tarea a través de un enlace "
+"directo, incluso si no tienen acceso al proyecto.\n"
+"- Los administradores del proyecto tienen acceso a los proyectos privados, "
+"aunque no sean seguidores.\n"
 
 #. module: project
 #. odoo-javascript
