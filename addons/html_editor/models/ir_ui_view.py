@@ -63,7 +63,7 @@ class IrUiView(models.Model):
                 views_to_return += self._views_get(called_view, get_children=get_children, bundles=bundles, visited=visited + views_to_return.ids)
 
         if not get_children:
-            return views_to_return
+            return views_to_return.with_prefetch()  # simplify prefetching to avoid memory error
 
         extensions = self._view_get_inherited_children(view)
 
@@ -74,7 +74,7 @@ class IrUiView(models.Model):
                 for ext_view in self._views_get(extension, get_children=extension.active, root=False, visited=visited + views_to_return.ids):
                     if ext_view not in views_to_return:
                         views_to_return += ext_view
-        return views_to_return
+        return views_to_return.with_prefetch()  # simplify prefetching to avoid memory error
 
     @api.model
     def get_related_views(self, key, bundles=False):
