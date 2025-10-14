@@ -120,23 +120,28 @@ class ResCurrency(models.Model):
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
+        currency_rates = dict(self.env.execute_query(self._get_rates_query(company, date)))
+        if any(not currency_rates.get(c_id) for c_id in self.ids):
+            currency_rates = self._get_rates_fallback(currency_rates, company, date)
+        return currency_rates
+
+    def _get_rates_fallback(self, rates, company, date):
+        return {currency_id: rate or 1.0 for currency_id, rate in rates.items()}
+
+    def _get_rates_query(self, company, date):
         currency_query = self._as_query(ordered=False)
         currency_id = self.env['res.currency']._field_to_sql(currency_query.table, 'id')
         Rate = self.env['res.currency.rate']
         rate_query = Rate._search([
-            ('name', '<=', date),
+            ('name', '<', date),
             ('company_id', 'in', (False, company.root_id.id)),
         ], order='company_id.id, name DESC', limit=1)
         rate_query.add_where(SQL("%s = %s", Rate._field_to_sql(rate_query.table, 'currency_id'), currency_id))
-        rate_fallback = Rate._search([
-            ('company_id', 'in', (False, company.root_id.id)),
-        ], order='company_id.id, name ASC', limit=1)
-        rate_fallback.add_where(SQL("%s = %s", Rate._field_to_sql(rate_fallback.table, 'currency_id'), currency_id))
         rate = Rate._field_to_sql(rate_query.table, 'rate')
-        return dict(self.env.execute_query(currency_query.select(
+        return currency_query.select(
             currency_id,
-            SQL("COALESCE((%s), (%s), 1.0)", rate_query.select(rate), rate_fallback.select(rate))
-        )))
+            SQL("(%s)", rate_query.select(rate)),
+        )
 
     @api.depends_context('company')
     def _compute_is_current_company_currency(self):
