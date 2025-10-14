@@ -77,3 +77,10 @@ class ProductCombo(models.Model):
         templates = self.env['product.template'].sudo().search([('combo_ids', 'in', self.ids)])
         templates._check_company(fnames=['combo_ids'])
         self.combo_item_ids._check_company(fnames=['product_id'])
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_product_combo(self):
+        templates = self.env['product.template'].search([('combo_ids', 'in', self.ids)])
+        if templates:
+            products = ", ".join(templates.mapped('name'))
+            raise ValidationError(_("You can't delete combo choice(s) as it is used in the following products: %(products)s", products=products))

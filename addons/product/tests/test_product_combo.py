@@ -146,3 +146,13 @@ class TestProductCombo(ProductCommon):
             combo_in_company_a.write({
                 'company_id': False,
             })
+
+    def test_unlink_combo_choices(self):
+        combo = self.env['product.combo'].create({
+            'name': "Test combo",
+            'combo_item_ids': [Command.create({'product_id': self.product.id})],
+        })
+        self._create_product(type='combo', combo_ids=[Command.link(combo.id)])
+
+        with self.assertRaises(ValidationError):
+            combo.unlink()
