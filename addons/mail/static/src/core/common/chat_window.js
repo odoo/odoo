@@ -110,7 +110,11 @@ export class ChatWindow extends Component {
             ev.stopPropagation();
             return;
         }
-        if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
+        if (
+            ev.target.closest(".o-dropdown") ||
+            ev.target.closest(".o-dropdown--menu") ||
+            document.querySelector(".o-we-powerbox")
+        ) {
             return;
         }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C

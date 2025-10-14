@@ -1100,8 +1100,8 @@ test('display canned response suggestions on typing "::"', async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, "::");
-    await contains(".o-mail-Composer-suggestionList .o-open");
-    await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
+    await contains(".o-we-powerbox");
+    await contains(".o-we-command", { text: "helloHello! How are you?" });
 });
 
 test("[text composer] select a canned response suggestion", async () => {
@@ -1153,7 +1153,7 @@ test("select a canned response suggestion", async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, "::");
-    await click(".o-mail-Composer-suggestion");
+    await click(".o-we-command");
     await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "Hello! How are you?" });
 });
 
@@ -1209,7 +1209,7 @@ test("select a canned response suggestion with some text", async () => {
     await htmlInsertText(editor, "bluhbluh ");
     await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "bluhbluh" });
     await htmlInsertText(editor, "::");
-    await click(".o-mail-Composer-suggestion");
+    await click(".o-we-command");
     await contains(".o-mail-Composer-html.odoo-editor-editable", {
         text: "bluhbluh\u00A0Hello! How are you?",
     });
@@ -1451,16 +1451,16 @@ test("can quickly add emoji with ':' keyword", async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, ":sweat");
-    await contains(".o-mail-Composer-suggestionList .o-open");
-    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
-    await click(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await contains(".o-we-powerbox");
+    await contains(".o-we-command", { text: "😅:sweat_smile:" });
+    await click(".o-we-command", { text: "😅:sweat_smile:" });
     await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "😅" });
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-we-powerbox", { count: 0 });
     await htmlInsertText(editor, " :sw");
-    await contains(".o-mail-Composer-suggestionList .o-open");
-    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await contains(".o-we-powerbox");
+    await contains(".o-we-command", { text: "😅:sweat_smile:" });
     await htmlInsertText(editor, ":s", { replace: true });
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-we-powerbox", { count: 0 });
 });
 
 test("composer reply-to message is restored on thread change", async () => {

@@ -4,7 +4,7 @@ import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
+import { MAIL_PLUGINS, MAIL_CORE_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -233,6 +233,19 @@ export class Composer extends Component {
             },
             () => [this.props.composer.forceCursorMove]
         );
+        useEffect(
+            () => {
+                if (!this.composerService.htmlEnabled) {
+                    return;
+                }
+                if (this.hasSuggestions) {
+                    this.editor?.shared.mail_suggestion.openSuggestionPowerbox(this.suggestion);
+                } else {
+                    this.editor?.shared.powerbox.closePowerbox();
+                }
+            },
+            () => [this.suggestion?.state.items]
+        );
         onMounted(() => {
             this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.composerText) {
@@ -291,7 +304,7 @@ export class Composer extends Component {
         return {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,
-            Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            Plugins: this.ui.isSmall ? MAIL_CORE_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
@@ -527,7 +540,11 @@ export class Composer extends Component {
                 }
                 break;
             case "Enter": {
-                if (isEventHandled(ev, "NavigableList.select") || !this.state.active) {
+                if (
+                    isEventHandled(ev, "NavigableList.select") ||
+                    document.querySelector(".o-we-powerbox") ||
+                    !this.state.active
+                ) {
                     ev.preventDefault();
                     return;
                 }
@@ -547,7 +564,10 @@ export class Composer extends Component {
                 break;
             }
             case "Escape":
-                if (isEventHandled(ev, "NavigableList.close")) {
+                if (
+                    isEventHandled(ev, "NavigableList.close") ||
+                    document.querySelector(".o-we-powerbox")
+                ) {
                     return;
                 }
                 if (this.props.onDiscardCallback) {

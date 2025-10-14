@@ -239,11 +239,13 @@ export class PowerboxPlugin extends Plugin {
                 break;
             case "ArrowUp": {
                 ev.preventDefault();
+                ev.stopImmediatePropagation();
                 this.state.currentIndex = rotate(this.state.currentIndex, this.state.commands, -1);
                 break;
             }
             case "ArrowDown": {
                 ev.preventDefault();
+                ev.stopImmediatePropagation();
                 this.state.currentIndex = rotate(this.state.currentIndex, this.state.commands, 1);
                 break;
             }

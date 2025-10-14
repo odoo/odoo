@@ -11,13 +11,16 @@
                     t-on-mouseenter="() => this.onMouseEnter(command_index)"
                     t-on-mousedown="(ev) => ev.preventDefault()"
                     t-on-click="() => this.props.applyCommand(command)">
-                    <div class="border rounded">
-                        <i class="o-we-command-img d-flex align-items-center justify-content-center fa" t-att-class="command.icon"/>
-                    </div>
-                    <div class="ms-3">
-                        <div class="o-we-command-name" t-esc="command.title"/>
-                        <div class="o-we-command-description" t-esc="command.description"/>
-                    </div>
+                    <t t-if="command.template" t-call="{{command.template}}" t-call-context="command.props"/>
+                    <t t-else="">
+                        <div class="border rounded">
+                            <i class="o-we-command-img d-flex align-items-center justify-content-center fa" t-att-class="command.icon"/>
+                        </div>
+                        <div class="ms-3">
+                            <div class="o-we-command-name" t-esc="command.title"/>
+                            <div class="o-we-command-description" t-esc="command.description"/>
+                        </div>
+                    </t>
                 </div>
             </t>
         </div>
