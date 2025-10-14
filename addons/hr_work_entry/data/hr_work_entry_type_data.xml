@@ -190,9 +190,22 @@
     </record>
 
 <!-- BE : Belgium -->
+    <record id="l10n_be_work_entry_type_overtime_no_onss" model="hr.work.entry.type">
+        <field name="name">Overtime Hours not suject to social security contribution</field>
+        <field name="color">4</field>
+        <field name="code">OVERTIMENOONSS</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_overtime_no_onss_horeca" model="hr.work.entry.type">
+        <field name="name">Overtime not subject to contributions in the horeca sector (hotel, restaurant, catering)</field>
+        <field name="color">4</field>
+        <field name="code">OVERTIMEHORECA</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_bank_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
+        <field name="display_code">PH</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
@@ -201,6 +214,7 @@
     <record id="l10n_be_work_entry_type_solicitation_time_off" model="hr.work.entry.type">
         <field name="name">Solicitation Time Off</field>
         <field name="code">LEAVE600</field>
+        <field name="display_code">SOL</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -208,6 +222,23 @@
     <record id="l10n_be_work_entry_type_unjustified_reason" model="hr.work.entry.type">
         <field name="name">Unjustified Reason</field>
         <field name="code">LEAVE700</field>
+        <field name="display_code">UJR</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_justified_reason_paid" model="hr.work.entry.type">
+        <field name="name">Justified Reason (Paid)</field>
+        <field name="code">LEAVE701</field>
+        <field name="display_code">JRP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_justified_reason_unpaid" model="hr.work.entry.type">
+        <field name="name">Justified Reason (Unpaid)</field>
+        <field name="code">LEAVE702</field>
+        <field name="display_code">JRU</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -216,6 +247,7 @@
         <field name="name">Small Unemployment (Brief Holiday)</field>
         <field name="code">LEAVE205</field>   <!-- YTI: 1 as it is paid, would be 70 otherwise -->
         <field name="color">5</field>
+        <field name="display_code">SUH</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -224,6 +256,7 @@
         <field name="name">Economic Unemployment</field>
         <field name="code">LEAVE6665</field>
         <field name="color">5</field>
+        <field name="display_code">ECO</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -232,6 +265,7 @@
         <field name="name">Corona Unemployment</field>
         <field name="code">LEAVE6666</field>
         <field name="color">5</field>
+        <field name="display_code">COV</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -240,6 +274,7 @@
         <field name="name">Maternity Time Off</field>
         <field name="code">LEAVE210</field>
         <field name="color">5</field>
+        <field name="display_code">MAT</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -248,6 +283,7 @@
         <field name="name">Paternity Time Off (Paid by Company)</field>
         <field name="code">LEAVE220</field>
         <field name="color">5</field>
+        <field name="display_code">PTC</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -256,14 +292,16 @@
         <field name="name">Paternity Time Off (Legal)</field>
         <field name="code">LEAVE230</field>
         <field name="color">5</field>
+        <field name="display_code">PTL</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_unpredictable" model="hr.work.entry.type">
-        <field name="name">Unpredictable Reason</field>
+        <field name="name">Unpredictable Reason (Unpaid)</field>
         <field name="code">LEAVE250</field>
         <field name="color">5</field>
+        <field name="display_code">URU</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -271,6 +309,7 @@
     <record id="l10n_be_work_entry_type_training" model="hr.work.entry.type">
         <field name="name">Training</field>
         <field name="code">LEAVE265</field>
+        <field name="display_code">TRN</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -279,6 +318,7 @@
         <field name="name">Educational Time Off</field>
         <field name="code">LEAVE260</field>
         <field name="color">5</field>
+        <field name="display_code">EDU</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -287,6 +327,7 @@
         <field name="name">Flemish Educational Time Off</field>
         <field name="code">LEAVE261</field>
         <field name="color">5</field>
+        <field name="display_code">FED</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -295,6 +336,7 @@
         <field name="name">Long Term Sick</field>
         <field name="code">LEAVE280</field>
         <field name="color">5</field>
+        <field name="display_code">LTS</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -303,6 +345,7 @@
         <field name="name">Breastfeeding Break</field>
         <field name="code">LEAVE290</field>
         <field name="color">5</field>
+        <field name="display_code">BFB</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -311,14 +354,16 @@
         <field name="name">Medical Assistance</field>
         <field name="code">MEDIC01</field>
         <field name="color">5</field>
+        <field name="display_code">MED</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_youth_time_off" model="hr.work.entry.type">
-        <field name="name">Youth Time Off</field>
+        <field name="name">Youth / Senior Time Off</field>
         <field name="code">YOUNG01</field>
         <field name="color">5</field>
+        <field name="display_code">YSO</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -327,6 +372,7 @@
         <field name="name">Recovery Additional Time</field>
         <field name="code">LEAVE295</field>
         <field name="color">5</field>
+        <field name="display_code">RAT</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -335,6 +381,7 @@
         <field name="name">Additional Time (Paid)</field>
         <field name="code">LEAVE297</field>
         <field name="color">5</field>
+        <field name="display_code">ATP</field>
         <field name="country_id" ref="base.be"/>
     </record>
 
@@ -342,6 +389,7 @@
         <field name="name">Notice (Unprovided)</field>
         <field name="code">LEAVE211</field>
         <field name="color">5</field>
+        <field name="display_code">NTC</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -350,6 +398,7 @@
         <field name="name">Public Holiday Compensation</field>
         <field name="code">PHC1</field>
         <field name="color">3</field>
+        <field name="display_code">PHC</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -358,6 +407,7 @@
         <field name="name">Extra Legal Time Off</field>
         <field name="code">LEAVE213</field>
         <field name="color">5</field>
+        <field name="display_code">XLT</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -366,6 +416,7 @@
         <field name="name">Sick Time Off (Without Guaranteed Salary)</field>
         <field name="code">LEAVE214</field>
         <field name="color">5</field>
+        <field name="display_code">SGS</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -374,6 +425,7 @@
         <field name="name">Recovery Bank Holiday</field>
         <field name="code">LEAVE215</field>
         <field name="color">5</field>
+        <field name="display_code">RBH</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -382,6 +434,7 @@
         <field name="name">European Time Off</field>
         <field name="code">LEAVE216</field>
         <field name="color">5</field>
+        <field name="display_code">EUR</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -390,6 +443,7 @@
         <field name="name">Credit Time</field>
         <field name="code">LEAVE300</field>
         <field name="color">8</field>
+        <field name="display_code">CRT</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -398,6 +452,7 @@
         <field name="name">Parental Time Off</field>
         <field name="code">LEAVE301</field>
         <field name="color">8</field>
+        <field name="display_code">PAR</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -406,14 +461,34 @@
         <field name="name">Simple Holiday Pay - Variable Salary</field>
         <field name="code">LEAVE1731</field>
         <field name="color">3</field>
+        <field name="display_code">SHP</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_work_accident" model="hr.work.entry.type">
-        <field name="name">Work Accident</field>
+        <field name="name">Work Accident / Occupational Disease (Paid)</field>
         <field name="code">LEAVE115</field>
         <field name="color">5</field>
+        <field name="display_code">WAP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_accident_unpaid" model="hr.work.entry.type">
+        <field name="name">Work Accident (Unpaid)</field>
+        <field name="code">LEAVE117</field>
+        <field name="color">5</field>
+        <field name="display_code">WAU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_occupational_disease_unpaid" model="hr.work.entry.type">
+        <field name="name">Occupational Disease (Unpaid)</field>
+        <field name="code">LEAVE116</field>
+        <field name="color">5</field>
+        <field name="display_code">ODU</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -422,14 +497,16 @@
         <field name="name">Partial Incapacity (due to illness)</field>
         <field name="code">LEAVE281</field>
         <field name="color">4</field>
+        <field name="display_code">PIN</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_strike" model="hr.work.entry.type">
-        <field name="name">Strike</field>
+        <field name="name">Strike / Lock-out</field>
         <field name="code">LEAVE251</field>
         <field name="color">5</field>
+        <field name="display_code">STR</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
@@ -438,6 +515,494 @@
         <field name="name">Brief Holiday (Birth)</field>
         <field name="code">LEAVE206</field>
         <field name="color">5</field>
+        <field name="display_code">BHB</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_non_taxable_political_service" model="hr.work.entry.type">
+        <field name="name">Non-taxable service for political representatives</field>
+        <field name="code">WORK207</field>
+        <field name="color">5</field>
+        <field name="display_code">NTS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_other_presence" model="hr.work.entry.type">
+        <field name="name">Other services not declared under another code</field>
+        <field name="code">WORK208</field>
+        <field name="color">5</field>
+        <field name="display_code">OSC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_paid_compensatory_rest" model="hr.work.entry.type">
+        <field name="name">Compensatory rest as part of a reduction in working time paid at the time of recovery</field>
+        <field name="code">WORK209</field>
+        <field name="color">5</field>
+        <field name="display_code">CRP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_unpaid_compensatory_rest" model="hr.work.entry.type">
+        <field name="name">Compensatory rest as part of a reduction in unpaid working time at the time of recovery</field>
+        <field name="code">WORK210</field>
+        <field name="color">5</field>
+        <field name="display_code">CRU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_paid_recovered_compensatory_rest" model="hr.work.entry.type">
+        <field name="name">Compensatory rest paid at the time of recovery due to hours worked at another time</field>
+        <field name="code">WORK211</field>
+        <field name="color">5</field>
+        <field name="display_code">CHP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+<!-- YTI TODO: Encore unpaid work entry types on structure -->
+    <record id="l10n_be_work_entry_type_unpaid_recovered_compensatory_rest" model="hr.work.entry.type">
+        <field name="name">Unpaid compensatory rest at the time of recovery following hours worked at another time</field>
+        <field name="code">WORK288</field>
+        <field name="color">5</field>
+        <field name="display_code">CHU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_sectoral_compensatory_rest" model="hr.work.entry.type">
+        <field name="name">Compensatory rest granted under a sectoral collective agreement on the reduction of working time paid by third parties</field>
+        <field name="code">WORK213</field>
+        <field name="color">5</field>
+        <field name="display_code">SCT</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_public_holiday_temporary_unemployment" model="hr.work.entry.type">
+        <field name="name">Public holiday during periods of temporary unemployment</field>
+        <field name="code">LEAVE207</field>
+        <field name="color">5</field>
+        <field name="display_code">PUT</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_extra_legal_public_holiday" model="hr.work.entry.type">
+        <field name="name">Extra-legal Public Holiday</field>
+        <field name="code">LEAVE208</field>
+        <field name="color">5</field>
+        <field name="display_code">XPH</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_extra_legal_sectoral_holiday" model="hr.work.entry.type">
+        <field name="name">Extra-legal sectoral holidays</field>
+        <field name="code">LEAVE209</field>
+        <field name="color">5</field>
+        <field name="display_code">XSH</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_untaken_time_off_first_year" model="hr.work.entry.type">
+        <field name="name">Vacation that a worker was unable to take due to certain suspensions and which is taken during the first year following the vacation year</field>
+        <field name="code">LEAVE212</field>
+        <field name="color">5</field>
+        <field name="display_code">VY1</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_untaken_time_off_second_year" model="hr.work.entry.type">
+        <field name="name">Vacation that a worker was unable to take due to certain suspensions and which is taken during the second year following the vacation year</field>
+        <field name="code">LEAVE262</field>
+        <field name="color">5</field>
+        <field name="display_code">VY2</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_sailor_time_off" model="hr.work.entry.type">
+        <field name="name">Sailors Time Off</field>
+        <field name="code">LEAVE263</field>
+        <field name="color">5</field>
+        <field name="display_code">SEA</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_incapacity_first_week" model="hr.work.entry.type">
+        <field name="name">Incapacity for work with guaranteed salary - 1st week</field>
+        <field name="code">LEAVE264</field>
+        <field name="color">5</field>
+        <field name="display_code">IW1</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_incapacity" model="hr.work.entry.type">
+        <field name="name">Incapacity for work with guaranteed monthly salary</field>
+        <field name="code">LEAVE266</field>
+        <field name="color">5</field>
+        <field name="display_code">IWM</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_incapacity_sickness_credit" model="hr.work.entry.type">
+        <field name="name">Incapacity for work paid by the employer until the sickness credit is exhausted (education and public sector)</field>
+        <field name="code">LEAVE217</field>
+        <field name="color">5</field>
+        <field name="display_code">ISC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_incapacity_worker_second_week" model="hr.work.entry.type">
+        <field name="name">Incapacity for work with guaranteed salary system for workers - 2nd week</field>
+        <field name="code">LEAVE218</field>
+        <field name="color">5</field>
+        <field name="display_code">IW2</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_incapacity_worker_after_second_week" model="hr.work.entry.type">
+        <field name="name">Incapacity for work with salary supplement for workers - after the 2nd week CCT 12bis/13bis</field>
+        <field name="code">LEAVE219</field>
+        <field name="color">5</field>
+        <field name="display_code">ISS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker" model="hr.work.entry.type">
+        <field name="name">Illness or accident under common law, not covered by the guaranteed salary, during the theoretical legal period of guaranteed salary for reasons not attributable to the worker</field>
+        <field name="code">LEAVE222</field>
+        <field name="color">5</field>
+        <field name="display_code">CL1</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_common_law_illness_attributable_to_worker" model="hr.work.entry.type">
+        <field name="name">Illness or accident under common law, not covered by the guaranteed salary, during the theoretical legal period of guaranteed salary for reasons not attributable to the worker</field>
+        <field name="code">LEAVE223</field>
+        <field name="color">5</field>
+        <field name="display_code">CL2</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_common_law_illness_after_legal_period" model="hr.work.entry.type">
+        <field name="name">Illness or accident under common law, not covered by salary, after the theoretical legal period of guaranteed salary</field>
+        <field name="code">LEAVE224</field>
+        <field name="color">5</field>
+        <field name="display_code">CLA</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_prophylactic_time_off" model="hr.work.entry.type">
+        <field name="name">Prophylactic Time Off</field>
+        <field name="code">LEAVE225</field>
+        <field name="color">5</field>
+        <field name="display_code">PRO</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_common_law_illness_ami" model="hr.work.entry.type">
+        <field name="name">Illness or accident under common law within the framework of an adapted AMI work regime</field>
+        <field name="code">LEAVE226</field>
+        <field name="color">5</field>
+        <field name="display_code">AMI</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_accident_first_week" model="hr.work.entry.type">
+        <field name="name">Work accident or occupational illness with normal daily pay at 100% for the first week</field>
+        <field name="code">LEAVE227</field>
+        <field name="color">5</field>
+        <field name="display_code">WA1</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_accident_guaranteed_monthly" model="hr.work.entry.type">
+        <field name="name">Work accident or occupational illness with guaranteed monthly salary</field>
+        <field name="code">LEAVE228</field>
+        <field name="color">5</field>
+        <field name="display_code">WAM</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_work_accident_second_week" model="hr.work.entry.type">
+        <field name="name">Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis</field>
+        <field name="code">LEAVE229</field>
+        <field name="color">5</field>
+        <field name="display_code">WAS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_dismissal" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment in the event of dismissal of a protected worker</field>
+        <field name="code">LEAVE267</field>
+        <field name="color">5</field>
+        <field name="display_code">TUP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_incident" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to technical incident</field>
+        <field name="code">LEAVE231</field>
+        <field name="color">5</field>
+        <field name="display_code">TUT</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_force_majeure" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to technical incident</field>
+        <field name="code">LEAVE232</field>
+        <field name="color">5</field>
+        <field name="display_code">TUA</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to force majeure for medical reasons</field>
+        <field name="code">LEAVE233</field>
+        <field name="color">5</field>
+        <field name="display_code">TUM</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_collective_closure" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to collective closure of the company due to annual holidays</field>
+        <field name="code">LEAVE234</field>
+        <field name="color">5</field>
+        <field name="display_code">TUH</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_collective_closure_agreeement" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to collective closure of the company due to compulsory leave under a collective labor agreement</field>
+        <field name="code">LEAVE235</field>
+        <field name="color">5</field>
+        <field name="display_code">TUC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_collective_closure_reduction" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to collective closure of the company for compensatory rest as part of a reduction in working hours</field>
+        <field name="code">LEAVE236</field>
+        <field name="color">5</field>
+        <field name="display_code">TUR</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_strike" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to strike or lockout</field>
+        <field name="code">LEAVE237</field>
+        <field name="color">5</field>
+        <field name="display_code">TUS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_temporary_unemployment_bad_weather" model="hr.work.entry.type">
+        <field name="name">Temporary unemployment due to bad weather</field>
+        <field name="code">LEAVE238</field>
+        <field name="color">5</field>
+        <field name="display_code">TUB</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_non_provided_service_childminders" model="hr.work.entry.type">
+        <field name="name">Service planned but not provided by childminders due to the absence of children for reasons beyond the control of the childminder</field>
+        <field name="code">LEAVE268</field>
+        <field name="color">5</field>
+        <field name="display_code">CHI</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_other_training" model="hr.work.entry.type">
+        <field name="name">Training with the exception of social promotion and educational leave</field>
+        <field name="code">LEAVE239</field>
+        <field name="color">5</field>
+        <field name="display_code">TRX</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_training_social_promotion" model="hr.work.entry.type">
+        <field name="name">Social promotion training with suspension of the employment contract</field>
+        <field name="code">LEAVE240</field>
+        <field name="color">5</field>
+        <field name="display_code">SPT</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_maternity_time_off_converted" model="hr.work.entry.type">
+        <field name="name">Maternity leave or maternity leave converted in the event of death or hospitalization of the mother</field>
+        <field name="code">LEAVE241</field>
+        <field name="color">5</field>
+        <field name="display_code">MLC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_adoption_company" model="hr.work.entry.type">
+        <field name="name">Employer-paid adoption and foster parent leave</field>
+        <field name="code">LEAVE242</field>
+        <field name="color">5</field>
+        <field name="display_code">AFP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_adoption_legal" model="hr.work.entry.type">
+        <field name="name">Adoption leave and foster parent leave not paid by the employer</field>
+        <field name="code">LEAVE243</field>
+        <field name="color">5</field>
+        <field name="display_code">AFU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_foster_care" model="hr.work.entry.type">
+        <field name="name">Foster care</field>
+        <field name="code">LEAVE244</field>
+        <field name="color">5</field>
+        <field name="display_code">FOS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_available_not_working" model="hr.work.entry.type">
+        <field name="name">Availability time not considered as working time</field>
+        <field name="code">LEAVE245</field>
+        <field name="color">5</field>
+        <field name="display_code">AVL</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_construction_bad_weather_first_day" model="hr.work.entry.type">
+        <field name="name">First day of absence due to bad weather in the construction site</field>
+        <field name="code">LEAVE246</field>
+        <field name="color">5</field>
+        <field name="display_code">FDB</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_construction_imperative_maintained_salary" model="hr.work.entry.type">
+        <field name="name">Imperative leave with maintained salary</field>
+        <field name="code">LEAVE247</field>
+        <field name="color">5</field>
+        <field name="display_code">IMS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_environmental_protection" model="hr.work.entry.type">
+        <field name="name">Technical malfunction in the company or closure of the company for environmental protection purposes</field>
+        <field name="code">LEAVE248</field>
+        <field name="color">5</field>
+        <field name="display_code">TME</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_union_mission" model="hr.work.entry.type">
+        <field name="name">Union mission paid by the employer</field>
+        <field name="code">LEAVE249</field>
+        <field name="color">5</field>
+        <field name="display_code">UMP</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_end_of_carreer_exemption" model="hr.work.entry.type">
+        <field name="name">Exemption from end-of-career benefits</field>
+        <field name="code">LEAVE252</field>
+        <field name="color">5</field>
+        <field name="display_code">EXC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_social_judge" model="hr.work.entry.type">
+        <field name="name">Function of social judge</field>
+        <field name="code">LEAVE253</field>
+        <field name="color">5</field>
+        <field name="display_code">FSJ</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_union_mission_unpaid" model="hr.work.entry.type">
+        <field name="name">Union mission unpaid by the employer</field>
+        <field name="code">LEAVE254</field>
+        <field name="color">5</field>
+        <field name="display_code">UMU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_civic_duty_unpaid" model="hr.work.entry.type">
+        <field name="name">Civic duty (Unpaid)</field>
+        <field name="code">LEAVE255</field>
+        <field name="color">5</field>
+        <field name="display_code">CIV</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_public_mandate_unpaid" model="hr.work.entry.type">
+        <field name="name">Public mandate (Unpaid)</field>
+        <field name="code">LEAVE256</field>
+        <field name="color">5</field>
+        <field name="display_code">PMU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_militia_obligation" model="hr.work.entry.type">
+        <field name="name">Militia obligation (Unpaid)</field>
+        <field name="code">LEAVE257</field>
+        <field name="color">5</field>
+        <field name="display_code">MIL</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
+    <record id="l10n_be_work_entry_type_normal_inactivity" model="hr.work.entry.type">
+        <field name="name">Normal days of inactivity in the employment schedule</field>
+        <field name="code">LEAVE258</field>
+        <field name="color">5</field>
+        <field name="display_code">NDI</field>
         <field name="country_id" ref="base.be"/>
         <field name="is_leave" eval="True"/>
     </record>
