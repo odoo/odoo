@@ -15,7 +15,7 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
-class ColorPickerGradientTab extends Component {
+export class ColorPickerGradientTab extends Component {
     static template = "html_editor.ColorPickerGradientTab";
     static components = { GradientPicker };
     static props = {
