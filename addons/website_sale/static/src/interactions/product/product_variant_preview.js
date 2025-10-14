@@ -1,22 +1,25 @@
-import { Interaction } from '@web/public/interaction';
-import { registry } from '@web/core/registry';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
 export class ProductVariantPreview extends Interaction {
-    static selector = '.o_wsale_attribute_previewer';
+    static selector = ".o_wsale_attribute_previewer";
+    static instances = [];
+    static currentFrame = null;
+
     dynamicContent = {
         _window: {
-            't-on-resize': this.debounced(this._updateVariantPreview, 250),
+            "t-on-resize": this.debounced(this.updateVariantPreview, 250),
         },
     };
 
     setup() {
-        this.ptavs = this.el.querySelectorAll('.o_product_variant_preview');
+        this.ptavs = this.el.querySelectorAll(".o_product_variant_preview");
         this.hiddenCountSpan = this.el.querySelector('span[name="hidden_ptavs_count"]');
         this.ptavCount = this.ptavs.length + Number(this.el.dataset.hiddenPtavCount ?? 0);
         this.displayedPTAVCount = 0;
         // Class `gap-1` on parent adds 4px margin for each ptav.
         this.margin = 4;
-        this._updateVariantPreview();
+        this.updateVariantPreview();
     }
 
     /**
@@ -29,7 +32,7 @@ export class ProductVariantPreview extends Interaction {
      */
     _resetDisplay() {
         for (const child of this.el.children) {
-            child.classList.add('d-none');
+            child.classList.add("d-none");
         }
     }
 
@@ -39,11 +42,10 @@ export class ProductVariantPreview extends Interaction {
      *
      * @returns {Number}
      */
-    _updateAndGetHiddenPTAVsWidth() {
+    _updateAndGetHiddenPTAVsWidth(PTAVWidth) {
         const hiddenPTAVCount = this.ptavCount - this.displayedPTAVCount;
         this.hiddenCountSpan.firstElementChild.textContent = `+${hiddenPTAVCount}`;
-        this.hiddenCountSpan.classList.remove('d-none');
-        return this.hiddenCountSpan.offsetWidth + this.margin * 2;
+        return PTAVWidth + this.margin * 2;
     }
 
     /**
@@ -55,14 +57,14 @@ export class ProductVariantPreview extends Interaction {
      *
      * @returns {void}
      */
-    _showHiddenPTAVsElement(currentPTAV, remainingSpace) {
-        let hiddenCountSpanWidth = this._updateAndGetHiddenPTAVsWidth();
+    _showHiddenPTAVsElement(currentPTAV, remainingSpace, PTAVWidth) {
+        this.hiddenCountSpan.classList.remove("d-none");
+        let hiddenCountSpanWidth = this._updateAndGetHiddenPTAVsWidth(PTAVWidth);
         while (currentPTAV && hiddenCountSpanWidth >= remainingSpace) {
-            const currentPTAVWidth = currentPTAV.offsetWidth;
             currentPTAV.classList.add("d-none");
             this.displayedPTAVCount--;
-            hiddenCountSpanWidth = this._updateAndGetHiddenPTAVsWidth();
-            remainingSpace += currentPTAVWidth;
+            hiddenCountSpanWidth = this._updateAndGetHiddenPTAVsWidth(PTAVWidth);
+            remainingSpace += PTAVWidth;
             currentPTAV = currentPTAV.previousElementSibling;
         }
     }
@@ -75,30 +77,65 @@ export class ProductVariantPreview extends Interaction {
      *
      * @returns {void}
      */
-    _updateVariantPreview() {
-        this._resetDisplay();
-        const containerWidth = this.el.offsetWidth;
+    _updateVariantPreview(containerWidth, PTAVWidth) {
         let usedWidth = 0;
         this.displayedPTAVCount = 0;
+        this._resetDisplay();
         for (const ptav of this.ptavs) {
-            // Remove d-none to be able to get width.
-            ptav.classList.remove('d-none');
-            usedWidth += ptav.offsetWidth + this.margin;
+            ptav.classList.remove("d-none");
+            usedWidth += PTAVWidth + this.margin;
             this.displayedPTAVCount++;
             const remainingSpace = containerWidth - usedWidth;
             const isLastPTAV = ptav === this.ptavs[this.ptavs.length - 1];
             const hasHiddenPtavs = isLastPTAV && this.ptavCount > this.displayedPTAVCount;
             if (usedWidth >= containerWidth || hasHiddenPtavs) {
-                this._showHiddenPTAVsElement(ptav, remainingSpace);
+                this._showHiddenPTAVsElement(ptav, remainingSpace, PTAVWidth);
                 break;
             }
         }
     }
+
+    /**
+     * Schedules and batches updates for all active `ProductVariantPreview` instances
+     * to refresh their variant previews efficiently.
+     * Uses `requestAnimationFrame` to ensure that updates occur in sync with the browser’s
+     * rendering cycle, preventing redundant or frequent recalculations (trigger by offsetWidth).
+     */
+    updateVariantPreview() {
+        ProductVariantPreview.instances.push(this);
+        if (ProductVariantPreview.currentFrame) {
+            return;
+        }
+        ProductVariantPreview.currentFrame = requestAnimationFrame(() => {
+            const instances = ProductVariantPreview.instances.filter(
+                (instance) => !instance.isDestroyed
+            );
+            ProductVariantPreview.currentFrame = null;
+            ProductVariantPreview.instances = [];
+            if (!instances.length) {
+                return;
+            }
+
+            for (const instance of instances) {
+                instance._resetDisplay();
+
+                const ptav = instance.ptavs[0];
+                ptav.classList.remove("d-none");
+            }
+
+            for (const instance of instances) {
+                const ptav = instance.ptavs[0];
+                const containerWidth = instance.el.offsetWidth;
+                const PTAVWidth = ptav.offsetWidth;
+                instance._updateVariantPreview(containerWidth, PTAVWidth);
+            }
+        });
+    }
 }
 
 registry
-    .category('public.interactions')
-    .add('website_sale.product_variant_preview', ProductVariantPreview);
+    .category("public.interactions")
+    .add("website_sale.product_variant_preview", ProductVariantPreview);
 
 registry
     .category("public.interactions.edit")
