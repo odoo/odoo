@@ -357,10 +357,18 @@ class ProductProduct(models.Model):
 
     def _compute_product_document_count(self):
         for product in self:
-            product.product_document_count = product.env['product.document'].search_count([
-                ('res_model', '=', 'product.product'),
-                ('res_id', 'in', product.ids),
-            ])
+            product.product_document_count = product.env['product.document'].search_count(
+                Domain.OR([
+                    Domain.AND([
+                        Domain('res_model', '=', 'product.product'),
+                        Domain('res_id', 'in', product.ids),
+                    ]),
+                    Domain.AND([
+                        Domain('res_model', '=', 'product.template'),
+                        Domain('res_id', 'in', product.product_tmpl_id.ids),
+                    ]),
+                ])
+            )
 
     @api.depends('product_tag_ids', 'additional_product_tag_ids')
     def _compute_all_product_tag_ids(self):
@@ -712,8 +720,11 @@ class ProductProduct(models.Model):
         res['context'].update({
             'default_res_model': self._name,
             'default_res_id': self.id,
-            'search_default_context_variant': True,
         })
+        res['domain'] = ['|', '&', ('res_model', '=', 'product.product'),
+                            ('res_id', '=', self.id),
+                            '&', ('res_model', '=', 'product.template'),
+                            ('res_id', '=', self.product_tmpl_id.id)]
         return res
 
     #=== BUSINESS METHODS ===#
