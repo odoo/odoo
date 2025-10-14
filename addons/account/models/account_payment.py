@@ -741,7 +741,8 @@ class AccountPayment(models.Model):
                 if k in self._fields and self._fields[k].store and k in pay.move_id._fields and pay.move_id._fields[k].store:
                     to_write[k] = v
 
-            if 'line_ids' not in vals_list[i]:
+            # Check if line_ids is empty or not provided
+            if not vals_list[i].get('line_ids'):
                 to_write['line_ids'] = [
                     Command.create(line_vals)
                     for line_vals in pay._prepare_move_line_default_vals(
