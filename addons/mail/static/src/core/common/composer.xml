@@ -111,15 +111,7 @@
                     t-if="props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
-                <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
-                    <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
-                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
-                            'active': pickerAction.picker.isOpen
-                        }"/>
-                    </div>
-                    <div t-ref="picker-target"/>
-                </div>
-                <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
+                <div t-if="extended or props.composer.message" class="d-flex align-items-center gap-1 w-100 pe-2">
                     <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
                         <span t-if="props.composer.message and !ui.isSmall" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText" />
                         <t t-elif="!props.composer.message">
@@ -155,7 +147,7 @@
 </t>
 
 <t t-name="mail.Composer.quickActions">
-    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions">
+    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <ActionList actions="partitionedActions.quick" inline="true"/>
         </div>
@@ -163,7 +155,7 @@
 </t>
 
 <t t-name="mail.Composer.moreActions">
-    <button class="btn btn-link p-0 d-flex" t-att-disabled="areAllActionsDisabled" t-ref="more-actions">
+    <button class="btn btn-link p-0 d-flex" t-att-disabled="areAllActionsDisabled">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
             <ActionList inline="true" actions="[{

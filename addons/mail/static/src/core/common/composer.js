@@ -123,6 +123,7 @@ export class Composer extends Component {
         );
         this.ui = useService("ui");
         this.composerService = useService("mail.composer");
+        this.root = useRef("root");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.inputContainerRef = useRef("input-container");
@@ -157,22 +158,6 @@ export class Composer extends Component {
         });
         this.updateFromEditor = false;
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
-        useExternalListener(
-            window,
-            "click",
-            (ev) => {
-                if (
-                    this.ui.isSmall &&
-                    this.composerActions.activePicker &&
-                    this.pickerContainerRef.el &&
-                    ev.target !== this.pickerContainerRef.el &&
-                    !this.pickerContainerRef.el.contains(ev.target)
-                ) {
-                    this.composerActions.activePicker.close?.();
-                }
-            },
-            { capture: true }
-        );
         if (this.props.dropzoneRef) {
             useCustomDropzone(
                 this.props.dropzoneRef,
@@ -728,7 +713,6 @@ export class Composer extends Component {
 
     async sendMessage() {
         const composer = toRaw(this.props.composer);
-        this.composerActions.activePicker?.close?.();
         if (composer.message) {
             this.editMessage();
             return;

@@ -12,6 +12,7 @@ export const ACTION_TAGS = Object.freeze({
     WARNING_BADGE: "WARNING_BADGE",
     CALL_LAYOUT: "CALL_LAYOUT",
     JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
+    COMPOSER_PICKER: "COMPOSER_PICKER",
 });
 
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -23,6 +24,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {(action: Action) => void} [actionPanelClose]
  * @property {Component} [actionPanelComponent]
  * @property {(action: Action) => Object} [actionPanelComponentProps]
+ * @property {string|(action: Action) => string} [actionPanelName]
  * @property {(action: Action) => void} [actionPanelOpen]
  * @property {(action: Action) => string} [actionPanelOuterClass]
  * @property {boolean|(action: Action) => boolean} [badge]
@@ -124,6 +126,15 @@ export class Action {
         return this.definition.actionPanelComponentProps?.call(this, this.params);
     }
 
+    /** @returns {string} */
+    get actionPanelName() {
+        return (
+            (typeof this.definition.actionPanelName === "function"
+                ? this.definition.actionPanelName.call(this, this.params)
+                : this.definition.actionPanelName) ?? this.name
+        );
+    }
+
     /**
      * Opens action panel of this action.
      *
@@ -132,7 +143,7 @@ export class Action {
      * should be kept so that closing the current action goes back
      * to the previous one.
      * */
-    actionPanelOpen({ keepPrevious } = {}) {
+    actionPanelOpen({ ev, keepPrevious } = {}) {
         if (this.actions) {
             if (this.actions.activeAction) {
                 if (keepPrevious) {
@@ -143,7 +154,7 @@ export class Action {
             }
             this.actions.activeAction = this;
         }
-        this.definition.actionPanelOpen?.call(this, this.params);
+        this.definition.actionPanelOpen?.call(this, Object.assign(this.params, { ev }));
     }
 
     get actionPanelOuterClass() {
@@ -444,7 +455,7 @@ export class Action {
             if (this.isActive) {
                 this.actionPanelClose();
             } else {
-                this.actionPanelOpen({ keepPrevious });
+                this.actionPanelOpen({ ev, keepPrevious });
             }
         }
         return (
