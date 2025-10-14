@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:32+0000\n"
+"PO-Revision-Date: 2025-10-13 10:05+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/pos_sale/"
 "de/>\n"
@@ -27,13 +27,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (storniert)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (storniert)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -55,12 +55,14 @@ msgstr "Ein neuer Auftrag wurde erstellt."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Zu bezahlender Betrag im Kassensystem"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Noch zu zahlender Betrag im Kassensystem, um doppelte Zahlungen oder "
+"doppelte Rechnungsstellung zu vermeiden."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -82,12 +84,12 @@ msgstr "Konfigurationseinstellungen"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Kunden erstellen"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -102,7 +104,7 @@ msgstr "Geliefert aus"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Liefermenge"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -119,7 +121,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Anzeigename"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -158,6 +160,8 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Anzahlung (Ref: %(order_reference)s am\n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -185,7 +189,7 @@ msgstr "Von"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -199,11 +203,14 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Es scheint, dass Sie in Ihrem Kassensystem kein Anzahlungsprodukt "
+"konfiguriert haben. Sie können in der Konfiguration Ihres Kassensystems ein "
+"solches Produkt auswählen."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Journalbuchung"
 
 #. module: pos_sale
 #. odoo-python
@@ -247,7 +254,7 @@ msgstr "An das Kassensystem übertragene Auftragspositionen"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "Kassenauftrag"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -292,7 +299,7 @@ msgstr "Gebucht"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -408,7 +415,7 @@ msgstr "Dieses Produkt wird als Anzahlung für einen Verkaufsauftrag verwendet."
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -416,6 +423,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Übertragen<br/>\n"
+"                                aus Verkauf"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -423,12 +432,14 @@ msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Übertragen<br/>\n"
+"                            in Kassensystem"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Warning for %s"
-msgstr ""
+msgstr "Warnung für %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -441,7 +452,7 @@ msgstr "Was möchten Sie tun?"
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "id"
-msgstr ""
+msgstr "ID"
 
 #~ msgid "(left:"
 #~ msgstr "(links:"

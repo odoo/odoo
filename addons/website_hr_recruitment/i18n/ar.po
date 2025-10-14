@@ -7,13 +7,14 @@
 # Niyas Raphy, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 13:43+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "website_hr_recruitment/ar/>\n"
 "Language: ar\n"
@@ -38,12 +39,22 @@ msgid ""
 "            <h6>4 Days after Interview</h6>\n"
 "        "
 msgstr ""
+"\n"
+"            <span class=\"text-muted small\">الوقت المتاح للإجابة</span>\n"
+"            <h6>يومان مفتوحان</h6>\n"
+"            <span class=\"text-muted small\">العملية</span>\n"
+"            <h6>مكالمة هاتفية</h6>\n"
+"            <h6>مقابلة عمل شخصية</h6>\n"
+"            <span class=\"text-muted small\">الفترة بالأيام حتى تحصل على عرض "
+"عمل</span>\n"
+"            <h6>4 أيام بعد المقابلة</h6>\n"
+"        "
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid " In case of issue, contact %(contact_infos)s"
-msgstr ""
+msgstr " في حال وقوع مشكلة، يرجى التواصل مع %(contact_infos)s"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -53,7 +64,7 @@ msgstr "'. يتم عرض النتائج لـ '"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "+1 (650) 555-0187"
-msgstr ""
+msgstr "+1 (650) 555-0187"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -66,6 +77,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\""
+"><small><b>اقرأ</b></small></a>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
@@ -182,6 +195,8 @@ msgid ""
 "<span class=\"text-muted small\">Provide either a resume file or a linkedin "
 "profile</span>"
 msgstr ""
+"<span class=\"text-muted small\">قدم إما سيرتك الذاتية أو ملفك التعريفي على "
+"LinkedIn</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -237,7 +252,7 @@ msgstr "لغات إضافية"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base_mobile
 msgid "All"
-msgstr ""
+msgstr "الكل"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
@@ -251,6 +266,8 @@ msgid ""
 "An application already exists for %(value)s. Duplicates might be rejected. %"
 "(recruiter_contact)s"
 msgstr ""
+"يوجد طلب تقديم بالفعل لـ %(value)s. قد يتم رفض الطلبات المكررة. "
+"%(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -260,7 +277,7 @@ msgstr "المتقدم للوظيفة"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Application Info"
-msgstr ""
+msgstr "معلومات التطبيق"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -281,7 +298,7 @@ msgstr "قم بالتقديم الآن!"
 #. module: website_hr_recruitment
 #: model:ir.model,website_form_label:website_hr_recruitment.model_hr_applicant
 msgid "Apply for a Job"
-msgstr ""
+msgstr "التقدم لوظيفة"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -321,7 +338,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "Autosave"
-msgstr ""
+msgstr "الحفظ التلقائي"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -336,7 +353,7 @@ msgstr "بإمكانه النشر"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.topbar_customizations
 msgid "Close"
-msgstr ""
+msgstr "إغلاق"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
@@ -357,12 +374,12 @@ msgstr "تواصل معنا"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "Copied"
-msgstr ""
+msgstr "تم النسخ"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
 msgid "Countries"
-msgstr ""
+msgstr "الدول"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -392,7 +409,7 @@ msgstr "القسم"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
 msgid "Departments"
-msgstr ""
+msgstr "الأقسام"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -419,7 +436,7 @@ msgstr "استكشف منتجاتنا."
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -433,6 +450,12 @@ msgid ""
 "                    sports sessions, team building events, monthly drink, "
 "and much more"
 msgstr ""
+"لدى كل موظف الفرصة لرؤية البصمة التي يتركها عمله.\n"
+"                    بمقدورك أن تساهم بشكل كبير في نجاح الشركة.\n"
+"                    <br/>\n"
+"                    يتم تنظيم العديد من الأنشطة على مدار العام، كالتجمعات\n"
+"                    الرياضية الأسبوعية وفعاليات بناء الفِرَق، والمشروبات "
+"الشهرية وغير ذلك الكثير"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -458,17 +481,17 @@ msgstr "خبرة في كتابة المحتوى عبر الإنترنت"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "Facebook"
-msgstr ""
+msgstr "فيسبوك"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
 msgid "Filter by country"
-msgstr ""
+msgstr "الفلترة حسب الدولة"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.topbar_customizations
 msgid "Filters"
-msgstr ""
+msgstr "عوامل التصفية"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -538,25 +561,25 @@ msgstr "ضربة حظ"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
 msgid "ID"
-msgstr ""
+msgstr "المُعرف"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid ""
 "If checked, the record will be saved immediately when the field is modified."
-msgstr ""
+msgstr "إذا تم تحديده، فسيتم حفظ السجل فوراً عند تعديل الحقل."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_industries
 msgid "Industries"
-msgstr ""
+msgstr "مجالات العمل"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Industries Filter"
-msgstr ""
+msgstr "فلتر قطاعات الأعمال"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -581,7 +604,7 @@ msgstr "الوصف الوظيفي"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 msgid "Job Page"
-msgstr ""
+msgstr "صفحة الوظائف"
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_window,name:website_hr_recruitment.action_job_pages_list
@@ -630,13 +653,13 @@ msgstr "ترأس دورة المبيعات بأكملها"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 msgid "LinkedIn Profile"
-msgstr ""
+msgstr "ملف LinkedIn التعريفي"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -680,12 +703,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
 msgid "Not Published"
-msgstr ""
+msgstr "غير منشور"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Offices"
-msgstr ""
+msgstr "المكاتب"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -706,7 +729,7 @@ msgstr "غير ذلك"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Our Job Offers"
-msgstr ""
+msgstr "عروض وظائفنا"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -737,7 +760,7 @@ msgstr "المزايا"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 msgid "Phone Number"
-msgstr ""
+msgstr "رقم الهاتف"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -790,12 +813,12 @@ msgstr "عن بعد"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_option.xml:0
 msgid "Reset Filter"
-msgstr ""
+msgstr "إعادة تعيين الفلتر"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_reset_filters
 msgid "Reset Filters"
-msgstr ""
+msgstr "إعادة ضبط الفلاتر"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -805,7 +828,7 @@ msgstr "المسؤوليات"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "التقييد لموقع إلكتروني محدد"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
@@ -832,19 +855,19 @@ msgstr "قم بالتعيين إذا كان التطبيق منشوراً في �
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "Share Job"
-msgstr ""
+msgstr "مشاركة الوظيفة"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 msgid "Short Introduction"
-msgstr ""
+msgstr "مقدمة قصيرة"
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid "Short introduction from applicant"
-msgstr ""
+msgstr "مقدمة قصيرة من المتقدم للوظيفة"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -870,30 +893,30 @@ msgstr "مهارات تحليلية قوية"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "رابطURL الكامل المطلق للوصول إلى المستند من خلال الموقع الإلكتروني."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "رابطURL الكامل ذو الصلة للوصول إلى المستند من خلال الموقع الإلكتروني."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "The job link has been copied to the clipboard."
-msgstr ""
+msgstr "لقد تم نسخ رابط الوظيفة في الحافظة."
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "The job offer has been closed."
-msgstr ""
+msgstr "لقد تم إغلاق هذه الوظيفة."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/interactions/hr_recruitment_form.js:0
 msgid "The profile that you gave us doesn't seems like a linkedin profile"
-msgstr ""
+msgstr "الملف التعريفي الذي أدخلته لا يبدو كملف تعريفي على LinkedIn"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -910,12 +933,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "ToggleLabeled"
-msgstr ""
+msgstr "ToggleLabeled"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Tracker URL"
-msgstr ""
+msgstr "روابط المتتبعات"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -925,13 +948,13 @@ msgstr "التدريبات"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "Types"
-msgstr ""
+msgstr "الأنواع"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_base_mobile
 msgid "Unspecified"
-msgstr ""
+msgstr "غير محدد"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -963,6 +986,8 @@ msgid ""
 "We found a recent application with a similar name, email, phone number. You "
 "can continue if it's not a mistake."
 msgstr ""
+"وجدنا طلباً حديثاً يحمل نفس الاسم والبريد الإلكتروني ورقم الهاتف. يمكنك "
+"المتابعة إذا لم يكن ذلك خطأ."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -971,6 +996,8 @@ msgid ""
 "We've found a previous closed application in our system within the last 6 "
 "months. Please consider before applying in order not to duplicate efforts."
 msgstr ""
+"لقد وجدنا طلباً سابقاً مغلقاً في نظامنا خلال الأشهر الستة الماضية. يرجى مراعاة "
+"ذلك قبل التقديم حتى لا تتكرر الجهود."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
@@ -981,7 +1008,7 @@ msgstr "الموقع الإلكتروني"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "رابط URL المطلق للموقع الإلكتروني"
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
@@ -1037,13 +1064,13 @@ msgstr "<b>معلومات التواصل</b> الخاصة بك هي:"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 msgid "Your Email"
-msgstr ""
+msgstr "بريدك الإلكتروني"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 msgid "Your Name"
-msgstr ""
+msgstr "اسمك"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -1065,11 +1092,13 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the Jobs list page..."
 msgstr ""
+"على سبيل المثال تلخيص الوظيفة في سطر واحد أو سطرين يتم عرضها في صفحة قائمة "
+"الوظائف..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "e.g. https://www.linkedin.com/in/fpodoo"
-msgstr ""
+msgstr "مثال: https://www.linkedin.com/in/fpodoo"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -1079,17 +1108,17 @@ msgstr "info@yourcompany.example.com"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
 msgid "job URL"
-msgstr ""
+msgstr "رابط URL للوظيفة"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "open position"
-msgstr ""
+msgstr "منصب شاغر"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "open positions"
-msgstr ""
+msgstr "الوظائف الشاغرة"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

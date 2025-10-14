@@ -7,13 +7,14 @@
 # Niyas Raphy, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 13:44+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "website_slides_survey/ar/>\n"
 "Language: ar\n"
@@ -27,13 +28,13 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__members_certified_count
 msgid "# Certified Attendees"
-msgstr ""
+msgstr "عدد الحاضرين المعتمدين"
 
 #. module: website_slides_survey
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid "- %(certification)s (Courses - %(courses)s)"
-msgstr ""
+msgstr "- %(certification)s (الدورات - %(courses)s)"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
@@ -70,11 +71,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزي <t t-out=\"object.partner_id.name or 'participant' or ''\""
+">المشارك</t><br/><br/>\n"
+"        للأسف، لم تنجح في اختبار الشهادة ولم تعد عضواً في الدورة: <t t-out="
+"\"object.slide_partner_id.channel_id.name or ''\">مبادئ العناية "
+"بالحديقة</t>.<br/><br/>\n"
+"        لا تتردد في التسجيل مجدداً!\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href="
+"\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-style"
+"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
+"size:13px;\">\n"
+"                سجل الآن\n"
+"            </a>\n"
+"        </div>\n"
+"        شكراً لك على مشاركتك.\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> كن معتمداً"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -138,7 +161,7 @@ msgstr "<span class=\"ms-1\">الشهادات</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
 msgid "<span class=\"o_stat_text\">Certified</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">معتَمَد</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -314,7 +337,7 @@ msgstr "الشهادات"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Certifications are exams that you successfully passed. <br/>"
-msgstr ""
+msgstr "الشهادات هي عبارة عن اختبارات تجتازها بنجاح. <br/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -326,7 +349,7 @@ msgstr "لا يمكن تعيين اختبارات الشهادة التي اجت
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__survey_certification_success
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_partner_view_search
 msgid "Certified"
-msgstr ""
+msgstr "معتمد"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
@@ -336,7 +359,7 @@ msgstr "كرسي"
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
-msgstr ""
+msgstr "القناة / الشركاء (الأعضاء)"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -385,7 +408,7 @@ msgstr "مكتب"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -428,7 +451,7 @@ msgstr "كيف تقوم برفع اختبار شهادة في دورتك؟"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
 msgid "ID"
-msgstr ""
+msgstr "المُعرف"
 
 #. module: website_slides_survey
 #: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
@@ -449,7 +472,7 @@ msgstr "التعيين كيجب القيام به"
 #. odoo-python
 #: code:addons/website_slides_survey/models/slide_channel.py:0
 msgid "No Attendee passed this course certification yet!"
-msgstr ""
+msgstr "لم يجتز أي حاضر هذه الشهادة بعد!"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
@@ -509,7 +532,7 @@ msgstr "محاولات البحث..."
 #. odoo-javascript
 #: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
 msgid "Select a certification"
-msgstr ""
+msgstr "قم بتحديد شهادة"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
@@ -523,6 +546,8 @@ msgid ""
 "Select an existing certification from the list. Creating or editing a "
 "certification can be done from the backend."
 msgstr ""
+"قم بتحديد شهادة من الشهادات الموجودة في القائمة. يمكن إنشاء الشهادة أو "
+"تحريرها من الواجهة الخلفية."
 
 #. module: website_slides_survey
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
@@ -648,6 +673,10 @@ msgid ""
 "The courses that need them are:\n"
 "%s"
 msgstr ""
+"أوه، لا يمكنك حذف الاستطلاعات المستخدمة في شهادة الدورة التدريبية! وإلا، قد "
+"يعتقد الطلاب أن الشهادات تنمو على الأشجار.\n"
+"الدورات التدريبية التي تحتاج إليها هي:\n"
+"%s"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3

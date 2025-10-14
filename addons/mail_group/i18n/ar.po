@@ -3,13 +3,14 @@
 # * mail_group
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 13:45+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-13 12:16+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/ar/>\n"
 "Language: ar\n"
@@ -23,17 +24,17 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "عدد الأعضاء"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "عدد الرسائل"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "عدد الرسائل بانتظار المراجعة"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -47,6 +48,8 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    ابدأ المحادثة عن طريق إرسال بريد إلكتروني إلى"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -70,6 +73,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                مرحباً،<br/><br/>\n"
+"                لقد طلبت الاشتراك في القائمة البريدية <strong t-out="
+"\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                للتأكيد، يرجى زيارة الرابط التالي: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                إذا كان ذلك عن طريق الخطأ أو إذا لم تطلب تنفيذ هذا الإجراء، "
+"يرجى تجاهل هذه الرسالة.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -88,6 +104,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                مرحباً،<br/><br/>\n"
+"                لقد طلبت إلغاء الاشتراك من القائمة البريدية <strong t-out="
+"\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                للتأكيد، يرجى زيارة الرابط التالي: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                إذا كان ذلك عن طريق الخطأ أو إذا لم تطلب تنفيذ هذا الإجراء، "
+"يرجى تجاهل هذه الرسالة.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -101,6 +130,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>مرحباً <t t-out=\"object.partner_id.name or ''\"/>،</p>\n"
+"                <p>ستجد أدناه لوائح <t t-out=\"object.mail_group_id.name\"/> "
+"القائمة البريدية.</p>\n"
+"                <p><t t-out="
+"\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -134,6 +171,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"الازدحام \"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -455,13 +494,15 @@ msgstr "قم بتحديد أو تهيئة نطاق مخصص"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Closed"
-msgstr ""
+msgstr "مغلق"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"قد يظل من الممكن الوصول إلى المجموعات المغلقة، ولكن رسائل البريد الإلكتروني "
+"المرسلة إليها سترتد"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -661,6 +702,12 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"مرحباً،\n"
+"    <br/><br/>\n"
+"    تم إغلاق القائمة البريدية التي تحاول الوصول إليها، ولن تقبل رسائل جديدة."
+"\n"
+"    <br/><br/>\n"
+"    مع أطيب التحيات،"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -724,7 +771,7 @@ msgstr "هو محظور"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "مقفل"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -912,7 +959,7 @@ msgstr "الرسائل التي تتطلب اتخاذ إجراء"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "الإشراف"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1072,7 +1119,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "عذراً، لا توجد رسائل هنا."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1237,7 +1284,7 @@ msgstr "إزالة الرسالة وتفسير السبب"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "المسؤولون"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1262,7 +1309,7 @@ msgstr "البحث في قائمة الإشراف"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "قم بتحديد المستخدمين"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1298,12 +1345,12 @@ msgstr "إرسال بريد إلكتروني إلى كاتب الرسالة"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "إرسال بريد إلكتروني"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "إرسال اللوائح والإرشادات إلى الأعضاء الجدد"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1507,13 +1554,13 @@ msgstr "بإمكانك إنشاء قاعدة واحدة فقط لكل عنوان
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "لا يمكنك الانضمام إلى مجموعة مغلقة."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "لا يمكنك إرسال اللوائح في مجموعة مغلقة."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1553,7 +1600,7 @@ msgstr "مثال: \"النشرة الأخبارية\""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "مثال: \"هذه المجموعة في من أجل...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1563,7 +1610,7 @@ msgstr "مثال: mycompany.com"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "مثال: \"رجاءً قم بـ ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1578,7 +1625,7 @@ msgstr "كانت"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "أعضاء<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1588,7 +1635,7 @@ msgstr "رسائل / شهر"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "الرسائل المراد مراجعتها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
