@@ -2,6 +2,7 @@ import code
 import logging
 import optparse
 import os
+import re
 import signal
 import sys
 import threading
@@ -11,7 +12,9 @@ from odoo import api
 from odoo.modules.registry import Registry
 from odoo.service import server
 from odoo.tools import config
-from . import Command, server as cli_server
+
+from . import Command
+from . import server as cli_server
 
 _logger = logging.getLogger(__name__)
 
@@ -50,6 +53,25 @@ class Console(code.InteractiveConsole):
         else:
             readline.set_completer(rlcompleter.Completer(local_vars).complete)
             readline.parse_and_bind("tab: complete")
+
+
+class ModelsProxy:
+    def __init__(self, env):
+        self.env = env
+
+    @property
+    def model_names(self):
+        return {re.sub(r'\.', r'_', model): model for model in self.env.registry}
+
+    def __dir__(self):
+        return list(self.model_names)
+
+    def __getattr__(self, name):
+        env = self.env
+        if name in self.model_names:
+            name_with_dots = self.model_names[name]
+            return env.registry[name_with_dots](env, (), ())
+        raise AttributeError(f"{self.__class__.__name__!r} object has no model {name!r}")
 
 
 class Shell(Command):
@@ -141,6 +163,7 @@ class Shell(Command):
                 env = api.Environment(cr, uid, ctx)
                 local_vars['env'] = env
                 local_vars['self'] = env.user
+                local_vars['models'] = ModelsProxy(env)
                 # context_get() has started the transaction already. Rollback to
                 # avoid logging warning "rolling back the transaction before testing"
                 # from odoo.tests.shell.run_tests if the user hasn't done anything.
