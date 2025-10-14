@@ -37,6 +37,7 @@ class HrLeaveReportCalendar(models.Model):
     is_striked = fields.Boolean('Striked', readonly=True)
 
     is_absent = fields.Boolean(related='employee_id.is_absent')
+    member_of_department = fields.Boolean(related='employee_id.member_of_department')
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True, groups='hr_holidays.group_hr_holidays_user')
     is_manager = fields.Boolean("Manager", compute="_compute_is_manager")

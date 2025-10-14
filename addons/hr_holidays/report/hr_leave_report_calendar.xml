@@ -59,7 +59,7 @@
                 <field name="job_id"/>
                 <filter name="my_team" string="My Team" domain="['|', ('employee_id.user_id', '=', uid), ('employee_id.parent_id.user_id', '=', uid)]"/>
                 <filter string="My Department" name="department"
-                        domain="[('employee_id.member_of_department', '=', True)]"
+                        domain="[('member_of_department', '=', True)]"
                         help="My Department"/>
                 <separator/>
                 <filter string="Off Today" name="off_today" domain="[('is_absent', '=', True)]" help="Employees Off Today"/>
