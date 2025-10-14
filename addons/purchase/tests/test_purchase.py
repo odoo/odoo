@@ -4,10 +4,12 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 from odoo import Command, fields
 from odoo.exceptions import UserError
+from odoo.tools import mute_logger
 
 
 from datetime import timedelta
 from freezegun import freeze_time
+from psycopg2.errors import ForeignKeyViolation
 import pytz
 
 
@@ -1081,3 +1083,27 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
         })
         self.assertEqual(po_2.currency_id, gbp, "The currency should be set from context default_currency_id, bypassing the compute")
+
+    def test_purchase_order_line_without_uom(self):
+        uom_test = self.env['uom.uom'].create({
+            'name': 'Test Uom',
+            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
+            'ratio': 250.0,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 1.0,
+                    'product_uom': uom_test.id,
+                })],
+        })
+
+        with (self.assertRaises(ForeignKeyViolation), self.cr.savepoint(), mute_logger("odoo.sql_db")):
+            uom_test.unlink()
+
+        self.assertEqual(po.order_line[0].product_uom, uom_test)
