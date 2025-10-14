@@ -36,8 +36,6 @@ IOT_CHAR = IOT_RPI_CHAR if IS_RPI else IOT_WINDOWS_CHAR if IS_WINDOWS else IOT_T
 - 'T' for Test (non-Raspberry Pi nor Windows)"""
 
 if IS_RPI:
-    import crypt
-
     def rpi_only(function):
         """Decorator to check if the system is raspberry pi before running the function."""
         return function
@@ -252,13 +250,13 @@ def toggle_remote_connection(token=""):
 
 @rpi_only
 def generate_password():
-    """Generate an unique code to secure raspberry pi """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for _ in range(12))
+    """Resets (pi) user password generating a new random one.
+
+    :return: The new generated password
+    """
+    password = secrets.token_urlsafe(16)
     try:
-        shadow_password = crypt.crypt(password, crypt.mksalt())
-        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        subprocess.run(['sudo', 'chpasswd'], input=f"pi:{password}", text=True, check=True)
         return password
     except subprocess.CalledProcessError as e:
         _logger.exception("Failed to generate password: %s", e.output)

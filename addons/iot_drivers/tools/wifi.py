@@ -195,14 +195,16 @@ def _validate_configuration(ssid):
     :return: True if the configuration file is saved successfully
     :rtype: bool
     """
-    source_path = Path(f'/etc/NetworkManager/system-connections/{ssid}.nmconnection')
+    source_path = Path('/etc/netplan/')
     if not source_path.exists():
         return False
 
     destination_path = Path('/root_bypass_ramdisks') / source_path.relative_to('/')
+    if source_path.is_dir():
+        source_path = f"{source_path}/"
 
     # Copy the configuration file to the root filesystem
-    if subprocess.run(['sudo', 'cp', source_path, destination_path], check=False).returncode == 0:
+    if subprocess.run(['sudo', 'rsync', '--dirs', '--delete', source_path, destination_path], check=False).returncode == 0:
         return True
     else:
         _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
