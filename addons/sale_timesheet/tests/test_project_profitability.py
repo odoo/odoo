@@ -489,3 +489,70 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         profitability_items = self.project_task_rate._get_profitability_items(False)
         self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertFalse([data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'])
+
+    def test_profitability_revenue(self):
+        product_profitability_items = self.env['product.product'].create({
+            'name': "Service Ordered, create task in new project",
+            'standard_price': 10,
+            'list_price': 20,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': self.uom_hour.id,
+            'uom_po_id': self.uom_hour.id,
+            'default_code': 'SERV-ORDERED3',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_task_rate.id,
+            'service_type': 'manual',
+        })
+        saleorder_revenue = self.env['sale.order'].with_context(tracking_disable=True)
+        saleOrderLine_revenue = self.env['sale.order.line'].with_context(tracking_disable=True)
+        sale_order_revenue = saleorder_revenue.create({
+            'partner_id': self.partner_b.id,
+            'partner_invoice_id': self.partner_b.id,
+            'partner_shipping_id': self.partner_b.id,
+        })
+
+        sale_order_line_revenue = saleOrderLine_revenue.create({
+            'product_id': product_profitability_items.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order_revenue.id,
+        })
+
+        sequence_per_invoice_type = self.project_task_rate._get_profitability_sequence_per_invoice_type()
+        profitability_item_data = {
+            'revenues': {
+                'data': [{
+                    'id': 'billable_fixed',
+                    'sequence': sequence_per_invoice_type['billable_fixed'],
+                    'invoiced': 0.0,
+                    'to_invoice': 200.0
+                }],
+                'total': {
+                    'invoiced': 0.0,
+                    'to_invoice': 200.0
+                }
+            },
+            'costs': {
+                'data': [],
+                'total': {'billed': 0.0, 'to_bill': 0.0}
+            }
+        }
+
+        sale_order_revenue.action_confirm()
+        project_profitability_items = sale_order_line_revenue.project_id
+        self.assertDictEqual(
+            self.project_task_rate._get_profitability_items(False),
+            profitability_item_data
+        )
+        project_profitability_items.active = False
+        self.assertDictEqual(
+            self.project_task_rate._get_profitability_items(False),
+            profitability_item_data
+        )
+        profitability_before = self.project_task_rate.get_panel_data()['profitability_items']
+        product_profitability_items.active = False
+        profitability_after = self.project_task_rate.get_panel_data()['profitability_items']
+        self.assertEqual(
+            profitability_before,
+            profitability_after,
+        )
