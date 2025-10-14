@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
@@ -14,7 +14,13 @@ class AccountMoveLine(models.Model):
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
-    sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
+    sale_line_warn_msg = fields.Text(compute='_compute_sale_line_warn_msg')
+
+    @api.depends('product_id.sale_line_warn_msg')
+    def _compute_sale_line_warn_msg(self):
+        has_warning_group = self.env.user.has_group('sale.group_warning_sale')
+        for line in self:
+            line.sale_line_warn_msg = line.product_id.sale_line_warn_msg if has_warning_group else ""
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'sale_line_ids' field as well.
