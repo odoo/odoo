@@ -82,6 +82,7 @@ class PosMercadoPagoWebhook(http.Controller):
 
         # Notify the frontend that we received a message from Mercado Pago
         pos_session_sudo.config_id._notify('MERCADO_PAGO_LATEST_MESSAGE', {
+            'payment_method_id': payment_method_sudo.id,
             'config_id': pos_session_sudo.config_id.id
         })
 

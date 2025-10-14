@@ -64,6 +64,10 @@ class PosPaymentMethod(models.Model):
     def _get_payment_terminal_selection(self):
         return super()._get_payment_terminal_selection() + [('viva_com', 'Viva.com')]
 
+    @api.model
+    def _allowed_actions_in_self_order(self):
+        return super()._allowed_actions_in_self_order() + ["viva_com_send_payment_request", "viva_com_get_payment_status", "get_latest_viva_com_status"]
+
     def _bearer_token(self, session):
         self.ensure_one()
 

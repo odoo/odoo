@@ -8,7 +8,7 @@
     ],
     'depends': ['point_of_sale'],
     'assets': {
-        'point_of_sale._assets_pos': [
+        'point_of_sale.payment_terminals': [
             'pos_mercado_pago/static/**/*',
         ],
     },

@@ -220,7 +220,7 @@ class PosPaymentMethod(models.Model):
                 pm.default_qr = False
 
     @api.model
-    def _allowed_methods_in_self_order(self):
+    def _allowed_actions_in_self_order(self):
         # This method is overridden by payment terminal modules to
         # allow their methods to be called from the Self Order Kiosk.
         # It is defined here rather than in `pos_self_order` so that

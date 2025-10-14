@@ -212,10 +212,12 @@ class PosSelfOrderController(http.Controller):
     @http.route("/kiosk/payment_method_action/<action>", auth="public", type="jsonrpc", website=True)
     def pos_self_order_kiosk_payment_method_action(self, access_token, action, args, kwargs):
         pos_config = self._verify_pos_config(access_token)
+        if pos_config.self_ordering_mode != "kiosk":
+            raise Forbidden("Method only allowed in kiosk mode")
         payment_method = pos_config.env["pos.payment.method"].search([("id", "=", args[0]), ("config_ids", "in", pos_config.id)])
         if not payment_method:
             raise NotFound("Payment method not found in config")
-        if action not in payment_method._allowed_methods_in_self_order():
+        if action not in payment_method._allowed_actions_in_self_order():
             raise Forbidden(f"Method '{action}' is forbidden in the self order kiosk")
 
         return call_kw(pos_config.env["pos.payment.method"], action, args, kwargs)
