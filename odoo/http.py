@@ -210,7 +210,6 @@ from .tools import (config, consteq, file_path, get_lang, json_default,
 from .tools.facade import Proxy, ProxyAttr, ProxyFunc
 from .tools.func import filter_kwargs
 from .tools.misc import submap, real_time
-from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
 
