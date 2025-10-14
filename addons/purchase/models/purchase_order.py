@@ -293,6 +293,9 @@ class PurchaseOrder(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
     def _compute_purchase_warning_text(self):
+        if not self.env.user.has_group('purchase.group_warning_purchase'):
+            self.purchase_warning_text = ''
+            return
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.purchase_warn_msg:

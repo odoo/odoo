@@ -819,6 +819,9 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'order_line.sale_line_warn_msg')
     def _compute_sale_warning_text(self):
+        if not self.env.user.has_group('sale.group_warning_sale'):
+            self.sale_warning_text = ''
+            return
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
@@ -2127,9 +2130,10 @@ class SaleOrder(models.Model):
             **kwargs,
         )
         res = super()._get_product_catalog_order_data(products, **kwargs)
+        has_warning_group = self.env.user.has_group('sale.group_warning_sale')
         for product in products:
             res[product.id]['price'] = pricelist.get(product.id)
-            if product.sale_line_warn_msg:
+            if product.sale_line_warn_msg and has_warning_group:
                 res[product.id]['warning'] = product.sale_line_warn_msg
         return res
 
