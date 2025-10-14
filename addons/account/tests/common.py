@@ -14,11 +14,14 @@ import copy
 import logging
 import re
 
+import difflib
+import pprint
+import requests
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
 from lxml import etree
-from unittest import SkipTest
+from unittest import SkipTest, TestCase
 from unittest.mock import patch, ANY
 
 _logger = logging.getLogger(__name__)
@@ -2181,3 +2184,141 @@ class TestAccountMergeCommon(AccountTestInvoicingCommon):
             partner: 'property_account_receivable_id',
             attachment: 'res_id',
         }
+
+
+class PatchRequestsMixin(TestCase):
+    """ Mock external HTTP requests made through the `requests` library.
+    Assert expected requests and provide mocked responses in a record/replay fashion.
+    """
+
+    external_mode = False
+
+    @contextmanager
+    def assert_requests(self, expected_requests_and_responses: list[tuple[dict, requests.Response]]):
+        """ Assert expected requests and provide mocked responses in a record/replay fashion.
+
+        Patches `requests.Session.request`, which is the main method internally used by the 
+        `requests` library to perform HTTP requests.
+
+        This allows simulating external APIs during tests.
+
+        The `external_mode` attribute can be set to:
+        - True to let the requests through;
+        - False to mock the requests;
+        - 'warn' to let the requests through but issue a warning if the requests / responses differ from the expected requests / mocked responses.
+
+        :param expected_requests_and_responses: A list of tuples, each containing
+                                                an expected request and a mocked response.
+                                                The expected request is a dictionary of arguments
+                                                passed to `requests.Session.request`,
+                                                and the mocked response is an object that supports
+                                                the `requests.Response` interface.
+
+        Example usage:
+        ```
+        mocked_response = requests.Response()
+        mocked_response.status_code = 200
+        mocked_response._content = json.dumps({'message': 'Success'})
+
+        with self.assert_requests([
+            (
+                {'method': 'POST', 'url': 'https://example.com/send', 'json': {'message': 'Hello World!'}},
+                mocked_response,
+            ),
+        ]):
+            response = requests.post('https://example.com/send', json={'message': 'Hello World!'})
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json(), {'message': 'Success'})
+        ```
+        """
+        if self.external_mode is True:
+            yield  # Full external mode: don't patch `requests.Session.request` at all
+        elif self.external_mode == 'warn':
+            # External mode with warnings
+            yield from self._assert_requests_warn(expected_requests_and_responses)
+        else:
+            # Mocked mode
+            yield from self._assert_requests_mock(expected_requests_and_responses)
+
+    def _assert_requests_warn(self, expected_requests_and_responses):
+        """ Let requests pass through but warn if the request or the response differ from
+        what is expected.
+        """
+        def generate_diff(d1, d2):
+            return '\n'.join(difflib.ndiff(
+                pprint.pformat(d1).splitlines(),
+                pprint.pformat(d2).splitlines())
+            )
+
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+        original_request_method = requests.Session.request
+
+        def request_and_warn(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, expected_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                _logger.warning("Unexpected request: %s", actual_request)
+                return original_request_method(session, method, url, **kwargs)
+
+            if actual_request != expected_request:
+                diff = generate_diff(actual_request, expected_request)
+                _logger.warning("Request differs from expected request: \n%s", diff)
+
+            response = original_request_method(session, method, url, **kwargs)
+
+            if (
+                response.status_code != expected_response.status_code
+                or response.content != expected_response.content
+            ):
+                warning_msg = 'Response differs from expected response:\n'
+                warning_msg += 'Status code: %s != %s\n' % (response.status_code, expected_response.status_code)
+                try:
+                    diff = generate_diff(response.json(), expected_response.json())
+                    warning_msg += 'Content: \n%s' % diff
+                except Exception:
+                    try:
+                        diff = generate_diff(response.text, expected_response.text)
+                        warning_msg += 'Content: \n%s' % diff
+                    except Exception:
+                        warning_msg += 'Content: \n%s\n != \n%s' % (response.content, expected_response.content)
+                _logger.warning(warning_msg)
+
+            return response
+
+        with patch.object(requests.Session, 'request', request_and_warn):
+            yield
+
+        for expected_request, _ in expected_requests_and_responses_iter:
+            _logger.warning("Expected request not made: %s", expected_request)
+
+    def _assert_requests_mock(self, expected_requests_and_responses):
+        """ Mock requests, assert that the request is as expected and serve a mocked response. """
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+
+        def mock_request(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, mocked_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                self.fail("Unexpected request: %s" % actual_request)
+
+            self.assertEqual(actual_request, expected_request)
+            return mocked_response
+
+        with patch.object(requests.Session, 'request', new=mock_request):
+            yield
+
+        next_expected_request, _ = next(expected_requests_and_responses_iter, (None, None))
+        if next_expected_request is not None:
+            self.fail("Expected request not made: %s" % next_expected_request)
