@@ -43,15 +43,16 @@
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
                         <h1>
-                            <field id="contact" name="name" default_focus="1" placeholder="e.g. Lumber Inc or Brandon Freeman"  required="type == 'contact'"/>
+                            <field id="contact" name="name" default_focus="1" placeholder="e.g. Lumber Inc or Brandon Freeman" required="is_individual or is_company"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
                             placeholder="Company Name..."
-                            domain="[('parent_id', '=', False)]" context="{'show_vat': True, 'default_user_id': user_id}"/>
+                            domain="[('can_be_parent', '=', True)]" context="{'show_vat': True, 'default_user_id': user_id}"
+                            invisible="not can_be_child"/> 
                     </div>
                     <group>
-                        <field name="function" placeholder="e.g. Sales Director"/>
+                        <field name="function" placeholder="e.g. Sales Director" invisible="not is_individual"/>
                         <field name="email" widget="email" required="True"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                     </group>
@@ -131,8 +132,8 @@
                             <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
                             <div class="d-flex flex-column flex-grow-1">
-                                <h1 class="mb-0 w-75">
-                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="Name (company or person)" required="type == 'contact'"/>
+                                <h1 class="mb-0 w-md-75">
+                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="Name (company or person)" required="is_individual or is_company"/>
                                 </h1>
                                 <div class="d-flex align-items-baseline w-md-50">
                                     <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
@@ -155,6 +156,18 @@
                     </div>
                     <group>
                         <group>
+                            <field name="parent_id"
+                                widget="res_partner_many2one"
+                                placeholder="Company Name..."
+                                string="Company"
+                                domain="[('is_company', '=', True)]"
+                                context="{'default_is_company': True, 'default_user_id': user_id, 'show_address': False}"
+                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
+                            <div colspan="2" class="d-flex gap-2" invisible="not company_name or company_name == '' or is_company">
+                                <label for="company_name" class="fw-bold text-nowrap"/>
+                                <field name="company_name"/>
+                                <button name="create_company" icon="fa-plus-square" string="Create" type="object" class="oe_edit_only btn-link text-nowrap"/>
+                            </div>
                             <span class="o_form_label o_td_label o_address_type" name="address_name">
                                 <field name="type_address_label" readonly="1" class="fw-bold"/>
                             </span>
@@ -174,7 +187,7 @@
                             <field name="vat" placeholder="e.g. BE0477472701"/>
                         </group>
                         <group>
-                            <field name="function" placeholder="e.g. Sales Director"/>
+                            <field name="function" placeholder="e.g. Sales Director" invisible="not is_individual"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
@@ -240,7 +253,7 @@
                                             <field name="image_1920" widget="contact_image" nolabel="1" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded border'}"/>
                                             <div class="flex-grow-1">
                                                 <h3>
-                                                    <field name="name" class="d-block" string="Name" default_focus="1" required="type == 'contact'" placeholder="e.g. Brandon Freeman"/>
+                                                    <field name="name" class="d-block" string="Name" default_focus="1" required="is_individual or is_company" placeholder="e.g. Brandon Freeman"/>
                                                 </h3>
                                                 <div class="row flex-row">
                                                     <div class="d-flex align-items-baseline">
@@ -251,14 +264,14 @@
                                                         <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
                                                         <field name="phone" widget="phone" class="w-100" placeholder="Phone"/>
                                                     </div>
-                                                    <div invisible="type != 'contact'" class="d-flex align-items-baseline">
+                                                    <div invisible="not is_individual" class="d-flex align-items-baseline">
                                                         <i class="fa fa-fw me-1 fa-suitcase text-primary" title="Position"/>
                                                         <field name="function" placeholder="Job title"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <group invisible="type == 'contact'" name="other_info">
+                                        <group invisible="is_address_readonly" name="other_info">
                                             <group>
                                                 <span class="o_form_label o_td_label o_address_type">
                                                     <field name="type_address_label" readonly="1" class="fw-bold"/>
