@@ -1,23 +1,11 @@
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import * as tourUtils from "@website_sale_wishlist/../tests/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates', {
     url: '/shop?search=Customizable Desk',
     steps: () => [
-        {
-            content: "hover card && click on add to wishlist",
-            trigger: ".o_wsale_product_grid_wrapper:contains(desk)",
-            run: "hover && click .o_add_wishlist",
-        },
-        {
-            trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
-        },
-        {
-            content: "go to wishlist",
-            trigger: 'a[href="/shop/wishlist"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...tourUtils.addToWishlistFromShopPage(),
+        tourUtils.goToWishlist({ quantity: 1 }),
         {
             content: "remove first item in whishlist",
             trigger: '.o_wish_rm:first',
@@ -29,9 +17,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
             trigger: ".o_wsale_product_grid_wrapper:contains(desk)",
             run: "hover && click .o_add_wishlist",
         },
-        {
-            trigger: ".my_wish_quantity:contains(1)",
-        },
+        tourUtils.assertWishlistQuantity(1),
         {
             content: "check value of wishlist and go to login",
             trigger: 'a[href="/web/login"]',
@@ -41,7 +27,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
         {
             content: "submit login",
             trigger: ".oe_login_form",
-            run: function (){
+            run: function () {
                 document.querySelector('.oe_login_form input[name="login"]').value = "admin";
                 document.querySelector('.oe_login_form input[name="password"]').value = "admin";
                 document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop?search=Customizable Desk";
@@ -79,32 +65,21 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
             trigger: '#product_detail .o_add_wishlist_dyn',
             run: "click",
         },
-        {
-            trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
-        },
-        {
-            content: "check that wishlist contains 2 items and go to wishlist",
-            trigger: 'a[href="/shop/wishlist"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        tourUtils.goToWishlist({ quantity: 2}),
         {
             content: "remove Customizable Desk (TEST)",
             trigger: '.o_wish_rm:first',
             run: "click",
         },
-        {
-            content: "check that wishlist contains 1 item",
-            trigger: ".my_wish_quantity:contains(1)",
-        },
+        tourUtils.assertWishlistQuantity(1),
         {
             content: "add last item to cart",
             trigger: '.o_wish_add:eq(1)',
             run: "click",
         },
         {
-            content: "Clicking on the Continue Shopping",
-            trigger: "button:contains(\"Continue Shopping\")",
+            content: "Clicking on Add to cart",
+            trigger: "button[name='website_sale_product_configurator_continue_button']",
             run: "click",
             expectUnloadPage: true,
         },
@@ -119,253 +94,6 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
         {
             content: "check that wishlist is empty and no more visible",
             trigger: ":not(:has(.my_wish_quantity:visible))",
-        },
-        // Test dynamic attributes
-        {
-            content: "Create a product with dynamic attribute and its values.",
-            trigger: 'body',
-            run: function () {
-                rpc("/web/dataset/call_kw/product.attribute/create", {
-                    model: 'product.attribute',
-                    method: 'create',
-                    args: [{
-                        'name': "color",
-                        'display_type': 'color',
-                        'create_variant': 'dynamic'
-                    }],
-                    kwargs: {},
-                }).then(function (attributeId) {
-                    return rpc("/web/dataset/call_kw/product.template/create", {
-                        model: 'product.template',
-                        method: 'create',
-                        args: [{
-                            'name': "Bottle",
-                            'is_published': true,
-                            'attribute_line_ids': [[0, 0, {
-                                'attribute_id': attributeId,
-                                'value_ids': [
-                                    [0, 0, {
-                                        'name': "red",
-                                        'attribute_id': attributeId,
-                                    }],
-                                    [0, 0, {
-                                        'name': "blue",
-                                        'attribute_id': attributeId,
-                                    }],
-                                    [0, 0, {
-                                        'name': "black",
-                                        'attribute_id': attributeId,
-                                    }],
-                                ]
-                            }]],
-                        }],
-                        kwargs: {},
-                    });
-                }).then(function () {
-                    window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
-                });
-            },
-            expectUnloadPage: true,
-        },
-        {
-            trigger: '.oe_product_cart:contains("Bottle")',
-        },
-        {
-            content: "Add Bottle to wishlist from /shop",
-            trigger: ".oe_product_cart:contains(Bottle)",
-            run: "hover && click .oe_product_cart:contains(Bottle) .o_add_wishlist",
-        },
-        {
-            content: "Check that wishlist contains 1 item",
-            trigger: '.my_wish_quantity:contains(1)',
-        },
-        {
-            trigger: '.o_wsale_product_grid_wrapper:contains("Bottle") .o_add_wishlist.disabled',
-        },
-        {
-            content: "Click on product",
-            trigger: '.oe_product_cart a:contains("Bottle")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            content: "Select Bottle with second variant from /product",
-            trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
-            run: "click",
-        },
-        {
-            trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
-        },
-        {
-            content: "Add product in wishlist",
-            trigger: '#product_detail .o_add_wishlist_dyn',
-            run: "click",
-        },
-        {
-            content: "Select Bottle with third variant from /product",
-            trigger: "input.js_variant_change[data-value-name=black]:not(:visible)",
-            run: "click",
-        },
-        {
-            trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
-        },
-        {
-            content: "Add product in wishlist",
-            trigger: '#product_detail .o_add_wishlist_dyn',
-            run: "click",
-        },
-        {
-            content: "Check that wishlist contains 3 items and go to wishlist",
-            trigger: '.my_wish_quantity:contains(3)',
-            run: function () {
-                window.location.href = '/shop/wishlist';
-            },
-            expectUnloadPage: true,
-        },
-        {
-            content: "Check wishlist contains first variant",
-            trigger: '#o_comparelist_table .oe_product_cart a:contains("red")',
-        },
-        {
-            content: "Check wishlist contains second variant",
-            trigger: '#o_comparelist_table .oe_product_cart a:contains("blue")',
-        },
-        {
-            content: "Check wishlist contains third variant, then go to login",
-            trigger: '#o_comparelist_table .oe_product_cart a:contains("black")',
-            run: function () {
-                window.location.href = "/web/login";
-            },
-            expectUnloadPage: true,
-        },
-        {
-            content: "Submit login as admin",
-            trigger: '.oe_login_form',
-            run: function () {
-                document.querySelector('.oe_login_form input[name="login"]').value = "admin";
-                document.querySelector('.oe_login_form input[name="password"]').value = "admin";
-                document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
-                document.querySelector(".oe_login_form").submit();
-            },
-            expectUnloadPage: true,
-        },
-        // Test one impossible combination while other combinations are possible
-        {
-            content: "Archive the first variant",
-            trigger: 'header#top:contains("Mitchell Admin")',
-            run: function () {
-                rpc("/web/dataset/call_kw/product.product/search", {
-                    model: 'product.product',
-                    method: 'search',
-                    args: [[['name', '=', "Bottle"]]],
-                    kwargs: {},
-                })
-                .then(function (productIds) {
-                    return rpc("/web/dataset/call_kw/product.product/write", {
-                        model: 'product.product',
-                        method: 'write',
-                        args: [productIds[0], {active: false}],
-                        kwargs: {},
-                    });
-                })
-                .then(function () {
-                    window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
-                });
-            },
-            expectUnloadPage: true,
-        },
-        {
-            trigger: ".js_sale",
-        },
-        {
-            content: "Check there is wishlist button on product from /shop",
-            trigger: ".o_wsale_product_grid_wrapper:contains(Bottle) .o_add_wishlist",
-        },
-        {
-            content: "Click on product",
-            trigger: '.oe_product_cart a:contains("Bottle")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            content: "Select Bottle with first variant (red) from /product",
-            trigger: "input.js_variant_change[data-value-name=red]:not(:visible)",
-            run: "click",
-        },
-        {
-            content: "Check there is no wishlist button when selecting impossible variant",
-            trigger: '#product_detail:not(:has(.o_add_wishlist))',
-        },
-        {
-            content: "Select Bottle with second variant (blue) from /product",
-            trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
-            run: "click",
-        },
-        {
-            content: "Click on wishlist when selecting a possible variant from /product",
-            trigger: '#product_detail .o_add_wishlist_dyn:not(.disabled)',
-            run: "click",
-        },
-        {
-            content: "Check product added to wishlist and go to login",
-            trigger: '.my_wish_quantity:contains(1)',
-            run: function () {
-                window.location.href = "/web/login";
-            },
-            expectUnloadPage: true,
-        },
-        {
-            content: "Submit login",
-            trigger: '.oe_login_form',
-            run: function () {
-                document.querySelector('.oe_login_form input[name="login"]').value = "admin";
-                document.querySelector('.oe_login_form input[name="password"]').value = "admin";
-                document.querySelector('.oe_login_form input[name="redirect"]').value = "/";
-                document.querySelector(".oe_login_form").submit();
-            },
-            expectUnloadPage: true,
-        },
-        // test when all combinations are impossible
-        {
-            content: "Archive all variants",
-            trigger: 'header#top:contains("Mitchell Admin")',
-            run: function () {
-                rpc("/web/dataset/call_kw/product.product/search", {
-                    model: 'product.product',
-                    method: 'search',
-                    args: [[['name', '=', "Bottle"]]],
-                    kwargs: {},
-                })
-                .then(function (productIds) {
-                    return rpc("/web/dataset/call_kw/product.product/write", {
-                        model: 'product.product',
-                        method: 'write',
-                        args: [productIds, {active: false}],
-                        kwargs: {},
-                    });
-                })
-                .then(function () {
-                    window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
-                });
-            },
-            expectUnloadPage: true,
-        },
-        {
-            trigger: ".js_sale",
-        },
-        {
-            content: "Check that there is no wishlist button from /shop",
-            trigger: '.oe_product_cart:contains("Bottle"):not(:has(.o_add_wishlist))',
-        },
-        {
-            content: "Click on product",
-            trigger: '.oe_product_cart a:contains("Bottle")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            content: "Check that there is no wishlist button from /product",
-            trigger: '#product_detail:not(:has(.o_add_wishlist_dyn))',
         },
         // Test if the wishlist button is active or not in /shop
         {
@@ -387,10 +115,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
             trigger: '#product_option_block .o_add_wishlist_dyn',
             run: "click",
         },
-        {
-            content: "Added into the wishlist",
-            trigger: '.my_wish_quantity.bg-primary:contains(1)',
-        },
+        tourUtils.assertWishlistQuantity(1),
         {
             content: "Go to '/shop",
             trigger: 'header#top a[href="/shop"]',
@@ -440,4 +165,92 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
             trigger: '.oe_product_cart .o_wsale_product_btn:not(:has(.o_add_wishlist[disabled]))',
         },
     ]
+});
+
+
+registry.category("web_tour.tours").add('website_sale_wishlist.dynamic_variants', {
+    url: '/shop?search=Bottle',
+    steps: () => [
+        {
+            trigger: '.oe_product_cart:contains("Bottle")',
+        },
+        ...tourUtils.addToWishlistFromShopPage(),
+        tourUtils.assertWishlistQuantity(1),
+        {
+            content: "Click on product",
+            trigger: '.oe_product_cart a:contains("Bottle")',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: "Select Bottle with second variant from /product",
+            trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
+            run: "click",
+        },
+        ...tourUtils.addToWishlistFromProductPage(),
+        tourUtils.assertWishlistQuantity(2),
+        {
+            content: "Select Bottle with third variant from /product",
+            trigger: "input.js_variant_change[data-value-name=black]:not(:visible)",
+            run: "click",
+        },
+        ...tourUtils.addToWishlistFromProductPage(),
+        tourUtils.goToWishlist({ quantity: 3}),
+        {
+            content: "Check wishlist contains first variant",
+            trigger: '#o_comparelist_table .oe_product_cart a:contains("red")',
+        },
+        {
+            content: "Check wishlist contains second variant",
+            trigger: '#o_comparelist_table .oe_product_cart a:contains("blue")',
+        },
+        {
+            content: "Check wishlist contains third variant, then go to login",
+            trigger: '#o_comparelist_table .oe_product_cart a:contains("black")',
+        },
+    ]
+});
+
+registry.category("web_tour.tours").add('website_sale_wishlist.archived_variant', {
+    url: '/shop?search=Bottle',
+    steps: () => [
+        {
+            trigger: ".js_sale",
+        },
+        {
+            content: "Check there is wishlist button on product from /shop",
+            trigger: ".o_wsale_product_grid_wrapper:contains(Bottle) .o_add_wishlist",
+        },
+        {
+            content: "Click on product",
+            trigger: '.oe_product_cart a:contains("Bottle")',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: "Select Bottle with first variant (red) from /product",
+            trigger: "input.js_variant_change[data-value-name=red]:not(:visible)",
+            run: "click",
+        },
+        {
+            content: "Check there is no wishlist button when selecting impossible variant",
+            trigger: '#product_detail:not(:has(.o_add_wishlist))',
+        },
+        {
+            content: "Select Bottle with second variant (blue) from /product",
+            trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
+            run: "click",
+        },
+        ...tourUtils.addToWishlistFromProductPage(),
+        tourUtils.assertWishlistQuantity(1),
+    ]
+});
+
+registry.category("web_tour.tours").add('website_sale_wishlist.no_valid_combination', {
+    steps: () => [
+        {
+            content: "Check that there is no wishlist button on the product page",
+            trigger: '#product_detail:not(:has(.o_add_wishlist_dyn))',
+        },
+    ],
 });
