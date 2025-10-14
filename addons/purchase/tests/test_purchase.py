@@ -874,7 +874,10 @@ class TestPurchase(AccountTestInvoicingCommon):
         """Test warnings when partner/products with purchase warnings are used."""
         partner_with_warning = self.env['res.partner'].create({
             'name': 'Test Partner', 'purchase_warn_msg': 'Highly infectious disease'})
+        child_partner = self.env['res.partner'].create({
+            'type': 'invoice', 'parent_id': partner_with_warning.id, 'purchase_warn_msg': 'Slightly infectious disease'})
         purchase_order = self.env['purchase.order'].create({'partner_id': partner_with_warning.id})
+        purchase_order2 = self.env['purchase.order'].create({'partner_id': child_partner.id})
 
         product_with_warning1 = self.env['product.product'].create({
             'name': 'Test Product 1', 'purchase_line_warn_msg': 'Highly corrosive'})
@@ -894,12 +897,23 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'order_id': purchase_order.id,
                 'product_id': product_with_warning1.id,
             },
+            {
+                'order_id': purchase_order2.id,
+                'product_id': product_with_warning2.id,
+            },
         ])
+        purchase_order2.button_confirm()
+        purchase_order2.action_create_invoice()
+        invoice = Form(purchase_order2.invoice_ids[0])
 
         expected_warnings = ('Test Partner - Highly infectious disease',
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
+        expected_warnings_for_purchase_order2 = ('Test Partner, Invoice - Slightly infectious disease',
+                                             'Test Product 2 - Toxic pollutant')
         self.assertEqual(purchase_order.purchase_warning_text, '\n'.join(expected_warnings))
+        self.assertEqual(purchase_order2.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
+        self.assertEqual(invoice.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
 
     def test_bill_in_purchase_matching_individual(self):
         """
