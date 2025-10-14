@@ -596,7 +596,7 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticCache(TestHttpStaticCommon):
-    @freeze_time(datetime.utcnow())
+    @freeze_time(datetime.now())
     def test_static_cache0_standard(self):
         one_week_away = int((datetime.now(timezone.utc) + timedelta(weeks=1)).timestamp())
 
@@ -620,7 +620,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         res_last_modified.raise_for_status()
         self.assertEqual(res_last_modified.status_code, 304, "We should not download the file again.")
 
-    @freeze_time(datetime.utcnow())
+    @freeze_time(datetime.now())
     def test_static_cache1_unique(self):
         # Wed, 21 Oct 2015 07:28:00 GMT
         # The timezone should be %Z (instead of 'GMT' hardcoded) but
@@ -646,7 +646,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         res_last_modified.raise_for_status()
         self.assertEqual(res_last_modified.status_code, 304, "We should not download the file again.")
 
-    @freeze_time(datetime.utcnow())
+    @freeze_time(datetime.now())
     def test_static_cache2_nocache(self):
         res1 = self.assertDownloadGizeh('/web/content/test_http.gizeh_png?nocache=1')
         self.assertCacheControl(res1, 'no-cache')
@@ -659,7 +659,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         res_etag.raise_for_status()
         self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")
 
-    @freeze_time(datetime.utcnow())
+    @freeze_time(datetime.now())
     def test_static_cache3_private(self):
         gizeh_png = self.env.ref('test_http.gizeh_png')
         gizeh_png.public = False

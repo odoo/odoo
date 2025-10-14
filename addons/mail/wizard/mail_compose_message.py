@@ -844,7 +844,7 @@ class MailComposeMessage(models.TransientModel):
                 iter_mails_sudo_tosend = iter_mails_sudo.filtered(
                     lambda mail: (
                         not mail.scheduled_date or
-                        mail.scheduled_date <= datetime.datetime.utcnow()
+                        mail.scheduled_date <= datetime.datetime.now()
                     )
                 )
                 if iter_mails_sudo_tosend:

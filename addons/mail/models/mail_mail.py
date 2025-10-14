@@ -208,7 +208,7 @@ class MailMail(models.Model):
                 ('state', '=', 'outgoing'),
                 '|',
                    ('scheduled_date', '=', False),
-                   ('scheduled_date', '<=', datetime.datetime.utcnow()),
+                   ('scheduled_date', '<=', datetime.datetime.now()),
         ]
         if 'filters' in self.env.context:
             domain.extend(self.env.context['filters'])

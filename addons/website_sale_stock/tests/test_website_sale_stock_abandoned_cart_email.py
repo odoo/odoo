@@ -21,7 +21,7 @@ class TestWebsiteSaleStockAbandonedCartEmail(
         website.write(
             {
                 "send_abandoned_cart_email_activation_time": (
-                    datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+                    datetime.now() - relativedelta(hours=website.cart_abandoned_delay)
                 )
                 - relativedelta(minutes=10)
             }
@@ -41,7 +41,7 @@ class TestWebsiteSaleStockAbandonedCartEmail(
             'partner_id': customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
+            'date_order': (datetime.now() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
                 minutes=1),
             'order_line': order_line
         })

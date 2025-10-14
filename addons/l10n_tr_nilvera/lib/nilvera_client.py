@@ -35,7 +35,7 @@ class NilveraClient:
             self.__session.close()
 
     def request(self, method, endpoint, params=None, json=None, files=None, handle_response=True):
-        start = datetime.utcnow()
+        start = datetime.now()
         url = self.base_url + endpoint
 
         try:
@@ -50,7 +50,7 @@ class NilveraClient:
             _logger.info(_("Network error during request: %s"), e)
             raise UserError(_("Network connectivity issue. Please check your internet connection and try again."))
 
-        end = datetime.utcnow()
+        end = datetime.now()
         duration = (end - start).total_seconds()
         self._log_request(method, duration, url, response.status_code)
 

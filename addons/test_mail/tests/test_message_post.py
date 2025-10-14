@@ -1192,7 +1192,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     def test_message_post_schedule(self):
         """ Test delaying notifications through scheduled_date usage """
         cron_id = self.env.ref('mail.ir_cron_send_scheduled_message').id
-        now = datetime.utcnow().replace(second=0, microsecond=0)
+        now = datetime.now().replace(second=0, microsecond=0)
         scheduled_datetime = now + timedelta(days=5)
         self.user_admin.write({'notification_type': 'inbox'})
 
@@ -1294,7 +1294,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     def test_message_post_schedule_update(self):
         """ Test tools to update scheduled notifications """
         cron = self.env.ref('mail.ir_cron_send_scheduled_message')
-        now = datetime.utcnow().replace(second=0, microsecond=0)
+        now = datetime.now().replace(second=0, microsecond=0)
         scheduled_datetime = now + timedelta(days=5)
         self.user_admin.write({'notification_type': 'inbox'})
 

@@ -44,7 +44,7 @@ class MailMessageSchedule(models.Model):
     @api.model
     def _send_notifications_cron(self):
         messages_scheduled = self.env['mail.message.schedule'].search(
-            [('scheduled_datetime', '<=', datetime.utcnow())]
+            [('scheduled_datetime', '<=', datetime.now())]
         )
         if messages_scheduled:
             _logger.info('Send %s scheduled messages', len(messages_scheduled))

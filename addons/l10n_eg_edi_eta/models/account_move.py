@@ -96,7 +96,7 @@ class AccountMove(models.Model):
         if not drive_id.certificate:
             raise ValidationError(_('Please setup the certificate on the thumb drive menu'))
 
-        invoices.write({'l10n_eg_signing_time': datetime.utcnow()})
+        invoices.write({'l10n_eg_signing_time': datetime.now()})
 
         for invoice in invoices:
             eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(invoice)

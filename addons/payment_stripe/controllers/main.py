@@ -206,7 +206,7 @@ class StripeController(http.Controller):
             raise Forbidden()
 
         # Check if the timestamp is not too old
-        if datetime.utcnow().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
+        if datetime.now().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
             _logger.warning("Received payment data with outdated timestamp: %s", event_timestamp)
             raise Forbidden()
 

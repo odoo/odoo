@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from odoo.tests.common import tagged, TransactionCase, freeze_time
 
 
@@ -44,12 +44,14 @@ class TestFreezeTimeMethodDecorator(TransactionCase):
 
     @freeze_time('2020-01-06 06:06', tz_offset=-1)
     def test_freeze_time_method_decorator_with_tz_offset_int(self):
-        self.assertEqual(datetime.utcnow(), datetime(2020, 1, 6, 6, 6))
+        tz = timezone(timedelta(hours=1))
+        self.assertEqual(datetime.now(tz).replace(tzinfo=None), datetime(2020, 1, 6, 6, 6))
         self.assertEqual(datetime.now(), datetime(2020, 1, 6, 5, 6))
 
     @freeze_time('2020-01-07 08:08', tz_offset=-timedelta(hours=1, minutes=1))
     def test_freeze_time_method_decorator_with_tz_offset_datetime(self):
-        self.assertEqual(datetime.utcnow(), datetime(2020, 1, 7, 8, 8))
+        tz = timezone(timedelta(hours=1, minutes=1))
+        self.assertEqual(datetime.now(tz).replace(tzinfo=None), datetime(2020, 1, 7, 8, 8))
         self.assertEqual(datetime.now(), datetime(2020, 1, 7, 7, 7))
 
     @freeze_time('2120-01-08 08:08', tick=True)
@@ -127,11 +129,13 @@ class TestFreezeTimeClassDecoratorWithDatetime(TransactionCase):
 class TestFreezeTimeClassDecoratorWithTzOffsetInt(TransactionCase):
     # Both methods should have the same freezed time.
     def test_freeze_time_class_decorator_with_tz_offset_int_01(self):
-        self.assertEqual(datetime.utcnow(), datetime(2021, 1, 6, 6, 6))
+        tz = timezone(timedelta(hours=1))
+        self.assertEqual(datetime.now(tz).replace(tzinfo=None), datetime(2021, 1, 6, 6, 6))
         self.assertEqual(datetime.now(), datetime(2021, 1, 6, 5, 6))
 
     def test_freeze_time_class_decorator_with_tz_offset_int_02(self):
-        self.assertEqual(datetime.utcnow(), datetime(2021, 1, 6, 6, 6))
+        tz = timezone(timedelta(hours=1))
+        self.assertEqual(datetime.now(tz).replace(tzinfo=None), datetime(2021, 1, 6, 6, 6))
         self.assertEqual(datetime.now(), datetime(2021, 1, 6, 5, 6))
 
 
@@ -140,11 +144,13 @@ class TestFreezeTimeClassDecoratorWithTzOffsetInt(TransactionCase):
 class TestFreezeTimeClassDecoratorWithTzOffsetDatetime(TransactionCase):
     # Both methods should have the same freezed time.
     def test_freeze_time_class_decorator_with_tz_offset_datetime_01(self):
-        self.assertEqual(datetime.utcnow(), datetime(2021, 1, 7, 8, 8))
+        tz = timezone(timedelta(hours=1, minutes=1))
+        self.assertEqual(datetime.now(tz).replace(tzinfo=None), datetime(2021, 1, 7, 8, 8))
         self.assertEqual(datetime.now(), datetime(2021, 1, 7, 7, 7))
 
     def test_freeze_time_class_decorator_with_tz_offset_datetime_02(self):
-        self.assertEqual(datetime.utcnow(), datetime(2021, 1, 7, 8, 8))
+        tz = timezone(timedelta(hours=1, minutes=1))
+        self.assertEqual(datetime.now(tz).replace(tzinfo=None), datetime(2021, 1, 7, 8, 8))
         self.assertEqual(datetime.now(), datetime(2021, 1, 7, 7, 7))
 
 

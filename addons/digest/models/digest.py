@@ -377,7 +377,7 @@ class DigestDigest(models.Model):
         return date.today() + delta
 
     def _compute_timeframes(self, company):
-        start_datetime = datetime.utcnow()
+        start_datetime = datetime.now()
         tz_name = company.resource_calendar_id.tz
         if tz_name:
             start_datetime = pytz.timezone(tz_name).localize(start_datetime)

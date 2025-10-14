@@ -223,7 +223,7 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
     def test_message_sms_schedule(self):
         """ Test delaying notifications through scheduled_date usage """
         cron_id = self.env.ref('mail.ir_cron_send_scheduled_message').id
-        now = datetime.utcnow().replace(second=0, microsecond=0)
+        now = datetime.now().replace(second=0, microsecond=0)
         scheduled_datetime = now + timedelta(days=5)
 
         with self.mock_datetime_and_now(now), \

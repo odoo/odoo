@@ -91,7 +91,7 @@ class L10nHuEdiConnection:
         :raise: L10nHuEdiConnectionError
         """
         if credentials['mode'] == 'demo':
-            return {'token': 'token', 'token_validity_to': datetime.utcnow() + timedelta(minutes=5)}
+            return {'token': 'token', 'token_validity_to': datetime.now() + timedelta(minutes=5)}
 
         template_values = self._get_header_values(credentials)
         request_data = self.env['ir.qweb']._render('l10n_hu_edi.token_exchange_request', template_values)
@@ -107,7 +107,7 @@ class L10nHuEdiConnection:
             token_validity_to = dateutil.parser.isoparse(token_validity_to).astimezone(timezone.utc).replace(tzinfo=None)
         except ValueError:
             _logger.warning('Could not parse token validity end timestamp!')
-            token_validity_to = datetime.utcnow() + timedelta(minutes=5)
+            token_validity_to = datetime.now() + timedelta(minutes=5)
 
         if not encrypted_token:
             raise L10nHuEdiConnectionError(_('Missing token in response from NAV.'))
@@ -326,7 +326,7 @@ class L10nHuEdiConnection:
 
         annulment_hashes = []
         for annulment_operation in annulment_operations:
-            annulment_operation['annulmentTimestamp'] = format_timestamp(datetime.utcnow())
+            annulment_operation['annulmentTimestamp'] = format_timestamp(datetime.now())
             annulment_data = self.env['ir.qweb']._render('l10n_hu_edi.invoice_annulment', annulment_operation)
             annulment_data_b64 = b64encode(annulment_data.encode()).decode('utf-8')
             template_values['annulments'].append({
@@ -353,7 +353,7 @@ class L10nHuEdiConnection:
     # === Helpers: XML generation === #
 
     def _get_header_values(self, credentials, invoice_hashs=None):
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now()
         request_id = 'ODOO' + secrets.token_hex(13)
         request_signature = self._calculate_request_signature(credentials['signature_key'], request_id, timestamp, invoice_hashs=invoice_hashs)
         odoo_version = release.version

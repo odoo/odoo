@@ -181,7 +181,7 @@ class MailActivityMixin(models.AbstractModel):
                 ) AS res_record
             WHERE %(search_states_int)s @> ARRAY[activity_state]
             )""",
-            today_utc=pytz.utc.localize(datetime.utcnow()),
+            today_utc=pytz.utc.localize(datetime.now()),
             res_model_table=self._name,
             search_states_int=list(search_states_int)
         )
@@ -284,7 +284,7 @@ class MailActivityMixin(models.AbstractModel):
             GROUP BY res_id)
             """,
             res_model=self._name,
-            today_utc=pytz.utc.localize(datetime.utcnow()),
+            today_utc=pytz.utc.localize(datetime.now()),
             tz=tz,
         )
         alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")

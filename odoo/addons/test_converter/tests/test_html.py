@@ -348,7 +348,7 @@ class TestRelativeDatetime(TestBasicExport):
 
     def test_basic(self):
         converter = self.get_converter('datetime', 'relative')
-        t = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
+        t = datetime.datetime.now() - datetime.timedelta(hours=1)
 
         result = converter(t, context={'lang': 'fr_FR'})
         self.assertEqual(result, u"il y a 1 heure")
