@@ -1,8 +1,8 @@
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
-import { setContent } from "@html_editor/../tests/_helpers/selection";
-import { expect, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-dom";
+import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
+import { animationFrame, expect, test } from "@odoo/hoot";
+import { Deferred, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -349,4 +349,33 @@ test("An inner snippet alone in a column should not have overlay options", async
     // Only the "Blockquote" should have an overlay.
     expect(".oe_overlay").toHaveCount(3);
     expect(".oe_overlay.oe_active").toHaveCount(1);
+});
+
+test("The overlay buttons should be hidden when the toolbar is open", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="test-options-target">test here</div>
+            </div>
+        </section>
+    `);
+    const editor = getEditor();
+    // Check that the overlay buttons are not hidden.
+    await contains(":iframe .test-options-target").click();
+    expect(".o-we-toolbar.o_overlay_options:not(.d-none)").toHaveCount(1);
+    const text = editor.editable.querySelector(".test-options-target");
+    const selection = {
+        anchorNode: text.childNodes[0],
+        anchorOffset: 2,
+        focusNode: text.childNodes[0],
+        focusOffset: 5,
+    };
+    setSelection(selection);
+    await animationFrame();
+    // Check that the toolbar buttons are shown.
+    await waitFor(".o-we-toolbar:not(.o_overlay_options)");
+    expect(".o-we-toolbar:not(.o_overlay_options)").toHaveCount(1);
+    // Check that the overlay buttons are hidden.
+    await waitFor(".o-we-toolbar.o_overlay_options.d-none", { timeout: 500 });
+    expect(".o-we-toolbar.o_overlay_options.d-none").toHaveCount(1);
 });
