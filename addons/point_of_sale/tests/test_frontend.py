@@ -3040,6 +3040,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_cross_exclusion_attribute_values')
 
+    def test_custom_attribute_alone_displayed(self):
+        """
+        Tests that if product configurator will be shown if any of the
+        attributes have a free text field, even if there is only one
+        possible selection for every attributes.
+        """
+        attribute_custom = self.env['product.attribute'].create({
+            'name': 'Custom',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+        attribute_value_custom = self.env['product.attribute.value'].create({
+            'name': 'Custom',
+            'attribute_id': attribute_custom.id,
+            'is_custom': True,
+        })
+        self.test_product_1 = self.env['product.template'].create({
+            'name': 'Only Custom',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute_custom.id,
+                    'value_ids': [Command.set([attribute_value_custom.id])],
+                }),
+            ],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_custom_attribute_alone_displayed')
+
     def test_preset_customer_selection(self):
         self.preset_delivery = self.env['pos.preset'].create({
             'name': 'Delivery',
