@@ -36,7 +36,7 @@ class HrWorkEntry(models.Model):
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
-    is_leave = fields.Boolean(related='work_entry_type_id.is_leave')
+    category = fields.Selection(related='work_entry_type_id.category')
     is_manual = fields.Boolean(help="Marks if the work entry came from manual creation or split")
     state = fields.Selection([
         ('draft', 'New'),
@@ -177,7 +177,7 @@ class HrWorkEntry(models.Model):
         return bool(conflict_ids)
 
     def _get_leaves_entries_outside_schedule(self):
-        return self.filtered(lambda w: w.work_entry_type_id.is_leave and w.state not in ('validated', 'cancelled'))
+        return self.filtered(lambda w: w.work_entry_type_id.category == 'absence' and w.state not in ('validated', 'cancelled'))
 
     def _mark_leaves_outside_schedule(self):
         """

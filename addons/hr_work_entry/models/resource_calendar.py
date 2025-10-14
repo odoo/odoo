@@ -1,15 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.fields import Domain
 
 
 class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
-    # Override the method to add 'attendance_ids.work_entry_type_id.is_leave' to the dependencies
-    @api.depends('attendance_ids.work_entry_type_id.is_leave')
+    # Override the method to add 'attendance_ids.work_entry_type_id.category' to
+    # the dependencies
+    @api.depends('attendance_ids.work_entry_type_id.category')
     def _compute_hours_per_week(self):
         super()._compute_hours_per_week()
 
     def _get_global_attendances(self):
-        return super()._get_global_attendances().filtered(lambda a: not a.work_entry_type_id.is_leave)
+        global_attendances = super()._get_global_attendances()
+        return global_attendances.filtered_domain(
+            Domain.OR(
+                [
+                    Domain('work_entry_type_id', '=', False),
+                    Domain('work_entry_type_id.category', '=', 'working_time'),
+                ],
+            ),
+        )

@@ -10,7 +10,7 @@ class HrWorkEntryType(models.Model):
 
     name = fields.Char(required=True, translate=True)
     display_code = fields.Char(string="Display Code", size=3, translate=True, help="This code can be changed, it is only for a display purpose (3 letters max)")
-    code = fields.Char(string="Payroll Code", required=True, help="Careful, the Code is used in many references, changing it could lead to unwanted changes.")
+    code = fields.Char(string="Payroll Code", required=True, help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
     external_code = fields.Char(help="Use this code to export your data to a third party")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
@@ -23,11 +23,12 @@ class HrWorkEntryType(models.Model):
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
     )
     country_code = fields.Char(related='country_id.code')
-    is_leave = fields.Boolean(
-        default=False, string="Is Time Off", help="Allow the work entry type to be linked with time off types.")
-    is_work = fields.Boolean(
-        compute='_compute_is_work', inverse='_inverse_is_work', string="Working Time", readonly=False,
-        help="If checked, the work entry is counted as work time in the working schedule")
+    category = fields.Selection(
+        [("working_time", "Working Time"), ("absence", "Absence")],
+        default="working_time",
+        required=True,
+        help="Determines if the entry counts as working time or absence.",
+    )
     amount_rate = fields.Float(
         string="Rate",
         default=1.0,
@@ -58,12 +59,3 @@ class HrWorkEntryType(models.Model):
             ])
             if invalid_work_entry_types:
                 raise UserError(_("The same code cannot be associated to multiple work entry types (%s)", ', '.join(list(set(invalid_work_entry_types.mapped('code'))))))
-
-    @api.depends('is_leave')
-    def _compute_is_work(self):
-        for record in self:
-            record.is_work = not record.is_leave
-
-    def _inverse_is_work(self):
-        for record in self:
-            record.is_leave = not record.is_work

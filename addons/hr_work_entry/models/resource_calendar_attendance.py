@@ -19,4 +19,4 @@ class ResourceCalendarAttendance(models.Model):
         return res
 
     def _is_work_period(self):
-        return not self.work_entry_type_id.is_leave and super()._is_work_period()
+        return self.work_entry_type_id.category == 'working_time' and super()._is_work_period()

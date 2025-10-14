@@ -461,7 +461,8 @@ class HrVersion(models.Model):
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
         if 'work_entry_type_id' not in vals:
             return False
-        return self.env['hr.work.entry.type'].browse(vals['work_entry_type_id']).is_leave
+        work_entry_type = self.env['hr.work.entry.type'].browse(vals['work_entry_type_id'])
+        return work_entry_type.category == 'absence'
 
     @api.model
     def _generate_work_entries_postprocess(self, vals_list):

@@ -108,7 +108,7 @@
                                     readonly="state != 'draft'"/>
                                 <span>Hours</span>
                             </div>
-                            <field name="resource_calendar_id" string="Source" invisible="is_manual or work_entry_source != 'calendar' or is_leave" readonly="1"/>
+                            <field name="resource_calendar_id" string="Source" invisible="is_manual or work_entry_source != 'calendar' or category == 'absence'" readonly="1"/>
                             <span class="text-muted fw-medium" invisible="not is_manual">Source</span>
                             <span class="o_row mw-50 mw-sm-25" invisible="not is_manual">Manual</span>
                             <field name="company_id" invisible="1"/>
@@ -212,7 +212,13 @@
             <search string="Search Work Entry Type">
                 <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                 <separator/>
+                <filter name="working_time" string="Working Time" domain="[('category', '=', 'working_time')]"/>
+                <filter name="absence_time" string="Absence Time" domain="[('category', '=', 'absence')]"/>
+                <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                <filter name="group_work_type" string="Type of Work" context="{'group_by': 'category'}"/>
             </search>
         </field>
     </record>
@@ -235,10 +241,12 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
-                <field name="display_code"/>
-                <field name="code"/>
+                <field name="code" string="Code"/>
+                <field name="external_code" optional="hide"/>
+                <field name="display_code" string="Display"/>
+                <field name="country_id"/>
+                <field string="Type of Work" name="category" optional="hide"/>
                 <field name="color" widget="color_picker"/>
-                <field name="country_id" optional="hide"/>
             </list>
         </field>
     </record>
@@ -258,27 +266,36 @@
                     <group name="main_group">
                         <group name="identification" class="o_form_fw_labels">
                             <field name="active" invisible="1"/>
-                            <field name="code"/>
-                            <field name="display_code"/>
-                            <field name="external_code"/>
-                            <field name="sequence" groups="base.group_no_one"/>
-                            <field name="color" widget="color_picker"/>
+                            <field name="code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
                         </group>
                         <group>
-                            <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
-                            <label for="amount_rate"/>
-                            <div class="o_row mw-25" name="amount_rate">
-                                <field name="amount_rate" widget="percentage"/>
-                            </div>
-                            <field name="is_extra_hours"/>
+                            <field name="country_id" options="{'no_create': True, 'no_open': True}" placeholder="Available Everywhere"/>
                         </group>
                     </group>
-                    <group name="other">
-                        <group name="time_off" string="Time Off Options" class="o_form_fw_labels"/>
-                    </group>
+
                     <group>
-                        <field name="description"/>
+                        <group name='computation' string="Computation">
+                            <label for="amount_rate"/>
+                            <div name="amount_rate">
+                                <field style='width: 4em;' name="amount_rate" widget="percentage"/>
+                            </div>
+                            <field name="is_extra_hours"/>
+                            <field string="Considered as" name="category" widget="radio" options="{'horizontal': True}" />
+                        </group>
+                        <group string="Display">
+                            <field name="display_code" placeholder="e.g. ATT, PTO, STO, OT, RW, ..."/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
                     </group>
+
+                    <group>
+                        <group name="exports_code" string="Exports Code">
+                            <field name="external_code" string="External" placeholder="Code used in manual exports"/>
+                        </group>
+                    </group>
+
+                    <separator string="Description" />
+                    <field rows="5" nolabel="1" name="description" placeholder="Provide a description of the Work Entry Type, in which case should it be used"/>
                 </sheet>
             </form>
         </field>
