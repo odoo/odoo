@@ -162,7 +162,7 @@ class Im_LivechatChannel(models.Model):
         counts = {}
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
             possible_users = users if users is not None else livechat_channels.user_ids
-            limited_users = possible_users.filtered(lambda user: "online" in user.im_status)
+            limited_users = possible_users.filtered(lambda user: "online" in user.im_status or "busy" in user.im_status)
             counts = {
                 (partner, livechat_channels): count
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
@@ -178,7 +178,7 @@ class Im_LivechatChannel(models.Model):
 
         def is_available(user, channel):
             return (
-                "online" in user.im_status
+                ("online" in user.im_status or "busy" in user.im_status)
                 and (
                     channel.max_sessions_mode == "unlimited"
                     or counts.get((user.partner_id, channel), 0) < channel.max_sessions

@@ -405,6 +405,23 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 livechat_channels[1]: operator,
             },
         )
+        operator.manual_im_status = "busy"
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: self.env["res.users"],
+                livechat_channels[1]: operator,
+            },
+        )
+        operator.manual_im_status = False
+        operator.presence_ids.status = "away"
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: self.env["res.users"],
+                livechat_channels[1]: self.env["res.users"],
+            },
+        )
         operator.presence_ids.status = "offline"
         self.assertEqual(
             livechat_channels._get_available_operators_by_livechat_channel(operator),
