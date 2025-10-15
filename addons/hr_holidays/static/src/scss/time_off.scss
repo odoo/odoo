@@ -84,32 +84,13 @@
     width: fit-content;
 }
 
-.o_kanban_renderer {
-    .o_kanban_record.o_hr_holidays_kanban {
-        min-height: 105px;
-        .ribbon {
-            --Ribbon-wrapper-width: 6.7rem;
-            span {
-                --Ribbon-left-position-default: 0.3rem;
-            }
-            & .o_medium {
-                font-size: $font-size-sm !important;
-            }
-        }
-    }
-}
+.o_holidays_view_kanban .o_kanban_renderer {
+    .o_kanban_record:not(.o_kanban_ghost) {
+        --Ribbon-wrapper-height: 5.5rem;
+        --Ribbon-font-size: .72rem;
 
-.o_holidays_view_kanban .o_kanban_renderer{
-
-    .ribbon {
-        --Ribbon-wrapper-width: 6.77rem;
-        height: 5rem;
-        span {
-            --Ribbon-left-position-default: 0.3rem;
-        }
-        & .o_medium {
-            font-size: $font-size-sm !important;
-        }
+        min-height: auto;
+        overflow: hidden;
     }
 
     &.o_kanban_grouped {
@@ -119,48 +100,87 @@
     }
 
     &.o_kanban_ungrouped {
+        --KanbanRecord-width: 100%;
+
         padding: 0px;
-        @media only screen and (max-width:767px) {
+        container-type: inline-size;
+
+        .o_kanban_record:not(.o_kanban_ghost) {
+            margin: 0;
+            border: none;
+            border-bottom: $border-width solid $border-color;
+        }
+
+        @container (max-width: 750px) {
             .o_hr_holidays_kanban {
                 display: none;
             }
         }
-        @media only screen and (min-width:768px){
-            .o_kanban_record:not(.o_kanban_ghost) {
-                width: 100%;
-                max-height: 5.1rem;
-                margin: 0px;
-                justify-content: center;
+
+        @container (max-width: 1150px) {
+            .o_hr_holidays_kanban .o_hr_holidays_button {
+                flex-direction: column;
+                align-items: start;
+                gap: map-get($spacers, 1) !important;
             }
+        }
+
+        @container (min-width: 751px) {
             .o_hr_holidays_kanban_mobile {
-                display: none;
+                display: none !important;
             }
-            .o_holidays_kanban_card {
+            .o_hr_holidays_name {
                 display: flex;
                 flex-direction: column;
-                height: 100%;
-                .o_hr_holidays_value {
-                    display: flex;
-                    flex-direction: row;
-                    .o_hr_holidays_name {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 2;
-                        align-items: baseline;
-                    }
-                    .o_hr_holidays_card {
-                        flex-direction: column;
-                        display: flex;
-                        flex-wrap: wrap;
-                        align-items: baseline;
-                    }
+                gap: 2;
+                align-items: baseline;
+            }
+            .o_hr_holidays_card {
+                flex-direction: column;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+            }
+        }
+    }
+
+    .o_hr_holidays_kanban_mobile {
+        --KanbanRecord__image-width: 40px;
+
+        container-type: inline-size;
+
+        .btn-sm {
+            padding: $btn-padding-y-sm $btn-padding-x-sm;
+        }
+
+        .o_hr_holidays_button {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: map-get($spacers, 1);
+
+            .btn-primary.oe_kanban_action:where(:last-child), .btn-secondary.oe_kanban_action {
+                grid-area: 2 / 2;
+            }
+
+            .badge {
+                grid-column: -1;
+                align-self: baseline;
+                min-width: fit-content;
+            }
+
+            @container (min-width: 500px) {
+                grid-template-columns: 1fr 1fr 5.5rem;
+                grid-template-rows: 1fr;
+                gap: map-get($spacers, 2);
+                align-items: center;
+
+                .btn-primary.oe_kanban_action:where(:last-child), .btn-secondary.oe_kanban_action {
+                    grid-area: 1 / 2;
                 }
-                .o_hr_holidays_button {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 1;
+
+                .badge {
+                    grid-area: 1 / 3;
+                    align-self: center;
                 }
             }
         }
