@@ -42,7 +42,6 @@ import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
-import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 import { WebsiteSavePlugin } from "@website/builder/plugins/website_save_plugin";
 import { Plugin } from "@html_editor/plugin";
 
@@ -74,7 +73,6 @@ const TRANSLATION_PLUGINS = [
     ImageFieldPlugin,
     MonetaryFieldPlugin,
     Many2OneOptionPlugin,
-    CustomizeTranslationTabPlugin,
     WebsiteSavePlugin,
     // Those plugin are depended by other Plugin but not used in translation
     // mode.

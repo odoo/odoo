@@ -286,5 +286,5 @@ export class CustomizeTranslationTabPlugin extends Plugin {
 }
 
 registry
-    .category("translation-plugins")
+    .category("website-translation-plugins")
     .add(CustomizeTranslationTabPlugin.id, CustomizeTranslationTabPlugin);

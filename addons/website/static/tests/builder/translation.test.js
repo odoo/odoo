@@ -1,4 +1,3 @@
-import { Builder } from "@html_builder/builder";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -9,35 +8,15 @@ import {
     defineWebsiteModels,
     getStructureSnippet,
     invisibleEl,
+    setupSidebarBuilderForTranslation,
     setupWebsiteBuilder,
+    websiteServiceInTranslateMode,
 } from "./website_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { uniqueId } from "@web/core/utils/functions";
 import { TranslationPlugin } from "@website/builder/plugins/translation_plugin";
 
 defineWebsiteModels();
-
-const websiteServiceInTranslateMode = {
-    currentWebsite: {
-        metadata: {
-            lang: "fr_BE",
-            langName: " Français (BE)",
-            translatable: true,
-            defaultLangName: "English (US)",
-        },
-        default_lang_id: {
-            code: "en_US",
-        },
-    },
-    // Minimal context to avoid crashes.
-    context: {},
-    websites: [
-        {
-            id: 1,
-            metadata: {},
-        },
-    ],
-};
 
 test("systray in translate mode", async () => {
     mockService("website", {
@@ -409,32 +388,4 @@ function getTranslateEditable({
                 <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="o_editable translate_branding">${inWrap}</span>
             </p>
         </div>`;
-}
-
-async function setupSidebarBuilderForTranslation(options) {
-    const { websiteContent } = options;
-    // Hack: configure the snippets menu as in translate mode when clicking
-    // on the "Edit" button of the systray. The goal of this hack is to avoid
-    // the handling of an extra reload of the action to arrive in translate
-    // mode.
-    patchWithCleanup(Builder.prototype, {
-        setup() {
-            super.setup();
-            this.env.services.website = websiteServiceInTranslateMode;
-            this.websiteService = websiteServiceInTranslateMode;
-            this.websiteContext = this.websiteService.context;
-        },
-    });
-    const { getEditor, getEditableContent, openBuilderSidebar } = await setupWebsiteBuilder(
-        websiteContent,
-        {
-            openEditor: false,
-            translateMode: true,
-            onIframeLoaded: (iframe) => {
-                websiteServiceInTranslateMode.pageDocument = iframe.contentDocument;
-            },
-        }
-    );
-    await openBuilderSidebar();
-    return { getEditor, getEditableContent };
 }
