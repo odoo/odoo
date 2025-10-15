@@ -3,13 +3,22 @@
   <data>
 
     <!-- =========================================================
-         Ajout de la colonne "Référence" dans le rapport facture
+         Ajout de la colonne "Référence" + "Unité" dans le rapport facture
          ========================================================= -->
     <template id="report_invoice_add_reference" inherit_id="account.report_invoice_document" priority="25">
 
       <!-- 1️⃣  ENTÊTE : ajoute "Référence" après la colonne N° -->
       <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_line_number']" position="after">
         <th name="th_product_ref" class="text-start" style="width: 25mm;">Code</th>
+      </xpath>
+
+      <!-- 1️⃣bis  ENTÊTE : ajoute "Unité" après la colonne Quantité -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="after">
+        <th name="th_unit" class="text-center" style="width: 15mm;">Unité</th>
+      </xpath>
+
+      <!-- 1️⃣ter  SUPPRIMER LA COLONNE TAXES DE L'ENTÊTE -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_taxes']" position="replace">
       </xpath>
 
       <!-- 2️⃣  CORPS : ajoute la valeur default_code ligne par ligne -->
@@ -20,16 +29,24 @@
         </td>
       </xpath>
 
-      <!-- 3️⃣  COLGROUP : ajoute une colonne fixe de 25 mm
-           (juste après la première <col> qui correspond au N°) -->
-      <xpath expr="//table[@name='invoice_line_table']/colgroup/col[1]" position="after">
-        <col style="width: 25mm;"/>
-        <!-- Référence -->
+      <!-- 2️⃣bis  Supprimer l'unité de la cellule quantité -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_quantity']/span[@t-field='line.product_uom_id']" position="replace">
       </xpath>
 
-      <!-- 4️⃣  (optionnel) Si tu préfères redéfinir entièrement le colgroup,
-               remplace-le plutôt que d'insérer -->
+      <!-- 2️⃣ter  CORPS : ajouter la cellule Unité après la cellule Quantité -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_quantity']" position="after">
+        <td name="td_unit" class="text-center" style="width: 15mm;">
+          <span t-if="line.product_uom_id" t-out="line.product_uom_id.name"/>
+          <span t-elif="line.product_id.uom_id" t-out="line.product_id.uom_id.name"/>
+          <span t-else="">-</span>
+        </td>
+      </xpath>
 
+      <!-- 2️⃣quater  SUPPRIMER LA COLONNE TAXES DU CORPS -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_taxes']" position="replace">
+      </xpath>
+
+      <!-- 3️⃣  COLGROUP : redéfinir entièrement le colgroup avec les nouvelles colonnes -->
       <xpath expr="//table[@name='invoice_line_table']/colgroup" position="replace">
         <colgroup>
           <col style="width: 10mm;"/>
@@ -40,41 +57,42 @@
           <!-- Description (reste flexible) -->
           <col style="width: 22mm;"/>
           <!-- Quantity -->
+          <col style="width: 15mm;"/>
+          <!-- Unité -->
           <col style="width: 38mm;"/>
           <!-- Unit Price - AUGMENTÉ -->
           <col t-if="display_discount" style="width: 35mm;"/>
           <!-- Discount -->
-          <col style="width: 45mm;"/>
-          <!-- Taxes - AUGMENTÉ -->
+          <!-- SUPPRIMÉ : col pour Taxes -->
           <col style="width: 50mm;"/>
           <!-- Amount - AUGMENTÉ -->
         </colgroup>
       </xpath>
 
-      <!-- 5️⃣  Enlever CFA et formater avec des espaces pour la colonne Montant -->
+      <!-- 4️⃣  Enlever CFA et formater avec des espaces pour la colonne Montant -->
       <xpath expr="//table[@name='invoice_line_table']//tbody//tr//td[@name='td_subtotal']//span[@t-field='line.price_subtotal']" position="replace">
         <t t-set="formatted_amount" t-value="'{:,}'.format(int(line.price_subtotal)).replace(',', ' ')"/>
         <span t-out="formatted_amount" style="white-space: nowrap;"/>
       </xpath>
 
-      <!-- 6️⃣  Modifier le titre de la colonne Amount en "Montant HT" -->
+      <!-- 5️⃣  Modifier le titre de la colonne Amount en "Montant HT" -->
       <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_subtotal']" position="replace">
         <th name="th_subtotal" class="text-end">Montant HT</th>
       </xpath>
 
-      <!-- 7️⃣  Formater la Quantité pour enlever les décimales inutiles -->
+      <!-- 6️⃣  Formater la Quantité pour enlever les décimales inutiles -->
       <xpath expr="//table[@name='invoice_line_table']//tbody//tr//td[@name='td_quantity']//span[@t-field='line.quantity']" position="replace">
         <t t-set="formatted_qty" t-value="'{:g}'.format(line.quantity)"/>
         <span t-out="formatted_qty"/>
       </xpath>
 
-      <!-- 8️⃣  Formater le Prix unitaire avec des espaces et empêcher le retour à la ligne -->
+      <!-- 7️⃣  Formater le Prix unitaire avec des espaces et empêcher le retour à la ligne -->
       <xpath expr="//span[@t-field='line.price_unit']" position="replace">
         <t t-set="formatted_price" t-value="'{:,}'.format(int(line.price_unit)).replace(',', ' ') if line.price_unit >= 1 else '{:g}'.format(line.price_unit)"/>
         <span t-out="formatted_price" style="white-space: nowrap;"/>
       </xpath>
 
-      <!-- 9️⃣  Enlever le code produit de la description - Version alternative -->
+      <!-- 8️⃣  Enlever le code produit de la description - Version alternative -->
       <xpath expr="//span[@t-field='line.name']" position="replace">
         <t t-set="description_parts" t-value="(line.name or '').split(']')"/>
         <t t-if="len(description_parts) > 1">

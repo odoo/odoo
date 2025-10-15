@@ -5,7 +5,7 @@
     "summary": "Agencements personnalisés pour les documents PDF",
     "description": "Ajoute de nouveaux agencements pour les factures, devis, bons, etc.",
     "author": "Alain Gansonré",
-    "depends": ["base","sale","web","account"],
+    "depends": ["base","sale","web","account", "uom"],
     "data": [
         'views/external_layout_modern.xml',
         'views/report_invoice_document_remove_due_date.xml',
@@ -18,6 +18,7 @@
         'views/hide_invoice_totals.xml',
         'views/hide_sale_order_totals.xml',
         'views/report_invoice_modern.xml',
+        'views/report_invoice_inherit.xml',
         'data/report_layouts.xml',
         'data/report_layout_sale_order.xml',
         'data/report_saleorder_compact.xml',
