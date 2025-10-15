@@ -104,7 +104,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
         for convert in self:
             convert.user_id = convert.lead_id.user_id if convert.lead_id.user_id else False
 
-    @api.depends('user_id')
+    @api.depends('lead_id', 'user_id')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
         to the ones user_id is member of. """
@@ -114,6 +114,9 @@ class CrmLead2opportunityPartner(models.TransientModel):
                 continue
             user = convert.user_id
             if convert.team_id and user in convert.team_id.member_ids | convert.team_id.user_id:
+                continue
+            elif user in convert.lead_id.team_id.member_ids | convert.lead_id.team_id.user_id:
+                convert.team_id = convert.lead_id.team_id
                 continue
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=None)
             convert.team_id = team.id
