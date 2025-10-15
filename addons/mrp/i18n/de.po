@@ -11,13 +11,14 @@
 # Niyas Raphy, 2023
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 04:41+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-14 08:51+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/mrp/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -357,6 +358,21 @@ msgid ""
 "                                        <span class=\"o_annotation "
 "o_annotation_5 o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
+"<span class="
+"\"o_annotation o_annotation_1 o_annotation_end position-absolute\""
+">Stechuhr</span>\n"
+"                                        <span class="
+"\"o_annotation o_annotation_2 o_annotation_end position-absolute\""
+">Qualitätskontrolle</span>\n"
+"                                        <span class="
+"\"o_annotation o_annotation_3 o_annotation_start position-absolute\""
+">Feedbackschleife</span>\n"
+"                                        <span class="
+"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
+">Materialien registrieren</span>\n"
+"                                        <span class="
+"\"o_annotation o_annotation_5 o_annotation_start position-absolute\""
+">Bediener auswählen</span>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -372,11 +388,26 @@ msgid ""
 "                    <span class=\"o_annotation o_annotation_5 "
 "o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
+"<span class="
+"\"o_annotation o_annotation_1 o_annotation_end position-absolute\""
+">Stechuhr</span>\n"
+"                    <span class="
+"\"o_annotation o_annotation_2 o_annotation_end position-absolute\""
+">Qualitätskontrolle</span>\n"
+"                    <span class="
+"\"o_annotation o_annotation_3 o_annotation_start position-absolute\""
+">Feedbackschleife</span>\n"
+"                    <span class="
+"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
+">Materialien registrieren</span>\n"
+"                    <span class="
+"\"o_annotation o_annotation_5 o_annotation_start position-absolute\""
+">Bediener auswählen</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Add Operation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vorgang hinzufügen</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -454,7 +485,7 @@ msgstr "<span class=\"o_stat_text\">Ausschuss</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Seriennummern</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -490,17 +521,22 @@ msgid ""
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / last </span>"
 msgstr ""
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\""
+">Minuten</span>\n"
+"                                    <span invisible=\"time_mode == 'manual'\""
+"> / letzte </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "<span invisible=\"time_mode == 'manual'\">work orders</span>"
-msgstr ""
+msgstr "<span invisible=\"time_mode == 'manual'\">Arbeitsaufträge</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
+"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Zu produzieren</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -745,7 +781,7 @@ msgstr "Tatsächliche(r)"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__actual
 msgid "Actual time"
-msgstr ""
+msgstr "Tatsächliche Zeit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -817,6 +853,8 @@ msgid ""
 "All automatically generated manufacturing orders for this product will be of "
 "this size."
 msgstr ""
+"Alle automatisch generierten Fertigungsaufträge für dieses Produkt sind von "
+"dieser Größe."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -982,7 +1020,7 @@ msgstr "Seriennummern zuweisen"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_serials
 msgid "Assign serial numbers to production order"
-msgstr ""
+msgstr "Seriennummern Produktionsauftrag zuweisen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -1206,7 +1244,7 @@ msgstr "Basiert auf"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__batch_size
 msgid "Batch Size"
-msgstr ""
+msgstr "Stapelgröße"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__before
@@ -1399,12 +1437,12 @@ msgstr "Schraubbolzen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_ids
 msgid "Bom"
-msgstr ""
+msgstr "Stückliste"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id_placeholder
 msgid "Bom Id Placeholder"
-msgstr ""
+msgstr "Platzhalter der Stücklisten-ID"
 
 #. module: mrp
 #. odoo-javascript
@@ -1566,7 +1604,7 @@ msgstr "Verfügbarkeit prüfen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__child_ids
 msgid "Child Manufacturing Orders"
-msgstr ""
+msgstr "Untergeordnete Fertigungsaufträge"
 
 #. module: mrp
 #. odoo-python
@@ -1599,12 +1637,12 @@ msgstr "Aufräumzeit (Minuten)"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Clear"
-msgstr ""
+msgstr "Bereinigen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Clears the selected lot/serial number"
-msgstr ""
+msgstr "Bereinigt die ausgewählten Los-/Seriennummern"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -1704,11 +1742,14 @@ msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
 msgstr ""
+"Berechnen Sie die Tage, die erforderlich sind, um alle Komponenten aus der "
+"Stückliste aufzufüllen, indem die Komponenten und/oder Unterbausätze "
+"eingekauft oder gefertigt werden."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
 msgid "Computed"
-msgstr ""
+msgstr "Berechnet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1822,7 +1863,7 @@ msgstr "Kosten wie aktuell aufgelaufen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost_mode
 msgid "Cost based on"
-msgstr ""
+msgstr "Kosten basierend auf"
 
 #. module: mrp
 #. odoo-javascript
@@ -1882,7 +1923,7 @@ msgstr "Anzahl verbundener Lieferrückstände"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__serial_numbers_count
 msgid "Count of serial numbers"
-msgstr ""
+msgstr "Anzahl Seriennummern"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots

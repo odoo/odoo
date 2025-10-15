@@ -9,7 +9,7 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-13 08:02+0000\n"
+"PO-Revision-Date: 2025-10-15 02:30+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/project/"
 "ja/>\n"
@@ -302,7 +302,7 @@ msgstr ""
 "                お世話になっております。<br/><br/>\n"
 "            </t>\n"
 "            弊社の下記サービスについて、ご感想をお聞かせください： <strong "
-"t-out=\"object.name or ''\">計画・予算立案</strong> タスク\n"
+"t-out=\"object.name or ''\">計画・予算立案</strong> \n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
 "                担当者： <strong t-out="
 "\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
@@ -358,18 +358,18 @@ msgstr ""
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
 "                <br/><span style="
 "\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\""
-">本アンケートは、プロジェクトタスクが<b t-out=\"object.stage_id.name or ''\""
+">本アンケートは、プロジェクトが<b t-out=\"object.stage_id.name or ''\""
 ">進行中</b>ステージ</span>に移動したため自動で送信されています。\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style="
 "\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\""
 ">本アンケートは<b t-out=\"object.stage_id.rating_status_period or ''\""
-">毎月</b>自動送信されます（ <b t-out=\"object.stage_id.name or ''\""
-">進行中</b>ステージ中)</span>\n"
+">毎月</b>自動送信されます（プロジェクト <b t-out="
+"\"object.stage_id.name or ''\">進行中</b>)</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
-"        <tr><td><br/>よろしくおねがいいたします。</td></tr>\n"
+"        <tr><td><br/>どうぞよろしくお願いいたします。</td></tr>\n"
 "        <tr><td>\n"
 "           <t t-out=\"object.project_id.company_id.name or ''\""
 ">YourCompany</t>\n"
@@ -3331,7 +3331,7 @@ msgstr "エラー数"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "対応が必要なメッセージ数"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -4621,7 +4621,7 @@ msgstr "開始日"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
 msgid "State"
-msgstr "都道府県・州"
+msgstr "状態"
 
 #. module: project
 #. odoo-javascript
