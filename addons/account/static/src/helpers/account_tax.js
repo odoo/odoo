@@ -298,7 +298,9 @@ export const accountTaxHelpers = {
 
         function prepare_tax_extra_data(tax, kwargs = {}) {
             let price_include;
-            if (special_mode === "total_included") {
+            if (tax.has_negative_factor) {
+                price_include = false;
+            } else if (special_mode === "total_included") {
                 price_include = true;
             } else if (special_mode === "total_excluded") {
                 price_include = false;

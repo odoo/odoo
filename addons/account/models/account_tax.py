@@ -1071,7 +1071,9 @@ class AccountTax(models.Model):
                 add_tax_amount_to_results(tax, tax_amount)
 
         def prepare_tax_extra_data(tax, **kwargs):
-            if special_mode == 'total_included':
+            if tax.has_negative_factor:
+                price_include = False
+            elif special_mode == 'total_included':
                 price_include = True
             elif special_mode == 'total_excluded':
                 price_include = False
