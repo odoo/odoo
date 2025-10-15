@@ -95,7 +95,8 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
     def _json_file_to_dict(self, json_file):
         json_string = self._read_file(json_file, 'rb')
-        return json.loads(json_string)
+        res = json.loads(json_string)
+        return self.replace_ignore(res)
 
     def _mock_response(self, status_code, response_file, content_type='text/xml;charset=UTF-8'):
         response = mock.Mock(spec=requests.Response)
@@ -122,9 +123,11 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
 
         return mock.patch(request_function_path, mocked_get_zeep_operation)
 
-    def _mock_zeep_registration_operation(self, response_file_json):
+    def _mock_zeep_registration_operation(self, response_file_json, name=""):
         # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
         zeep_response_dict = json.loads(self._read_file(response_file_json))
+        if name:
+            zeep_response_dict['RespuestaLinea'][0]['IDFactura']['NumSerieFactura'] = name
         return self._mock_get_zeep_operation(registration_return_value=lambda *args, **kwargs: zeep_response_dict)
 
     def _mock_zeep_registration_operation_certificate_issue(self):
