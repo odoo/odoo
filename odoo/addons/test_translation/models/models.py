@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import fields, models
 from odoo.tools.translate import _, xml_translate, LazyTranslate
 
@@ -10,8 +9,8 @@ class DummyClass:
         return term
 
 
-class TestTranslationImportModel1(models.Model):
-    _name = 'test.translation.import.model1'
+class TestTranslationModel1(models.Model):
+    _name = 'test.translation.model1'
     _description = 'Translation Test 1'
 
     name = fields.Char('Name', translate=True, help='Help, English')
@@ -80,9 +79,9 @@ class TestTranslationImportModel1(models.Model):
         _(dummy_function("NO - PY Export 08"))
 
 
-class TestTranslationImportModel2(models.Model):
-    _name = 'test.translation.import.model2'
-    _inherits = {'test.translation.import.model1': 'model1_id'}
+class TestTranslationModel2(models.Model):
+    _name = 'test.translation.model2'
+    _inherits = {'test.translation.model1': 'model1_id'}
     _description = 'Translation Test 2'
 
-    model1_id = fields.Many2one('test.translation.import.model1', required=True, ondelete='cascade')
+    model1_id = fields.Many2one('test.translation.model1', required=True, ondelete='cascade')
