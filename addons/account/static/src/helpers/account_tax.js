@@ -628,15 +628,14 @@ export const accountTaxHelpers = {
         let remaining_errors = nb_of_errors;
 
         // Take absolute value of factors and sort them by largest absolute value first
-        const factors = target_factors.map((x) => Math.abs(x.factor));
-        factors.sort((a, b) => b - a);
-        const sum_of_factors = factors.reduce((a, b) => a + b, 0);
+        const factors = target_factors.map((x, i) => [i, Math.abs(x.factor)]);
+        factors.sort((a, b) => b[1] - a[1]);
+        const sum_of_factors = factors.reduce((sum, x) => sum + x[1], 0.0);
         if (sum_of_factors === 0.0) {
             return amounts_to_distribute;
         }
 
-        for (let i = 0; i < target_factors.length; i++) {
-            const factor = factors[i];
+        for (const [i, factor] of factors) {
             if (remaining_errors === 0) {
                 break;
             }
