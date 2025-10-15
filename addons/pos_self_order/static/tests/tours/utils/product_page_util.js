@@ -90,6 +90,20 @@ export function setupAttribute(attributes, addToCart = true) {
     return steps;
 }
 
+export function attributeHasColorDot(attribute) {
+    return {
+        content: `The ${attribute} has a color dot`,
+        trigger: `div:has(span:contains("${attribute}")) ~ div.rounded-5`,
+    };
+}
+
+export function attributeHasImage(attribute) {
+    return {
+        content: `The ${attribute} has an image`,
+        trigger: `div:has(span:contains("${attribute}")) ~ img.rounded-4`,
+    };
+}
+
 export function verifyIsCheckedAttribute(attribute, values = []) {
     return {
         content: `Select value for attribute ${attribute}`,
