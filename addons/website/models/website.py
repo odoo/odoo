@@ -851,9 +851,10 @@ class Website(models.Model):
         # through module overrides of `configurator_get_footer_links`.
         footer_links = website.configurator_get_footer_links()
         footer_ids = [
-            'website.template_footer_contact',
+            'website.template_footer_contact', 'website.template_footer_headline',
             'website.footer_custom', 'website.template_footer_links',
             'website.template_footer_minimalist', 'website.template_footer_mega', 'website.template_footer_mega_columns', 'website.template_footer_mega_links',
+            'website.template_footer_mega_cards', 'website.template_footer_descriptive', 'website.template_footer_centered', 'website.template_footer_call_to_action',
         ]
         for footer_id in footer_ids:
             view_id = self.env['website'].viewref(footer_id)
@@ -870,7 +871,6 @@ class Website(models.Model):
                 else:
                     el = arch_string.xpath("//t[@t-set='configurator_footer_links']")
                     if not el:
-                        logger.warning("No 'configurator_footer_links' found in view %s", footer_id)
                         continue
                     el[0].attrib['t-value'] = json.dumps(footer_links)
                     view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
@@ -909,6 +909,14 @@ class Website(models.Model):
                 html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
                 generated_content.update(snippet_generated_content)
                 translated_content.update(snippet_translated_content)
+
+        # Extract placeholders from footers
+        for footer_id in footer_ids:
+            view_id = self.env['website'].viewref(footer_id, raise_if_not_found=False)
+            if view_id and view_id.arch_db:
+                html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
+                for placeholder in placeholders:
+                    generated_content[placeholder] = ''
 
         translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
         if translated_ratio > 0.8:
@@ -986,6 +994,20 @@ class Website(models.Model):
                 'key': f"{index}_{page_view_id.key}_configurator_pages_landing",
                 'website_id': website.id,
             })
+
+        # Configure the footers
+        for key in footer_ids:
+            generic_view = self.env['website'].viewref(key)
+            current_website_footer_view = self.env['ir.ui.view'].with_context(active_test=False).search(
+                [('key', '=', key), ('website_id', '=', website.id)], limit=1
+            )
+            # Use the website-specific view if exists, otherwise use the generic
+            # view
+            view_to_update = current_website_footer_view or generic_view
+            if generic_view and view_to_update:
+                el = html_text_processor._update_snippet_content(generated_content, key, view_to_update.arch_db)
+                updated_view = etree.tostring(el, encoding='unicode')
+                generic_view.with_context(website_id=website.id).write({'arch_db': updated_view})
 
         # Configure the images
         images = custom_resources.get('images', {})
