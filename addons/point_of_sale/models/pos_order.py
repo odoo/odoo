@@ -302,7 +302,8 @@ class PosOrder(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
-    sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order. Negative if generated from the client', default=1)
+    sequence_number = fields.Integer(string='Sequence Number', copy=False,
+                                     help='A session-unique sequence number for the order. Negative if generated from the client')
     session_id = fields.Many2one('pos.session', string='Session', index=True, domain="[('state', '=', 'opened')]")
     config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
@@ -535,6 +536,9 @@ class PosOrder(models.Model):
             vals = self._complete_values_from_session(session, vals)
         return super().create(vals_list)
 
+    def _update_sequence_number(self, session, values):
+        values['sequence_number'] = session.config_id.order_seq_id._next()  # Some localization needs orders to have a sequence number
+
     @api.model
     def _complete_values_from_session(self, session, values):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
@@ -547,7 +551,7 @@ class PosOrder(models.Model):
             values['tracking_number'] = tracking_number
 
         if not values.get('sequence_number'):
-            values['sequence_number'] = session.config_id.order_seq_id._next()  # Some localization needs orders to have a sequence number
+            self._update_sequence_number(session, values)
 
         return values
 
