@@ -121,14 +121,13 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
     def test_order_not_invoiced(self):
         with self.with_pos_session():
-            with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
+            with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json',
+                                                        name=str(self.basic_config.id) + "/000001"):
                 order = self._create_order({
                     'pos_order_lines_ui_args': [
                         (self.product, 1.0),
                     ],
                     'payments': [(self.bank_pm1, 121.0)],
-                    # Adjust the fields relevant for the record identifier to match the ones in the response
-                    'name': 'INV/2019/00026',
                     'date_order': '2024-12-30 00:00:00',
                 })
             with self._mock_zeep_registration_operation_certificate_issue():
@@ -145,7 +144,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_state': 'accepted',
-            'l10n_es_edi_verifactu_qr_code': '/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3DA39200019%26numserie%3DINV%252F2019%252F00026%26fecha%3D30-12-2024%26importe%3D121.00&barLevel=M&width=180&height=180',
+            'l10n_es_edi_verifactu_qr_code': f'/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3DA39200019%26numserie%3D{self.basic_config.id}%252F000001%26fecha%3D30-12-2024%26importe%3D121.00&barLevel=M&width=180&height=180',
         }])
 
         order_document = order.l10n_es_edi_verifactu_document_ids
@@ -169,11 +168,15 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             }
         ])
 
-        self.assertEqual(order_document._get_document_dict(),
-                         self._json_file_to_dict('l10n_es_edi_verifactu_pos/tests/files/test_order_not_invoiced_order.json'))
+        json_contents = self._json_file_to_dict('l10n_es_edi_verifactu_pos/tests/files/test_order_not_invoiced_order.json')
+        invoice_number = str(self.basic_config.id) + '/000001'
+        json_contents['RegistroAlta']['IDFactura']['NumSerieFactura'] = invoice_number
+        self.assertEqual(order_document._get_document_dict(), json_contents)
 
-        self.assertEqual(refund_document._get_document_dict(),
-                         self._json_file_to_dict('l10n_es_edi_verifactu_pos/tests/files/test_order_not_invoiced_refund.json'))
+        json_contents = self._json_file_to_dict('l10n_es_edi_verifactu_pos/tests/files/test_order_not_invoiced_refund.json')
+        json_contents['RegistroAlta']['IDFactura']['NumSerieFactura'] = str(self.basic_config.id) + '/000002'
+        json_contents['RegistroAlta']['FacturasRectificadas'][0]['IDFacturaRectificada']['NumSerieFactura'] = invoice_number
+        self.assertEqual(refund_document._get_document_dict(), json_contents)
 
     def test_order_invoiced_simplified(self):
         with self.with_pos_session():
@@ -231,6 +234,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
                 })
 
         # The Veri*Factu document was created for the invoice and not the document
+        self.assertEqual(order.sequence_number, 0)
         invoice = order.account_move
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_document_ids': [],
