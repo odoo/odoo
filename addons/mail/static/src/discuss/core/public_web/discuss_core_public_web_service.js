@@ -49,11 +49,7 @@ export class DiscussCorePublicWeb {
             "message",
             async ({ data: { action, data } }) => {
                 if (action === "OPEN_CHANNEL") {
-                    const thread = await this.store["mail.thread"].getOrFetch({
-                        model: "discuss.channel",
-                        id: data.id,
-                    });
-                    const channel = thread?.channel;
+                    const channel = await this.store["discuss.channel"].getOrFetch(data.id);
                     channel?.open({ focus: true });
                     if (!data.joinCall || !channel || this.store.rtc.state.channel?.eq(channel)) {
                         return;

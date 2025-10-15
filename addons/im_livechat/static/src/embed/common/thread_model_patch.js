@@ -6,20 +6,6 @@ import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { patch } from "@web/core/utils/patch";
 import { Deferred } from "@web/core/utils/concurrency";
 
-/** @type {typeof Thread} */
-const threadStaticPatch = {
-    async getOrFetch(data, fieldNames = []) {
-        const thread = await super.getOrFetch(...arguments);
-        if (thread) {
-            return thread;
-        }
-        // wait for restore of livechatService.savedState as channel might be inserted from there
-        await this.store.isReady;
-        return super.getOrFetch(...arguments);
-    },
-};
-patch(Thread, threadStaticPatch);
-
 patch(Thread.prototype, {
     setup() {
         super.setup();

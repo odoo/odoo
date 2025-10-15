@@ -30,6 +30,10 @@ export class Thread extends Record {
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
     }
     static async getOrFetch(data, fieldNames = []) {
+        if (data.model === "discuss.channel") {
+            const channel = await this.store["discuss.channel"].getOrFetch(data.id);
+            return channel?.thread;
+        }
         let thread = this.get(data);
         if (
             data.id > 0 &&

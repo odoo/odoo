@@ -7,54 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { createElementWithContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 
 const commandRegistry = registry.category("discuss.channel_commands");
-
-/** @type {typeof Thread} */
-const threadStaticPatch = {
-    async getOrFetch(data, fieldNames = []) {
-        if (data.model !== "discuss.channel" || data.id < 1) {
-            return super.getOrFetch(...arguments);
-        }
-        const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
-        if (thread?.fetchChannelInfoState === "fetched") {
-            return Promise.resolve(thread);
-        }
-        const fetchChannelInfoDeferred = this.store.channelIdsFetchingDeferred.get(data.id);
-        if (fetchChannelInfoDeferred) {
-            return fetchChannelInfoDeferred;
-        }
-        const def = new Deferred();
-        this.store.channelIdsFetchingDeferred.set(data.id, def);
-        this.store.fetchChannel(data.id).then(
-            () => {
-                this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
-                if (thread?.exists()) {
-                    thread.fetchChannelInfoState = "fetched";
-                    def.resolve(thread);
-                } else {
-                    def.resolve();
-                }
-            },
-            () => {
-                this.store.channelIdsFetchingDeferred.delete(data.id);
-                const thread = this.store["mail.thread"].get({ id: data.id, model: data.model });
-                if (thread?.exists()) {
-                    def.reject(thread);
-                } else {
-                    def.reject();
-                }
-            }
-        );
-        return def;
-    },
-};
-patch(Thread, threadStaticPatch);
 
 /** @type {import("models").Thread} */
 const threadPatch = {
