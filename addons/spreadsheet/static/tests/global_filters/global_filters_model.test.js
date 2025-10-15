@@ -1711,6 +1711,38 @@ test("Export boolean global filters with undefined value for excel", async funct
     expect(filterSheet.cells["A2"]).toBe("test");
     expect(filterSheet.cells["B1"]).toBe("Value");
     expect(filterSheet.cells["B2"]).toBe("");
+
+    model.exportXLSX(); // should not crash
+});
+
+test("Export relational global filter for excel", async function () {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    await addGlobalFilter(model, {
+        id: "1",
+        label: "test relation in",
+        type: "relation",
+        defaultValue: { operator: "in", ids: [1, 2] },
+    });
+    await addGlobalFilter(model, {
+        id: "2",
+        label: "test relation ilike",
+        type: "relation",
+        defaultValue: { operator: "ilike", strings: ["hello", "world"] },
+    });
+
+    const filterPlugin = model["handlers"].find(
+        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+    );
+    const exportData = { styles: [], sheets: [], formats: {} };
+    filterPlugin.exportForExcel(exportData);
+    const filterSheet = exportData.sheets[0];
+
+    expect(filterSheet.cells["A2"]).toBe("test relation in");
+    expect(filterSheet.cells["B2"]).toBe("1, 2");
+
+    expect(filterSheet.cells["A3"]).toBe("test relation ilike");
+    expect(filterSheet.cells["B3"]).toBe("hello, world");
+
     model.exportXLSX(); // should not crash
 });
 
