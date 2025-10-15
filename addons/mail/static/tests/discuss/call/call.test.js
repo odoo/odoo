@@ -1023,3 +1023,20 @@ test("show all participants on other user stops screen share", async () => {
     await streamerRemote.updateUpload("screen", null);
     await contains(".o-discuss-CallParticipantCard-avatar", { count: 2 });
 });
+
+test("discuss sidebar call participant shows appropriate status icon", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await click("button[title='Mute']");
+    await contains(".o-mail-DiscussSidebarCallParticipants-status .fa-microphone-slash");
+    await click("button[title='Voice Settings']");
+    await click(".dropdown-menu button:contains('Deafen')");
+    await contains(".o-mail-DiscussSidebarCallParticipants-status .fa-deaf");
+    await contains(".o-mail-DiscussSidebarCallParticipants-status .fa-microphone-slash", {
+        count: 0,
+    });
+});

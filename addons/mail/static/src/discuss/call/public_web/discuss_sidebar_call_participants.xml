@@ -78,8 +78,7 @@
                     <t t-set="session" t-value="session"/>
                 </t>
                 <t t-else="">
-                    <span t-if="session.is_muted" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'mute').icon"/>
-                    <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'deafen').icon"/>
+                    <span t-if="session.is_muted or session.is_deaf" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'mute').icon"/>
                     <span t-if="session.is_screen_sharing_on" class="o-live bg-danger o-text-white rounded">LIVE</span>
                 </t>
             </div>
