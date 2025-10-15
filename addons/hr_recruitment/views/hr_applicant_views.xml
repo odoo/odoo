@@ -12,6 +12,13 @@
                         invisible="context.get('default_job_id') or not context.get('default_talent_pool_ids')"
                         type="object"
                     />
+                    <button
+                        name="action_talent_pool_add_applicants"
+                        string="Add to Pool"
+                        type="object"
+                        invisible="context.get('default_talent_pool_ids')"
+                        groups="hr_recruitment.group_hr_recruitment_user"
+                    />
                     <button type="object" 
                         name="archive_applicant" 
                         string="Refuse" class="btn btn-secondary" 

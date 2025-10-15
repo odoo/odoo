@@ -894,6 +894,7 @@ class HrApplicant(models.Model):
                 )
                 or [],
                 "default_applicant_ids": self.ids,
+                "display_applicant_ids": len(self) != 1,
             },
         }
 
