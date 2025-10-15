@@ -332,8 +332,7 @@ class Survey(http.Controller):
                     values = {'survey_last': survey_last}
                     # On the last survey page, get the suggested answers which are triggering questions on the following pages
                     # to dynamically update the survey button to "submit" or "continue" depending on the selected answers.
-                    # NB: Not in the skipped questions flow as conditionals aren't handled.
-                    if not answer_sudo.survey_first_submitted and survey_last and survey_sudo.questions_layout != 'one_page':
+                    if survey_last and survey_sudo.questions_layout != 'one_page':
                         pages_or_questions = survey_sudo._get_pages_or_questions(answer_sudo)
                         following_questions = pages_or_questions.filtered(lambda page_or_question: page_or_question.sequence > next_page_or_question.sequence)
                         next_page_questions_suggested_answers = next_page_or_question.suggested_answer_ids
@@ -590,8 +589,7 @@ class Survey(http.Controller):
                 else:
                     next_page = survey_sudo._get_next_page_or_question(answer_sudo, page_or_question_id)
                 if not next_page:
-                    if survey_sudo.users_can_go_back and answer_sudo.user_input_line_ids.filtered(
-                            lambda a: a.skipped and a.question_id.constr_mandatory):
+                    if survey_sudo.users_can_go_back and answer_sudo._get_skipped_questions():
                         answer_sudo.write({
                             'last_displayed_page_id': page_or_question_id,
                             'survey_first_submitted': True,

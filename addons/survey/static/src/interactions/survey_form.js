@@ -272,10 +272,10 @@ export class SurveyForm extends Interaction {
             }
         }
 
-        // Update survey button to "continue" if the current page/question is the last (without accounting for
+        // Update survey button label to next page if the current page/question is the last (without accounting for
         // its own conditional questions) but a selected answer is triggering a conditional question on a next page.
-        const surveyLastTriggeringAnswers = this.el.querySelector(".o_survey_form_content_data")
-            .dataset.surveyLastTriggeringAnswers;
+        const surveyContentData = this.el.querySelector(".o_survey_form_content_data");
+        const surveyLastTriggeringAnswers = surveyContentData.dataset.surveyLastTriggeringAnswers;
         if (surveyLastTriggeringAnswers) {
             const currentSelectedAnswers = Array.from(
                 this.el.querySelectorAll(`
@@ -289,9 +289,10 @@ export class SurveyForm extends Interaction {
                     surveyLastTriggeringAnswers.includes(answerId)
                 )
             ) {
-                // change to continue
-                submitButton.value = "next";
-                submitButton.textContent = _t("Continue");
+                // change to next
+                const firstSubmitted = surveyContentData.dataset.surveyFirstSubmitted;
+                submitButton.value = firstSubmitted ? "next_skipped" : "next";
+                submitButton.textContent = firstSubmitted ? _t("Next Skipped") : _t("Continue");
                 submitButton.classList.replace("btn-secondary", "btn-primary");
             } else {
                 // change to submit
