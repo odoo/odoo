@@ -312,8 +312,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
                                     "country_id": self.env.ref("base.be").id,
                                     "id": self.partner_employee.id,
-                                    "im_status": "offline",
-                                    "im_status_access_token": self.partner_employee._get_im_status_access_token(),
                                     "is_public": False,
                                     "mention_token": self.partner_employee._get_mention_token(),
                                     "name": "Ernest Employee",

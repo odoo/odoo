@@ -538,11 +538,12 @@ class DiscussChannel(models.Model):
             notifications[bus_channel] |= member
         for bus_channel, members in notifications.items():
             members = members.with_prefetch(new_members.ids)
-            Store(bus_channel=bus_channel).add(members.channel_id).add(
+            store = Store(bus_channel=bus_channel)
+            store.add(members.channel_id).add(
                 members,
                 [
                     Store.One("channel_id", [], as_thread=True),
-                    *self.env["discuss.channel.member"]._to_store_persona(),
+                    *self.env["discuss.channel.member"]._to_store_persona(store.target),
                     "unpin_dt",
                 ],
             ).bus_send()
@@ -781,14 +782,15 @@ class DiscussChannel(models.Model):
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         members.rtc_inviting_session_id = False
         if members:
-            Store(bus_channel=self).add(
+            store = Store(bus_channel=self)
+            store.add(
                 self,
                 {
                     "invited_member_ids": Store.Many(
                         members,
                         [
                             Store.One("channel_id", [], as_thread=True),
-                            *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                            *self.env["discuss.channel.member"]._to_store_persona(store.target, "avatar_card"),
                         ],
                         mode="DELETE",
                     ),
@@ -1240,7 +1242,7 @@ class DiscussChannel(models.Model):
                 "invited_member_ids",
                 [
                     Store.One("channel_id", [], as_thread=True),
-                    *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                    *self.env["discuss.channel.member"]._to_store_persona(target, "avatar_card"),
                 ],
                 mode="ADD",
             ),
