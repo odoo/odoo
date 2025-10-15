@@ -839,6 +839,40 @@ describe("sanitized values", () => {
         expect.verifySteps(["customAction 0", "customAction 0"]); // input, change
         expect(".options-container input").toHaveValue("0");
     });
+    test("clamp to min value when pressing down arrow with min > 0", async () => {
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.textContent;
+                }
+                apply({ editingElement, value }) {
+                    expect.step(`customAction ${value}`);
+                    editingElement.textContent = value;
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderNumberInput action="'customAction'" min="1"/>`;
+            }
+        );
+        await setupHTMLBuilder(`
+            <div class="test-options-target">2</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        // Simulate pressing arrow down
+        await contains(".options-container input").keyDown("ArrowDown");
+        expect.verifySteps(["customAction 1"]);
+        expect(".options-container input").toHaveValue("1");
+        expect(":iframe .test-options-target").toHaveText("1");
+        // Pressing down again should stay at min value
+        await contains(".options-container input").keyDown("ArrowDown");
+        expect.verifySteps(["customAction 1"]);
+        expect(".options-container input").toHaveValue("1");
+        expect(":iframe .test-options-target").toHaveText("1");
+    });
     test("use max when the given value is bigger", async () => {
         addBuilderAction({
             customAction: class extends BuilderAction {
