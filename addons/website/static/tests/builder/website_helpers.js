@@ -435,6 +435,55 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
         hasToCreateWebsite: false,
     });
 }
+export const websiteServiceInTranslateMode = {
+    currentWebsite: {
+        metadata: {
+            lang: "fr_BE",
+            langName: " Français (BE)",
+            translatable: true,
+            defaultLangName: "English (US)",
+        },
+        default_lang_id: {
+            code: "en_US",
+        },
+    },
+    // Minimal context to avoid crashes.
+    context: {},
+    websites: [
+        {
+            id: 1,
+            metadata: {},
+        },
+    ],
+};
+
+export async function setupSidebarBuilderForTranslation(options) {
+    const { websiteContent } = options;
+    // Hack: configure the snippets menu as in translate mode when clicking
+    // on the "Edit" button of the systray. The goal of this hack is to avoid
+    // the handling of an extra reload of the action to arrive in translate
+    // mode.
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            super.setup();
+            this.env.services.website = websiteServiceInTranslateMode;
+            this.websiteService = websiteServiceInTranslateMode;
+            this.websiteContext = this.websiteService.context;
+        },
+    });
+    const { getEditor, getEditableContent, openBuilderSidebar } = await setupWebsiteBuilder(
+        websiteContent,
+        {
+            openEditor: false,
+            translateMode: true,
+            onIframeLoaded: (iframe) => {
+                websiteServiceInTranslateMode.pageDocument = iframe.contentDocument;
+            },
+        }
+    );
+    await openBuilderSidebar();
+    return { getEditor, getEditableContent };
+}
 
 export async function getStructureSnippet(snippetName) {
     const html = await getWebsiteSnippets();
