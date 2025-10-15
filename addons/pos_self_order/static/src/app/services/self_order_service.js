@@ -449,7 +449,9 @@ export class SelfOrder extends Reactive {
     }
 
     initData() {
-        this.productCategories = this.models["pos.category"].getAll();
+        this.productCategories = this.config.iface_available_categ_ids.length
+            ? this.config.iface_available_categ_ids
+            : this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
         const excludedProductTemplateIds = new Set(

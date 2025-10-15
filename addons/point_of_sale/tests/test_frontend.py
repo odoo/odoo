@@ -2720,9 +2720,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         loaded_data = self.main_pos_config.current_session_id.load_data([])
-        category_id = [category['id'] for category in loaded_data['pos.category']]
-        self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
-        self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")
+        category_ids = [category['id'] for category in loaded_data['pos.category']]
+        self.assertIn(parent_categ.id, category_ids)
+        self.assertIn(children_categs[0].id, category_ids)
+        self.assertIn(children_categs[1].id, category_ids)
 
     def test_pos_order_shipping_date(self):
         self.env['res.partner'].create({
