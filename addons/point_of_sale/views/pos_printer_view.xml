@@ -5,6 +5,7 @@
         <field name="arch" type="xml">
             <form string="POS Printer">
                 <sheet>
+                <group>
                     <group>
                         <field name="company_id" invisible="1" />
                         <field name="name" />
@@ -13,6 +14,12 @@
                         <field name="proxy_ip" invisible="printer_type != 'iot'"/>
                         <field name="product_categories_ids" />
                     </group>
+                    <group>
+                        <div style="display:flex; justify-content:flex-end; align-items:flex-start; height:100%;">
+                            <widget name="point_of_sale_test_epos" invisible="printer_type != 'epson_epos' or epson_printer_ip in [False, '']"/>
+                        </div>
+                    </group>
+                </group>
                 </sheet>
             </form>
         </field>
