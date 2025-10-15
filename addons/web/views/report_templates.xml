@@ -107,125 +107,180 @@
     <template id="report_invoice_wizard_preview">
         <t t-set="is_preview" t-value="True"/>
         <t t-call="web.html_preview_container">
-           <t t-set="address">
-               <address class="mb-0" itemscope="itemscope"
+            <t t-set="address">
+                <address class="mb-0" itemscope="itemscope"
                         itemtype="http://schema.org/Organization">
-                   <div>
-                       <span itemprop="name">Deco Addict</span>
-                   </div>
-                   <div itemprop="address" itemscope="itemscope"
+                    <div>
+                        <span itemprop="name">Deco Addict</span>
+                    </div>
+                    <div itemprop="address" itemscope="itemscope"
                         itemtype="http://schema.org/PostalAddress">
-                       <div class="d-flex align-items-baseline">
-                           <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
-                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
-                       </div>
-                   </div>
-               </address>
-           </t>
-           <t t-set="layout_document_title">
-               <span>Invoice</span>
-               <span>INV/2023/00003</span>
-           </t>
-           <t t-call="web.external_layout"
-               address="address"
-               layout_document_title="layout_document_title">
-                   <div class="page">
-                       <div id="informations" class="row mb-4">
-                           <div class="col" name="invoice_date">
-                               <strong>Invoice Date</strong>
-                               <div>07/08/2020</div>
-                           </div>
-                           <div class="col" name="due_date">
-                               <strong>Due Date</strong>
-                               <div>08/07/2020</div>
-                           </div>
-                       </div>
-                       <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
-                           <thead>
-                               <tr>
-                                   <th name="th_description" class="text-start"><span>Description</span></th>
-                                   <th name="th_quantity" class="text-end"><span>Quantity</span></th>
-                                   <th name="th_priceunit" class="text-end d-md-table-cell text-nowrap"><span>Unit Price</span></th>
-                                   <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
-                                   <th name="th_subtotal" class="text-end">
-                                       <span>Amount</span>
-                                   </th>
-                               </tr>
-                           </thead>
-                           <tbody class="invoice_tbody">
-                               <tr>
-                                   <td class="w-100" name="account_invoice_line_name"><span>[FURN_8999] Three-Seat Sofa<br/>
-                                       Three Seater Sofa with Lounger in Steel Grey Colour</span></td>
-                                   <td class="text-end">
-                                       <span>5.00</span>
-                                   </td>
-                                   <td class="text-end d-md-table-cell">
-                                       <span class="text-nowrap">1,500.00</span>
-                                   </td>
-                                   <td class="text-end d-md-table-cell">
-                                       <span id="line_tax_ids">15%</span>
-                                   </td>
-                                   <td class="text-end o_price_total">
-                                       <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
-                                   </td>
-                               </tr>
-                               <tr>
-                                   <td name="account_invoice_line_name"><span>[FURN_8220] Four Person Desk<br/>
-                                       Four person modern office workstation</span></td>
-                                   <td class="text-end">
-                                       <span>5.00</span>
-                                   </td>
-                                   <td class="text-end d-md-table-cell">
-                                       <span class="text-nowrap">2,350.00</span>
-                                   </td>
-                                   <td class="text-end d-md-table-cell">
-                                       <span id="line_tax_ids">15%</span>
-                                   </td>
-                                   <td class="text-end o_price_total">
-                                       <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
-                                   </td>
-                               </tr>
-                           </tbody>
-                       </table>
-                       <div id="right-elements" class="float-end ms-auto">
-                           <div id="total" class="clearfix row mt-n3">
-                               <div class="ms-auto">
-                                   <table class="o_total_table table table-borderless">
-                                       <tbody><tr class="o_subtotal">
-                                           <td><strong>Untaxed Amount</strong></td>
-                                           <td class="text-end">
-                                               <span>$ <span class="oe_currency_value">19,250.00</span></span>
-                                           </td>
-                                       </tr>
-                                           <tr class="o_taxes">
-                                               <td><span class="text-nowrap">Tax 15%</span></td>
-                                               <td class="text-end o_price_total">
-                                                   <span class="text-nowrap">$ 2,887.50</span>
-                                               </td>
-                                           </tr>
-                                           <tr class="o_total">
-                                               <td><strong>Total</strong></td>
-                                               <td class="text-end">
-                                                   <strong class="text-nowrap">$ <span class="oe_currency_value">
-                                                       22,137.50</span></strong>
-                                               </td>
-                                           </tr>
-                                       </tbody></table>
-                               </div>
-                           </div>
-                       </div>
-                       <div id="payment_term" class="mt-4">
-                            <div class="mb-3">
-                                <p name="payment_term">
-                                    <span>Payment terms: 30 Days</span>
-                                </p>
-                                <p name="payment_communication">
-                                    Payment Communication: <b><span>INV/2023/00003</span></b>
-                                </p>
+                        <div class="d-flex align-items-baseline">
+                            <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                                Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
+                        </div>
+                    </div>
+                </address>
+            </t>
+            <t t-set="layout_document_title">
+                <span>Invoice</span>
+                <span>INV/2023/00003</span>
+            </t>
+            <t
+                t-call="web.external_layout"
+                address="address"
+                layout_document_title="layout_document_title"
+            >
+                <div class="page">
+                    <div id="informations" class="row mb-4">
+                        <div class="col" name="invoice_date">
+                            <strong>Invoice Date</strong>
+                            <div>07/08/2020</div>
+                        </div>
+                        <div class="col" name="due_date">
+                            <strong>Due Date</strong>
+                            <div>08/07/2020</div>
+                        </div>
+                    </div>
+                    <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
+                        <thead>
+                            <tr>
+                                <th name="th_description" class="text-start"><span>Description</span></th>
+                                <th name="th_quantity" class="text-end"><span>Quantity</span></th>
+                                <th name="th_priceunit" class="text-end d-md-table-cell text-nowrap"><span>Unit Price</span></th>
+                                <th name="th_taxes" class="text-end d-md-table-cell"><span>Taxes</span></th>
+                                <th name="th_subtotal" class="text-end">
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <tr>
+                                <td class="w-100" name="account_invoice_line_name">
+                                    <span>
+                                        [FURN_8999] Three-Seat Sofa<br/>
+                                        Three Seater Sofa with Lounger in Steel Grey Colour
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span>5.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span class="text-nowrap">1,500.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="text-end o_price_total">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td name="account_invoice_line_name"><span>[FURN_8220] Four Person Desk<br/>
+                                    Four person modern office workstation</span></td>
+                                <td class="text-end">
+                                    <span>5.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span class="text-nowrap">2,350.00</span>
+                                </td>
+                                <td class="text-end d-md-table-cell">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="text-end o_price_total">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-100" name="account_invoice_line_name">
+                                    <span>
+                                        [FURN_7777] Office Chair<br/>
+                                        Comfortable yellow chair for daily work
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span>20.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-nowrap">70.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="o_price_total text-end">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">1,400.00</span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-100" name="account_invoice_line_name">
+                                    <span>
+                                        Chair floor protection<br/>
+                                        Office chairs can harm your floor: protect it
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <span>20.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-nowrap">12.00</span>
+                                </td>
+                                <td class="text-end">
+                                    <span id="line_tax_ids">15%</span>
+                                </td>
+                                <td class="o_price_total text-end">
+                                    <span class="text-nowrap">$ <span class="oe_currency_value">240.00</span></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="right-elements" class="float-end ms-auto">
+                        <div id="total" class="clearfix row mt-n3">
+                            <div class="ms-auto">
+                                <table class="o_total_table table table-borderless">
+                                    <tbody>
+                                        <tr class="o_subtotal">
+                                            <td>
+                                                <strong>Untaxed Amount</strong>
+                                            </td>
+                                            <td class="text-end">
+                                                <span>$ <span class="oe_currency_value">24,090.00</span></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="o_taxes">
+                                            <td>
+                                                <span class="text-nowrap">Tax 15%</span>
+                                            </td>
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap">$ 3,613.50</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="o_total">
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-end">
+                                                <strong class="text-nowrap">
+                                                    $ <span class="oe_currency_value">27,703.50</span>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                   </div>
-           </t>
+                    </div>
+                    <div id="payment_term" class="mt-4">
+                        <div class="mb-3">
+                            <p name="payment_term">
+                                <span>Payment terms: 30 Days</span>
+                            </p>
+                            <p name="payment_communication">
+                                Payment Communication: <b><span>INV/2023/00003</span></b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </t>
     </template>
 
@@ -379,7 +434,6 @@
         />
         <div
             t-attf-class="o_company_#{company.id}_layout article {{external_layout_body_style_classes}} {{snail_mail_compatible and 'o_snail_mail' or ''}}"
-            t-attf-style="{{report_type != 'pdf' and header_shape_height and 'margin-top:' + header_shape_height + 'px;'}}"
             t-att-data-oe-model="o and o._name"
             t-att-data-oe-id="o and o.id"
             t-att-data-oe-lang="o and o.env.context.get('lang')"
@@ -544,7 +598,7 @@
         <t t-call="web.external_layout_body">
             <t t-set="hide_title" t-value="True"/>
             <t t-set="customized_address_layout">
-                <div class="pt-2" t-attf-style="{{report_type != 'pdf' and 'margin-top:' + str(env['ir.actions.report'].get_paperformat().margin_top) + 'pt;'}}">
+                <div class="pt-2">
                     <t t-call="web.address_layout" custom_layout_address="True"/>
                 </div>
             </t>
