@@ -574,7 +574,7 @@ export function makeDraggableHook(hookParams) {
                 if (state.dragging) {
                     preventClick = true;
                     if (!inErrorState) {
-                        if (target) {
+                        if (target && ctx.current.element.isConnected) {
                             callBuildHandler("onDrop", { target });
                         }
                         callBuildHandler("onDragEnd");
@@ -785,6 +785,8 @@ export function makeDraggableHook(hookParams) {
                         return;
                     }
                     dragStart();
+                } else if (!ctx.current.element.isConnected) {
+                    return dragEnd(null);
                 }
 
                 if (ctx.followCursor) {
