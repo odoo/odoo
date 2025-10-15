@@ -414,7 +414,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'product_ids': self.desk_organizer,
                 'reward_point_amount': 1,
                 'reward_point_mode': 'order',
-                'minimum_qty': 2,
+                'minimum_qty': 3,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
