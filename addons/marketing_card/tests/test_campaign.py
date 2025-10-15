@@ -173,6 +173,7 @@ class TestMarketingCardRender(MarketingCardCommon):
         ])
         self.assertEqual(len(card), 1)
         self.assertTrue(card.image)
+        self.assertTrue(card.requires_sync)
         self.assertEqual(card.res_id, self.partners[0].id)
 
         # second record, modified tags
@@ -193,6 +194,8 @@ class TestMarketingCardRender(MarketingCardCommon):
             ('campaign_id', '=', campaign.id),
             ('active', '=', False)
         ])
+        self.assertEqual(cards.mapped('requires_sync'), [True] * 2)
+        self.assertEqual(cards.mapped('active'), [False] * 2)
         self.assertTrue(cards.mapped('res_id'), self.partners.ids)
 
         # update previewed record fields
