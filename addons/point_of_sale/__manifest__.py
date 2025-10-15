@@ -7,7 +7,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'partner_autocomplete', 'iot_base', 'google_address_autocomplete'],
+    'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'partner_autocomplete', 'google_address_autocomplete'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
@@ -133,8 +133,6 @@
             'bus/static/src/multi_tab_shared_worker_service.js',
             'bus/static/src/multi_tab_fallback_service.js',
             'bus/static/src/workers/*',
-            'iot_base/static/src/network_utils/*',
-            'iot_base/static/src/device_controller.js',
         ],
 
         # Main PoS assets, they are loaded in the PoS UI
@@ -206,8 +204,6 @@
             "barcodes/static/tests/legacy/helpers.js",
             "web/static/tests/legacy/helpers/utils.js",
             "web/static/tests/legacy/helpers/cleanup.js",
-            'iot_base/static/src/network_utils/*',
-            'iot_base/static/src/device_controller.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
