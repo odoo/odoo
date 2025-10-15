@@ -10,7 +10,7 @@
                         name="applicant_ids"
                         widget="many2many_tags"
                         options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
-                        invisible="context.get('default_applicant_ids')"
+                        invisible="not context.get('display_applicant_ids', True)"
                     />
                     <field
                         name="talent_pool_ids"

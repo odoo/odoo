@@ -72,8 +72,24 @@ class TalentPoolAddApplicants(models.TransientModel):
                 "target": "current",
                 "res_id": talents.id,
             }
-        else:
+        if not talents:
             return {
                 "type": "ir.actions.client",
                 "tag": "soft_reload",
             }
+        message = self.env._(
+                "Added the following talents to %(talent_pools)s: %(talent_names)s.",
+                talent_pools=", ".join(self.talent_pool_ids.mapped('name')),
+                talent_names=", ".join(talents.mapped('partner_name')),
+            )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': self.env._("Talents Added To Talent Pool(s)"),
+                'type': 'success',
+                'message': message,
+                'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            },
+        }
