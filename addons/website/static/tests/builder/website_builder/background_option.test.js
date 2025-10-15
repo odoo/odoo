@@ -418,3 +418,40 @@ test("remove background image removes color filter", async () => {
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
 });
+
+test("change background size", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="o_bg_img_opt_repeat" style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px; background-size: 100px;">
+        </section>`);
+
+    const section = await waitFor(":iframe section");
+    await contains(section).click();
+
+    await waitSidebarUpdated();
+
+    const widthInput = await waitFor(
+        '[data-action-id="setBackgroundSize"][data-action-param="width"] > input'
+    );
+    const heightInput = await waitFor(
+        '[data-action-id="setBackgroundSize"][data-action-param="height"] > input'
+    );
+
+    expect(heightInput).toHaveValue("");
+
+    await contains(heightInput).edit("0");
+    expect(heightInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(section).toHaveStyle("background-size: 100px 1px");
+
+    await contains(heightInput).edit("");
+    expect(heightInput).toHaveValue("");
+    expect(section).toHaveStyle("background-size: 100px");
+
+    await contains(widthInput).edit("");
+    expect(widthInput).toHaveValue("");
+    expect(heightInput).toHaveValue("", { message: "height input should stay empty" });
+    expect(section).toHaveStyle("background-size: auto");
+
+    await contains(widthInput).edit("0");
+    expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(section).toHaveStyle("background-size: 1px");
+});
