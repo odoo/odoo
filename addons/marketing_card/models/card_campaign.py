@@ -181,7 +181,7 @@ class CardCampaign(models.Model):
     def write(self, vals):
         link_tracker_vals = {}
         if vals.keys() & set(self._get_render_fields()):
-            self.env['card.card'].search([('campaign_id', 'in', self.ids)]).requires_sync = True
+            self.env['card.card'].with_context(active_test=False).search([('campaign_id', 'in', self.ids)]).requires_sync = True
         if 'target_url' in vals:
             link_tracker_vals['url'] = vals['target_url'] or self.env['card.campaign'].get_base_url()
         if link_tracker_vals:
