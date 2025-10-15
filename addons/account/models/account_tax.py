@@ -1525,14 +1525,14 @@ class AccountTax(models.Model):
         remaining_errors = nb_of_errors
 
         # Take absolute value of factors and sort them by largest absolute value first
-        factors = [abs(target_factor['factor']) for target_factor in target_factors]
-        factors.sort(reverse=True)
-        sum_of_factors = sum(factors)
+        factors = [(i, abs(target_factor['factor'])) for i, target_factor in enumerate(target_factors)]
+        factors.sort(key=lambda x: x[1], reverse=True)
+        sum_of_factors = sum(x[1] for x in factors)
 
         if sum_of_factors == 0.0:
             return amounts_to_distribute
 
-        for i, factor in enumerate(factors):
+        for i, factor in factors:
             if not remaining_errors:
                 break
 
