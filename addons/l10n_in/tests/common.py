@@ -97,6 +97,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         cls.igst_sale_18_sez_lut = AccountChartTemplate.ref('igst_sale_18_sez_lut')
         cls.igst_sale_18_sez_exp_lut = AccountChartTemplate.ref('igst_sale_18_sez_exp_lut')
         cls.igst_sale_18_sez_exp = AccountChartTemplate.ref('igst_sale_18_sez_exp')
+        cls.igst_sale_18_sez_exp_inc = cls.igst_sale_18_sez_exp.copy({'price_include_override': 'tax_included'})
 
         # === Products === #
         cls.product_a.write({
@@ -181,4 +182,10 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             partner=cls.partner_foreign,
             products=cls.product_a,
             taxes=cls.igst_sale_18_sez_exp,
+        )
+        cls.invoice_with_export_without_lut_inc = cls.init_invoice(
+            "out_invoice",
+            partner=cls.partner_foreign,
+            products=cls.product_a,
+            taxes=cls.igst_sale_18_sez_exp_inc,
         )
