@@ -11,7 +11,7 @@
                         />
                     </span>
                     <div class="d-flex flex-column o_card_user_infos overflow-hidden">
-                        <span class="fw-bold" t-out="name"/>
+                        <span class="o-mail-avatar-card-name fw-bold" t-out="name"/>
                         <a t-if="email" t-attf-href="mailto:{{email}}" t-att-title="email" class="text-truncate">
                             <i class="fa fa-fw fa-envelope me-1"/><t t-out="email"/>
                         </a>

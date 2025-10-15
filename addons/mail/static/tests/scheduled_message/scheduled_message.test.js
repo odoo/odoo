@@ -142,13 +142,13 @@ test("avatar card from author should be opened after clicking on their name or a
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Scheduled-Message .o-mail-Message-author", { text: "Demo" });
-    await contains(".o_card_user_infos > span", { text: "Demo" });
+    await contains(".o-mail-avatar-card-name", { text: "Demo" });
     await contains(".o_card_user_infos > a", { text: "demo@example.com" });
     await contains(".o_card_user_infos > a", { text: "+5646548" });
     await click(".o-mail-Message-date");
     await contains(".o_card_user_infos", { count: 0 });
     await click(".o-mail-Message-avatar");
-    await contains(".o_card_user_infos > span", { text: "Demo" });
+    await contains(".o-mail-avatar-card-name", { text: "Demo" });
 });
 
 test("Read more of a scheduled message", async () => {
