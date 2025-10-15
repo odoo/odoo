@@ -43,6 +43,7 @@ import { FormOption } from "./form_option";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
+import { setAttribute } from "@html_editor/utils/dom";
 
 const { DateTime } = luxon;
 
@@ -663,7 +664,11 @@ export class FormOptionPlugin extends Plugin {
                     for (const el of inputsInDependencyContainer) {
                         conditionValueList.push({
                             value: el.value,
-                            textContent: inputsInDependencyContainer.length === 1 ? el.value : dependencyContainerEl.querySelector(`label[for="${el.id}"]`).textContent,
+                            textContent:
+                                inputsInDependencyContainer.length === 1
+                                    ? el.value
+                                    : dependencyContainerEl.querySelector(`label[for="${el.id}"]`)
+                                          .textContent,
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
@@ -1083,7 +1088,7 @@ export class FormToggleRecaptchaLegalAction extends BuilderAction {
         const legalEl = renderToElement("website.s_website_form_recaptcha_legal", {
             labelWidth: labelWidth,
         });
-        legalEl.setAttribute("contentEditable", true);
+        setAttribute(legalEl, "contentEditable", "true");
         el.querySelector(".s_website_form_submit").insertAdjacentElement("beforebegin", legalEl);
     }
     clean({ editingElement: el }) {

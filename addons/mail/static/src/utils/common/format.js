@@ -1,3 +1,4 @@
+import { setAttribute } from "@html_editor/utils/dom";
 import { htmlEscape, markup } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
@@ -314,15 +315,15 @@ export function getNonEditableMentions(body) {
     }
     // for mentioned partner
     for (const mention of doc.body.querySelectorAll(".o_mail_redirect")) {
-        mention.setAttribute("contenteditable", false);
+        setAttribute(mention, "contenteditable", false);
     }
     // for mentioned channel
     for (const mention of doc.body.querySelectorAll(".o_channel_redirect")) {
-        mention.setAttribute("contenteditable", false);
+        setAttribute(mention, "contenteditable", false);
     }
     // for special mentions
     for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
-        mention.setAttribute("contenteditable", false);
+        setAttribute(mention, "contenteditable", false);
     }
     return markup(doc.body.innerHTML);
 }
