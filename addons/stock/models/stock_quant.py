@@ -1043,8 +1043,12 @@ class StockQuant(models.Model):
             raise ValidationError(_('Quantity or Reserved Quantity should be set.'))
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-        if lot_id and quantity > 0:
-            quants = quants.filtered(lambda q: q.lot_id)
+        if lot_id:
+            if float_compare(quantity, 0, precision_rounding=product_id.uom_id.rounding) > 0:
+                quants = quants.filtered(lambda q: q.lot_id)
+            else:
+                # Don't remove quantity from a negative quant without lot
+                quants = quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0 or q.lot_id)
 
         if location_id.should_bypass_reservation():
             incoming_dates = []
