@@ -112,6 +112,7 @@ export class PowerboxPlugin extends Plugin {
         powerbox_categories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),
             withSequence(60, { id: "widget", name: _t("Widget") }),
+            withSequence(100, { id: "modules", name: _t("Modules") }),
         ],
         power_buttons: withSequence(100, {
             commandId: "openPowerbox",
