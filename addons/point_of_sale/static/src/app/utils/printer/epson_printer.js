@@ -67,6 +67,7 @@ export class EpsonPrinter extends BasePrinter {
             const res = await fetch(this.address, {
                 method: "POST",
                 body: img,
+                signal: AbortSignal.timeout(15000),
             });
             const body = await res.text();
             const parser = new DOMParser();
