@@ -93,6 +93,7 @@ class PaymentTransaction(models.Model):
             'currency': self.currency_id.name,
             'locale': 'tr' if self.env.lang == 'tr_TR' else 'en',
             'paidPrice': self.amount,
+            'paymentSource': 'ODOO',
             'price': self.amount,
         }
 
