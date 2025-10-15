@@ -6,6 +6,7 @@ import re
 from PIL import Image
 from unittest.mock import patch
 import odoo
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.addons.website.tests.test_performance import TestWebsitePerformanceCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -25,6 +26,16 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'type': 'url',
             'url': f'{cls.base_url()}/web/image/website.s_banner_default_image.jpg',
         })
+
+        cats = cls.env['product.public.category'].create([{
+            'name': 'Level 0',
+        }, {
+            'name': 'Level 1',
+        }, {
+            'name': 'Level 2',
+        }])
+        cats[2].parent_id = cats[1].id
+        cats[1].parent_id = cats[0].id
 
         # First image (blue) for the template.
         color_blue = '#4169E1'
@@ -71,6 +82,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'sale_ok': True,
             'website_published': True,
             'website_sequence': 1,
+            'public_categ_ids': [Command.link(cats[2].id)],
         })
 
         cls.productB = cls.env['product.product'].create({
@@ -79,12 +91,14 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'sale_ok': True,
             'website_published': True,
             'image_1920': red_image,
+            'website_sequence': -10,
         })
 
         cls.templateC = cls.env['product.template'].create({
             'name': 'Test Remove Image',
             'image_1920': blue_image,
-            'website_sequence': 1,
+            'website_sequence': -10,
+            'public_categ_ids': [Command.link(cats[1].id)],
         })
         cls.productC = cls.templateC.product_variant_ids[0]
         cls.productC.write({
@@ -107,9 +121,21 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 'name': f'Product test {i}',
                 'list_price': 100,
                 'sale_ok': True,
-                'website_published': True,
                 'image_1920': red_image,
+                'website_sequence': -9,
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': cls.product_attribute.id,
+                        'value_ids': [Command.set(cls.product_attribute.value_ids.ids)],
+                    }),
+                ],
             })
+            variant = template.product_variant_ids[0]
+            if i % 5:
+                variant.website_published = True
+            if i % 4:
+                variant.website_sequence = -7
+
             images = [{
                 'name': 'Template image',
                 'image_1920': blue_image,
@@ -118,22 +144,46 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 images.append({
                     'name': 'Variant image',
                     'image_1920': red_image,
-                    'product_variant_id': template.product_variant_ids[0].id,
+                    'product_variant_id': variant.id,
                 })
+            cls.env['product.image'].create(images)
+
+        fpos = cls.env["account.fiscal.position"].create({
+            'name': 'Fiscal Position BE',
+            'country_id': cls.env.ref('base.be').id,
+            'auto_apply': True,
+            'sequence': -1,
+        })
+        usd = cls.env.ref('base.USD')
+        cls.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'currency_id': usd.id,
+            'sequence': -1,
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': cls.templateC.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula',
+            })],
+        })
+        tax_group = cls.env['account.tax.group'].create({'name': 'Test 6%'})
+        cls.env['account.tax'].create({
+                'name': "Test 6%",
+                'fiscal_position_ids': fpos,
+                'amount': 6,
+                'price_include_override': 'tax_included',
+                'type_tax_use': 'sale',
+                'amount_type': 'percent',
+                'country_id': cls.env.ref('base.us').id,
+                'tax_group_id': tax_group.id,
+        })
 
     def setUp(self):
         super().setUp()
         self.session = None
         self.env['website'].search([]).channel_id = False
-
-    def test_perf_sql_queries_shop(self):
-        html = self.url_open('/shop').text
-        self.assertIn(f'<img src="/web/image/product.product/{self.productC.id}/', html)
-        self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
-        self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
-
-        # Test in community: 36
-        self.assertLessEqual(self._get_url_hot_query('/shop'), 37)  # To increase this number you must ask the permission to al
 
     def _get_cart_quantity(self):
         return int(re.search(
@@ -235,25 +285,97 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         expected_query_count = sum(select_tables_perf.values())
         self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, {})
 
-
-@tagged('post_install', '-at_install')
-class TestWebsiteAllPerformancePostInstall(TestWebsiteAllPerformance):
-
-    def test_perf_sql_queries_shop(self):
-        tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
-        tax = self.env['account.tax'].create({
-            'name': 'Tax 15%',
-            'amount': 15,
-            'type_tax_use': 'sale',
-            'tax_group_id': tax_group.id,
-            'country_id': self.env.company.country_id.id,
-        })
-        self.productB.taxes_id = tax
-
+    def _get_queries_shop(self):
         html = self.url_open('/shop').text
         self.assertIn(f'<img src="/web/image/product.product/{self.productC.id}/', html)
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        # Test in community: 45
-        self.assertLessEqual(self._get_url_hot_query('/shop'), 47)  # To increase this number you must ask the permission to al
+        query_count = 52  # To increase this number you must ask the permission to al
+        queries = {
+            'orm_signaling_registry': 1,
+            'website': 2,
+            'res_company': 2,
+            'product_pricelist': 4,
+            'product_template': 6,
+            'product_tag': 1,
+            'product_public_category': 6,
+            'product_product': 1,
+            'product_template_attribute_line': 3,
+            'res_users': 1,
+            'res_partner': 2,
+            'product_category': 1,
+            'product_pricelist_item': 2,
+            'account_tax': 1,
+            'res_currency': 1,
+            'account_account_tag': 1,
+            'product_ribbon': 1,
+            'product_attribute_value': 3,
+            'product_attribute': 1,
+            'ir_attachment': 4,
+            'product_image': 3,
+            'product_template_attribute_value': 1,
+            'ir_ui_view': 2,
+            'website_menu': 1,
+            'website_page': 1,
+        }
+
+        addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)
+        if 'website_helpdesk' in addons:
+            query_count += 1
+            queries['helpdesk_team'] = 1
+        if 'website_sale_subscription' in addons:
+            query_count += 1
+            queries['product_product'] += 1
+
+        tax = self.env.ref('account.1_sale_tax_template', raise_if_not_found=False)
+        if tax and tax.name == '15%':
+            query_count += 2
+            queries['account_tax_repartition_line'] = 2
+
+        if self._has_demo_data():
+            query_count += 5
+            queries['product_template'] += 1
+            queries['product_product'] += 2
+            queries['ir_attachment'] += 1
+            queries['product_ribbon'] += 1
+        else:
+            query_count += 3
+            queries['product_template_attribute_value'] += 3
+
+        # To increase the query count you must ask the permission to al
+        return query_count, queries
+
+    def _has_demo_data(self):
+        return bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
+
+    def test_perf_sql_queries_shop(self):
+        # To increase the query count you must ask the permission to al
+        query_count, queries = self._get_queries_shop()
+
+        if self._has_demo_data():
+            query_count += 3
+            queries['account_tax'] += 1
+            queries['account_account_tag'] += 2
+
+        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
+        self._check_url_hot_query('/shop', query_count, queries)
+
+
+@tagged('post_install', '-at_install')
+class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
+
+    def test_perf_sql_queries_shop(self):
+        # To increase the query count you must ask the permission to al
+        query_count, queries = self._get_queries_shop()
+
+        query_count += 3
+        queries['account_tax'] += 1
+        queries['account_account_tag'] += 2
+
+        if self._has_demo_data():
+            query_count += 1
+            queries['product_attribute_value'] += 1
+
+        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
+        self._check_url_hot_query('/shop', query_count, queries)
