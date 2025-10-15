@@ -15,10 +15,11 @@ export class CategorySelector extends Component {
     getCategoriesList(list, allParents, depth) {
         const categoriesList = [...list];
         list.forEach((item) => {
-            if (item.id === allParents[depth]?.id && item.child_ids?.length) {
-                categoriesList.push(
-                    ...this.getCategoriesList(item.child_ids, allParents, depth + 1)
-                );
+            if (item.id === allParents[depth]?.id) {
+                const children = this.getChildren(item);
+                if (children.length) {
+                    categoriesList.push(...this.getCategoriesList(children, allParents, depth + 1));
+                }
             }
         });
         return categoriesList;
@@ -26,29 +27,39 @@ export class CategorySelector extends Component {
 
     getCategoriesAndSub() {
         const { limit_categories, iface_available_categ_ids } = this.pos.config;
-        let rootCategories = this.pos.models["pos.category"].getAll();
+        let displayableCategories;
         if (limit_categories && iface_available_categ_ids.length > 0) {
-            rootCategories = iface_available_categ_ids;
+            displayableCategories = iface_available_categ_ids;
+            const allowedIdSet = new Set(displayableCategories.map((c) => c.id));
+            this.isAllowedCategory = (category) => allowedIdSet.has(category.id);
+        } else {
+            displayableCategories = this.pos.models["pos.category"].getAll();
+            this.isAllowedCategory = () => true;
         }
-        rootCategories = rootCategories
-            .filter((category) => !category.parent_id)
+
+        const rootCategories = displayableCategories
+            .filter(
+                (category) => !category.parent_id || !this.isAllowedCategory(category.parent_id)
+            )
             .sort((a, b) => a.sequence - b.sequence);
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
-        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
-        return this.getCategoriesList(rootCategories, allParents, 0)
+        const allParents = selected.concat(this.getAllParents(this.pos.selectedCategory)).reverse();
+        const result = this.getCategoriesList(rootCategories, allParents, 0)
             .flat(Infinity)
             .filter((c) => c.hasProductsToShow)
-            .map(this.getChildCategoriesInfo, this);
+            .map((c) => this.getChildCategoriesInfo(c, rootCategories));
+        this.isAllowedCategory = null;
+        return result;
     }
 
     getAncestorsAndCurrent() {
         const selectedCategory = this.pos.selectedCategory;
         return selectedCategory
-            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            ? [undefined, ...this.getAllParents(selectedCategory), selectedCategory]
             : [selectedCategory];
     }
 
-    getChildCategoriesInfo(category) {
+    getChildCategoriesInfo(category, rootCategories) {
         return {
             ...pick(category, "id", "name", "color"),
             imgSrc:
@@ -56,13 +67,25 @@ export class CategorySelector extends Component {
                     ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
                     : undefined,
             isSelected: this.getAncestorsAndCurrent().includes(category),
-            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+            isChildren: this.getChildCategories(this.pos.selectedCategory, rootCategories).includes(
+                category
+            ),
         };
     }
 
-    getChildCategories(selectedCategory) {
-        return selectedCategory
-            ? [...selectedCategory.child_ids]
-            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    getChildCategories(selectedCategory, rootCategories) {
+        return selectedCategory ? this.getChildren(selectedCategory) : rootCategories;
+    }
+
+    getChildren(category) {
+        return (
+            category.child_ids
+                ?.filter((child) => this.isAllowedCategory(child))
+                .sort((a, b) => a.sequence - b.sequence) || []
+        );
+    }
+
+    getAllParents(category) {
+        return category?.allParents.filter((cat) => this.isAllowedCategory(cat)) || [];
     }
 }

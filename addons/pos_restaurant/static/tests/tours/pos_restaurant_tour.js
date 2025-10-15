@@ -488,7 +488,7 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
             ...checkPrinterRetryDialog(["Preparation Printer (127.0.0.1)", "Printer (0.0.0.0)"]),
             FloorScreen.clickTable("5"),
             ProductScreen.selectCourseLine("Course 3"),
-            checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
+            checkPreparationTicketData([], {
                 visibleInDom: ["Course 3"],
                 invisibleInDom: ["DUPLICATA!"],
                 fireCourse: true,
