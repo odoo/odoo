@@ -186,7 +186,7 @@ export class DescriptionScreen extends Component {
             () => [this.state.selectedType, this.state.selectedIndustry]
         );
 
-        this.dropdownSafariHack = false;
+        this.safariHackFocusedOutDropdown = null;
     }
 
     onMounted() {
@@ -360,35 +360,30 @@ export class DescriptionScreen extends Component {
             this.props.navigate(ROUTES.paletteSelectionScreen);
         }
     }
+    onConfiguratorScreenFocusin(ev) {
+        // On safari, hide the previously focused out dropdown if focusin is
+        // outside of it
+        if (isBrowserSafari() && this.safariHackFocusedOutDropdown) {
+            if (ev.target.closest(".dropdown") !== this.safariHackFocusedOutDropdown) {
+                window.Dropdown.getOrCreateInstance(this.safariHackFocusedOutDropdown).hide();
+            }
+            this.safariHackFocusedOutDropdown = null;
+        }
+    }
     /**
      * Hide the dropdown once the focus isn't contained within it anymore.
      *
      * @param {FocusEvent} ev
      */
     onDropdownFocusout(ev) {
-        if (this.dropdownSafariHack) {
+        // On safari, we are missing relatedTarget because we can't focus on a
+        // button, so we delay dropdown hiding to focusin of next element
+        if (isBrowserSafari()) {
+            this.safariHackFocusedOutDropdown = ev.currentTarget;
             return;
         }
         if (ev.relatedTarget?.closest(".dropdown") !== ev.currentTarget) {
             window.Dropdown.getOrCreateInstance(ev.currentTarget).hide();
-        }
-    }
-    // Because of focus problems with safari on buttons, we need to block the focusout
-    // until the pointer is up.
-    onDropdownPointerDown() {
-        if (isBrowserSafari()) {
-            this.dropdownSafariHack = true;
-        }
-    }
-    onDropdownPointerUp(ev) {
-        if (!isBrowserSafari()) {
-            return;
-        }
-        const dropdown = ev.currentTarget;
-        this.dropdownSafariHack = false;
-        const active = document.activeElement;
-        if (!active || !dropdown.contains(active)) {
-            window.Dropdown.getOrCreateInstance(dropdown).hide();
         }
     }
 
