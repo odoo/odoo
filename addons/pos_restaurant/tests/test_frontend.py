@@ -595,6 +595,14 @@ class TestFrontend(TestFrontendCommon):
         expected_time = datetime(2025, 2, 12, 14, 40)
         self.assertEqual(order.preset_time, expected_time, f"The preset time should be {expected_time}, but got {order.preset_time}")
 
+    def test_restaurant_preset_eatin_tour(self):
+        self.pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.env.ref('pos_restaurant.pos_takein_preset', False).id,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RestaurantPresetEatInTour', login="pos_user")
+
     def test_combo_preparation_receipt_layout(self):
         setup_product_combo_items(self)
         pos_printer = self.env['pos.printer'].create({
