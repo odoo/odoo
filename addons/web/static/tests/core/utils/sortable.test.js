@@ -628,3 +628,53 @@ test("clone option", async () => {
     await contains(".item:first-child").dragAndDrop(".item:nth-child(2)");
     expect(".placeholder:not(.item)").toHaveCount(0);
 });
+
+test("dragged element is removed from the DOM while being dragged", async () => {
+    class List extends Component {
+        static props = ["*"];
+        static template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="state.items" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+        setup() {
+            this.state = useState({
+                items: [1, 2, 3],
+            });
+            useSortable({
+                ref: useRef("root"),
+                elements: ".item",
+                onDragStart() {
+                    expect.step("start");
+                },
+                onDragEnd() {
+                    expect.step("end");
+                },
+                onDrop() {
+                    expect.step("drop"); // should not be called
+                },
+            });
+        }
+    }
+
+    const list = await mountWithCleanup(List);
+
+    expect(".item:visible").toHaveCount(3);
+    expect(".o_dragged").toHaveCount(0);
+    expect.verifySteps([]);
+
+    const { drop, moveTo } = await contains(".item:first-child").drag();
+    expect(".o_dragged").toHaveCount(1);
+    expect.verifySteps(["start"]);
+
+    await moveTo(".item:nth-child(2)");
+    expect(".o_dragged").toHaveCount(1);
+
+    list.state.items = [3, 4];
+    await animationFrame();
+    expect(".item:visible").toHaveCount(2);
+    expect(".o_dragged").toHaveCount(0);
+    await drop();
+    expect.verifySteps(["end"]);
+});

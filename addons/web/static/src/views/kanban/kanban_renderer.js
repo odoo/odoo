@@ -592,6 +592,12 @@ export class KanbanRenderer extends Component {
             parent.classList.contains("o_kanban_hover") ||
             parent.dataset.id === element.parentElement.dataset.id
         ) {
+            if (!this.props.list.records.find((r) => r.id === dataRecordId)) {
+                // Race condition: a new rendering has been scheduled/is ongoing but hasn't been
+                // applied to the DOM yet, so the user dropped a record that is no longer referenced
+                // in the model. In that case, we can't to anything else than abort.
+                return;
+            }
             this.toggleProcessing(dataRecordId, true);
 
             parent?.classList.remove("o_kanban_hover");
