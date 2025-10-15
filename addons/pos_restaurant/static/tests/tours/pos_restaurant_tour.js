@@ -617,6 +617,21 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.discardOrderWarningDialog(),
+            ReceiptScreen.cashierNameExists("A simple PoS man!"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout", {
     steps: () =>
         [
