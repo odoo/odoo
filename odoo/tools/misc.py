@@ -229,7 +229,7 @@ def file_path(file_path: str, filter_ext: tuple[str, ...] = ('',), env: Environm
         addons_paths = list(map(os.path.dirname, module.__path__))
     else:
         root_path = os.path.abspath(config.root_path)
-        temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else ()
+        temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else []
         addons_paths = [*odoo.addons.__path__, root_path, *temporary_paths]
 
     for addons_dir in addons_paths:
@@ -305,13 +305,12 @@ def file_open_temporary_directory(env: Environment):
     :param env: environment for which the temporary directory is created.
     :return: the absolute path to the created temporary directory
     """
-    assert not env.transaction._Transaction__file_open_tmp_paths, 'Reentrancy is not implemented for this method'
     with tempfile.TemporaryDirectory() as module_dir:
         try:
-            env.transaction._Transaction__file_open_tmp_paths = (module_dir,)
+            env.transaction._Transaction__file_open_tmp_paths.append(module_dir)
             yield module_dir
         finally:
-            env.transaction._Transaction__file_open_tmp_paths = ()
+            env.transaction._Transaction__file_open_tmp_paths.remove(module_dir)
 
 
 #----------------------------------------------------------
