@@ -64,7 +64,7 @@ const clearServiceCache = () => {
 // regex patterns in Python are slightly different from those in JavaScript.
 // See : controllers/main.py
 const CSS_ANIMATION_RULE_REGEX =
-    /(?<declaration>animation(?:-duration)?: .*?)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>ms|s)(?<separator>\s|;|"|$)/gm;
+    /(?<declaration>animation(?:-duration)?:\s*.*?)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>ms|s)(?<separator>\s|;|"|$)/gm;
 const SVG_DUR_TIMECOUNT_VAL_REGEX =
     /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
 const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
