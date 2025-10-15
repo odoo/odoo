@@ -126,18 +126,17 @@
                             <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                             <aside>
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
-                                    class="o_image_64_cover float-start me-2" alt="Employee's image"/>
+                                    class="o_image_64_cover rounded border float-start" alt="Employee's image"/>
                             </aside>
                             <main class="h-100">
-                                <div class="justify-content-center o_holidays_kanban_card">
+                                <div class="o_holidays_kanban_card d-flex flex-column justify-content-center h-100 ps-2 pe-3">
                                     <div class="d-flex flex-row">
-                                        <div class="col-12 align-items-center o_hr_holidays_value">
-                                            <div class="col-4 o_hr_holidays_card">
-                                                <field class="fw-bold fs-3 mb-2" name="employee_id"/>
+                                        <div class="col-12 d-flex align-items-center o_hr_holidays_value">
+                                            <div class="col-3 o_hr_holidays_card">
+                                                <field class="fw-bold fs-4 lh-sm" name="employee_id"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
-                                                <field name="holiday_status_id" class="fw-bold"/>
-                                                <div class="d-flex flex-row">
+                                                <div class="d-flex flex-row fw-bold">
                                                     <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
                                                     <t t-set="leave_unit" t-value="record.leave_type_request_unit.raw_value"/>
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
@@ -175,12 +174,15 @@
                                                         <field name="request_hour_to" widget="float_time_selection"/>
                                                     </t>
                                                 </div>
+                                                <field name="holiday_status_id" class="text-muted"/>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_card">
+                                            <div class="col-2 o_hr_holidays_card ps-3">
                                                 <div class="fw-bold d-flex me-1">
                                                     <field name="duration_display"/>
                                                 </div>
-                                                Amount
+                                                <span class="text-muted">
+                                                    Amount
+                                                </span>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card">
                                                 <div t-if="record.holiday_status_requires_allocation.raw_value"> <!-- To keep the same space-->
@@ -189,12 +191,17 @@
                                                         /
                                                         <field name="max_leaves" widget="float" digits="[3,2]"/>
                                                     </div>
-                                                    <span>
+                                                    <span class="text-muted">
                                                         Current balance
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
+                                            <div class="col-1">
+                                                <button t-if="record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link text-nowrap">
+                                                    <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                                                </button>
+                                            </div>
+                                            <div class="o_hr_holidays_button col-2 d-flex justify-content-start gap-2">
                                                 <button
                                                     name="action_approve" type="object" class="btn btn-primary"
                                                     t-if="record.can_approve.raw_value">
@@ -216,20 +223,14 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="f-flex flex-row o_hr_holidays_kanban_mobile w-100">
-                            <main>
-                                <div class="flex flex-grow-1 align-items-start mb-1">
-                                    <div class="mb-1 d-flex align-items-center gap-2 hr_leave_kanban_title">
-                                        <field name="employee_id" widget="many2one_avatar_employee"/>
-                                        <field name="employee_id" class="fw-bold w-100"/>
-                                        <span
-                                            style="min-width: fit-content;"
-                                            t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
-                                                record.state.raw_value == 'validate' ? 'success' :
-                                                ['confirm', 'validate1'].includes(record.state.raw_value) ?
-                                                'warning' : 'danger' }}"
-                                            t-out="record.state.value"/>
-                                    </div>
+                        <div class="o_hr_holidays_kanban_mobile d-flex w-100">
+                            <aside class="hr_leave_kanban_aside">
+                                <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'"
+                                    class="o_image_40_cover rounded float-start" alt="Employee's image"/>
+                            </aside>
+                            <main class="d-flex flex-column ps-2">
+                                <span class="hr_leave_kanban_employee_id"><field name="employee_id" class="fw-bold"/></span>
+                                <div class="lh-sm">
                                     <div class="d-flex flex-row">
                                         <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
                                                 <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
@@ -275,23 +276,30 @@
                                     </span>
                                 </div>
                             </main>
-                            <bottom class="d-flex justify-content-end gap-2 mt-0">
-                                <button t-if="record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                            <button t-if="record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link me-4 text-nowrap">
+                                <i class="fa fa-paperclip" title="Attachments" /> <field name="supported_attachment_ids_count" nolabel="1"/>
+                            </button>
+                            <div class="o_hr_holidays_button d-flex gap-1 pt-1">
+                                <span
+                                    style="min-width: fit-content;"
+                                    t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
+                                        record.state.raw_value == 'validate' ? 'success' :
+                                        ['confirm', 'validate1'].includes(record.state.raw_value) ?
+                                        'warning' : 'danger' }}"
+                                    t-out="record.state.value"/>
+                                <button t-if="record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     Approve
                                 </button>
-                                <button t-if="record.can_validate.raw_value and !record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                <button t-if="record.can_validate.raw_value and !record.can_approve.raw_value" name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     groups="hr_holidays.group_hr_holidays_manager">
                                     Validate
                                 </button>
-                                <button t-if="record.can_refuse.raw_value" name="action_refuse" type="object" class="btn btn-sm btn-secondary py-0"
+                                <button t-if="record.can_refuse.raw_value" name="action_refuse" type="object" class="btn btn-sm btn-secondary"
                                     groups="hr_holidays.group_hr_holidays_user">
                                     Refuse
                                 </button>
-                                <button t-if="record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link btn-sm ps-0 text-danger">
-                                    <i class="fa fa-paperclip"> <field name="supported_attachment_ids_count" nolabel="1"/></i>
-                                </button>
-                            </bottom>
+                            </div>
                         </div>
                     </t>
                 </templates>
@@ -738,16 +746,8 @@
             <xpath expr="//div[@id='date_part']" position="attributes">
                 <attribute name="class" add="w-100 fw-bold" separator=" "/>
             </xpath>
-            <xpath expr="//div[@id='date_part']" position="after">
-                <span
-                    style="min-width: fit-content;"
-                    t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
-                    record.state.raw_value == 'validate' ? 'success' :
-                    ['confirm', 'validate1'].includes(record.state.raw_value) ?
-                    'warning' : 'danger' }}"
-                    t-out="record.state.value"/>
-            </xpath>
-            <xpath expr="//div[hasclass('hr_leave_kanban_title')]" position="replace"/>
+            <xpath expr="//span[hasclass('hr_leave_kanban_employee_id')]" position="replace"/>
+            <xpath expr="//aside[hasclass('hr_leave_kanban_aside')]" position="replace"/>
         </field>
     </record>
 
