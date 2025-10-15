@@ -2453,6 +2453,13 @@ export class CaseError extends CaseEvent {
         this.message = error.message.split(R_WHITE_SPACE);
         /** @type {string} */
         this.stack = error.stack;
+
+        // Ensures that the stack contains the error name & message.
+        // This can happen when setting the 'message' after creating the error.
+        const errorNameAndMessage = String(error);
+        if (!this.stack.startsWith(errorNameAndMessage)) {
+            this.stack = errorNameAndMessage + this.stack.slice(error.name.length);
+        }
     }
 }
 
