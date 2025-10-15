@@ -81,8 +81,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": operator.partner_id._get_avatar_128_access_token(),
                     "country_id": False,
                     "id": operator.partner_id.id,
-                    "im_status": "offline",
-                    "im_status_access_token": operator.partner_id._get_im_status_access_token(),
                     "is_public": False,
                     "mention_token": operator.partner_id._get_mention_token(),
                     "user_livechat_username": "Michel Operator",
