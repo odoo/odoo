@@ -5,13 +5,11 @@ import {
     goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { whenReady } from "@odoo/owl";
 import { editorsWeakMap, setSelection } from "@html_editor/../tests/tours/helpers/editor";
 
 registerWebsitePreviewTour('rte_translator', {
     url: '/',
     edition: true,
-    wait_for: whenReady(),
 }, () => [
 ...goToTheme(),
 {

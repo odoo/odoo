@@ -6,7 +6,6 @@ import { session } from "@web/session";
 import { loadBundle } from "@web/core/assets";
 import { createPointerState } from "@web_tour/js/tour_pointer/tour_pointer_state";
 import { tourState } from "@web_tour/js/tour_state";
-import { callWithUnloadCheck } from "@web_tour/js/utils/tour_utils";
 import {
     tourRecorderState,
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
@@ -124,26 +123,18 @@ export class TourService {
         }));
     }
 
-    async getTourRecorder() {
-        let tourRecorder = odoo.loader.modules.get(
-            "@web_tour/js/tour_recorder/tour_recorder"
-        ).TourRecorder;
-        if (!tourRecorder) {
-            await loadBundle("web_tour.recorder");
-            tourRecorder = odoo.loader.modules.get(
-                "@web_tour/js/tour_recorder/tour_recorder"
-            ).TourRecorder;
-        }
-        return tourRecorder;
-    }
-
     /**
      * Add tour recorder component in overlay container.
      */
     async addTourRecorderToOverlay() {
-        const tourRecorder = await this.getTourRecorder();
+        if (!odoo.loader.modules.get("@web_tour/js/tour_recorder/tour_recorder")) {
+            await loadBundle("web_tour.recorder");
+        }
+        const { TourRecorder } = odoo.loader.modules.get(
+            "@web_tour/js/tour_recorder/tour_recorder"
+        );
         const remove = this.overlay.add(
-            tourRecorder,
+            TourRecorder,
             {
                 onClose: () => {
                     remove();
@@ -156,53 +147,55 @@ export class TourService {
     }
 
     /**
-     * @param {string} tourName
+     * @param {string} name The name of the tour
      */
-    async getTourFromDB(tourName) {
-        const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [tourName]);
+    async getTour(name, options) {
+        let tour = tourRegistry.get(name, null);
+        if (options.mode === "manual" && options.fromDB) {
+            tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+            if (!tour) {
+                throw new Error(`Tour '${name}' is not found in the database.`);
+            }
+
+            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
+                tour.steps = tourRegistry.get(tour.name).steps;
+            }
+        }
         if (!tour) {
-            throw new Error(`Tour '${tourName}' is not found in the database.`);
+            return undefined;
         }
-
-        if (!tour.steps.length && tourRegistry.contains(tour.name)) {
-            tour.steps = tourRegistry.get(tour.name).steps();
-        }
-
-        return tour;
-    }
-
-    /**
-     * @param {string} tourName
-     */
-    getTourFromRegistry(tourName) {
-        if (!tourRegistry.contains(tourName)) {
-            return;
-        }
-        const tour = tourRegistry.get(tourName);
+        const url = options.fromDB ? options.url : tour.url;
         return {
             ...tour,
-            steps: tour.steps(),
-            name: tourName,
+            name,
+            url,
+            steps:
+                typeof tour.steps === "function"
+                    ? tour.steps()
+                    : Array.isArray(tour.steps)
+                    ? tour.steps
+                    : [],
             waitFor: tour.wait_for || Promise.resolve(),
         };
     }
 
     /**
-     * @param {string} tourName
+     * Wait the tour is ready (only for automatic tour)
+     * @param {string} name The name of the tour
      */
-    async isTourReady(tourName) {
-        await this.getTourFromRegistry(tourName).waitFor;
+    async isTourReady(name) {
+        if (!tourRegistry.contains(name)) {
+            return false;
+        }
+        const tour = tourRegistry.get(name);
+        await (tour.wait_for || Promise.resolve());
         return true;
     }
 
     async resumeTour() {
         const tourName = tourState.getCurrentTour();
         const tourConfig = tourState.getCurrentConfig();
-
-        let tour = this.getTourFromRegistry(tourName);
-        if (tourConfig.fromDB) {
-            tour = await this.getTourFromDB(tourName);
-        }
+        const tour = await this.getTour(tourName, tourConfig);
         if (!tour) {
             return;
         }
@@ -265,7 +258,7 @@ export class TourService {
      * This retrieves a tour from the internal registry or from the database
      * if `options.fromDB` is set.
      *
-     * @param {string} tourName - The name of the tour to start.
+     * @param {string} name - The name of the tour to start.
      * @param {Object} [options={}] - Options to customize the tour start.
      * @param {boolean} [options.fromDB=false] - Whether the tour should be loaded from the database.
      * @param {string} [options.url] - URL to start the tour.
@@ -277,17 +270,12 @@ export class TourService {
      * @param {boolean} [options.debug=false] - Enables debug mode for the tour.
      * @param {boolean} [options.redirect=true] - Whether to redirect to `tour.url` if necessary.
      */
-    async startTour(tourName, options = {}) {
+    async startTour(name, options = {}) {
         this.pointer.stop();
-        const tourFromRegistry = this.getTourFromRegistry(tourName);
-
-        if (!tourFromRegistry && !options.fromDB) {
-            // Sometime tours are not loaded depending on the modules.
-            // For example, point_of_sale do not load all tours assets.
+        const tour = await this.getTour(name, options);
+        if (!tour) {
             return;
         }
-
-        const tour = options.fromDB ? { name: tourName, url: options.url } : tourFromRegistry;
         if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
                 !this.toursEnabled,
@@ -306,15 +294,12 @@ export class TourService {
         };
 
         tourState.setCurrentConfig(tourConfig);
-        tourState.setCurrentTour(tour.name);
+        tourState.setCurrentTour(name);
         tourState.setCurrentIndex(0);
 
-        const willUnload = callWithUnloadCheck(() => {
-            if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
-                redirect(tour.url);
-            }
-        });
-        if (!willUnload) {
+        if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
+            redirect(tour.url);
+        } else {
             await this.resumeTour();
         }
     }
@@ -349,7 +334,6 @@ registry.category("services").add("tour_service", {
         const service = new TourService(env, services);
         odoo.startTour = service.startTour.bind(service);
         odoo.isTourReady = service.isTourReady.bind(service);
-
         return service;
     },
 });
