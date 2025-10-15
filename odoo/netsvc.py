@@ -200,6 +200,9 @@ def init_logger():
         warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
         warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
 
+        # ignore PyPDF deprecation warnings as our `odoo.tools.pdf` wrapper is done to handle multiple versions
+        warnings.filterwarnings("ignore", category=PendingDeprecationWarning, message=r".+ is deprecated and will be removed in PyPDF2 3\.0\.0")
+
         # Ignore unclosed sockets. The warning appears at random places, when the GC trigger.
         # Cannot find where they are open...
         warnings.filterwarnings("ignore", message=r'unclosed <socket\.socket \[closed\]', category=ResourceWarning)
