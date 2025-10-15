@@ -1968,27 +1968,23 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 0)
         self.assertEqual(len(qweb_keys), 0)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
-
+        self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        asset_keys_length = len(asset_keys)
+        qweb_keys_length = len(qweb_keys)
+        self.assertEqual(asset_keys_length, 1)
+        self.assertEqual(qweb_keys_length, 1)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='tests')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        def check_no_new_cache_entry(debug):
+            self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1', debug=debug)
+            asset_keys, qweb_keys = self.cache_keys()
+            self.assertEqual(len(asset_keys), asset_keys_length)
+            self.assertEqual(len(qweb_keys), qweb_keys_length)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='1')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
-
+        check_no_new_cache_entry(debug='tests')
+        check_no_new_cache_entry(debug='1')
         # in debug=assets, the ormcache is not used for _generate_asset_links_cache
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='assets')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        check_no_new_cache_entry(debug='assets')
 
     def test_assets_node_orm_cache_usage_file_type(self):
         self.env.registry.clear_cache('assets')
@@ -1997,23 +1993,23 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 0)
         self.assertEqual(len(qweb_keys), 0)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=True, css=False)
+        self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1', js=True, css=False)
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1)
         self.assertEqual(len(qweb_keys), 1)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=False, css=True)
+        self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1', js=False, css=True)
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1)
         self.assertEqual(len(qweb_keys), 2)
 
-        # NOTE: this result is not really desired but this is the current behaviour. In practice, we usually only generate one of them.
+        # NOTE: this result is not really desired but this is the current
+        # behavior. In practice, we usually only generate one of them.
         # This could be enforced or avoided
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=True, css=True)
+        self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1', js=True, css=True)
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1)
         self.assertEqual(len(qweb_keys), 3)
-
 
     def test_assets_node_orm_cache_usage_lang(self):
         self.env.registry.clear_cache('assets')
@@ -2025,20 +2021,22 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 0)
         self.assertEqual(len(qweb_keys), 0)
 
-        self.env['ir.qweb'].with_context(lang='fr_FR')._get_asset_nodes('web.assets_backend')
+        self.env['ir.qweb'].with_context(lang='fr_FR')._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        asset_keys_length = len(asset_keys)
+        qweb_keys_length = len(qweb_keys)
+        self.assertEqual(asset_keys_length, 1)
+        self.assertEqual(qweb_keys_length, 1)
 
-        self.env['ir.qweb'].with_context(lang='en_US')._get_asset_nodes('web.assets_backend')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        def check_no_new_cache_entry(lang, is_rtl):
+            self.env['ir.qweb'].with_context(lang=lang)._get_asset_nodes('test_assetsbundle.manifest1')
+            asset_keys, qweb_keys = self.cache_keys()
+            self.assertEqual(len(asset_keys), asset_keys_length)
+            # A second cache entry is created for rtl
+            self.assertEqual(len(qweb_keys), qweb_keys_length + (1 if is_rtl else 0))
 
-        self.env['ir.qweb'].with_context(lang='ar_SY')._get_asset_nodes('web.assets_backend')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 2)  # a second cache entry is created for rtl
+        check_no_new_cache_entry('en_US', is_rtl=False)
+        check_no_new_cache_entry('ar_SY', is_rtl=True)
 
     def test_assets_node_orm_cache_usage_website(self):
         if self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'uninstalled')]):
@@ -2049,15 +2047,19 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 0)
         self.assertEqual(len(qweb_keys), 0)
 
-        self.env['ir.qweb'].with_context(website_id=None)._get_asset_nodes('web.assets_backend')
+        self.env['ir.qweb'].with_context(website_id=None)._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        asset_keys_length = len(asset_keys)
+        qweb_keys_length = len(qweb_keys)
+        self.assertEqual(asset_keys_length, 1)
+        self.assertEqual(qweb_keys_length, 1)
 
-        self.env['ir.qweb'].with_context(website_id=1)._get_asset_nodes('web.assets_backend')
+        self.env['ir.qweb'].with_context(website_id=1)._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 2)  # the content may be different for different websites, even if it is not always the case
-        self.assertEqual(len(qweb_keys), 2)
+        # The content may be different for different websites, even if it is not
+        # always the case.
+        self.assertEqual(len(asset_keys), asset_keys_length + 1)
+        self.assertEqual(len(qweb_keys), qweb_keys_length + 1)
 
     def test_assets_node_orm_cache_usage_node_flags(self):
         self.env.registry.clear_cache('assets')
@@ -2066,25 +2068,23 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 0)
         self.assertEqual(len(qweb_keys), 0)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
+        self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1')
         asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1)
-        self.assertEqual(len(qweb_keys), 1)
+        asset_keys_length = len(asset_keys)
+        qweb_keys_length = len(qweb_keys)
+        self.assertEqual(asset_keys_length, 1)
+        self.assertEqual(qweb_keys_length, 1)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', media='print')
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1, "media shouldn't create another entry")
-        self.assertEqual(len(qweb_keys), 1, "media shouldn't create another entry")
+        def check_no_new_cache_entry(error_message, **kwargs):
+            self.env['ir.qweb']._get_asset_nodes('test_assetsbundle.manifest1', **kwargs)
+            asset_keys, qweb_keys = self.cache_keys()
+            self.assertEqual(len(asset_keys), asset_keys_length, error_message)
+            self.assertEqual(len(qweb_keys), qweb_keys_length, error_message)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', defer_load=True)
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1, "defer_load shouldn't create another entry")
-        self.assertEqual(len(qweb_keys), 1, "defer_load shouldn't create another entry")
+        check_no_new_cache_entry("media shouldn't create another entry", media='print')
+        check_no_new_cache_entry("defer_load shouldn't create another entry", defer_load=True)
+        check_no_new_cache_entry("lazy_load shouldn't create another entry", lazy_load=True)
 
-        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', lazy_load=True)
-        asset_keys, qweb_keys = self.cache_keys()
-        self.assertEqual(len(asset_keys), 1, "lazy_load shouldn't create another entry")
-        self.assertEqual(len(qweb_keys), 1, "lazy_load shouldn't create another entry")
 
 @tagged('-at_install', 'post_install')
 @unittest.skipIf(os.getenv("ODOO_FAKETIME_TEST_MODE"), "This test cannot work with faketime")
