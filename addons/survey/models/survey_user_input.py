@@ -615,19 +615,25 @@ class SurveyUser_Input(models.Model):
             inactive_questions = self._get_inactive_conditional_questions()
         return survey.question_ids - inactive_questions
 
-    def _get_next_skipped_page_or_question(self):
-        """Get next skipped question or page in case the option 'can_go_back' is set on the survey
-        It loops to the first skipped question or page if 'last_displayed_page_id' is the last
-        skipped question or page."""
+    def _get_next_post_submit_page_or_question(self):
+        """Get next page or question in the post submit flow, i.e. when the option 'can_go_back'
+        is set on the survey and the survey has already been submitted once.
+        This flow contains:
+            - the skipped mandatory questions waiting for an answer
+            - their related conditional questions (mandatory or not) missing an answer (not answered and not skipped).
+        If a mandatory question is skipped in the flow, it'll be suggested back until the user answers.
+        If a non-mandatory conditional question is skipped in the flow, it won't be suggested again.
+        It loops back to the first question or page of the flow if 'last_displayed_page_id' is the last one.
+        """
         self.ensure_one()
-        skipped_mandatory_questions = self._get_skipped_questions()
+        post_submit_questions = self._get_post_submit_questions()
 
-        if not skipped_mandatory_questions:
+        if not post_submit_questions:
             return self.env['survey.question']
 
-        page_or_question_ids = skipped_mandatory_questions
+        page_or_question_ids = post_submit_questions
         if self.survey_id.questions_layout == 'page_per_section':
-            page_or_question_ids = skipped_mandatory_questions.page_id
+            page_or_question_ids = post_submit_questions.page_id
 
         # Loop on first page or question if 'last_displayed_page_id' is the last one
         if self.last_displayed_page_id == page_or_question_ids[-1]:
@@ -639,43 +645,51 @@ class SurveyUser_Input(models.Model):
             page_or_question_ids[0]
         )
 
-    def _get_skipped_questions(self):
+    def _get_post_submit_questions(self):
+        """Get every questions of the post submit flow, i.e. when the option 'can_go_back'
+        is set on the survey and the survey has already been submitted once.
+        This flow contains:
+            - the skipped mandatory questions waiting for an answer
+            - their related conditional questions (mandatory or not) missing an answer (not answered and not skipped).
+        """
         self.ensure_one()
 
         # Mandatory questions manually skipped by the user.
-        skipped_questions = self.user_input_line_ids.filtered(
+        post_submit_questions = self.user_input_line_ids.filtered(
             lambda answer: answer.skipped and answer.question_id.constr_mandatory).question_id
 
         # Conditional questions that are triggered but have not yet been displayed (not answered and not skipped)
         _, triggered_questions_by_answer, selected_answers = self._get_conditional_values()
         for answer in selected_answers:
-            skipped_questions |= triggered_questions_by_answer.get(answer, self.env['survey.question']).filtered(
+            post_submit_questions |= triggered_questions_by_answer.get(answer, self.env['survey.question']).filtered(
                 lambda question: question not in self.user_input_line_ids.question_id
             )
 
-        return skipped_questions.sorted('sequence')
+        return post_submit_questions.sorted('sequence')
 
-    def _is_last_skipped_page_or_question(self, page_or_question):
-        """In case of a submitted survey tells if the question or page is the last
-        skipped page or question.
+    def _is_last_post_submit_page_or_question(self, page_or_question):
+        """Determines if the given page or question is the last of the post submit flow, i.e. when
+        the option 'can_go_back' is set on the survey and the survey has already been submitted once.
 
         This is used to :
 
-        - Display a Submit button if the actual question is the last skipped question.
-        - Avoid displaying a Submit button on the last survey question if there are
-          still skipped questions before.
-        - Avoid displaying the next page if submitting the latest skipped question.
+        - Avoid displaying the next page if submitting the last page or question.
+        - Display a Submit button if the actual page or question is the last one.
+        - Avoid displaying a Submit button on the last page or question if:
+          * there are still mandatory questions waiting for an answer.
+          * there is at least one selected answer of the page / question which
+            is triggering further conditional questions.
 
         :param page_or_question: page if survey's layout is page_per_section, question if page_per_question.
         """
         if self.survey_id.questions_layout == 'one_page':
             return True
-        skipped = self._get_skipped_questions()
-        if not skipped:
+        post_submit_questions = self._get_post_submit_questions()
+        if not post_submit_questions:
             return True
         if self.survey_id.questions_layout == 'page_per_section':
-            skipped = skipped.page_id
-        return skipped == page_or_question
+            post_submit_questions = post_submit_questions.page_id
+        return post_submit_questions == page_or_question
 
     # ------------------------------------------------------------
     # MESSAGING

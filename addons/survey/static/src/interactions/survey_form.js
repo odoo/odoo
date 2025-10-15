@@ -221,7 +221,7 @@ export class SurveyForm extends Interaction {
             }
             this.submitForm({
                 isFinish: !!this.el.querySelector("button[value='finish']"),
-                nextSkipped: this.el.querySelector("button[value='next_skipped']")
+                showNextPostSubmitPage: this.el.querySelector("button[value='next_post_submit']")
                     ? ev.key === "Enter"
                     : false,
             });
@@ -291,8 +291,8 @@ export class SurveyForm extends Interaction {
             ) {
                 // change to next
                 const firstSubmitted = surveyContentData.dataset.surveyFirstSubmitted;
-                submitButton.value = firstSubmitted ? "next_skipped" : "next";
-                submitButton.textContent = firstSubmitted ? _t("Next Skipped") : _t("Continue");
+                submitButton.value = firstSubmitted ? "next_post_submit" : "next";
+                submitButton.textContent = _t("Continue");
                 submitButton.classList.replace("btn-secondary", "btn-primary");
             } else {
                 // change to submit
@@ -320,7 +320,7 @@ export class SurveyForm extends Interaction {
             targetEl.closest(".js_question-wrapper").querySelector(".o_survey_comment");
         if (!questionHasComment) {
             await this.submitForm({
-                nextSkipped: !!questionEl.dataset.isSkippedQuestion,
+                showNextPostSubmitPage: !!questionEl.dataset.isPostSubmitQuestion,
             });
         }
     }
@@ -411,8 +411,8 @@ export class SurveyForm extends Interaction {
         const targetEl = ev.currentTarget;
         if (targetEl.value === "previous") {
             this.submitForm({ previousPageId: parseInt(targetEl.dataset.previousPageId) });
-        } else if (targetEl.value === "next_skipped") {
-            this.submitForm({ nextSkipped: true });
+        } else if (targetEl.value === "next_post_submit") {
+            this.submitForm({ showNextPostSubmitPage: true });
         } else if (targetEl.value === "finish" && !this.options.sessionInProgress) {
             // Adding pop-up before the survey is submitted when not in live session
             this.dialog.add(ConfirmationDialog, {
@@ -526,7 +526,7 @@ export class SurveyForm extends Interaction {
      *
      * @param {Array} [options]
      * @param {Integer} [options.previousPageId] navigates to page id
-     * @param {Boolean} [options.nextSkipped] navigates to next skipped page or question
+     * @param {Boolean} [options.showNextPostSubmitPage] navigates to next post submit page or question
      * @param {Boolean} [options.skipValidation] skips JS validation
      * @param {Boolean} [options.initTime] will force the re-init of the timer after next
      *   screen transition
@@ -541,8 +541,8 @@ export class SurveyForm extends Interaction {
         if (options.previousPageId) {
             params.previous_page_id = options.previousPageId;
         }
-        if (options.nextSkipped) {
-            params.next_skipped_page_or_question = true;
+        if (options.showNextPostSubmitPage) {
+            params.next_post_submit_page_or_question = true;
         }
         let route = "/survey/submit";
         if (this.options.isStartScreen) {
@@ -604,10 +604,9 @@ export class SurveyForm extends Interaction {
      */
     async nextScreen(nextScreenPromise, options) {
         const selectorsToFadeout = [".o_survey_form_content"];
-        if (options.isFinish && !this.nextScreenResult?.has_skipped_questions) {
+        if (options.isFinish && !this.nextScreenResult?.has_post_submit_questions) {
             // Fade out the top title
             document.querySelector('.o_survey_main_title_fade')?.classList.replace("opacity-100", "opacity-0");
-            
             selectorsToFadeout.push(".breadcrumb", ".o_survey_timer");
             cookie.delete(`survey_${this.options.surveyToken}`);
         }
@@ -640,7 +639,7 @@ export class SurveyForm extends Interaction {
     onNextScreenDone(options) {
         const result = this.nextScreenResult;
         if (
-            (!(options && options.isFinish) || result.has_skipped_questions) &&
+            (!(options && options.isFinish) || result.has_post_submit_questions) &&
             !this.options.sessionInProgress
         ) {
             this.preventEnterSubmit = false;
@@ -694,7 +693,7 @@ export class SurveyForm extends Interaction {
                 this.removeTimer();
             }
         }
-        if (options && options.isFinish && !result.has_skipped_questions) {
+        if (options && options.isFinish && !result.has_post_submit_questions) {
             if (this.breadcrumbEl) {
                 this.showBreadcrumb = false;
                 this.breadcrumbEl.replaceChildren();
