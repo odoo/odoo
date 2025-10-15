@@ -34,6 +34,11 @@ export class HardwareProxy extends EventBus {
             },
             [this.connectionInfo]
         );
+
+        browser.navigator.permissions
+            ?.query({ name: "local-network-access" })
+            .then(() => (this.useLocalFetch = true))
+            .catch(() => (this.useLocalFetch = false));
     }
 
     setConnectionInfo(info) {
@@ -151,7 +156,7 @@ export class HardwareProxy extends EventBus {
             const response = await browser
                 .fetch(`${url}/hw_proxy/hello`, {
                     signal: timeoutController.signal,
-                    targetAddressSpace: "local",
+                    targetAddressSpace: this.useLocalFetch ? "local" : undefined,
                 })
                 .catch(() => ({}));
             if (response.ok) {
