@@ -77,7 +77,6 @@ export class PosStore extends WithLazyGetterTrap {
         "alert",
         "pos_router",
         "mail.sound_effects",
-        "iot_longpolling",
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
@@ -102,7 +101,6 @@ export class PosStore extends WithLazyGetterTrap {
             action,
             pos_router,
             alert,
-            iot_longpolling,
         }
     ) {
         this.env = env;
@@ -148,7 +146,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.iotLongpolling = iot_longpolling;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
