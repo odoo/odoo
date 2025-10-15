@@ -5,7 +5,7 @@
     'category': 'Hidden/Tests',
     'version': '0.1',
 
-    'depends': ['web'],
+    'depends': ['web', 'test_orm'],
 
     'data': ['ir.model.access.csv'],
     'author': 'Odoo S.A.',

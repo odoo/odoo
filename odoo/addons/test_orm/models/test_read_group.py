@@ -195,12 +195,6 @@ class Test_Read_GroupTag(models.Model):
     active = fields.Boolean(default=True)
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    date = fields.Date()
-
-
 class Test_Read_GroupRelated_Bar(models.Model):
     _name = 'test_read_group.related_bar'
     _description = "RelatedBar"
