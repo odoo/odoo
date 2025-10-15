@@ -87,6 +87,28 @@ class ProductProduct(models.Model):
     image_256 = fields.Image("Image 256", compute='_compute_image_256')
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
+    seller_ids = fields.One2many(
+        comodel_name="product.supplierinfo",
+        inverse_name="product_id",
+        string="Vendors",
+        compute="_compute_variant_seller_ids",
+        store=False,
+    )
+
+    @api.depends('product_tmpl_id.seller_ids', 'seller_ids')
+    def _compute_variant_seller_ids(self):
+        """ Filter seller_ids for each variant 
+        to show only those that match the variant or apply globally. """
+
+        for product in self:
+            seller_ids = product.product_tmpl_id.seller_ids
+            filtered_seller_ids = seller_ids.filtered(
+                lambda s: s.product_id and s.product_id == product
+            )
+            if filtered_seller_ids:
+                product.seller_ids = filtered_seller_ids 
+            else:
+                product.seller_ids = seller_ids
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):

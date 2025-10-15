@@ -43,7 +43,7 @@ class TestSeller(TransactionCase):
         company_b = self.env['res.company'].create({
             'name': 'Saucisson Inc.',
         })
-        self.product_consu.write({'seller_ids': [
+        self.product_consu.product_tmpl_id.write({'seller_ids': [
             (0, 0, {'partner_id': self.asustec.id, 'product_code': 'A', 'company_id': company_a.id}),
             (0, 0, {'partner_id': self.asustec.id, 'product_code': 'B', 'company_id': company_b.id}),
             (0, 0, {'partner_id': self.asustec.id, 'product_code': 'NO', 'company_id': False}),
@@ -150,7 +150,7 @@ class TestSeller(TransactionCase):
             'partner_id': self.camptocamp.id,
             'product_id': self.product_consu.id,
         }])
-        self.assertEqual(vendors, self.product_consu.seller_ids,
+        self.assertEqual(vendors.filtered('product_id'), self.product_consu.seller_ids,
             "Sellers of a product should be listed in the product's seller_ids")
         vendors.write({'product_id': False})
         self.assertEqual(vendors, self.product_consu.seller_ids,
