@@ -776,6 +776,29 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1, strict=False), 2.0)
 
+    def test_mixed_tracking_reservation_9(self):
+        lot1 = self.env["stock.lot"].create({"name": "lot1", "product_id": self.product_serial.id})
+        lot2 = self.env["stock.lot"].create({"name": "lot2", "product_id": self.product_serial.id})
+        self.env["stock.quant"]._update_available_quantity(self.product_serial, self.stock_location, 10, lot_id=lot1)
+        self.env["stock.quant"]._update_available_quantity(self.product_serial, self.stock_location, 1)
+        self.env["stock.quant"]._update_available_quantity(self.product_serial, self.stock_location, -1)
+        move_out = self.env['stock.move'].create({
+            'name': 'test_mixed_tracking_reservation_9',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_out.move_line_ids.lot_id = lot2
+        move_out.picked = True
+        move_out._action_done()
+        quants = self.gather_relevant(self.product_serial, self.stock_location)
+        self.assertEqual(quants.filtered(lambda q: q.lot_id == lot1).quantity, 10)
+        self.assertEqual(quants.filtered(lambda q: q.lot_id == lot2).quantity, -1)
+
     def test_putaway_1(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
         the receipt move line.
