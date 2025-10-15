@@ -3254,6 +3254,11 @@ var SnippetsMenu = Widget.extend({
             iframeEl.dataset.oSrcOnDrop = iframeEl.getAttribute("src");
             iframeEl.removeAttribute("src");
         }
+
+        const filterSelectEl = $html.find("we-select").has("we-button[data-gl-filter]")[0];
+        if (filterSelectEl) {
+            filterSelectEl.dataset.name = "glfilter_select_opt";
+        }
     },
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
