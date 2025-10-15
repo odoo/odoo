@@ -71,6 +71,11 @@ export class PopupVisibilityPlugin extends Plugin {
     }
 
     cleanForSave(rootEl) {
+        // Do not hide a popup if it is saved as a custom snippet, otherwise it
+        // appears empty in the snippet dialog.
+        if (rootEl.matches(".s_popup")) {
+            return;
+        }
         // Hide the popups manually, as we cannot rely on the `onTargetHide`
         // flow since the cleaned popup is a clone and is not in the DOM.
         for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {
