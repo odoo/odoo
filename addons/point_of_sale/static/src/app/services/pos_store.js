@@ -28,7 +28,6 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -551,7 +550,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (
                     !ignoreChange &&
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    order.prep_order_ids.length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
@@ -1754,24 +1753,15 @@ export class PosStore extends WithLazyGetterTrap {
     get printOptions() {
         return { webPrintFallback: true };
     }
-    getOrderChanges(order = this.getOrder()) {
-        return getOrderChanges(order, this.config.preparationCategories);
-    }
-    changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
-        return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
-    }
     async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
         if (typeof order.id !== "number") {
             return this.sendOrderInPreparation(order, opts);
         }
-
-        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
-        const rawchange = data.last_order_preparation_change || "{}";
-        const lastChanges = JSON.parse(rawchange);
-        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
-        const lastLocalDate = DateTime.fromSQL(
-            order.last_order_preparation_change?.metadata?.serverDate
-        ).toUTC();
+        const lastChangeDate = await this.data.call("pos.order", "get_last_order_change_date", [
+            order.id,
+        ]);
+        const lastServerDate = DateTime.fromSQL(lastChangeDate).toUTC();
+        const lastLocalDate = DateTime.fromSQL(order.raw.write_date).toUTC();
 
         if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
             this.dialog.add(AlertDialog, {
@@ -1784,7 +1774,6 @@ export class PosStore extends WithLazyGetterTrap {
             });
 
             // Update before syncing otherwise it will overwrite the last change
-            order.last_order_preparation_change = lastChanges;
             await this.syncAllOrders({ orders: [order] });
             return;
         }
@@ -1798,11 +1787,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
                 let reprint = false;
-                let orderChange = changesToOrder(
-                    order,
-                    this.config.printerCategories,
-                    opts.cancelled
-                );
+                let orderChange = order.changesToOrder(opts);
 
                 if (
                     !orderChange.new.length &&
@@ -1833,7 +1818,7 @@ export class PosStore extends WithLazyGetterTrap {
                 );
             }
         }
-        order.updateLastOrderChange();
+        order.updateLastOrderChange(opts);
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
@@ -1841,7 +1826,7 @@ export class PosStore extends WithLazyGetterTrap {
             await this.syncAllOrders({ orders: [order], force: true });
         }
     }
-    async sendOrderInPreparationUpdateLastChange(o, opts) {
+    async sendOrderInPreparationUpdateLastChange(o, opts = {}) {
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
@@ -1916,7 +1901,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         const changes = this.filterChangeByCategories(categories, orderChange);
         for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
-            changeItem.note = this.getStrNotes(changeItem.note || "[]");
+            changeItem.note = this.getStrNotes(changeItem.note || null);
         }
         return { orderData, changes };
     }

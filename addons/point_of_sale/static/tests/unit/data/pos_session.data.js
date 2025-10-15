@@ -47,6 +47,8 @@ export class PosSession extends models.ServerModel {
             "pos.note",
             "product.tag",
             "ir.module.module",
+            "pos.prep.order",
+            "pos.prep.line",
         ];
     }
 

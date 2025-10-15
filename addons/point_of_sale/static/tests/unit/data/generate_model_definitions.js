@@ -49,6 +49,8 @@ import { StockWarehouse } from "./stock_warehouse.data";
 import { StockRoute } from "./stock_route.data";
 import { BarcodeNomenclature } from "./barcode_nomenclature.data";
 import { ProductAttributeValue } from "./product_attribute_value.data";
+import { PosPrepOrder } from "./pos_prep_order.data";
+import { PosPrepLine } from "./pos_prep_line.data";
 
 export const hootPosModels = [
     ResCountry,
@@ -100,6 +102,8 @@ export const hootPosModels = [
     AccountJournal,
     ResourceCalendar,
     BarcodeNomenclature,
+    PosPrepOrder,
+    PosPrepLine,
 ];
 
 export const definePosModels = () => {

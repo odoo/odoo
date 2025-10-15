@@ -77,7 +77,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
         })
 
         payment_context = {"active_ids": order.ids, "active_id": order.id}
