@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import tagged, Form
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, freeze_time
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -933,6 +933,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         cls.bom_finished1.bom_line_ids[0].operation_id = cls.bom_finished1.operation_ids[0].id
         cls.bom_finished1.bom_line_ids[1].operation_id = cls.bom_finished1.operation_ids[1].id
 
+    @freeze_time('2025-10-27 12:00:00')
     def test_mrp_backorder_operations(self):
         """
         Checks that the operations'data are correclty set on a backorder:
