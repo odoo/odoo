@@ -19,5 +19,9 @@ Base tools required by all IoT related modules.
             'iot_base/static/src/network_utils/*',
             'iot_base/static/src/device_controller.js',
         ],
+        'web.assets_unit_tests': [
+            'iot_base/static/src/network_utils/*',
+            'iot_base/static/tests/**/*',
+        ],
     },
 }

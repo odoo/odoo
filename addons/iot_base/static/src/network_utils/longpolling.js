@@ -21,11 +21,10 @@ export class IoTLongpolling {
     /**
      * Setup in addition to constructor to allow patching
      */
-    setup({ notification, orm }) {
+    setup({ notification }) {
         this._session_id = uuid();
         this._delayedStartPolling(this.rpcDelay);
         this.notification = notification;
-        this.orm = orm;
     }
 
     /**
