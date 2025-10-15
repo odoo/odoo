@@ -1206,7 +1206,10 @@ class MailComposeMessage(models.TransientModel):
                 mail_values['attachment_ids'] = process_record._process_attachments_for_post(
                     decoded_attachments,
                     attachment_ids,
-                    {'model': 'mail.message', 'res_id': 0}
+                    {'model': 'mail.message', 'res_id': 0} if (
+                        not hasattr(record, "_process_attachments_for_post")
+                        or (self.auto_delete and not self.auto_delete_keep_log)
+                    ) else {}  # link to record if kept in chatter, for ease of access
                 )['attachment_ids']
             # comment mode: prepare attachments as a list of IDs, to be processed by MailThread
             else:
