@@ -9,14 +9,20 @@
              <div class="self_order_attribute_selection row pb-3">
                 <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
                     <t t-set="valueSelected" t-value="isValueSelected(attribute,value)"/>
-                    <div class="d-flex col-12 col-md-6 col-lg-4">
+                    <div class="d-flex col-12 col-md-6 col-lg-4 position-relative">
                         <button
-                            t-on-click="() => this.selectAttribute(attribute, value)"
+                            t-on-click="() => this.selectAttribute(attribute, value)" style="min-height:105px;"
                             role="button" class="btn btn-light px-3 px-sm-3 py-3 py-sm-3 w-100 d-flex flex-column align-items-start align-items-md-center text-start text-md-center justify-content-center gap-0 border-2 shadow-sm rounded-4"
                             t-attf-class="{{ valueSelected ? 'border-primary': 'border-transparent' }}">
-                            <span t-esc="value.name" class="fs-4"/>
-                            <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)" class="fs-5  "
-                                 t-att-class="{ 'text-reset opacity-75' : valueSelected, 'text-primary': !valueSelected  }"/>
+                            <div class="d-flex d-inline-flex justify-content-between w-100 align-items-center gap-1">
+                                <div class="text-center d-flex flex-column gap-2 align-items-center w-100">
+                                    <span t-esc="value.name" class="fs-4"/>
+                                </div>
+                                <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)"
+                                    class="d-block position-absolute badge top-0 end-0 me-3 mt-3 rounded-3 text-bg-primary fw-medium" />
+                                <img  t-if="value.image" t-attf-src="data:image/png;base64,{{value.image}}" class="img-fluid rounded-4" style="max-height:70px; max-width:70px"/>
+                                <div t-if="value.html_color and !value.image" t-attf-style="min-height: 25px; min-width: 25px; background-color: {{value.html_color}}" class="rounded-5"/> 
+                            </div>
                         </button>
                     </div>
                 </t>
