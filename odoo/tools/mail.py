@@ -473,7 +473,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
 URL_SKIP_PROTOCOL_REGEX = r'mailto:|tel:|sms:'
 URL_REGEX = rf'''(\bhref=['"](?!{URL_SKIP_PROTOCOL_REGEX})([^'"]+)['"])'''
-TEXT_URL_REGEX = r'https?://[\w@:%.+&~#=/-]+(?:\?\S+)?'
+TEXT_URL_ALLOWED_GROUP = r'[\w@:%+&~#=/-]|[.,][^\s](?!$)'  # defines what characters can be inside a URL
+TEXT_URL_REGEX = r'https?://'  # scheme
+TEXT_URL_REGEX += rf'(?:{TEXT_URL_ALLOWED_GROUP})+'  # domain + path
+TEXT_URL_REGEX += r'(?:\?(?:[^\s.,]|[.,][^\s](?!$))+)?'  # query parameters
 # retrieve inner content of the link
 HTML_TAG_URL_REGEX = URL_REGEX + r'([^<>]*>([^<>]+)<\/)?'
 HTML_TAGS_REGEX = re.compile('<.*?>')
@@ -949,6 +952,11 @@ def url_domain_extract(url):
     if company_hostname and '.' in company_hostname:
         return '.'.join(company_hostname.split('.')[-2:])  # remove subdomains
     return False
+
+
+def text_url_replace(original_url, new_url, text):
+    """Replace an url with another inside some arbitrary text. Avoids matching sub-urls."""
+    return re.sub(re.escape(original_url) + rf'(?!{TEXT_URL_ALLOWED_GROUP})', new_url, text)
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
