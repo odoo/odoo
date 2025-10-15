@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Hassan Mahmoud Hassan hassanmahmoud607@gmail.com https://github.com/hassan510-cmd
+Hassan Mahmoud Hassan <55447090+hassan510-cmd@users.noreply.github.com> https://github.com/hassan510-cmd
