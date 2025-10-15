@@ -76,7 +76,7 @@ class IrQwebFieldImage(models.AbstractModel):
 
         if options.get('alt-field') and options['alt-field'] in record and record[options['alt-field']]:
             alt = escape(record[options['alt-field']])
-        elif options.get('alt'):
+        elif options.get('alt') is not None:
             alt = options['alt']
         else:
             alt = escape(record.display_name)
@@ -101,7 +101,7 @@ class IrQwebFieldImage(models.AbstractModel):
 
         img = ['<img']
         for name, value in atts.items():
-            if value:
+            if value is not None:
                 img.append(' ')
                 img.append(escape(name))
                 img.append('="')

@@ -140,7 +140,7 @@
         <div t-if="blog_post.author_avatar"
              t-field="blog_post.author_avatar"
              style="line-height:1"
-             t-options='{"widget": "image", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
+             t-options='{"widget": "image", "alt": "", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
         <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
             <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
             <span t-else="" t-out="blog_post.author_name"/>
