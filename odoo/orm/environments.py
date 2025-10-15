@@ -603,7 +603,7 @@ class Transaction:
         # {access_context: {model_name: {record_id: bool}}}
         self.access_read = defaultdict[tuple, defaultdict[str, dict["IdType", bool]]](lambda: defaultdict(dict))
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
-        self.__file_open_tmp_paths = ()  # type: ignore # noqa: PLE0237
+        self.__file_open_tmp_paths = []  # type: ignore # noqa: PLE0237
 
     def flush(self) -> None:
         """ Flush pending computations and updates in the transaction. """
