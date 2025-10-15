@@ -128,6 +128,7 @@ export class DragAndDropPlugin extends Plugin {
             elements: elementsSelector,
             scrollingElement,
             handle: handleSelector,
+            allowDisconnected: true, // To be challenged in master
             enable: () => !!document.querySelector(".o_move_handle") || this.dragStarted, // Still needed ?
             dropzones: () => dropzoneEls,
             helper: ({ helperOffset }) => {
