@@ -653,27 +653,6 @@ class TestStockMove(TestStockCommon):
         quants = self.gather_relevant(self.product_serial, self.stock_location)
         self.assertEqual(len(quants), 0)
 
-    def test_multi_step_update(self):
-        """
-            multi step reciept update done quantity
-        """
-        self.warehouse_1.reception_steps = 'two_steps'
-
-        move_input = self.env['stock.move'].create({
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
-            'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-            'warehouse_id': self.warehouse_1.id,
-        })
-        move_input._action_confirm()
-        move_input.move_line_ids.quantity = 9
-        move_input.picked = True
-        move_input._action_done()
-
-        self.assertEqual(move_input.move_dest_ids.product_uom_qty, 9)
-
     def test_mixed_tracking_reservation_8(self):
         """ Send one product tracked by lot to a customer. In your stock, there are one tracked and
         one untracked quant. Reserve the move, then edit the lot to one not present in stock. The
@@ -721,6 +700,49 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1, strict=False), 2.0)
+
+    def test_mixed_tracking_reservation_9(self):
+        lot1 = self.env["stock.lot"].create({"name": "lot1", "product_id": self.product_serial.id})
+        lot2 = self.env["stock.lot"].create({"name": "lot2", "product_id": self.product_serial.id})
+        self.env["stock.quant"]._update_available_quantity(self.product_serial, self.stock_location, 10, lot_id=lot1)
+        self.env["stock.quant"]._update_available_quantity(self.product_serial, self.stock_location, 1)
+        self.env["stock.quant"]._update_available_quantity(self.product_serial, self.stock_location, -1)
+        move_out = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_out.move_line_ids.lot_id = lot2
+        move_out.picked = True
+        move_out._action_done()
+        quants = self.gather_relevant(self.product_serial, self.stock_location)
+        self.assertEqual(quants.filtered(lambda q: q.lot_id == lot1).quantity, 10)
+        self.assertEqual(quants.filtered(lambda q: q.lot_id == lot2).quantity, -1)
+
+    def test_multi_step_update(self):
+        """
+            multi step reciept update done quantity
+        """
+        self.warehouse_1.reception_steps = 'two_steps'
+
+        move_input = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
+            'product_id': self.productA.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': self.warehouse_1.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.quantity = 9
+        move_input.picked = True
+        move_input._action_done()
+
+        self.assertEqual(move_input.move_dest_ids.product_uom_qty, 9)
 
     def test_putaway_1(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
