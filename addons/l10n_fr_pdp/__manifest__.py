@@ -16,6 +16,8 @@ This module will allow sending and receiving B2B invoices
     'data': [
         'data/ubl_en16931_template.xml',
         'data/ubl_en16931_extended_template.xml',
+        'data/cii_france_cius_template.xml',
+        'data/cii_france_cius_extended_template.xml',
     ],
     'auto_install': True,
     'installable': True,

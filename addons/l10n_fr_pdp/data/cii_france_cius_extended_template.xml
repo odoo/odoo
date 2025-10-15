@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SUB-TEMPLATE: Sales Agent Trade Party Basic Info -->
+    <!-- BT-X-337, BT-X-338, BT-X-338-0, BT-X-335 -->
+    <template id="cii_france_cius_sales_agent_basic" 
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+
+        <ram:ID t-out="sales_agent_vals.get('id')"/>
+        <ram:GlobalID t-foreach="sales_agent_vals.get('global_ids')" t-as="global_id_vals" t-att-schemeID="global_id_vals.get('scheme_id')" t-out="global_id_vals.get('id')"/> 
+        <ram:Name t-out="sales_agent_vals.get('name')"/>
+    </template>
+
+    <!-- SUB-TEMPLATE : Sales Agent Legal Organization -->
+    <!-- BT-X-339, BT-X-339-0, BT-X-336 -->
+    <template id="cii_france_cius_sales_agent_legal_org" 
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+
+        <ram:ID t-att-schemeID="legal_organization_vals.get('scheme_id')" t-out="legal_organization_vals.get('id')"/>
+        <ram:TradingBusinessName t-out="legal_organization_vals.get('trading_business_name')"/>
+    </template>
+
+    <!-- SUB-TEMPLATE: Buyer Agent Trade Contact -->
+    <!-- BT-X-413, BT-X-414, BT-X-416-00, BT-X-416, BT-X-418-00, BT-X-418 -->
+    <template id="cii_france_cius_buyer_agent_contact" 
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+
+        <ram:PersonName t-out="trade_contact_vals.get('person_name')"/>
+        <ram:DepartmentName t-out="trade_contact_vals.get('department_name')"/>
+        <ram:TelephoneUniversalCommunication t-if="trade_contact_vals.get('telephone')">
+            <ram:CompleteNumber t-out="trade_contact_vals.get('telephone')"/>
+        </ram:TelephoneUniversalCommunication>
+        <ram:EmailURIUniversalCommunication t-if="trade_contact_vals.get('email')">
+            <ram:URIID t-out="trade_contact_vals.get('email')"/>
+        </ram:EmailURIUniversalCommunication>
+    </template>
+
+    <!-- EXTENDED LINE -->
+    <template id="cii_france_extended_line" 
+                inherit_id="l10n_fr_pdp.cii_france_cius_line"
+                primary="True"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100">
+
+        <!-- BT-X-10 -->
+        <xpath expr="//*[local-name()='AssociatedDocumentLineDocument']/*[local-name()='IncludedNote']/*[local-name()='Content']" position="after">
+            <ram:SubjectCode t-out="note_vals.get('subject_code')"/>
+        </xpath>
+
+        <!-- BG-X-81, BT-X-537, BT-X-538 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeAgreement']" position="inside">
+            <ram:SellerOrderReferencedDocument t-if="line_vals.get('seller_order_reference')">
+                <ram:IssuerAssignedID t-out="line_vals.get('seller_order_reference').get('issuer_assigned_id')"/>
+                <ram:LineID t-out="line_vals.get('seller_order_reference').get('line_id')"/>
+            </ram:SellerOrderReferencedDocument>
+        </xpath>
+
+        <!-- BT-X-21 -->
+        <xpath expr="//*[local-name()='BuyerOrderReferencedDocument']" position="inside">
+            <ram:IssuerAssignedID t-out="line_vals.get('buyer_order_issuer_assigned_id')"/>
+        </xpath>
+
+        <!-- BG-X-7, BT-X-48, BT-X-49, BT-X-49-0, BT-X-50 -->
+        <!-- BG-X-9, BT-X-58, BT-X-64 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeDelivery']" position="inside">
+            <ram:ShipToTradeParty t-if="line_vals.get('ship_to_trade_party')">
+                <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_basic">
+                    <t t-set="sales_agent_vals" t-value="line_vals.get('ship_to_trade_party') or {}"/>
+                </t>
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="line_vals.get('ship_to_trade_party') or {}"/>
+                </t>
+            </ram:ShipToTradeParty>
+        </xpath>
+
+        <!-- BT-X-85-000, BT-X-85-00, BT-X-85, BT-X-85-0 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeDelivery']" position="inside">
+            <ram:ActualDeliverySupplyChainEvent t-if="line_vals.get('actual_delivery_date')">
+                <ram:OccurrenceDateTime>
+                    <udt:DateTimeString format="102" t-out="line_vals.get('actual_delivery_date')"/>
+                </ram:OccurrenceDateTime>
+            </ram:ActualDeliverySupplyChainEvent>
+        </xpath>
+
+        <!-- BG-X-13, BT-X-86, BT-X-87 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeDelivery']" position="inside">
+            <ram:DespatchAdviceReferencedDocument t-if="line_vals.get('despatch_advice_reference')">
+                <ram:IssuerAssignedID t-out="line_vals.get('despatch_advice_reference').get('issuer_assigned_id')"/>
+                <ram:LineID t-out="line_vals.get('despatch_advice_reference').get('line_id')"/>
+            </ram:DespatchAdviceReferencedDocument>
+        </xpath>
+
+        <!-- BG-X-82, BT-X-89, BT-X-90 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeDelivery']" position="inside">
+            <ram:ReceivingAdviceReferencedDocument t-if="line_vals.get('receiving_advice_reference')">
+                <ram:IssuerAssignedID t-out="line_vals.get('receiving_advice_reference').get('issuer_assigned_id')"/>
+                <ram:LineID t-out="line_vals.get('receiving_advice_reference').get('line_id')"/>
+            </ram:ReceivingAdviceReferencedDocument>
+        </xpath>
+
+        <!-- BG-X-48, BT-X-331, BT-X-540, BT-X-332, BT-X-333-00, BT-X-333, BT-X-333-0 -->
+        <xpath expr="//*[local-name()='SpecifiedLineTradeSettlement']" position="inside">
+            <ram:InvoiceReferencedDocument t-if="line_vals.get('invoice_reference')">
+                <ram:IssuerAssignedID t-out="line_vals.get('invoice_reference').get('issuer_assigned_id')"/>
+                <ram:LineID t-out="line_vals.get('invoice_reference').get('line_id')"/>
+                <ram:TypeCode t-out="line_vals.get('invoice_reference').get('type_code')"/>
+                <ram:FormattedIssueDateTime t-if="line_vals.get('invoice_reference').get('issue_date')">
+                    <qdt:DateTimeString format="102" t-out="line_vals.get('invoice_reference').get('issue_date')"/>
+                </ram:FormattedIssueDateTime>
+            </ram:InvoiceReferencedDocument>
+        </xpath>
+
+    </template>
+
+    <!-- MAIN EXTENDED INVOICE -->
+    <template id="cii_france_extended_invoice" 
+                inherit_id="l10n_fr_pdp.cii_france_cius_invoice"
+                primary="True"
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100">
+
+        <!-- Replace line t-calls -->
+        <xpath expr="//t[@t-call='l10n_fr_pdp.cii_france_cius_line']" position="replace">
+            <t t-call="l10n_fr_pdp.cii_france_extended_line"/>
+        </xpath>
+
+        <!-- Document Context ID -->
+        <xpath expr="//*[local-name()='GuidelineSpecifiedDocumentContextParameter']/*[local-name()='ID']" position="replace">
+            <ram:ID t-out="document_context_id"/>
+        </xpath>
+
+        <!-- BT-23-00, BT-23 -->
+        <xpath expr="//*[local-name()='ExchangedDocumentContext']" position="inside">
+            <t t-set="business_process_vals" t-value="business_process_vals or {}"/>
+            <ram:BusinessProcessSpecifiedDocumentContextParameter t-if="business_process_vals">
+                <ram:ID t-out="business_process_vals.get('id')"/>
+            </ram:BusinessProcessSpecifiedDocumentContextParameter>
+        </xpath>
+
+        <!-- BG-X-49, BT-X-337, BT-X-338, BT-X-338-0, BT-X-335, BT-X-545 -->
+        <!-- BG-X-50, BT-X-339, BT-X-339-0, BT-X-336 -->
+        <!-- BG-X-51, BT-X-342, BT-X-343, BT-X-347, BT-X-344-00, BT-X-344, BT-X-346-00, BT-X-346 -->
+        <!-- BG-X-52, BT-X-348, BT-X-354 -->
+        <!-- BT-X-341-00, BT-X-341, BT-X-341-0, BT-X-340-00, BT-X-340, BT-X-340-0 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeAgreement']" position="inside">
+            <t t-set="sales_agent_trade_party_vals" t-value="sales_agent_trade_party_vals or {}"/>
+            <ram:SalesAgentTradeParty t-if="sales_agent_trade_party_vals">
+                <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_basic">
+                    <t t-set="sales_agent_vals" t-value="sales_agent_trade_party_vals"/>
+                </t>
+                <ram:RoleCode t-out="sales_agent_trade_party_vals.get('role_code')"/>
+
+                <ram:SpecifiedLegalOrganization t-if="sales_agent_trade_party_vals.get('legal_organization')">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_legal_org">
+                        <t t-set="legal_organization_vals" t-value="sales_agent_trade_party_vals.get('legal_organization')"/>
+                    </t>
+                </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-foreach="sales_agent_trade_party_vals.get('trade_contacts')" t-as="trade_contact_vals">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_buyer_agent_contact"/>
+                    <ram:TypeCode t-out="trade_contact_vals.get('type_code')"/>
+                </ram:DefinedTradeContact>
+
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="sales_agent_trade_party_vals"/>
+                </t>
+
+                <ram:URIUniversalCommunication t-if="sales_agent_trade_party_vals.get('uri_communication')">
+                    <ram:URIID t-att-schemeID="sales_agent_trade_party_vals.get('uri_scheme_id')" t-out="sales_agent_trade_party_vals.get('uri_id')"/>
+                </ram:URIUniversalCommunication>
+
+                <ram:SpecifiedTaxRegistration t-if="sales_agent_trade_party_vals.get('tax_registration')">
+                    <ram:ID t-att-schemeID="sales_agent_trade_party_vals.get('tax_registration').get('scheme_id')" t-out="sales_agent_trade_party_vals.get('tax_registration').get('id')"/>
+                </ram:SpecifiedTaxRegistration>
+            </ram:SalesAgentTradeParty>
+        </xpath>
+
+        <!-- BT-X-405 -->
+        <xpath expr="//*[local-name()='ContractReferencedDocument']" position="inside">
+            <t t-set="contract_reference_vals" t-value="contract_reference_vals or {}"/>
+            <ram:ReferenceTypeCode t-out="contract_reference_vals.get('reference_type_code')"/>
+        </xpath>
+
+        <!-- BG-X-62, BT-X-408, BT-X-409, BT-X-409-0, BT-X-406, BT-X-549 -->
+        <!-- BG-X-63, BT-X-410, BT-X-410-0, BT-X-407 -->
+        <!-- BG-X-64, BT-X-413, BT-X-414, BT-X-416-00, BT-X-416, BT-X-418-00, BT-X-418 -->
+        <!-- BG-X-65, BT-X-419, BT-X-425 -->
+        <!-- BT-X-412-00, BT-X-412, BT-X-412-0, BT-X-411-00, BT-X-411, BT-X-411-0 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeAgreement']" position="inside">
+            <t t-set="buyer_agent_trade_party_vals" t-value="buyer_agent_trade_party_vals or {}"/>
+            <ram:BuyerAgentTradeParty t-if="buyer_agent_trade_party_vals">
+                <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_basic">
+                    <t t-set="sales_agent_vals" t-value="buyer_agent_trade_party_vals"/>
+                </t>
+                <ram:RoleCode t-out="buyer_agent_trade_party_vals.get('role_code')"/>
+
+                <ram:SpecifiedLegalOrganization t-if="buyer_agent_trade_party_vals.get('legal_organization')">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_legal_org">
+                        <t t-set="legal_organization_vals" t-value="buyer_agent_trade_party_vals.get('legal_organization')"/>
+                    </t>
+                </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-foreach="buyer_agent_trade_party_vals.get('trade_contacts')" t-as="trade_contact_vals">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_buyer_agent_contact"/>
+                </ram:DefinedTradeContact>
+
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="buyer_agent_trade_party_vals"/>
+                </t>
+
+                <ram:URIUniversalCommunication t-if="buyer_agent_trade_party_vals.get('uri_communication')">
+                    <ram:URIID t-att-schemeID="buyer_agent_trade_party_vals.get('uri_scheme_id')" t-out="buyer_agent_trade_party_vals.get('uri_id')"/>
+                </ram:URIUniversalCommunication>
+
+                <ram:SpecifiedTaxRegistration t-if="buyer_agent_trade_party_vals.get('tax_registration')">
+                    <ram:ID t-att-schemeID="buyer_agent_trade_party_vals.get('tax_registration').get('scheme_id')" t-out="buyer_agent_trade_party_vals.get('tax_registration').get('id')"/>
+                </ram:SpecifiedTaxRegistration>
+            </ram:BuyerAgentTradeParty>
+        </xpath>
+
+        <!-- BG-X-33, BT-X-205, BT-X-206, BT-X-206-0, BT-X-207, BT-X-553 -->
+        <!-- BT-X-208-00, BT-X-208, BT-X-208-0, BT-X-209 -->
+        <!-- BG-X-34, BT-X-210, BT-X-211, BT-X-212-00, BT-X-212, BT-X-214-00, BT-X-214 -->
+        <!-- BG-X-35, BT-X-215, BT-X-221, BT-X-222-00, BT-X-222, BT-X-222-0 -->
+        <!-- BT-X-223-00, BT-X-223, BT-X-223-0 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside">
+            <t t-set="invoicer_trade_party_vals" t-value="invoicer_trade_party_vals or {}"/>
+            <ram:InvoicerTradeParty t-if="invoicer_trade_party_vals">
+                <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_basic">
+                    <t t-set="sales_agent_vals" t-value="invoicer_trade_party_vals"/>
+                </t>
+                <ram:RoleCode t-out="invoicer_trade_party_vals.get('role_code')"/>
+
+                <ram:SpecifiedLegalOrganization t-if="invoicer_trade_party_vals.get('legal_organization')">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_legal_org">
+                        <t t-set="legal_organization_vals" t-value="invoicer_trade_party_vals.get('legal_organization')"/>
+                    </t>
+                </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-foreach="invoicer_trade_party_vals.get('trade_contacts')" t-as="trade_contact_vals">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_buyer_agent_contact"/>
+                </ram:DefinedTradeContact>
+
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="invoicer_trade_party_vals"/>
+                </t>
+
+                <ram:URIUniversalCommunication t-if="invoicer_trade_party_vals.get('uri_communication')">
+                    <ram:URIID t-att-schemeID="invoicer_trade_party_vals.get('uri_scheme_id')" t-out="invoicer_trade_party_vals.get('uri_id')"/>
+                </ram:URIUniversalCommunication>
+
+                <ram:SpecifiedTaxRegistration t-if="invoicer_trade_party_vals.get('tax_registration')">
+                    <ram:ID t-att-schemeID="invoicer_trade_party_vals.get('tax_registration').get('scheme_id')" t-out="invoicer_trade_party_vals.get('tax_registration').get('id')"/>
+                </ram:SpecifiedTaxRegistration>
+            </ram:InvoicerTradeParty>
+        </xpath>
+
+        <!-- BG-X-36, BT-X-224, BT-X-225, BT-X-225-0, BT-X-226, BT-X-554 -->
+        <!-- BT-X-227-00, BT-X-227, BT-X-227-0, BT-X-228 -->
+        <!-- BG-X-37, BT-X-229, BT-X-230, BT-X-231-00, BT-X-231, BT-X-233-00, BT-X-233 -->
+        <!-- BG-X-38, BT-X-234, BT-X-240, BT-X-241-00, BT-X-241, BT-X-241-0 -->
+        <!-- BT-X-242-00, BT-X-242, BT-X-242-0 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside">
+            <t t-set="invoicee_trade_party_vals" t-value="invoicee_trade_party_vals or {}"/>
+            <ram:InvoiceeTradeParty t-if="invoicee_trade_party_vals">
+                <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_basic">
+                    <t t-set="sales_agent_vals" t-value="invoicee_trade_party_vals"/>
+                </t>
+                <ram:RoleCode t-out="invoicee_trade_party_vals.get('role_code')"/>
+
+                <ram:SpecifiedLegalOrganization t-if="invoicee_trade_party_vals.get('legal_organization')">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_legal_org">
+                        <t t-set="legal_organization_vals" t-value="invoicee_trade_party_vals.get('legal_organization')"/>
+                    </t>
+                </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-foreach="invoicee_trade_party_vals.get('trade_contacts')" t-as="trade_contact_vals">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_buyer_agent_contact"/>
+                </ram:DefinedTradeContact>
+
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="invoicee_trade_party_vals"/>
+                </t>
+
+                <ram:URIUniversalCommunication t-if="invoicee_trade_party_vals.get('uri_communication')">
+                    <ram:URIID t-att-schemeID="invoicee_trade_party_vals.get('uri_scheme_id')" t-out="invoicee_trade_party_vals.get('uri_id')"/>
+                </ram:URIUniversalCommunication>
+
+                <ram:SpecifiedTaxRegistration t-if="invoicee_trade_party_vals.get('tax_registration')">
+                    <ram:ID t-att-schemeID="invoicee_trade_party_vals.get('tax_registration').get('scheme_id')" t-out="invoicee_trade_party_vals.get('tax_registration').get('id')"/>
+                </ram:SpecifiedTaxRegistration>
+            </ram:InvoiceeTradeParty>
+        </xpath>
+
+        <!-- BT-X-468 -->
+        <!-- BG-X-39, BT-X-244, BT-X-245, BT-X-246-00, BT-X-246, BT-X-248-00, BT-X-248 -->
+        <!-- BG-X-40, BT-X-249, BT-X-255, BT-X-256-00, BT-X-256, BT-X-256-0 -->
+        <!-- BT-X-257-00, BT-X-257, BT-X-257-0 -->
+        <xpath expr="//*[local-name()='PayeeTradeParty']" position="inside">
+            <ram:RoleCode t-out="payee_trade_party_vals.get('role_code')"/>
+            <ram:DefinedTradeContact t-if="payee_trade_party_vals.get('trade_contact')">
+                <t t-set="trade_contact_vals" t-value="payee_trade_party_vals.get('trade_contact') or {}"/>
+                <t t-call="l10n_fr_pdp.cii_france_cius_buyer_agent_contact"/>
+            </ram:DefinedTradeContact>
+            <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                <t t-set="partner" t-value="record.company_id.partner_id"/>
+                <t t-set="partner_additional_info" t-value="payee_trade_party_vals"/>
+            </t>
+
+            <ram:URIUniversalCommunication t-if="payee_trade_party_vals.get('uri_communication')">
+                <ram:URIID t-att-schemeID="payee_trade_party_vals.get('uri_scheme_id')" t-out="payee_trade_party_vals.get('uri_id')"/>
+            </ram:URIUniversalCommunication>
+
+            <ram:SpecifiedTaxRegistration t-if="payee_trade_party_vals.get('tax_registration')">
+                <ram:ID t-att-schemeID="payee_trade_party_vals.get('tax_registration').get('scheme_id')" t-out="payee_trade_party_vals.get('tax_registration').get('id')"/>
+            </ram:SpecifiedTaxRegistration>
+        </xpath>
+
+        <!-- BG-X-73, BT-X-478, BT-X-479, BT-X-479-0, BT-X-476, BT-X-483 -->
+        <!-- BT-X-480-00, BT-X-480, BT-X-480-0, BT-X-477 -->
+        <!-- BG-X-74, BT-X-484, BT-X-485, BT-X-487-00, BT-X-487, BT-X-489-00, BT-X-489 -->
+        <!-- BG-X-75, BT-X-490, BT-X-496, BT-X-482-00, BT-X-482, BT-X-482-0 -->
+        <!-- BT-X-481-00, BT-X-481, BT-X-481-0 -->
+        <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside">
+            <t t-set="payer_trade_party_vals" t-value="payer_trade_party_vals or {}"/>
+            <ram:PayerTradeParty t-if="payer_trade_party_vals">
+                <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_basic">
+                    <t t-set="sales_agent_vals" t-value="payer_trade_party_vals"/>
+                </t>
+                <ram:RoleCode t-out="payer_trade_party_vals.get('role_code')"/>
+
+                <ram:SpecifiedLegalOrganization t-if="payer_trade_party_vals.get('legal_organization')">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_sales_agent_legal_org">
+                        <t t-set="legal_organization_vals" t-value="payer_trade_party_vals.get('legal_organization')"/>
+                    </t>
+                </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-foreach="payer_trade_party_vals.get('trade_contacts')" t-as="trade_contact_vals">
+                    <t t-call="l10n_fr_pdp.cii_france_cius_buyer_agent_contact"/>
+                </ram:DefinedTradeContact>
+
+                <t t-call="l10n_fr_pdp.cii_france_cius_address">
+                    <t t-set="partner" t-value="record.company_id.partner_id"/>
+                    <t t-set="partner_additional_info" t-value="payer_trade_party_vals"/>
+                </t>
+
+                <ram:URIUniversalCommunication t-if="payer_trade_party_vals.get('uri_communication')">
+                    <ram:URIID t-att-schemeID="payer_trade_party_vals.get('uri_scheme_id')" t-out="payer_trade_party_vals.get('uri_id')"/>
+                </ram:URIUniversalCommunication>
+
+                <ram:SpecifiedTaxRegistration t-if="payer_trade_party_vals.get('tax_registration')">
+                    <ram:ID t-att-schemeID="payer_trade_party_vals.get('tax_registration').get('scheme_id')" t-out="payer_trade_party_vals.get('tax_registration').get('id')"/>
+                </ram:SpecifiedTaxRegistration>
+            </ram:PayerTradeParty>
+        </xpath>
+
+        <!-- BT-X-555 -->
+        <xpath expr="//*[local-name()='InvoiceReferencedDocument']" position="inside">
+            <t t-set="invoice_reference_vals" t-value="invoice_reference_vals or {}"/>
+            <ram:TypeCode t-out="invoice_reference_vals.get('type_code')"/>
+        </xpath>
+    </template>
+</odoo>
