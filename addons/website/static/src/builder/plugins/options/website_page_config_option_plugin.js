@@ -54,37 +54,6 @@ class WebsitePageConfigOptionPlugin extends Plugin {
             withSequence(HIDE_FOOTER, HideFooterOption),
             BreadcrumbOption,
         ],
-        invisible_items: [
-            {
-                selector: "#wrapwrap > header.o_snippet_invisible",
-                toggle: (el, show) =>
-                    show &&
-                    this.dependencies.builderActions.applyAction("setWebsiteHeaderVisibility", {
-                        editingElement: el,
-                        value: "regular",
-                        isPreviewing: false,
-                    }),
-            },
-            {
-                selector: ".o_page_breadcrumb.o_snippet_invisible",
-                toggle: (el, show) =>
-                    show &&
-                    this.dependencies.builderActions.applyAction("setWebsiteBreadcrumbVisibility", {
-                        editingElement: el,
-                        value: "regular",
-                        isPreviewing: false,
-                    }),
-            },
-            {
-                selector: "#wrapwrap > footer.o_snippet_invisible",
-                toggle: (el, show) =>
-                    show &&
-                    this.dependencies.builderActions.applyAction("setWebsiteFooterVisible", {
-                        editingElement: el,
-                        isPreviewing: false,
-                    }),
-            },
-        ],
         save_handlers: this.onSave.bind(this),
     };
 

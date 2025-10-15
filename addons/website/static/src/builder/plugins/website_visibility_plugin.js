@@ -24,6 +24,10 @@ export class WebsiteVisibilityPlugin extends Plugin {
                 selector: "[data-visibility=conditional]",
                 toggle: (el, show) => el.classList.toggle("o_conditional_hidden", !show),
             },
+            {
+                selector: ":is(#wrapwrap > :is(header, footer), .o_page_breadcrumb).d-none",
+                toggle: (el, show) => el.classList.toggle("o_snippet_override_invisible", show),
+            },
         ],
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             for (const el of selectElements(snippetEl, "[data-visibility=conditional]")) {
@@ -36,7 +40,7 @@ export class WebsiteVisibilityPlugin extends Plugin {
                 : ".o_snippet_desktop_invisible";
             for (const el of selectElements(
                 root,
-                `.o_snippet_override_invisible:not(${allowedDeviceOverride})`
+                `.o_snippet_override_invisible:not(${allowedDeviceOverride}, :is(#wrapwrap > :is(header, footer), .o_page_breadcrumb).d-none)`
             )) {
                 this.removeTemporaryClass(el, "o_snippet_override_invisible");
             }
