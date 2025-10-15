@@ -4,7 +4,7 @@
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-ref="root">
-        <div class="o-mail-DiscussContent-header py-2 ps-2 ps-xl-3 pe-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary gap-1 z-1 flex-grow-0" t-ref="header">
+        <div class="o-mail-DiscussContent-header py-2 ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary gap-1 z-1 flex-grow-0" t-ref="header">
             <t t-if="thread">
                 <div t-if="showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                     <img class="rounded-2 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
