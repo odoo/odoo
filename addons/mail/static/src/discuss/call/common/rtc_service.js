@@ -282,10 +282,7 @@ export class Rtc extends Record {
             if (!this.channel) {
                 return;
             }
-            this.store["mail.thread"].getOrFetch({
-                model: "discuss.channel",
-                id: this.channel.id,
-            });
+            this.store["discuss.channel"].getOrFetch(this.channel.id);
         },
     });
     /**
