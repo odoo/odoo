@@ -15,7 +15,7 @@ from unittest.mock import patch
 from odoo import release
 from odoo.addons import __path__ as __addons_path__
 from odoo.exceptions import UserError
-from odoo.tools import mute_logger
+from odoo.tools import file_open, file_open_temporary_directory, mute_logger
 from odoo.tools.translate import TranslationModuleReader
 
 
@@ -30,12 +30,15 @@ class TestImportModule(odoo.tests.TransactionCase):
             **values,
         }).encode()
 
-    def import_zipfile(self, files):
+    def archive(self, files):
         archive = BytesIO()
         with ZipFile(archive, 'w') as zipf:
             for path, data in files:
                 zipf.writestr(path, data)
-        return self.env['ir.module.module']._import_zipfile(archive)
+        return archive
+
+    def import_zipfile(self, files):
+        return self.env['ir.module.module']._import_zipfile(self.archive(files))
 
     def test_import_zip(self):
         """Assert the behaviors expected by the module import feature using a ZIP archive"""
@@ -445,6 +448,22 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.import_zipfile(files)
         module = self.env['ir.module.module'].search([('name', '=', 'baz')])
         self.assertEqual(set(module.dependencies_id.mapped('name')), {'bar', 'base', 'foo'})
+
+    def test_multiple_file_open_temporary_directory(self):
+        files = [('foo/__manifest__.py', self.manifest_content(name='foo'))]
+        with (
+            ZipFile(self.archive(files), 'r') as zip_files,
+            file_open_temporary_directory(self.env) as tmp_dir,
+            file_open_temporary_directory(self.env) as other_tmp_dir
+        ):
+            zip_files.extract('foo/__manifest__.py', tmp_dir)
+            zip_files.extract('foo/__manifest__.py', other_tmp_dir)
+            self.assertIn('"name": "foo"', file_open(tmp_dir + '/foo/__manifest__.py', 'r', env=self.env).read())
+            self.assertIn('"name": "foo"', file_open(other_tmp_dir + '/foo/__manifest__.py', 'r', env=self.env).read())
+            tmp_folder = tmp_dir
+        self.assertFalse(self.env.transaction._Transaction__file_open_tmp_paths)
+        with self.assertRaises(FileNotFoundError):
+            file_open(tmp_folder + '/foo/__manifest__.py', 'r', env=self.env)
 
 
 class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
