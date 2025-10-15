@@ -169,8 +169,11 @@ function formatIncludes(values) {
  */
 function formatAssertions(assertions) {
     const lines = [];
-    for (const { failedDetails, label, message, number } of assertions) {
+    for (const { additionalMessage, failedDetails, label, message, number } of assertions) {
         const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
+        if (additionalMessage) {
+            formattedMessage.push(`(${additionalMessage})`);
+        }
         lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
             for (const detail of failedDetails) {
