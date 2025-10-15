@@ -53,12 +53,19 @@
                         <setting id="other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box">
                             <field name="other_devices" />
                             <div class="content-group" invisible="not other_devices">
-                                <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
-                                <div class="row" invisible="epson_printer_ip in [False, '']">
-                                    <div class="col-lg-5 o_light_label">
-                                        <label string="Cashdrawer" for="iface_cashdrawer"/>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
                                     </div>
-                                    <div class="col-lg-7">
+                                    <div class="col-lg-6">
+                                        <widget name="point_of_sale_test_epos" invisible="epson_printer_ip in [False, '']"/>
+                                    </div>
+                                </div>
+                                <div class="row" invisible="epson_printer_ip in [False, '']">
+                                    <div class="col-lg-6 o_light_label">
+                                        <label string="Link Cashdrawer" for="iface_cashdrawer"/>
+                                    </div>
+                                    <div class="col-lg-6">
                                         <field name="iface_cashdrawer"/>
                                     </div>
                                 </div>
