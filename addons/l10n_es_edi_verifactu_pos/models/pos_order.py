@@ -168,6 +168,7 @@ class PosOrder(models.Model):
         else:
             refunded_document = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
 
+        name = self.l10n_es_edi_verifactu_get_invoice_name()
         vals.update({
             'rejected_before': rejected_before,
             'verifactu_state': self.l10n_es_edi_verifactu_state,
@@ -178,7 +179,7 @@ class PosOrder(models.Model):
             # NOTE: invoice with negative amounts possible (when no `refunded_order` specified)
             'verifactu_move_type': 'correction_incremental' if refunded_order else 'invoice',
             'sign': -1 if refunded_order else 1,
-            'name': self.name,
+            'name': name,
             'partner': self.partner_id.commercial_partner_id,
             'refund_reason': self.l10n_es_edi_verifactu_refund_reason,
             'refunded_document': refunded_document,
@@ -275,3 +276,13 @@ class PosOrder(models.Model):
         res['l10n_es_is_simplified'] = False
 
         return res
+
+    def l10n_es_edi_verifactu_get_invoice_name(self):
+        if self.account_move:
+            return self.account_move.name
+        return str(self.config_id.id) + '/' + str(self.sequence_number).zfill(6)
+
+    def _update_sequence_number(self, session, values):
+        """ Override: do not allow updating the sequence number for Spanish pos orders"""
+        if not session.config_id.l10n_es_edi_verifactu_required or not values.get('to_invoice'):
+            super()._update_sequence_number(session, values)
