@@ -280,7 +280,7 @@ export class SnippetModel extends Reactive {
         if (!snippetKey) {
             return;
         }
-        return [...this.snippetStructures, ...this.snippetInnerContents].find(
+        return [...this.snippetInnerContents, ...this.snippetStructures].find(
             (snippet) => snippet.name === snippetKey
         );
     }
