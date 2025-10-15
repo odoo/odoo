@@ -227,7 +227,10 @@ This is a link: https://www.worldcommunitygrid.org
 This is another: {self.base_url}/odoo?debug=1&more=2
 A third: {self.base_url}
 A forth: {self.base_url}
-And a last, with question mark: https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833"""
+One with question mark: https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833&options=2,3. Ok.
+One with commas and dots without query: https://boinc.berkeley.edu/options/2,3/view, Should work too.
+One with many end dots: https://boinc.berkeley.edu/other_options/2,3/view...
+"""
 
         expected_pattern = re.compile(
             rf"""
@@ -235,7 +238,10 @@ This is a link: {self.base_url}/r/\w+
 This is another: {self.base_url}/r/\w+
 A third: {self.base_url}/r/(\w+)
 A forth: {self.base_url}/r/(\w+)
-And a last, with question mark: {self.base_url}/r/(\w+)"""
+One with question mark: {self.base_url}/r/(\w+)\. Ok\.
+One with commas and dots without query: {self.base_url}/r/(\w+), Should work too\.
+One with many end dots: {self.base_url}/r/(\w+)\.
+"""
         )
         with self.allow_requests(all_requests=True):  # Creating link will query url to infer title
             new_content = self.env["mail.render.mixin"]._shorten_links_text(content, {})

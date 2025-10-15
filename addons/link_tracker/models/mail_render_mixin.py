@@ -10,7 +10,7 @@ from werkzeug import urls
 
 from odoo import api, models, tools
 from odoo.addons.link_tracker.tools.html import find_links_with_urls_and_labels
-from odoo.tools.mail import is_html_empty, URL_SKIP_PROTOCOL_REGEX, TEXT_URL_REGEX
+from odoo.tools.mail import is_html_empty, text_url_replace, URL_SKIP_PROTOCOL_REGEX, TEXT_URL_REGEX
 
 
 class MailRenderMixin(models.AbstractModel):
@@ -86,6 +86,6 @@ class MailRenderMixin(models.AbstractModel):
             link = self.env['link.tracker'].search_or_create([create_vals])
             if link.short_url:
                 # Ensures we only replace the same link and not a subpart of a longer one, multiple times if applicable
-                content = re.sub(re.escape(original_url) + r'(?![\w@:%.+&~#=/-])', link.short_url, content)
+                content = text_url_replace(original_url, link.short_url, content)
 
         return content
