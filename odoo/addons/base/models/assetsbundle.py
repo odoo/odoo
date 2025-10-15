@@ -143,8 +143,9 @@ class AssetsBundle(object):
         return self.external_assets + response
 
     def get_link(self, asset_type):
-        unique = self.get_version(asset_type) if not self.is_debug_assets else 'debug'
-        extension = asset_type if self.is_debug_assets else f'min.{asset_type}'
+        use_debug = self.is_debug_assets and not self.has_binary
+        unique = self.get_version(asset_type) if not use_debug else 'debug'
+        extension = asset_type if use_debug else f'min.{asset_type}'
         return self.get_asset_url(unique=unique, extension=extension)
 
     def get_version(self, asset_type):
