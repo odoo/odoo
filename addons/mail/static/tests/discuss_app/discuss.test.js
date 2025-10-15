@@ -272,7 +272,7 @@ test("Click on avatar opens its partner chat window", async () => {
     await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
     await click(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "testPartner" });
+    await contains(".o-mail-avatar-card-name", { text: "testPartner" });
     await contains(".o_card_user_infos > a", { text: "test@partner.com" });
     await contains(".o_card_user_infos > a", { text: "+45687468" });
 });

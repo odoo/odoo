@@ -1058,7 +1058,7 @@ test("open author avatar card", async () => {
     await contains(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
     await click(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Demo" });
+    await contains(".o-mail-avatar-card-name", { text: "Demo" });
     await contains(".o_card_user_infos > a", { text: "demo@example.com" });
     await contains(".o_card_user_infos > a", { text: "+5646548" });
 });
@@ -1532,7 +1532,7 @@ test("avatar card from author should be opened after clicking on their avatar", 
     expect(".o-mail-Message-avatarContainer:first").toHaveClass("cursor-pointer");
     await click(".o-mail-Message-avatar");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Partner_2" });
+    await contains(".o-mail-avatar-card-name", { text: "Partner_2" });
     await contains(".o_card_user_infos > a", { text: "partner2@mail.com" });
     await contains(".o_card_user_infos > a", { text: "+15968415" });
 });
@@ -1558,7 +1558,7 @@ test("avatar card from author should be opened after clicking on their name", as
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-author", { text: "Demo" });
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Demo" });
+    await contains(".o-mail-avatar-card-name", { text: "Demo" });
     await contains(".o_card_user_infos > a", { text: "demo@example.com" });
     await contains(".o_card_user_infos > a", { text: "+5646548" });
 });
