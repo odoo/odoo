@@ -35,6 +35,7 @@
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="stage_id" widget="badge_rotting" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="kanban_state" widget="state_selection" string="State" optional="hide"/> 
                 <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
@@ -46,8 +47,9 @@
                 <field name="activity_ids" widget="list_activity" optional="hide"/>
                 <field name="activity_date_deadline" optional="hide"/>
                 <field name="interviewer_ids" widget="many2many_avatar_user" optional="hide"/>
+                <field name="source_id" optional="hide"/>
                 <field name="medium_id" optional="hide"/>
-                <field name="source_id" readonly="1" optional="hide"/>
+                <field name="campaign_id" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
