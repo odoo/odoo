@@ -16,7 +16,7 @@
                 <div t-if="order.company.email" t-esc="order.company.email" />
                 <div t-if="order.company.website" t-esc="order.company.website" />
                 <div t-if="order.config.receipt_header" style="white-space:pre-line" t-esc="order.config.receipt_header" />
-                <div t-if="order?.getCashierName() and (!order.preset_id or order.preset_id.identification === 'name')" class="cashier">
+                <div t-if="order?.getCashierName()" class="cashier">
                     <div>--------------------------------</div>
                     <div>Served by: <t t-esc="order.getCashierName()" /></div>
                 </div>

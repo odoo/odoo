@@ -550,6 +550,20 @@ registry.category("web_tour.tours").add("RestaurantPresetTakeoutTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.cashierNameExists("A simple PoS man!"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout", {
     steps: () =>
         [
