@@ -48,15 +48,15 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
         content: 'Check if question is Q1',
         trigger: 'div.js_question-wrapper:contains("Q1")',
     }, {
-        content: 'Click on "Next Skipped" button',
-        trigger: 'button.btn:contains("Next Skipped")',
+        content: 'Click on "Continue" button',
+        trigger: 'button.btn:contains("Continue")',
         run: "click",
     }, {
         content: 'Check if question is Q2',
         trigger: 'div.js_question-wrapper:contains("Q2")',
     }, {
-        content: 'Click on "Next Skipped" button',
-        trigger: 'button.btn:contains("Next Skipped")',
+        content: 'Click on "Continue" button',
+        trigger: 'button.btn:contains("Continue")',
         run: "click",
     }, {
         content: 'Check if question is Q1 again (should loop on skipped questions)',

@@ -254,12 +254,12 @@ class Survey(http.Controller):
             :param post:
                 - previous_page_id : come from the breadcrumb or the back button and force the next questions to load
                                      to be the previous ones.
-                - next_skipped_page : force the display of next skipped question or page if any."""
+                - next_post_submit_page : force the display of next post submit question or page if any."""
         data = {
             'is_html_empty': is_html_empty,
             'survey': survey_sudo,
             'answer': answer_sudo,
-            'skipped_questions': answer_sudo._get_skipped_questions(),
+            'post_submit_questions': answer_sudo._get_post_submit_questions(),
             'breadcrumb_pages': [{
                 'id': page.id,
                 'title': page.title,
@@ -314,19 +314,20 @@ class Survey(http.Controller):
             if answer_sudo.is_session_answer:
                 next_page_or_question = survey_sudo.session_question_id
             else:
-                if 'next_skipped_page' in post:
-                    next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
+                if 'next_post_submit_page' in post:
+                    next_page_or_question = answer_sudo._get_next_post_submit_page_or_question()
                 if not next_page_or_question:
                     next_page_or_question = survey_sudo._get_next_page_or_question(
                         answer_sudo,
                         answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
-                    # fallback to skipped page so that there is a next_page_or_question otherwise this should be a submit
+                    # fallback to post submit page or question so that there is a next_page_or_question
+                    # otherwise this should be a submit
                     if not next_page_or_question:
-                        next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
+                        next_page_or_question = answer_sudo._get_next_post_submit_page_or_question()
 
                 if next_page_or_question:
                     if answer_sudo.survey_first_submitted:
-                        survey_last = answer_sudo._is_last_skipped_page_or_question(next_page_or_question)
+                        survey_last = answer_sudo._is_last_post_submit_page_or_question(next_page_or_question)
                     else:
                         survey_last = survey_sudo._is_last_page_or_question(answer_sudo, next_page_or_question)
                     values = {'survey_last': survey_last}
@@ -407,7 +408,7 @@ class Survey(http.Controller):
             background_image_url = survey_data['page'].background_image_url
 
         return {
-            'has_skipped_questions': any(answer_sudo._get_skipped_questions()),
+            'has_post_submit_questions': bool(answer_sudo._get_post_submit_questions()),
             'survey_content': survey_content,
             'survey_progress': survey_progress,
             'survey_navigation': IrQweb._render('survey.survey_navigation', survey_data),
@@ -578,23 +579,23 @@ class Survey(http.Controller):
             answer_sudo.last_displayed_page_id = post['previous_page_id']
             # Go back to specific page using the breadcrumb. Lines are saved and survey continues
             return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, **post)
-        elif 'next_skipped_page_or_question' in post:
+        elif 'next_post_submit_page_or_question' in post:
             answer_sudo.last_displayed_page_id = page_or_question_id
-            return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
+            return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_post_submit_page=True)
         else:
             if not answer_sudo.is_session_answer:
                 page_or_question = request.env['survey.question'].sudo().browse(page_or_question_id)
-                if answer_sudo.survey_first_submitted and answer_sudo._is_last_skipped_page_or_question(page_or_question):
+                if answer_sudo.survey_first_submitted and answer_sudo._is_last_post_submit_page_or_question(page_or_question):
                     next_page = request.env['survey.question']
                 else:
                     next_page = survey_sudo._get_next_page_or_question(answer_sudo, page_or_question_id)
                 if not next_page:
-                    if survey_sudo.users_can_go_back and answer_sudo._get_skipped_questions():
+                    if survey_sudo.users_can_go_back and answer_sudo._get_post_submit_questions():
                         answer_sudo.write({
                             'last_displayed_page_id': page_or_question_id,
                             'survey_first_submitted': True,
                         })
-                        return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_skipped_page=True)
+                        return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo, next_post_submit_page=True)
                     else:
                         answer_sudo._mark_done()
 
