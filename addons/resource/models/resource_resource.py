@@ -385,7 +385,8 @@ class ResourceResource(models.Model):
                 duration_per_week.get(week, 0.0),
             ))
             work_hours += day_working_hours
-            duration_per_week[week] -= day_working_hours
+            if week in duration_per_week:
+                duration_per_week[week] -= day_working_hours
 
             if work_hours_per_day is not None:
                 work_hours_per_day[day] += day_working_hours
