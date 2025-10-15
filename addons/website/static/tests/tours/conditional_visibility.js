@@ -190,6 +190,13 @@ registry.category("web_tour.tours").add("conditional_visibility_4", {
             content: "Check that the footer is visible",
             trigger: ":iframe #wrapwrap footer",
         },
+        {
+            trigger: `:iframe .s_banner`,
+            content: `Scroll to the Banner snippet`,
+            run() {
+                this.anchor.scrollIntoView();
+            },
+        },
         // Click on the "Banner" snippet.
         ...clickOnSnippet(snippets[1]),
         {
