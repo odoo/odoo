@@ -88,27 +88,32 @@ export class SavePlugin extends Plugin {
             // the same record.
             return groupElementHandler(model, field, recordId) || `${model}::${recordId}::${field}`;
         });
-        const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
+        for (const dirtyEls of Object.values(groupedElements)) {
             const cleanedEls = dirtyEls.map((dirtyEl) => {
                 dirtyEl.classList.remove("o_dirty");
                 const cleanedEl = dirtyEl.cloneNode(true);
                 this.dispatchTo("clean_for_save_handlers", { root: cleanedEl });
                 return cleanedEl;
             });
+            let isSaveOverridden = false;
             for (const saveElementsOverride of this.getResource("save_elements_overrides")) {
                 if (await saveElementsOverride(cleanedEls)) {
-                    return;
+                    isSaveOverridden = true;
+                    break;
                 }
+            }
+            if (isSaveOverridden) {
+                continue;
             }
             for (const cleanedEl of cleanedEls) {
                 for (const saveElementHandler of this.getResource("save_element_handlers")) {
                     await saveElementHandler(cleanedEl);
                 }
             }
-        });
+        }
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
         const willSaves = this.getResource("save_handlers").map((c) => c());
-        await Promise.all(saveProms.concat(willSaves));
+        await Promise.all(willSaves);
         this.dependencies.history.reset();
     }
 
