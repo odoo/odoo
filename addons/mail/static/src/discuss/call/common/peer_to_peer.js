@@ -530,6 +530,7 @@ export class PeerToPeer extends EventTarget {
                     peer = this._createPeer(id, { sequence: payload.sequence });
                 }
                 if (
+                    !peer.connection ||
                     INVALID_ICE_CONNECTION_STATES.has(peer.connection.iceConnectionState) ||
                     peer.connection.signalingState === "have-remote-offer"
                 ) {
