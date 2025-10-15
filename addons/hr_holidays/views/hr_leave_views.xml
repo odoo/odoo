@@ -364,7 +364,7 @@
                             <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
                         </group>
                         <group>
-                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state not in ('confirm', 'validate1')" />
+                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="not leave_type_support_document or state not in ('confirm', 'validate1')" />
                         </group>
                     </div>
                     <div class="o_hr_leave_column col_right col-md-6 col-12">
