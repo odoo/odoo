@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-29 19:46+0000\n"
+"PO-Revision-Date: 2025-10-14 08:29+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/payment/"
 "de/>\n"
@@ -237,7 +237,7 @@ msgstr "ACH-Lastschrift"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE"
-msgstr ""
+msgstr "AKTIVIEREN"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -1277,7 +1277,7 @@ msgstr "Ist zu erfassender Betrag gültig"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
 msgid "Is Mercado Pago Supported Country"
-msgstr ""
+msgstr "Ist ein von Mercado Pago unterstütztes Land"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1530,7 +1530,7 @@ msgstr "Mercado Pago"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_pago_wallet
 msgid "Mercado Pago Wallet"
-msgstr ""
+msgstr "Mercado-Pago-Geldbörse"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1681,7 +1681,7 @@ msgstr "OmanNet"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
 msgid "Onboarding Payment Module"
-msgstr ""
+msgstr "Einführungszahlungsmodul"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_czech_republic
@@ -2107,7 +2107,7 @@ msgstr "Verarbeitet von"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Production Environment"
-msgstr ""
+msgstr "Produktionsumgebung"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_promptpay
@@ -2186,7 +2186,7 @@ msgstr "Redpagos"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_redsys
 msgid "Redsys"
-msgstr ""
+msgstr "Redsys"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -2475,30 +2475,31 @@ msgstr "Vielen Dank!"
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
 msgstr ""
+"Mit %(tx_label)s %(ref)s von %(formatted_amount)s ist ein Fehler aufgetreten."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s von %(formatted_amount)s wurde autorisiert."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s von %(formatted_amount)s wurde storniert."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s von %(formatted_amount)s wurde bestätigt."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s von %(formatted_amount)s ist ausstehend."
 
 #. module: payment
 #. odoo-python
@@ -2714,6 +2715,8 @@ msgid ""
 "The payment provider rejected the request.\n"
 "%s"
 msgstr ""
+"Der Zahlungsanbieter hat die Anfrage abgelehnt.\n"
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2741,7 +2744,7 @@ msgstr "Die Anbieterreferenz der Transaktion"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "Die Rückerstattung %(ref)s von %(formatted_amount)s wurde veranlasst."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
@@ -2813,7 +2816,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "Die Transaktion %(ref)s von %(formatted_amount)s wurde veranlasst."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2968,7 +2971,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_troy
 msgid "Troy"
-msgstr ""
+msgstr "Troy"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
@@ -3148,6 +3151,9 @@ msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
 msgstr ""
+"Ob die Transaktion in einer Produktionumgebung vorgenommen wurde. False für "
+"Transaktionen, die erstellt wurden, bevor diese Verfolgung implementiert "
+"wurde."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3355,12 +3361,14 @@ msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
 msgstr ""
+"Ihr Zahlvorgang konnte für folgende Transaktionen nicht abgeschlossen werden:"
+" %(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "Ihr Zahlvorgang wurde erfolgreich gesendet."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form

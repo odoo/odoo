@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-14 00:34+0000\n"
+"PO-Revision-Date: 2025-10-14 18:06+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/sms/es_419/>\n"
@@ -147,6 +147,26 @@ msgid ""
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                    El mensaje se enviará como un SMS a los "
+"destinatarios de la plantilla\n"
+"                                    y no aparecerá en el historial de "
+"mensajes.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'note'\">\n"
+"                                    El SMS no se enviará, solo se registrará "
+"como una\n"
+"                                    nota interna en el historial de mensajes."
+"\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'comment'\">"
+"\n"
+"                                    El SMS se enviará como SMS a los "
+"destinatarios de la plantilla\n"
+"                                    y también se registrará como una nota "
+"interna\n"
+"                                    en el historial de mensajes.\n"
+"                                </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -200,7 +220,7 @@ msgstr "Ocurrió un error al enviar un SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS on “%(record_name)s”"
-msgstr ""
+msgstr "Ocurrió un error al enviar un SMS en “%(record_name)s”"
 
 #. module: sms
 #. odoo-python
@@ -231,12 +251,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/controllers/main.py:0
 msgid "Bad parameters"
-msgstr ""
+msgstr "Parámetros erróneos"
 
 #. module: sms
 #: model:ir.model,name:sms.model_base
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -296,7 +316,7 @@ msgstr "Elija su nombre de remitente"
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Empresas"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -582,7 +602,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "Insert Field"
-msgstr ""
+msgstr "Insertar campo"
 
 #. module: sms
 #. odoo-javascript
@@ -784,6 +804,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Idioma de traducción opcional (código ISO) a seleccionar al enviar un "
+"correo. Si no lo defines, el sistema usará el idioma principal del contacto. "
+"Por lo general, debe ser una expresión de marcador de posición que indique "
+"el idioma adecuado, por ejemplo, {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -815,6 +839,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Evita enviar mensajes a los contactos en la lista de exclusión. Desactiva "
+"esta función solo cuando sea absolutamente necesario."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -956,7 +982,7 @@ msgstr "SMS (sin nota)"
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
 msgid "SMS Account"
-msgstr ""
+msgstr "Cuenta de SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
@@ -1015,7 +1041,7 @@ msgstr "Error en el envío del SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failure: %(modelName)s"
-msgstr ""
+msgstr "Error de SMS: %(modelName)s"
 
 #. module: sms
 #. odoo-javascript
@@ -1128,13 +1154,13 @@ msgstr "Buscar plantillas SMS"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Send %(template_name)s"
-msgstr ""
+msgstr "Enviar %(template_name)s"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1192,7 +1218,7 @@ msgstr "Enviar directamente"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send now"
-msgstr ""
+msgstr "Enviar ahora"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
@@ -1395,7 +1421,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "To"
-msgstr ""
+msgstr "A"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -1463,7 +1489,7 @@ msgstr "Cuenta no registrada"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "Usar lista de exclusión"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1544,7 +1570,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Write a message..."
-msgstr ""
+msgstr "Escribe un mensaje..."
 
 #. module: sms
 #. odoo-javascript

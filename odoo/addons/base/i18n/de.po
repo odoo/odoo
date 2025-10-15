@@ -15,13 +15,14 @@
 # Larissa Manderfeld, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-10-13 10:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-10-14 14:27+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/base/de/>"
 "\n"
 "Language: de\n"
@@ -15567,7 +15568,7 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"E-Mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15577,16 +15578,20 @@ msgid ""
 "                                    <i class=\"fa fa-fw fa-key text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Login / E-Mail\" "
+"invisible=\"login != email\"/>\n"
+"                                    <i class=\"fa fa-fw fa-key text-primary\""
+" title=\"Login\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone text-primary\" title=\"E-Mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Telefonnummer\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -15666,6 +15671,13 @@ msgid ""
 "                                            Update if compromised.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                            Passwort ändern\n"
+"                                        </span>\n"
+"                                        <span class=\"text-muted\">\n"
+"                                            Aktualisieren, wenn "
+"kompromittiert.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -15742,6 +15754,9 @@ msgid ""
 "                                            Connect external services.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                            Verbinden Sie externe Dienste.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -15982,6 +15997,8 @@ msgstr "<strong>Bezeichnung</strong>"
 msgid ""
 "<strong>Let's first confirm it's you. Enter your current password:</strong>"
 msgstr ""
+"<strong>Bestätigen, dass Sie es wirklich sind. Geben Sie Ihr aktuelles "
+"Passwort ein:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -17032,7 +17049,7 @@ msgstr "Hinzufügen"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Add API Key"
-msgstr ""
+msgstr "API-Schlüssel hinzufügen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_avatax
@@ -26544,7 +26561,7 @@ msgstr "E-Mail"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__email_domain_placeholder
 msgid "Email Domain Placeholder"
-msgstr ""
+msgstr "Platzhalter für E-Mail-Domain"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
@@ -26773,7 +26790,7 @@ msgstr "Geben Sie eine Beschreibung und den Zweck des Schlüssels an."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Enter your password"
-msgstr ""
+msgstr "Ihr Passwort eingeben"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -27751,7 +27768,7 @@ msgstr "Ablaufdatum"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Expires on:"
-msgstr ""
+msgstr "Läuft ab am:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -32891,7 +32908,7 @@ msgstr "Letztes Aktualisierung:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest Login"
-msgstr ""
+msgstr "Letzte Anmeldung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
@@ -41411,7 +41428,7 @@ msgstr "Eigenschaften"
 #: model:ir.model.fields,field_description:base.field_res_partner__properties_base_definition_id
 #: model:ir.model.fields,field_description:base.field_res_users__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Allgemeine Festlegung der Eigenschaften"
 
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
@@ -43449,7 +43466,7 @@ msgstr "Bereich"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Scope:"
-msgstr ""
+msgstr "Umfang:"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -49059,7 +49076,7 @@ msgstr "Modulliste aktualisieren"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Update Preferences"
-msgstr ""
+msgstr "Präferenzen aktualisieren"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
@@ -51261,7 +51278,7 @@ msgstr "z. B. „Roadshow“"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "e.g. %(placeholder)s"
-msgstr ""
+msgstr "z. B. %(placeholder)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
