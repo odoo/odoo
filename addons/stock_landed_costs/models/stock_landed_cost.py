@@ -149,7 +149,7 @@ class StockLandedCost(models.Model):
             cost.write(cost_vals)
             if cost.account_move_id:
                 move._post()
-            cost.valuation_adjustment_lines.move_id._set_value()
+            cost.valuation_adjustment_lines.move_id.with_context(remaining_qty_value=True)._set_value()
         return True
 
     def get_valuation_lines(self):

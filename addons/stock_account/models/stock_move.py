@@ -249,7 +249,10 @@ class StockMove(models.Model):
                 if move.product_id.lot_valuated:
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
             if move.is_in:
-                move.value = move.sudo()._get_value()
+                new_move_value = move.sudo()._get_value()
+                if self.env.context.get('remaining_qty_value') and not move.product_uom.is_zero(move.quantity):
+                    new_move_value *= (move.remaining_qty / move.quantity)
+                move.value = new_move_value
                 continue
             # Outgoing moves
             if not move._is_out():
