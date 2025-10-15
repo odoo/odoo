@@ -48,7 +48,6 @@ export function checkPreparationTicketData(
     opts = {
         visibleInDom: [],
         invisibleInDom: [],
-        lineOrder: [],
         type: "new", // can be "new", "cancelled" or "noteUpdate"
     }
 ) {
@@ -56,6 +55,12 @@ export function checkPreparationTicketData(
         const ticket = generatePreparationReceiptElement(opts.type || "new");
         const lines = ticket.querySelectorAll(".orderline");
         const lineNames = [];
+
+        if (data.length !== lines.length) {
+            throw new Error(
+                `Ticket data mismatch: expected ${data.length} lines, but printed ${lines.length}.`
+            );
+        }
 
         let idx = 0;
         for (const line of lines) {
@@ -65,15 +70,15 @@ export function checkPreparationTicketData(
             const attrs = domAttrs.map((c) => c.innerHTML).filter(Boolean);
             const values = data[idx];
 
-            if (values.qty != qty) {
-                throw new Error(
-                    `Ticket data mismatch for ${name}: expected ${values.qty}, got ${qty}`
-                );
-            }
-
             if (values.name != name) {
                 throw new Error(
                     `Ticket data mismatch for ${name}: expected ${values.name}, got ${name}, maybe lines ordering ?`
+                );
+            }
+
+            if (values.qty != qty) {
+                throw new Error(
+                    `Ticket data mismatch for ${name}: expected ${values.qty}, got ${qty}`
                 );
             }
 

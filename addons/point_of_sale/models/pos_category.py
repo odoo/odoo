@@ -37,12 +37,8 @@ class PosCategory(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        domain = []
-        limited_categories = data['pos.config'][0]['limit_categories']
-        if limited_categories:
-            available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
-            domain += [('id', 'in', available_category_ids)]
-        return domain
+        """ Ensure all categories are loaded. """
+        return []
 
     @api.model
     def _load_pos_data_fields(self, config_id):

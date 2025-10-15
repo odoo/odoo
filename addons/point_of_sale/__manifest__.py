@@ -107,6 +107,8 @@
 
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/services/render_service.js',
+            'point_of_sale/static/src/app/components/category_selector/utils.js',
+
             'point_of_sale/static/tests/unit/**/*',
 
             'point_of_sale/static/src/app/components/odoo_logo/*',
