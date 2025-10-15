@@ -383,6 +383,31 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(lead.city, 'my city', 'City should be preserved during conversion')
         self.assertEqual(partner.lang, 'en_US')
 
+    def test_lead_convert_same_team(self):
+        """Check that the team_id field of the 'crm.lead2opportunity.partner' form is pre-filled with the team of the
+        lead that must be converted and not with the default one of its user."""
+        lead = self.env['crm.lead'].create({
+            'name': 'Convert Same Team LEAD',
+            'type': 'lead',
+            'user_id': self.user_sales_manager.id,
+            'team_id': self.env['crm.team'].create({
+                'name': 'Convert Sales Team 2',
+                'user_id': self.user_sales_manager.id,
+            }).id,
+        })
+        wizard = Form(self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': lead.ids,
+        }))
+        # Check that the team_id field of the wizard is pre-filled with the lead's team and ensure that it is not
+        # because it is the default team of the user.
+        self.assertEqual(lead.team_id, wizard.team_id)
+        self.assertNotEqual(
+            self.env['crm.team']._get_default_team_id(user_id=self.user_sales_manager.id),
+            lead.team_id
+        )
+
     @users('user_sales_manager')
     def test_lead_convert_properties_preserve(self):
         """Verify that the properties are preserved when converting."""
