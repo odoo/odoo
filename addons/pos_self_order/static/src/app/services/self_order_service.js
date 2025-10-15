@@ -410,7 +410,13 @@ export class SelfOrder extends Reactive {
     }
 
     initProducts() {
-        this.productCategories = this.models["pos.category"].getAll();
+        if (this.config.iface_available_categ_ids.length) {
+            this.productCategories = this.config.iface_available_categ_ids;
+            this.limitedCategoryIdsSet = new Set(this.productCategories.map((c) => c.id));
+        } else {
+            this.limitedCategoryIdsSet = null;
+            this.productCategories = this.models["pos.category"].getAll();
+        }
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
         const excludedProductTemplateIds = new Set(
@@ -437,6 +443,16 @@ export class SelfOrder extends Reactive {
             });
             this.productByCategIds["0"] = productWoCat;
         }
+    }
+
+    isVisibleCategory(category) {
+        if (!category) {
+            return false;
+        }
+        if (this.limitedCategoryIdsSet) {
+            return this.limitedCategoryIdsSet.has(category.id);
+        }
+        return true;
     }
 
     initData() {
@@ -471,16 +487,18 @@ export class SelfOrder extends Reactive {
     }
 
     _getKioskPrintingCategoriesChanges(order, categories) {
-        return order.lines.filter((orderline) => {
-            const baseProductId = orderline.combo_parent_id
-                ? orderline.combo_parent_id.product_id.id
-                : orderline.product_id.id;
-            return categories.some((category) =>
-                this.models["product.product"]
-                    .get(baseProductId)
-                    .pos_categ_ids.map((categ) => categ.id)
-                    .includes(category.id)
-            );
+        const prepCategoryIds = new Set(categories.map((c) => c.id));
+        const hasPreparationCategory = (product) => {
+            if (!product) {
+                return false;
+            }
+            return product.parentPosCategIds.some((id) => prepCategoryIds.has(id));
+        };
+        return order.lines.filter((line) => {
+            if (line.combo_line_ids?.length) {
+                return line.combo_line_ids.some((line) => hasPreparationCategory(line.product_id));
+            }
+            return hasPreparationCategory(line.product_id);
         });
     }
 
