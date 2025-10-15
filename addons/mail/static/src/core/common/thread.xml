@@ -100,7 +100,7 @@
 </t>
 
 <t t-name="mail.Thread.startMessage">
-    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-2 ps-xl-3': env.inDiscussApp, 'px-2': env.inMeetingChat }">
+    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-2': env.inDiscussApp or env.inMeetingChat }">
         <div class="d-flex align-items-center gap-2" t-att-class="{
             'mt-2 mb-1': !props.thread.parent_channel_id,
             'mt-1': props.thread.parent_channel_id,
