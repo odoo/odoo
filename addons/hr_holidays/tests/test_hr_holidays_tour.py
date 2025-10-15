@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.tests import HttpCase
@@ -51,7 +50,6 @@ class TestHrHolidaysTour(HttpCase):
         admin_user.lang = "sr@latin"
         self.start_tour("/web", "hr_holidays_launch", login="admin")
 
-    @freeze_time('2025-11-11')
     def test_tour_mandatory_days_in_hebrew(self):
         """Run the UI tour in Hebrew to check mandatory days display."""
         # Force Hebrew language for the user
@@ -59,10 +57,11 @@ class TestHrHolidaysTour(HttpCase):
         self.env.ref("base.lang_he_IL").active = True
         admin_user.lang = "he_IL"
 
+        today = date.today()
         self.env['hr.leave.mandatory.day'].create({
             'name': 'Madatory Day',
-            'start_date': datetime(2025, 11, 11),
-            'end_date': datetime(2025, 11, 11),
+            'start_date': today,
+            'end_date': today,
             'color': 1,
         })
         self.start_tour(
