@@ -7,7 +7,13 @@
             tracking utilities will be fully integrated into a service.
         -->
         <div class="s_add_to_cart oe_website_sale" data-action="add_to_cart">
-            <button class="s_add_to_cart_btn disabled btn btn-secondary mb-2" data-action="add_to_cart">
+            <!-- data-show-quantity is set to false since there's no easy way to compute it. -->
+            <button
+                name="add_to_cart"
+                class="s_add_to_cart_btn disabled btn btn-secondary mb-2"
+                data-action="add_to_cart"
+                t-att-data-show-quantity="False"
+            >
                 <i class="fa fa-cart-plus me-2"/>Add to Cart
             </button>
         </div>

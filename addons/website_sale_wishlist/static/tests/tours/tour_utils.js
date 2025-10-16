@@ -4,12 +4,12 @@ export function addToWishlistFromProductPage() {
     return [
         {
             content: "Add to wishlist",
-            trigger: "#product_detail form a.btn.o_add_wishlist_dyn:not(.disabled)",
+            trigger: ".js_product button.o_add_wishlist_dyn:not(:disabled)",
             run: "click",
         },
         {
             content: "Check if the button is disabled",
-            trigger: "#product_detail form a.btn.o_add_wishlist_dyn.disabled",
+            trigger: ".js_product button.o_add_wishlist_dyn:disabled",
         },
     ];
 }
@@ -19,12 +19,12 @@ export function addToWishlistFromShopPage() {
     return [
         {
             content: "Add to wishlist",
-            trigger: "#o_wsale_products_grid button.btn.o_add_wishlist:not(.disabled)",
+            trigger: "#o_wsale_products_grid button.o_add_wishlist:not(:disabled)",
             run: "click",
         },
         {
             content: "Check that the button is disabled",
-            trigger: "#o_wsale_products_grid button.btn.o_add_wishlist.disabled",
+            trigger: "#o_wsale_products_grid button.o_add_wishlist:disabled",
         },
     ];
 }

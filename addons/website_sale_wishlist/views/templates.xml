@@ -24,12 +24,10 @@
                 />
                 <button
                     t-if="product_variant_id"
-                    type="button"
                     t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
                     t-att-disabled="in_wish"
+                    t-att-data-product-id="product_variant_id"
                     t-att-data-product-template-id="product.id"
-                    t-att-data-product-product-id="product_variant_id"
-                    data-action="o_wishlist"
                     t-att-title="in_wish and btnTitleActive or btnTitle"
                 >
                     <span
@@ -48,18 +46,16 @@
         inherit_id="website_sale.cart_lines"
         active="True"
     >
-        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/a" position="after">
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/button" position="after">
             <t t-if="line._is_sellable()">
                 <span class="text-300">|</span>
-                <a
-                    href="#"
-                    class="o_add_wishlist js_delete_product small"
+                <button
+                    class="o_add_wishlist js_delete_product btn btn-link btn-sm p-0"
+                    t-att-data-product-id="line.product_id.id"
                     t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
-                    t-att-data-product-product-id="line.product_id.id"
-                    data-action="o_wishlist"
                 >
                     Save for Later
-                </a>
+                </button>
             </t>
         </xpath>
 
@@ -67,9 +63,8 @@
             <button
                 t-if="line._is_sellable()"
                 class="o_add_wishlist js_delete_product btn btn-link d-inline-block d-md-none px-2"
+                t-att-data-product-id="line.product_id.id"
                 t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
-                t-att-data-product-product-id="line.product_id.id"
-                data-action="o_wishlist"
                 title="Wishlist"
             >
                 <i class="fa fa-fw fa-heart-o"/>
@@ -105,14 +100,12 @@
                 t-set="_button_classes"
                 t-value="_button_classes + ' btn-lg px-lg-0'"
             />
-            <!-- using A instead of BUTTON so space character works when editing -->
-            <a
+            <button
                 t-if="product_variant"
                 t-att-class="_button_classes"
                 t-att-disabled="in_wish"
+                t-att-data-product-id="product_variant.id"
                 t-att-data-product-template-id="product.id"
-                t-att-data-product-product-id="product_variant.id"
-                data-action="o_wishlist"
                 title="Add to wishlist"
             >
                 <i class="fa fa-heart-o me-2 me-lg-0" role="img" aria-label="Add to wishlist"/>
@@ -126,7 +119,7 @@
                     t-value="_span_classes + ' d-lg-none'"
                 />
                 <span t-att-class="_span_classes">Add to wishlist</span>
-            </a>
+            </button>
         </xpath>
     </template>
 
@@ -286,7 +279,7 @@
     <template id="website_sale_wishlist.product_wishlist" name="Wishlist Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Wishlist</t>
-            <div id="wrap" class="js_sale">
+            <div id="wrap" class="o_wsale_wishlist_page">
                 <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
                 <div class="container oe_website_sale">
                     <section class="container wishlist-section pb-5">
@@ -322,8 +315,9 @@
                                 <t t-set="product" t-value="product_variant.product_tmpl_id"/>
                                 <t t-set="product_href" t-value="product_variant.website_url"/>
                                 <t t-set="combination_info" t-value="product_variant._get_combination_info_variant()"/>
-                                <article
+                                <div
                                     class="o_wishlist_item"
+                                    name="wishlist_item"
                                     t-att-data-wish-id="wish.id"
                                     t-att-data-product-id="product_variant.id"
                                 >
@@ -363,14 +357,13 @@
                                                 </a>
                                                 <button
                                                     t-else=""
-                                                    id="add_to_cart_button"
-                                                    type="button"
-                                                    class="o_wsale_product_btn_primary btn btn-primary o_wish_add"
-                                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                    name="add_to_cart"
+                                                    class="o_wsale_product_btn_primary btn btn-primary"
+                                                    t-att-data-product-id="product_variant.id"
                                                     t-att-data-product-template-id="product.id"
-                                                    t-att-data-product-product-id="product_variant.id"
                                                     t-att-data-product-type="product.type"
                                                     t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
+                                                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                                 >
                                                     <i
                                                         class="fa fa-fw fa-shopping-cart o_not-animable"
@@ -392,7 +385,7 @@
                                             </button>
                                         </t>
                                     </t>
-                                </article>
+                                </div>
                             </t>
                         </div>
                     </section>

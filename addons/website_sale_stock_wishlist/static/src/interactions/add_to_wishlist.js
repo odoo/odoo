@@ -1,9 +1,7 @@
 import { patch } from '@web/core/utils/patch';
-import {
-    AddProductToWishlistButton
-} from '@website_sale_wishlist/interactions/add_product_to_wishlist_button';
+import { AddToWishlist } from '@website_sale_wishlist/interactions/add_to_wishlist';
 
-patch(AddProductToWishlistButton.prototype, {
+patch(AddToWishlist.prototype, {
     /**
      * Remove wishlist indication when adding a product to the wishlist.
      */

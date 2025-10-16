@@ -21,7 +21,7 @@ registerWebsitePreviewTour(
             ...clickOnSnippet(productsSnippet),
             ...clickOnSave(),
             {
-                trigger: ":iframe .s_dynamic_snippet_products .o_carousel_product_card .js_add_cart:not(:visible)",
+                trigger: ":iframe .s_dynamic_snippet_products .o_carousel_product_card button[name='add_to_cart']:not(:visible)",
                 run: 'click',
             },
             goToCart({ backend: true, expectUnloadPage: false }),

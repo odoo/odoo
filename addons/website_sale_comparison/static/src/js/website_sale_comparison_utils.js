@@ -57,7 +57,7 @@ function clearComparisonProducts(bus) {
     const productIds = getComparisonProductIds();
     cookie.delete(COMPARISON_PRODUCT_IDS_COOKIE_NAME);
     notifyComparisonListeners(bus);
-    enableDisabledProducts(productIds);
+    enableAddToComparisonButtons(productIds);
 }
 
 /**
@@ -66,32 +66,19 @@ function clearComparisonProducts(bus) {
  * @param {EventBus} bus
  */
 function notifyComparisonListeners(bus) {
-    if (bus) {
-        bus.dispatchEvent(new CustomEvent(COMPARISON_EVENT, { bubbles: true }));
-    }
+    bus?.trigger(COMPARISON_EVENT);
 }
 
 /**
- * Update the disabled/enabled state of an element.
- *
- * @param {Element} el The element to disable/enable.
- * @param {boolean} isDisabled Whether the element should be disabled.
+ * Enable the "add to comparison" buttons for the specified products.
  */
-function updateDisabled(el, isDisabled) {
-    el.disabled = isDisabled;
-    el.classList.toggle('disabled', isDisabled);
-}
-
-/**
- * After removing products from comparison, update the disabled button
- */
-function enableDisabledProducts(productIds) {
+function enableAddToComparisonButtons(productIds) {
     for (const productId of productIds) {
         const productCompareButton = document.querySelector(
-            `.o_add_compare[data-product-product-id="${productId}"]`
+            `.o_add_compare[data-product-id="${productId}"], .o_add_compare_dyn[data-product-id="${productId}"]`
         );
         if (productCompareButton) {
-            updateDisabled(productCompareButton, false);
+            productCompareButton.disabled = false;
         }
     }
 }
@@ -105,6 +92,5 @@ export default {
     removeComparisonProduct: removeComparisonProduct,
     clearComparisonProducts: clearComparisonProducts,
     notifyComparisonListeners: notifyComparisonListeners,
-    updateDisabled: updateDisabled,
-    enableDisabledProducts: enableDisabledProducts,
+    enableAddToComparisonButtons: enableAddToComparisonButtons,
 };

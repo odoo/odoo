@@ -2,7 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 
 export class AddToCart extends Interaction {
-    static selector = '#add_to_cart, #buy_now, .o_wsale_products_page button[name="add_to_cart"]';
+    static selector = '.oe_website_sale button[name="add_to_cart"]';
     dynamicContent = {
         _root: { "t-on-click.prevent": this.locked(this.addToCart, true) },
     };
@@ -24,20 +24,29 @@ export class AddToCart extends Interaction {
             noVariantAttributeValues: this._getSelectedNoVariantPtavs(productEl),
         } : {};
 
+        const productContainer = productEl ?? button.closest('#products_grid');
+        const optionalParams = productContainer ? this._getOptionalParams(productContainer) : {};
+
         const quantity = await this.waitFor(this.services['cart'].add({
             productTemplateId: parseInt(button.dataset.productTemplateId),
             productId: parseInt(button.dataset.productId),
             isCombo: button.dataset.productType === 'combo',
+            ptavs: JSON.parse(button.dataset.ptavIds || '[]'),
             ...productPageData,
-            ...this._getOptionalParams(productEl ?? button.closest('#products_grid')),
+            ...optionalParams,
         }, {
-            isBuyNow: button.id === 'buy_now',
+            isBuyNow: button.dataset.action === 'buy_now',
             isConfigured: button.parentElement.id === 'add_to_cart_wrap',
             showQuantity: button.dataset.showQuantity === 'True',
         }));
 
         if (quantity > 0) {
             button.dispatchEvent(new CustomEvent('product_added_to_cart', { bubbles: true }));
+        }
+        if (button.closest('.o_carousel_product_card')?.dataset?.add2cartRerender === 'True') {
+            const dynamicSnippetProducts = button.closest('.s_dynamic_snippet_products');
+            this.services['public.interactions'].stopInteractions(dynamicSnippetProducts);
+            this.services['public.interactions'].startInteractions(dynamicSnippetProducts);
         }
 
         return quantity;

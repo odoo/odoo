@@ -14,11 +14,6 @@ It allows for comparing products from the wishlist
     'data': [
         'views/templates.xml',
     ],
-    'assets': {
-        'web.assets_frontend': [
-            'website_sale_comparison_wishlist/static/src/**/*',
-        ],
-    },
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -38,8 +38,11 @@
                         />
                     </div>
                     <div t-out="order_line._get_shop_warning()"/>
-                    <div name="o_wsale_unavailable_line_button_container" class="mt-2 mt-md-1">
-                        <a href='#' class="alert-link me-2 small">
+                    <div
+                        name="o_wsale_unavailable_line_button_container"
+                        class="mt-2 mt-md-1 d-flex align-items-center gap-2"
+                    >
+                        <button class="alert-link btn btn-link btn-sm p-0">
                             <i
                                 t-attf-class="fa fa-fw {{'fa-refresh' if available_qty else 'fa-trash-o'}}"
                                 role="presentation"
@@ -54,7 +57,7 @@
                                 t-att-data-available-qty="available_qty"
                                 t-out="update_cart_button_label if available_qty else remove_from_cart_button_label"
                             />
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
