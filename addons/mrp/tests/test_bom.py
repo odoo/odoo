@@ -1823,11 +1823,19 @@ class TestBoM(TestMrpCommon):
             move_raw.product_uom_qty = 1
             move_raw.product_uom = uom_dozen
         mo_2 = mo_form.save()
+        self.assertEqual(mo_2.state, 'draft')
         mo_2.action_confirm()
+        self.assertEqual(mo_2.state, 'confirmed')
         self.assertRecordValues(mo_2.move_raw_ids, [
             {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': uom_dozen.id},
             {'product_id': component_2.id, 'product_uom_qty': 1, 'product_uom': uom_dozen.id}
         ])
+        mo_form = Form(mo_2)
+        with mo_form.move_raw_ids.edit(0) as move_raw:
+            move_raw.quantity = 5
+        with mo_form.move_raw_ids.edit(1) as move_raw:
+            move_raw.quantity = 5
+        mo_2 = mo_form.save()
 
         # Updates the BoM by set the second BoM line's quantity to 2.
         bom_form = Form(bom)
