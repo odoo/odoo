@@ -73,6 +73,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             'event_booths': event_booths,
             'hide_sponsors': True,
             'redirect_url': werkzeug.urls.url_quote(request.httprequest.full_path),
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
         }
 
     @http.route('/event/<model("event.event"):event>/booth/confirm',
@@ -130,6 +131,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             'main_object': event_sudo,
             'selected_booth_category_id': (chosen_booth_category or default_booth_category).id,
             'selected_booth_ids': booth_ids if booth_category_id == chosen_booth_category.id and booth_ids else False,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
         }
 
     def _prepare_booth_registration_values(self, event, kwargs):
