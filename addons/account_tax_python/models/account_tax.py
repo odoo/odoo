@@ -7,8 +7,6 @@ from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
-REGEX_FORMULA_OBJECT = re.compile(r'((?:product\[\')(?P<field>\w+)(?:\'\]))+')
-
 FORMULA_ALLOWED_TOKENS = {
     '(', ')',
     '+', '-', '*', '/', ',', '<', '>', '<=', '>=',
@@ -42,12 +40,18 @@ class AccountTaxPython(models.Model):
             if tax.amount_type == 'code':
                 tax._check_formula()
 
-    @api.model
     def _eval_taxes_computation_prepare_product_fields(self):
         # EXTENDS 'account'
         field_names = super()._eval_taxes_computation_prepare_product_fields()
         for tax in self.filtered(lambda tax: tax.amount_type == 'code'):
             field_names.update(tax.formula_decoded_info['product_fields'])
+        return field_names
+
+    def _eval_taxes_computation_prepare_product_uom_fields(self):
+        # EXTENDS 'account'
+        field_names = super()._eval_taxes_computation_prepare_product_uom_fields()
+        for tax in self.filtered(lambda tax: tax.amount_type == 'code'):
+            field_names.update(tax.formula_decoded_info['product_uom_fields'])
         return field_names
 
     @api.depends('formula')
@@ -62,8 +66,8 @@ class AccountTaxPython(models.Model):
                 'js_formula': formula,
                 'py_formula': formula,
             }
-            product_fields = set()
 
+            product_fields = set()
             groups = re.findall(r'((?:product\.)(?P<field>\w+))+', formula) or []
             Product = self.env['product.product']
             for group in groups:
@@ -71,8 +75,18 @@ class AccountTaxPython(models.Model):
                 if field_name in Product and not Product._fields[field_name].relational:
                     product_fields.add(field_name)
                     formula_decoded_info['py_formula'] = formula_decoded_info['py_formula'].replace(f"product.{field_name}", f"product['{field_name}']")
-
             formula_decoded_info['product_fields'] = list(product_fields)
+
+            product_uom_fields = set()
+            groups = re.findall(r'((?:uom\.)(?P<field>\w+))+', formula) or []
+            Uom = self.env['uom.uom']
+            for group in groups:
+                field_name = group[1]
+                if field_name in Uom and not Uom._fields[field_name].relational:
+                    product_uom_fields.add(field_name)
+                    formula_decoded_info['py_formula'] = formula_decoded_info['py_formula'].replace(f"uom.{field_name}", f"uom['{field_name}']")
+            formula_decoded_info['product_uom_fields'] = list(product_uom_fields)
+
             tax.formula_decoded_info = formula_decoded_info
 
     def _check_formula(self):
@@ -95,7 +109,11 @@ class AccountTaxPython(models.Model):
             return i - starting_i
 
         formula_decoded_info = self.formula_decoded_info
-        allowed_tokens = FORMULA_ALLOWED_TOKENS.union(f"product['{field_name}']" for field_name in formula_decoded_info['product_fields'])
+        allowed_tokens = (
+            FORMULA_ALLOWED_TOKENS
+            .union(f"product['{field_name}']" for field_name in formula_decoded_info['product_fields'])
+            .union(f"uom['{field_name}']" for field_name in formula_decoded_info['product_uom_fields'])
+        )
         formula = formula_decoded_info['py_formula']
 
         i = 0
@@ -139,6 +157,7 @@ class AccountTaxPython(models.Model):
             'price_unit': evaluation_context['price_unit'],
             'quantity': evaluation_context['quantity'],
             'product': evaluation_context['product'],
+            'uom': evaluation_context['uom'],
             'base': raw_base,
             'min': min,
             'max': max,
