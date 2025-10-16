@@ -4,8 +4,8 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import format_date
-
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+import uuid
 
 
 @tagged('post_install', '-at_install')
@@ -1567,3 +1567,78 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_selected_partner_quotation_loading', login="accountman")
+
+    def test_backend_settle_refund(self):
+        """Make sure that sale orders settled in PoS and refunded in the backend get their invoiced quantity updated correctly."""
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'lst_price': 10.0,
+            'taxes_id': [],
+        })
+
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        pos_order = {
+           'amount_paid': 10,
+           'amount_return': 0,
+           'amount_tax': 0,
+           'amount_total': 10,
+           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'to_invoice': True,
+           'partner_id': partner_test.id,
+           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'pack_lot_ids': [],
+              'price_unit': 10,
+              'product_id': product_a.id,
+              'price_subtotal': 10,
+              'price_subtotal_incl': 10,
+              'sale_order_line_id': sale_order.order_line[0].id,
+              'sale_order_origin_id': sale_order.id,
+              'qty': 1,
+              'tax_ids': []}]],
+           'name': 'Order 00044-003-0014',
+           'session_id': current_session.id,
+           'sequence_number': self.main_pos_config.journal_id.id,
+           'payment_ids': [[0,
+             0,
+             {'amount': 10,
+              'name': fields.Datetime.now(),
+              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
+           'user_id': self.env.uid,
+           'uuid': str(uuid.uuid4()),
+            }
+
+        data = self.env['pos.order'].sync_from_ui([pos_order])
+        self.assertEqual(sale_order.order_line.qty_invoiced, 1)
+        pos_order_id = data['pos.order'][0]['id']
+        pos_order_record = self.env['pos.order'].browse(pos_order_id)
+        refund_action = pos_order_record.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+
+        self.env.flush_all()
+        refund_payment.with_context(**payment_context).check()
+        self.assertEqual(sale_order.order_line.qty_invoiced, 0)

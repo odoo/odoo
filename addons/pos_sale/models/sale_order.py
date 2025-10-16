@@ -136,7 +136,7 @@ class SaleOrderLine(models.Model):
             if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
                 sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
 
-    @api.depends('pos_order_line_ids.qty')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
         for sale_line in self:
