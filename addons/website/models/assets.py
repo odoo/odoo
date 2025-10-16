@@ -3,6 +3,7 @@
 import base64
 import re
 import requests
+from collections.abc import Mapping
 
 from werkzeug.urls import url_parse
 
@@ -129,8 +130,12 @@ class WebsiteAssets(models.AbstractModel):
             if custom_attachments is None:
                 attachment = self._get_custom_attachment(url)
             else:
-                attachment = custom_attachments.filtered(lambda r: r.url == url)
-            return attachment and base64.b64decode(attachment.datas) or False
+                if isinstance(custom_attachments, Mapping):
+                    attachment = custom_attachments.get(url)
+                else:
+                    attachment = next((att for att in custom_attachments if att.url == url), None)
+
+            return attachment and attachment.raw
 
         # If the file is not yet customized, the content is found by reading
         # the local file
