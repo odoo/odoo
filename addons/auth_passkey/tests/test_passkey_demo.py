@@ -449,6 +449,7 @@ class PasskeyTestTours(PasskeyTest):
     def test_passkey_backend(self):
         # All these tests rely on each other but had to be split up to patch different methods.
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', self.passkeys['test-yubikey']['host'])
+        self.admin_user.tz = 'UTC'  # workaround to fix timezone not being set so you are unable to click any buttons on the profile page
         self.admin_user.auth_passkey_key_ids.unlink()
         with self.patch_start_registration(self.passkeys['test-yubikey']['registration']['challenge']):
             self.start_tour("/odoo?debug=tests", 'passkeys_tour_registration', login="admin")
