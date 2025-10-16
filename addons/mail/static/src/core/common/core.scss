@@ -296,45 +296,46 @@ $o-mail-utilities: map-merge(
 // see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
 @mixin o-mention-variant(
     $background,
-    $border,
+    $outline,
     $color: color-contrast($background),
     $hover-background: if($color == $color-contrast-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount)),
-    $hover-border: if($color == $color-contrast-light, shade-color($border, $btn-hover-border-shade-amount), tint-color($border, $btn-hover-border-tint-amount)),
+    $hover-outline: if($color == $color-contrast-light, shade-color($outline, $btn-hover-border-shade-amount), tint-color($outline, $btn-hover-border-tint-amount)),
     $hover-color: color-contrast($hover-background),
     $active-background: if($color == $color-contrast-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount)),
-    $active-border: if($color == $color-contrast-light, shade-color($border, $btn-active-border-shade-amount), tint-color($border, $btn-active-border-tint-amount)),
+    $active-outline: if($color == $color-contrast-light, shade-color($outline, $btn-active-border-shade-amount), tint-color($outline, $btn-active-border-tint-amount)),
     $active-color: color-contrast($active-background),
     $disabled-background: $background,
-    $disabled-border: $border,
+    $disabled-outline: $outline,
     $disabled-color: color-contrast($disabled-background)
 ) {
     color: #{$color} !important;
     background-color: #{$background};
-    border-color: #{$border};
+    outline-color: #{$outline};
     &:hover {
         color: #{$hover-color};
         background-color: #{$hover-background};
-        border-color: #{$hover-border};
+        outline-color: #{$hover-outline};
     }
     &:focus {
-        box-shadow: #{to-rgb(mix($color, $border, 15%))};
+        box-shadow: #{to-rgb(mix($color, $outline, 15%))};
     }
     &:active {
         color: #{$active-color};
         background-color: #{$active-background};
-        border-color: #{$active-border};
+        outline-color: #{$active-outline};
     }
     &:disabled {
         color: #{$disabled-color};
         background-color: #{$disabled-background};
-        border-color: #{$disabled-border};
+        outline-color: #{$disabled-outline};
     }
 }
 
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed {
     border-radius: $btn-border-radius-sm;
-    padding: 0rem 0.1875rem;
-    border: 1px solid;
+    padding: 0rem 0.1rem;
+    margin: 0rem 0.0875rem;
+    outline: 1px solid;
     font-weight: $font-weight-bold;
     display: inline-block;
 }
