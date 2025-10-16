@@ -4,4 +4,3 @@ from . import test_lot_valuation
 from . import test_product
 from . import test_stockvaluation
 from . import test_stockvaluationlayer
-from . import test_stock_valuation_layer_revaluation
