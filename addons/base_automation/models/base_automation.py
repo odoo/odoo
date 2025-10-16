@@ -545,16 +545,6 @@ class BaseAutomation(models.Model):
         for automation in self:
             automation.webhook_uuid = str(uuid4())
 
-    def action_view_webhook_logs(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Webhook Logs'),
-            'res_model': 'ir.logging',
-            'view_mode': 'list,form',
-            'domain': [('path', '=', "base_automation(%s)" % self.id)],
-        }
-
     def _get_trigger_specific_field(self):
         self.ensure_one()
         match self.trigger:
@@ -592,9 +582,11 @@ class BaseAutomation(models.Model):
             'type': 'server',
             'dbname': self.env.cr.dbname,
             'level': 'INFO',
-            'path': "base_automation(%s)" % self.id,
+            'path': "base_automation/models/base_automation.py",
             'func': '',
-            'line': ''
+            'line': '',
+            'res_model': self._name,
+            'res_id': self.id,
         }
         defaults.update(**values)
         return defaults

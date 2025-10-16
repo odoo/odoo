@@ -32,6 +32,8 @@ class IrLogging(models.Model):
     path = fields.Char(required=True)
     func = fields.Char(string='Function', required=True)
     line = fields.Char(required=True)
+    res_model = fields.Char(string="Related Model Name", help="Model name of the object from which the logging originates, if applicable")
+    res_id = fields.Integer(string="Resource ID", help="Database ID of record from which the logging originates, if applicable")
 
     def init(self):
         super(IrLogging, self).init()
