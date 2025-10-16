@@ -82,6 +82,7 @@
             ('include', 'html_builder.assets'),
             ('remove', 'web/static/fonts/fonts.scss'),
             'mass_mailing/static/src/builder/**/*',
+            ('remove', 'mass_mailing/static/src/builder/**/*.inside.scss'),
         ],
         'mass_mailing.assets_iframe_helpers': [
             # minimal assets for mass_mailing isolated iframes from web.

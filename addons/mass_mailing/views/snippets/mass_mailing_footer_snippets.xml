@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md o_mail_footer_social col" style="text-align: center;">
-                    <t t-call="mass_mailing.social_links" optionalTextStyle.f="color: white;"/>
+                    <t t-call="mass_mailing.s_social_media_template" optionalTextStyle.f="color: white;" optionalTextPosition.f="text-center" optionalSnippetClass.f="no_icon_color"/>
                 </div>
             </div>
             <div class="row">
@@ -29,7 +29,7 @@
     <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16" data-name="Footer Left" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 o_mail_footer_description col-12">
+                <div class="col-md-5 o_mail_footer_description col-12">
                     <p t-if="res_company">
                         <strong><t t-out="res_company.partner_id.name"/></strong>
                     </p>
@@ -39,8 +39,10 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-md-6 col-12" align="right">
-                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
+                <div class="col-md-7 col-12" align="right">
+                    <div class="o_mail_footer_social pb16">
+                        <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end"/>
+                    </div>
                     <p class="o_mail_footer_copy">© <t t-out="datetime.datetime.now().year"/> All Rights Reserved</p>
                 </div>
             </div>
@@ -61,29 +63,5 @@
             </div>
         </div>
     </section>
-</template>
-
-<template id="social_links">
-
-    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
-
-    <p class="mb-0">
-        <a t-att-href="social_links.get('social_facebook')" t-attf-style="{{optionalTextStyle}}" aria-label="Facebook" title="Facebook">
-            <span class="fa fa-facebook"></span>
-        </a>&amp;nbsp;&amp;nbsp;
-        <a t-att-href="social_links.get('social_linkedin')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="LinkedIn" title="LinkedIn">
-            <span class="fa fa-linkedin"></span>
-        </a>&amp;nbsp;&amp;nbsp;
-        <a t-att-href="social_links.get('social_twitter')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="X" title="X">
-            <span class="fa fa-twitter"></span>
-        </a>&amp;nbsp;&amp;nbsp;
-        <a t-att-href="social_links.get('social_instagram')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="Instagram" title="Instagram">
-            <span class="fa fa-instagram"></span>
-        </a>&amp;nbsp;&amp;nbsp;
-        <a t-att-href="social_links.get('social_tiktok')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="TikTok" title="TikTok">
-            <span class="fa fa-tiktok"></span>
-        </a>
-    </p>
-
 </template>
 </odoo>

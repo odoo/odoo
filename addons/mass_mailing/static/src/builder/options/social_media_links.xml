@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.SocialMediaLinks">
+    <BuilderRow label.translate="Company" preview="false">
+        <BuilderSelect t-if="this.companies?.length > 1" action="'changeCompany'">
+            <t t-foreach="this.companies" t-as="company" t-key="company_index">
+                <BuilderSelectItem actionParam="company"><t t-out="company.name"/></BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+        <span t-else="" t-out="this.companies[0].name"/>
+    </BuilderRow>
+    <div t-ref="root">
+        <BuilderRow t-foreach="this.medias" t-as="media" t-key="media">
+            <button class="btn o_drag_handle ps-1" t-att-data-sortable-platform="media">
+                <i class="oi oi-draggable"/>
+            </button>
+            <BuilderTextInput action="'updateSocialMediaLinks'" actionParam="media" placeholder.translate="www.example.com"/>
+            <BuilderButton t-if="media_value.custom"
+                        action="'removeCustomMediaLink'" preview="false" actionParam="{ platform: media }"
+                        className="'fa fa-fw fa-minus text-danger bg-transparent border-0'"
+            />
+            <BuilderCheckbox t-else="" action="'toggleSocialMediaLink'"
+                            actionParam="{platform: media, getIndex: () => this.getIndex(media)}"
+            />
+        </BuilderRow>
+    </div>
+    <BuilderRow>
+        <BuilderButton className="'ms-4 mt-1 px-0'" preview="false" label.translate="Add Custom Link" action="'addSocialMediaLink'"/>
+        <button t-if="this.canEditCompanies" class="o-hb-btn btn mt-1 btn-secondary px-0" t-on-click="this.updateCompany" title="Configure Company">Configure Company</button>
+    </BuilderRow>
+</t>
+
+<t t-name="mass_mailing.social_media_link">
+    <a t-att-href="href" target="_blank" t-att-data-platform="platform">
+        <i t-attf-class="fa {{ icon }} fa-stack o_editable_media"/>
+    </a>
+</t>
+
+<t t-name="mass_mailing.social_media_placeholder">
+    <span class="alert alert-info text-center o_social_snippet_empty_placeholder">
+        Configure your social media links.
+    </span>
+</t>
+
+<t t-name="mass_mailing.social_media_title">
+    <h4 class="s_social_media_title" contenteditable="true">Follow Us on</h4>
+</t>
+
+</templates>
