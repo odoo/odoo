@@ -1,31 +1,38 @@
-@keyframes o-tour-pointer-bounce-horizontal {
+@keyframes o-tour-pointer-bounce-left {
     from {
-        transform: translateX(calc(var(--TourPointer__bounce-offset) * -1));
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * 1)) scaleX(var(--TourPointer__scale)) rotate(135deg);
     }
     to {
-        transform: translateX(var(--TourPointer__bounce-offset));
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * -1)) scaleX(var(--TourPointer__scale)) rotate(135deg);
     }
 }
 
-@keyframes o-tour-pointer-bounce-vertical {
+@keyframes o-tour-pointer-bounce-right {
     from {
-        transform: translateY(calc(var(--TourPointer__bounce-offset) * -1));
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * 1)) scaleX(var(--TourPointer__scale)) rotate(315deg);
     }
     to {
-        transform: translateY(var(--TourPointer__bounce-offset));
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * -1)) scaleX(var(--TourPointer__scale)) rotate(315deg);
     }
 }
 
-@keyframes o-tour-pointer-fade-in {
+@keyframes o-tour-pointer-bounce-top {
     from {
-        opacity: 0;
+        transform: translateY(calc(var(--TourPointer__bounce-offset) * -1)) scaleY(var(--TourPointer__scale)) rotate(225deg);
+    }
+    to {
+        transform: translateY(var(--TourPointer__bounce-offset)) scaleY(var(--TourPointer__scale)) rotate(225deg);
     }
 }
 
-@keyframes o-tour-pointer-info-expand {
+@keyframes o-tour-pointer-bounce-bottom {
     from {
-        width: 0;
-        height: 0;
+        transform:
+            translateY(calc(var(--TourPointer__bounce-offset) * -1)) scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+    to {
+        transform:
+            translateY(var(--TourPointer__bounce-offset)) scaleY(var(--TourPointer__scale)) rotate(45deg);
     }
 }
 
@@ -47,29 +54,9 @@
 
     --TourPointer__translate-x: 0;
     --TourPointer__translate-y: 0;
-
-    z-index: $zindex-tooltip;
+    
     max-width: 270px;
     border: var(--TourPointer__border-width) solid transparent;
-    transform: translate(var(--TourPointer__translate-x), var(--TourPointer__translate-y));
-    transition: width var(--TourPointer__expand-duration),
-        height var(--TourPointer__expand-duration);
-
-    &.o_bouncing {
-        &.o_left,
-        &.o_right {
-            animation: o-tour-pointer-bounce-horizontal var(--TourPointer__animation-duration)
-                    ease-in infinite alternate,
-                var(--TourPointer__reveal-animation);
-        }
-
-        &.o_top,
-        &.o_bottom {
-            animation: o-tour-pointer-bounce-vertical var(--TourPointer__animation-duration) ease-in
-                    infinite alternate,
-                var(--TourPointer__reveal-animation);
-        }
-    }
 
     .o_tour_pointer_tip {
         width: var(--TourPointer__width);
@@ -81,143 +68,50 @@
             var(--TourPointer__color)
         );
         box-shadow: 0 0 40px 2px rgba(var(--TourPointer__border-color-rgb), 0.5);
+
+        &.o_left {
+            animation: o-tour-pointer-bounce-left var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_right {
+            animation: o-tour-pointer-bounce-right var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_top {
+            animation: o-tour-pointer-bounce-top var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_bottom {
+            animation: o-tour-pointer-bounce-bottom var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
     }
-
+    
     .o_tour_pointer_content {
-        background-color: $light;
-        color: transparent;
         transition: color 0s ease var(--TourPointer__expand-duration);
-
-        // Force style so that it does not depend on where the tooltip is attached
         line-height: $line-height-base;
         @include font-size($font-size-base);
         font-family: $font-family-sans-serif;
         font-weight: normal;
-
-        .o_skip_tour {
-            display: inline-block;
-            margin-top: 4px;
-            color: gray;
-            cursor: pointer;
-
-            &:hover {
-                color: darken(gray, 20%);
-            }
-        }
-
-        p:last-child {
-            margin-bottom: 0;
-        }
     }
 
-    &.o_left .o_tour_pointer_tip {
-        transform: rotate(90deg) translateY(var(--TourPointer__offset))
-            scaleY(var(--TourPointer__scale)) rotate(45deg);
-    }
-
-    &.o_right .o_tour_pointer_tip {
-        transform: rotate(270deg) translateY(var(--TourPointer__offset))
-            scaleY(var(--TourPointer__scale)) rotate(45deg);
-    }
-
-    &.o_top .o_tour_pointer_tip {
-        transform: rotate(180deg) translateY(var(--TourPointer__offset))
-            scaleY(var(--TourPointer__scale)) rotate(45deg);
-    }
-
-    &.o_bottom .o_tour_pointer_tip {
-        transform: rotate(0deg) translateY(var(--TourPointer__offset))
-            scaleY(var(--TourPointer__scale)) rotate(45deg);
-    }
-
-    &.o_open {
-        border-color: #{$o-gray-400};
-        background-color: #{$o-gray-300};
-        animation: var(--TourPointer__reveal-animation);
-
-        .o_tour_pointer_tip {
-            width: var(--TourPointer__arrow-size);
-            height: var(--TourPointer__arrow-size);
-            border-color: #{$o-gray-400};
-            border-radius: 0;
-            background: $light;
-            box-shadow: none;
-        }
-
-        .o_tour_pointer_content {
-            color: $o-black;
-        }
-
-        &.o_left {
-            --TourPointer__translate-x: calc(var(--TourPointer__arrow-size) / -2);
-
-            .o_tour_pointer_tip {
-                transform: translateX(-50%) rotate(45deg);
-                /*rtl:begin:ignore*/
-                right: calc(var(--TourPointer__arrow-size) * -1);
-                top: calc(var(--TourPointer__arrow-size) / 2);
-                /*rtl:end:ignore*/
-            }
-        }
-
-        &.o_right {
-            --TourPointer__translate-x: calc(var(--TourPointer__arrow-size) / 2);
-
-            .o_tour_pointer_tip {
-                transform: translateX(50%) rotate(45deg);
-                /*rtl:begin:ignore*/
-                left: calc(var(--TourPointer__arrow-size) * -1);
-                top: calc(var(--TourPointer__arrow-size) / 2);
-                /*rtl:end:ignore*/
-            }
-        }
-
-        &.o_top {
-            --TourPointer__translate-y: calc(var(--TourPointer__arrow-size) / -2);
-
-            .o_tour_pointer_tip {
-                transform: translateY(-50%) rotate(45deg);
-                /*rtl:begin:ignore*/
-                bottom: calc(var(--TourPointer__arrow-size) * -1);
-                left: calc(var(--TourPointer__arrow-size) / 2);
-                /*rtl:end:ignore*/
-            }
-        }
-
-        &.o_bottom {
-            --TourPointer__translate-y: calc(var(--TourPointer__arrow-size) / 2);
-
-            .o_tour_pointer_tip {
-                transform: translateY(50%) rotate(45deg);
-                /*rtl:begin:ignore*/
-                top: calc(var(--TourPointer__arrow-size) * -1);
-                left: calc(var(--TourPointer__arrow-size) / 2);
-                /*rtl:end:ignore*/
-            }
-        }
-
-        // Exception for when the info bubble would overflow to the right:
-        // we offset the content to the left
-        &.o_expand_left {
-            &.o_top,
-            &.o_bottom {
-                --TourPointer__translate-x: calc(
-                    var(--TourPointer__width) + var(--TourPointer__border-width) - 100%
-                );
-
-                .o_tour_pointer_tip {
-                    /*rtl:begin:ignore*/
-                    left: initial;
-                    right: calc(var(--TourPointer__arrow-size) / 2);
-                    /*rtl:end:ignore*/
-                }
-            }
-        }
+    .o_tour_dropzone {
+        border: 3px dashed #714b67;
+        background: rgba(113, 75, 103, 0.2);
+        position: fixed;
     }
 }
 
+.o_tour_anchor {
+    width: 1px;
+    height: 1px;
+}
+
 @media print {
-    .o_tour_pointer {
+    .o_tour_anchor, .o_tour_pointer {
         display: none !important;
     }
 }
