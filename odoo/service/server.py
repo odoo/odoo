@@ -608,6 +608,11 @@ class ThreadedServer(CommonServer):
 
         odoo.sql_db.close_all()
 
+        current_process = psutil.Process()
+        children = current_process.children(recursive=False)
+        for child in children:
+            _logger.info('A child process was found, pid is %s, process may hang', child)
+
         _logger.debug('--')
         logging.shutdown()
 
