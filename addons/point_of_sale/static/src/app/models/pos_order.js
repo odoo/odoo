@@ -6,6 +6,7 @@ import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
+import { getStrNotes } from "./utils/order_change";
 
 const { DateTime } = luxon;
 
@@ -937,6 +938,25 @@ export class PosOrder extends Base {
 
     get showChange() {
         return !this.currency.isZero(this.orderChange) && this.finalized;
+    }
+
+    getOrderData(reprint = false) {
+        return {
+            reprint: reprint,
+            pos_reference: this.getName(),
+            config_name: this.config_id?.name || this.config.name,
+            time: luxon.DateTime.now().toFormat("HH:mm"),
+            tracking_number: this.tracking_number,
+            preset_name: this.preset_id?.name || "",
+            preset_time: this.presetDateTime,
+            employee_name: this.employee_id?.name || this.user_id?.name,
+            internal_note: getStrNotes(this.internal_note),
+            general_customer_note: this.general_customer_note,
+            changes: {
+                title: "",
+                data: [],
+            },
+        };
     }
 
     getLinesToCompute() {

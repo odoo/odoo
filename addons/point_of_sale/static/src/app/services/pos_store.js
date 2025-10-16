@@ -28,7 +28,11 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
+import {
+    changesToOrder,
+    getOrderChanges,
+    filterChangeByCategories,
+} from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -1849,53 +1853,6 @@ export class PosStore extends WithLazyGetterTrap {
         await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
     }
 
-    getStrNotes(note) {
-        if (!note) {
-            return "";
-        }
-        if (Array.isArray(note)) {
-            return note.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
-        }
-        if (typeof note === "string") {
-            try {
-                const parsed = JSON.parse(note);
-                if (Array.isArray(parsed)) {
-                    return parsed.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
-                }
-                return note;
-            } catch (error) {
-                logPosMessage(
-                    "Store",
-                    "getStrNotes",
-                    "Error while parsing note, not valid JSON",
-                    CONSOLE_COLOR,
-                    [error]
-                );
-                return note;
-            }
-        }
-        return "";
-    }
-
-    getOrderData(order, reprint) {
-        return {
-            reprint: reprint,
-            pos_reference: order.getName(),
-            config_name: order.config_id?.name || order.config.name,
-            time: DateTime.now().toFormat("HH:mm"),
-            tracking_number: order.tracking_number,
-            preset_time: order.presetDateTime,
-            preset_name: order.preset_id?.name || "",
-            employee_name: order.employee_id?.name || order.user_id?.name,
-            internal_note: this.getStrNotes(order.internal_note),
-            general_customer_note: order.general_customer_note,
-            changes: {
-                title: "",
-                data: [],
-            },
-        };
-    }
-
     generateOrderChange(order, orderChange, categories, reprint = false) {
         const isPartOfCombo = (line) =>
             line.isCombo ||
@@ -1914,12 +1871,9 @@ export class PosStore extends WithLazyGetterTrap {
         });
         orderChange.new = [...comboChanges, ...normalChanges];
 
-        const orderData = this.getOrderData(order, reprint);
+        const orderData = order.getOrderData(reprint);
 
-        const changes = this.filterChangeByCategories(categories, orderChange);
-        for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
-            changeItem.note = this.getStrNotes(changeItem.note || "[]");
-        }
+        const changes = filterChangeByCategories(categories, orderChange, this.models);
         return { orderData, changes };
     }
 
@@ -2033,39 +1987,6 @@ export class PosStore extends WithLazyGetterTrap {
             data: data,
         });
         return await printer.printReceipt(receipt);
-    }
-
-    filterChangeByCategories(categories, currentOrderChange) {
-        const matchesCategories = (change) => {
-            const product = this.models["product.product"].get(change["product_id"]);
-            const categoryIds = product.parentPosCategIds;
-            for (const categoryId of categoryIds) {
-                if (categories.includes(categoryId)) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
-        const filterChanges = (changes) => {
-            // Combo line uuids to have at least one child line in the given categories
-            const validComboUuids = new Set(
-                changes
-                    .filter((change) => change.combo_parent_uuid && matchesCategories(change))
-                    .map((change) => change.combo_parent_uuid)
-            );
-            return changes.filter(
-                (change) =>
-                    (change.isCombo && validComboUuids.has(change.uuid)) ||
-                    (!change.isCombo && matchesCategories(change))
-            );
-        };
-
-        return {
-            new: filterChanges(currentOrderChange["new"]),
-            cancelled: filterChanges(currentOrderChange["cancelled"]),
-            noteUpdate: filterChanges(currentOrderChange["noteUpdate"]),
-        };
     }
 
     connectToProxy() {

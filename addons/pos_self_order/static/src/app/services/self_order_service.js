@@ -24,6 +24,10 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import {
+    changesToOrder,
+    filterChangeByCategories,
+} from "@point_of_sale/app/models/utils/order_change";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 export class SelfOrder extends Reactive {
@@ -463,50 +467,29 @@ export class SelfOrder extends Reactive {
         return new HWPrinter({ url });
     }
 
-    _getKioskPrintingCategoriesChanges(order, categories) {
-        return order.lines.filter((orderline) => {
-            const baseProductId = orderline.combo_parent_id
-                ? orderline.combo_parent_id.product_id.id
-                : orderline.product_id.id;
-            return categories.some((category) =>
-                this.models["product.product"]
-                    .get(baseProductId)
-                    .pos_categ_ids.map((categ) => categ.id)
-                    .includes(category.id)
-            );
-        });
-    }
-
     async printKioskChanges(access_token = "") {
-        const d = new Date();
-        let hours = "" + d.getHours();
-        hours = hours.length < 2 ? "0" + hours : hours;
-        let minutes = "" + d.getMinutes();
-        minutes = minutes.length < 2 ? "0" + minutes : minutes;
         const order = access_token
             ? this.models["pos.order"].find((o) => o.access_token === access_token)
             : this.currentOrder;
 
+        const orderData = order.getOrderData();
+        const changes = changesToOrder(order, this.config.preparationCategories);
         for (const printer of this.kitchenPrinters) {
-            const orderlines = this._getKioskPrintingCategoriesChanges(
-                order,
-                Object.values(printer.config.product_categories_ids)
-            );
-            if (orderlines) {
+            const orderlines = filterChangeByCategories(
+                printer.config.product_categories_ids.map((c) => c.id),
+                changes,
+                this.models
+            ).new;
+            if (orderlines.length > 0) {
                 const printingChanges = {
-                    new: orderlines,
-                    tracker: order.table_stand_number,
-                    trackingNumber: order.tracking_number || "unknown number",
-                    name: order.pos_reference || "unknown order",
-                    time: {
-                        hours,
-                        minutes,
+                    ...orderData,
+                    changes: {
+                        title: _t("NEW"),
+                        data: orderlines,
                     },
-                    preset_name: order.preset_id?.name || "",
-                    preset_time: order.presetDateTime,
                 };
-                const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
-                    changes: printingChanges,
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    data: printingChanges,
                 });
                 await printer.printReceipt(receipt);
             }
