@@ -25,6 +25,15 @@ patch(SelfOrder.prototype, {
             }
         });
     },
+    hasPaymentMethod() {
+        if (
+            this.config.self_ordering_mode === "mobile" &&
+            this.config.self_order_online_payment_method_id
+        ) {
+            return true;
+        }
+        return super.hasPaymentMethod();
+    },
     getOnlinePaymentUrl(
         { id: order_id, access_token: order_access_token, config_id: order_pos_config_id },
         exitRoute = true
