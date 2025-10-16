@@ -1,12 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
 from datetime import datetime, timedelta
-from xmlrpc.client import Fault
 
-from odoo.tests import get_db_name, tagged, HttpCase
-from odoo.tools import mute_logger
+from odoo.tests import HttpCase, get_db_name, tagged
 
 from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 
@@ -19,35 +16,40 @@ class TestTOTPMail(TestTOTPMixin, HttpCase):
     def test_totp_rpc_api_keys_only(self):
         db = get_db_name()
         login, password = self.user_test.login, self.user_test.login
-        uid = self.xmlrpc_common.authenticate(db, password, login, {})
 
         # Without TOTP by mail, xmlrpc using password is expected
-        [result] = self.xmlrpc_object.execute_kw(db, uid, password, 'res.users', 'read', [uid, ['login']])
-        self.assertEqual(result['login'], login)
+        result = self.make_jsonrpc_request('/web/session/authenticate', params={
+            'db': db,
+            'login': login,
+            'password': password,
+        })
+        self.assertEqual(result['uid'], self.user_test.id)
 
         # Enable enforcing TOTP by mail
         self.env['res.config.settings'].create({
             'auth_totp_enforce': True,
-            'auth_totp_policy': 'all_required'
+            'auth_totp_policy': 'all_required',
         }).execute()
 
         # With TOTP by mail, xmlrpc using password is not expected
-        with (
-            self.assertRaisesRegex(Fault, r'Access Denied'),
-            self.assertLogs(logger='odoo.addons.base.models.res_users') as log_catcher,
-            mute_logger("odoo.http")
-        ):
-            self.xmlrpc_object.execute_kw(db, uid, password, 'res.users', 'read', [uid, ['login']])
-        self.assertIn("Invalid API key or password-based authentication", log_catcher.output[0])
+        result = self.make_jsonrpc_request('/web/session/authenticate', params={
+            'db': db,
+            'login': login,
+            'password': password,
+        })
+        self.assertFalse(result.get('uid'))
 
         # Create an API key for the user
         api_key = self.env['res.users.apikeys'].with_user(self.user_test)._generate(
-            None, 'Foo', datetime.now() + timedelta(days=1)
+            None, 'Foo', datetime.now() + timedelta(days=1),
         )
 
         # With TOTP by mail, xmlrpc using an API key is expected
-        [result] = self.xmlrpc_object.execute_kw(db, uid, api_key, 'res.users', 'read', [uid, ['login']])
-        self.assertEqual(result['login'], login)
+        result = self.url_open('/json/2/res.users/context_get', json={'ids': []}, headers={
+            'X-Odoo-Database': db,
+            'Authorization': f'Bearer {api_key}',
+        }).raise_for_status().json()
+        self.assertEqual(result['uid'], self.user_test.id)
 
 
 @tagged('post_install', '-at_install')

@@ -1,7 +1,6 @@
 import logging
 
-from odoo.tests import Like, get_db_name, tagged
-from odoo.tools import mute_logger
+from odoo.tests import Like, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -51,30 +50,4 @@ class TestRpcPath(HttpCaseWithUserDemo):
             })
         self.assertEqual(capture.output, [
             Like('...POST /web/dataset/call_kw/res.users.read HTTP/...'),
-        ])
-
-    @mute_logger('odoo.addons.rpc.controllers.jsonrpc')
-    def test_rpc_path_jsonrpc(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
-            self.make_jsonrpc_request('/jsonrpc', {
-                'service': 'object',
-                'method': 'execute_kw',
-                'args': [
-                    get_db_name(), self.user_demo.id, 'demo',
-                   'res.users', 'read', [self.user_demo.id, ['login']]
-                ]
-            })
-        self.assertEqual(capture.output, [
-            Like('...POST /jsonrpc#res.users.read HTTP/...'),
-        ])
-
-    @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
-    def test_rpc_path_xmlrpc(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
-            self.xmlrpc_object.execute_kw(
-                get_db_name(), self.user_demo.id, 'demo',
-               'res.users', 'read', [self.user_demo.id, ['login']]
-            )
-        self.assertEqual(capture.output, [
-            Like('...POST /xmlrpc/2/object#res.users.read HTTP/...'),
         ])

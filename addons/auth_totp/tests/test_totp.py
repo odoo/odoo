@@ -1,17 +1,15 @@
-import logging
 import json
+import logging
 import time
-from xmlrpc.client import Fault
 
 from passlib.totp import TOTP
 
 from odoo import http
-from odoo.tests import tagged, get_db_name, new_test_user, HttpCase
+from odoo.tests import HttpCase, get_db_name, new_test_user, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.auth_totp.models.totp import TOTP as auth_TOTP
-
 from ..controllers.home import Home
+from odoo.addons.auth_totp.models.totp import TOTP as auth_TOTP
 
 _logger = logging.getLogger(__name__)
 
@@ -23,10 +21,6 @@ class TestTOTPMixin:
         cls.user_test = new_test_user(
             cls.env, 'test_user', password='test_user', tz='UTC',
         )
-
-        ml = mute_logger('odoo.addons.rpc.controllers.xmlrpc')
-        ml.__enter__()  # noqa: PLC2801
-        cls.addClassCleanup(ml.__exit__)
 
     def install_totphook(self):
         baseline_time = time.time()
@@ -80,21 +74,16 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         # 1. Enable 2FA
         self.start_tour('/odoo', 'totp_tour_setup', login='test_user')
 
-        # 2. Verify that RPC is blocked because 2FA is on.
-        self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'test_user', 'test_user', {}),
-            "Should not have returned a uid"
-        )
-        self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'test_user', 'test_user', {'interactive': True}),
-            'Trying to fake the auth type should not work'
-        )
-        uid = self.user_test.id
-        with self.assertRaisesRegex(Fault, r'Access Denied'), mute_logger("odoo.http"):
-            self.xmlrpc_object.execute_kw(
-                get_db_name(), uid, 'test_user',
-                'res.users', 'read', [uid, ['login']]
-            )
+        # 2. Verify that web session authenticate is blocked because 2FA is on.
+        res = self.make_jsonrpc_request('/web/session/authenticate', params={
+            'db': get_db_name(),
+            'login': 'test_user',
+            'password': 'test_user',
+        })
+        self.assertFalse(res['uid'], "Should not have returned a uid")
+
+        session = http.root.session_store.get(self.opener.cookies['session_id'])
+        self.assertFalse(session.get('uid'), "Should not have an uid in the session")
 
         # 3. Check 2FA is required
         with self.assertLogs("odoo.addons.auth_totp.models.res_users", "WARNING") as cm:
@@ -109,14 +98,15 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         # 5. Finally, check that 2FA is in fact disabled
         self.start_tour('/', 'totp_login_disabled', login=None)
 
-        # 6. Check that rpc is now re-allowed
-        uid = self.xmlrpc_common.authenticate(get_db_name(), 'test_user', 'test_user', {})
-        self.assertEqual(uid, self.user_test.id)
-        [r] = self.xmlrpc_object.execute_kw(
-            get_db_name(), uid, 'test_user',
-            'res.users', 'read', [uid, ['login']]
-        )
-        self.assertEqual(r['login'], 'test_user')
+        # 6. Check that web session authenticate is now re-allowed
+        res = self.make_jsonrpc_request('/web/session/authenticate', params={
+            'db': get_db_name(),
+            'login': 'test_user',
+            'password': 'test_user',
+        })
+        self.assertEqual(res['uid'], self.user_test.id)
+        session = http.root.session_store.get(self.opener.cookies['session_id'])
+        self.assertEqual(session.get('uid'), self.user_test.id)
 
     def test_totp_administration(self):
         self.start_tour('/web', 'totp_tour_setup', login='test_user')

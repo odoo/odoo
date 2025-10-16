@@ -283,3 +283,16 @@ class Database(http.Controller):
         :rtype: list
         """
         return http.db_list()
+
+    @http.route('/web/database/status', type='http', auth='none', methods=['POST'], csrf=False)
+    def status(self, master_pwd, name):
+        """ Get the list of modules with their current state. """
+        odoo.modules.db.verify_admin_password(master_pwd)
+        with odoo.modules.registry.Registry(name).cursor() as cr:
+            env = odoo.api.Environment(cr, None, {}, su=True)
+            modules = env['ir.module.module'].search_read(
+                domain=[],
+                fields=['name', 'state'],
+                order='state ASC, id ASC',
+            )
+        return request.make_json_response(modules)
