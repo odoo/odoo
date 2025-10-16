@@ -7,44 +7,51 @@ import {
 } from "@website/js/tours/tour_utils";
 import { editorsWeakMap, setSelection } from "@html_editor/../tests/tours/helpers/editor";
 
+function installParseltongueAndOpenLangDropdown() {
+    return [
+        ...goToTheme(),
+        {
+            content: "click on Add a language",
+            trigger: "button[data-action-id='addLanguage']",
+            run: "click",
+        }, {
+            content: "confirm leave editor",
+            trigger: ".modal-dialog button.btn-primary",
+            run: "click",
+        }, {
+            content: "type Parseltongue",
+            trigger: 'div[name="lang_ids"] .o_input_dropdown input',
+            run: "edit Parseltongue",
+        }, {
+            content: 'select Parseltongue',
+            trigger: '.dropdown-item:contains(Parseltongue)',
+            run: "click",
+        },
+        {
+            trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
+        },
+        {
+            content: "load Parseltongue",
+            trigger: '.modal-footer .btn-primary',
+            run: "click",
+        }, {
+            content: "click language dropdown (2)",
+            trigger: ':iframe .js_language_selector .dropdown-toggle',
+            timeout: 60000,
+            run: "click",
+        },
+        {
+            content: "Check that the language of the page is Parseltongue",
+            trigger: ':iframe html[lang*="pa-GB"]',
+        },
+    ];
+}
+
 registerWebsitePreviewTour('rte_translator', {
     url: '/',
     edition: true,
 }, () => [
-...goToTheme(),
-{
-    content: "click on Add a language",
-    trigger: "button[data-action-id='addLanguage']",
-    run: "click",
-}, {
-    content: "confirm leave editor",
-    trigger: ".modal-dialog button.btn-primary",
-    run: "click",
-}, {
-    content: "type Parseltongue",
-    trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-    run: "edit Parseltongue",
-}, {
-    content: 'select Parseltongue',
-    trigger: '.dropdown-item:contains(Parseltongue)',
-    run: "click",
-},
-{
-    trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
-},
-{
-    content: "load Parseltongue",
-    trigger: '.modal-footer .btn-primary',
-    run: "click",
-}, {
-    content: "click language dropdown (2)",
-    trigger: ':iframe .js_language_selector .dropdown-toggle',
-    timeout: 60000,
-    run: "click",
-},
-{
-    trigger: ':iframe html[lang*="pa-GB"]',
-},
+    ...installParseltongueAndOpenLangDropdown(),
 {
     content: "go to english version",
     trigger: ':iframe .o_header_language_selector a[data-url_code="en"]',
@@ -318,3 +325,10 @@ registerWebsitePreviewTour('rte_translator', {
     content: "Check that the editor is not showing translated content (2)",
     trigger: ':iframe body:not(.rte_translator_error)',
 }]);
+
+registerWebsitePreviewTour('multiple_websites_add_language', {
+    url: '/',
+    edition: true,
+}, () => [
+...installParseltongueAndOpenLangDropdown(),
+])
