@@ -8,6 +8,14 @@
             <xpath expr="//group[@name='accounting_info_group']/field[@name='invoice_incoterm_id']" position="attributes">
                 <attribute name="required" add="l10n_tr_is_export_invoice" separator=" or "/>
             </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-info" role="alert" invisible="state != 'draft' or l10n_tr_nilvera_send_status != 'error' or not l10n_tr_nilvera_uuid">
+                    To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue.
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                <attribute name="invisible" separator=" or " add="l10n_tr_nilvera_send_status == 'error' and l10n_tr_nilvera_uuid"/>
+            </xpath>
             <xpath expr="//div[@name='journal_div']" position="after">
                 <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']"/>
                 <div name="nilvera_div"

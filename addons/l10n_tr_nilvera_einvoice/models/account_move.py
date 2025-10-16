@@ -32,7 +32,6 @@ class AccountMove(models.Model):
         string="Nilvera Document UUID",
         copy=False,
         readonly=True,
-        default=lambda self: str(uuid.uuid4()),
         help="Universally unique identifier of the Invoice",
     )
 
@@ -159,14 +158,20 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         # EXTENDS account
-        for move in self:
-            if (
-                not move.company_id.l10n_tr_nilvera_use_test_env
-                and move.l10n_tr_nilvera_uuid
-                and move.l10n_tr_nilvera_send_status != 'not_sent'
-            ):
+        for move in self.filtered('l10n_tr_nilvera_uuid'):
+            if move.l10n_tr_nilvera_send_status == 'error':
+                move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
+            elif move.l10n_tr_nilvera_send_status != 'not_sent':
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
         super().button_draft()
+
+    def _post(self, soft=True):
+        for move in self:
+            if move.l10n_tr_nilvera_send_status == 'error' and move.l10n_tr_nilvera_uuid:
+                raise UserError(_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
+            if move.country_code == 'TR' and not move.l10n_tr_nilvera_uuid:
+                move.l10n_tr_nilvera_uuid = str(uuid.uuid4())
+        return super()._post(soft=soft)
 
     def _l10n_tr_nilvera_submit_einvoice(self, xml_file, customer_alias):
         self._l10n_tr_nilvera_submit_document(
