@@ -349,3 +349,9 @@ class TestAnalyticAccount(TransactionCase):
             plan_1_col: self.analytic_account_1.id,
             plan_2_col: False,
         }])
+
+    def test_change_sys_param(self):
+        ''' Test if changing project_plan param updates dynamic fields on account.analytic.line '''
+        self.env['ir.config_parameter'].set_param('analytic.project_plan', self.analytic_plan_2.id)
+        self.analytic_account_1.write({'company_id': self.company_data.id})
+        self.analytic_account_1._check_company_consistency()
