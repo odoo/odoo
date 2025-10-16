@@ -57,28 +57,29 @@ class PosOrder(models.Model):
             for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
-                if not any(line.display_type and line.is_downpayment for line in sale_lines):
-                    self.env['sale.order.line'].create(
-                        self.env['sale.advance.payment.inv']._prepare_down_payment_section_values(sale_order_origin)
-                    )
-                order_reference = line.name
+                if not line.sale_order_line_id:
+                    if not any(line.display_type and line.is_downpayment for line in sale_lines):
+                        self.env['sale.order.line'].create(
+                            self.env['sale.advance.payment.inv']._prepare_down_payment_section_values(sale_order_origin)
+                        )
+                    order_reference = line.name
 
-                if order.partner_id.lang and order.partner_id.lang != line.env.lang:
-                    line = line.with_context(lang=order.partner_id.lang)
+                    if order.partner_id.lang and order.partner_id.lang != line.env.lang:
+                        line = line.with_context(lang=order.partner_id.lang)
 
-                sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=format_date(line.env, line.order_id.date_order))
-                sale_line = self.env['sale.order.line'].create({
-                    'order_id': sale_order_origin.id,
-                    'product_id': line.product_id.id,
-                    'price_unit': line.price_unit,
-                    'product_uom_qty': 0,
-                    'tax_id': [(6, 0, line.tax_ids.ids)],
-                    'is_downpayment': True,
-                    'discount': line.discount,
-                    'sequence': sale_lines and sale_lines[-1].sequence + 2 or 10,
-                    'name': sale_order_line_description
-                })
-                line.sale_order_line_id = sale_line
+                    sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=format_date(line.env, line.order_id.date_order))
+                    sale_line = self.env['sale.order.line'].create({
+                        'order_id': sale_order_origin.id,
+                        'product_id': line.product_id.id,
+                        'price_unit': line.price_unit,
+                        'product_uom_qty': 0,
+                        'tax_id': [(6, 0, line.tax_ids.ids)],
+                        'is_downpayment': True,
+                        'discount': line.discount,
+                        'sequence': sale_lines and sale_lines[-1].sequence + 2 or 10,
+                        'name': sale_order_line_description
+                    })
+                    line.sale_order_line_id = sale_line
 
             so_lines = order.lines.mapped('sale_order_line_id')
 
