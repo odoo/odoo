@@ -6,21 +6,21 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <notebook invisible="use_payment_terminal != 'qfpay'">
+                <notebook invisible="payment_provider != 'qfpay'">
                     <page name="settings" string="QFPay">
                         <group>
                             <field name="qfpay_terminal_ip_address"
-                                invisible="use_payment_terminal != 'qfpay'"
-                                required="use_payment_terminal == 'qfpay'"/>
+                                invisible="payment_provider != 'qfpay'"
+                                required="payment_provider == 'qfpay'"/>
                             <field name="qfpay_pos_key"
-                                invisible="use_payment_terminal != 'qfpay'"
-                                required="use_payment_terminal == 'qfpay'"/>
+                                invisible="payment_provider != 'qfpay'"
+                                required="payment_provider == 'qfpay'"/>
                             <field name="qfpay_payment_type"
-                                invisible="use_payment_terminal != 'qfpay'"
-                                required="use_payment_terminal == 'qfpay'"/>
+                                invisible="payment_provider != 'qfpay'"
+                                required="payment_provider == 'qfpay'"/>
                             <field name="qfpay_notification_key"
-                                invisible="use_payment_terminal != 'qfpay'"
-                                required="use_payment_terminal == 'qfpay'"/>
+                                invisible="payment_provider != 'qfpay'"
+                                required="payment_provider == 'qfpay'"/>
                         </group>
                     </page>
                 </notebook>

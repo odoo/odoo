@@ -7,7 +7,7 @@ patch(PaymentPage.prototype, {
         const paymentMethod = this.selfOrder.models["pos.payment.method"].find(
             (p) => p.id === this.state.paymentMethodId
         );
-        if (paymentMethod.use_payment_terminal === "qfpay") {
+        if (paymentMethod.payment_provider === "qfpay") {
             const order = this.selfOrder.currentOrder;
             const response = await this.selfOrder.qfpay.makeQFPayRequest("trade", {
                 func_type: 1001,

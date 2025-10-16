@@ -93,13 +93,12 @@ export class CustomerDisplayPosAdapter {
     }
 
     getQrPaymentData(order) {
-        const qrPaymentData = order.getSelectedPaymentline()?.qrPaymentData;
-        if (!qrPaymentData) {
-            return null;
-        }
-        return {
-            ...qrPaymentData,
-            isCustomerDisplay: true,
-        };
+        const qrPaymentData = order.getSelectedPaymentline()?.getQrPopupProps(true);
+        return qrPaymentData
+            ? {
+                  ...qrPaymentData,
+                  amount: formatCurrency(qrPaymentData.amount, this.currency),
+              }
+            : null;
     }
 }

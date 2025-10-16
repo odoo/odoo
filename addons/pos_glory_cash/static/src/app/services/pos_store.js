@@ -7,7 +7,7 @@ patch(PosStore.prototype, {
         await super.processServerData();
         for (const pm of this.models["pos.payment.method"].getAll()) {
             if (pm.payment_method_type === "glory_cash") {
-                pm.payment_terminal = new PaymentGlory(this, pm);
+                pm.payment_interface = new PaymentGlory(this, pm);
             }
         }
     },

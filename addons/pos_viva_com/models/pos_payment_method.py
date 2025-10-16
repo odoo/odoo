@@ -61,8 +61,8 @@ class PosPaymentMethod(models.Model):
         whitelisted_fields = {'viva_com_bearer_token', 'viva_com_webhook_verification_key', 'viva_com_latest_response'}
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('viva_com', 'Viva.com')]
+    def _get_terminal_provider_selection(self):
+        return super()._get_terminal_provider_selection() + [('viva_com', 'Viva.com')]
 
     @api.model
     def _allowed_actions_in_self_order(self):
@@ -204,11 +204,11 @@ class PosPaymentMethod(models.Model):
 
         return records
 
-    @api.constrains('use_payment_terminal')
+    @api.constrains('payment_provider')
     def _check_viva_com_credentials(self):
         for record in self:
             if (
-                record.use_payment_terminal == 'viva_com'
+                record.payment_provider == 'viva_com'
                 and not all(record[f] for f in [
                     'viva_com_merchant_id',
                     'viva_com_api_key',

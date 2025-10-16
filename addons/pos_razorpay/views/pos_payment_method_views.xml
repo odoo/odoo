@@ -6,14 +6,14 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <notebook invisible="use_payment_terminal != 'razorpay'">
+                <notebook invisible="payment_provider != 'razorpay'">
                     <page name="settings" string="Razorpay">
                         <group>
-                            <field name="razorpay_username" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                            <field name="razorpay_tid" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                            <field name="razorpay_api_key" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                            <field name="razorpay_test_mode" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                            <field name="razorpay_allowed_payment_modes" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+                            <field name="razorpay_username" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_tid" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_api_key" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_test_mode" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_allowed_payment_modes" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
                         </group>
                     </page>
                 </notebook>

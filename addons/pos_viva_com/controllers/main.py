@@ -15,7 +15,7 @@ class PosVivaComController(http.Controller):
         _logger.info('notification received from Viva.com')
 
         viva_payment_methods = request.env['pos.payment.method'].sudo().search([
-            ('use_payment_terminal', '=', 'viva_com'),
+            ('payment_provider', '=', 'viva_com'),
             ('company_id.id', '=', int(company_id))
         ])
         payment_method_sudo = next(
@@ -64,9 +64,9 @@ class PosVivaComController(http.Controller):
 
         # Update payment line
         if not session_id:
-            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'viva_com')
+            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com')
         else:
-            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'viva_com' and p.viva_com_session_id == session_id)[-1:]
+            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com' and p.viva_com_session_id == session_id)[-1:]
 
         if result == 'success':
             payment_line.write({

@@ -93,7 +93,7 @@ class PosPaymentMethod(models.Model):
         if 'type' in vals:
             vals['type'] = 'online'
 
-        disabled_fields_name = ('split_transactions', 'receivable_account_id', 'outstanding_account_id', 'journal_id', 'is_cash_count', 'use_payment_terminal', 'qr_code_method')
+        disabled_fields_name = ('split_transactions', 'receivable_account_id', 'outstanding_account_id', 'journal_id', 'is_cash_count', 'payment_provider', 'qr_code_method')
         if if_present:
             for name in disabled_fields_name:
                 if name in vals:
@@ -105,17 +105,17 @@ class PosPaymentMethod(models.Model):
                 vals[name] = False
             vals['payment_method_type'] = 'none'
 
-    def _get_payment_terminal_selection(self):
+    def _get_provider_selection(self):
         if len(self) == 1 and self.is_online_payment:
             return []
-        return super()._get_payment_terminal_selection()
+        return super()._get_provider_selection()
 
     @api.depends('type')
-    def _compute_hide_use_payment_terminal(self):
+    def _compute_hide_payment_provider(self):
         opm = self.filtered(lambda pm: pm.type == 'online')
         if opm:
-            opm.hide_use_payment_terminal = True
-        super(PosPaymentMethod, self - opm)._compute_hide_use_payment_terminal()
+            opm.hide_payment_provider = True
+        super(PosPaymentMethod, self - opm)._compute_hide_payment_provider()
 
     @api.model
     def _get_or_create_online_payment_method(self, company_id, pos_config_id):

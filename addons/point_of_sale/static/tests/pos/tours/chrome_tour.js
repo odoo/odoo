@@ -218,6 +218,13 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
             PaymentScreen.clickPartnerButton(),
             PaymentScreen.clickCustomer("Partner Test 1"),
             PaymentScreen.clickInvoiceButton(),
+            {
+                content: "wait for 200 ms",
+                trigger: "body",
+                run: async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 200));
+                },
+            },
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),

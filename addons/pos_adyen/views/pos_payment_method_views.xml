@@ -6,14 +6,14 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <notebook invisible="use_payment_terminal != 'adyen'">
+                <notebook invisible="payment_provider != 'adyen'">
                     <page name="settings" string="Adyen">
                         <group>
-                            <field name="adyen_api_key" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'" password="True"/>
-                            <field name="adyen_terminal_identifier" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
-                            <field name="adyen_merchant_account" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
-                            <field name="adyen_event_url" invisible="use_payment_terminal != 'adyen'" widget="CopyClipboardChar"/>
-                            <field name="adyen_test_mode" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
+                            <field name="adyen_api_key" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'" password="True"/>
+                            <field name="adyen_terminal_identifier" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                            <field name="adyen_merchant_account" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                            <field name="adyen_event_url" invisible="payment_provider != 'adyen'" widget="CopyClipboardChar"/>
+                            <field name="adyen_test_mode" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
                         </group>
                     </page>
                 </notebook>

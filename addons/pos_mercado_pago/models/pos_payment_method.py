@@ -24,8 +24,8 @@ class PosPaymentMethod(models.Model):
         help="Enter your Point Smart terminal serial number written on the back of your terminal (after the S/N:)")
     mp_id_point_smart_complet = fields.Char()
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('mercado_pago', 'Mercado Pago')]
+    def _get_terminal_provider_selection(self):
+        return super()._get_terminal_provider_selection() + [('mercado_pago', 'Mercado Pago')]
 
     def _allowed_actions_in_self_order(self):
         return super()._allowed_actions_in_self_order() + ['mp_payment_intent_create', 'mp_payment_intent_get', 'mp_get_payment_status', 'mp_payment_intent_cancel']

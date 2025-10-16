@@ -8,8 +8,8 @@ from odoo.tools import hash_sign
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [("mollie", "Mollie")]
+    def _get_terminal_provider_selection(self):
+        return super()._get_terminal_provider_selection() + [("mollie", "Mollie")]
 
     def _allowed_actions_in_self_order(self):
         return super()._allowed_actions_in_self_order() + ["mollie_create_payment", "mollie_create_refund", "mollie_cancel_payment"]

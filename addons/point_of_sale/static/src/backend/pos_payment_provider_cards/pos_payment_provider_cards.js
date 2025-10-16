@@ -9,6 +9,7 @@ export class PosPaymentProviderCards extends Component {
     static components = {};
     static props = {
         ...standardWidgetProps,
+        paymentMethodType: { validate: (pmt) => ["terminal", "external_qr"].includes(pmt) },
     };
 
     setup() {
@@ -21,7 +22,10 @@ export class PosPaymentProviderCards extends Component {
         });
 
         onWillStart(async () => {
-            this.state.providers = await this.orm.call("pos.payment.method", "get_provider_status");
+            const allProviders = await this.orm.call("pos.payment.method", "get_provider_status");
+            this.state.providers = allProviders.filter(
+                (p) => p.type === this.props.paymentMethodType
+            );
         });
     }
 
@@ -52,8 +56,7 @@ export class PosPaymentProviderCards extends Component {
         const provider = this.state.providers.find((p) => p.id === moduleId);
         if (provider) {
             this.props.record.update({
-                payment_method_type: "terminal",
-                use_payment_terminal: provider.provider,
+                payment_provider: provider.provider,
                 name: provider.name,
             });
         }
@@ -62,6 +65,7 @@ export class PosPaymentProviderCards extends Component {
 
 export const PosPaymentProviderCardsParams = {
     component: PosPaymentProviderCards,
+    extractProps: ({ options }) => ({ paymentMethodType: options.payment_method_type }),
 };
 
 registry.category("view_widgets").add("pos_payment_provider_cards", PosPaymentProviderCardsParams);

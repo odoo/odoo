@@ -6,7 +6,7 @@
                 UPI: <t t-out="props.paymentMethod.upi_identifier"/>
             </div>
             <div t-if="props.paymentMethod?._qr_payment_icon_urls?.length > 0" class="supported-method-icons d-flex align-items-center justify-content-center flex-wrap gap-1 mt-1">
-                <t t-foreach="props.paymentMethod?._qr_payment_icon_urls" t-as="icon" t-key="icon[0]">
+                <t t-foreach="props.paymentMethod._qr_payment_icon_urls" t-as="icon" t-key="icon[0]">
                     <img t-att-src="icon[1]" alt="Icon" class="mx-1 " style="width: 35px; height: 35px;"/>
                 </t>
             </div>

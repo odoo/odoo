@@ -20,7 +20,7 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
                     "adyen_api_key": "my_adyen_api_key",
                     "adyen_terminal_identifier": "my_adyen_terminal",
                     "adyen_test_mode": False,
-                    "use_payment_terminal": "adyen",
+                    "payment_provider": "adyen",
                     "payment_method_type": "terminal",
                     'journal_id': self.bank_journal.id,
                 }),

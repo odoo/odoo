@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, whenReady } from "@odoo/owl";
+import { Component, whenReady, useState } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { useSingleDialog } from "@point_of_sale/customer_display/utils";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -21,6 +21,7 @@ export class CustomerDisplay extends Component {
         this.order = useService("customer_display_data");
         this.time = useTime();
         const singleDialog = useSingleDialog();
+        this.state = useState({ prevQrCode: null });
 
         this.scrollableRef = useRef("scrollable");
         useLayoutEffect(() => {
@@ -31,11 +32,14 @@ export class CustomerDisplay extends Component {
 
         useLayoutEffect(
             (qrPaymentData) => {
-                if (qrPaymentData) {
-                    singleDialog.open(QRPopup, qrPaymentData);
-                } else {
+                if (!qrPaymentData || qrPaymentData.qrCode !== this.state.prevQrCode) {
                     singleDialog.close();
                 }
+                if (qrPaymentData) {
+                    singleDialog.open(QRPopup, qrPaymentData);
+                }
+
+                this.state.prevQrCode = qrPaymentData?.qrCode || null;
             },
             () => [this.order.qrPaymentData]
         );

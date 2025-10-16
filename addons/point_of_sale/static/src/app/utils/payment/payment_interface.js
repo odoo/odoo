@@ -7,10 +7,9 @@
  * To connect the interface to the right payment methods register it:
  *
  * import { registry } models from "@web/core/registry";
- * registry.category("electronic_payment_interfaces").add("my_payment", MyPayment);
+ * registry.category("pos_payment_providers").add("my_payment", MyPayment);
  *
- * my_payment is the technical name of the added selection in
- * use_payment_terminal.
+ * my_payment is the technical name of the added selection in payment_provider
  *
  * If necessary new fields can be loaded on any model:
  * by overriding the loader_params of the models in the back end
@@ -24,8 +23,11 @@ export class PaymentInterface {
     setup(pos, payment_method_id) {
         this.env = pos.env;
         this.pos = pos;
+        this.notification = pos.notification;
+        this.orm = pos.data.orm;
+        this.dialog = pos.dialog;
         this.payment_method_id = payment_method_id;
-        this.supports_reversals = false;
+        this.supports_refunds = true;
     }
 
     /**
@@ -49,12 +51,12 @@ export class PaymentInterface {
      * should also set card_type and transaction_id on the line for
      * successful transactions.
      *
-     * @param {string} uuid - The uuid of the paymentline
+     * @param {Object} line - The payment line object
      * @returns {Promise} resolved with a boolean that is false when
      * the payment should be retried. Rejected when the status of the
      * paymentline will be manually updated.
      */
-    sendPaymentRequest(uuid) {}
+    async sendPaymentRequest(line) {}
 
     /**
      * Called when a user removes a payment line that's still waiting
@@ -64,23 +66,10 @@ export class PaymentInterface {
      * them. The payment line being cancelled will be deleted
      * automatically after the returned promise resolves.
      *
-     * @param {} order - The order of the paymentline
-     * @param {string} uuid - The id of the paymentline
+     * @param {Object} line - The payment line object
      * @returns {Promise}
      */
-    sendPaymentCancel(order, uuid) {}
-
-    /**
-     * This is an optional method. When implementing this make sure to
-     * call enable_reversals() in the constructor of your
-     * interface. This should reverse a previous payment with status
-     * 'done'. The paymentline will be removed based on returned
-     * Promise.
-     *
-     * @param {string} uuid - The id of the paymentline
-     * @returns {Promise} returns true if the reversal was successful.
-     */
-    sendPaymentReversal(uuid) {}
+    async sendPaymentCancel(line) {}
 
     /**
      * Called when the payment screen in the POS is closed (by

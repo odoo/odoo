@@ -16,11 +16,11 @@ export class PaymentQFpay extends PaymentInterface {
         this.qfpay = new QFPay(this.env, this.payment_method_id, this._showError.bind(this));
     }
 
-    async sendPaymentRequest(uuid) {
+    async sendPaymentRequest(line) {
         await super.sendPaymentRequest(...arguments);
-        const order = this.pos.getOrder();
-        const line = order.getSelectedPaymentline();
 
+        const order = line.pos_order_id;
+        const uuid = line.uuid;
         if (line.amount < 0) {
             const originalPayment = order.refunded_order_id.payment_ids.find(
                 (l) => l.payment_method_id.id === this.payment_method_id.id
@@ -88,11 +88,9 @@ export class PaymentQFpay extends PaymentInterface {
         });
     }
 
-    async sendPaymentCancel(order, uuid) {
-        super.sendPaymentCancel(order, uuid);
-        this.callQFPay(uuid, "cancel_request", {
-            func_type: 5001,
-        });
+    async sendPaymentCancel(line) {
+        super.sendPaymentCancel(...arguments);
+        this.callQFPay(line.uuid, "cancel_request", { func_type: 5001 });
         return Promise.resolve(true);
     }
 
@@ -165,4 +163,4 @@ export class PaymentQFpay extends PaymentInterface {
     }
 }
 
-registry.category("electronic_payment_interfaces").add("qfpay", PaymentQFpay);
+registry.category("pos_payment_providers").add("qfpay", PaymentQFpay);

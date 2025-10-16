@@ -29,8 +29,8 @@ class PosPaymentMethod(models.Model):
     dpopay_test_mode = fields.Boolean(string='Enable Test Mode', help="Check this to use DPO Pay's sandbox environment for testing purposes.")
     dpopay_bearer_token = fields.Char(default='Token', help="Bearer token used for authenticating requests. Automatically refreshed when expired.")
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('dpopay', 'DPO Pay')]
+    def _get_terminal_provider_selection(self):
+        return super()._get_terminal_provider_selection() + [('dpopay', 'DPO Pay')]
 
     def _is_write_forbidden(self, fields):
         # Allow the modification of these fields even if a pos_session is open

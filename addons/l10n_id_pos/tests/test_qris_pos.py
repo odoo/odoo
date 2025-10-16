@@ -67,7 +67,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
             'company_id': cls.company.id,
-            'payment_method_type': 'qr_code',
+            'payment_method_type': 'bank_qr_code',
             'qr_code_method': 'id_qr'
         })
 

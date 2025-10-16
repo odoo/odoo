@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add("qfpay_order_and_refund", {
             PaymentScreen.clickPaymentMethod("Qfpay"),
             {
                 content: "Waiting for Qfpay payment to be processed",
-                trigger: ".electronic_status:contains('Waiting for card')",
+                trigger: ".paymentline_status_title:contains('Waiting for card')",
                 run: async function () {
                     const paymentLine = posmodel.getPendingPaymentLine("qfpay");
                     paymentUuid = paymentLine.uuid;
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add("qfpay_order_and_refund", {
             PaymentScreen.clickRefundButton(),
             {
                 content: "Waiting for Qfpay refund to be processed",
-                trigger: ".electronic_status:contains('Refund in process')",
+                trigger: ".paymentline_status_title:contains('Refund in process')",
                 run: async function () {
                     const paymentLine = posmodel.getPendingPaymentLine("qfpay");
                     const paymentMethodId = paymentLine.payment_method_id.id;

@@ -114,7 +114,7 @@ export class PaymentGlory extends PaymentInterface {
         );
     }
 
-    async sendPaymentRequest() {
+    async sendPaymentRequest(line) {
         if (!this.paymentLine) {
             return false;
         }
@@ -197,7 +197,7 @@ export class PaymentGlory extends PaymentInterface {
         }
     }
 
-    async sendPaymentCancel() {
+    async sendPaymentCancel(line) {
         const cancelResult = await this.gloryService.initiatePaymentCancel();
 
         if (cancelResult === "DISCONNECTED") {

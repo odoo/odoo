@@ -73,3 +73,11 @@ test("handleUrlParams prevents unauthorized access when POS is locked with pos_h
     await store.handleUrlParams();
     expect(navigateCalledWithLoginScreen).toBe(true);
 });
+
+test("validateOrder", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    store.validateOrder();
+    const order = store.getOrder();
+    expect(order.employee_id.id).toBe(2);
+});
