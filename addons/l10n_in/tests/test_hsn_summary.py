@@ -111,17 +111,6 @@ class TestL10nInHSNSummary(TestTaxCommon):
     # Tests
     # -------------------------------------------------------------------------
 
-    def create_base_line_dict(self, l10n_in_hsn_code, quantity, price_unit, discount, uom, taxes=None, product=None):
-        return {
-            'l10n_in_hsn_code': l10n_in_hsn_code,
-            'quantity': quantity,
-            'price_unit': price_unit,
-            'discount': discount,
-            'product': product,
-            'uom': uom,
-            'taxes_data': taxes or self.env['account.tax'],
-        }
-
     def _test_l10n_in_hsn_summary_1(self):
         """ Test GST/IGST taxes. """
         document = self.populate_document(self.init_document([
