@@ -253,6 +253,7 @@ export const accountTaxHelpers = {
             // method because we have no way to deal with it automatically in this method since it depends of
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
+            product_uom = null,
             special_mode = null,
             manual_tax_amounts = null, // TO BE REMOVED IN MASTER
             filter_tax_function = null,
@@ -343,6 +344,7 @@ export const accountTaxHelpers = {
 
         let evaluation_context = {
             product: product || {},
+            uom: product_uom || {},
             price_unit: price_unit,
             quantity: quantity,
             raw_base: raw_base,
@@ -467,7 +469,7 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes) {
+    adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes, { product_uom = null } = {}) {
         const original_tax_ids = new Set(original_taxes.map((x) => x.id));
         const new_tax_ids = new Set(new_taxes.map((x) => x.id));
         if (
@@ -482,6 +484,7 @@ export const accountTaxHelpers = {
         let taxes_computation = this.get_tax_details(original_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
+            product_uom: product_uom,
         });
         price_unit = taxes_computation.total_excluded;
 
@@ -489,6 +492,7 @@ export const accountTaxHelpers = {
         taxes_computation = this.get_tax_details(new_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
+            product_uom: product_uom,
             special_mode: "total_excluded",
         });
         let delta = 0.0;
@@ -703,6 +707,7 @@ export const accountTaxHelpers = {
                 precision_rounding: currency_pd,
                 rounding_method: rounding_method,
                 product: base_line.product_id,
+                product_uom: base_line.product_uom_id,
                 special_mode: base_line.special_mode,
                 filter_tax_function: base_line.filter_tax_function,
             }
