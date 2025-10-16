@@ -5,6 +5,7 @@ import { getShapeURL } from "@html_builder/plugins/image/image_helpers";
 import {
     activateCropper,
     createDataURL,
+    cropperDataFields,
     loadImage,
     loadImageInfo,
     isGif,
@@ -407,6 +408,18 @@ export class SetImageShapeAction extends BuilderAction {
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, value: shapeId }) {
         const params = { shape: shapeId };
+        // A crop is applied to the image at the same time as certain shapes,
+        // which is why we reset the crop here or when the shape is removed.
+        // However, we don’t reset it when the crop was applied intentionally.
+        // In that case, there are crop values; otherwise, there are none,
+        // only a 'data-aspect-ratio'.
+        if (
+            !shapeId &&
+            img.dataset.aspectRatio &&
+            !cropperDataFields.some((field) => field in img.dataset)
+        ) {
+            params["aspectRatio"] = undefined;
+        }
         // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
         return this.dependencies.imageShapeOption.loadShape(img, params);
     }
