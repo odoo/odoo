@@ -1,8 +1,13 @@
+import logging
 from collections import defaultdict
+
 from markupsafe import Markup
 
-from odoo import _, api, models, modules, tools
+from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -455,7 +460,7 @@ class AccountMoveSend(models.AbstractModel):
         attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
-        for invoice in invoices_data:
+        for invoice, invoice_data in invoices_data.items():
             if attachment := res_id_to_attachment.get(invoice.id):
                 invoice.message_main_attachment_id = attachment
                 invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
@@ -485,6 +490,24 @@ class AccountMoveSend(models.AbstractModel):
                 to_send_mail[move] = move_data
         self._send_mails(to_send_mail)
         self._send_notifications_to_partners(group_by_partner)
+
+        # Notify subscribers.
+        for move, move_data in moves_data.items():
+            if not move.is_invoice(include_receipts=True):
+                continue
+
+            try:
+                move.journal_id._notify_invoice_subscribers(
+                    invoice=move,
+                    mail_params={
+                        'attachment_ids': [
+                            Command.create({'name': attachment.name, 'raw': attachment.raw, 'mimetype': attachment.mimetype})
+                            for attachment in self._get_invoice_extra_attachments(move)
+                        ]
+                    },
+                )
+            except Exception:
+                _logger.exception("Failed notifying subscribers for move %s", move.id)
 
     @api.model
     def _send_notifications_to_partners(self, moves_grouped_by_author_partner_id, is_success=True):
@@ -805,14 +828,17 @@ class AccountMoveSend(models.AbstractModel):
         success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
         if success:
             self._hook_if_success(success, from_cron=from_cron)
+
         # Update sending data of moves
         for move, move_data in moves_data.items():
             # We keep the sending_data, so it will be retried
             if from_cron and move_data.get('error', {}).get('retry'):
                 continue
             move.sending_data = False
+
         # Return generated attachments.
         attachments = self.env['ir.attachment']
         for move, move_data in success.items():
             attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
+
         return attachments
