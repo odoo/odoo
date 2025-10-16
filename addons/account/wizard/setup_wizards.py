@@ -39,24 +39,47 @@ class AccountFinancialYearOp(models.TransientModel):
                     month=wiz.fiscalyear_last_month, day=wiz.fiscalyear_last_day)
                 )
 
-    def write(self, vals):
+    @api.model
+    def _company_fields_to_update(self):
+        return {'fiscalyear_last_day', 'fiscalyear_last_month', 'opening_date'}
+
+    @api.model
+    def _update_company(self, company_id, vals):
         # Amazing workaround: non-stored related fields on company are a BAD idea since the 3 fields
         # must follow the constraint '_check_fiscalyear_last_day'. The thing is, in case of related
         # fields, the inverse write is done one value at a time, and thus the constraint is verified
         # one value at a time... so it is likely to fail.
-        for wiz in self:
-            wiz.company_id.write({
-                'fiscalyear_last_day': vals.get('fiscalyear_last_day') or wiz.company_id.fiscalyear_last_day,
-                'fiscalyear_last_month': vals.get('fiscalyear_last_month') or wiz.company_id.fiscalyear_last_month,
-                'account_opening_date': vals.get('opening_date') or wiz.company_id.account_opening_date,
-            })
-            wiz.company_id.account_opening_move_id.write({
-                'date': fields.Date.from_string(vals.get('opening_date') or wiz.company_id.account_opening_date) - timedelta(days=1),
+        company_fields_to_update = {k: k for k in self._company_fields_to_update()}
+        company_fields_to_update['opening_date'] = 'account_opening_date'
+        company_id.write({
+            company_field: vals[wizard_field] for wizard_field, company_field in company_fields_to_update.items() if wizard_field in vals
+        })
+        opening_date = vals.get('opening_date', company_id.account_opening_date)
+        if opening_date:
+            company_id.account_opening_move_id.write({
+                'date': fields.Date.from_string(opening_date) - timedelta(days=1),
             })
 
-        vals.pop('opening_date', None)
-        vals.pop('fiscalyear_last_day', None)
-        vals.pop('fiscalyear_last_month', None)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'company_id' in vals:
+                company = self.env['res.company'].browse(vals['company_id'])
+                self._update_company(company, vals)
+
+                # we need to keep opening_date in vals since it's a required field otherwise the wizard fails to be created
+                for key in self._company_fields_to_update() - {'opening_date'}:
+                    vals.pop(key, None)
+
+        return super().create(vals_list)
+
+    def write(self, vals):
+        for wiz in self:
+            wiz._update_company(wiz.company_id, vals)
+
+        for key in self._company_fields_to_update():
+            vals.pop(key, None)
+
         return super().write(vals)
 
     def action_save_onboarding_fiscal_year(self):
