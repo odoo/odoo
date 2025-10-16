@@ -273,7 +273,6 @@ class WebsiteEventController(http.Controller):
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
             'registration_error_code': post.get('registration_error_code'),
-            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
@@ -530,7 +529,6 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
             'slot': slot,
-            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
