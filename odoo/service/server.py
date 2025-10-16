@@ -653,6 +653,11 @@ class ThreadedServer(CommonServer):
             _logger.info("Logging uses the database, stop logging then close DB connections")
             log_ctx = mute_logger('')
 
+        current_process = psutil.Process()
+        children = current_process.children(recursive=False)
+        for child in children:
+            _logger.info('A child process was found, pid is %s, process may hang', child)
+
         with log_ctx:
             sql_db.close_all()
             _logger.debug('--')
