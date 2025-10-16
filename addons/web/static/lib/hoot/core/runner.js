@@ -1431,7 +1431,6 @@ export class Runner {
      * @param {boolean} [canEraseParent]
      */
     _erase(job, canEraseParent = false) {
-        job.minimize();
         if (job instanceof Suite) {
             if (!job.reporting.failed) {
                 this.suites.delete(job.id);
@@ -1441,6 +1440,7 @@ export class Runner {
                 this.tests.delete(job.id);
             }
         }
+        job.minimize();
         if (canEraseParent && job.parent) {
             const jobIndex = job.parent.jobs.indexOf(job);
             if (jobIndex >= 0) {
