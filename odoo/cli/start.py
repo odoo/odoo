@@ -3,11 +3,12 @@ import itertools
 import os
 import sys
 
+from odoo.modules.db import DatabaseExists, _create_empty_database
+from odoo.modules.module import MANIFEST_NAMES, Manifest
+from odoo.tools import config
+
 from . import Command
 from .server import main
-from odoo.modules.module import Manifest, MANIFEST_NAMES
-from odoo.service.db import _create_empty_database, DatabaseExists
-from odoo.tools import config
 
 
 class Start(Command):

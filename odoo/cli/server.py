@@ -99,7 +99,7 @@ def main(args):
     report_configuration()
 
     for db_name in config['db_name']:
-        from odoo.service import db  # noqa: PLC0415
+        from odoo.modules import db  # noqa: PLC0415
         try:
             db._create_empty_database(db_name)
             config['init']['base'] = True

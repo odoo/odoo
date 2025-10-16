@@ -61,7 +61,6 @@ from odoo.release import nt_service_name
 from odoo.tools import config, gc, osutil, OrderedSet, profiler
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks, mute_logger
-from .db import list_dbs
 
 _logger = logging.getLogger(__name__)
 
@@ -109,7 +108,8 @@ def empty_pipe(fd):
 
 
 def cron_database_list():
-    return config['db_name'] or list_dbs(True)
+    from odoo.modules.db import list_dbs  # noqa: PLC0415
+    return config['db_name'] or list_dbs(force=True)
 
 
 #----------------------------------------------------------
