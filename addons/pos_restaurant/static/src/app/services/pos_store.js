@@ -987,13 +987,6 @@ patch(PosStore.prototype, {
             }
         }
     },
-    getOrderData(order, reprint) {
-        return {
-            ...super.getOrderData(order, reprint),
-            customer_count: order.getCustomerCount(),
-        };
-    },
-
     async validateOrderFast(paymentMethod) {
         const currentOrder = this.getOrder();
         if (!currentOrder) {

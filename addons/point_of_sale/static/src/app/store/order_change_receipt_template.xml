@@ -10,7 +10,7 @@
                 </div>
                 <div class="o-employee-name" style="font-size: 78%;">
                     <span><t t-esc="data.config_name"/> : <t t-esc="data.time"/></span><br/>
-                    <span>By: <t t-esc="data.employee_name"/></span>
+                    <span t-if="data.employee_name">By: <t t-esc="data.employee_name"/></span>
                 </div>
                 <span class="my-4" style="font-size: 150%;">
                     <span>Order <strong><t t-esc="data.pos_reference"/></strong></span>

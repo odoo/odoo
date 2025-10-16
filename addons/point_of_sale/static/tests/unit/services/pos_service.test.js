@@ -4,6 +4,10 @@ import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { imageUrl } from "@web/core/utils/urls";
+import {
+    getStrNotes,
+    filterChangeByCategories,
+} from "@point_of_sale/app/models/utils/order_change";
 
 definePosModels();
 
@@ -35,11 +39,10 @@ describe("pos_store.js", () => {
     });
 
     test("orderNoteFormat", async () => {
-        const store = await setupPosEnv();
-        const str = store.getStrNotes("string");
+        const str = getStrNotes("string");
         expect(str).toBeOfType("string");
         expect(str).toBe("string");
-        const json2str = store.getStrNotes([{ text: "json", colorIndex: 0 }]);
+        const json2str = getStrNotes([{ text: "json", colorIndex: 0 }]);
         expect(json2str).toBeOfType("string");
         expect(json2str).toBe("json");
     });
@@ -270,7 +273,11 @@ describe("pos_store.js", () => {
             noteUpdate: [],
         };
 
-        const filtered = store.filterChangeByCategories(allowedCategories, currentOrderChange);
+        const filtered = filterChangeByCategories(
+            allowedCategories,
+            currentOrderChange,
+            store.models
+        );
 
         const expectedUuids = ["combo-parent-uuid", "combo-child-a-uuid", "line1"];
         const actualUuids = filtered.new.map((c) => c.uuid);
@@ -301,9 +308,9 @@ describe("pos_store.js", () => {
     test("getOrderData", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
-        const orderData = store.getOrderData(order);
+        const orderData = order.getOrderData();
         expect(orderData).toEqual({
-            reprint: undefined,
+            reprint: false,
             pos_reference: "1001",
             config_name: "Hoot",
             time: "10:30",
