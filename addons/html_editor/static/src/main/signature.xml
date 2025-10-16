@@ -1,5 +1,9 @@
 <templates>
     <t t-name="html_editor.Signature">
-        <div t-att-class="signatureClass" t-out="signature"/>
+        <div
+            t-att-class="signatureClass"
+            t-att-data-o-mail-quote="dataMailQuote or '1'"
+            t-out="signature"
+        />
     </t>
 </templates>
