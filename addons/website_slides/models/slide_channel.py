@@ -12,6 +12,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
+from odoo.addons.website.tools import text_from_html
 
 _logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class SlideChannel(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'web.markup_data.mixin',
     ]
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
@@ -429,6 +431,54 @@ class SlideChannel(models.Model):
     @api.depends('website_id.domain')
     def _compute_website_absolute_url(self):
         super()._compute_website_absolute_url()
+
+    def _get_md_payload(self, website):
+        self.ensure_one()
+        if not self.name:
+            return False
+
+        base_url = website.get_base_url()
+        channel_url = self.website_url or ''
+        if channel_url.startswith('http'):
+            url = channel_url
+        else:
+            url = f"{base_url}{channel_url}"
+
+        image = hasattr(self, '_md_background_url') and self._md_background_url(website) or False
+        if not image:
+            image_path = website.image_url(self, 'image_1024')
+            image = f"{base_url}{image_path}" if image_path else False
+
+        description_source = self.description or self.description_short or self.description_html
+        description = text_from_html(description_source, True) if description_source else None
+
+        provider = False
+        company = website.company_id or self.env.company
+        if company and company.name:
+            logo_path = website.image_url(company, 'logo')
+            logo = f"{base_url}{logo_path}" if logo_path else None
+            provider = website._md_organization(name=company.name, url=base_url, logo=logo)
+
+        aggregate = False
+        sudo_self = self.sudo()
+        rating_count = sudo_self.rating_count or 0
+        rating_value = float(sudo_self.rating_avg or 0.0)
+        if self.allow_comment and rating_count:
+            aggregate = self._md_payload(
+                'AggregateRating',
+                ratingValue=float(rating_value),
+                reviewCount=rating_count,
+            )
+
+        return self._md_payload(
+            'Course',
+            name=self.name,
+            url=url,
+            description=description,
+            image=image,
+            provider=provider,
+            aggregateRating=aggregate,
+        )
 
     @api.depends('can_publish', 'is_member', 'karma_review', 'karma_slide_comment', 'karma_slide_vote')
     @api.depends_context('uid')

@@ -78,6 +78,9 @@
 
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
+    <t t-set="head">
+        <script t-if="channel_collection_md_json" type="application/ld+json" t-out="channel_collection_md_json"/>
+    </t>
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-set="has_side_column" t-value="not is_public_user"/>
     <t t-call="website.layout">

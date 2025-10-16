@@ -93,3 +93,26 @@ class WebsiteEventSaleController(WebsiteEventController):
                 return request.redirect("/shop/confirmation")
 
         return res
+
+    def _get_event_offers_md(self, event):
+        offers = super()._get_event_offers_md(event)
+        if offers:
+            return offers
+        tickets = event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)
+        if not tickets:
+            return False
+        prices = [ticket.price_reduce or ticket.price or 0.0 for ticket in tickets]
+        if not prices:
+            return False
+        currency = event.company_id.currency_id or request.website.currency_id
+        availability = 'https://schema.org/InStock' if event.event_registrations_open else 'https://schema.org/SoldOut'
+        event_url = event.website_url or f'/event/{event.id}/register'
+        base_url = request.website.get_base_url()
+        return event._md_aggregate_offer(
+            price_currency=currency.name,
+            low_price=min(prices),
+            high_price=max(prices),
+            offer_count=len(prices),
+            availability=availability,
+            url=f'{base_url}{event_url}',
+        )

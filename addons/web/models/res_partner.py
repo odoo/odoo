@@ -3,6 +3,8 @@
 import logging
 from base64 import b64decode
 
+import werkzeug.urls
+
 from odoo import models
 from odoo.tools.facade import Proxy, ProxyAttr, ProxyFunc
 
@@ -40,7 +42,50 @@ if vobject is not None:
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'web.markup_data.mixin']
+
+    def _get_md_payload(self, website):
+        self.ensure_one()
+        name = self.display_name or self.name
+        if not name:
+            return False
+
+        base_url = website.get_base_url()
+        website_url = self.website or ''
+        if website_url and not website_url.startswith(("http://", "https://")):
+            website_url = werkzeug.urls.join(base_url, website_url)
+
+        image_path = website.image_url(self, 'image_512')
+        image_url = f'{base_url}{image_path}' if image_path else None
+
+        payload = self._md_organization(
+            name=name,
+            url=website_url or base_url,
+            logo=image_url,
+        )
+
+        phones = [phone for phone in (self.phone, self.mobile) if phone]
+        if phones:
+            payload['telephone'] = ' / '.join(phones)
+        if self.email:
+            payload['email'] = self.email
+
+        street = self.street.strip() if self.street else None
+        postal_code = self.zip.strip() if self.zip else None
+        city = self.city.strip() if self.city else None
+        region = self.state_id.name if self.state_id else None
+        country = self.country_id.name if self.country_id else None
+        if any((street, postal_code, city, region, country)):
+            payload['address'] = self._md_postal_address(
+                street_address=street,
+                postal_code=postal_code,
+                locality=city,
+                region=region,
+                country=country,
+            )
+
+        return payload
 
     def _build_vcard(self):
         """ Build the partner's vCard.

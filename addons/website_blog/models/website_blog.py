@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import random
 
 from odoo import api, models, fields, _
@@ -20,6 +19,7 @@ class BlogBlog(models.Model):
         'website.multi.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
+        'web.markup_data.mixin',
     ]
     _order = 'name'
 
@@ -40,6 +40,27 @@ class BlogBlog(models.Model):
     def _compute_blog_post_count(self):
         for record in self:
             record.blog_post_count = len(record.blog_post_ids)
+
+    @api.model
+    def _md_blog(
+        self,
+        *,
+        name,
+        url,
+        description=None,
+        image=None,
+        posts=None,
+    ):
+        payload = self._md_payload(
+            'Blog',
+            name=name,
+            url=url,
+            description=description,
+            image=image,
+        )
+        if posts:
+            payload['blogPost'] = posts
+        return payload
 
     def write(self, vals):
         res = super().write(vals)
@@ -126,6 +147,23 @@ class BlogBlog(models.Model):
             data['url'] = '/blog/%s' % data['id']
         return results_data
 
+    def _get_md(self, website=None):
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        slug = self.env['ir.http']._slug(self)
+
+        description = self.website_meta_description or self.subtitle
+        if not description and self.content:
+            description = text_from_html(self.content, True)
+
+        return self._md_blog(
+            name=self.name,
+            url=f'{base_url}/blog/{slug}',
+            description=description,
+            image=self._md_background_url(website),
+        )
+
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -163,7 +201,7 @@ class BlogPost(models.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
         'website.page_visibility_options.mixin',
-        'website.cover_properties.mixin', 'website.searchable.mixin']
+        'website.cover_properties.mixin', 'website.searchable.mixin', 'web.markup_data.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -211,6 +249,55 @@ class BlogPost(models.Model):
             else:
                 content = text_from_html(blog_post.content, True)
                 blog_post.teaser = content[:200] + '...'
+
+    @api.model
+    def _md_blog_posting(
+        self,
+        *,
+        headline,
+        url,
+        main_entity_of_page=None,
+        description=None,
+        article_body=None,
+        image=None,
+        date_published=None,
+        date_modified=None,
+        author=None,
+        publisher=None,
+        keywords=None,
+        article_section=None,
+        speakable=None,
+        id=None,
+        in_language=None,
+        is_part_of=None,
+        word_count=None,
+    ):
+        payload = self._md_payload(
+            'BlogPosting',
+            headline=headline,
+            url=url,
+            mainEntityOfPage=main_entity_of_page or url,
+            description=description,
+            articleBody=article_body,
+            image=image,
+            datePublished=date_published,
+            dateModified=date_modified,
+            author=author,
+            publisher=publisher,
+            keywords=keywords,
+            articleSection=article_section,
+        )
+        if speakable:
+            payload['speakable'] = speakable
+        if id:
+            payload['@id'] = id
+        if in_language:
+            payload['inLanguage'] = in_language
+        if is_part_of:
+            payload['isPartOf'] = is_part_of
+        if word_count:
+            payload['wordCount'] = int(word_count)
+        return payload
 
     def _set_teaser(self):
         for blog_post in self:
@@ -326,6 +413,105 @@ class BlogPost(models.Model):
         res['default_opengraph']['og:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res
+
+    def _get_breadcrumb_md(self, website=None):
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        items = [(website.name or base_url, base_url)]
+        if self.blog_id:
+            slug = self.env['ir.http']._slug(self.blog_id)
+            items.append((self.blog_id.name, f'{base_url}/blog/{slug}'))
+        items.append((self.name, f'{base_url}{self.website_url}'))
+        return self._md_breadcrumb_list(items)
+
+    def _get_md(self, website=None):
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        company = website.company_id
+
+        def _truncate_text(text, limit=300):
+            if not text:
+                return False
+            stripped = text.strip()
+            if len(stripped) <= limit:
+                return stripped
+            truncated = stripped[:limit].rsplit(' ', 1)[0].rstrip()
+            if not truncated:
+                truncated = stripped[:limit].rstrip()
+            return f'{truncated}...'
+
+        md = []
+        for blog_post in self:
+            blog_post_sudo = blog_post.sudo()
+            post_url = f'{base_url}{blog_post_sudo.website_url}'
+            description = blog_post_sudo.website_meta_description or blog_post_sudo.subtitle or blog_post_sudo.teaser_manual or blog_post_sudo.teaser
+            content_text = text_from_html(blog_post_sudo.content, True) if blog_post_sudo.content else False
+            truncated_article = _truncate_text(content_text, 300) if content_text else False
+            word_count = len(content_text.split()) if content_text else None
+
+            author = False
+            if blog_post_sudo.author_id:
+                author_partner_sudo = blog_post_sudo.author_id.sudo()
+                author = blog_post_sudo._md_person(
+                    name=author_partner_sudo.display_name or blog_post_sudo.author_name,
+                )
+
+            publisher = False
+            if company:
+                logo_url = website.image_url(company, 'logo')
+                full_logo_url = f'{base_url}{logo_url}' if logo_url else False
+                publisher = blog_post_sudo._md_organization(
+                    name=company.name,
+                    url=base_url,
+                    logo=full_logo_url,
+                )
+
+            speakable = blog_post_sudo._md_speakable([
+                "//h1[contains(@class, 'o_wblog_post_name')]",
+                "//div[contains(@class, 'o_wblog_post_subtitle')]",
+                "//div[@id='o_wblog_post_content']",
+            ])
+
+            post_language = False
+            if blog_post_sudo.website_id and blog_post_sudo.website_id.default_lang_id:
+                post_language = blog_post_sudo.website_id.default_lang_id.code
+            elif website.default_lang_id:
+                post_language = website.default_lang_id.code
+            if post_language:
+                post_language = post_language.replace('_', '-')
+
+            is_part_of = False
+            blog = blog_post_sudo.blog_id
+            if blog:
+                blog_slug = self.env['ir.http']._slug(blog)
+                blog_url = f'{base_url}/blog/{blog_slug}'
+                is_part_of = blog._md_blog(
+                    name=blog.name,
+                    url=blog_url,
+                    description=blog.subtitle or None,
+                    image=blog._md_background_url(website),
+                )
+
+            md.append(blog_post_sudo._md_blog_posting(
+                headline=blog_post_sudo.name,
+                url=post_url,
+                description=description,
+                article_body=truncated_article,
+                image=blog_post_sudo._md_background_url(website),
+                date_published=blog_post_sudo._md_datetime(blog_post_sudo.post_date or blog_post_sudo.create_date),
+                date_modified=blog_post_sudo._md_datetime(blog_post_sudo.write_date),
+                author=author,
+                publisher=publisher,
+                keywords=', '.join(blog_post_sudo.tag_ids.mapped('name')) if blog_post_sudo.tag_ids else None,
+                article_section=blog_post_sudo.blog_id.name if blog_post_sudo.blog_id else None,
+                speakable=speakable,
+                id=post_url,
+                in_language=post_language,
+                is_part_of=is_part_of,
+                word_count=word_count,
+            ))
+        return md
 
     @api.model
     def _search_get_detail(self, website, order, options):

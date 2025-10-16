@@ -98,7 +98,7 @@ function websiteEditEventTourSteps() {
             content: "edit the short description of the event",
             trigger: ":iframe .opt_events_list_columns",
             run: function () {
-                const descriptionEl = this.anchor.querySelector("[itemprop='description']");
+                const descriptionEl = this.anchor.querySelector("small.opacity-75");
                 descriptionEl.textContent = "new short description";
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
                 editor.shared.history.addStep();

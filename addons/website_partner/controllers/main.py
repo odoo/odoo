@@ -21,7 +21,8 @@ class WebsitePartnerPage(http.Controller):
                 values = {
                     'main_object': partner_sudo,
                     'partner': partner_sudo,
-                    'edit_page': False
+                    'edit_page': False,
+                    'partner_md_json': partner_sudo._get_md_json(request.website),
                 }
                 return request.render("website_partner.partner_page", values)
         raise request.not_found()

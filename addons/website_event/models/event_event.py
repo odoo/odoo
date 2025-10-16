@@ -25,6 +25,7 @@ class EventEvent(models.Model):
         'website.cover_properties.mixin',
         'website.searchable.mixin',
         'website.page_visibility_options.mixin',
+        'web.markup_data.mixin',
     ]
 
     def _default_cover_properties(self):
@@ -97,7 +98,63 @@ class EventEvent(models.Model):
         """Fall back on the website_url to share the event."""
         for event in self:
             event.event_share_url = event.event_url or tools.urls.urljoin(event.get_base_url(), event.website_url)
- 
+
+    @api.model
+    def _md_aggregate_offer(
+        self,
+        *,
+        price_currency,
+        low_price=None,
+        high_price=None,
+        offer_count=None,
+        availability=None,
+        valid_from=None,
+        valid_through=None,
+        url=None,
+    ):
+        return self._md_payload(
+            'AggregateOffer',
+            priceCurrency=price_currency,
+            lowPrice=float(low_price) if low_price is not None else None,
+            highPrice=float(high_price) if high_price is not None else None,
+            offerCount=offer_count,
+            availability=availability,
+            validFrom=valid_from,
+            validThrough=valid_through,
+            url=url,
+        )
+
+    @api.model
+    def _md_event(
+        self,
+        *,
+        name,
+        url,
+        start_date,
+        end_date=None,
+        description=None,
+        image=None,
+        location=None,
+        organizer=None,
+        offers=None,
+        event_status=None,
+        attendance_mode=None,
+    ):
+        return self._md_payload(
+            'Event',
+            name=name,
+            url=url,
+            description=description,
+            image=image,
+            startDate=start_date,
+            endDate=end_date,
+            location=location,
+            organizer=organizer,
+            offers=offers,
+            eventStatus=event_status,
+            eventAttendanceMode=attendance_mode,
+        )
+
     @api.depends('registration_ids')
     @api.depends_context('uid')
     def _compute_is_participating(self):

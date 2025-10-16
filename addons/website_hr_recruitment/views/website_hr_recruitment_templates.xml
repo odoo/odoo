@@ -3,6 +3,9 @@
 
 <template id="index" name="Jobs">
     <t t-call="website.layout">
+        <t t-set="head">
+            <script t-if="jobs_md_json" type="application/ld+json" t-out="jobs_md_json"/>
+        </t>
         <div id="wrap" class="o_website_hr_recruitment_jobs_list">
             <!-- Snippet area -->
             <div class="oe_structure" id="oe_structure_hr_recruitment_index_top"/>
@@ -102,6 +105,9 @@
 <!-- Job Detail -->
 <template id="detail" name="Job Detail" track="1">
     <t t-call="website.layout">
+        <t t-set="head">
+            <script t-if="job_md_json" type="application/ld+json" t-out="job_md_json"/>
+        </t>
         <!-- Topbar -->
         <nav class="navbar navbar-light border-top shadow-sm d-print-none">
             <div class="container">
@@ -117,24 +123,7 @@
         </nav>
         <!-- Content -->
         <div id="wrap" class="js_hr_recruitment">
-            <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
-                <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
-                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date"/>
-                <meta itemprop="title" t-att-content="job.name"/>
-                <meta itemprop="directApply" content="true"/>
-                <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
-                    <meta itemprop="name" t-att-content="job.company_id.name"/>
-                    <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
-                </span>
-                <span t-if="job.address_id.sudo().contact_address" itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
-                    <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
-                </span>
-                <t t-else="">
-                    <meta itemprop="jobLocationType" content="TELECOMMUTE"/>
-                    <span itemprop="applicantLocationRequirements" itemscope="itemscope" itemtype="https://schema.org/Country">
-                        <meta itemprop="name" t-att-content="job.company_id.country_id.name"/>
-                    </span>
-                </t>
+            <div>
                 <!-- Job name -->
                 <section class="pb32">
                     <div class="container">
@@ -371,7 +360,7 @@
     <section class="pt32">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 pb32" itemprop="description">
+                <div class="col-lg-8 pb32">
                     <p class="lead">
                         As an employee of our company, you will <b>collaborate with each department
                         to create and deploy disruptive products.</b> Come work at a growing company
@@ -466,7 +455,7 @@
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Responsibilities</h4>
-                        <ul class="list-group list-group-flush" itemprop="responsibilities">
+                        <ul class="list-group list-group-flush">
                             <li class="list-group-item">Lead the entire sales cycle</li>
                             <li class="list-group-item">Achieve monthly sales objectives</li>
                             <li class="list-group-item">Qualify the customer needs</li>
@@ -478,7 +467,7 @@
                 <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
                     <div class="card text-bg-primary">
                         <h4 class="card-header">Must Have</h4>
-                        <ul class="list-group list-group-flush" itemprop="skills">
+                        <ul class="list-group list-group-flush">
                             <li class="list-group-item">Bachelor Degree or Higher</li>
                             <li class="list-group-item">Passion for software products</li>
                             <li class="list-group-item">Perfect written English</li>
@@ -532,7 +521,7 @@
     </section>
     <!-- What we offer -->
     <section class="s_features pt64 pb64" data-name="Features" data-snippet="s_features">
-        <div class="container" itemprop="employerOverview">
+        <div class="container">
             <div class="col-lg-12">
                 <h3>What We Offer</h3>
                 <p class="lead">

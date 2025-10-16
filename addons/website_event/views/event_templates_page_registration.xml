@@ -4,9 +4,10 @@
 
 <template id="event_details" name="Event Header">
     <t t-call="website_event.layout">
-        <div class="h-100" name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
-            <meta itemprop="startDate" t-attf-content="{{event.date_begin}}Z"/>
-            <meta itemprop="endDate" t-attf-content="{{event.date_end}}Z"/>
+        <t t-set="head">
+            <script t-if="event_md_json" type="application/ld+json" t-out="event_md_json"/>
+        </t>
+        <div class="h-100" name="event">
             <t t-out="0"/>
         </div>
     </t>
@@ -43,7 +44,7 @@
                         <i class="fa fa-check me-2" role="img"/>Registered
                     </span>
                     <div class="w-100 mt-auto">
-                        <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                        <h2 t-field="event.name" placeholder="Event Title" class="mt-3"/>
                         <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
                     </div>
                 </div>
@@ -77,14 +78,14 @@
                                     <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
                                         <i class="fa fa-check me-2" role="img"/>Registered
                                     </span>
-                                    <h1 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3 h2-fs"/>
+                                    <h1 t-field="event.name" placeholder="Event Title" class="mt-3 h2-fs"/>
                                     <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
                                 </div>
                             </t>
                             <div class="o_wevent_event_main_dates_mobile d-lg-none mt-3">
                                 <t t-call="website_event.event_description_dates"/>
                             </div>
-                            <div class="mt-4" t-field="event.description" itemprop="description"/>
+                            <div class="mt-4" t-field="event.description"/>
                         </div>
                     </div>
 
@@ -101,26 +102,26 @@
                         </div>
                         <!-- Date & Time (desktop only) -->
                         <div t-if="opt_event_dates_block or opt_event_calendar_block" class="o_wevent_bordered_block pb-3 mb-4 d-none d-lg-block">
-                            <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()" />
-                            <meta itemprop="endDate" t-att-content="event.date_end.isoformat()" />
+                            <meta t-att-content="event.date_begin.isoformat()" />
+                            <meta t-att-content="event.date_end.isoformat()" />
                             <t t-call="website_event.event_description_dates"/>
                         </div>
                         <header t-if="opt_event_location_block or opt_event_organizer_block or opt_event_share_block" class="d-lg-none mt-4 mb-2 py-3 border-top">
                             <h5 class="my-0">Event Info</h5>
-                            <meta itemprop="eventStatus" content="https://schema.org/EventScheduled" />
+                            <meta content="https://schema.org/EventScheduled" />
                         </header>
                         <!-- Location -->
-                        <meta itemprop="eventAttendanceMode" t-attf-content="https://schema.org/{{'Offline' if event.address_id else 'Online'}}EventAttendanceMode"/>
-                        <div t-if="opt_event_location_block and event.address_id" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4" itemprop="location" itemscope="itemscope" itemtype="https://schema.org/Place">
+                        <meta t-attf-content="https://schema.org/{{'Offline' if event.address_id else 'Online'}}EventAttendanceMode"/>
+                        <div t-if="opt_event_location_block and event.address_id" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4">
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Location</h6>
                             </div>
-                            <div itemprop="name" class="mb-1" t-field="event.address_id"/>
+                            <div class="mb-1" t-field="event.address_id"/>
                             <small class="d-block mb-2" t-field="event.address_id" t-options='{
                                 "widget": "contact",
                                 "fields": ["address"],
                                 "no_marker": True,
-                                "with_microdata": True,
+                                "with_microdata": False,
                             }'/>
                             <small t-field="event.address_id" class="d-block mb-2" t-options='{
                                 "widget": "contact",
@@ -139,12 +140,12 @@
                             <i class="fa fa-map-marker" title="Location"/> Online event
                         </div>
                         <!-- Organizer -->
-                        <div t-if="opt_event_organizer_block and event.organizer_id" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4" itemprop="organizer" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                        <div t-if="opt_event_organizer_block and event.organizer_id" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4">
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Organizer</h6>
                             </div>
-                            <div itemprop="name" class="mb-1" t-field="event.organizer_id"/>
-                            <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': True,}"/>
+                            <div class="mb-1" t-field="event.organizer_id"/>
+                            <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': False,}"/>
                         </div>
                         <!-- Social -->
                         <div t-if="opt_event_share_block" class="o_wevent_sidebar_block">
@@ -499,8 +500,7 @@
 
             <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
                 id="registration_form"
-                t-attf-action="/event/#{slug(event)}/registration/new" method="post"
-                itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
+                t-attf-action="/event/#{slug(event)}/registration/new" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input t-if="event_slot" type="hidden" name="event_slot_id" t-att-value="event_slot.id"/>
                 <div id="o_wevent_tickets" class="shadow-sm o_wevent_js_ticket_details">
@@ -519,21 +519,21 @@
                             <div t-foreach="tickets" t-as="ticket"
                                 t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}"
                                 t-att-name="ticket.name">
-                                <div class="col-6 pe-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                                    <h5 itemprop="name" t-field="ticket.name" class="h6 my-0"/>
+                                <div class="col-6 pe-3">
+                                    <h5 t-field="ticket.name" class="h6 my-0"/>
                                     <t t-if="ticket.description">
                                         <small t-field="ticket.description" class="text-muted py-2"/>
                                         <br/>
                                     </t>
                                     <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
-                                        class="text-muted me-3" itemprop="availabilityEnds">Sales end on
-                                        <span itemprop="priceValidUntil" t-out="ticket.end_sale_datetime"
+                                        class="text-muted me-3">Sales end on
+                                        <span t-out="ticket.end_sale_datetime"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
                                         <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
                                     <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired"
-                                        class="text-muted me-3" itemprop="availabilityEnds">
-                                        Sales start on <span itemprop="priceValidUntil" t-out="ticket.start_sale_datetime"
+                                        class="text-muted me-3">
+                                        Sales start on <span t-out="ticket.start_sale_datetime"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
                                         <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
@@ -597,8 +597,8 @@
                     </t>
                     <div t-else="" class="o_wevent_registration_single">
                         <div class="modal-body row px-3 py-2 mx-0">
-                            <div class="col-12 col-md-6 p-0 pe-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                                <h5 itemprop="name" class="my-0 pe-3 o_wevent_single_ticket_name">
+                            <div class="col-12 col-md-6 p-0 pe-3">
+                                <h5 class="my-0 pe-3 o_wevent_single_ticket_name">
                                     <span t-if="tickets" t-field="tickets.name"/>
                                     <span t-else="">Registration</span>
                                 </h5>
@@ -607,16 +607,15 @@
                                     <br/>
                                 </t>
                                 <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired"
-                                    class="text-muted" itemprop="availabilityEnds">
+                                    class="text-muted">
                                     Sales end on
-                                    <span itemprop="priceValidUntil" t-out="tickets.end_sale_datetime"
+                                    <span t-out="tickets.end_sale_datetime"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
                                     <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                 </small>
                             </div>
                             <div class="col-md-6 d-flex justify-content-between p-0">
                                 <t t-if="event.event_registrations_open">
-                                    <link itemprop="availability" content="http://schema.org/InStock"/>
                                     <div class="o_wevent_registration_single_select w-auto ms-auto">
                                         <t t-set="limit_per_order" t-value="tickets._get_current_limit_per_order(event_slot if event_slot else False)[tickets.id] if tickets else event.EVENT_MAX_TICKETS"/>
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and tickets and seats_available_slot_tickets.get(tickets.id, 0) or 0"/>
@@ -653,7 +652,7 @@
                                     </div>
                                 </t>
                                 <t t-else="">
-                                    <span itemprop="availability" content="http://schema.org/SoldOut" class="text-danger">
+                                    <span class="text-danger">
                                         <i class="fa fa-ban me-2"/>Sold Out
                                     </span>
                                 </t>

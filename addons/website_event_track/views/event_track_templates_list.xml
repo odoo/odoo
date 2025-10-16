@@ -2,6 +2,9 @@
 <odoo>
 
 <template id="tracks_session" name="Event Tracks">
+    <t t-set="head">
+        <script t-if="tracks_md_json" type="application/ld+json" t-out="tracks_md_json"/>
+    </t>
     <t t-call="website_event.layout">
         <div class="o_wevent_online o_wesession_index container">
             <!-- Options -->

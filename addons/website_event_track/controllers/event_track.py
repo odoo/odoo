@@ -18,6 +18,7 @@ from odoo.fields import Domain
 from odoo.http import content_disposition, request
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 
 class EventTrackController(http.Controller):
@@ -159,7 +160,7 @@ class EventTrackController(http.Controller):
             )
 
         # return rendering values
-        return {
+        values = {
             # event information
             'event': event,
             'main_object': event,
@@ -182,6 +183,57 @@ class EventTrackController(http.Controller):
             'is_event_user': request.env.user.has_group('event.group_event_user'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
+        values['tracks_md_json'] = self._get_tracks_md_json(event, tracks_sudo)
+        return values
+
+    def _get_tracks_md_json(self, event, tracks):
+        website = request.website
+        payloads = []
+        track_payloads = []
+        for track in tracks:
+            payload = track._get_md_payload(website)
+            if payload:
+                track_payloads.append(payload)
+        base_url = website.get_base_url()
+        event_url = event.website_url or f"/event/{request.env['ir.http']._slug(event)}"
+        list_url = f"/event/{request.env['ir.http']._slug(event)}/track"
+        if track_payloads:
+            name = _('Talks')
+            if event.name:
+                name = _('%s Talks', event.name)
+            collection = website._md_collection_page(
+                name=name,
+                url=list_url if list_url.startswith('http') else f"{base_url}{list_url}",
+                has_part=track_payloads,
+            )
+            payloads.append(collection)
+        breadcrumb = website._md_breadcrumb_list([
+            (_('Events'), f"{base_url}/event"),
+            (event.name or '', event_url if event_url.startswith('http') else f"{base_url}{event_url}"),
+            (_('Talks'), None),
+        ])
+        if breadcrumb:
+            payloads.append(breadcrumb)
+        return payloads and json_scriptsafe.dumps(payloads, indent=2)
+
+    def _get_track_md_json(self, event, track):
+        website = request.website
+        payloads = []
+        track_payload = track._get_md_payload(website)
+        if track_payload:
+            payloads.append(track_payload)
+        base_url = website.get_base_url()
+        event_url = event.website_url or f"/event/{request.env['ir.http']._slug(event)}"
+        list_url = f"/event/{request.env['ir.http']._slug(event)}/track"
+        breadcrumb = website._md_breadcrumb_list([
+            (_('Events'), f"{base_url}/event"),
+            (event.name or '', event_url if event_url.startswith('http') else f"{base_url}{event_url}"),
+            (_('Talks'), list_url if list_url.startswith('http') else f"{base_url}{list_url}"),
+            (track.name or '', None),
+        ])
+        if breadcrumb:
+            payloads.append(breadcrumb)
+        return payloads and json_scriptsafe.dumps(payloads, indent=2)
 
     # ------------------------------------------------------------
     # AGENDA VIEW
@@ -380,7 +432,7 @@ class EventTrackController(http.Controller):
             limit=10
         )
 
-        return {
+        values = {
             # event information
             'event': event,
             'main_object': track,
@@ -396,6 +448,8 @@ class EventTrackController(http.Controller):
             'user_event_manager': request.env.user.has_group('event.group_event_manager'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
+        values['track_md_json'] = self._get_track_md_json(event, track)
+        return values
 
     @http.route("/event/track/toggle_reminder", type="jsonrpc", auth="public", website=True)
     def track_reminder_toggle(self, track_id, set_reminder_on):

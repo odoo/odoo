@@ -214,8 +214,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # menu and layout
                     'website_menu': 1,
                     'ir_ui_view': 1,
+                    # json+ld for google rich results
+                    'res_company': 1,
                 }
-                expected_query_count = 7
+                expected_query_count = 8
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
@@ -239,8 +241,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # menu and layout
                     'website_menu': 1,
                     'ir_ui_view': 1,
+                    # json+ld for google rich results
+                    'res_company': 1,
                 }
-                expected_query_count = 2 if cache else 7
+                expected_query_count = 2 if cache else 8
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -283,8 +287,10 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website': 1,
                     # layout
                     'ir_ui_view': 1,
+                    # json+ld for google rich results
+                    'res_company': 1,
                 }
-                expected_query_count = 6
+                expected_query_count = 7
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -350,9 +356,11 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website': 1,
             'website_menu': 1,
             'ir_ui_view': 1,
+            # json+ld for google rich results
+            'res_company': 1,
         }
-        self._check_url_hot_query(self.page.url, 7, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 7)
+        self._check_url_hot_query(self.page.url, 8, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 8)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):

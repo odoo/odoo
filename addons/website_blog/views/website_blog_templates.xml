@@ -26,6 +26,7 @@ list of filtered posts (by date or tag).
         <t t-set="head">
             <link t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
             <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
+            <script t-if="blog_md_json" type="application/ld+json" t-out="blog_md_json"/>
         </t>
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
@@ -170,6 +171,9 @@ list of filtered posts (by date or tag).
 ============================================================================ -->
 <template id="website_blog.blog_post_complete" name="Blog Post" track="1">
     <t t-call="website_blog.index">
+        <t t-set="head">
+            <script t-if="blog_post_md_json" type="application/ld+json" t-out="blog_post_md_json"/>
+        </t>
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>

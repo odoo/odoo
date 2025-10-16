@@ -2,6 +2,9 @@
 <odoo>
 
 <template id="event_exhibitors" name="Event Exhibitors">
+    <t t-set="head">
+        <script t-if="exhibitors_md_json" type="application/ld+json" t-out="exhibitors_md_json"/>
+    </t>
     <t t-call="website_event.layout">
         <div class="o_wevent_online o_wesponsor_index container">
             <!-- Topbar -->

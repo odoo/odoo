@@ -35,8 +35,6 @@
                   t-field="ticket.price_reduce_taxinc"
                   class="fs-6"
                   t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-            <span itemprop="price" class="d-none" t-out="ticket.price"/>
-            <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
         </t>
         <span t-else="" class="badge text-bg-success p-2 px-3">Free</span>
     </xpath>
@@ -78,8 +76,6 @@
                       class="badge text-bg-secondary fs-6"
                       t-field="tickets.price_reduce_taxinc"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                <span itemprop="price" class="d-none" t-out="tickets.price"/>
-                <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
             </t>
             <span t-else="" class="badge text-bg-secondary fs-6 text-uppercase">Free</span>
         </div>

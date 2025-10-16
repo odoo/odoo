@@ -2,6 +2,9 @@
 <odoo>
 
 <template id="event_track_main" name="Event Exhibitor">
+    <t t-set="head">
+        <script t-if="track_md_json" type="application/ld+json" t-out="track_md_json"/>
+    </t>
     <t t-call="website_event.layout">
         <t t-set="navbar_back_url" t-value="'/event/%s/track' % (slug(event))"/>
         <t t-set="navbar_back_title">Back to All Talks</t>

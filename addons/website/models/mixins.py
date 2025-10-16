@@ -120,6 +120,22 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
                 img = img[:-1] + suffix + ')'
         return img
 
+    def _md_background_url(self, website):
+        self.ensure_one()
+        background = self._get_background()
+        if not background or background == 'none':
+            return False
+
+        image_path = background[4:-1].strip('\'"')
+        if not image_path:
+            return False
+        if image_path.startswith(('http://', 'https://')):
+            return image_path
+        if image_path.startswith('//'):
+            return f'https:{image_path}'
+        base_url = website.get_base_url()
+        return f'{base_url}{image_path}'
+
     def write(self, vals):
         if 'cover_properties' not in vals:
             return super().write(vals)

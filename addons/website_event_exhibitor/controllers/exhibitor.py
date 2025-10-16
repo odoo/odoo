@@ -5,11 +5,12 @@ from collections import OrderedDict
 from random import randint, sample
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import http, _
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import format_duration
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 
 class ExhibitorController(WebsiteEventController):
@@ -101,7 +102,7 @@ class ExhibitorController(WebsiteEventController):
             })
 
         # return rendering values
-        return {
+        values = {
             # event information
             'event': event,
             'main_object': event,
@@ -119,6 +120,8 @@ class ExhibitorController(WebsiteEventController):
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': is_event_user,
         }
+        values['exhibitors_md_json'] = self._get_exhibitors_md_json(event, sorted_sponsors)
+        return values
 
     # ------------------------------------------------------------
     # FRONTEND FORM
@@ -157,7 +160,7 @@ class ExhibitorController(WebsiteEventController):
         option_widescreen = options.get('widescreen', False)
         option_widescreen = bool(option_widescreen) if option_widescreen != '0' else False
 
-        return {
+        values = {
             # event information
             'event': event,
             'main_object': sponsor,
@@ -173,6 +176,57 @@ class ExhibitorController(WebsiteEventController):
             'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
+        values['exhibitor_md_json'] = self._get_exhibitor_md_json(event, sponsor)
+        return values
+
+    def _get_exhibitors_md_json(self, event, sponsors):
+        website = request.website
+        payloads = []
+        sponsor_payloads = []
+        for sponsor in sponsors:
+            payload = sponsor._get_md_payload(website)
+            if payload:
+                sponsor_payloads.append(payload)
+        base_url = website.get_base_url()
+        event_url = event.website_url or f"/event/{request.env['ir.http']._slug(event)}"
+        list_url = f"/event/{request.env['ir.http']._slug(event)}/exhibitors"
+        if sponsor_payloads:
+            name = _('Exhibitors')
+            if event.name:
+                name = _('%s Exhibitors', event.name)
+            collection = website._md_collection_page(
+                name=name,
+                url=list_url if list_url.startswith('http') else f"{base_url}{list_url}",
+                has_part=sponsor_payloads,
+            )
+            payloads.append(collection)
+        breadcrumb = website._md_breadcrumb_list([
+            (_('Events'), f"{base_url}/event"),
+            (event.name or '', event_url if event_url.startswith('http') else f"{base_url}{event_url}"),
+            (_('Exhibitors'), None),
+        ])
+        if breadcrumb:
+            payloads.append(breadcrumb)
+        return payloads and json_scriptsafe.dumps(payloads, indent=2)
+
+    def _get_exhibitor_md_json(self, event, sponsor):
+        website = request.website
+        payloads = []
+        sponsor_payload = sponsor._get_md_payload(website)
+        if sponsor_payload:
+            payloads.append(sponsor_payload)
+        base_url = website.get_base_url()
+        event_url = event.website_url or f"/event/{request.env['ir.http']._slug(event)}"
+        list_url = f"/event/{request.env['ir.http']._slug(event)}/exhibitors"
+        breadcrumb = website._md_breadcrumb_list([
+            (_('Events'), f"{base_url}/event"),
+            (event.name or '', event_url if event_url.startswith('http') else f"{base_url}{event_url}"),
+            (_('Exhibitors'), list_url if list_url.startswith('http') else f"{base_url}{list_url}"),
+            (sponsor.name or sponsor.partner_name or '', None),
+        ])
+        if breadcrumb:
+            payloads.append(breadcrumb)
+        return payloads and json_scriptsafe.dumps(payloads, indent=2)
 
     # ------------------------------------------------------------
     # BUSINESS / MISC

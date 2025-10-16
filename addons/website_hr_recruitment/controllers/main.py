@@ -8,12 +8,15 @@ from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import itemgetter
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, escape_psql
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate
+
+from odoo.addons.website.tools import text_from_html
 
 _lt = LazyTranslate(__name__)
 
@@ -144,6 +147,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         )
         offset = pager['offset']
         jobs_to_display = found_jobs[offset:offset + self._jobs_per_page]
+        structured_jobs = [self._get_job_md(job) for job in jobs_to_display]
         return request.render("website_hr_recruitment.index", {
             'jobs': jobs_to_display,
             'country_id': country,
@@ -159,6 +163,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'search': fuzzy_search_term or search,
             'search_count': total,
             **job_filter_values,
+            'jobs_md_json': (structured_jobs and json_scriptsafe.dumps([data for data in structured_jobs if data], indent=2)) or False,
         })
 
     @http.route('/jobs/add', type='jsonrpc', auth="user", website=True)
@@ -176,9 +181,11 @@ class WebsiteHrRecruitment(WebsiteForm):
 
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def job(self, job, **kwargs):
+        md = self._get_job_md(job)
         return request.render("website_hr_recruitment.detail", {
             'job': job,
             'main_object': job,
+            'job_md_json': md and json_scriptsafe.dumps(md, indent=2),
         })
 
     @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
@@ -193,6 +200,76 @@ class WebsiteHrRecruitment(WebsiteForm):
             'error': error,
             'default': default,
         })
+
+    def _md_date(self, date_value):
+        if not date_value:
+            return False
+        try:
+            dt = fields.Date.to_date(date_value)
+            return dt.isoformat()
+        except ValueError:
+            return False
+
+    def _get_job_md(self, job):
+        website = request.website
+        title = job.name
+        if not title:
+            return False
+        base_url = website.get_base_url()
+        job_url = job.website_url or f'/jobs/{request.env["ir.http"]._slug(job)}'
+        description_source = job.website_description or job.description or ''
+        description = text_from_html(description_source, True) if description_source else None
+
+        organization = False
+        if job.company_id:
+            logo_url = f'{base_url}/logo.png?company={job.company_id.id}'
+            organization = website._md_organization(
+                name=job.company_id.name,
+                url=job.company_id.website or base_url,
+                logo=logo_url,
+            )
+
+        job_location = False
+        job_location_type = None
+        applicant_location_requirements = None
+        if job.address_id and job.address_id.sudo().contact_address:
+            partner = job.address_id.sudo()
+            state_name = partner.state_id.display_name if partner.state_id else None
+            country_name = partner.country_id.display_name if partner.country_id else None
+            address = website._md_postal_address(
+                street_address=' '.join(filter(None, [partner.street, partner.street2])) or None,
+                locality=partner.city or None,
+                region=state_name,
+                postal_code=partner.zip or None,
+                country=country_name,
+            )
+            job_location = website._md_place(
+                name=partner.name or None,
+                address=address,
+            )
+        else:
+            job_location_type = 'TELECOMMUTE'
+            if job.company_id.country_id:
+                applicant_location_requirements = {
+                    '@type': 'Country',
+                    'name': job.company_id.country_id.display_name,
+                }
+
+        employment_type = job.contract_type_id and job.contract_type_id.sudo().name or None
+        date_posted = self._md_date(job.published_date)
+
+        return job._md_job_posting(
+            title=title,
+            description=description,
+            hiring_organization=organization,
+            job_location=job_location,
+            employment_type=employment_type,
+            date_posted=date_posted,
+            direct_apply=True,
+            applicant_location_requirements=applicant_location_requirements,
+            job_location_type=job_location_type,
+            url=f'{base_url}{job_url}',
+        )
 
     @http.route('/website_hr_recruitment/check_recent_application', type='jsonrpc', auth="public", website=True)
     def check_recent_application(self, field, value, job_id):

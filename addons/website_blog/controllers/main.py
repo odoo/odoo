@@ -5,7 +5,7 @@ import pytz
 import babel.dates
 from collections import defaultdict
 
-from odoo import http, fields, tools, models
+from odoo import http, fields, tools, models, _
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.fields import Domain
 from odoo.http import request
@@ -13,6 +13,7 @@ from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
 from odoo.tools.translate import LazyTranslate
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 _lt = LazyTranslate(__name__)
 
@@ -165,6 +166,36 @@ class WebsiteBlog(http.Controller):
             'original_search': fuzzy_search_term and search,
         }
 
+    def _prepare_blog_listing_md(self, website, blog, posts):
+        if not posts:
+            return []
+
+        posts_md = posts._get_md(website=website)
+        if not posts_md:
+            return []
+
+        md = []
+
+        if blog:
+            blog_md = blog._get_md(website=website)
+            blog_md['blogPost'] = posts_md
+            md.extend((blog_md, self._get_blog_breadcrumb_md(website, blog=blog)))
+        else:
+            md.extend((website._md_collection_page(name=_('Blog'), url=f"{website.get_base_url()}{request.httprequest.path}", has_part=posts_md), self._get_blog_breadcrumb_md(website)))
+        return md
+
+    def _get_blog_breadcrumb_md(self, website, blog=None):
+        base_url = website.get_base_url()
+        blog_listing_url = f'{base_url}/blog'
+        items = [
+            (website.name or base_url, base_url),
+            (_('Blog'), blog_listing_url),
+        ]
+        if blog:
+            slug = request.env['ir.http']._slug(blog)
+            items.append((blog.name, f'{blog_listing_url}/{slug}'))
+        return website._md_breadcrumb_list(items)
+
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
@@ -210,6 +241,10 @@ class WebsiteBlog(http.Controller):
         if blog:
             values['main_object'] = blog
         values['blog_url'] = QueryURL('/blog', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
+
+        md = self._prepare_blog_listing_md(request.website, blog, values.get('posts'))
+        if md:
+            values['blog_md_json'] = json_scriptsafe.dumps(md, indent=2)
 
         return request.render("website_blog.blog_post_short", values)
 
@@ -293,6 +328,16 @@ class WebsiteBlog(http.Controller):
             'date': date_begin,
             'blog_url': blog_url,
         }
+
+        md = blog_post._get_md(website=request.website)
+        breadcrumb_data = blog_post._get_breadcrumb_md(website=request.website)
+        if md and breadcrumb_data:
+            md.append(breadcrumb_data)
+        elif breadcrumb_data:
+            md = [breadcrumb_data]
+        if md:
+            values['blog_post_md_json'] = json_scriptsafe.dumps(md, indent=2)
+
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):

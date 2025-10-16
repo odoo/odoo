@@ -15,6 +15,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
+from odoo.addons.website.tools import text_from_html
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +37,8 @@ class EventTrack(models.Model):
         'mail.activity.mixin',
         'website.seo.metadata',
         'website.published.mixin',
-        'website.searchable.mixin'
+        'website.searchable.mixin',
+        'web.markup_data.mixin'
     ]
     _primary_email = 'contact_email'
 
@@ -321,6 +323,70 @@ class EventTrack(models.Model):
                 track.website_image_url = self.env['website'].image_url(track, 'website_image', size=1024)
             else:
                 track.website_image_url = '/website_event_track/static/src/img/event_track_default_%d.jpeg' % (track.id % 2)
+
+    def _get_md_payload(self, website):
+        self.ensure_one()
+        if not self.name:
+            return False
+
+        base_url = website.get_base_url()
+        track_url = self.website_url or ''
+        if track_url.startswith(('http://', 'https://')):
+            url = track_url
+        else:
+            url = f"{base_url}{track_url}"
+
+        image = False
+        if self.website_image_url:
+            image = self.website_image_url if self.website_image_url.startswith(('http://', 'https://')) else f"{base_url}{self.website_image_url}"
+
+        description = text_from_html(self.description, True) if self.description else None
+        start_date = self._md_datetime(self.date)
+        end_date = self._md_datetime(self.date_end)
+
+        location = False
+        if self.location_id:
+            location = self._md_place(name=self.location_id.name)
+        elif self.event_id.address_id:
+            partner = self.event_id.address_id
+            address = website._md_postal_address(
+                street_address=' '.join(filter(None, [partner.street, partner.street2])) or None,
+                locality=partner.city or None,
+                region=partner.state_id and partner.state_id.name,
+                postal_code=partner.zip or None,
+                country=partner.country_id and partner.country_id.name,
+            )
+            location = self._md_place(name=partner.display_name or None, address=address)
+
+        performer = False
+        if self.partner_name:
+            performer = self._md_person(name=self.partner_name, email=self.partner_email or None)
+            if self.partner_phone:
+                performer['telephone'] = self.partner_phone
+            if self.partner_id and self.partner_id.website:
+                performer['url'] = self.partner_id.website
+            if self.partner_company_name:
+                performer['worksFor'] = self._md_organization(name=self.partner_company_name)
+
+        super_event = self.event_id._get_md_payload(website) if hasattr(self.event_id, '_get_md_payload') else None
+        attendance_mode = 'https://schema.org/OnlineEventAttendanceMode'
+        if location:
+            attendance_mode = 'https://schema.org/OfflineEventAttendanceMode'
+
+        return self._md_payload(
+            'Event',
+            name=self.name,
+            url=url,
+            description=description,
+            image=image,
+            startDate=start_date,
+            endDate=end_date,
+            location=location,
+            superEvent=super_event,
+            performer=performer,
+            eventAttendanceMode=attendance_mode,
+            eventStatus='https://schema.org/EventScheduled',
+        )
 
     # WISHLIST / VISITOR MANAGEMENT
 

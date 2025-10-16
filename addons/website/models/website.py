@@ -31,6 +31,7 @@ from odoo.tools import SQL
 from odoo.tools.image import image_process
 from odoo.tools.sql import escape_psql
 from odoo.tools.translate import _
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 logger = logging.getLogger(__name__)
 
@@ -97,6 +98,7 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
 
 class Website(models.Model):
     _name = 'website'
+    _inherit = ['web.markup_data.mixin']
 
     _description = "Website"
     _order = "sequence, id"
@@ -158,6 +160,21 @@ class Website(models.Model):
 
     def _default_social_twitter(self):
         return self.env.ref('base.main_company').social_twitter
+
+    def _get_company_md(self, company=None):
+        self.ensure_one()
+        company = company or self.company_id
+        if not company:
+            return False
+        base_url = self.get_base_url()
+        logo_path = self.image_url(company, 'logo')
+        logo = f'{base_url}{logo_path}' if logo_path else False
+        payload = self._md_organization(
+            name=company.name,
+            url=base_url,
+            logo=logo,
+        )
+        return json_scriptsafe.dumps(payload, indent=2)
 
     def _default_social_tiktok(self):
         return self.env.ref('base.main_company').social_tiktok

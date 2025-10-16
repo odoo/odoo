@@ -12,6 +12,7 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 from odoo.fields import Domain
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo.tools.translate import _, LazyTranslate
 
@@ -48,6 +49,28 @@ class WebsiteAccount(CustomerPortal):
                 else 0
             )
         return values
+
+    def _get_lead_md(self, lead):
+        name = lead.partner_name or lead.contact_name or lead.name
+        if not name:
+            return False
+        ResPartner = request.env['res.partner']
+        organization = ResPartner._md_organization(name=name)
+        phones = [phone for phone in (lead.phone, lead.mobile) if phone]
+        if phones:
+            organization['telephone'] = ' / '.join(phones)
+        if lead.email_from:
+            organization['email'] = lead.email_from
+        address = ResPartner._md_postal_address(
+            street_address=' '.join(filter(None, [lead.street, lead.street2])) or None,
+            locality=lead.city,
+            region=lead.state_id and lead.state_id.name,
+            postal_code=lead.zip,
+            country=lead.country_id and lead.country_id.name,
+        )
+        if address:
+            organization['address'] = address
+        return organization
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -165,7 +188,11 @@ class WebsiteAccount(CustomerPortal):
     def portal_my_lead(self, lead, **kw):
         if lead.type != 'lead':
             raise NotFound()
-        return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
+        md = self._get_lead_md(lead)
+        return request.render("website_crm_partner_assign.portal_my_lead", {
+            'lead': lead,
+            'lead_md_json': md and json_scriptsafe.dumps(md, indent=2),
+        })
 
     @http.route(['''/my/opportunity/<model('crm.lead', "[('type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
     def portal_my_opportunity(self, opp, **kw):

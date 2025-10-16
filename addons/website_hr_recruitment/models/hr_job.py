@@ -13,6 +13,7 @@ class HrJob(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'web.markup_data.mixin',
     ]
 
     @mute_logger('odoo.addons.base.models.ir_qweb')
@@ -74,6 +75,41 @@ class HrJob(models.Model):
             if not job.id:
                 continue
             job.website_url = f'/jobs/{self.env["ir.http"]._slug(job)}'
+
+    @api.model
+    def _md_job_posting(
+        self,
+        *,
+        title,
+        description=None,
+        hiring_organization=None,
+        job_location=None,
+        employment_type=None,
+        date_posted=None,
+        valid_through=None,
+        direct_apply=None,
+        applicant_location_requirements=None,
+        job_location_type=None,
+        base_salary=None,
+        identifier=None,
+        url=None,
+    ):
+        return self._md_payload(
+            'JobPosting',
+            title=title,
+            description=description,
+            hiringOrganization=hiring_organization,
+            jobLocation=job_location,
+            employmentType=employment_type,
+            datePosted=date_posted,
+            validThrough=valid_through,
+            directApply=direct_apply,
+            applicantLocationRequirements=applicant_location_requirements,
+            jobLocationType=job_location_type,
+            baseSalary=base_salary,
+            identifier=identifier,
+            url=url,
+        )
 
     def set_open(self):
         self.write({'website_published': False})

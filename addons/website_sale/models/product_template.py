@@ -38,6 +38,7 @@ class ProductTemplate(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'web.markup_data.mixin',
     ]
     _mail_post_access = 'read'
     _check_company_auto = True
@@ -974,6 +975,25 @@ class ProductTemplate(models.Model):
         return not request.website.prevent_zero_price_sale or self._get_contextual_price()
 
     @api.model
+    def _md_product_group(
+        self,
+        *,
+        name,
+        url,
+        image,
+        variants,
+        description=None,
+    ):
+        return self._md_payload(
+            'ProductGroup',
+            name=name,
+            url=url,
+            image=image,
+            hasVariant=list(variants),
+            description=description,
+        )
+
+    @api.model
     def _get_configurator_display_price(
         self, product_or_template, quantity, date, currency, pricelist, **kwargs
     ):
@@ -1021,17 +1041,15 @@ class ProductTemplate(models.Model):
             return self.product_variant_id._to_markup_data(website)
 
         base_url = website.get_base_url()
-        markup_data = {
-            '@context': 'https://schema.org/',
-            '@type': 'ProductGroup',
-            'name': self.name,
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
-        }
-        if self.description_ecommerce:
-            markup_data['description'] = text_from_html(self.description_ecommerce)
-        return markup_data
+        variants = [product._to_markup_data(website) for product in self.product_variant_ids]
+        description = text_from_html(self.description_ecommerce) if self.description_ecommerce else None
+        return self._md_product_group(
+            name=self.name,
+            url=f'{base_url}{self.website_url}',
+            image=f'{base_url}{website.image_url(self, "image_1920")}',
+            variants=variants,
+            description=description,
+        )
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.

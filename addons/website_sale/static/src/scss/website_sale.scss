@@ -902,13 +902,10 @@
         display: inline-block;
     }
 
-    h1[itemprop="name"] {
+    #product_details .o_wsale_product_details_content_section_title h1 {
         word-break: break-word;
         word-wrap: break-word;
         overflow-wrap: break-word;
-    }
-
-    h1[itemprop="name"] {
         @include font-size($h3-font-size);
         font-weight: $font-weight-bold;
     }
@@ -1822,11 +1819,6 @@ $-product-radius-map: (
             overflow-y: scroll;
             height: 15rem;
         }
-    }
-
-    div[itemprop="address"] {
-        margin: map-get($spacers, 2) 0;
-        font-size: $font-size-sm;
     }
 
     .o_wsale_address_fill {

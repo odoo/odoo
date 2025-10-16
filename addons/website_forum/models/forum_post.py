@@ -21,6 +21,7 @@ class ForumPost(models.Model):
         'mail.thread',
         'website.seo.metadata',
         'website.searchable.mixin',
+        'web.markup_data.mixin',
     ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
@@ -171,6 +172,55 @@ class ForumPost(models.Model):
     def _compute_plain_content(self):
         for post in self:
             post.plain_content = tools.html2plaintext(post.content)[0:500] if post.content else False
+
+    @api.model
+    def _md_answer(
+        self,
+        *,
+        text,
+        url=None,
+        author=None,
+        date_published=None,
+        upvote_count=None,
+    ):
+        return self._md_payload(
+            'Answer',
+            text=text,
+            url=url,
+            author=author,
+            datePublished=date_published,
+            upvoteCount=upvote_count,
+        )
+
+    @api.model
+    def _md_question(
+        self,
+        *,
+        name,
+        text=None,
+        url=None,
+        author=None,
+        date_published=None,
+        upvote_count=None,
+        answer_count=None,
+    ):
+        return self._md_payload(
+            'Question',
+            name=name,
+            text=text,
+            url=url,
+            author=author,
+            datePublished=date_published,
+            upvoteCount=upvote_count,
+            answerCount=answer_count,
+        )
+
+    @api.model
+    def _md_qa_page(self, *, main_entity, questions=None):
+        payload = self._md_payload('QAPage', mainEntity=main_entity)
+        if questions:
+            payload['question'] = list(questions)
+        return payload
 
     @api.depends('name')
     def _compute_website_url(self):
@@ -801,47 +851,48 @@ class ForumPost(models.Model):
         if not suggested_posts and not correct_posts:
             return None
 
-        structured_data = {
-            "@context": "https://schema.org",
-            "@type": "QAPage",
-            "mainEntity": self._get_structured_data(post_type="question"),
-        }
+        question_data = self._get_md(post_type="question")
         if correct_posts:
-            structured_data["mainEntity"]["acceptedAnswer"] = correct_posts[0]._get_structured_data()
+            question_data['acceptedAnswer'] = correct_posts[0]._get_md()
         if suggested_posts:
-            structured_data["mainEntity"]["suggestedAnswer"] = [
-                suggested_post._get_structured_data()
+            question_data['suggestedAnswer'] = [
+                suggested_post._get_md()
                 for suggested_post in suggested_posts
             ]
-        return json_safe.dumps(structured_data, indent=2)
+        md = self._md_qa_page(main_entity=question_data)
+        return json_safe.dumps(md, indent=2)
 
-    def _get_structured_data(self, post_type="answer"):
+    def _get_md(self, post_type="answer"):
         """
         Generate structured data (microdata) for an answer or a question.
 
         Returns:
             dict: microdata.
         """
-        res = {
-            "upvoteCount": self.vote_count,
-            "datePublished": self.create_date.isoformat() + 'Z',
-            "url": self.env['ir.http']._url_for(self.website_url),
-            "author": {
-                "@type": "Person",
-                "name": self.create_uid.sudo().name,
-            },
-        }
-        if post_type == "answer":
-            res["@type"] = "Answer"
-            res["text"] = self.plain_content
-        else:
-            res["@type"] = "Question"
-            res["name"] = self.name
-            res["text"] = self.plain_content or self.name
-            res["answerCount"] = self.child_count
+        author = self._md_person(
+            name=self.create_uid.sudo().name,
+        )
         if self.create_uid.sudo().website_published:
-            res["author"]["url"] = self.env['ir.http']._url_for(f"/profile/user/{ self.create_uid.sudo().id }")
-        return res
+            author['url'] = self.env['ir.http']._url_for(f"/profile/user/{self.create_uid.sudo().id}")
+        published = self._md_datetime(self.create_date)
+        url = self.env['ir.http']._url_for(self.website_url)
+        if post_type == "answer":
+            return self._md_answer(
+                text=self.plain_content or self.name,
+                url=url,
+                author=author,
+                date_published=published,
+                upvote_count=self.vote_count,
+            )
+        return self._md_question(
+            name=self.name,
+            text=self.plain_content or self.name,
+            url=url,
+            author=author,
+            date_published=published,
+            upvote_count=self.vote_count,
+            answer_count=self.child_count,
+        )
 
     def go_to_website(self):
         self.ensure_one()

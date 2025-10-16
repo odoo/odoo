@@ -2,6 +2,9 @@
 <odoo>
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
+        <t t-set="head">
+            <script t-if="partner_md_json" type="application/ld+json" t-out="partner_md_json"/>
+        </t>
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_partner_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>
             <div class="container">
@@ -17,21 +20,20 @@
 </template>
 
 <template id="partner_detail" name="Partner Details">
-    <div class="row mt-3" itemscope="itemscope" itemtype="http://schema.org/Organization">
+    <div class="row mt-3">
         <div class="col-lg-3 col-md-4">
             <div t-field="partner.image_1920" t-options='{
                 "widget": "image",
                 "preview_image": "avatar_1920",
                 "style": "object-fit: cover",
-                "class": "w-100 mb-2 rounded-3 border o_partner_image oe_unremovable",
-                "itemprop": "image"
+                "class": "w-100 mb-2 rounded-3 border o_partner_image oe_unremovable"
             }'/>
             <t t-if="contact_details">
                 <div class="o_wcrm_contact_details">
                     <div t-field="partner.self" t-options='{
                         "widget": "contact",
                         "fields": ["address", "website", "phone", "email"],
-                        "with_microdata": True,
+                        "with_microdata": False,
                     }'/>
                     <t t-out="left_column or ''"/>
                 </div>
@@ -40,7 +42,7 @@
         <div class="col-lg-9 col-md-8">
             <div class="d-flex align-items-center flex-wrap mb-4">
                 <div class="flex-grow-1">
-                    <h1 id="partner_name" t-field="partner.display_name" itemprop="name"/>
+                    <h1 id="partner_name" t-field="partner.display_name"/>
                 </div>
             </div>
             <t t-if="partner">

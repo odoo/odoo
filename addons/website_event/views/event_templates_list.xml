@@ -6,6 +6,7 @@
     <t t-call="website.layout">
         <t t-set="head">
             <meta t-if="search_tags" name="robots" content="none"/>
+            <script t-if="events_md_json" type="application/ld+json" t-out="events_md_json"/>
         </t>
 
         <div id="wrap" class="o_wevent_index">
@@ -321,7 +322,7 @@
                         <div class="d-block h-100 w-100">
                             <t t-call="website.record_cover">
                                 <t t-set="_record" t-value="event"/>
-                                <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()"/>
+                                <meta t-att-content="event.date_begin.isoformat()"/>
                                 <!-- Short date + (optional) Country Flag -->
                                 <div t-if="opt_events_event_location" t-attf-class="o_wevent_date_with_flag o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
                                     <div t-if="not event.is_multi_slots" class="o_wevent_event_date_text">
@@ -378,13 +379,13 @@
                             </div>
                             <!-- Title -->
                             <h5 t-attf-class="card-title my-2 #{not event.website_published and 'text-danger'} #{not opt_events_list_columns and not event.event_registrations_open and 'text-muted'}">
-                                <span t-field="event.name" itemprop="name"/>
+                                <span t-field="event.name"/>
                             </h5>
                             <div t-if="not opt_events_list_columns" class="d-inline-flex flex-wrap gap-3">
                                 <!-- Location (List View) -->
                                 <div class="d-flex align-items-center">
                                     <i class="fa fa-map-marker me-2 text-muted" title="Location"/>
-                                    <small class="o_not_editable fw-bold text-muted" itemprop="location"
+                                    <small class="o_not_editable fw-bold text-muted"
                                         t-out="event.address_id"
                                         t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event', 'no_marker': 'true'}"/>
                                 </div>
@@ -398,10 +399,10 @@
                                 </div>
                             </div>
                             <!-- Subtitle (Grid View) -->
-                            <small t-if="opt_events_list_columns" class="opacity-75" itemprop="description" t-field="event.subtitle"/>
+                            <small t-if="opt_events_list_columns" class="opacity-75" t-field="event.subtitle"/>
                         </div>
                         <!-- Location (Grid View) -->
-                        <small t-if="opt_events_list_columns" class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event'}"/>
+                        <small t-if="opt_events_list_columns" class="o_not_editable fw-bold" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city', 'country_id'], 'null_text': 'Online event'}"/>
                         <!-- CTA (List View) -->
                         <div t-if="not opt_events_list_columns" t-attf-class="d-none #{opt_index_sidebar and 'd-xl-block' or 'd-lg-block'}">
                             <div class="d-flex flex-column gap-1 align-items-end text-center">

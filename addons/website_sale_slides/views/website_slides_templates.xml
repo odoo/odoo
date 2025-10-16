@@ -132,8 +132,6 @@
                 <div t-attf-class="oe_price fw-bold text-nowrap my-2 #{'h4' if len(str(product_info['price'])) > 10 else 'h2'}"
                      t-out="product_info['price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
-                <span itemprop="price" style="display:none;" t-out="product_info['price']"/>
-                <span itemprop="priceCurrency" style="display:none;" t-out="product_info['currency'].name"/>
                 <!-- original discounted price, if any -->
                 <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
                      t-out="product_info['list_price']"
@@ -212,6 +210,12 @@
     </xpath>
     <xpath expr="//form//a[@id='add_to_cart']" position="attributes">
         <attribute name="class" remove="btn-primary" add="btn-outline-primary" separator=" "/>
+    </xpath>
+</template>
+
+<template id="course_main_md" name="Course JSON-LD" inherit_id="website_slides.course_main">
+    <xpath expr="//t[@t-set='head']" position="inside">
+        <script t-if="channel_md_json" type="application/ld+json" t-out="channel_md_json"/>
     </xpath>
 </template>
 

@@ -8,7 +8,8 @@ from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _name = 'product.product'
+    _inherit = ['product.product', 'web.markup_data.mixin']
     _mail_post_access = 'read'
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
@@ -66,6 +67,47 @@ class ProductProduct(models.Model):
     def _compute_base_unit_name(self):
         for product in self:
             product.base_unit_name = product.base_unit_id.name or product.uom_name
+
+    @api.model
+    def _md_offer(self, *, price, currency):
+        return self._md_payload(
+            'Offer',
+            price=float(price),
+            priceCurrency=currency,
+        )
+
+    @api.model
+    def _md_aggregate_rating(self, *, rating_value, review_count):
+        return self._md_payload(
+            'AggregateRating',
+            ratingValue=float(rating_value),
+            reviewCount=review_count,
+        )
+
+    @api.model
+    def _md_product(
+        self,
+        *,
+        name,
+        url,
+        image,
+        offers,
+        description=None,
+        aggregate_rating=None,
+        additional_properties=None,
+    ):
+        payload = self._md_payload(
+            'Product',
+            name=name,
+            url=url,
+            image=image,
+            description=description,
+            offers=offers,
+            aggregateRating=aggregate_rating,
+        )
+        if additional_properties:
+            payload.update(additional_properties)
+        return payload
 
     @api.depends_context('lang')
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
@@ -164,30 +206,30 @@ class ProductProduct(models.Model):
         self.ensure_one()
 
         base_url = website.get_base_url()
-        markup_data = {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            'name': self.with_context(display_default_code=False).display_name,
-            'url': f'{base_url}{self.website_url}',
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'offers': {
-                '@type': 'Offer',
-                'price': float_round(request.pricelist._get_product_price(
+        offer = self._md_offer(
+            price=float_round(
+                request.pricelist._get_product_price(
                     self, quantity=1, target_currency=website.currency_id
-                ), 2),
-                'priceCurrency': website.currency_id.name,
-            },
-        }
-        if self.website_meta_description or self.description_sale:
-            markup_data['description'] = self.website_meta_description or self.description_sale
+                ),
+                2,
+            ),
+            currency=website.currency_id.name,
+        )
+        aggregate = False
         if website.is_view_active('website_sale.product_comment') and self.rating_count:
-            markup_data['aggregateRating'] = {
-                '@type': 'AggregateRating',
-                # sudo: product.product - visitor can access product average rating
-                'ratingValue': self.sudo().rating_avg,
-                'reviewCount': self.rating_count,
-            }
-        return markup_data
+            aggregate = self._md_aggregate_rating(
+                rating_value=self.sudo().rating_avg,
+                review_count=self.rating_count,
+            )
+        description = self.website_meta_description or self.description_sale
+        return self._md_product(
+            name=self.with_context(display_default_code=False).display_name,
+            url=f'{base_url}{self.website_url}',
+            image=f'{base_url}{website.image_url(self, "image_1920")}',
+            offers=offer,
+            description=description,
+            aggregate_rating=aggregate,
+        )
 
     def _get_image_1920_url(self):
         """ Returns the local url of the product main image.

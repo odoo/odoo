@@ -8,10 +8,12 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.tools import text_from_html
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate
 from odoo.exceptions import UserError, ValidationError
 
@@ -165,6 +167,13 @@ class WebsiteEventController(http.Controller):
             'website': website
         }
 
+        structured_events = [self._get_event_md(event) for event in events]
+        structured_events = [data for data in structured_events if data]
+        if structured_events:
+            values['events_md_json'] = json_scriptsafe.dumps(structured_events, indent=2)
+        else:
+            values['events_md_json'] = False
+
         return request.render("website_event.index", values)
 
     # ------------------------------------------------------------
@@ -218,7 +227,7 @@ class WebsiteEventController(http.Controller):
     def _prepare_event_register_values(self, event, **post):
         """Return the require values to render the template."""
         urls = lazy(event._get_event_resource_urls)
-        return {
+        values = {
             'event': event,
             'slots': event.event_slot_ids.filtered(
                         lambda s: s.start_datetime > datetime.now()
@@ -236,6 +245,94 @@ class WebsiteEventController(http.Controller):
             'registration_error_code': post.get('registration_error_code'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
+        event_md = self._get_event_md(event)
+        breadcrumb_md = self._get_event_breadcrumb_md(event)
+        payloads = [payload for payload in (event_md, breadcrumb_md) if payload]
+        values['event_md_json'] = payloads and json_scriptsafe.dumps(payloads, indent=2)
+        return values
+
+    def _get_event_offers_md(self, event):
+        return False
+
+    def _get_event_md(self, event):
+        website = request.website
+        name = event.name
+        if not name:
+            return False
+        base_url = website.get_base_url()
+        event_url = event.website_url or ''
+        if event_url:
+            event_url = f'{base_url}{event_url}'
+        else:
+            event_url = f'{base_url}/event/{event.id}'
+
+        image_url = website.image_url(event, 'image_1920')
+        if image_url:
+            image_url = f'{base_url}{image_url}'
+
+        description = event.subtitle or ''
+        if not description and event.description:
+            description = text_from_html(event.description, True)
+
+        start_date = event._md_datetime(event.date_begin)
+        end_date = event._md_datetime(event.date_end)
+
+        location = False
+        if event.address_id:
+            address_sudo = event.address_id.sudo()
+            street = address_sudo.street.strip() if address_sudo.street else None
+            city = address_sudo.city.strip() if address_sudo.city else None
+            state_name = address_sudo.state_id.name if address_sudo.state_id else None
+            zip_code = address_sudo.zip.strip() if address_sudo.zip else None
+            country_name = address_sudo.country_id.name if address_sudo.country_id else None
+            address = event._md_postal_address(
+                street_address=street,
+                locality=city,
+                region=state_name,
+                postal_code=zip_code,
+                country=country_name,
+            )
+            location = event._md_place(name=address_sudo.display_name or None, address=address)
+
+        organizer = False
+        if event.organizer_id:
+            organizer_partner = event.organizer_id.sudo()
+            organizer_name = organizer_partner.display_name or None
+            organizer_url = organizer_partner.website or None
+            organizer_helper = request.env['res.partner']
+            organizer = organizer_helper._md_organization(name=organizer_name, url=organizer_url)
+
+        offers = self._get_event_offers_md(event)
+
+        event_status = 'https://schema.org/EventScheduled'
+        attendance_mode = 'https://schema.org/OnlineEventAttendanceMode'
+        if event.address_id:
+            attendance_mode = 'https://schema.org/OfflineEventAttendanceMode'
+
+        return event._md_event(
+            name=name,
+            url=event_url,
+            description=description or None,
+            image=image_url,
+            start_date=start_date,
+            end_date=end_date,
+            location=location,
+            organizer=organizer,
+            offers=offers,
+            event_status=event_status,
+            attendance_mode=attendance_mode,
+        )
+
+    def _get_event_breadcrumb_md(self, event):
+        website = request.website
+        base_url = website.get_base_url()
+        if not event.name:
+            return False
+        items = [
+            (_('All Events'), f'{base_url}/events'),
+            (event.name or '', None),
+        ]
+        return website._md_breadcrumb_list(items)
 
     def _process_tickets_form(self, event, form_details):
         """ Process posted data about ticket order. Generic ticket are supported

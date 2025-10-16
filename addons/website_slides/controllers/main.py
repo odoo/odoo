@@ -18,6 +18,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError, MissingErro
 from odoo.fields import Domain
 from odoo.http import request, Response
 from odoo.tools import consteq, email_normalize_all
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -431,7 +432,31 @@ class WebsiteSlides(WebsiteProfile):
             if slug_tags:
                 return request.redirect(f"/slides/tag/{slug_tags}?{keep_query('*')}")
             return request.redirect(f"/slides?{keep_query('*')}")
+        render_values['channel_collection_md_json'] = self._get_channel_collection_md_json(render_values['channels'])
         return request.render('website_slides.courses_home', render_values)
+
+    def _get_channel_collection_md_json(self, channels):
+        website = request.website
+        payloads = []
+        base_url = website.get_base_url()
+        has_part = []
+        for channel in channels:
+            channel_payload = channel._get_md_payload(website)
+            if channel_payload:
+                has_part.append(channel_payload)
+        if has_part:
+            collection = website._md_collection_page(
+                name=_('Courses'),
+                url=f"{base_url}/slides",
+                has_part=has_part,
+            )
+            payloads.append(collection)
+        breadcrumb = website._md_breadcrumb_list([
+            (_('Courses'), None),
+        ])
+        if breadcrumb:
+            payloads.append(breadcrumb)
+        return payloads and json_scriptsafe.dumps(payloads, indent=2)
 
     def slides_channel_values(self, slide_category=None, slug_tags=None, my=0, page=None, page_size=12, **post):
         """ Home page displaying a list of courses displayed according to some
@@ -500,6 +525,23 @@ class WebsiteSlides(WebsiteProfile):
         return render_values
 
     def _prepare_additional_channel_values(self, values, **kwargs):
+        channel = values.get('channel')
+        payloads = []
+        if channel:
+            website = request.website
+            channel_payload = channel._get_md_payload(website)
+            if channel_payload:
+                payloads.append(channel_payload)
+
+            breadcrumb = website._md_breadcrumb_list([
+                (_('Courses'), f"{website.get_base_url()}/slides"),
+                (channel.name or '', None),
+            ])
+            if breadcrumb:
+                payloads.append(breadcrumb)
+
+        values['channel_md_payloads'] = payloads
+        values['channel_md_json'] = payloads and json_scriptsafe.dumps(payloads, indent=2)
         return values
 
     def _get_top3_users(self):

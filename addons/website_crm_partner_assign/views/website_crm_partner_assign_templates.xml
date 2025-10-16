@@ -513,6 +513,9 @@
 
     <template id="portal_my_lead" name="My Lead">
         <t t-call="portal.portal_layout">
+            <t t-set="head">
+                <script t-if="lead_md_json" type="application/ld+json" t-out="lead_md_json"/>
+            </t>
             <div class="d-flex align-items-center gap-2 mb-4">
                 <h4 class="mb-0">Lead -
                     <span t-field="lead.name"/>
@@ -530,14 +533,14 @@
                         <td>
                             <address>
                                 <div>
-                                    <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
-                                    <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
+                                    <span t-if="lead.partner_name" t-field="lead.partner_name" />
+                                    <span t-if="not lead.partner_name" t-field="lead.contact_name"/>
                                 </div>
                                 <div t-if="lead.phone">
-                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="lead.phone" />
                                 </div>
                                 <div t-if="lead.email_from">
-                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span t-field="lead.email_from" />
                                 </div>
                             </address>
                         </td>
