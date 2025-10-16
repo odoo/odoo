@@ -276,7 +276,22 @@
                         </td>
                       </tr>
 
-                      <!-- LIGNE 3 : BIC (affiché seulement si présent et > 0) -->
+                      <!-- LIGNE 3 : TOTAL GÉNÉRAL TTC (déplacé avant BIC) -->
+                      <tr t-if="o._fields.get('amount_total') and o.amount_total">
+                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
+                          <strong>Total Général TTC F</strong>
+                        </td>
+                        <!-- Colonne vide pour alignement -->
+                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;"></td>
+                        <!-- Montant total en gras -->
+                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
+                          <strong>
+                            <span t-esc="'{:,.2f}'.format(o.amount_total).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                          </strong>
+                        </td>
+                      </tr>
+
+                      <!-- LIGNE 4 : BIC (maintenant en dernière position) -->
                       <t t-if="o._fields.get('tax_totals') and o.tax_totals">
                         <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
                           <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
@@ -301,20 +316,35 @@
                         </t>
                       </t>
 
-                      <!-- LIGNE 4 : TOTAL GÉNÉRAL TTC -->
+                      <!-- LIGNE 5 : NET À PAYER (TTC + BIC) - NOUVELLE SECTION -->
                       <tr t-if="o._fields.get('amount_total') and o.amount_total">
-                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
-                          <strong>Total Général TTC F</strong>
+                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%; background-color: #f0f0f0;">
+                          <strong>Net à payer F CFA</strong>
                         </td>
                         <!-- Colonne vide pour alignement -->
-                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;"></td>
-                        <!-- Montant total en gras -->
-                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
+                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%; background-color: #f0f0f0;"></td>
+                        <!-- Calcul TTC + BIC -->
+                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap; background-color: #f0f0f0;">
                           <strong>
-                            <span t-esc="'{:,.2f}'.format(o.amount_total).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                            <!-- Calcul du montant BIC total -->
+                            <t t-set="total_bic" t-value="0"/>
+                            <t t-if="o._fields.get('tax_totals') and o.tax_totals">
+                              <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
+                                <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
+                                  <t t-if="'BIC' in tax_group.get('group_name', '').upper()">
+                                    <t t-set="total_bic" t-value="total_bic + float(tax_group.get('tax_amount_currency', 0))"/>
+                                  </t>
+                                </t>
+                              </t>
+                            </t>
+
+                            <!-- Calcul Net à payer = TTC + BIC -->
+                            <t t-set="net_a_payer" t-value="o.amount_total + total_bic"/>
+                            <span t-esc="'{:,.2f}'.format(net_a_payer).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                           </strong>
                         </td>
                       </tr>
+
                     </table>
                   </td>
                 </tr>
@@ -325,8 +355,8 @@
           <!-- ============================================================= -->
           <!-- MONTANT EN LETTRES (conversion automatique)                  -->
           <!-- ============================================================= -->
-          <div style="width: 100%; margin-top: 15px; text-align: center; font-size: 14px; page-break-inside: avoid; break-inside: avoid;">
-            <p>
+          <div style="width: 100%; margin-top: 15px; text-align: left; font-size: 14px; page-break-inside: avoid; break-inside: avoid;">
+            <p style="margin: 0; line-height: 1.4; word-wrap: break-word; overflow-wrap: break-word;">
               <strong>
                 <!-- Texte différent selon le type de document -->
                 <t t-if="o._name == 'account.move'">
@@ -334,7 +364,7 @@
                     ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE 
                                                                                 <!-- Conversion automatique du montant en lettres -->
                     <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
-CFA.
+                    CFA.
                   </t>
                   <t t-else="">
                     ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE ZERO CFA.
@@ -346,7 +376,7 @@ CFA.
                   <t t-if="o._fields.get('amount_total') and o.amount_total">
                     ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE 
                     <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
-CFA.
+                    CFA.
                   </t>
                   <t t-else="">
                     ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE ZERO CFA.

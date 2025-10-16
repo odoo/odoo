@@ -29,10 +29,11 @@
       </style>
     </xpath>
 
-    <!-- 1. Insérer la colonne "N°" avant "Description" dans l'en-tête -->
+    <!-- 1. Insérer les colonnes "Code" et "Store" avant "Description" dans l'en-tête -->
     <xpath expr="//thead/tr/th[@name='th_description']" position="before">
-      <th class="text-end" style="width:3%;">N°</th>
+      <!-- Colonne N° supprimée -->
       <th class="text-start" style="width: 25mm;">Code</th>
+      <th class="text-center" style="width: 15mm;">Store</th>
     </xpath>
 
     <xpath expr="//thead/tr/th[@name='th_priceunit']" position="after">
@@ -43,7 +44,7 @@
     <!-- Modification du titre de la colonne Amount -->
     <xpath expr="//thead/tr/th[@name='th_subtotal']" position="replace">
       <th class="text-end" name="th_subtotal">
-        <span>Montant HT</span>
+        <span>Montant HTVA</span>
       </th>
     </xpath>
 
@@ -52,7 +53,12 @@
       <!-- On remplace la colonne d'origine par rien -->
     </xpath>
 
-    <!-- 2. Remplacement du tbody pour ajouter les colonnes numéro, référence et TVA dans chaque ligne -->
+    <!-- Ajouter la colonne Unité après la colonne Quantité dans l'en-tête -->
+    <xpath expr="//thead/tr/th[@name='th_quantity']" position="after">
+      <th class="text-center" style="width: 15mm;">Unité</th>
+    </xpath>
+
+    <!-- 2. Remplacement du tbody pour ajouter les colonnes référence, store, unité et TVA dans chaque ligne -->
     <xpath expr="//tbody[@class='sale_tbody']" position="replace">
       <tbody class="sale_tbody">
         <t t-set="current_subtotal" t-value="0"/>
@@ -62,26 +68,37 @@
           <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
           <tr t-att-class="'fw-bold o_line_section' if (line.display_type == 'line_section' or line.product_type == 'combo') else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-            <!-- Nouvelle colonne N° -->
-            <td class="text-end" style="width:3%;">
-              <t t-esc="line_index + 1"/>
-            </td>
+            <!-- Colonne N° supprimée -->
 
-            <!-- Nouvelle colonne Référence -->
+            <!-- Colonne Référence -->
             <td class="text-start" style="width: 25mm;">
               <span t-esc="line.product_id and line.product_id.default_code or ''"/>
+            </td>
+
+            <!-- Colonne Store -->
+            <td class="text-center" style="width: 15mm;">
+              <span t-if="line.product_id and line.product_id._fields.get('store_location')" t-out="line.product_id.store_location"/>
+              <span t-else="">BIS</span>
             </td>
 
             <!-- Colonne Description sans référence -->
             <td name="td_name">
               <span t-field="line.product_id.name"/>
             </td>
-            <!--pour line.product_uom pour les version plus recente d'odoo ajouter id-->
+
+            <!-- Colonne Quantité (sans unité) -->
             <td class="text-end">
               <span t-out="line.product_uom_qty" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
-              <span t-field="line.product_uom_id"/>
-              <span></span>
             </td>
+
+            <!-- Nouvelle colonne Unité -->
+            <!--pour line.product.uom pour les version plus recente d'odoo ajouter id ex: line.product_uom.id-->
+            <td class="text-center" style="width: 15mm;">
+              <span t-if="line.product_uom_id" t-out="line.product_uom_id.name"/>
+              <span t-elif="line.product_id.uom_id" t-out="line.product_id.uom_id.name"/>
+              <span t-else="">-</span>
+            </td>
+
             <td name="td_priceunit" class="text-end text-nowrap">
               <span t-out="line.price_unit" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
             </td>
@@ -140,7 +157,8 @@
             </tr>
             <tr style="border: 2px solid #000;">
               <td style="border: 2px solid #000;">
-                <strong>T.V.A. <span t-out="doc.amount_tax / doc.amount_untaxed * 100 if doc.amount_untaxed else 0" t-options="{'widget': 'float', 'precision': 0}"/>%</strong>
+                <strong>T.V.A. <span t-out="doc.amount_tax / doc.amount_untaxed * 100 if doc.amount_untaxed else 0" t-options="{'widget': 'float', 'precision': 0}"/>
+%</strong>
               </td>
               <td class="text-end" style="border: 2px solid #000;">
                 <span t-out="doc.amount_tax" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>

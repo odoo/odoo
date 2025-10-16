@@ -19,6 +19,7 @@
         'views/hide_sale_order_totals.xml',
         'views/report_invoice_modern.xml',
         'views/report_invoice_inherit.xml',
+        'views/report_sale_inherit.xml',
         'data/report_layouts.xml',
         'data/report_layout_sale_order.xml',
         'data/report_saleorder_compact.xml',

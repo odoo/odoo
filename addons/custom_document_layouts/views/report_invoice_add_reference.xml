@@ -3,37 +3,59 @@
   <data>
 
     <!-- =========================================================
-         Ajout de la colonne "Référence" + "Unité" dans le rapport facture
+         Ajout des colonnes "Référence", "Store", "Unité" dans le rapport facture
          ========================================================= -->
     <template id="report_invoice_add_reference" inherit_id="account.report_invoice_document" priority="25">
 
-      <!-- 1️⃣  ENTÊTE : ajoute "Référence" après la colonne N° -->
-      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_line_number']" position="after">
+      <!-- 1️⃣  SUPPRIMER LA COLONNE N° DE L'ENTÊTE -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_line_number']" position="replace">
+      </xpath>
+
+      <!-- 1️⃣bis  ENTÊTE : ajoute "Référence" avant la colonne Description -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_description']" position="before">
         <th name="th_product_ref" class="text-start" style="width: 25mm;">Code</th>
       </xpath>
 
-      <!-- 1️⃣bis  ENTÊTE : ajoute "Unité" après la colonne Quantité -->
+      <!-- 1️⃣ter  ENTÊTE : ajoute "Store" après la colonne Référence -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_product_ref']" position="after">
+        <th name="th_store" class="text-center" style="width: 15mm;">Store</th>
+      </xpath>
+
+      <!-- 1️⃣quater  ENTÊTE : ajoute "Unité" après la colonne Quantité -->
       <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="after">
         <th name="th_unit" class="text-center" style="width: 15mm;">Unité</th>
       </xpath>
 
-      <!-- 1️⃣ter  SUPPRIMER LA COLONNE TAXES DE L'ENTÊTE -->
+      <!-- 1️⃣quinquies  SUPPRIMER LA COLONNE TAXES DE L'ENTÊTE -->
       <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_taxes']" position="replace">
       </xpath>
 
-      <!-- 2️⃣  CORPS : ajoute la valeur default_code ligne par ligne -->
-      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_line_number']" position="after">
+      <!-- 2️⃣  SUPPRIMER LA COLONNE N° DU CORPS -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_line_number']" position="replace">
+      </xpath>
+
+      <!-- 2️⃣bis  CORPS : ajoute la valeur default_code avant la description -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='account_invoice_line_name']" position="before">
         <td name="td_product_ref" class="text-start" style="width: 25mm;">
           <!-- Si le produit existe on affiche sa référence, sinon vide -->
           <span t-esc="line.product_id and line.product_id.default_code or ''"/>
         </td>
       </xpath>
 
-      <!-- 2️⃣bis  Supprimer l'unité de la cellule quantité -->
+      <!-- 2️⃣ter  CORPS : ajoute la colonne Store après la colonne Référence -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_product_ref']" position="after">
+        <td name="td_store" class="text-center" style="width: 15mm;">
+          <!-- Version corrigée sans hasattr -->
+          <span t-if="line.product_id and line.product_id._fields.get('store_location')" t-out="line.product_id.store_location"/>
+          <span t-else="">BIS</span>
+        </td>
+      </xpath>
+
+      <!-- 2️⃣quater  Supprimer l'unité de la cellule quantité -->
       <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_quantity']/span[@t-field='line.product_uom_id']" position="replace">
       </xpath>
 
-      <!-- 2️⃣ter  CORPS : ajouter la cellule Unité après la cellule Quantité -->
+      <!-- 2️⃣quinquies  CORPS : ajouter la cellule Unité après la cellule Quantité -->
       <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_quantity']" position="after">
         <td name="td_unit" class="text-center" style="width: 15mm;">
           <span t-if="line.product_uom_id" t-out="line.product_uom_id.name"/>
@@ -42,30 +64,30 @@
         </td>
       </xpath>
 
-      <!-- 2️⃣quater  SUPPRIMER LA COLONNE TAXES DU CORPS -->
+      <!-- 2️⃣sexies  SUPPRIMER LA COLONNE TAXES DU CORPS -->
       <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_taxes']" position="replace">
       </xpath>
 
       <!-- 3️⃣  COLGROUP : redéfinir entièrement le colgroup avec les nouvelles colonnes -->
       <xpath expr="//table[@name='invoice_line_table']/colgroup" position="replace">
         <colgroup>
-          <col style="width: 10mm;"/>
-          <!-- N° -->
+          <!-- Colonne N° supprimée -->
           <col style="width: 25mm;"/>
           <!-- Référence -->
+          <col style="width: 15mm;"/>
+          <!-- Store -->
           <col/>
           <!-- Description (reste flexible) -->
           <col style="width: 22mm;"/>
           <!-- Quantity -->
           <col style="width: 15mm;"/>
           <!-- Unité -->
-          <col style="width: 38mm;"/>
-          <!-- Unit Price - AUGMENTÉ -->
-          <col t-if="display_discount" style="width: 35mm;"/>
+          <col style="width: 35mm;"/>
+          <!-- Unit Price -->
+          <col t-if="display_discount" style="width: 32mm;"/>
           <!-- Discount -->
-          <!-- SUPPRIMÉ : col pour Taxes -->
-          <col style="width: 50mm;"/>
-          <!-- Amount - AUGMENTÉ -->
+          <col style="width: 45mm;"/>
+          <!-- Amount -->
         </colgroup>
       </xpath>
 
@@ -75,9 +97,9 @@
         <span t-out="formatted_amount" style="white-space: nowrap;"/>
       </xpath>
 
-      <!-- 5️⃣  Modifier le titre de la colonne Amount en "Montant HT" -->
+      <!-- 5️⃣  Modifier le titre de la colonne Amount en "Montant HTVA" -->
       <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_subtotal']" position="replace">
-        <th name="th_subtotal" class="text-end">Montant HT</th>
+        <th name="th_subtotal" class="text-end">Montant HTVA</th>
       </xpath>
 
       <!-- 6️⃣  Formater la Quantité pour enlever les décimales inutiles -->

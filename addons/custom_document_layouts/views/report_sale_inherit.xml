@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Remplacer complètement le contenu du template pour masquer les informations -->
+    <template id="sale_order_portal_content_custom" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='informations']" position="replace">
+            <!-- Remplacer la section informations par une div vide -->
+            <div id="informations" class="row">
+                <!-- Informations masquées -->
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
