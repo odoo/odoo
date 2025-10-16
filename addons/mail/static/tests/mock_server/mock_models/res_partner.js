@@ -271,6 +271,7 @@ export class ResPartner extends webModels.ResPartner {
                         "display_name",
                         "is_admin",
                         "notification_type",
+                        "signature",
                         "user",
                     ].includes(field)
             )
@@ -310,6 +311,12 @@ export class ResPartner extends webModels.ResPartner {
                     store._add_record_fields(
                         ResUsers.browse(partner.main_user_id),
                         makeKwArgs({ fields: ["notification_type"] })
+                    );
+                }
+                if (partner.main_user_id && fields.includes("signature")) {
+                    store._add_record_fields(
+                        ResUsers.browse(partner.main_user_id),
+                        makeKwArgs({ fields: ["signature"] })
                     );
                 }
             }
