@@ -379,6 +379,7 @@ export class PosOrderline extends Base {
         const currency = order.config.currency_id;
         const extraValues = { currency_id: currency };
         const product = this.get_product();
+        const product_uom = this.get_unit();
         const priceUnit = this.get_unit_price();
         const discount = this.get_discount();
 
@@ -388,10 +389,8 @@ export class PosOrderline extends Base {
             price_unit: priceUnit,
             discount: discount,
             tax_ids: this.tax_ids,
-            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                this.config._product_default_values,
-                product
-            ),
+            product_id: product,
+            product_uom_id: product_uom,
             is_refund: this.qty * priceUnit < 0,
             ...customValues,
         };
