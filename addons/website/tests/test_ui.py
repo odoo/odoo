@@ -296,6 +296,17 @@ class TestUiTranslate(odoo.tests.HttpCase):
         })
         self.start_tour(f"/website/force/{website.id}", 'snippet_dialog_rtl', login='admin')
 
+    def test_multiple_websites_add_language(self):
+        self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        Website = self.env['website']
+        Website.create({'name': 'Website Test'})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'multiple_websites_add_language', login='admin')
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithWebsiteUser):
