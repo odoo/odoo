@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-
+from odoo import api, fields, models
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
