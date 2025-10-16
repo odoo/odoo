@@ -1444,3 +1444,24 @@ test("shadowed fields, getters and functions are not inherited", async () => {
     expect(thread.getName()).toBe("Thread: General");
     expect(thread.channel.getName()).toBe("Channel: undefined");
 });
+
+test("accessing fields through empty _inherits parent returns empty values", async () => {
+    (class Partner extends Record {
+        static id = "id";
+        id;
+        name;
+        users = fields.Many("User", { inverse: "partner" });
+        partners = fields.Many("Partner");
+    }).register(localRegistry);
+    (class User extends Record {
+        static id = "id";
+        static _inherits = { Partner: "partner" };
+        id;
+        partner = fields.One("Partner", { inverse: "users" });
+    }).register(localRegistry);
+    const store = await start();
+    const user = store.User.insert({ id: 1 });
+    expect(user.partner).toBe(undefined);
+    expect(user.name).toBe(undefined);
+    expect(user.partners).toHaveLength(0);
+});

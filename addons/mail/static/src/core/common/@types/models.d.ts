@@ -56,7 +56,7 @@ declare module "models" {
     export interface ResLang extends ResLangClass {}
     export interface ResPartner extends ResPartnerClass {}
     export interface ResRole extends ResRoleClass {}
-    export interface ResUsers extends ResUsersClass {}
+    export interface ResUsers extends ResUsersClass, ResPartner {}
     export interface Settings extends SettingsClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
