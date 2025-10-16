@@ -21,7 +21,7 @@ test("add a new ribbon", async () => {
             <section id="o_wsale_products_grid" class="o_wsale_products_grid_table grid o_wsale_products_grid_table_md" style="--o-wsale-ppr: 4; --o-wsale-ppg: 20" data-name="Grid">
                 <div class="oe_product" style="--o-wsale-products-grid-product-col-height: 1;" data-name="Product">
                 <div class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_1_1">
-                <form class="oe_product_cart" data-publish="off">
+                <article class="oe_product_cart" data-publish="off">
                     <div class="oe_product_image">
                         <a class="oe_product_image_link d-block position-relative" contenteditable="false" href="/shop/event-registration-4">
                             <span class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"><img src="/web/image/product.template/4/image_512/product?unique=5c2586b" class="img img-fluid h-100 w-100 position-absolute"></span>
@@ -47,7 +47,7 @@ test("add a new ribbon", async () => {
                             </div>
                         </div>
                     </div>
-                </form>
+                </article>
                 </div>
                 </div>
             </section>

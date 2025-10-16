@@ -2,7 +2,6 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { hasTouch, isBrowserFirefox } from '@web/core/browser/feature_detection';
 import { redirect } from '@web/core/utils/urls';
-import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class ShopPage extends Interaction {
     static selector = '.o_wsale_products_page';
@@ -51,7 +50,7 @@ export class ShopPage extends Interaction {
         if (productGrid) {
             productGrid.classList.add('opacity-50');
         }
-        const form = wSaleUtils.getClosestProductForm(ev.currentTarget);
+        const form = ev.currentTarget.closest('form');
         const filters = form.querySelectorAll('input:checked, select');
         const attributeValues = new Map();
         const tags = new Set();

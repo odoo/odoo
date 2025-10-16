@@ -38,19 +38,12 @@
         </t>
     </t>
 
-    <form
+    <article
         t-attf-class="oe_product_cart h-100 d-flex {{ptavs_classes}}"
         t-att-data-publish="product.website_published and 'on' or 'off'"
-        role="article"
         t-att-aria-label="product.name"
     >
         <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
-            <input
-                type="hidden"
-                name="csrf_token"
-                t-att-value="request.csrf_token()"
-            />
-
             <!-- Fetch Images Data -->
             <!-- Use `variant` instead of reassigning `product_variant` beacause it's used to infer
                  if variant information should be shown later. -->
@@ -222,7 +215,7 @@
             <!-- Extra actions (wishlist remove, ...) -->
             <t t-if="extra_actions" t-out="extra_actions"/>
         </div>
-    </form>
+    </article>
 </template>
 
 <!-- TODO: rename `shop_product_buttons` to `product_tile_actions` -->
@@ -234,10 +227,8 @@
                 t-call="website_sale.product_tile_element_visibility"
             >
                 <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_cta'"/>
-                <!-- type="button" needed to avoid submitting the enclosing form on click. -->
                 <button
                     name="add_to_cart"
-                    type="button"
                     class="o_wsale_product_btn_primary btn btn-primary"
                     aria-label="Add to cart"
                     title="Add to cart"

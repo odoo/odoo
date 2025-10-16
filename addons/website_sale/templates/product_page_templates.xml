@@ -108,8 +108,10 @@
                             id="product_details"
                             t-attf-class="position-relative position-lg-sticky o_wsale_sticky_object col"
                         >
-                            <div id="o_wsale_product_details_content" t-attf-class="js_product js_main_product o_wsale_content_contained container">
-
+                            <div
+                                id="o_wsale_product_details_content"
+                                t-attf-class="js_product o_wsale_content_contained container"
+                            >
                                 <!-- Product title (purchase not available)-->
                                 <t t-set="is_add_to_cart_possible" t-value="product._is_add_to_cart_possible()"/>
                                 <t
@@ -117,7 +119,7 @@
                                     t-call="website_sale.product_title"
                                 />
 
-                                <form t-if="is_add_to_cart_possible">
+                                <article t-if="is_add_to_cart_possible">
                                     <!-- Product title (purchase available)-->
                                     <t t-call="website_sale.product_title"/>
 
@@ -136,12 +138,6 @@
                                             </t>
                                         </small>
                                     </div>
-
-                                    <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        t-att-value="request.csrf_token()"
-                                    />
 
                                     <t name="variant_info">
                                         <div
@@ -251,7 +247,7 @@
                                             </t>
                                         </div>
                                     </div>
-                                </form>
+                                </article>
                             </div>
                         </div>
                     </div>
@@ -592,10 +588,8 @@
                 id="add_to_cart_wrap"
                 t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
             >
-                <!-- type="button" needed to avoid submitting the enclosing form on click. -->
                 <button
                     id="add_to_cart"
-                    type="button"
                     t-attf-class="btn btn-primary flex-grow-1"
                     data-animation-selector=".o_wsale_product_images"
                     t-att-data-product-category-id="product.public_categ_ids.ids and product.public_categ_ids.ids[0]"
@@ -923,7 +917,6 @@
         <xpath expr="//div[@id='add_to_cart_wrap']" position="inside">
             <button
                 id="buy_now"
-                type="button"
                 t-attf-class="btn btn-outline-primary w-100 {{'' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') or not is_50_pc else 'w-sm-auto'}} {{'flex-grow-1' if not is_50_pc else ''}}"
                 t-att-data-product-id="product_variant.id"
                 t-att-data-product-template-id="product.id"

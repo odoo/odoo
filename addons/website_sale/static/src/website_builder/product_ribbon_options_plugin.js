@@ -232,9 +232,9 @@ class ProductsRibbonOptionPlugin extends Plugin {
             if (isProductPage) {
                 templateId = this.productTemplateID;
             } else {
-                // Find the product template ID from the ribbon element's parent form
-                const productForm = ribbonElement.closest('form.oe_product_cart');
-                const templateElement = productForm?.querySelector('[data-oe-model="product.template"]');
+                // Find the product template ID from the ribbon element's parent article.
+                const productArticle = ribbonElement.closest('article.oe_product_cart');
+                const templateElement = productArticle?.querySelector('[data-oe-model="product.template"]');
                 templateId = templateElement ? parseInt(templateElement.getAttribute('data-oe-id')) : null;
             }
             if (templateId && !isNaN(templateId)) {

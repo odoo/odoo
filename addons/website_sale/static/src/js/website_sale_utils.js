@@ -4,18 +4,6 @@ import { _t } from '@web/core/l10n/translation';
 import { setElementContent } from '@web/core/utils/html';
 
 /**
- * Returns the closest product form to a given element if exists.
- * Required for product pages with full-width or no images where the "Add to cart" button can be
- * outside of the form.
- *
- * @param { HTMLElement } element - Reference to an HTML element in the DOM.
- * @returns { HTMLFormElement|undefined }
- */
-function getClosestProductForm(element){
-    return element.closest('form') ?? element.closest('.js_product')?.querySelector('form');
-}
-
-/**
  * Updates both navbar cart
  * @param {Object} data
  * @return {void}
@@ -134,7 +122,6 @@ function getSelectedAttributeValues(container) {
 }
 
 export default {
-    getClosestProductForm: getClosestProductForm,
     updateCartNavBar: updateCartNavBar,
     showWarning: showWarning,
     getSelectedAttributeValues: getSelectedAttributeValues,
