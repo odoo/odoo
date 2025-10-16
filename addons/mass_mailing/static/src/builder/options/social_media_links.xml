@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.SocialMediaLinks">
+    <div class="hb-row d-flex position-relative pe-2">
+        <div class="hb-row-label d-flex">
+            <span class="text-nowrap text-truncate">Company</span>
+        </div>
+        <div class="o-hb-select-wrapper">
+            <Dropdown menuClass="'o-hb-select-dropdown'">
+                <button class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret">
+                    <t t-out="this.state.selectedCompany.name"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="this.companies" t-as="company" t-key="company_index">
+                        <div class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable"
+                            t-on-click="event => this.selectCompany(company)"
+                            t-out="company.name"/>
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    </div>
+    <table t-ref="root" class="o_social_media_list">
+        <tbody>
+            <tr t-foreach="this.state.links" t-as="link" t-key="link_index" t-att-data-id="link_index">
+                <td>
+                    <button class="btn o_drag_handle ps-0">
+                        <i class="oi oi-draggable"/>
+                    </button>
+                </td>
+                <td width="100%">
+                    <input type="text" class="o-hb-input-text o-hb-input-base"
+                        t-att-value="link.element.href"
+                        t-on-input="ev => this.onSocialMediaLinkChange(ev, link_index)"/>
+                </td>
+                <td style="'min-width: 2.5em'">
+                    <div t-if="link.element.getAttribute('data-plateform')"
+                        class="o-checkbox form-check o-hb-checkbox o_field_boolean o_boolean_toggle form-switch">
+                        <input type="checkbox" class="form-check-input"
+                            t-att-checked="link.checked"
+                            t-on-change="ev => this.onSocialMediaLinkToggle(ev, link_index)"/>
+                        <label class="form-check-label"/>
+                    </div>
+                    <button t-else=""
+                        type="button" class="o-hb-btn btn fa fa-fw fa-minus btn-danger"
+                        t-on-click="ev => this.onSocialMediaLinkDelete(ev, link_index)"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="o-hb-btn btn btn-secondary"
+        t-on-click="ev => this.onSocialMediaLinkAdd(ev)">
+        Add New Social Network
+    </button>
+</t>
+
+<t t-name="mass_mailing.social_media_link">
+    <a t-att-href="href" target="_blank" t-att-data-plateform="plateform">
+        <i t-attf-class="fa {{ icon }} rounded shadow-sm o_editable_media"/>
+    </a>
+</t>
+
+</templates>
