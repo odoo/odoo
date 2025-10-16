@@ -264,104 +264,177 @@
     <t t-out="company_name"/>
 </p>
         </template>
-       <record id="mail_template_einvoice_notification" model="mail.template">
-            <field name="name">New eInvoices Notification</field>
-            <field name="subject">New Electronic Invoices Received</field>
-            <field name="email_from">{{ object.company_id.email_formatted }}</field>
-            <field name="email_to">{{ object.incoming_einvoice_notification_email }}</field>
+
+        <!-- Journal notifications -->
+        <record id="mail_template_invoice_subscriber" model="mail.template">
+            <field name="name">Journal Notification</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">{{ object.company_id.name }} - New item in {{ object.journal_id.display_name or 'Invoices' }} journal</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="use_default_to" eval="False"/>
-            <field name="model_id" ref="account.model_account_journal"/>
             <field name="auto_delete" eval="True"/>
-            <field name="description">Notification email for newly received eInvoices</field>
             <field name="body_html" type="html">
+<t t-set="company" t-value="object.company_id"/>
+<t t-set="partner" t-value="object.partner_id"/>
+<t t-set="is_sale" t-value="object.is_sale_document(include_receipts=True)"/>
+<t t-set="is_purchase" t-value="object.is_purchase_document(include_receipts=True)"/>
+<t t-set="document_label" t-value="object._get_move_display_name()"/>
+<t t-set="total_amount" t-value="format_amount(object.amount_total, object.currency_id or object.company_currency_id) if object.amount_total else False"/>
+<t t-set="portal_url" t-value="object.get_portal_url()"/>
+<t t-set="unsubscribe_url" t-value="ctx.get('unsubscribe_url', False)"/>
 
-<t t-set="invoices" t-value="ctx.get('einvoices', [])"/>
-<t t-set="invoice_preview_ids" t-value="','.join([str(i) for i in invoices.ids]) if invoices else ''"/>
-<t t-set="invoice_count" t-value="len(invoices)"/>
-<t t-set="MAX_INVOICES_TO_DISPLAY" t-value="5"/>
+<t t-set="has_partner" t-value="bool(partner)"/>
+<t t-set="has_invoice_date" t-value="bool(object.invoice_date)"/>
+<t t-set="has_due_date" t-value="bool(object.invoice_date_due)"/>
+<t t-set="has_payment_state" t-value="bool(object.payment_state and object.payment_state != 'not_paid')"/>
+<t t-set="has_foreign_currency" t-value="bool(object.currency_id and object.currency_id != object.company_currency_id)"/>
 
-<div style="margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-serif; color: #454748;">
-    <table border="0" cellpadding="0" cellspacing="0"
-           style="padding-top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;">
+<t t-set="has_details" t-value="total_amount or has_partner or has_invoice_date or has_due_date or has_payment_state or has_foreign_currency"/>
+
+<div style="margin:0; padding:0; color:#2c2431;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%; background:#f7f4f8; padding:40px 0;">
         <tr>
             <td align="center">
-                <table border="0" cellpadding="0" cellspacing="0" width="590"
-                       style="background-color: white; border-collapse:separate;">
-                    <!-- HEADER -->
+                <table cellpadding="0" cellspacing="0" border="0" width="640" style="width:100%; max-width:640px; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, 0.12);">
                     <tr>
-                        <td align="center">
-                            <table width="100%" cellpadding="0" cellspacing="0"
-                                   style="background-color: #875A7B; color: #FFFFFF; font-size: 14px; padding: 14px 0; border-radius: 3px;">
+                        <td colspan="2" style="background:linear-gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                                 <tr>
-                                    <td align="left" style="padding-left: 16px;">
-                                        You have received <t t-if="invoice_count > 1">new electronic invoices!</t><t t-else="">a new electronic invoice!</t>
+                                    <td style="font-size:13px; letter-spacing:0.3px; text-transform:uppercase; opacity:0.78;">
+                                        <t t-if="is_purchase and not is_sale">Incoming Bill</t>
+                                        <t t-elif="is_sale and not is_purchase">Outbound Invoice</t>
+                                        <t t-else="">Journal Update</t>
                                     </td>
-                                    <td align="right" style="padding-right: 16px;">
-                                        <img alt="Odoo" src="/web/static/img/logo_inverse_white_206px.png" style="height: 2em; object-fit: contain;" class="align-baseline w-auto"/>
+                                    <td align="right">
+                                        <img alt="Odoo" src="/web/static/img/logo_inverse_white_206px.png" style="height:30px; width:auto;"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-top:22px; font-size:26px; line-height:1.45; font-weight:600;">
+                                        New document in <t t-out="object.journal_id.display_name or 'Purchases'"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding-top:18px; font-size:14px; opacity:0.85; line-height:1.6;">
+                                        A new document just arrived to <t t-out="object.journal_id.display_name or 'Purchases'"/> journal of <t t-out="company.name or 'Company'"/>!
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-                    <!-- BODY -->
                     <tr>
-                        <td align="center">
-                            <table width="590" cellpadding="0" cellspacing="0"
-                                   style="padding: 16px 32px; background-color: white; border-collapse:separate;">
+                        <td colspan="2" style="padding:34px 38px;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%; border-collapse:separate; border-spacing:0 16px;">
                                 <tr>
-                                    <td style="font-size: 14px;">
-                                        <h3 style="font-size: 20px; margin-bottom: 20px;">
-                                            <t t-if="object.company_id.name">
-                                                Hi <t t-out="object.company_id.name"/>,
-                                            </t>
-                                            <t t-else="">
-                                                Hi,
-                                            </t>
-                                        </h3>
-                                        <p style="margin-top: 12px;">
-                                            You have recieved <t t-if="invoice_count > 1">new electronic invoices</t><t t-else="">a new electronic invoice</t>!
-                                        </p>
-                                        <t t-set="MAX_INVOICES_TO_DISPLAY" t-value="5"/>
-                                        <t t-foreach="invoices[:MAX_INVOICES_TO_DISPLAY]" t-as="inv">
-                                            <t t-if="not inv_first">
-                                                <div style="background-color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;"></div>
-                                            </t>
-                                            <p style="line-height: 1.7em; padding-top: 16px;">
-                                                <t t-if="inv.name or inv.ref">
-                                                    <span style="font-weight:bold;">Invoice Ref:</span> <t t-out="inv.name or inv.ref"/><br/>
+                                    <td colspan="2" style="padding:0;">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%; background:#fbf7fc; border-radius:16px;">
+                                            <tr>
+                                                <td style="padding:24px 26px;">
+                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Document</div>
+                                                    <div style="margin-top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-word;">
+                                                        <t t-out="document_label"/>
+                                                    </div>
+                                                    <t t-if="object.name and object.name != document_label">
+                                                        <div style="margin-top:6px; color:#7f6c84;">Ref: <t t-out="object.name"/></div>
+                                                    </t>
+                                                    <t t-elif="object.ref">
+                                                        <div style="margin-top:6px; color:#7f6c84;">Ref: <t t-out="object.ref"/></div>
+                                                    </t>
+                                                </td>
+                                                <t t-if="total_amount">
+                                                    <td style="padding:24px 26px; border-left:1px solid #efe6f3;" align="right">
+                                                        <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Total</div>
+                                                        <div style="margin-top:8px; font-size:22px; font-weight:600; color:#2c2431;">
+                                                            <t t-out="total_amount"/>
+                                                        </div>
+                                                    </td>
                                                 </t>
-                                                <t t-if="inv.partner_id.name">
-                                                    <span style="font-weight:bold;">Vendor:</span> <t t-out="inv.partner_id.name"/><br/>
-                                                </t>
-                                                <t t-if="inv.amount_total">
-                                                    <span style="font-weight:bold;">Amount:</span> <t t-out="inv.amount_total" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id or object.company_id.currency_id}"/><br/>
-                                                </t>
-                                                <t t-if="inv.invoice_date_due">
-                                                    <span style="font-weight:bold;">Due date:</span> <t t-out="inv.invoice_date_due"/>
-                                                </t>
-                                            </p>
-                                        </t>
-
-                                        <div style="text-align: center; padding-top: 24px;">
-                                            <a t-if="invoice_count != 1" t-attf-href="/odoo/accounting/action-account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids }}"
-                                               target="_blank"
-                                               t-attf-style="padding: 12px 24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: none !important; background-color: #008384; border-radius:3px; display: inline-block;">
-                                               Consult Invoices
-                                            </a>
-                                            <a t-else="" t-attf-href="/odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}"
-                                               target="_blank"
-                                               t-attf-style="padding: 12px 24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: none !important; background-color: #008384; border-radius:3px; display: inline-block;">
-                                               Consult Invoice
-                                            </a>
-                                            <p style="font-size: 11px; margin-top: 8px; color: #777;">Time to crunch some numbers</p>
-                                        </div>
-                                        <br/>
-                                        <p style="text-align: center; margin-top: 16px;">
-                                            If you'd like to unsubscribe from receiving emails for incoming invoices click <a t-attf-href="/my/journal/{{ object.id }}/unsubscribe">here</a>.
-                                        </p>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
+                                <t t-if="has_details">
+                                    <tr>
+                                        <td colspan="2" style="padding:0;">
+                                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%; margin-top:18px;">
+                                                <tr>
+                                                    <td style="padding:0;">
+                                                        <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;">
+                                                            <t t-if="has_partner">
+                                                                <div style="flex:0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Partner</div>
+                                                                    <div style="margin-top:6px; font-size:15px; font-weight:500; color:#2c2431; word-break:break-word;">
+                                                                        <t t-out="partner.display_name"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                            <t t-if="has_invoice_date">
+                                                                <div style="flex:0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Invoice Date</div>
+                                                                    <div style="margin-top:6px; font-size:15px; color:#2c2431;">
+                                                                        <t t-out="format_date(object.invoice_date)"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                            <t t-if="has_due_date">
+                                                                <div style="flex:0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Due Date</div>
+                                                                    <div style="margin-top:6px; font-size:15px; color:#2c2431;">
+                                                                        <t t-out="format_date(object.invoice_date_due)"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                            <t t-if="has_payment_state">
+                                                                <div style="flex:0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Payment Status</div>
+                                                                    <div style="margin-top:6px; font-size:15px; color:#2c2431; text-transform:capitalize;">
+                                                                        <t t-out="object.payment_state.replace('_', ' ')"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                            <t t-if="has_foreign_currency">
+                                                                <div style="flex:0 1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                    <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Currency</div>
+                                                                    <div style="margin-top:6px; font-size:15px; color:#2c2431;">
+                                                                        <t t-out="object.currency_id.display_name"/>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </t>
                             </table>
+
+                            <t t-if="not has_details">
+                                <div style="margin:18px 0 0; padding:18px 22px; background:#f9f2f9; border-radius:12px; border:1px solid #eadff0; font-size:13px; color:#6f5c73; line-height:1.6;">
+                                    <strong style="color:#2c2431;">Heads up:</strong> we couldn't extract structured details from this file. Open the attachment to review the document contents.
+                                </div>
+                            </t>
+
+                            <div style="margin:26px 0 0; padding:18px 22px; background:linear-gradient(145deg,#faf1fc 0%,#f5edf7 100%); border-radius:12px; border:1px solid #eadff0; font-size:13px; color:#6f5c73; line-height:1.6;">
+                                <strong style="color:#2c2431;">Files included:</strong> the original document(s) are attached for your convenience.
+                            </div>
+
+                            <div style="margin-top:32px; text-align:center;">
+                                <a t-if="portal_url" t-attf-href="{{ portal_url }}"
+                                   style="display:inline-block; margin:0 10px 14px; padding:13px 30px; min-width:210px; background:linear-gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; border-radius:12px; font-weight:600; font-size:14px;"
+                                   target="_blank">
+                                    View on Portal
+                                </a>
+                            </div>
+
+                            <p style="margin:28px 0 0; font-size:12px; color:#8f8596; text-align:center;">
+                                You receive this message because you are listed as a watcher on
+                                <strong t-out="object.journal_id.display_name or 'this journal'"/>.
+                                <span style="display:block; margin:18px auto; height:1px; max-width:420px; background:#ece3ed;"></span>
+                                <t t-if="unsubscribe_url">
+                                    Prefer to stop receiving these? <a t-attf-href="{{ unsubscribe_url }}" style="color:#8f8596; text-decoration:underline;" target="_blank">Unsubscribe here</a>.
+                                </t>
+                            </p>
                         </td>
                     </tr>
                 </table>

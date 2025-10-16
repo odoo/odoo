@@ -143,3 +143,14 @@ class AccountMoveSend(models.AbstractModel):
             attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
             res_ids = [attachment.res_id for attachment in attachments]
             self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_tw_edi_file_id', 'l10n_tw_edi_file'])
+
+    @api.model
+    def _collect_attachments_for_email_notification(self, invoice, invoice_data):
+        files = list(super()._collect_attachments_for_email_notification(invoice, invoice_data) or [])
+        if vals := invoice_data.get('ecpay_attachments'):
+            files.append({
+                'name': vals['name'],
+                'raw': vals['raw'],
+                'mimetype': vals['mimetype'],
+            })
+        return files

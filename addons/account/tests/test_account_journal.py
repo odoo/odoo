@@ -179,7 +179,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
     def test_journal_notifications_unsubscribe(self):
         journal = self.company_data['default_journal_purchase']
-        journal.incoming_einvoice_notification_email = 'test@example.com'
+        journal.invoice_notified_emails = 'test@example.com'
 
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(
@@ -189,7 +189,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         )
         res.raise_for_status()
 
-        self.assertFalse(journal.incoming_einvoice_notification_email)
+        self.assertFalse(journal.invoice_notified_emails)
 
 
 @tagged('post_install', '-at_install', 'mail_alias')

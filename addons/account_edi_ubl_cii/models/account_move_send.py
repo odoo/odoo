@@ -82,6 +82,17 @@ class AccountMoveSend(models.AbstractModel):
             })
         return results
 
+    @api.model
+    def _collect_attachments_for_email_notification(self, invoice, invoice_data):
+        files = list(super()._collect_attachments_for_email_notification(invoice, invoice_data) or [])
+        if vals := invoice_data.get('ubl_cii_xml_attachment_values'):
+            files.append({
+                'name': vals['name'],
+                'raw': vals['raw'],
+                'mimetype': vals['mimetype'],
+            })
+        return files
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------

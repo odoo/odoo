@@ -4786,13 +4786,23 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _extend_with_attachments(self, files_data, new=False):
+        self.ensure_one()
         existing_lines = self.invoice_line_ids
+        attachment_domain = [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+        existing_attachment_ids = set(self.env['ir.attachment'].search(attachment_domain).ids)
+
         res = super()._extend_with_attachments(files_data, new)
 
         if new_lines := (self.invoice_line_ids - existing_lines):
             new_lines.is_imported = True
             if not existing_lines:
                 self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
+
+        if new and res:
+            current_attachments = self.env['ir.attachment'].search(attachment_domain)
+            new_attachments = current_attachments.filtered(lambda attachment: attachment.id not in existing_attachment_ids)
+            # self._notify_journal_subscribers_with_files(files_data, new_attachments)
+            self.journal_id._notify_subscribers_with_generated_pdf(self, new_attachments)
 
         return res
 

@@ -514,7 +514,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
-class TestAccountMoveSend(TestAccountMoveSendCommon):
+class TestAccountMoveSend(TestAccountMoveSendCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -1224,3 +1224,22 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard_2 = self.create_send_and_print(move2)
         wizard_2.action_send_and_print()
         self.assertEqual(move2.message_main_attachment_id.name, f"CustomName_{move2._get_report_base_filename().replace('/', '_')}.pdf")
+
+    def test_journal_follower_gets_pdf_on_send_and_print(self):
+        watcher_email = 'watcher@example.com'
+        journal = self.company_data['default_journal_sale']
+        journal.invoice_notified_emails = watcher_email
+
+        invoice = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        with self.mock_mail_gateway():
+            wizard.action_send_and_print()
+
+        self.assertSentEmail(
+            self.company_data['company'].email_formatted,
+            [watcher_email],
+            subject=f'{self.company_data["company"].name} - New item in {journal.display_name} journal',
+            attachments_info=[
+                {'name': f'{invoice._get_report_base_filename().replace("/", "_")}.pdf', 'type': 'application/pdf'}
+            ],
+        )

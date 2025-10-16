@@ -1,8 +1,13 @@
+import logging
 from collections import defaultdict
+
 from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -507,6 +512,37 @@ class AccountMoveSend(models.AbstractModel):
             partner = ResPartner.browse(partner_id)
             partner._bus_send(*get_account_notification(move_ids, is_success))
 
+    def _notify_subscribers_with_generated_pdf(self, invoice, invoice_data):
+        recipients = set(tools.email_normalize_all(invoice.journal_id.invoice_notified_emails or ''))
+        if not recipients:
+            return
+
+        # Collect all documents generated in this run
+        attachments = [(0, 0, {
+            'name': file['name'],
+            'raw': file['raw'],
+            'type': 'binary',
+            'mimetype': file.get('mimetype', 'application/octet-stream'),
+            'res_model': 'mail.message',
+            'res_id': False,
+        }) for file in self._collect_attachments_for_email_notification(invoice, invoice_data)]
+
+        invoice.journal_id._notify_subscribers_with_generated_pdf(invoice, attachments)
+
+    @api.model
+    def _collect_attachments_for_email_notification(self, invoice, invoice_data):
+        if docs := invoice_data.get('email_notification_documents'):
+            return docs
+
+        docs = []
+
+        for key in ('pdf_attachment_values', 'proforma_pdf_attachment_values'):
+            vals = invoice_data.get(key)
+            if vals and vals.get('raw') and vals.get('name'):
+                docs.append({'name': vals['name'], 'raw': vals['raw'], 'mimetype': vals.get('mimetype')})
+
+        return docs
+
     @api.model
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
@@ -740,6 +776,12 @@ class AccountMoveSend(models.AbstractModel):
             if not invoice_data.get('error') or allow_fallback_pdf
         }
         self._link_invoice_documents(invoices_to_link)
+
+        for inv, data in invoices_to_link.items():
+            try:
+                self._notify_subscribers_with_generated_pdf(inv, data)
+            except Exception:
+                _logger.exception("Failed notifying subscribers for move %s", inv.id)
 
     @api.model
     def _generate_invoice_fallback_documents(self, invoices_data):

@@ -144,3 +144,14 @@ class AccountMoveSend(models.AbstractModel):
             ])
             for attachment in attachments:
                 attachment.name = move_ids_to_names.get(attachment.res_id)
+
+    @api.model
+    def _collect_attachments_for_email_notification(self, invoice, invoice_data):
+        files = list(super()._collect_attachments_for_email_notification(invoice, invoice_data) or [])
+        if vals := invoice_data.get('l10n_it_edi_values'):
+            files.append({
+                'name': vals['name'],
+                'raw': vals['raw'],
+                'mimetype': vals['mimetype'],
+            })
+        return files
