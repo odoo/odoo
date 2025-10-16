@@ -18,6 +18,7 @@ from . import (
     test_ir_rules,
     test_json_field,
     test_many2many,
+    test_modules_db,
     test_one2many,
     test_performance,
     test_properties,

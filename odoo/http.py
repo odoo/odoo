@@ -391,14 +391,14 @@ def db_list(force=False, host=None):
     """
     Get the list of available databases.
 
-    :param bool force: See :func:`~odoo.service.db.list_dbs`:
+    :param bool force: See :func:`~odoo.modules.db.list_dbs`
     :param host: The Host used to replace %h and %d in the dbfilters
         regexp. Taken from the current request when omitted.
     :returns: the list of available databases
     :rtype: List[str]
     """
     try:
-        dbs = odoo.service.db.list_dbs(force)
+        dbs = odoo.modules.db.list_dbs(force=force)
     except psycopg2.OperationalError:
         return []
     return db_filter(dbs, host)
@@ -455,7 +455,6 @@ def dispatch_rpc(service_name, method, params):
     """
     rpc_dispatchers = {
         'common': odoo.service.common.dispatch,
-        'db': odoo.service.db.dispatch,
         'object': odoo.service.model.dispatch,
     }
 
