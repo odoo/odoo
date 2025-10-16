@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification", {
         },
         {
             content: "change quantity",
-            trigger: '#product_detail input[name=add_qty]',
+            trigger: '.js_product input[name=add_qty]',
             run: "edit 3",
         },
         ...tourUtils.addToCartFromProductPage(),
@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("website_sale.cart_notification_qty_and_
         // Again add same product
         {
             content: "change quantity",
-            trigger: '#product_detail input[name=add_qty]',
+            trigger: '.js_product input[name=add_qty]',
             run: "edit 3",
         },
         ...tourUtils.addToCartFromProductPage(),

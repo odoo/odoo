@@ -5,40 +5,8 @@ import { rpc } from '@web/core/network/rpc';
 export class CarouselProductCard extends Interaction {
     static selector = '.o_carousel_product_card';
     dynamicContent = {
-        ".js_add_cart": { "t-on-click": this.locked(this.onClickAddToCart, true) },
         '.js_remove': { 't-on-click': this.onRemoveFromRecentlyViewed },
     };
-
-    setup() {
-        this.add2cartRerender = this.el.dataset.add2cartRerender === 'True';
-    }
-
-    /**
-     * Event triggered by a click on the Add to cart button
-     *
-     * @param {Event} ev
-     */
-    async onClickAddToCart(ev) {
-        const dataset = ev.currentTarget.dataset;
-
-        const productTemplateId = parseInt(dataset.productTemplateId);
-        const productId = parseInt(dataset.productId);
-        const isCombo = dataset.productType === 'combo';
-        const showQuantity = Boolean(dataset.showQuantity);
-
-        await this.waitFor(this.services["cart"].add({
-            productTemplateId: productTemplateId,
-            productId: productId,
-            isCombo: isCombo,
-        }, {
-            showQuantity: showQuantity,
-        }));
-        if (this.add2cartRerender) {
-            const dynamicSnippetProducts = this.el.closest('.s_dynamic_snippet_products');
-            this.services['public.interactions'].stopInteractions(dynamicSnippetProducts);
-            this.services['public.interactions'].startInteractions(dynamicSnippetProducts);
-        }
-    }
 
     /**
      * Event triggered by a click on the remove button on a "recently viewed"

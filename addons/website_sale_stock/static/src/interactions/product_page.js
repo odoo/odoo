@@ -20,7 +20,7 @@ patch(ProductPage.prototype, {
             },
             'button[name="add_to_cart"]': {
                 't-on-product_added_to_cart': this._getCombinationInfo.bind(this),
-            }
+            },
         });
     },
 

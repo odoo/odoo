@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
         },
         {
             content: "check the first variant is already in wishlist",
-            trigger: '#product_detail .o_add_wishlist_dyn.disabled',
+            trigger: '#product_detail .o_add_wishlist_dyn:disabled',
         },
         {
             trigger: "#product_detail label:contains(Aluminium) input",
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
             run: "click",
         },
         {
-            trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
+            trigger: "#product_detail .o_add_wishlist_dyn:not(:disabled)",
         },
         {
             content: "wait button enable and click on add to wishlist",
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
         tourUtils.assertWishlistQuantity(1),
         {
             content: "add last item to cart",
-            trigger: '.o_wish_add:eq(1)',
+            trigger: 'button[name="add_to_cart"]:eq(1)',
             run: "click",
         },
         {
@@ -187,7 +187,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.dynamic_variants'
             // wait for the button to be correctly disabled because the first
             // variant was already added to the wishlist from the product page.
             content: "Check that the button is disabled",
-            trigger: "#product_detail form a.btn.o_add_wishlist_dyn.disabled",
+            trigger: ".js_product button.o_add_wishlist_dyn:disabled",
         },
         {
             content: "Select Bottle with second variant from /product",
@@ -222,7 +222,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.archived_variant'
     url: '/shop?search=Bottle',
     steps: () => [
         {
-            trigger: ".js_sale",
+            trigger: ".o_wsale_products_page",
         },
         {
             content: "Check there is wishlist button on product from /shop",

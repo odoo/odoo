@@ -20,7 +20,7 @@ export class ProductRow extends Component {
      */
     removeProduct() {
         comparisonUtils.removeComparisonProduct(this.props.id, this.env.bus);
-        comparisonUtils.enableDisabledProducts([this.props.id], false);
+        comparisonUtils.enableAddToComparisonButtons([this.props.id], false);
     }
 
     /**

@@ -14,7 +14,7 @@ registerWebsitePreviewTour(
     },
     () => [
         {
-            trigger: ":iframe .js_sale",
+            trigger: ":iframe .o_wsale_products_page",
         },
         {
             trigger: ".o_menu_systray .o_new_content_container > button",

@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState, useSubEnv } from '@odoo/owl';
+import { Component, onWillStart, useState } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { useBus } from '@web/core/utils/hooks';
 import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
@@ -7,15 +7,12 @@ import { ProductRow } from '../product_row/product_row';
 export class ProductComparisonBottomBar extends Component {
     static template = 'website_sale_comparison.ProductComparisonBottomBar';
     static components = { ProductRow };
-    static props = {
-        bus: Object,
-    };
+    static props = {};
 
     setup() {
         super.setup();
         this.state = useState({ products: new Map() });
-        useBus(this.props.bus, comparisonUtils.COMPARISON_EVENT, (_) => this._loadProducts());
-        useSubEnv({bus: this.props.bus});
+        useBus(this.env.bus, comparisonUtils.COMPARISON_EVENT, (_) => this._loadProducts());
         onWillStart(this._loadProducts);
     }
 

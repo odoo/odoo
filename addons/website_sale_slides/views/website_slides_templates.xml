@@ -104,7 +104,7 @@
     <div class="oe_website_sale">
         <t t-set="product" t-value="slide.channel_id.product_id"/>
         <button
-            id="add_to_cart"
+            name="add_to_cart"
             class="btn btn-primary w-100"
             t-att-data-product-id="product.id"
             t-att-data-product-template-id="product.product_tmpl_id.id"
@@ -165,7 +165,7 @@
         <div t-else="" class="oe_website_sale">
             <t t-set="product" t-value="channel.product_id"/>
             <button
-                id="add_to_cart"
+                name="add_to_cart"
                 class="btn btn-primary w-100"
                 t-att-data-product-id="product.id"
                 t-att-data-product-template-id="product.product_tmpl_id.id"
@@ -174,8 +174,6 @@
             >
                 <i class="fa fa-shopping-cart"></i> Add to Cart
             </button>
-            <!-- Hook for wishlist -->
-            <div id="product_option_block"/>
         </div>
     </t>
     <t t-elif="not channel.is_member">
@@ -186,10 +184,11 @@
 </template>
 
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
-    <button id="add_to_cart" position="before">
+    <button name="add_to_cart" position="before">
         <button
-            id="buy_now"
+            name="add_to_cart"
             class="btn btn-primary w-100 mb-1"
+            data-action="buy_now"
             t-att-data-product-id="product.id"
             t-att-data-product-template-id="product.product_tmpl_id.id"
             t-att-data-product-type="product.product_tmpl_id.type"
@@ -198,7 +197,7 @@
             <i class="fa fa-bolt"></i> Buy Now
         </button>
     </button>
-    <button id="add_to_cart" position="attributes">
+    <button name="add_to_cart" position="attributes">
         <attribute name="class" remove="btn-primary" add="btn-outline-primary" separator=" "/>
     </button>
 </template>

@@ -4,24 +4,10 @@ import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison
 import { redirect } from '@web/core/utils/urls';
 
 export class ComparisonPage extends Interaction {
-    static selector = '#o_comparelist_table';
-
-    dynamicSelectors = {
-        ...this.dynamicSelectors,
-        _miniSticky: () => document.querySelector('#miniStickyComparison'),
-        _mainScroll: () => document.querySelector('.table-comparator')?.closest('.overflow-x-auto'),
-        _miniScroll: () => document.querySelector('#miniStickyComparison .overflow-x-auto'),
-        _backButton: () => document.querySelector('button[name="comparison_back_button"]'),
-        _clearAllButton: () => document.querySelector('button[name="comparison_clear_all_button"]'),
-    };
-
+    static selector = '.o_wsale_comparison_page';
     dynamicContent = {
-        "button[name='comparison_add_to_cart']": {
-            "t-on-click": this.locked(this.addToCart, true),
-        },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
-        _backButton: { 't-on-click': () => redirect('/shop') },
-        _clearAllButton: { 't-on-click': this.clearAllProducts },
+        'button[name="comparison_clear_all_button"]': { 't-on-click': this.clearAllProducts },
     };
 
     // TODO the sticky logic could probably make use of the WebsiteSaleStickyObject
@@ -56,7 +42,7 @@ export class ComparisonPage extends Interaction {
             this.updateContent();
 
             // Update mini sticky position if it exists
-            const miniStickyEl = this.dynamicSelectors._miniSticky();
+            const miniStickyEl = this.el.querySelector('#miniStickyComparison');
             if (miniStickyEl) {
                 miniStickyEl.style.top = `${position}px`;
             }
@@ -67,7 +53,7 @@ export class ComparisonPage extends Interaction {
      * Clear all products from the comparison.
      */
     clearAllProducts() {
-        comparisonUtils.clearComparisonProducts(this.bus);
+        comparisonUtils.clearComparisonProducts(this.env.bus);
         redirect('/shop');
     }
 
@@ -77,8 +63,8 @@ export class ComparisonPage extends Interaction {
      * @private
      */
     _initMiniStickyComparison() {
-        const miniStickyEl = this.dynamicSelectors._miniSticky();
-        const productImagesEl = this.el.querySelector('ul:first-of-type');
+        const miniStickyEl = this.el.querySelector('#miniStickyComparison');
+        const productImagesEl = this.el.querySelector('#o_comparelist_table ul:first-of-type');
 
         if (!miniStickyEl || !productImagesEl) return;
 
@@ -86,8 +72,8 @@ export class ComparisonPage extends Interaction {
         miniStickyEl.style.top = `${this.position}px`;
 
         // Get scroll containers
-        const mainScrollEl = this.dynamicSelectors._mainScroll();
-        const miniScrollEl = this.dynamicSelectors._miniScroll();
+        const mainScrollEl = this.el.querySelector('.table-comparator').closest('.overflow-x-auto');
+        const miniScrollEl = this.el.querySelector('#miniStickyComparison .overflow-x-auto');
 
         // Handle vertical scroll (show/hide mini sticky)
         const handleVerticalScroll = () => {
@@ -135,31 +121,12 @@ export class ComparisonPage extends Interaction {
     }
 
     /**
-     * Add a product to the cart from the comparison page.
-     *
-     * @param {Event} ev
-     */
-    async addToCart(ev) {
-        const button = ev.currentTarget;
-        const productId = parseInt(button.dataset.productProductId);
-        const productTemplateId = parseInt(button.dataset.productTemplateId);
-        const showQuantity = Boolean(button.dataset.showQuantity);
-
-        await this.services["cart"].add({
-            productTemplateId: productTemplateId,
-            productId: productId,
-        }, {
-            showQuantity: showQuantity,
-        });
-    }
-
-    /**
      * Remove a product from the comparison.
      *
      * @param {Event} ev
      */
     removeProduct(ev) {
-        const productId = parseInt(ev.currentTarget.dataset.productProductId);
+        const productId = parseInt(ev.currentTarget.dataset.productId);
         comparisonUtils.removeComparisonProduct(productId, null); // No bus needed on comparison page
 
         const productIds = comparisonUtils.getComparisonProductIds();

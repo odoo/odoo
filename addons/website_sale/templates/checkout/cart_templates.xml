@@ -133,14 +133,13 @@
                                     name="o_wsale_cart_line_button_container"
                                     t-attf-class="d-none d-md-flex align-items-center gap-2 mt-2 {{'justify-content-between' if is_combo else ''}}"
                                 >
-                                    <a
-                                        href='#'
-                                        class="js_delete_product small"
+                                    <button
+                                        class="js_delete_product btn btn-link btn-sm p-0"
                                         aria-label="Remove from cart"
                                         title="Remove from cart"
                                     >
                                         Remove
-                                    </a>
+                                    </button>
                                     <div t-if="is_combo" class="d-none d-md-block ms-auto"><t t-call="website_sale.cart_lines_quantity"/></div>
                                 </div>
                             </div>
@@ -492,7 +491,6 @@
                     t-as="product"
                     t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
                     t-att-data-publish="product.website_published and 'on' or 'off'"
-                    name="suggested_product"
                 >
                     <div class="o_cart_product_image">
                         <a t-att-href="product.website_url">
@@ -536,7 +534,9 @@
                                     />
                                 </h6>
                                 <button
-                                    class="js_add_suggested_products btn btn-primary text-nowrap"
+                                    name="add_to_cart"
+                                    class="btn btn-primary text-nowrap"
+                                    data-action="buy_now"
                                     t-att-data-product-id="product.id"
                                     t-att-data-product-template-id="product.product_tmpl_id.id"
                                     t-att-data-product-type="product.type"
