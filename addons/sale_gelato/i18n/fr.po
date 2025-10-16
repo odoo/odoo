@@ -3,13 +3,14 @@
 # * sale_gelato
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-17 17:30+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-10-15 12:41+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "sale_gelato/fr/>\n"
 "Language: fr\n"
@@ -66,6 +67,49 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Bonjour <t t-out=\"object.partner_id.name or ''\""
+">Brandon Freeman</t>,<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        Nous sommes heureux de vous informer que votre "
+"commande est en transit.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value="
+"\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Votre numéro de suivi est <a t-attf-href="
+"\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Vos numéros de suivi sont :\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as="
+"\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" "
+"t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        Nous sommes heureux de vous informer que votre "
+"commande a été livrée.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    Merci,\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                        <br/>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote="
+"\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -118,7 +162,7 @@ msgstr "Impossible de se synchroniser avec Gelato."
 #. module: sale_gelato
 #: model:ir.model,website_form_label:sale_gelato.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Créer un client"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__display_name
@@ -131,7 +175,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_gelato.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
@@ -205,7 +249,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has canceled order %(reference)s."
-msgstr ""
+msgstr "Gelato a annulé la commande %(reference)s."
 
 #. module: sale_gelato
 #. odoo-python
@@ -229,13 +273,13 @@ msgstr "Gelato : Mise à jour du statut de la commande"
 #: model:ir.model.fields,field_description:sale_gelato.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "Invalid source document type"
-msgstr ""
+msgstr "Type de document source invalide"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
