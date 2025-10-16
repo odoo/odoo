@@ -402,7 +402,6 @@ class PosSession(models.Model):
 
             return session.action_pos_session_validate(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
-
     def action_pos_session_validate(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         return self.action_pos_session_close(balancing_account, amount_to_balance, bank_payment_method_diffs)
@@ -1288,7 +1287,6 @@ class PosSession(models.Model):
         payment_method_to_receivable_lines = data.get('payment_method_to_receivable_lines')
         payment_to_receivable_lines = data.get('payment_to_receivable_lines')
 
-
         all_lines = (
               split_cash_statement_lines
             | combine_cash_statement_lines
@@ -1301,7 +1299,6 @@ class PosSession(models.Model):
         lines_by_account = [all_lines.filtered(lambda l: l.account_id == account and not l.reconciled) for account in accounts if account.reconcile]
         for lines in lines_by_account:
             lines.with_context(no_cash_basis=True).reconcile()
-
 
         for payment_method, lines in payment_method_to_receivable_lines.items():
             receivable_account = self._get_receivable_account(payment_method)
@@ -1822,18 +1819,3 @@ class PosSession(models.Model):
 
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
-
-
-class StockRule(models.Model):
-    _inherit = 'stock.rule'
-
-    @api.model
-    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
-        super()._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
-        self.env['pos.session']._alert_old_session()
-        if use_new_cursor:
-            self.env['ir.cron']._commit_progress(1)
-
-    @api.model
-    def _get_scheduler_tasks_to_do(self):
-        return super()._get_scheduler_tasks_to_do() + 1
