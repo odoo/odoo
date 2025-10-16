@@ -380,7 +380,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             }])
 
     def test_received_bill_notification(self):
-        self.env.company.peppol_purchase_journal_id.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
+        peppol_purchase_journal = self.env.company.peppol_purchase_journal_id
+        peppol_purchase_journal.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
         self.env.company.email = 'hq@example.com'
 
         with self.mock_mail_gateway():
@@ -389,7 +390,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertSentEmail(
             '"company_1_data" <hq@example.com>',
             ['oops_another_bill@example.com'],
-            subject='New Electronic Invoices Received',
+            subject=f"{self.env.company.name} - New invoice in {peppol_purchase_journal.display_name} journal",
         )
 
     def test_validate_partner(self):

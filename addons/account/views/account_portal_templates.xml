@@ -120,14 +120,26 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Invoice Notifications</h5>
-                            <p class="card-text">You can unsubscribe from emails received upon invoice reception here.</p>
-                            <div t-if="completed" class="alert alert-success" role="alert">
-                                Successfully unsubscribed from invoice notifications
-                            </div>
-                            <form t-else="" method="POST">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <button type="submit" class="btn btn-primary">Unsubscribe</button>
-                            </form>
+                            <p class="card-text">You can unsubscribe from emails received upon invoice sending and reception here.</p>
+                            <t t-if="completed">
+                                <div class="alert alert-success" role="alert">
+                                    Successfully unsubscribed <t t-if="email"><strong t-out="email"/></t> from invoice notifications.
+                                </div>
+                            </t>
+                            <t t-elif="error">
+                                <div class="alert alert-danger" role="alert">
+                                    <t t-out="error"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div t-if="email" class="alert alert-info" role="alert">
+                                    You are about to unsubscribe <strong t-out="email"/> from invoice notifications.
+                                </div>
+                                <form method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                                </form>
+                            </t>
                         </div>
                     </div>
                 </div>
