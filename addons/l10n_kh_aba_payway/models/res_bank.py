@@ -8,7 +8,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from odoo import _, api, fields, models,modules
+from odoo import _, api, fields, models, modules
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import config
 
@@ -69,7 +69,7 @@ class ResBank(models.Model):
         help="Enter your production PayWay API Key. You'll receive this by email after obtaining a Go Live approval from ABA PayWay.",
         groups='base.group_system',
     )
-
+    # TODO: Can use the same fields for both prod and sandbox
     sandbox_payway_merchant_id = fields.Char(
         string='Merchant ID',
         help='Enter your unique PayWay Merchant ID. You can find it in the email registered for your PayWay Sandbox account.',

@@ -22,7 +22,8 @@
     'category': 'Point of Sale',
     'depends': [
         'point_of_sale',
-        # 'pos_restaurant',
+        # TODO: Remove dependancy on restaurant
+        'pos_restaurant',
         'l10n_kh_aba_payway',
     ],
     'auto_install': True,

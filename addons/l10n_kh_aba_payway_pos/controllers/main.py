@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 class PayWayController(http.Controller):
 
-    @http.route('/pos/payway/webhook', type='json', auth='public', methods=['POST'], csrf=False)
+    @http.route('/pos/payway/webhook', type='jsonrpc', auth='public', methods=['POST'], csrf=False)
     def payway_webhook(self):
 
         try:

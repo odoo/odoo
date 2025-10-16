@@ -6,6 +6,7 @@ from odoo.addons.l10n_kh_aba_payway import const
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
+    # TODO: Remove dependancy on restaurant
     allow_qr_on_bill = fields.Boolean(
         string="Allow QR on Bill",
         help="If checked, a QR code for this payment method will be generated and printed on the customer bill.",

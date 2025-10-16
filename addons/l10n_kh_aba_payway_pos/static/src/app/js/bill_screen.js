@@ -15,8 +15,9 @@ patch(BillScreen.prototype, {
         });
     },
 
+    // TODO: Remove restaurant dependancy. This feature could be added to standard if there is a need for it.
     async _generateQrCode() {
-        /** 
+        /**
          * Generate Payway QR code for the printed bill in POS resturant.
          */
 
