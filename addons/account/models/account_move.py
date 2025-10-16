@@ -3412,7 +3412,7 @@ class AccountMove(models.Model):
         # Collect data to avoid recomputing value unecessarily
         product_lines_before = {
             move: Counter(
-                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount)
+                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount, line.account_id)
                 for line in move.line_ids
                 if line.display_type == 'product'
             )
@@ -3425,7 +3425,7 @@ class AccountMove(models.Model):
         to_create = []
         for move in container['records']:
             product_lines_now = Counter(
-                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount)
+                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount, line.account_id)
                 for line in move.line_ids
                 if line.display_type == 'product'
             )
