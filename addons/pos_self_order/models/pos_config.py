@@ -64,12 +64,14 @@ class PosConfig(models.Model):
         'ir.attachment',
         string="Add images",
         help="Image to display on the self order screen",
+        bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
         'ir.attachment',
         string="Set background image",
         help="Image to be displayed in the background",
         relation="pos_self_order_background_rels",
+        bypass_search_access=True,
     )
     self_ordering_default_user_id = fields.Many2one(
         "res.users",
