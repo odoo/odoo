@@ -88,6 +88,18 @@ class TestTaxesComputation(TestTaxCommonAccountTaxPython):
             },
             product_values={'volume': 0.0},
         )
+        self.assert_python_taxes_computation(
+            "uom.relative_factor",
+            100.0,
+            {
+                'total_included': 142.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 42.0),
+                ),
+            },
+            product_uom_values={'relative_factor': 42.0},
+        )
         self._run_js_tests()
 
     def test_invalid_formula(self):
