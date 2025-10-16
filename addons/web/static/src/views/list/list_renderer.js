@@ -27,6 +27,7 @@ import {
     status,
     onWillPatch,
     onWillRender,
+    status,
     useExternalListener,
     useRef,
 } from "@odoo/owl";
