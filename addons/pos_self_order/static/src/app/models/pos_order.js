@@ -74,4 +74,11 @@ patch(PosOrder.prototype, {
                 this.tracking_number != this.getName() ? orderData.tracking_number : "",
         };
     },
+    serializeForORM(opts = {}) {
+        const data = super.serializeForORM(opts);
+        if (this.email && !data.email) {
+            data.email = this.email;
+        }
+        return data;
+    },
 });

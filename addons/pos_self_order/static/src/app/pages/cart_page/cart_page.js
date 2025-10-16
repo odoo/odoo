@@ -115,14 +115,9 @@ export class CartPage extends Component {
     async proceedInfos(state) {
         this.state.fillInformations = false;
         if (state) {
+            this.selfOrder.currentOrder.email =
+                this.selfOrder.currentOrder.partner_id?.email || state.email;
             await this.pay();
-            if (this.selfOrder.currentOrder.preset_id?.mail_template_id) {
-                this.sendReceipt.call({
-                    action: "action_send_self_order_receipt",
-                    destination: state.email,
-                    mail_template_id: this.selfOrder.currentOrder.preset_id.mail_template_id.id,
-                });
-            }
         }
     }
 
