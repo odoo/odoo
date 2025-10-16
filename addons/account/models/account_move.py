@@ -6820,21 +6820,31 @@ class AccountMove(models.Model):
         else:
             return super()._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         # EXTENDS mail mail.thread
-        # add custom subtype depending of the state.
         self.ensure_one()
 
-        if not self.is_invoice(include_receipts=True):
-            if self.origin_payment_id and 'state' in init_values:
-                self.origin_payment_id._message_track(['state'], {self.origin_payment_id.id: init_values})
-            return super()._track_subtype(init_values)
-
-        if 'payment_state' in init_values and self.payment_state == 'paid':
+        if 'payment_state' in fields_iter and self.payment_state == 'paid':
             return self.env.ref('account.mt_invoice_paid')
-        elif 'state' in init_values and self.state == 'posted' and self.is_sale_document(include_receipts=True):
+        elif 'state' in fields_iter and self.state == 'posted' and self.is_sale_document(include_receipts=True):
             return self.env.ref('account.mt_invoice_validated')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
+
+    def _track_post_tracking(self, *, fields_iter=None, initial_values=None):
+        tracking = super()._track_post_tracking(fields_iter=fields_iter, initial_values=initial_values)
+
+        for record in self:
+            fields_iter, _tracking_value_ids = tracking.get(record.id) or ([], [])
+            record_initial_values = initial_values.get(record.id, {})
+            if (not record.is_invoice(include_receipts=True) and
+                record.origin_payment_id and
+                'state' in record_initial_values
+            ):
+                record.origin_payment_id._track_post_tracking(
+                    fields_iter=['state'],
+                    initial_values={record.origin_payment_id.id: record_initial_values}
+                )
+        return tracking
 
     def _creation_message(self):
         # EXTENDS mail mail.thread

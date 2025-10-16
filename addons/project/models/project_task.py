@@ -1573,7 +1573,7 @@ class ProjectTask(models.Model):
                      project_name=self.project_id.display_name)
         return _('A new task has been created and is not part of any project.')
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
         mail_message_subtype_per_state = {
             '1_done': 'project.mt_task_done',
@@ -1584,11 +1584,11 @@ class ProjectTask(models.Model):
             '04_waiting_normal': 'project.mt_task_waiting',
         }
 
-        if 'stage_id' in init_values:
+        if 'stage_id' in fields_iter:
             return self.env.ref('project.mt_task_stage')
-        elif 'state' in init_values and self.state in mail_message_subtype_per_state:
+        elif 'state' in fields_iter and self.state in mail_message_subtype_per_state:
             return self.env.ref(mail_message_subtype_per_state[self.state])
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()

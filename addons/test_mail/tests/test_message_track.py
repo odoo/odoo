@@ -141,7 +141,7 @@ class TestTracking(MailCommon):
             'body_html': f'<p>Template {n}</p>',
         } for n in range(2)])
 
-        def _track_subtype(self, init_values):
+        def _track_subtype(self, *, fields_iter=None, initial_values=None):
             return self.env.ref('mail.mt_note')
         self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
 
@@ -373,12 +373,12 @@ class TestTracking(MailCommon):
             'body_html': "<div>A nice body</div>",
         })
 
-        def patched_message_track_post_template(*args, **kwargs):
+        def patched_track_post_template(*args, **kwargs):
             if args[0]._name == "mail.test.track":
                 args[0].message_post_with_source(template)
             return True
 
-        with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
+        with patch('odoo.addons.mail.models.mail_thread.MailThread._track_post_template', patched_track_post_template):
             self.env['mail.test.track'].create({
                 'email_from': email_new_partner,
                 'company_id': company1.id,
@@ -392,7 +392,7 @@ class TestTracking(MailCommon):
 
     def test_message_track_template_defaults(self):
         """ Check that default_* keys are not taken into account in
-        _message_track_post_template """
+        _track_post_template """
         magic_code = 'Up-Up-Down-Down-Left-Right-Left-Right-Square-Triangle'
 
         mt_name_changed = self.env['mail.message.subtype'].create({
@@ -417,7 +417,7 @@ class TestTracking(MailCommon):
         self.assertFalse(hasattr(ContainerModel.name, 'tracking'))
         ContainerModel.name.tracking = True
         self.addCleanup(delattr, ContainerModel.name, 'tracking')
-        self.patch(ContainerModel, '_track_subtype', lambda self, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
+        self.patch(ContainerModel, '_track_subtype', lambda self, fields_iter, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
         self.patch(ContainerModel, '_track_template', lambda self, changes: {'name': (mail_template, {'composition_mode': 'mass_mail'})} if 'name' in changes else {})
 
         test_mail_record = self.env['mail.test.container'].create({

@@ -493,11 +493,11 @@ class FleetVehicle(models.Model):
         )
         return res
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'driver_id' in init_values or 'future_driver_id' in init_values:
+        if 'driver_id' in fields_iter or 'future_driver_id' in fields_iter:
             return self.env.ref('fleet.mt_fleet_driver_updated')
-        return super(FleetVehicle, self)._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def open_assignation_logs(self):
         self.ensure_one()

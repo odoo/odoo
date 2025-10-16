@@ -2965,19 +2965,19 @@ class MrpProduction(models.Model):
         self.qty_producing = 0
         self._set_qty_producing(False)
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'confirmed':
+        if 'state' in fields_iter and self.state == 'confirmed':
             return self.env.ref('mrp.mrp_mo_in_confirmed')
-        elif 'state' in init_values and self.state == 'progress':
+        elif 'state' in fields_iter and self.state == 'progress':
             return self.env.ref('mrp.mrp_mo_in_progress')
-        elif 'state' in init_values and self.state == 'to_close':
+        elif 'state' in fields_iter and self.state == 'to_close':
             return self.env.ref('mrp.mrp_mo_in_to_close')
-        elif 'state' in init_values and self.state == 'done':
+        elif 'state' in fields_iter and self.state == 'done':
             return self.env.ref('mrp.mrp_mo_in_done')
-        elif 'state' in init_values and self.state == 'cancel':
+        elif 'state' in fields_iter and self.state == 'cancel':
             return self.env.ref('mrp.mrp_mo_in_cancelled')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     # -------------------------------------------------------------------------
     # CATALOG

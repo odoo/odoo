@@ -908,11 +908,11 @@ class HrApplicant(models.Model):
             return self.env.ref('hr_recruitment.mt_talent_new', raise_if_not_found=False)
         return self.env.ref('hr_recruitment.mt_applicant_new')
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         record = self[0]
-        if 'stage_id' in init_values and record.stage_id:
+        if 'stage_id' in fields_iter and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def _notify_get_reply_to(self, default=None, author_id=False):
         """ Override to set alias of applicants to their job definition if any. """

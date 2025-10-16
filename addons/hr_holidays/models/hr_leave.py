@@ -1525,11 +1525,11 @@ is approved, validated or refused.')
                     subject=_('Your Time Off'),
                 )
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values and self.state == 'validate':
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
+        if 'state' in fields_iter and self.state == 'validate':
             leave_notif_subtype = self.holiday_status_id.leave_notif_subtype_id
             return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo

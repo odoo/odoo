@@ -1751,13 +1751,13 @@ class SaleOrder(models.Model):
         fallback on partner-based computation using ``_mail_get_partner_fields``. """
         return []
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'state' in init_values and self.state == 'sale':
+        if 'state' in fields_iter and self.state == 'sale':
             return self.env.ref('sale.mt_order_confirmed')
-        elif 'state' in init_values and self.state == 'sent':
+        elif 'state' in fields_iter and self.state == 'sent':
             return self.env.ref('sale.mt_order_sent')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     # PAYMENT #
 

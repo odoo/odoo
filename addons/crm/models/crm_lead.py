@@ -2080,19 +2080,19 @@ class CrmLead(models.Model):
             return _('A new lead has been created for the team "%(team_name)s".', team_name=self.team_id.display_name)
         return _('A new lead has been created and is not assigned to any team.')
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'stage_id' in init_values and self.won_status == 'won':
+        if 'stage_id' in fields_iter and self.won_status == 'won':
             return self.env.ref('crm.mt_lead_won')
-        elif 'lost_reason_id' in init_values and self.lost_reason_id:
+        elif 'lost_reason_id' in fields_iter and self.lost_reason_id:
             return self.env.ref('crm.mt_lead_lost')
-        elif 'stage_id' in init_values:
+        elif 'stage_id' in fields_iter:
             return self.env.ref('crm.mt_lead_stage')
-        elif 'won_status' in init_values and self.won_status != 'lost':
+        elif 'won_status' in fields_iter and self.won_status != 'lost':
             return self.env.ref('crm.mt_lead_restored')
-        elif 'won_status' in init_values and self.won_status == 'lost':
+        elif 'won_status' in fields_iter and self.won_status == 'lost':
             return self.env.ref('crm.mt_lead_lost')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,

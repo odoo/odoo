@@ -69,11 +69,11 @@ class MailTestTicket(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         return super(MailTestTicket, self)._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'container_id' in init_values and self.container_id:
+        if 'container_id' in fields_iter and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
-        return super(MailTestTicket, self)._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
     def _get_customer_information(self):
         email_keys_to_values = super()._get_customer_information()
@@ -150,11 +150,11 @@ class MailTestTicketMc(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
         return super()._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'container_id' in init_values and self.container_id:
+        if 'container_id' in fields_iter and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
 
 
 class MailTestTicketPartner(models.Model):

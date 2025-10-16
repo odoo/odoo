@@ -13,8 +13,8 @@ class MailBlacklist(models.Model):
         ondelete='restrict',
         tracking=10)
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, *, fields_iter=None, initial_values=None):
         self.ensure_one()
-        if 'opt_out_reason_id' in init_values and self.opt_out_reason_id:
+        if 'opt_out_reason_id' in fields_iter and self.opt_out_reason_id:
             return self.env.ref('mail.mt_comment')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(fields_iter=fields_iter, initial_values=initial_values)
