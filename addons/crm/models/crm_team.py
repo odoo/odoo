@@ -693,17 +693,6 @@ class CrmTeam(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    #TODO JEM : refactor this stuff with xml action, proper customization,
-    @api.model
-    def action_your_pipeline(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_action_pipeline")
-        return self._action_update_to_pipeline(action)
-
-    @api.model
-    def action_opportunity_forecast(self):
-        action = self.env['ir.actions.actions']._for_xml_id('crm.crm_lead_action_forecast')
-        return self._action_update_to_pipeline(action)
-
     def action_open_leads(self):
         action = self.env['ir.actions.actions']._for_xml_id('crm.crm_case_form_view_salesteams_opportunity')
         rcontext = {
@@ -723,28 +712,6 @@ class CrmTeam(models.Model):
         else:
             context = {}
         action['context'] = context | {'search_default_unassigned': True}
-        return action
-
-    @api.model
-    def _action_update_to_pipeline(self, action):
-        self.check_access("read")
-        user_team_id = self.env.user.sale_team_id.id
-        if not user_team_id:
-            user_team_id = self.search([], limit=1).id
-            action['help'] = "<p class='o_view_nocontent_smiling_face'>%s</p><p>" % _("Create an Opportunity")
-            if user_team_id:
-                if self.env.user.has_group('sales_team.group_sale_manager'):
-                    action['help'] += "<p>%s</p>" % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
-                                        To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>""",
-                                        self.env.ref('sales_team.crm_team_action_config').id)
-                else:
-                    action['help'] += "<p>%s</p>" % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
-                                        To work with the CRM, you should join a team.""")
-        try:
-            action_context = safe_eval(action['context'], {'uid': self.env.uid})
-        except (NameError, ValueError):
-            action_context = {}
-        action['context'] = action_context
         return action
 
     def _compute_dashboard_button_name(self):
