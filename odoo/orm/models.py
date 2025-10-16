@@ -73,10 +73,11 @@ from .utils import (
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, Reversible, Sequence
     from types import MappingProxyType
+    from typing import Self
     from .table_objects import TableObject
     from .environments import Environment
     from .registry import Registry, TriggerTree
-    from .types import Self, DomainType, IdType, ModelType, ValuesType
+    from .types import DomainType, IdType, ModelType, ValuesType
 
     T = typing.TypeVar('T')
 
