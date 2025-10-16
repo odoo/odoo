@@ -23,13 +23,11 @@
                 <field name="name">Part (I) - Output tax</field>
                 <field name="code">LK_VAT_001E_OT</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False" />
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_a" model="account.report.line">
                         <field name="name">Taxable Supplies</field>
                         <field name="code">LK_VAT_001E_A</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_a_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -47,7 +45,6 @@
                         <field name="name">Deemed Taxable Supplies (Specified Projects)</field>
                         <field name="code">LK_VAT_001E_A1</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_a1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -65,7 +62,6 @@
                         <field name="name">Deemed Taxable Supplies (Strategic Development Projects)</field>
                         <field name="code">LK_VAT_001E_A2</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_a2_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -83,7 +79,6 @@
                         <field name="name">Wholesale and Retail Taxable Supplies</field>
                         <field name="code">LK_VAT_001E_B</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_b_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -101,7 +96,6 @@
                         <field name="name">VAT Suspended Taxable Supplies</field>
                         <field name="code">LK_VAT_001E_C</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_c_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -119,7 +113,6 @@
                         <field name="name">Total Output Tax</field>
                         <field name="code">LK_VAT_001E_TOT</field>
                         <field name="hierarchy_level">3</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_tot_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -132,7 +125,6 @@
                         <field name="name">Zero Rated Supplies (Goods)</field>
                         <field name="code">LK_VAT_001E_D</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_d_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -145,7 +137,6 @@
                         <field name="name">Zero Rated Supplies (Services)</field>
                         <field name="code">LK_VAT_001E_D1</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_d1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -158,7 +149,6 @@
                         <field name="name">Exempt Supplies</field>
                         <field name="code">LK_VAT_001E_E</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_e_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -171,7 +161,6 @@
                         <field name="name">Excluded Supplies</field>
                         <field name="code">LK_VAT_001E_E1</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_e1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -184,7 +173,6 @@
                         <field name="name">Local Supply of Garments</field>
                         <field name="code">LK_VAT_001E_F</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_f_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -204,7 +192,6 @@
                         <field name="name">Local Supply of Fabrics</field>
                         <field name="code">LK_VAT_001E_G</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_g_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -226,13 +213,11 @@
                 <field name="name">Part (II) - Input tax</field>
                 <field name="code">LK_VAT_001E_IT</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False" />
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_h" model="account.report.line">
                         <field name="name">Imports</field>
                         <field name="code">LK_VAT_001E_H</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_h_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -255,7 +240,6 @@
                         <field name="name">Local Purchases</field>
                         <field name="code">LK_VAT_001E_I</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_i_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -273,7 +257,6 @@
                         <field name="name">Total Input Tax</field>
                         <field name="code">LK_VAT_001E_TIT</field>
                         <field name="hierarchy_level">3</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_tit_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -286,7 +269,6 @@
                         <field name="name">VAT Suspended Purchases</field>
                         <field name="code">LK_VAT_001E_J</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_j_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -304,7 +286,6 @@
                         <field name="name">Non-Foreign Exchange Purchases</field>
                         <field name="code">LK_VAT_001E_J1</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_j1_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -322,7 +303,6 @@
                         <field name="name">Imports on which VAT is not charged</field>
                         <field name="code">LK_VAT_001E_J2</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_j2_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -335,7 +315,6 @@
                         <field name="name">Local Purchases on which VAT is not charged</field>
                         <field name="code">LK_VAT_001E_J3</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_j3_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -348,7 +327,6 @@
                         <field name="name">Goods Purchased from Non VAT Registered Persons</field>
                         <field name="code">LK_VAT_001E_J4</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_j4_balance_a" model="account.report.expression">
                                 <field name="label">balance_a</field>
@@ -361,7 +339,6 @@
                         <field name="name">Disallowable Input Tax on Imports, other Purchases and Adjustments</field>
                         <field name="code">LK_VAT_001E_8</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_8_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -374,7 +351,6 @@
                         <field name="name">Disallowable Input Tax on Suspended Purchases</field>
                         <field name="code">LK_VAT_001E_8A</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_8a_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -387,7 +363,6 @@
                         <field name="name">Allowable Input Tax excluding B/F Amounts</field>
                         <field name="code">LK_VAT_001E_9</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_9_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -400,7 +375,6 @@
                         <field name="name">Brought Forward Input Tax</field>
                         <field name="code">LK_VAT_001E_10</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_10_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -416,13 +390,11 @@
                 <field name="name">Part (II) - Allowable Input tax</field>
                 <field name="code">LK_VAT_001E_AIT</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False" />
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_11" model="account.report.line">
                         <field name="name">Zero Rated Supplies/Suspended Supplies/22(7) {Cage 9*( C+D+D1)/(A+A1+A2+B+C+D+D1)}</field>
                         <field name="code">LK_VAT_001E_11</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_11_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -436,7 +408,6 @@
                         <field name="name">Not belongs to above {(9+10-11) or 100% of cage 0+1+1A+2 whichever is lower} </field>
                         <field name="code">LK_VAT_001E_12</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_12_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -466,7 +437,6 @@
                         <field name="name">Allowable Input</field>
                         <field name="code">LK_VAT_001E_13</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_13_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -479,7 +449,6 @@
                         <field name="name">Unabsorbed Excess Input Tax C/F to next Quarter</field>
                         <field name="code">LK_VAT_001E_14</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_14_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -494,13 +463,11 @@
                 <field name="name">Part (IV) - Tax Payable/Refundable</field>
                 <field name="code">LK_VAT_001E_TPR</field>
                 <field name="hierarchy_level">0</field>
-                <field name="foldable" eval="False" />
                 <field name="children_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_15" model="account.report.line">
                         <field name="name">15: Gross Refund Due if (13-3-8A) &gt; 0</field>
                         <field name="code">LK_VAT_001E_15</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_15_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -514,7 +481,6 @@
                                 <field name="name">L: Unabsorbed VAT as at 31/12/2010</field>
                                 <field name="code">LK_VAT_001E_L</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_l_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -528,7 +494,6 @@
                                 <field name="name">M: The aggregate Input Tax set off against VAT after 01/01/2011</field>
                                 <field name="code">LK_VAT_001E_M</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_m_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -542,7 +507,6 @@
                                 <field name="name">N: The aggregate Input Tax set off against other taxes payable to CGIR</field>
                                 <field name="code">LK_VAT_001E_N</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_n_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -556,7 +520,6 @@
                                 <field name="name">O: The aggregate input tax set off against taxes payable to DGC</field>
                                 <field name="code">LK_VAT_001E_O</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_o_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -572,7 +535,6 @@
                         <field name="name">P: Unabsorbed balance to be C/F</field>
                         <field name="code">LK_VAT_001E_P</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_p_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -585,7 +547,6 @@
                         <field name="name">16: Tax Payable if (3-13+8A) &gt; 0</field>
                         <field name="code">LK_VAT_001E_16</field>
                         <field name="hierarchy_level">1</field>
-                        <field name="foldable" eval="False" />
                         <field name="expression_ids">
                             <record id="l10n_lk_vat001_lk_vat_001e_16_balance_c" model="account.report.expression">
                                 <field name="label">balance_c</field>
@@ -599,7 +560,6 @@
                                 <field name="name">Q: Monthly Payment</field>
                                 <field name="code">LK_VAT_001E_Q</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_q_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -613,7 +573,6 @@
                                 <field name="name">R: Deemed Tax Credit (Specified Projects)</field>
                                 <field name="code">LK_VAT_001E_R</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_r_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -626,7 +585,6 @@
                                 <field name="name">R1: Deemed Tax Credit (Strategic Development Project)</field>
                                 <field name="code">LK_VAT_001E_R1</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_r1_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -639,7 +597,6 @@
                                 <field name="name">R2: Tax Credit based on SVAT Credit Voucher</field>
                                 <field name="code">LK_VAT_001E_R2</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_r2_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -652,7 +609,6 @@
                                 <field name="name">R3: Deem Input on Wholesale and Retail (R3B+R3F)</field>
                                 <field name="code">LK_VAT_001E_R3</field>
                                 <field name="hierarchy_level">3</field>
-                                <field name="foldable" eval="False" />
                                 <field name="expression_ids">
                                     <record id="l10n_lk_vat001_lk_vat_001e_r3_balance_c" model="account.report.expression">
                                         <field name="label">balance_c</field>
@@ -699,7 +655,6 @@
                                         <field name="name">R3A: B/F Credit on Stock</field>
                                         <field name="code">LK_VAT_001E_R3A</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3a_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -713,7 +668,6 @@
                                         <field name="name">R3B: Claimed Credit for the Period</field>
                                         <field name="code">LK_VAT_001E_R3B</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3b_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -727,7 +681,6 @@
                                         <field name="name">R3C: C/F Credit on Stock</field>
                                         <field name="code">LK_VAT_001E_R3C</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3c_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -741,7 +694,6 @@
                                         <field name="name">R3D: B/F Credit on Purchase</field>
                                         <field name="code">LK_VAT_001E_R3D</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3d_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -755,7 +707,6 @@
                                         <field name="name">R3E: Credit on purchases for the Period</field>
                                         <field name="code">LK_VAT_001E_R3E</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3e_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -769,7 +720,6 @@
                                         <field name="name">R3F: Claimed Credit for the Period</field>
                                         <field name="code">LK_VAT_001E_R3F</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3f_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -783,7 +733,6 @@
                                         <field name="name">R3G: C/F Credit on Purchase</field>
                                         <field name="code">LK_VAT_001E_R3G</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_r3g_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -797,7 +746,6 @@
                                         <field name="name">S: Claim for this Period out of Cage L</field>
                                         <field name="code">LK_VAT_001E_S</field>
                                         <field name="hierarchy_level">5</field>
-                                        <field name="foldable" eval="False" />
                                         <field name="expression_ids">
                                             <record id="l10n_lk_vat001_lk_vat_001e_s_balance_c" model="account.report.expression">
                                                 <field name="label">balance_c</field>
@@ -816,7 +764,6 @@
                 <field name="name">S1A, S1B, S1C: The Input tax set off against other taxes payable to CGIR (IT/ESC/NBT)</field>
                 <field name="code">LK_VAT_001E_S1</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False" />
                 <field name="expression_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_s1_balance_a" model="account.report.expression">
                         <field name="label">balance_a</field>
@@ -842,7 +789,6 @@
                 <field name="name">S2: The Input tax set off against taxes payable to DGC</field>
                 <field name="code">LK_VAT_001E_S2</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False" />
                 <field name="expression_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_s2_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
@@ -856,7 +802,6 @@
                 <field name="name">S3: Total claimed from Unabsorbed Input Tax</field>
                 <field name="code">LK_VAT_001E_S3</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False" />
                 <field name="expression_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_s3_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
@@ -869,7 +814,6 @@
                 <field name="name">17: Total Tax Credits</field>
                 <field name="code">LK_VAT_001E_17</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False" />
                 <field name="expression_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_17_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
@@ -882,7 +826,6 @@
                 <field name="name">18: Tax Payable/(Refund Due)</field>
                 <field name="code">LK_VAT_001E_18</field>
                 <field name="hierarchy_level">1</field>
-                <field name="foldable" eval="False" />
                 <field name="expression_ids">
                     <record id="l10n_lk_vat001_lk_vat_001e_18_balance_c" model="account.report.expression">
                         <field name="label">balance_c</field>
