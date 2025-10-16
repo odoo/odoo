@@ -59,6 +59,9 @@ class PosSelfOrderController(http.Controller):
         if amount_total == 0:
             order_ids._process_saved_order(False)
 
+        if preset_id and preset_id.mail_template_id:
+            order_ids._send_self_order_receipt()
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _get_prefixes(self, device_type):
