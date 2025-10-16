@@ -83,10 +83,9 @@ class PaymentTransaction(models.Model):
         )._post_process()
 
         for done_tx in self.filtered(lambda tx: tx.state == 'done'):
-            confirmed_orders = done_tx._check_amount_and_confirm_order()
-            if done_tx.operation == 'validation':
-                continue
-            (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+            if done_tx.operation != 'validation':
+                confirmed_orders = done_tx._check_amount_and_confirm_order()
+                (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
             auto_invoice = str2bool(
                 self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
