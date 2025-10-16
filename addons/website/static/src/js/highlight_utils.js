@@ -271,7 +271,6 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
         svg.style.left = `${(rects.x - containerRect.x - spanOffsetX) * scale}px`;
         svg.style.top = `${(rects.y - containerRect.y - spanOffsetY) * scale}px`;
         svg.style.bottom = `0px`;
-        svg.style.right = `0px`;
     }
     return svgs;
 }
