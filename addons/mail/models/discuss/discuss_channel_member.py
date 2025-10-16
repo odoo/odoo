@@ -413,7 +413,7 @@ class DiscussChannelMember(models.Model):
         self._join_sfu(ice_servers)
         if store:
             store.add(
-                self.channel_id, {"rtc_session_ids": Store.Many(current_rtc_sessions, mode="ADD")}
+                self.channel_id, ["is_transcribing", {"rtc_session_ids": Store.Many(current_rtc_sessions, mode="ADD")}]
             )
             store.add(
                 self.channel_id,

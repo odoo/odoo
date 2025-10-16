@@ -422,15 +422,6 @@ export class Rtc extends Record {
         this.dialog = services.dialog;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
-        this.store.env.services["bus_service"].subscribe(
-            "discuss.channel/transcription_state",
-            ({ id, is_transcribing }) => {
-                const channel = this.store["mail.thread"].get({ id, model: "discuss.channel" });
-                if (channel) {
-                    channel.is_transcribing = is_transcribing;
-                }
-            }
-        );
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
@@ -788,6 +779,56 @@ export class Rtc extends Record {
         this.store.settings.cameraFacingMode =
             this.store.settings.cameraFacingMode === "user" ? "environment" : "user";
         await this.toggleVideo("camera", { force: true, refreshStream: true });
+    }
+
+    async setTranscription(newState) {
+        // 1. Update Odoo backend immediately for UI responsiveness.
+        await rpc("/mail/rtc/session/update_and_broadcast", {
+            session_id: this.selfSession.id,
+            values: { is_transcribing: newState },
+        });
+
+        if (newState) {
+            // 2. Turning ON: Upgrade connection if needed, and wait for it.
+            if (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED) {
+                const upgradePromise = new Promise((resolve, reject) => {
+                    const onStateChange = ({ detail: { state } }) => {
+                        if (state === this.SFU_CLIENT_STATE.CONNECTED) {
+                            this.network.removeEventListener("stateChange", onStateChange);
+                            resolve();
+                        }
+                        if (state === this.SFU_CLIENT_STATE.CLOSED) {
+                            this.network.removeEventListener("stateChange", onStateChange);
+                            reject(new Error("SFU connection failed"));
+                        }
+                    };
+                    this.network.addEventListener("stateChange", onStateChange);
+                    this.upgradeConnectionDebounce();
+                });
+
+                try {
+                    await upgradePromise;
+                } catch (e) {
+                    this.notification.add(
+                        _t("Transcription failed: could not connect to the media server."),
+                        { type: "warning" }
+                    );
+                    // Revert the state on the backend.
+                    await rpc("/mail/rtc/session/update_and_broadcast", {
+                        session_id: this.selfSession.id,
+                        values: { is_transcribing: false },
+                    });
+                    return;
+                }
+            }
+            // 3. Send the START command.
+            this.sfuClient.setTranscription(true);
+        } else {
+            // 4. Turning OFF: Just send the command if we are connected.
+            if (this.sfuClient && this.sfuClient.state === this.SFU_CLIENT_STATE.CONNECTED) {
+                this.sfuClient.setTranscription(false);
+            }
+        }
     }
 
     async toggleDeafen() {

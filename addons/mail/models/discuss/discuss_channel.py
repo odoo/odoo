@@ -1262,6 +1262,7 @@ class DiscussChannel(models.Model):
                 sudo=True,
             ),
             "uuid",
+            "is_transcribing",
         ]
         if target.is_current_user(self.env):
             res = res + [

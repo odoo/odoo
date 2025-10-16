@@ -30,18 +30,20 @@ export function registerCallAction(id, definition) {
 }
 
 export const transcribeAction = {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel), // Only show in the active call
+    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ thread }) =>
-        thread?.is_transcribing ? _t("Stop Transcription") : _t("Start Transcription"),
-    isActive: ({ thread }) => thread?.is_transcribing ?? false,
+        thread?.channel?.is_transcribing ? _t("Stop Transcription") : _t("Start Transcription"),
+    isActive: ({ thread }) =>
+        thread?.channel?.is_transcribing ? thread.channel.is_transcribing : false,
     isTracked: true,
     icon: "fa fa-quote-right",
     onSelected: ({ store }) => {
-        store.rtc.updateAndBroadcast({ is_transcribing: !store.rtc.channel.is_transcribing });
+        store.rtc.setTranscription(!store.rtc.channel.is_transcribing);
     },
     sequence: 10,
     sequenceGroup: 90,
-    tags: ({ thread }) => (thread?.is_transcribing ? [ACTION_TAGS.SUCCESS] : []),
+    tags: ({ thread, store, action }) =>
+        store.rtc?.channel.is_transcribing ? [ACTION_TAGS.SUCCESS] : [],
 };
 registerCallAction("transcribe", transcribeAction);
 export const recordAction = {
