@@ -5395,6 +5395,32 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_update_component_qty_consumption(self):
+        """Ensure that when updating the component's quantity to consume,
+        the move is not marked as picked allowing the new quantity to be
+        correctly reserved."""
+        group_unlock_mo = self.env.ref('mrp.group_unlocked_by_default')
+        self.env.user.group_ids += group_unlock_mo
+        self.bom_1.bom_line_ids.product_id.is_storable = True
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.bom_1.bom_line_ids[0].product_id, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.bom_1.bom_line_ids[1].product_id, stock_location, 10)
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [2.0, 4.0])
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2.0, 4.0])
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False, False])
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(1) as move:
+            move.product_uom_qty = 5
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2.0, 5.0])
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False, False])
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):

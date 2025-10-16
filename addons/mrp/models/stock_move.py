@@ -313,7 +313,8 @@ class StockMove(models.Model):
 
     @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):
-        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
+        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none'\
+            and self.state not in ('draft', 'cancel', 'done'):
             mo = self.raw_material_production_id
             new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
@@ -321,7 +322,8 @@ class StockMove(models.Model):
     @api.onchange('quantity', 'product_uom', 'picked')
     def _onchange_quantity(self):
         if self.raw_material_production_id and self.product_uom and \
-           float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
+            not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding) and \
+            float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
             self.manual_consumption = True
             self.picked = True
 
