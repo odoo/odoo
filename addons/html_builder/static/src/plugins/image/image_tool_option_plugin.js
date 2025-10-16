@@ -2,6 +2,7 @@ import { cropperDataFieldsWithAspectRatio, loadImage } from "@html_editor/utils/
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
+import { VideoSizeOption } from "./video_size_option";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import {
@@ -40,6 +41,7 @@ class ImageToolOptionPlugin extends Plugin {
         builder_options: [
             withSequence(REPLACE_MEDIA, ReplaceMediaOption),
             withSequence(IMAGE_TOOL, ImageToolOption),
+            withSequence(IMAGE_TOOL, VideoSizeOption),
             withSequence(ALIGNMENT_STYLE_PADDING, ImageAndFaOption),
         ],
         builder_actions: {
