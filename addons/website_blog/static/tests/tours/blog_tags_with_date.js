@@ -28,7 +28,7 @@ registerWebsitePreviewTour("blog_tags_with_date", {
     }, {
         content: "Select first month",
         trigger: ":iframe select[name=archive]",
-        run: "selectByLabel October",
+        run: "selectByLabel January",
     }, {
         content: "Check date filter has been added",
         trigger: ":iframe #o_wblog_posts_loop span>i.fa-calendar-o",
