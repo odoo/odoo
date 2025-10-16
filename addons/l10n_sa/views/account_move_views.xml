@@ -9,6 +9,26 @@
                 <group name="sale_info_group" position="inside">
                     <field name="l10n_sa_reason" invisible="not l10n_sa_show_reason" readonly="state != 'draft'"/>
                 </group>
+                <xpath expr="//field[@name='delivery_date']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'SA'" separator=" or "/>
+                </xpath>
+                <xpath expr="//field[@name='delivery_date']" position="after">
+                    <field name="delivery_date"
+                           string="Supply Date"
+                           invisible="not show_delivery_date or country_code != 'SA'"
+                           readonly="state != 'draft'"
+                           help="Date when the supply of the goods and services is performed. In case of multiple deliveries, you should take the date of the latest one."/>
+                </xpath>
+                <xpath expr="//group[@id='other_tab_group']/group/field[@name='delivery_date']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'SA'" separator=" or "/>
+                </xpath>
+                <xpath expr="//group[@id='other_tab_group']/group/field[@name='delivery_date']" position="after">
+                    <field name="delivery_date"
+                           string="Supply Date"
+                           invisible="not show_delivery_date or country_code != 'SA'"
+                           readonly="state != 'draft'"
+                           help="Date when the supply of the goods and services is performed. In case of multiple deliveries, you should take the date of the latest one."/>
+                </xpath>
             </field>
         </record>
     </data>
