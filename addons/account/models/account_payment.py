@@ -248,6 +248,12 @@ class AccountPayment(models.Model):
             self.outstanding_account_id
         )
 
+    def _valid_payment_states(self):
+        """ This method is used to know in which edition we are: Community or Enterprise
+            and fetch the payment states accordingly.
+        """
+        return ['in_process', 'paid'] if self.env['account.move']._get_invoice_in_payment_state() == 'paid' else ['in_process']
+
     def _get_aml_default_display_name_list(self):
         """ Hook allowing custom values when constructing the default label to set on the journal items.
 
