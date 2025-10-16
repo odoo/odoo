@@ -160,18 +160,6 @@ class IrConfig_Parameter(models.Model):
             return value
         raise ValueError("Invalid type: %s" % type_)
 
-    @api.model
-    def get_param(self, key, default=False):
-        return self._get(key, 'str')[0] or default
-
-    @api.model
-    def set_param(self, key, value):
-        if value is not False and value is not None:
-            value = str(value)
-        else:
-            value = None
-        self._set(key, value, 'str')
-
     @api.model_create_multi
     def create(self, vals_list):
         self.env.registry.clear_cache('stable')
