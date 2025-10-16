@@ -237,6 +237,7 @@ export class ResPartner extends webModels.ResPartner {
                             "display_name",
                             "isAdmin",
                             "notification_type",
+                            "signature",
                             "user",
                         ].includes(field)
                 ),
@@ -278,6 +279,9 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 if (fields.includes("notification_type")) {
                     data.notification_preference = mainUser.notification_type;
+                }
+                if (fields.includes("signature")) {
+                    data.signature = mainUser.signature;
                 }
             }
             store.add(this.browse(partner.id), data);
