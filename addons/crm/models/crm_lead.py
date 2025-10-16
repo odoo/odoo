@@ -1401,18 +1401,51 @@ class CrmLead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        """ This method returns the action helpers for the leads. If help is already provided
-            on the action, the same is returned. Otherwise, we build the help message which
-            contains the alias responsible for creating the lead (if available) and return it.
-        """
-        if not is_html_empty(help_message):
-            return help_message
+        """Customize the help message to mention team membership or available alias.
 
+        When all the conditions below are met, the returned message will invite
+        users to join a team. Sales Managers will also be given a link to the
+        teams' configuration so they can immediately join one on their own.
+
+        * There are crm teams in the db,
+        * The user is not a member of any team, and
+        * The passed `help_message` is empty, or the context key
+          `crm_lead_prioritize_team_help` is truthy
+
+        Otherwise,
+
+        * Passed non-empty `help_message` is returned as-is,
+        * When `help_message` is empty, a simple message mentioning leads or
+          opportunities based on the context's `default_type` is generated.
+          Additionally, the generated message returned will mention the
+          possibility to create records via an alias if there is one set.
+        """
         help_title, sub_title = "", ""
         if self.env.context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
+        new_help_message = f"<p class='o_view_nocontent_smiling_face'>{help_title}</p>"
+        message_empty = is_html_empty(help_message)
+        if (
+            not self.env.user.sale_team_id
+            and (message_empty or self.env.context.get('crm_lead_prioritize_team_help'))
+            and self.env['crm.team'].search_count([], limit=1)
+        ):
+            sub_title = _("As you are a member of no Sales Team, you are showed the Pipeline of the "
+                          "<b>first team by default.</b>")
+            if self.env.user.has_group('sales_team.group_sale_manager'):
+                suffix = _(
+                    'To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>',
+                    self.env.ref('sales_team.crm_team_action_config').id
+                )
+            else:
+                suffix = _("To work with the CRM, you should join a team.")
+            return new_help_message + f"<p>{sub_title} {suffix}</p>"
+
+        if not message_empty:
+            return help_message
+
         alias_domain = [
             ('company_id', 'in', [self.env.company.id, False]),
             ('alias_id.alias_name', '!=', False),
@@ -1428,9 +1461,7 @@ class CrmLead(models.Model):
             sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
                 'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.alias_email, alias_record.alias_email),
             }
-        return super().get_empty_list_help(
-            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
-        )
+        return super().get_empty_list_help(f'{new_help_message}<p class="oe_view_nocontent_alias">{sub_title}</p>')
 
     # ------------------------------------------------------------
     # BUSINESS
