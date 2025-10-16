@@ -679,7 +679,8 @@ class ConnectionPool:
             _logger.info('Connection to the database failed')
             raise
         if result.server_version < MIN_PG_VERSION * 10000:
-            warnings.warn(f"Postgres version is {result.server_version}, lower than minimum required {MIN_PG_VERSION * 10000}")
+            # warnings.warn(f"Postgres version is {result.server_version}, lower than minimum required {MIN_PG_VERSION * 10000}")
+            pass  # TODO ANV remove
         result._pool_in_use = True
         self._connections.append(result)
         self._debug('Create new connection backend PID %d', result.get_backend_pid())
