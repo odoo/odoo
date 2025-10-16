@@ -205,7 +205,7 @@ export class WebsiteBuilderClientAction extends Component {
             this.waitForIframeReady().then(() => el)
         );
         const builderProps = {
-            closeEditor: this.reloadIframeAndCloseEditor.bind(this),
+            closeEditor: this.closeEditor.bind(this),
             editableSelector: "#wrapwrap",
             reloadEditor: this.reloadEditor.bind(this),
             snippetsName: this.snippetsTemplate,
@@ -542,12 +542,14 @@ export class WebsiteBuilderClientAction extends Component {
         this.state.key++;
     }
 
-    async reloadIframeAndCloseEditor() {
+    async closeEditor(reloadIframe = true) {
         this.reloadContext = null;
         const isEditing = false;
         this.state.isEditing = isEditing;
         this.addSystrayItems();
-        await this.reloadIframe(isEditing);
+        if (reloadIframe) {
+            await this.reloadIframe(isEditing);
+        }
     }
 
     async reloadIframe(isEditing = true, url) {
@@ -585,13 +587,20 @@ export class WebsiteBuilderClientAction extends Component {
     async installSnippetModule(snippet, beforeInstall) {
         this.dialog.closeAll();
         try {
-            this.ui.block();
             await beforeInstall();
-            await this.orm.call("ir.module.module", "button_immediate_install", [
+            this.websiteService.showLoader({
+                title: _t("Install modules, unlock the potential of your website."),
+            });
+            await this.orm.silent.call("ir.module.module", "button_immediate_install", [
                 [parseInt(snippet.moduleId)],
             ]);
-            this.reloadWebClient(snippet.title);
+            this.websiteService.redirectOutFromLoader({
+                redirectAction: () => {
+                    this.reloadWebClient(snippet.title);
+                },
+            });
         } catch (e) {
+            this.websiteService.hideLoader({ completeRemainingProgress: false });
             if (e instanceof RPCError) {
                 const message = _t("Could not install module %s", snippet.moduleDisplayName);
                 this.notification.add(message, {
@@ -601,8 +610,6 @@ export class WebsiteBuilderClientAction extends Component {
                 return;
             }
             throw e;
-        } finally {
-            this.ui.unblock();
         }
     }
 

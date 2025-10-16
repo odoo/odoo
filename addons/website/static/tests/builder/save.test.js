@@ -104,7 +104,7 @@ test("discard modified elements", async () => {
 
 test("discard without any modifications", async () => {
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
-        async reloadIframeAndCloseEditor() {
+        async closeEditor() {
             this.websiteContent.el.contentDocument.body.innerHTML = wrapExample;
         },
     });
@@ -458,7 +458,7 @@ function setupSaveAndReloadIframe() {
         return true;
     });
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
-        async reloadIframeAndCloseEditor() {
+        async closeEditor() {
             this.websiteContent.el.contentDocument.body.innerHTML =
                 resultSave.at(-1) || wrapExample;
         },
@@ -567,7 +567,7 @@ test("attempt to prevent closing window with unsaved changes", async () => {
         },
         async save() {
             expect.step("save - start");
-            await super.save();
+            await super.save(...arguments);
             expect.step("save - end");
         },
     });

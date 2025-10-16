@@ -118,7 +118,15 @@ export class WebsiteBuilder extends Component {
         }
     }
 
-    async save() {
+    /**
+     * Saves the website builder changes and closes the builder.
+     *
+     * @param {Object} [options]
+     * @param {boolean} [options.reloadIframe=true] - If `true`, the iframe will
+     *   be reloaded after the save operation; if `false`, the iframe remains as
+     *   is.
+     */
+    async save({ reloadIframe = true }) {
         if (this.editor.shared.operation.hasTimedOut()) {
             const shouldContinue = await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
@@ -142,7 +150,7 @@ export class WebsiteBuilder extends Component {
         await this.editor.shared.operation.next(
             async () => {
                 await this.editor.shared.savePlugin.save();
-                this.props.builderProps.closeEditor();
+                this.props.builderProps.closeEditor(reloadIframe);
             },
             { withLoadingEffect: false, canTimeout: false }
         );
@@ -207,7 +215,15 @@ export class WebsiteBuilder extends Component {
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         const installSnippetModule = builderProps.installSnippetModule;
         builderProps.installSnippetModule = (snippet) =>
-            installSnippetModule(snippet, this.save.bind(this));
+            installSnippetModule(snippet, () =>
+                this.save({
+                    // Prevent iframe reload as reloading the iframe hides the
+                    // `WebsiteLoader` prematurely. Also, after installing the
+                    // module we are reloading the client anyway, so iframe
+                    // reload is unnecessary.
+                    reloadIframe: false,
+                })
+            );
         builderProps.config.builderOptionsTemplate = this.props.translation
             ? "website.TranslationBuilderOptions"
             : "website.BuilderOptions";
