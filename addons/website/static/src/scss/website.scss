@@ -721,25 +721,6 @@ table.table_desc tr td {
     border-radius: 0;
 }
 
-.o_full_screen_height {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    min-height: 100vh !important;
-}
-.o_half_screen_height {
-    @extend .o_full_screen_height;
-    min-height: 55vh !important;
-}
-
-// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
-.cover_full {
-    @extend .o_full_screen_height;
-}
-.cover_mid {
-    @extend .o_half_screen_height;
-}
-
 // Allows custom border radius without contents overflowing.
 .card {
     overflow: hidden;
