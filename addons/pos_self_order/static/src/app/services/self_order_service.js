@@ -285,7 +285,10 @@ export class SelfOrder extends Reactive {
         this.printKioskChanges(access_token);
     }
     hasPaymentMethod() {
-        return this.models["pos.payment.method"].getAll().length > 0;
+        return (
+            this.config.self_ordering_mode === "kiosk" &&
+            this.models["pos.payment.method"].getAll().length > 0
+        );
     }
 
     async confirmOrder() {
