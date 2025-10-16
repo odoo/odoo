@@ -781,7 +781,7 @@ export class TablePlugin extends Plugin {
         return true;
     }
 
-    hanldeFirefoxSelection(ev = null) {
+    handleFirefoxSelection(ev = null) {
         const selection = this.document.getSelection();
         if (isBrowserFirefox()) {
             if (!this.dependencies.selection.isSelectionInEditable(selection)) {
@@ -946,7 +946,7 @@ export class TablePlugin extends Plugin {
 
     updateSelectionTable(selectionData) {
         if (
-            this.hanldeFirefoxSelection() ||
+            this.handleFirefoxSelection() ||
             this._isFirefoxDoubleMousedown ||
             this._isTripleClickInTable
         ) {
@@ -1041,7 +1041,7 @@ export class TablePlugin extends Plugin {
             !isProtecting(td) &&
             ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
         ) {
-            this.hanldeFirefoxSelection();
+            this.handleFirefoxSelection();
             this.selectTableCells(this.dependencies.selection.getEditableSelection());
             if (isBrowserFirefox()) {
                 // In firefox, selection changes when hitting mouseclick
@@ -1097,7 +1097,7 @@ export class TablePlugin extends Plugin {
         if (this._currentMouseState !== "mousedown") {
             return;
         }
-        if (this.hanldeFirefoxSelection(ev)) {
+        if (this.handleFirefoxSelection(ev)) {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
