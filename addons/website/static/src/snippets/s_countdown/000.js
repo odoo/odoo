@@ -38,6 +38,7 @@ const CountdownWidget = publicWidget.Widget.extend({
             this.el.dataset.display = this.display;
         }
 
+        this.defaultColor = "rgba(0, 0, 0, 0)";
         this.layout = this.el.dataset.layout;
         this.layoutBackground = this.el.dataset.layoutBackground;
         this.progressBarStyle = this.el.dataset.progressBarStyle;
