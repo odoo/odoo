@@ -3,7 +3,6 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
-from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -220,15 +219,6 @@ class WebsiteEventController(http.Controller):
         urls = lazy(event._get_event_resource_urls)
         return {
             'event': event,
-            'slots': event.event_slot_ids.filtered(
-                        lambda s: s.start_datetime > datetime.now()
-                        and any(
-                            availability is None or availability > 0
-                            for availability in event._get_seats_availability([
-                                (s, ticket) for ticket in event.event_ticket_ids or [False]
-                            ])
-                        )
-                    ).grouped('date'),
             'main_object': event,
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),

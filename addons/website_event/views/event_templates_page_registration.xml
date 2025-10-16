@@ -236,7 +236,7 @@
                 </small>
                 <div class="card bg-transparent py-3 px-2 px-md-3">
                     <!-- Up to the next 3 closest dates -->
-                    <t t-set="slots_to_preview" t-value="dict(list(slots.items())[:3])"/>
+                    <t t-set="slots_to_preview" t-value="dict(list(event.event_open_slot_ids.grouped('date').items())[:3])"/>
                     <t t-if="slots_to_preview">
                         <div class="row">
                             <div t-foreach="slots_to_preview" t-as="date" class="col d-flex flex-column align-items-start gap-1 pb-2">
@@ -710,6 +710,7 @@
                         </ul>
                     </nav>
                     <div class="o_wevent_slot_dates row px-2">
+                        <t t-set="slots" t-value="event.event_open_slot_ids.grouped('date')"/>
                         <div t-foreach="slots" t-as="date" t-attf-class="o_wevent_slot_date col col-sm-6 col-lg-4 px-3 pb-4">
                             <time t-out="date" class="text-nowrap pe-5 me-5" t-options="{'widget': 'date', 'format': 'full'}"/>
                             <div class="d-flex flex-wrap gap-2">
