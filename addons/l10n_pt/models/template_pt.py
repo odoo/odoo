@@ -26,6 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'chart_2117',
                 'income_currency_exchange_account_id': 'chart_7861',
                 'expense_currency_exchange_account_id': 'chart_6863',
+                'tax_calculation_rounding_method': 'round_globally',
                 'account_journal_early_pay_discount_loss_account_id': 'chart_682',
                 'account_journal_early_pay_discount_gain_account_id': 'chart_728',
                 'account_sale_tax_id': 'iva_pt_sale_normal',

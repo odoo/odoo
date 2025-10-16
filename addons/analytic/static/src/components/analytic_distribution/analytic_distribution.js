@@ -307,7 +307,9 @@ export class AnalyticDistribution extends Component {
                 },
                 domain,
             };
-            values[fieldName] =  account?.accountId || false;
+            values[fieldName] = account?.accountId
+                ? [account.accountId, account.accountDisplayName]
+                : false;
         });
         // Percentage field
         recordFields['percentage'] = {
@@ -324,10 +326,9 @@ export class AnalyticDistribution extends Component {
             values[name] = this.props.record.data[name] * values['percentage'];
             // Currency field
             if (currency_field) {
-                // TODO: check web_read network request
                 const { string, name, type, relation } = this.props.record.fields[currency_field];
                 recordFields[currency_field] = { name, string, type, relation, invisible: true };
-                values[currency_field] = this.props.record.data[currency_field][0];
+                values[currency_field] = [this.props.record.data[currency_field][0], ""];
             }
         }
         return {

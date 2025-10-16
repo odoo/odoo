@@ -118,7 +118,7 @@
     <template id="report_timesheet">
         <t t-call="web.html_container">
             <t t-call="web.internal_layout">
-                <t t-set="company" t-value="docs.project_id.company_id if len(docs.project_id) == 1 else docs.env.company"/>
+                <t t-set="company" t-value="docs.project_id.sudo().company_id if len(docs.project_id) == 1 else docs.env.company"/>
                 <t t-set="show_task" t-value="bool(docs.task_id)"/>
                 <t t-set="show_project" t-value="len(docs.project_id) > 1"/>
                 <div class="page">
@@ -128,7 +128,7 @@
                             <h2>
                                 <span>Timesheets
                                     <t t-if="len(docs.project_id) == 1">
-                                        for the <t t-out="docs.project_id.name">Research and Development</t> Project
+                                        for the <t t-out="docs.project_id.sudo().name">Research and Development</t> Project
                                     </t>
                                 </span>
                             </h2>
