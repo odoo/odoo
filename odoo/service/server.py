@@ -59,7 +59,7 @@ from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, gc, osutil, OrderedSet, profiler
 from odoo.tools.cache import log_ormcache_stats
-from odoo.tools.misc import stripped_sys_argv, dumpstacks
+from odoo.tools.misc import stripped_sys_argv, dumpstacks, mute_logger
 from .db import list_dbs
 
 _logger = logging.getLogger(__name__)
@@ -647,10 +647,15 @@ class ThreadedServer(CommonServer):
                     thread.join(0.05)
                     time.sleep(0.05)
 
-        sql_db.close_all()
+        log_ctx = contextlib.nullcontext()
+        if config['log_db']:
+            _logger.info("Logging uses the database, stop logging then close DB connections")
+            log_ctx = mute_logger('')
 
-        _logger.debug('--')
-        logging.shutdown()
+        with log_ctx:
+            sql_db.close_all()
+            _logger.debug('--')
+            logging.shutdown()
 
     def run(self, preload=None, stop=False):
         """ Start the http server and the cron thread then wait for a signal.
