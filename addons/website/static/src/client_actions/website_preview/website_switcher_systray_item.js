@@ -63,12 +63,9 @@ export class WebsiteSwitcherSystrayItem extends Component {
                     });
                     if (!website.domain) {
                         const closeFn = this.notificationService.add(
-                            _t(
-                                "This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\nTo remove this message please set a domain in your website settings"
-                            ),
+                            _t("Add a domain to your website."),
                             {
                                 type: "warning",
-                                title: _t("No website domain configured for this website."),
                                 sticky: true,
                                 buttons: [
                                     {
@@ -79,7 +76,7 @@ export class WebsiteSwitcherSystrayItem extends Component {
                                             closeFn();
                                         },
                                         primary: true,
-                                        name: "Go to Settings",
+                                        name: "Settings",
                                     },
                                 ],
                             }
