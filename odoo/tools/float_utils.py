@@ -96,7 +96,9 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         normalized_value += math.copysign(epsilon, normalized_value)
         rounded_value = round(normalized_value)     # round to integer
 
-    result = rounded_value * rounding_factor # de-normalize
+    denormarlized_value = rounded_value * rounding_factor # de-normalize
+    precision_digits = precision_digits or abs(builtins.round(math.log(rounding_factor, 10)))
+    result = builtins.round(denormarlized_value, precision_digits)
     return result
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
