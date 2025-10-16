@@ -58,7 +58,7 @@ test("should overide fontFamily on the selected characters", async () => {
 test("should change the font family of a few characters", async () => {
     const { el } = await setupEditor("<p>ab[cde]fg</p>");
     await expandToolbar();
-    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default");
+    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     await click(".btn[name='font_family']");
     await waitFor(".o_font_family_selector_menu");
     await click(".o_font_family_selector_menu .o-dropdown-item:nth-child(2)");
@@ -71,7 +71,7 @@ test("should change the font family of a few characters", async () => {
 test("should undo and redo the font family changes", async () => {
     const { editor, el } = await setupEditor("<p>ab[cde]fg</p>");
     await expandToolbar();
-    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default");
+    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     await click(".btn[name='font_family']");
     await waitFor(".o_font_family_selector_menu");
     await click(".o_font_family_selector_menu .o-dropdown-item:nth-child(2)");
@@ -92,8 +92,8 @@ test("should remove font family on the selected content using remove format", as
     await expandToolbar();
     expect(queryOne(".btn[name='font_family']").textContent).toBe("Arial");
     await click(".btn[title='Remove Format']");
-    await waitFor(".btn[name='font_family']:contains('Default')");
-    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default");
+    await waitFor(".btn[name='font_family']:contains('Default font')");
+    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     expect(getContent(el)).toBe("<p>ab[cde]fg</p>");
 });
 
@@ -107,14 +107,14 @@ test("should remove font family on the selected content using Default font famil
     await waitFor(".o_font_family_selector_menu");
     await click(".o_font_family_selector_menu .o-dropdown-item:first-child");
     await animationFrame();
-    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default");
+    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     expect(getContent(el)).toBe("<p>ab[cde]fg</p>");
 });
 
 test("should contain the 5 available font + default", async () => {
     await setupEditor("<p>ab[cde]fg</p>");
     await expandToolbar();
-    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default");
+    expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     await click(".btn[name='font_family']");
     await animationFrame();
     await waitFor(".o_font_family_selector_menu");
