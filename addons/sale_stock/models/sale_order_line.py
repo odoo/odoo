@@ -387,7 +387,7 @@ class SaleOrderLine(models.Model):
 
             line_uom = line.product_uom
             quant_uom = line.product_id.uom_id
-            origin = f'{line.order_id.name} - {line.order_id.client_order_ref}' if line.order_id.client_order_ref else line.order_id.name
+            origin = line.order_id.name
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
             procurements += line._create_procurements(product_qty, procurement_uom, origin, values)
         if procurements:
