@@ -94,12 +94,56 @@
     </div>
 </template>
 
+<template id="s_social_media_template">
+    <t t-call="mass_mailing.s_social_media" fillSocialLinks="True"/>
+</template>
+
+<template id="s_social_media" name="Social Media">
+    <div t-attf-class="s_social_media o_not_editable {{optionalTextPosition or 'text-start'}} {{optionalSnippetClass or ''}}" contenteditable="false" t-att-data-company-id="res_company.id">
+        <span class="s_social_media_links">
+            <t t-call="mass_mailing.social_links"/>
+        </span>
+        <span class="alert alert-info text-center o_social_snippet_dropped_placeholder" t-if="not fillSocialLinks">
+            Drop here to add your social media links.
+        </span>
+    </div>
+</template>
+
+<template id="social_links">
+    <t t-set="social_links" t-value="{
+        'social_facebook': res_company.social_facebook,
+        'social_instagram': res_company.social_instagram,
+        'social_twitter': res_company.social_twitter,
+        'social_linkedin': res_company.social_linkedin,
+        'social_tiktok': res_company.social_tiktok,
+    }"/>
+    <t t-set="base_social_links" t-value="{
+        'social_facebook': 'https://www.facebook.com/odoo',
+        'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+        'social_twitter': 'https://x.com/Odoo',
+        'social_linkedin': 'https://www.linkedin.com/company/odoo',
+        'social_tiktok': 'https://www.tiktok.com/@odoo',
+    }"/>
+    <t t-set="updated_links" t-value="{key: social_links.get(key) or val for key, val in base_social_links.items()}"/>
+    <t t-foreach="updated_links.items() if fillSocialLinks else []" t-as="link">
+        <t t-set="platform" t-value="link[0].split('social_')[1]"/>
+        <a t-att-data-platform="link[0] if social_links.get(link[0]) else 'customLink-' + link[0]" t-att-href="link[1]" t-att-aria-label="platform.capitalize()" t-att-title="platform.capitalize()">
+            <i t-attf-style="{{optionalTextStyle}}" t-attf-class="fa fa-{{platform}} {{ optionalIconLayout or 'fa-stack'}} o_editable_media"></i>
+        </a>
+    </t>
+</template>
 
 <!-- Assets -->
 <record id="mass_mailing.s_alert_001_scss" model="ir.asset">
     <field name="name">Alert 001 SCSS</field>
     <field name="bundle">mass_mailing.assets_iframe_style</field>
     <field name="path">mass_mailing/static/src/snippets/s_alert/000.scss</field>
+</record>
+
+<record id="mass_mailing.s_social_media_000_scss" model="ir.asset">
+    <field name="name">Social Media 000 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_social_media/000.scss</field>
 </record>
 
 <record id="mass_mailing.s_cta_badge_000_scss" model="ir.asset">

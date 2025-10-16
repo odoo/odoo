@@ -103,6 +103,7 @@
             <t t-snippet="mass_mailing.s_video" string="Video" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_video.svg"/>
             <t t-snippet="mass_mailing.s_badge" string="Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_badge.svg"/>
             <t t-snippet="mass_mailing.s_cta_badge" string="CTA Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_cta_badge.svg"/>
+            <t t-snippet="mass_mailing.s_social_media" string="Social Media" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_social_media.svg"/>
         </snippets>
     </t>
 </template>
@@ -112,13 +113,13 @@
     <section class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general" data-name="Left Text">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 pt16 pb16">
+                <div class="col-md-5 pt16 pb16">
                     <h1>
                         <a t-att-href="(company_id.website) or '#'" target="_blank" t-out="company_id.partner_id.name"/>
                     </h1>
                 </div>
-                <div class="col-md-8 o_mail_header_social" style="text-align: right;">
-                    <t t-call="mass_mailing.social_links"/>
+                <div class="col-md-7 o_mail_header_social" style="text-align: right;">
+                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end"/>
                 </div>
             </div>
         </div>

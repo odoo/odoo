@@ -58,22 +58,10 @@
                              <img src="/mass_mailing_themes/static/src/img/theme_event/s_default_image_logo.png" style="height: auto; max-width: 100%; width: 194px;"  width="194" alt="Your Logo" class="img-fluid" />
                         </a>
                     </div>
-                    <div class="col-md-8 o_mail_header_social" style="text-align: right;" t-translation="off">
-                        <a title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" title="TikTok" href="https://www.tiktok.com/@odoo">
-                            <span class="fa fa-tiktok text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                        </a>
+                    <div class="col-md-8 o_mail_header_social" t-translation="off" style="padding-left: 5px; padding-right: 5px;">
+                        <t t-call="mass_mailing.s_social_media_template" optionalIconLayout.f="rounded-circle shadow-sm"
+                            optionalTextStyle.f="color: white; background-color: rgb(43, 59, 88) !important;"
+                            optionalTextPosition.f="text-end" optionalSnippetClass.f="no_icon_color"/>
                     </div>
                 </div>
             </div>
@@ -195,27 +183,9 @@
                             <img width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_blogging/tech_logo.png" class="img-fluid"/>
                         </a>
                     </div>
-                    <div class="col-md-8 o_mail_header_social" style="text-align:right;">
-                        <a title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
-                        </a>
-                        &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
-                        </a>
-                        &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
-                        </a>
-                        &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
-                        </a>
-                        &amp;nbsp; &amp;nbsp;
-                        <a style="margin-left:10px" title="TikTok" href="https://www.tiktok.com/@odoo">
-                            <span class="fa fa-tiktok" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
-                        </a>
-                        &amp;nbsp; &amp;nbsp;
+                    <div class="col-md-8 o_mail_header_social px-0" style="text-align:right;">
+                        <t t-call="mass_mailing.s_social_media_template" optionalTextStyle.f="color: #36A6D2"
+                            optionalTextPosition.f="text-end" optionalSnippetClass.f="no_icon_color"/>
                     </div>
                 </div>
             </div>
@@ -424,21 +394,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12" style="text-align: center;" t-translation="off">
-                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" style="background-color: rgb(198, 150, 120) !important; color: rgb(36, 37, 48) !important;"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" style="background-color: rgb(198, 150, 120) !important; color: rgb(36, 37, 48) !important;"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" style="background-color: rgb(198, 150, 120) !important; color: rgb(36, 37, 48) !important;"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" style="background-color: rgb(198, 150, 120) !important; color: rgb(36, 37, 48) !important;"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="TikTok" title="TikTok" href="https://www.tiktok.com/@odoo">
-                            <span class="fa fa-tiktok" style="background-color: rgb(198, 150, 120) !important; color: rgb(36, 37, 48) !important;"></span>
-                        </a>
+                        <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-center"
+                            optionalSnippetClass.f="no_icon_color" optionalIconLayout.f="rounded shadow-sm"
+                            optionalTextStyle.f="background-color: #C69678; color: black;"/>
                     </div>
                 </div>
                 <div class="row">
@@ -609,21 +567,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12" style="text-align: center;" t-translation="off">
-                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="TikTok" title="TikTok" href="https://www.tiktok.com/@odoo">
-                            <span class="fa fa-tiktok"></span>
-                        </a>
+                        <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-center" optionalSnippetClass.f=""/>
                     </div>
                 </div>
                 <div class="row">
@@ -709,21 +653,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12" style="text-align: center;" t-translation="off">
-                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" style="color: rgb(186, 0, 19) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" style="color: rgb(186, 0, 19) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" style="color: rgb(186, 0, 19) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" style="color: rgb(186, 0, 19) !important;"/>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="TikTok" title="TikTok" href="https://www.tiktok.com/@odoo">
-                            <span class="fa fa-tiktok" style="color: rgb(186, 0, 19) !important;"/>
-                        </a>
+                        <t t-call="mass_mailing.s_social_media_template" optionalSnippetClass.f="no_icon_color"
+                            optionalTextStyle.f="color: #BA0013" optionalTextPosition.f="text-center"/>
                     </div>
                 </div>
                 <div class="row">
@@ -838,28 +769,14 @@
                             </span>
                         </p>
                         <div class="o_mail_footer_links">
-                            <a role="button" href="/unsubscribe_from_list" class="btn btn-link ">
-                                Unsubscribe
-                            </a>
+                            <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="pb16" style="text-align: right;" t-translation="off">
-                            <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                                <span class="fa fa-facebook bg-black" style="color: rgb(255, 187, 0) !important;"/>
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                                <span class="fa fa-linkedin bg-black" style="color: rgb(255, 187, 0) !important;"/>
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                                <span class="fa fa-twitter bg-black" style="color: rgb(255, 187, 0) !important;"/>
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                                <span class="fa fa-instagram bg-black" style="color: rgb(255, 187, 0) !important;"/>
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a aria-label="TikTok" title="TikTok" href="https://www.tiktok.com/@odoo">
-                                <span class="fa fa-tiktok bg-black" style="color: rgb(255, 187, 0) !important;"/>
-                            </a>
+                            <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end"
+                                optionalTextStyle.f="color: rgb(137, 101, 1);"
+                                optionalSnippetClass.f="no_icon_color"/>
                         </div>
                         <p style="text-align: right">
                             <font style="color: rgb(137, 101, 1);">© <t t-out="now.strftime('%Y')" /> All Rights Reserved</font>
@@ -909,16 +826,11 @@
                              <img src="/mass_mailing_themes/static/src/img/theme_coffeebreak/s_default_image_logo.png" style="height:auto;max-width:400px; width:100px;" alt="Your Logo" class="img-fluid" />
                         </a>
                     </div>
-                    <div class="col-md-4 o_mail_header_social" style="text-align: right">
-                        <a aria-label="Facebook" title="Facebook" target="_blank" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="X" title="X" target="_blank" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;"></span>
-                        </a>&amp;nbsp;&amp;nbsp;
-                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" target="_blank" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;"></span>
-                        </a>
+                    <div class="col-md-4 o_mail_header_social px-0" style="text-align: right">
+                        <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end"
+                            optionalIconLayout.f="rounded-circle shadow-sm"
+                            optionalTextStyle.f="background-color: #D4C5B3; color: #543427"
+                            optionalSnippetClass.f="no_icon_color"/>
                     </div>
                 </div>
             </div>
@@ -1020,10 +932,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-10 offset-md-1">
-                        <div class="o_mail_footer_social p16">
-                            <a aria-label="Facebook" title="Facebook" target="_blank" href="https://www.facebook.com/Odoo"><span class="fa fa-facebook text-o-color-4"></span></a> &amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" aria-label="X" target="_blank" title="X" href="https://twitter.com/Odoo"><span class="fa fa-twitter text-o-color-4"></span></a>  &amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" aria-label="Instagram" title="Instagram" target="_blank" href="https://www.instagram.com/explore/tags/odoo/"><span class="fa fa-instagram text-o-color-4"></span></a>
+                        <div class="o_mail_footer_social pt16 pb16">
+                            <t t-call="mass_mailing.s_social_media_template"
+                                optionalTextPosition.f="text-start" optionalIconLayout.f="rounded-empty-circle shadow-sm"
+                                optionalTextStyle.f="color: white;" optionalSnippetClass.f="no_icon_color"/>
                         </div>
                         <div class="o_mail_footer_links">
                             <a role="button" class="text-o-color-4" href="/unsubscribe_from_list">Unsubscribe</a> | <a role="button" class="text-o-color-4" href="/contactus">Contact</a>
@@ -1555,18 +1467,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md o_mail_footer_social pt8 pb8">
-                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" contenteditable="false"></span>
-                        </a>
-                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" contenteditable="false"></span>
-                        </a>
-                        <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" contenteditable="false"></span>
-                        </a>
-                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" contenteditable="false"></span>
-                        </a>
+                        <t t-call="mass_mailing.s_social_media_template" optionalSnippetClass.f="no_icon_color"
+                            optionalTextStyle.f="color: #1466B8" optionalTextPosition.f="text-center"/>
                     </div>
                 </div>
                 <div class="row">

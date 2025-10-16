@@ -1,0 +1,24 @@
+<templates>
+    <t t-name="mass_mailing.CompanyUpdateDialog">
+        <Dialog size="'xl'" title="this.dialogTitle">
+            <div class="o_inner_group d-flex flex-column">
+                <t t-foreach="fieldNames" t-as="fieldName" t-key="fieldName_index">
+                    <div class="row mb-1">
+                        <div class="o_cell o_wrap_label text-break text-900 col-2 pe-0">
+                            <label class="o_form_label fw-bolder" t-out="fieldName.displayName"/>
+                        </div>
+                        <div class="o_cell o_wrap_input text-break mb-3 mb-sm-0 col ps-0">
+                            <div class="o_field_widget o_field_char">
+                                <input t-att-name="fieldName.name" class="o_input w-100" type="text" t-model="this.state[fieldName.name]" t-attf-placeholder="e.g. {{fieldName.placeholder}}"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.clickOnSave">Save</button>
+                <button class="btn btn-secondary" t-on-click="this.cancel">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
