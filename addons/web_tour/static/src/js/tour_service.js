@@ -4,7 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { loadBundle } from "@web/core/assets";
-import { createPointerState } from "@web_tour/js/tour_pointer/tour_pointer_state";
+import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 import { tourState } from "@web_tour/js/tour_state";
 import {
     tourRecorderState,
@@ -68,8 +68,7 @@ export class TourService {
         this.effect = services["effect"];
         this.overlay = services["overlay"];
         this.toursEnabled = session?.tour_enabled;
-        this.pointer = createPointerState();
-        this.pointer.stop = () => {};
+        this.removePointer = () => {};
         this.addOnboardingItemInDebugMenu();
 
         if (window.frameElement) {
@@ -215,10 +214,10 @@ export class TourService {
             const { TourPointer } = odoo.loader.modules.get(
                 "@web_tour/js/tour_pointer/tour_pointer"
             );
-            this.pointer.stop = this.overlay.add(
+            this.removePointer = this.overlay.add(
                 TourPointer,
                 {
-                    pointerState: this.pointer.state,
+                    pointerState,
                     bounce: !(tourConfig.mode === "auto" && tourConfig.keepWatchBrowser),
                 },
                 {
@@ -228,8 +227,8 @@ export class TourService {
             const { TourInteractive } = odoo.loader.modules.get(
                 "@web_tour/js/tour_interactive/tour_interactive"
             );
-            new TourInteractive(tour).start(this.env, this.pointer, async () => {
-                this.pointer.stop();
+            new TourInteractive(tour).start(this.env, async () => {
+                this.removePointer();
                 tourState.clear();
                 browser.console.log("tour succeeded");
                 let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
@@ -271,7 +270,7 @@ export class TourService {
      * @param {boolean} [options.redirect=true] - Whether to redirect to `tour.url` if necessary.
      */
     async startTour(name, options = {}) {
-        this.pointer.stop();
+        this.removePointer();
         const tour = await this.getTour(name, options);
         if (!tour) {
             return;
