@@ -106,6 +106,7 @@ class ExhibitorController(WebsiteEventController):
             # event information
             'event': event,
             'main_object': event,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'sponsor_categories': sponsor_categories,
             'hide_sponsors': True,
             # search information
@@ -162,6 +163,7 @@ class ExhibitorController(WebsiteEventController):
             # event information
             'event': event,
             'main_object': sponsor,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'sponsor': sponsor,
             'hide_sponsors': True,
             # sidebar
