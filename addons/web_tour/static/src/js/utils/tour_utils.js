@@ -86,3 +86,18 @@ export function getScrollParent(element) {
         return getScrollParent(element.parentNode);
     }
 }
+
+export function isInPage(element) {
+    if (!element || !element.isConnected) {
+        return false;
+    }
+    const doc = element.ownerDocument;
+    if (doc === document) {
+        return document.body.contains(element);
+    }
+    if (doc.defaultView && doc.defaultView.frameElement) {
+        const iframe = doc.defaultView.frameElement;
+        return document.body.contains(iframe);
+    }
+    return false;
+}
