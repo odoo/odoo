@@ -1,4 +1,4 @@
-import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
+import { Component, markRaw, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";
 
@@ -68,6 +68,7 @@ export class PublicReadonlySpreadsheet extends Component {
             },
             this.data.revisions || []
         );
+        markRaw(this.model);
         if (this.env.debug) {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};
