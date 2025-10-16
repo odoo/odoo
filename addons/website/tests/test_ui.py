@@ -656,6 +656,12 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_edit_menus_delete_parent(self):
         website = self.env['website'].browse(1)
+        self.env['website.menu'].create({
+            'name': 'Test Child Menu',
+            'url': '/test-child',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+        })
         menu_tree = self.env['website.menu'].get_tree(website.id)
 
         parent_menu = menu_tree['children'][0]['fields']
