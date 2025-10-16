@@ -10,11 +10,9 @@
             <button
                 t-if="!is_in_wishlist"
                 id="wsale_save_for_later_button"
-                type="button"
                 class="btn btn-outline-primary text-nowrap o_add_wishlist_dyn"
-                t-att-data-product-product-id="product_id"
+                t-att-data-product-id="product_id"
                 t-att-data-product-template-id="product_id"
-                data-action="o_wishlist"
             >
                 <i class="fa fa-heart-o me-2"/>Add to wishlist
             </button>

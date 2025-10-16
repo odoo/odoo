@@ -24,13 +24,11 @@
                 <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
                 <button
                     t-if="product_variant_id and attrib_categories"
-                    type="button"
                     class="btn o_add_compare"
                     title="Compare"
                     aria-label="Compare"
+                    t-att-data-product-id="product_variant_id"
                     t-att-data-product-template-id="product.id"
-                    t-att-data-product-product-id="product_variant_id"
-                    data-action="o_comparelist"
                 >
                     <span class="fa fa-exchange fa-fw o_not-animable"/>
                     <span class="o_label small ms-2">Compare</span>
@@ -74,13 +72,11 @@
             />
             <button
                 t-if="product_variant_id and attrib_categories"
-                type="button"
                 t-att-class="_button_classes"
                 aria-label="Add to compare"
                 title="Add to compare"
-                t-att-data-product-product-id="product_variant_id"
+                t-att-data-product-id="product_variant_id"
                 t-att-data-product-template-id="product.id"
-                data-action="o_comparelist"
             >
                 <span class="fa fa-exchange"/>
                 <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale_wishlist.product_add_to_wishlist') else '')">Add to compare</span>
@@ -213,9 +209,9 @@
     <template id="product_compare" name="Comparator Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Comparator</t>
-            <div id="wrap" class="js_sale o_wsale_comparison_page">
+            <div id="wrap" class="o_wsale_comparison_page">
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
-                <div t-attf-class="oe_website_sale o_wsale_comparison_page pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
+                <div t-attf-class="oe_website_sale pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                     <h1 class="h4 mt-4 mb-3">Compare Products</h1>
 
                     <!-- Mini sticky product overview (initially hidden) -->
@@ -308,9 +304,9 @@
                                         />
                                     </a>
                                     <button
-                                        t-att-data-product-product-id="product.id"
                                         class="o_comparelist_remove btn position-absolute top-0 end-0 mx-3 my-2 p-2 rounded-circle bg-white-75 lh-1"
                                         aria-label="Remove product from comparison"
+                                        t-att-data-product-id="product.id"
                                     >
                                         <i class="oi oi-close"/>
                                     </button>
@@ -365,10 +361,12 @@
                                             </a>
                                             <button
                                                 t-else=""
-                                                name="comparison_add_to_cart"
+                                                name="add_to_cart"
                                                 class="btn btn-primary"
-                                                t-att-data-product-product-id="product.id"
+                                                t-att-data-product-id="product.id"
                                                 t-att-data-product-template-id="product.product_tmpl_id.id"
+                                                t-att-data-product-type="product.product_tmpl_id.type"
+                                                t-att-data-ptav-ids="json.dumps(product.product_template_attribute_value_ids.ids)"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                             >
                                                 <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>Add to Cart
@@ -443,12 +441,13 @@
                 <div class="align-items-end bottom-0 d-flex end-0 justify-content-end o_not_editable p-0 position-absolute top-0 start-0 pe-none">
                     <div class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto">
                         <div t-attf-class="d-flex align-items-center py-3 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
-                            <button
+                            <a
+                                href="/shop"
                                 class="btn btn-link ps-0 text-decoration-none"
                                 aria-label="Continue shopping"
-                                name="comparison_back_button"
                             >
-                                <i class="oi oi-chevron-left me-1"/> Back to shop </button>
+                                <i class="oi oi-chevron-left me-1"/> Back to shop
+                            </a>
                             <button
                                 class="button btn btn-light ms-auto"
                                 aria-label="Remove all products from comparison"

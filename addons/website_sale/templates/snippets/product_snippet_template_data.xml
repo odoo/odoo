@@ -95,8 +95,8 @@
                                 <div class="o_wsale_product_action_row">
                                     <t t-if="product._website_show_quick_add()">
                                         <button
-                                            type="button"
-                                            class="o_wsale_product_btn_primary btn js_add_cart"
+                                            name="add_to_cart"
+                                            class="o_wsale_product_btn_primary btn"
                                             title="Add to Cart"
                                             t-att-data-product-id="product.id if product.is_product_variant else product.product_variant_id.id"
                                             t-att-data-product-selected="product.is_product_variant"
