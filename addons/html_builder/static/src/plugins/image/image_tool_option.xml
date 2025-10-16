@@ -25,16 +25,7 @@
     </BuilderRow>
     <ImageFilterOption />
     <t t-if="!state.isGridMode">
-        <BuilderRow label.translate="Size">
-            <BuilderSelect styleAction="'width'">
-                <BuilderSelectItem styleActionValue="''" title.translate="Resize Default">Default</BuilderSelectItem>
-                <BuilderSelectItem styleActionValue="'100%'" title.translate="Resize Full">100%</BuilderSelectItem>
-                <BuilderSelectItem styleActionValue="'75%'" title.translate="Resize 75%">75%</BuilderSelectItem>
-                <BuilderSelectItem styleActionValue="'50%'" title.translate="Resize Half">50%</BuilderSelectItem>
-                <BuilderSelectItem styleActionValue="'25%'" title.translate="Resize Quarter">25%</BuilderSelectItem>
-                <BuilderSelectItem styleActionValue="'10%'" title.translate="Resize 10%">10%</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
+        <MediaSizeOption/>
     </t>
     <ImageFormatOption />
 </t>
