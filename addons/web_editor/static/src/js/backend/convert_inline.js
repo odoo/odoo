@@ -1,7 +1,7 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
+import { getAdjacentPreviousSiblings, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
 
 //--------------------------------------------------------------------------
 // Constants
@@ -40,6 +40,7 @@ export const TABLE_STYLES = {
     'text-align': 'inherit',
     'font-size': 'unset',
     'line-height': 'inherit',
+    'table-layout': 'fixed',
 };
 
 //--------------------------------------------------------------------------
@@ -344,10 +345,22 @@ function bootstrapToTable(editable) {
  * @param {Element} editable
  */
 function cardToTable(editable) {
+    // card-body is flex 1 1 auto and that makes it fill its parent vertically.
+    // Just like card-img-top actually...
     for (const card of editable.querySelectorAll('.card')) {
+        /*
+        Replace card with:
+        <table class="card">     // table
+            for each child:
+            <tr>                    // superRow
+                <td>                // superCol
+                    <table>         // subTable
+                        <tr>        // row
+                            <td>    // col (take child attributes if child is block)
+                                child (or child's children if child is block)
+        */
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
-        const cardImgTopSuperRows = [];
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
@@ -381,17 +394,25 @@ function cardToTable(editable) {
                     node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
                 ));
                 if (hasImgTop) {
-                    // Collect .card-img-top superRows to manipulate their heights.
-                    cardImgTopSuperRows.push(superRow);
+                    superRow.style.height = 0;
+                    // Wrap the image in a div with its dimensions to make sure the
+                    // td is the right size (can't set the height on a td).
+                    const div = document.createElement('div');
+                    div.style.height = child.style.height;
+                    div.style.width = child.style.width;
+                    child.before(div);
+                    div.append(child);
+                }
+                const hasCardBody = [child, ...child.querySelectorAll('.card-body')].some(node => (
+                    node.classList && node.classList.contains('card-body') && node.closest && node.closest('.card') === table
+                ));
+                if (hasCardBody) {
+                    superRow.style.height = 0;
+                    superCol.style.height = '100%';
+                    subTable.style.height = '100%';
+                    subTable.setAttribute('height', '100%');
                 }
             }
-        }
-        // We expect successive .card-img-top to have the same height so the
-        // bodies of the cards are aligned. This achieves that without flexboxes
-        // by forcing the height of the smallest card:
-        const smallestCardImgRow = Math.min(0, ...cardImgTopSuperRows.map(row => row.clientHeight));
-        for (const row of cardImgTopSuperRows) {
-            row.style.height = smallestCardImgRow + 'px';
         }
         card.before(table);
         card.remove();
@@ -537,6 +558,21 @@ function enforceTablesResponsivity(editable) {
     const trs = [...editable.querySelectorAll('.o_mail_wrapper tr')]
         .filter(tr => [...tr.children].some(td => td.classList.contains('o_converted_col')))
         .reverse();
+    /*
+    Replace <tr><td> with:
+    <tr>                                                            tr
+        <td>                                                        topTd
+            <table>                                                 commonTable
+                <tr>                                                commonTr
+                    <td>                                            commonTd
+                        [mso: <table><tr>]
+                        FOR EACH CHILD:
+                        [mso:            <td>]
+                        <div class="o_stacking_wrapper">            wrapDiv
+                            <table class="o_stacking_wrapper">      wrapTable
+                                <tr>                                newTr
+                                    <td>                            td
+    */
     for (const tr of trs) {
         const commonTable = _createTable();
         commonTable.style.height = '100%';
@@ -548,30 +584,30 @@ function enforceTablesResponsivity(editable) {
         let index = 0;
         for (const td of tds) {
             const width = td.style.maxWidth;
-            const div = document.createElement('div');
-            div.style.display = 'inline-block';
-            div.style.verticalAlign = 'top';
-            div.classList.add('o_stacking_wrapper');
-            commonTd.appendChild(div);
-            const newTable = _createTable();
-            newTable.style.width = width;
-            newTable.classList.add('o_stacking_wrapper');
-            div.appendChild(newTable);
+            const wrapDiv = document.createElement('div');
+            wrapDiv.style.display = 'inline-block';
+            wrapDiv.style.verticalAlign = 'top';
+            wrapDiv.classList.add('o_stacking_wrapper');
+            commonTd.appendChild(wrapDiv);
+            const wrapTable = _createTable();
+            wrapTable.style.width = width;
+            wrapTable.classList.add('o_stacking_wrapper');
+            wrapDiv.appendChild(wrapTable);
             const newTr = document.createElement('tr');
-            newTable.appendChild(newTr);
+            wrapTable.appendChild(newTr);
             newTr.appendChild(td);
             td.style.width = '100%';
             td.removeAttribute('width');
             if (index === 0) {
-                div.before(_createMso(`
+                wrapDiv.before(_createMso(`
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
                         <tr>
                             <td valign="top" style="width: ${width};">`));
             } else {
-                div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
+                wrapDiv.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
             }
             if (index === tds.length - 1) {
-                div.after(_createMso(`</td></tr></table>`));
+                wrapDiv.after(_createMso(`</td></tr></table>`));
             }
             index++;
         }
@@ -721,6 +757,12 @@ async function toInline($editable, cssRules, $iframe) {
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+        imgTop.setAttribute('data-fixed-height', 'true');
+    }
+    // Write down the original dimensions of all images.
+    for (const img of editable.querySelectorAll('.img')) {
+        img.setAttribute('data-original-image-width', _getWidth(img));
+        img.setAttribute('data-original-image-height', _getHeight(img));
     }
 
     attachmentThumbnailToLinkImg($editable);
@@ -734,8 +776,7 @@ async function toInline($editable, cssRules, $iframe) {
         clone.setAttribute('width', width);
         clone.style.setProperty('width', width + 'px');
         clone.style.removeProperty('max-width');
-        image.before(_createMso(clone.outerHTML));
-        _hideForOutlook(image);
+        image.setAttribute('data-img-mso', clone.outerHTML);
     }
 
     classToStyle($editable, cssRules);
@@ -753,6 +794,11 @@ async function toInline($editable, cssRules, $iframe) {
     formatTables($editable);
     normalizeColors($editable);
     responsiveToStaticForOutlook(editable);
+    for (const image of editable.querySelectorAll('img[data-img-mso]')) {
+        image.before(_createMso(image.getAttribute('data-img-mso')));
+        image.removeAttribute('data-img-mso');
+        _hideForOutlook(image);
+    }
     // Fix Outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
@@ -773,6 +819,11 @@ async function toInline($editable, cssRules, $iframe) {
         if (centeredImage.parentElement.children.length === 1) {
             centeredImage.parentElement.style.setProperty('text-align', 'center');
         }
+    }
+    // Remove temporary attributes.
+    for (const img of editable.querySelectorAll('[data-original-image-width],[data-original-image-height]')) {
+        img.setAttribute('data-original-image-width', _getWidth(img));
+        img.setAttribute('data-original-image-height', _getHeight(img));
     }
 
     // Remove contenteditable attributes
@@ -1010,20 +1061,67 @@ function formatTables($editable) {
     }
     // Align items doesn't work on table rows.
     for (const row of editable.querySelectorAll('tr')) {
-        const alignItems = row.style.alignItems;
-        if (alignItems === 'flex-start') {
-            row.style.verticalAlign = 'top';
-        } else if (alignItems === 'center') {
-            row.style.verticalAlign = 'middle';
-        } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
-            row.style.verticalAlign = 'bottom';
-        } else if (alignItems === 'stretch') {
-            const columns = [...row.querySelectorAll('td.o_converted_col')];
-            if (columns.length > 1) {
-                const commonAncestor = commonParentGet(columns[0], columns[1]);
-                const biggestHeight = commonAncestor.clientHeight;
-                for (const column of columns) {
-                    column.style.height = biggestHeight + 'px';
+        const alignItems = _getStylePropertyValue(row, 'align-items');
+        const alignment = {
+            'flex-start': 'top',
+            'center': 'middle',
+            'flex-end': 'bottom',
+            'baseline': 'bottom',
+            'stretch': 'top',
+        }
+        // What's missing for Outlook:
+        // 1. Just before the stacking wrapper there's an mso td with valign="top".
+        // 2. valign=alignment[alignItems] should be applied to the concerned
+        //    tds.
+        // IT WORKS :-)
+        // Then check the height 0 for Firefox.
+        if (alignItems in alignment) {
+            const cardContainers = new Set();
+            const wrappers = [...row.querySelectorAll('div.o_stacking_wrapper')];
+            for (const wrapper of wrappers) {
+                const parentWrapper = wrapper.parentElement && wrapper.parentElement.closest('div.o_stacking_wrapper');
+                if (!(parentWrapper && wrappers.includes(parentWrapper))) { // Go only one level down.
+                    wrapper.style.height = '100%';
+                    if (!wrapper.parentElement.style.height) {
+                        wrapper.parentElement.style.height = _getHeight(wrapper.parentElement) + 'px'; // So the pc height works.
+                    }
+                    if (wrapper.previousSibling && wrapper.previousSibling.nodeType === Node.COMMENT_NODE) {
+                        wrapper.previousSibling.textContent = wrapper.previousSibling.textContent.replaceAll(
+                            '<td valign="top"',
+                            `<td valign="${alignment[alignItems]}"`,
+                        ); // that's 1.
+                        // TODO: make it less ad-hoc (preferably fix before mso
+                        // gets added?)
+                    }
+                    const table = wrapper.querySelector('table.o_stacking_wrapper');
+                    table.style.height = '100%';
+                    table.setAttribute('height', '100%');
+                    const tds = [...table.querySelectorAll('td')];
+                    for (const td of tds) {
+                        const parentTd = td.parentElement && td.parentElement.closest('td');
+                        if (!(parentTd && tds.includes(parentTd))) { // Go only one level down.
+                            td.style.verticalAlign = alignment[alignItems];
+                            td.setAttribute('valign', alignment[alignItems]); // that's 2.
+                        }
+                    }
+                }
+                if (alignItems === 'stretch' && wrapper.querySelector('table.card td.card-body')) {
+                    cardContainers.add(wrapper.closest('td'));
+                }
+            }
+            row.style.alignItems = '';
+            // Fix the heights of the card bodies for Outlook.
+            for (const cardContainer of cardContainers) {
+                for (const card of cardContainer.querySelectorAll('table.card')) {
+                    const cardBody = card.querySelector('td.card-body');
+                    card.classList.remove('card'); // Remove the flexbox.
+                    const outlookCardBody = cardBody.cloneNode();
+                    outlookCardBody.style.height = _getHeight(cardBody) + 'px';
+                    outlookCardBody.setAttribute('valign', 'top');
+                    // The opening tag of `outlookTd` is for Outlook.
+                    cardBody.before(_createMso(outlookCardBody.outerHTML.replace('</td>', '')));
+                    // The opening tag of `td` is for the others.
+                    _hideForOutlook(cardBody, 'opening');
                 }
             }
         }
@@ -1621,10 +1719,12 @@ let lastComputedStyle
  * @returns
  */
 function _getStylePropertyValue(element, propertyName) {
-    const computedStyle = lastComputedStyleElement === element ? lastComputedStyle : getComputedStyle(element)
-    lastComputedStyleElement = element;
-    lastComputedStyle = computedStyle;
-    return computedStyle[propertyName] || element.style.getPropertyValue(propertyName);
+    return _withOriginalImageSizes(element, () => {
+        const computedStyle = lastComputedStyleElement === element ? lastComputedStyle : getComputedStyle(element)
+        lastComputedStyleElement = element;
+        lastComputedStyle = computedStyle;
+        return computedStyle[propertyName] || element.style.getPropertyValue(propertyName);
+    });
 }
 /**
  * Equivalent to JQuery's `width` method. Returns the element's visible width.
@@ -1633,7 +1733,7 @@ function _getStylePropertyValue(element, propertyName) {
  * @returns {Number}
  */
 function _getWidth(element) {
-    return parseFloat(getComputedStyle(element).width.replace('px', '')) || 0;
+    return _withOriginalImageSizes(element, () => parseFloat(getComputedStyle(element).width.replace('px', '')) || 0);
 }
 /**
  * Equivalent to JQuery's `height` method. Returns the element's visible height.
@@ -1642,7 +1742,7 @@ function _getWidth(element) {
  * @returns {Number}
  */
 function _getHeight(element) {
-    return parseFloat(getComputedStyle(element).height.replace('px', '')) || 0;
+    return _withOriginalImageSizes(element, () => parseFloat(getComputedStyle(element).height.replace('px', '')) || 0);
 }
 /**
  * Hides the given node (or just its opening/closing tag) for Outlook with mso
@@ -1692,6 +1792,22 @@ function _normalizeStyle(style) {
         }
     }
     return normalizedStyle;
+}
+function _withOriginalImageSizes(element, callback) {
+    const images = [...(element.nodeName === 'IMG' ? [element] : []), ...element.querySelectorAll('img')];
+    const imageStyles = new Map();
+    for (const image of images) {
+        imageStyles.set(image, { width: image.style.width, height: image.style.height });
+        image.style.width = image.getAttribute('data-original-image-width') + 'px';
+        image.style.height = image.getAttribute('data-original-image-height') + 'px';
+    }
+    const res = callback();
+    for (const image of images) {
+        const imageSize = imageStyles.get(image);
+        image.style.width = imageSize.width;
+        image.style.height = imageSize.height;
+    }
+    return res;
 }
 /**
  * Wrap a given element into a new parent, in place.
