@@ -481,10 +481,10 @@ export class SelfOrder extends Reactive {
 
         for (const pm of this.models["pos.payment.method"].getAll()) {
             const PaymentInterface = registry
-                .category("electronic_payment_interfaces")
-                .get(pm.use_payment_terminal, null);
+                .category("pos_payment_providers")
+                .get(pm.payment_provider, null);
             if (PaymentInterface) {
-                pm.payment_terminal = new PaymentInterface(this, pm);
+                pm.payment_interface = new PaymentInterface(this, pm);
             }
         }
 
@@ -924,9 +924,9 @@ export class SelfOrder extends Reactive {
         return getTimeUtil(date);
     }
 
-    getPendingPaymentLine(terminalName) {
+    getPendingPaymentLine(provider) {
         const currentPaymentLine = this.getOrder()?.getSelectedPaymentline();
-        return currentPaymentLine?.payment_method_id?.use_payment_terminal === terminalName
+        return currentPaymentLine?.payment_method_id?.payment_provider === provider
             ? currentPaymentLine
             : null;
     }

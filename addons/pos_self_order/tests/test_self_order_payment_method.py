@@ -12,7 +12,7 @@ class TestSelfOrderPaymentMethod(SelfOrderCommonTest):
         self.terminal_payment_method = self.env['pos.payment.method'].create({
             'name': 'Terminal',
             'journal_id': self.bank_journal.id,
-            'use_payment_terminal': 'stripe',
+            'payment_provider': 'stripe',
         })
 
         self.pos_config.write(

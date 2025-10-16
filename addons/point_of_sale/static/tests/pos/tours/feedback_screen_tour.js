@@ -360,10 +360,7 @@ registry.category("web_tour.tours").add("test_auto_validate_force_done", {
                     posmodel.getOrder().payment_ids[0].setPaymentStatus("force_done");
                 },
             },
-            {
-                trigger: ".send_force_done",
-                run: "click",
-            },
+            PaymentScreen.clickForceDoneButton(),
             FeedbackScreen.isShown(),
         ].flat(),
 });

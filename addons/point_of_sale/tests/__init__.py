@@ -3,6 +3,7 @@
 from . import common_setup_methods
 from . import test_point_of_sale_flow
 from . import test_frontend
+from . import test_backend
 from . import test_performances
 from . import test_point_of_sale_ui
 from . import test_anglo_saxon

@@ -94,14 +94,14 @@ describe("initHardware", () => {
         const store = await setupSelfPosEnv();
         const models = store.models;
         const mockTerminalMethod = models["pos.payment.method"].create({
-            use_payment_terminal: "mock_terminal",
+            payment_provider: "mock_terminal",
         });
         class MockTerminal {}
-        registry.category("electronic_payment_interfaces").add("mock_terminal", MockTerminal);
+        registry.category("pos_payment_providers").add("mock_terminal", MockTerminal);
 
         store.initHardware();
 
-        expect(mockTerminalMethod.payment_terminal).toBeInstanceOf(MockTerminal);
+        expect(mockTerminalMethod.payment_interface).toBeInstanceOf(MockTerminal);
     });
 });
 

@@ -8,7 +8,7 @@ patch(SelfOrder.prototype, {
         await super.setup(...arguments);
 
         const pineLabsPaymentMethod = this.models["pos.payment.method"].find(
-            (p) => p.use_payment_terminal === "pine_labs"
+            (p) => p.payment_provider === "pine_labs"
         );
 
         if (pineLabsPaymentMethod) {

@@ -28,7 +28,7 @@ export class PaymentVivaCom extends PaymentInterface {
                     !paymentLine.isDone() &&
                     paymentLine.getPaymentStatus() !== "retry"
                 ) {
-                    paymentLine.payment_method_id.payment_terminal.handleVivaComStatusResponse(
+                    paymentLine.payment_method_id.payment_interface.handleVivaComStatusResponse(
                         paymentLine,
                         payload
                     );
@@ -37,13 +37,13 @@ export class PaymentVivaCom extends PaymentInterface {
         });
         this.paymentLineResolvers = {};
     }
-    sendPaymentRequest(uuid) {
-        super.sendPaymentRequest(uuid);
-        return this._viva_com_pay(uuid);
+    sendPaymentRequest(line) {
+        super.sendPaymentRequest(...arguments);
+        return this._viva_com_pay(line);
     }
-    sendPaymentCancel(order, uuid) {
-        super.sendPaymentCancel(order, uuid);
-        return this._viva_com_cancel(order, uuid);
+    sendPaymentCancel(line) {
+        super.sendPaymentCancel(...arguments);
+        return this._viva_com_cancel(line);
     }
 
     _call_viva_com(data, action, paymentLine) {
@@ -74,13 +74,8 @@ export class PaymentVivaCom extends PaymentInterface {
         return this.waitForPaymentConfirmation(paymentLine);
     }
 
-    _viva_com_pay() {
-        /**
-         * Override
-         */
-        super.sendPaymentRequest(...arguments);
-        var order = this.pos.getOrder();
-        var line = order.getSelectedPaymentline();
+    _viva_com_pay(line) {
+        const order = line.pos_order_id;
         let customerTrns = " ";
         line.setPaymentStatus("waitingCard");
 
@@ -110,9 +105,7 @@ export class PaymentVivaCom extends PaymentInterface {
         );
     }
 
-    async _viva_com_cancel(order, uuid) {
-        const line = order.getPaymentlineByUuid(uuid);
-
+    async _viva_com_cancel(line) {
         var data = {
             sessionId: line.uiState.vivaSessionId,
             cashRegisterId: this.pos.config.uuid,
@@ -210,4 +203,4 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 }
 
-registry.category("electronic_payment_interfaces").add("viva_com", PaymentVivaCom);
+registry.category("pos_payment_providers").add("viva_com", PaymentVivaCom);

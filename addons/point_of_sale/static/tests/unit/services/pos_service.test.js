@@ -1,5 +1,5 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv } from "../utils";
+import { getFilledOrder, setupPosEnv, createPaymentLine } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import {
@@ -506,5 +506,126 @@ describe("pos_store.js", () => {
         const { cashPm: cash2, cardPm: card2 } = prepareRoundingVals(store, 0.05, "HALF-UP", true);
         expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 17.85");
         expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
+    });
+
+    test("canSendPaymentRequest", async () => {
+        const store = await setupPosEnv();
+        await getFilledOrder(store);
+        const card = store.models["pos.payment.method"].get(2);
+
+        // Order 1: no payment lines --> Ignored
+        const result1 = store.canSendPaymentRequest({ paymentMethod: card });
+        expect(result1).toEqual({ status: true, message: "" });
+
+        // Order 2: has a paymentline and canSendPaymentRequest returns success
+        const order2 = await getFilledOrder(store);
+        order2.canSendPaymentRequest = () => ({ status: true, message: "" });
+        createPaymentLine(store, order2, card);
+        const result2 = store.canSendPaymentRequest({ paymentMethod: card });
+        expect(result2).toEqual({ status: true, message: "" });
+
+        // Order 3: has a paymentline and canSendPaymentRequest returns failure
+        const order3 = await getFilledOrder(store);
+        order3.canSendPaymentRequest = () => ({ status: false, message: "Test Message" });
+        createPaymentLine(store, order3, card);
+        const result3 = store.canSendPaymentRequest({ paymentMethod: card });
+        expect(result3).toEqual({ status: false, message: "Test Message" });
+    });
+
+    test("displayQrCode", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const card = store.models["pos.payment.method"].get(2);
+        const paymentline = createPaymentLine(store, order, card);
+
+        // No qr_code
+        store.displayQrCode(paymentline);
+        expect(store.qrCode).toBeEmpty();
+
+        // With qr_code
+        paymentline.qr_code = "Test QR Code";
+        store.displayQrCode(paymentline);
+        expect({ ...(store.qrCode || {}), closer: typeof store.qrCode?.closer }).toEqual({
+            paymentline,
+            closer: "function",
+        });
+    });
+
+    test("closeQrCode", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const card = store.models["pos.payment.method"].get(2);
+        const paymentline = createPaymentLine(store, order, card);
+
+        // no error if no qrCode
+        store.closeQrCode();
+        expect(store.qrCode).toBeEmpty();
+
+        // close qrCode
+        store.qrCode = { paymentline, closer: () => {} };
+        store.closeQrCode();
+        expect(store.qrCode).toBeEmpty();
+    });
+
+    test("getValidationOrderOptions", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+
+        const fastPM = store.config.payment_method_ids[0];
+        const card = store.models["pos.payment.method"].get(2);
+
+        const getOpts = () => store.getValidationOrderOptions({ order });
+        const expectedWithoutFastPM = {
+            pos: store,
+            orderUuid: order.uuid,
+        };
+        const expectedWithFastPM = {
+            pos: store,
+            orderUuid: order.uuid,
+            fastPaymentMethod: fastPM,
+        };
+
+        // No payment lines
+        expect(getOpts()).toEqual(expectedWithFastPM);
+        // Refund order
+        order.is_refund = true;
+        const paymentline = createPaymentLine(store, order, card);
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+
+        // No refund + positive payment
+        order.is_refund = false;
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+
+        // No refund + negative payment
+        paymentline.amount = -10;
+        expect(getOpts()).toEqual(expectedWithFastPM);
+
+        // No refund + multiple payments
+        createPaymentLine(store, order, card, { amount: -5 });
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+    });
+
+    test("autoValidateOrder", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        store.validateOrder = async () => "test_validated";
+
+        // Should not be validated
+        order.toBeValidate = () => false;
+        expect(await store.autoValidateOrder(order)).toBe(false);
+
+        // Should not autovalidate electronic payments
+        order.toBeValidate = () => true;
+        store.config.auto_validate_electronic_payment = false;
+        expect(await store.autoValidateOrder(order)).toBe(false);
+
+        // Is in refund process
+        store.config.auto_validate_electronic_payment = true;
+        order.isRefundInProcess = () => true;
+        expect(await store.autoValidateOrder(order)).toBe(false);
+
+        // Should be autovalidated
+        order.isRefundInProcess = () => false;
+        expect(await store.autoValidateOrder(order)).toBe("test_validated");
     });
 });

@@ -5,13 +5,13 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='use_payment_terminal']" position="after">
-                <field name="pine_labs_merchant" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
-                <field name="pine_labs_store" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
-                <field name="pine_labs_client" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
-                <field name="pine_labs_security_token" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'" password="True"/>
-                <field name="pine_labs_allowed_payment_mode" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
-                <field name="pine_labs_test_mode" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
+            <xpath expr="//field[@name='payment_provider']" position="after">
+                <field name="pine_labs_merchant" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
+                <field name="pine_labs_store" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
+                <field name="pine_labs_client" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
+                <field name="pine_labs_security_token" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'" password="True"/>
+                <field name="pine_labs_allowed_payment_mode" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
+                <field name="pine_labs_test_mode" invisible="payment_provider != 'pine_labs'" required="payment_provider == 'pine_labs'"/>
             </xpath>
         </field>
     </record>

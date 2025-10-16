@@ -28,16 +28,16 @@ const setupPaymentPage = async () => {
     const store = await setupSelfPosEnv();
 
     const nonPaymentTerminal = store.models["pos.payment.method"].create({
-        use_payment_terminal: null,
+        payment_provider: null,
     });
     const paymentTerminal = store.models["pos.payment.method"].create({
-        use_payment_terminal: "mock_terminal",
+        payment_provider: "mock_terminal",
     });
-    paymentTerminal.payment_terminal = new MockPaymentInterface();
+    paymentTerminal.payment_interface = new MockPaymentInterface();
     const paymentTerminalWithError = store.models["pos.payment.method"].create({
-        use_payment_terminal: "mock_terminal",
+        payment_provider: "mock_terminal",
     });
-    paymentTerminalWithError.payment_terminal = new MockPaymentInterfaceWithError();
+    paymentTerminalWithError.payment_interface = new MockPaymentInterfaceWithError();
     await getFilledSelfOrder(store);
 
     const paymentPage = await mountWithCleanup(PaymentPage, {});
@@ -75,7 +75,7 @@ describe("startPayment", () => {
         onRpc("/kiosk/payment/1/kiosk", () => true);
         await paymentPage.startPayment();
 
-        expect(paymentTerminal.payment_terminal.hasBeenCalled).toBe(true);
+        expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
     });
 
@@ -86,7 +86,7 @@ describe("startPayment", () => {
         onRpc("/kiosk/payment/1/kiosk", () => true);
         await paymentPage.startPayment();
 
-        expect(paymentTerminalWithError.payment_terminal.hasBeenCalled).toBe(true);
+        expect(paymentTerminalWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 
@@ -99,7 +99,7 @@ describe("startPayment", () => {
         });
         await paymentPage.startPayment();
 
-        expect(paymentTerminal.payment_terminal.hasBeenCalled).toBe(true);
+        expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 });

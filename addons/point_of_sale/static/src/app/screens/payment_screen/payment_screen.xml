@@ -9,10 +9,10 @@
                     <t t-call="point_of_sale.PaymentScreenMethods" />
                 </div>
                 <PaymentScreenPaymentLines
-                    paymentLines="paymentLines"
+                    paymentLines="sortedPaymentLines"
                     deleteLine.bind="deletePaymentLine"
                     sendForceDone.bind="sendForceDone"
-                    sendPaymentReverse.bind="sendPaymentReverse"
+                    sendForceCancel.bind="sendForceCancel"
                     sendPaymentCancel.bind="sendPaymentCancel"
                     sendPaymentRequest.bind="sendPaymentRequest"
                     selectLine.bind="selectPaymentLine"
@@ -47,10 +47,10 @@
                         <t t-call="point_of_sale.PaymentScreenDue" />
                         <div t-if="paymentLines.length" class="payment-summary d-flex flex-grow-1 flex-column gap-1 overflow-y-auto py-3">
                             <PaymentScreenPaymentLines
-                                paymentLines="paymentLines"
+                                paymentLines="sortedPaymentLines"
                                 deleteLine.bind="deletePaymentLine"
                                 sendForceDone.bind="sendForceDone"
-                                sendPaymentReverse.bind="sendPaymentReverse"
+                                sendForceCancel.bind="sendForceCancel"
                                 sendPaymentCancel.bind="sendPaymentCancel"
                                 sendPaymentRequest.bind="sendPaymentRequest"
                                 selectLine.bind="selectPaymentLine"
@@ -136,7 +136,7 @@
                         <t t-if="pos.config.canInvoice">Invoice</t>
                         <t t-else="">Not available</t>
                     </span>
-                    <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
+                    <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" />
                 </button>
             </div>
             <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-1 w-100">
@@ -167,8 +167,8 @@
         <!-- Add scrollbar if more than 4 payment methods are configured -->
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': ui.isSmall, 'd-flex flex-column gap-lg-2': !ui.isSmall }" t-att-style="ui.isSmall ? 'max-height: 120px;' : ''">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div t-if="!(this.pos.cashier._role === 'minimal' and paymentMethod.type === 'pay_later')" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
-                        t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal, 'd-flex justify-content-between align-items-center': true}"
+                    <div t-if="showPaymentMethod(paymentMethod)" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
+                        t-att-class="{'opacity-50': !this.pos.canSendPaymentRequest({ paymentMethod }).status, 'd-flex justify-content-between align-items-center': true}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />

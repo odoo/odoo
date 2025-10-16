@@ -33,11 +33,7 @@ function addProductandPay(isPartialPay = false) {
                   Dialog.discard(),
                   PaymentScreen.clickNumpad("⌫"),
                   PaymentScreen.clickNumpad("+10"),
-                  {
-                      content: "Display QR Code Payment dialog",
-                      trigger: ".button.send_payment_request.highlight",
-                      run: "click",
-                  },
+                  PaymentScreen.clickRetryButton(),
               ]
             : [PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" })]),
     ].flat();
@@ -69,11 +65,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             isQRDisplayedinDialog(),
             Dialog.discard(),
             PaymentScreen.validateButtonIsHighlighted(false),
-            {
-                content: "Retry to display QR Code Payment dialog",
-                trigger: ".button.send_payment_request.highlight",
-                run: "click",
-            },
+            PaymentScreen.clickRetryButton(),
             isQRDisplayedinDialog(),
             Dialog.confirm(),
             FeedbackScreen.isShown(),
@@ -83,9 +75,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             addProductandPay(true),
             isQRDisplayedinDialog(),
             Dialog.confirm(),
-            {
-                trigger: ".electronic_status:contains('Successful')",
-            },
+            PaymentScreen.hasActionState("paid"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
         ].flat(),

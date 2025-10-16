@@ -183,7 +183,7 @@ class PosConfig(models.Model):
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
-    auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
+    auto_validate_electronic_payment = fields.Boolean(default=True, help="Automatically validates orders paid with an electronic payment (terminals, qr codes, ...).")
     trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
                                           column2="is_trusted", string="Trusted Point of Sale Configurations",
                                           domain="[('company_id', '=', company_id)]")

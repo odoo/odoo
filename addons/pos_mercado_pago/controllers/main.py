@@ -65,7 +65,7 @@ class PosMercadoPagoWebhook(http.Controller):
             return http.Response('OK', status=200)
 
         payment_method_sudo = pos_session_sudo.config_id.payment_method_ids.filtered(lambda p: p.id == int(payment_method_id))
-        if not payment_method_sudo or payment_method_sudo.use_payment_terminal != 'mercado_pago':
+        if not payment_method_sudo or payment_method_sudo.payment_provider != 'mercado_pago':
             _logger.error("Invalid payment method id: %s", payment_method_id)
             # This error is not related with Mercado Pago, simply acknowledge Mercado Pago message
             return http.Response('OK', status=200)

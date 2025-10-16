@@ -31,6 +31,9 @@
             'pos_online_payment/static/tests/tours/**/*',
             ('remove', 'pos_online_payment/static/tests/tours/customer_display_tour.js')
         ],
+        'web.assets_unit_tests': [
+            'pos_online_payment/static/tests/unit/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

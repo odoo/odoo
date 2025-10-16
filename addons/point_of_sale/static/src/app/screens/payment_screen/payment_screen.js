@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
-import { useErrorHandlers, useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
+import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -15,7 +15,6 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
-import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -41,18 +40,12 @@ export class PaymentScreen extends Component {
         this.numberBuffer.use(this._getNumberBufferConfig);
         useRouterParamsChecker();
         useErrorHandlers();
-        this.payment_interface = null;
         this.error = false;
-        this.validateOrder = useAsyncLockedMethod(this.validateOrder);
         onMounted(this.onMounted);
     }
 
     get configPaymentMethods() {
         return this.pos.config.payment_method_ids.slice().sort((a, b) => a.sequence - b.sequence);
-    }
-    async validateOrder(isForceValidate = false) {
-        const validation = new OrderPaymentValidation(this.validationOptions);
-        await validation.validateOrder(isForceValidate);
     }
 
     onMounted() {
@@ -72,27 +65,6 @@ export class PaymentScreen extends Component {
         ) {
             this.currentOrder.setToInvoice(true);
         }
-    }
-
-    get validationOptions() {
-        const opts = {
-            pos: this.pos,
-            orderUuid: this.currentOrder.uuid,
-        };
-        // Fast payment should be applied in the following cases:
-        // 1. When there are no existing payment lines, but a payment method is configured.
-        // 2. When the customer's due has been settled (i.e., a negative payment entry exists).
-        //    In this case, the negative payment line is present in `paymentLines` but not shown in the UI,
-        //    so `fastPayment` should still be triggered by passing `opts`.
-        if (
-            !this.paymentLines.length ||
-            (!this.currentOrder.is_refund &&
-                this.paymentLines.length === 1 &&
-                this.pos.currency.isNegative(this.paymentLines[0].amount))
-        ) {
-            opts.fastPaymentMethod = this.payment_methods_from_config[0];
-        }
-        return opts;
     }
 
     getNumpadButtons() {
@@ -119,11 +91,23 @@ export class PaymentScreen extends Component {
             ),
         });
     }
+
+    showPaymentMethod(paymentMethod) {
+        return (
+            !(this.pos.cashier._role === "minimal" && paymentMethod.type === "pay_later") &&
+            (!this.isRefundOrder ||
+                !paymentMethod.payment_interface ||
+                paymentMethod.payment_interface.supports_refunds ||
+                false)
+        );
+    }
+
     get uiBackText() {
         return this.pos.config.set_tip_after_payment && this.currentOrder.toBeValidate()
             ? _t("Keep Open")
             : _t("Back");
     }
+
     get _getNumberBufferConfig() {
         const config = {
             // When the buffer is updated, trigger this event.
@@ -143,6 +127,11 @@ export class PaymentScreen extends Component {
     get paymentLines() {
         return this.currentOrder.payment_ids;
     }
+    get sortedPaymentLines() {
+        return this.paymentLines
+            .slice()
+            .sort((a, b) => a.uiState.initStateDate - b.uiState.initStateDate);
+    }
     get selectedPaymentLine() {
         return this.currentOrder.getSelectedPaymentline();
     }
@@ -151,26 +140,22 @@ export class PaymentScreen extends Component {
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
     async addNewPaymentLine(paymentMethod) {
-        if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Oh snap !"),
-                body: _t("There is already an electronic payment in progress."),
-            });
+        const { status: canSend, message } = this.pos.canSendPaymentRequest({ paymentMethod });
+        if (!canSend) {
+            this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
             return;
         }
 
         if (this.paymentLines.length === 0) {
             this.makeAnimation();
         }
-        // original function: click_paymentmethods
+
         const result = this.currentOrder.addPaymentline(paymentMethod);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
             if (
                 !this.isRefundOrder &&
-                ((paymentMethod.use_payment_terminal &&
-                    paymentMethod.payment_terminal.fastPayments) ||
-                    paymentMethod.payment_method_type === "qr_code")
+                (paymentMethod.payment_interface?.fastPayments || paymentMethod.useBankQrCode)
             ) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
@@ -200,8 +185,8 @@ export class PaymentScreen extends Component {
                 amount = this.numberBuffer.getFloat();
             }
         }
-        // disable changing amount on paymentlines with running or done payments on a payment terminal
-        const payment_terminal = this.selectedPaymentLine.payment_method_id.payment_terminal;
+        // disable changing amount on paymentlines with running or done payments on a payment interface
+        const payment_interface = this.selectedPaymentLine.payment_interface;
         const hasCashPaymentMethod = this.payment_methods_from_config.some(
             (method) => method.type === "cash"
         );
@@ -215,7 +200,7 @@ export class PaymentScreen extends Component {
             this.showMaxValueError();
         }
         if (
-            payment_terminal &&
+            payment_interface &&
             !["pending", "retry"].includes(this.selectedPaymentLine.getPaymentStatus())
         ) {
             return;
@@ -316,7 +301,7 @@ export class PaymentScreen extends Component {
     }
     deletePaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
-        if (line.payment_method_id.payment_method_type === "qr_code") {
+        if (line.payment_method_id.useBankQrCode) {
             this.currentOrder.removePaymentline(line);
             this.numberBuffer.reset();
             return;
@@ -324,17 +309,16 @@ export class PaymentScreen extends Component {
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
-        if (["waiting", "waitingCard", "timeout"].includes(line.getPaymentStatus())) {
-            line.setPaymentStatus("waitingCancel");
-            line.payment_method_id.payment_terminal
-                .sendPaymentCancel(this.currentOrder, uuid)
-                .then(() => {
-                    this.currentOrder.removePaymentline(line);
-                    this.numberBuffer.reset();
-                });
-        } else if (line.getPaymentStatus() !== "waitingCancel") {
+        const finalizeDeletion = () => {
             this.currentOrder.removePaymentline(line);
             this.numberBuffer.reset();
+        };
+        const status = line.getPaymentStatus();
+        const cancelableStatuses = ["waiting", "waitingCard", "waitingScan", "timeout"];
+        if (cancelableStatuses.includes(status)) {
+            line.cancelPayment(this.currentOrder).then((success) => success && finalizeDeletion());
+        } else if (status !== "waitingCancel") {
+            finalizeDeletion();
         }
     }
     selectPaymentLine(uuid) {
@@ -355,16 +339,22 @@ export class PaymentScreen extends Component {
         }
     }
 
-    async sendPaymentRequest(line) {
-        // Other payment lines can not be reversed anymore
-        this.pos.paymentTerminalInProgress = true;
-        this.numberBuffer.capture();
-        this.paymentLines.forEach(function (line) {
-            line.can_be_reversed = false;
-        });
+    async validateOrder(args = {}) {
+        await this.pos.validateOrder(args);
+    }
 
+    async sendPaymentRequest(line) {
+        const { status: canSend, message } = this.pos.canSendPaymentRequest({
+            paymentline: line,
+        });
+        if (!canSend) {
+            this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: _t(message) });
+            return;
+        }
+
+        this.numberBuffer.capture();
         let isPaymentSuccessful = false;
-        if (line.payment_method_id.payment_method_type === "qr_code") {
+        if (line.payment_method_id.useBankQrCode) {
             const resp = await this.pos.showQR(line);
             isPaymentSuccessful = line.handlePaymentResponse(resp);
         } else {
@@ -373,58 +363,24 @@ export class PaymentScreen extends Component {
 
         // Automatically validate the order when after an electronic payment,
         // the current order is fully paid and due is zero.
-        this.pos.paymentTerminalInProgress = false;
-        const config = this.pos.config;
-        const currentOrder = line.pos_order_id;
-        if (
-            isPaymentSuccessful &&
-            currentOrder.toBeValidate() &&
-            config.auto_validate_terminal_payment &&
-            !currentOrder.isRefundInProcess()
-        ) {
-            this.validateOrder(false);
+        if (isPaymentSuccessful) {
+            await this.pos.autoValidateOrder();
         }
     }
-    async sendPaymentCancel(line) {
-        const payment_terminal = line.payment_method_id.payment_terminal;
-        line.setPaymentStatus("waitingCancel");
-        const isCancelSuccessful = await payment_terminal.sendPaymentCancel(
-            this.currentOrder,
-            line.uuid
-        );
-        if (isCancelSuccessful) {
-            line.setPaymentStatus("retry");
-            this.pos.paymentTerminalInProgress = false;
-        } else {
-            line.setPaymentStatus("waitingCard");
-        }
-    }
-    async sendPaymentReverse(line) {
-        const payment_terminal = line.payment_method_id.payment_terminal;
-        line.setPaymentStatus("reversing");
 
-        const isReversalSuccessful = await payment_terminal.sendPaymentReversal(line.uuid);
-        if (isReversalSuccessful) {
-            line.setAmount(0);
-            line.setPaymentStatus("reversed");
-        } else {
-            line.can_be_reversed = false;
-            line.setPaymentStatus("done");
-        }
+    async sendPaymentCancel(line) {
+        await line.cancelPayment(this.currentOrder);
     }
+
     async sendForceDone(line) {
-        line.setPaymentStatus("done");
-        this.pos.paymentTerminalInProgress = false;
-        const config = this.pos.config;
-        const currentOrder = line.pos_order_id;
-        if (
-            currentOrder.toBeValidate() &&
-            config.auto_validate_terminal_payment &&
-            !currentOrder.isRefundInProcess()
-        ) {
-            this.validateOrder(false);
-        }
+        line.forceDone();
+        await this.pos.autoValidateOrder();
     }
+
+    async sendForceCancel(line) {
+        line.forceCancel();
+    }
+
     async clickTableGuests() {
         this.pos.setCustomerCount();
     }

@@ -35,14 +35,14 @@ class PosPaymentMethod(models.Model):
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
         for record in read_records:
-            if record['payment_method_type'] == 'qr_code':
+            if record['payment_method_type'] == 'bank_qr_code':
                 payment_method = self.browse(record['id'])
                 record['_qr_payment_icon_urls'] = [[icon.id, url_join(config.get_base_url(), icon.local_url)] for icon in payment_method.qr_payment_icon_ids]
         return read_records
 
     def get_qr_code(self, amount, free_communication, structured_communication, currency, debtor_partner):
         self.ensure_one()
-        if self.payment_method_type == 'qr_code' and self.qr_code_method == 'upi':
+        if self.payment_method_type == 'bank_qr_code' and self.qr_code_method == 'upi':
             if not self.upi_identifier:
                 raise UserError(_("Please set a UPI ID for the payment method '%s'.", self.name))
             payment_url = f"upi://pay?pa={self.upi_identifier}&am={amount}&cu={self.journal_id.currency_id.name or self.env.company.currency_id.name}"

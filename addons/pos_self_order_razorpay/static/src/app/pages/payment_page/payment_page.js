@@ -8,7 +8,7 @@ patch(PaymentPage.prototype, {
             (p) => p.id === this.state.paymentMethodId
         );
 
-        if (paymentMethod.use_payment_terminal === "razorpay") {
+        if (paymentMethod.payment_provider === "razorpay") {
             await this.selfOrder.razorpay.startPayment(this.selfOrder.currentOrder);
         } else {
             await super.startPayment(...arguments);

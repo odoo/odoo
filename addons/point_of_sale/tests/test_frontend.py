@@ -2650,7 +2650,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_auto_validate_force_done(self):
         self.main_pos_config.write({
-            'auto_validate_terminal_payment': True
+            'auto_validate_electronic_payment': True
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_auto_validate_force_done', login="pos_user")
 

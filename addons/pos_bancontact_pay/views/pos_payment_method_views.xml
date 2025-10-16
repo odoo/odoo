@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_bancontact_pay" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.bancontact_pay</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_provider']" position="after">
+                <field name="bancontact_api_key" password="True" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
+                <field name="bancontact_ppid" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
+                <field name="bancontact_usage" invisible="payment_provider != 'bancontact_pay'"/>
+                <field name="bancontact_sticker_size" invisible="payment_provider != 'bancontact_pay' or bancontact_usage != 'sticker'"/>
+                <field name="bancontact_test_mode" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
+                <button name="download_bancontact_sticker" type="object" string="Download Sticker" class="btn btn-primary" invisible="payment_provider != 'bancontact_pay' or bancontact_usage != 'sticker'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

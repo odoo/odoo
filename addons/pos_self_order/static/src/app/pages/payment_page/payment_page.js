@@ -50,7 +50,7 @@ export class PaymentPage extends Component {
     async startPayment() {
         this.selfOrder.paymentError = false;
         try {
-            if (this.selectedPaymentMethod.payment_terminal) {
+            if (this.selectedPaymentMethod.payment_interface) {
                 const result = this.selfOrder.currentOrder.addPaymentline(
                     this.selectedPaymentMethod
                 );
