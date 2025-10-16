@@ -787,7 +787,7 @@ class Partner(models.Model):
                 cp_id = partner.commercial_partner_id.id
 
             add_id = None
-            if partner.parent_id and partner.type == 'contact':
+            if partner.parent_id and partner.type == 'contact' and not partner.is_company:
                 add_id = partner.parent_id.id
             groups[(cp_id, add_id)].append(partner.id)
 
