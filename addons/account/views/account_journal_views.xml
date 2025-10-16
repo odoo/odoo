@@ -177,7 +177,10 @@
                                                     class="copy_alias_email" options="{'btn_class': 'link'}" string=""/>
                                             </div>
                                         </div>
-                                        <field name="incoming_einvoice_notification_email" invisible="type != 'purchase'" placeholder="Enter an email to get notified"/>
+                                        <field name="incoming_einvoice_notification_email"
+                                               widget="CopyClipboardChar"
+                                               placeholder="e.g. finance@example.com; billing@example.com"
+                                               class="w-100"/>
                                     </group>
                                     <!-- edi -->
                                     <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>
