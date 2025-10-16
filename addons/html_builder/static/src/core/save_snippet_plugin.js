@@ -71,7 +71,7 @@ export class SaveSnippetPlugin extends Plugin {
         );
         if (savedName) {
             const message = _t(
-                "Your custom snippet was successfully saved as %s. Find it in your snippets collection.",
+                "Saved as %s. Find it in your snippets.",
                 markup`<strong>${savedName}</strong>`
             );
             this.services.notification.add(message, {
