@@ -56,6 +56,7 @@ export class ResUsers extends webModels.ResUsers {
                             "is_admin",
                             "name",
                             "notification_type",
+                            "signature",
                             "user",
                         ],
                     })
@@ -211,6 +212,9 @@ export class ResUsers extends webModels.ResUsers {
 
         for (const user of this.browse(ids)) {
             const [data] = this._read_format(user.id, fields, false);
+            Object.assign(data, {
+                signature: ["markup", data.signature],
+            });
             store.add(this.browse(user.id), data);
         }
     }
