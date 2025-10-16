@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('website_sale.pills_variant', {
     steps: () => [
         {
             content: "check there are two radio boxes, both hidden",
-            trigger: '.js_main_product',
+            trigger: '.js_product',
             run: function () {
                 var buttons = [...document.querySelectorAll('input.js_variant_change')];
 

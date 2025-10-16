@@ -24,7 +24,7 @@ export function addToCartFromProductPage({ productHasVariants = false } = {}) {
     const steps = [
         {
             content: "Add to cart",
-            trigger: "#product_detail form #add_to_cart",
+            trigger: "#product_detail #add_to_cart",
             run: "click",
         },
         {
