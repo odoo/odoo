@@ -14,7 +14,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
-from odoo.tools import html2plaintext, sql
+from odoo.tools import html_to_plaintext, sql
 from odoo.tools.pdf import PdfFileReader
 
 _logger = logging.getLogger(__name__)
@@ -1240,9 +1240,9 @@ class SlideSlide(models.Model):
     def _default_website_meta(self):
         res = super()._default_website_meta()
         res['default_opengraph']['og:title'] = self.name
-        res['default_opengraph']['og:description'] = html2plaintext(self.description)
+        res['default_opengraph']['og:description'] = html_to_plaintext(self.description)
         res['default_opengraph']['og:image'] = self.env['website'].image_url(self, 'image_1024')
-        res['default_meta_description'] = html2plaintext(self.description)
+        res['default_meta_description'] = html_to_plaintext(self.description)
         return res
 
     # ---------------------------------------------------------

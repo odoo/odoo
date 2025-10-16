@@ -5,7 +5,7 @@ from odoo.http import request
 from odoo import _
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.addons.website.controllers import form
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 class WebsiteForm(form.WebsiteForm):
@@ -27,7 +27,7 @@ class WebsiteForm(form.WebsiteForm):
         custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
         default_field = model_sudo.website_form_default_field_id
         default_field_data = values.get(default_field.name, '')
-        default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + nl2br_enclose(html2plaintext(default_field_data), 'p')
+        default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + nl2br_enclose(html_to_plaintext(default_field_data), 'p')
         custom_content = (default_field_content if default_field_data else '') \
                         + (custom_label + custom if custom else '') \
                         + (self._meta_label + meta if meta else '')

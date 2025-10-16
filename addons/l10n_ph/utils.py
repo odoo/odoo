@@ -3,7 +3,7 @@ import io
 import re
 
 from odoo.tools.misc import format_date
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 
 
 COLUMN_HEADER_MAP = {
@@ -71,7 +71,7 @@ def _export_bir_2307(sheet_title, moves, file_format='xlsx'):
                 if not tax.l10n_ph_atc:
                     continue
 
-                values['tax_description'] = html2plaintext(tax.description) or ''
+                values['tax_description'] = html_to_plaintext(tax.description)
                 values['atc'] = tax.l10n_ph_atc
                 values['price_subtotal'] = tax_detail['base_amount']
                 values['amount'] = abs(tax.amount)

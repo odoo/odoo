@@ -8,6 +8,7 @@ from .cache import ormcache
 from .config import config
 from .float_utils import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str
 from .func import classproperty, conditional, lazy, lazy_classproperty, reset_cached_properties
+from .html_to_text import html_to_text
 from .i18n import format_list, py_to_js_locale
 from .json import json_default
 from .mail import *

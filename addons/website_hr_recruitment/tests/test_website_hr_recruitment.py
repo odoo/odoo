@@ -3,7 +3,7 @@
 
 from odoo.api import Environment
 import odoo.tests
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 import unittest
 
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -39,7 +39,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(guru_applicant.partner_phone, '118.218')
         self.assertTrue(
             "Other Information:\n___________\n\nShort introduction from applicant : ### [GURU] HR RECRUITMENT TEST DATA ###"
-            in guru_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+            in guru_applicant.message_ids.mapped(lambda m: html_to_formatted_plaintext(m.body))
         )
         self.assertEqual(guru_applicant.job_id, job_guru)
 
@@ -49,7 +49,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(internship_applicant.partner_phone, '118.712')
         self.assertTrue(
             "Other Information:\n___________\n\nShort introduction from applicant : ### HR [INTERN] RECRUITMENT TEST DATA ###"
-            in internship_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+            in internship_applicant.message_ids.mapped(lambda m: html_to_formatted_plaintext(m.body))
         )
         self.assertEqual(internship_applicant.job_id, job_intern)
 
@@ -113,7 +113,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(applicant.partner_phone, '12345678')
         self.assertTrue(
             any(
-                html2plaintext(message.body) == 'Other Information:\n___________\n\ndescription : This is a short introduction\nAdditional info : Test'
+                html_to_formatted_plaintext(message.body) == 'Other Information:\n___________\n\ndescription : This is a short introduction\nAdditional info : Test'
                 for message in applicant.message_ids
             ),
             "One message in the chatter should contain the extra information filled in by the applicant"

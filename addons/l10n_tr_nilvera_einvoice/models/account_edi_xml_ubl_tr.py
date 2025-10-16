@@ -4,7 +4,7 @@ from num2words import num2words
 
 from odoo import api, models
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_formatted_plaintext
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -68,7 +68,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cbc:LineCountNumeric': {'_text': len(invoice.line_ids)},
             'cbc:BuyerReference': None,  # Nilvera will reject any <BuyerReference> tag, so remove it
             'cbc:Note': {
-                '_text': html2plaintext(invoice.narration, include_references=False) if invoice.narration else None,
+                '_text': html_to_formatted_plaintext(invoice.narration, strip_links=True) or None,
             },
         })
 

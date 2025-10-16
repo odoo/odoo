@@ -327,14 +327,14 @@ class SMSCase(MockSMS):
             sanitize_tags['remove_tags'] = [*sanitize_tags['remove_tags'] + ['a']]
             with patch('odoo.tools.mail.SANITIZE_TAGS', sanitize_tags):
                 for message in messages:
-                    self.assertEqual(content, tools.html2plaintext(tools.html_sanitize(message.body)).rstrip('\n'))
+                    self.assertEqual(content, tools.html_to_plaintext(tools.html_sanitize(message.body), keep_newlines=True).rstrip('\n'))
 
     def assertSMSLogged(self, records, body):
         for record in records:
             message = record.message_ids[-1]
             self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
             self.assertEqual(message.message_type, 'sms')
-            self.assertEqual(tools.html2plaintext(message.body).rstrip('\n'), body)
+            self.assertEqual(tools.html_to_plaintext(message.body, keep_newlines=True).rstrip('\n'), body)
 
 
 class SMSCommon(MailCommon, SMSCase):

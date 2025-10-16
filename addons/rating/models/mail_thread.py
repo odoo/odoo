@@ -170,7 +170,7 @@ class MailThread(models.AbstractModel):
         if rating_value:
             rating_vals = {
                 'rating': float(rating_value) if rating_value is not None else False,
-                'feedback': tools.html2plaintext(kwargs.get('body', '')),
+                'feedback': tools.html_to_plaintext(kwargs.get('body', '')),
                 'res_model_id': self.env['ir.model']._get_id(self._name),
                 'res_id': self.id,
                 'consumed': True,
@@ -197,7 +197,7 @@ class MailThread(models.AbstractModel):
     def _message_update_content(self, message, /, *, body, rating_value=None, **kwargs):
         if rating_value:
             message.rating_id.rating = rating_value
-            message.rating_id.feedback = tools.html2plaintext(body)
+            message.rating_id.feedback = tools.html_to_plaintext(body)
         elif rating_value is False:
             rating_ids = message.rating_ids
             rating_ids.message_id = False

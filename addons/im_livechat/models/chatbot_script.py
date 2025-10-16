@@ -3,7 +3,7 @@
 
 from odoo import api, Command, models, fields
 from odoo.http import request
-from odoo.tools import email_normalize, get_lang, html2plaintext, is_html_empty, plaintext2html
+from odoo.tools import email_normalize, get_lang, html_to_plaintext, is_html_empty, plaintext2html
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
 
@@ -201,7 +201,7 @@ class ChatbotScript(models.Model):
         return [Store.One("operator_partner_id", ["name"]), "title"]
 
     def _validate_email(self, email_address, discuss_channel):
-        email_address = html2plaintext(email_address)
+        email_address = html_to_plaintext(email_address)
         email_normalized = email_normalize(email_address)
 
         posted_message = False

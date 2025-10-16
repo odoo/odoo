@@ -1,7 +1,7 @@
 from lxml import etree
 
 from odoo import models, Command, _
-from odoo.tools import html2plaintext
+from odoo.tools import html_to_plaintext
 from odoo.addons.account_edi_ubl_cii.tools import Order
 from odoo.addons.account.tools import dict_to_xml
 
@@ -92,7 +92,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             'cbc:ID': {'_text': sale_order.name},
             'cbc:IssueDate': {'_text': sale_order.create_date.date()},
             'cbc:OrderTypeCode': {'_text': '220'},
-            'cbc:Note': {'_text': html2plaintext(sale_order.note)} if sale_order.note else None,
+            'cbc:Note': {'_text': html_to_plaintext(sale_order.note)} if sale_order.note else None,
             'cbc:DocumentCurrencyCode': {'_text': vals['currency_name']},
             'cac:ValidityPeriod': {
                 'cbc:EndDate': {'_text': sale_order.validity_date},

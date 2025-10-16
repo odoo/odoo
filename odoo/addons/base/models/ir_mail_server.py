@@ -595,7 +595,7 @@ class IrMail_Server(models.Model):
         email_body = body or ''
         if subtype == 'html' and not body_alternative:
             msg['MIME-Version'] = '1.0'
-            msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
+            msg.add_alternative(tools.html_to_formatted_plaintext(email_body, skip_sanitation=True), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
             msg['MIME-Version'] = '1.0'

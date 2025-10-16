@@ -14,7 +14,7 @@ from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, UserError
 from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED, ColoredFormatter
-from odoo.tools import SQL, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
+from odoo.tools import SQL, html_normalize, html_sanitize, html_to_plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
 from odoo.tools.translate import html_translate
@@ -693,7 +693,7 @@ class Html(BaseString):
 
     escape = staticmethod(markup_escape)
     is_empty = staticmethod(is_html_empty)
-    to_plaintext = staticmethod(html2plaintext)
+    to_plaintext = staticmethod(html_to_plaintext)
     from_plaintext = staticmethod(plaintext2html)
 
 
