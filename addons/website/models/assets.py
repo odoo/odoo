@@ -331,13 +331,13 @@ class WebsiteAssets(models.AbstractModel):
         if self.env.user.has_group('website.group_website_designer'):
             self = self.sudo()
         website = self.env['website'].get_current_website()
-        res = self.env["ir.attachment"].search([("url", op, custom_url)])
+        res = self.env["ir.attachment"].search([("url", op, custom_url), ("website_id", "=", website.id)])
         # It is guaranteed that the attachment we are looking for has a website_id.
         # When we serve an attachment we normally serve the ones which have the right website_id
         # or no website_id at all (which means "available to all websites", of
         # course if they are marked "public"). But this does not apply in this
         # case of customized asset files.
-        return res.with_context(website_id=website.id).filtered(lambda x: x.website_id == website)
+        return res
 
     @api.model
     def _get_custom_asset(self, custom_url):
