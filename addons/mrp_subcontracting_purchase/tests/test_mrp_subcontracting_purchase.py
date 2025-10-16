@@ -1030,3 +1030,64 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         with Form(mo) as production_form:
             production_form.date_start = original_mo_start_date
         self.assertEqual(mo.date_start, original_mo_start_date)
+
+    def test_changing_qty_producing_does_not_create_extra_move_lines(self):
+        """ Ensure that when recording lot/serial-tracked components in a subcontracted MO,
+        updating qty_producing correctly uses existing reserved move lines and their lots/serials,
+        without creating extra move lines with empty lots/serials.
+        """
+        resupply_sub_on_order_route = self.warehouse.subcontracting_pull_id.route_id
+        self.comp3.write({
+            'type': 'product',
+            'tracking': 'lot',
+            'route_ids': [Command.link(resupply_sub_on_order_route.id)],
+        })
+        self.bom_finished2.bom_line_ids.write({
+            'product_qty': 10,
+        })
+        lot01 = self.env['stock.lot'].create({
+            'name': 'lot-01',
+            'product_id': self.comp3.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.comp3, self.warehouse.lot_stock_id, 100, lot_id=lot01)
+
+        purchase = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 10,
+            })],
+        })
+        purchase.button_confirm()
+
+        # Validate resupply picking for components to subcontractor
+        purchase._get_subcontracting_resupplies().button_validate()
+
+        receipt = purchase.picking_ids
+        action_record = receipt.action_record_components()
+        sbc_mo = self.env['mrp.production'].browse(action_record['res_id'])
+
+        with Form(sbc_mo.with_context(action_record['context']), view=action_record['view_id']) as mo_form:
+            # Initially qty_producing = 0: Verify that the move line reflects the correct resupplied quantity and lot.
+            with mo_form.move_line_raw_ids.edit(0) as ml:
+                self.assertEqual(len(mo_form.move_line_raw_ids), 1)
+                self.assertEqual((ml.lot_id, ml.quantity), (lot01, 100))
+
+            # Change qty_producing = 5: It reduce move line quantity to 50
+            mo_form.qty_producing = 5
+            with mo_form.move_line_raw_ids.edit(0) as ml:
+                self.assertEqual(len(mo_form.move_line_raw_ids), 1)
+                self.assertEqual((ml.lot_id, ml.quantity), (lot01, 50))
+
+            # Change qty_producing = 10: Increase move line quantity, reusing the same line and lot.
+            mo_form.qty_producing = 10
+            with mo_form.move_line_raw_ids.edit(0) as ml:
+                self.assertEqual(len(mo_form.move_line_raw_ids), 1)
+                self.assertEqual((ml.lot_id, ml.quantity), (lot01, 100))
+        sbc_mo.subcontracting_record_component()
+
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')

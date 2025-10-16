@@ -2118,7 +2118,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _set_quantity_done_prepare_vals(self, qty):
         res = []
         for ml in self.move_line_ids:
-            ml_qty = ml.quantity
+            ml_qty = ml._origin.quantity or ml.quantity
             if float_is_zero(qty, precision_rounding=self.product_uom.rounding):
                 res.append((2, ml.id))
                 continue
