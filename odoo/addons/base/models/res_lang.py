@@ -206,6 +206,14 @@ class ResLang(models.Model):
                 format = format.replace(pattern, replacement)
             return str(format)
 
+        def fix_grouping(grouping):
+            grouping = str(grouping).replace(' ', '')
+
+            if grouping in self._fields['grouping'].get_values(self.env):
+                return grouping
+
+            return '[3,0]'
+
         conv = locale.localeconv()
         lang_info = {
             'code': lang,
@@ -216,7 +224,7 @@ class ResLang(models.Model):
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
             'thousands_sep' : fix_xa0(str(conv['thousands_sep'])),
-            'grouping': str(conv.get('grouping') or '[3,0]'),
+            'grouping': fix_grouping(conv.get('grouping')),
         }
         try:
             return self.create(lang_info)
