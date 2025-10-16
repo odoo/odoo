@@ -146,7 +146,7 @@ class SaleOrderLine(models.Model):
                     delivered_qties[sale_line] += pos_qty
         return delivered_qties
 
-    @api.depends('pos_order_line_ids.qty')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
 
