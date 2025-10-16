@@ -66,6 +66,14 @@ export function makeStore(env, { localRegistry } = {}) {
                             if (Model._.parentFields.has(name)) {
                                 const parentFieldName = Model._.parentFields.get(name);
                                 const parentRecordFullProxy = recordFullProxy[parentFieldName];
+                                if (!parentRecordFullProxy) {
+                                    const ParentModel =
+                                        Models[Model._.fieldsTargetModel.get(parentFieldName)];
+                                    if (isMany(ParentModel, name)) {
+                                        return [];
+                                    }
+                                    return;
+                                }
                                 return Reflect.get(parentRecordFullProxy, name);
                             }
                             recordFullProxy = record._.downgradeProxy(record, recordFullProxy);

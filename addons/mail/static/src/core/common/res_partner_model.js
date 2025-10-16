@@ -94,6 +94,7 @@ export class ResPartner extends Record {
     });
     /** @type {string|undefined} */
     previousPresencechannel;
+    user_ids = fields.Many("res.users", { inverse: "partner_id" });
     write_date = fields.Datetime();
 
     _computeDisplayName() {
