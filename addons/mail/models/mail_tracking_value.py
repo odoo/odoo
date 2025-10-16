@@ -300,3 +300,38 @@ class MailTrackingValue(models.Model):
             else:
                 result.append(value)
         return result
+
+    def _fetch_previous_trackings(self, records, field_names):
+        model_name = records._name
+        print('_fetch_previous_trackings launched on', model_name, 'for', field_names)
+        model_field_ids = [
+            field_id for fname, field_id in self.env['ir.model.fields'].sudo()._get_ids(model_name).items()
+            if fname in field_names
+        ]
+        initial_trackings = self.search([
+            ('field_id', 'in', model_field_ids),
+        ]).grouped(lambda t: t.mail_message_id.res_id)
+
+        initial_values = {
+            record.id: {
+                fname: record._track_convert_value(fname, False)
+                for fname in field_names
+            }
+            for record in records
+        }
+        for record in records:
+            record_trackings = initial_trackings.get(record.id, self.browse())
+            for field_name in field_names:
+                trackings = record_trackings.filtered(lambda t: t.field_id.name == field_name)
+                if not trackings:
+                    continue
+                last_value = False
+                last = trackings[0]
+                if last:
+                    ftype = self._fields[field_name].type
+                    if ftype == 'datetime':
+                        last_value = last.new_value_datetime
+                    else:
+                        last_value = last.new_value_char
+                initial_values[record.id][field_name] = last_value
+        return initial_values

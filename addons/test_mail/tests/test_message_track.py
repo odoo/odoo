@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -455,8 +455,31 @@ class TestTrackingAPI(MailCommon):
         records = self.test_tracking_records.with_env(self.env)
         for record in records:
             record_su = record.sudo()  # to check for tracking values directly
-            self.assertEqual(len(record_su.message_ids), 1, 'Should have creation message only')
-            self.assertFalse(record_su.message_ids.tracking_value_ids)
+            self.assertEqual(len(record_su.message_ids), 2, 'Should have creation message only')
+            track_message = record_su.message_ids[0]
+            tracking_value_list = [
+                ('properties_parent_id', 'char', '', 'PropDefinition'),
+                ('datetime_field', 'datetime', False, self.dt_ref),
+            ]
+            self.assertTracking(track_message, tracking_value_list, strict=True)
+
+        new_dt = self.dt_ref + timedelta(hours=1)
+        print('----------------------------------------------------')
+        print('----------------------------------------------------')
+        records.write({
+            'datetime_field': new_dt,
+        })
+        self.flush_tracking()
+        print('----------------------------------------------------')
+        print('----------------------------------------------------')
+        for record in records:
+            record_su = record.sudo()  # to check for tracking values directly
+            self.assertEqual(len(record_su.message_ids), 3, 'Should have new tracking')
+            track_message = record_su.message_ids[0]
+            tracking_value_list = [
+                ('datetime_field', 'datetime', self.dt_ref, new_dt),
+            ]
+            self.assertTracking(track_message, tracking_value_list, strict=True)
 
     @users('employee')
     def test_tracking_update(self):
