@@ -1358,15 +1358,16 @@ class HrEmployee(models.Model):
                 public.mapped(field_name)
         self._copy_cache_from(public, field_names)
 
-    def _check_access(self, operation):
+    def _access_domain(self, operation):
         # This method override provides read access to 'hr.employee' in some
         # situations, like setting a many2many field to comodel 'hr.employee'.
         # Since Odoo 19, one must have read access to the comodel to modify the
         # relation.
+        # HACK with context key
         if operation == 'read' and self.env.context.get('_allow_read_hr_employee') is _ALLOW_READ_HR_EMPLOYEE:
-            return None
+            return Domain.TRUE
 
-        return super()._check_access(operation)
+        return super()._access_domain(operation)
 
     def _check_private_fields(self, field_names):
         """ Check whether ``field_names`` contain private fields. """
