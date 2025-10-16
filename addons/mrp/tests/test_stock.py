@@ -627,3 +627,37 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertNotIn(self.kit_1, products)  # 12
         self.assertIn(self.kit_2, products)     # 6
         self.assertNotIn(self.kit_3, products)  # 3
+
+    def test_scrap_change_product(self):
+        """ Ensure a scrap order automatically updates the BoM when its product is changed,
+        selecting the product's first BoM if it's a kit or set the field empty otherwise."""
+        bom_a = self.bom_1
+        bom_a.type = 'phantom'
+        product_a = bom_a.product_id
+
+        bom_b = self.bom_3
+        bom_b.type = 'phantom'
+        product_b = bom_b.product_id
+
+        product_c = self.env['product.product'].create({'name': 'product_c', 'type': 'product'})
+
+        form = Form(self.env['stock.scrap'])
+        form.product_id = product_a
+        form.bom_id = bom_a
+        form.scrap_qty = 1
+        scrap = form.save()
+
+        # assert the scrap's bom_id is set to bom_a
+        self.assertEqual(scrap.bom_id, bom_a)
+
+        form.product_id = product_b
+        scrap = form.save()
+
+        # assert the scrap's bom_id is set to bom_b after updating the product
+        self.assertEqual(scrap.bom_id, bom_b)
+
+        form.product_id = product_c
+        scrap = form.save()
+
+        # assert the scrap's bom_id is updated to False after updating the product
+        self.assertFalse(scrap.bom_id)
