@@ -1043,6 +1043,29 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         journal_entry.action_post()
         self.assertTrue(self.get_analytic_lines(journal_entry))
 
+    def test_analytic_lines_on_post(self):
+        """
+        In some cases (e.g. when there is a purchase lock, the journal has autocheck_on_post=False),
+        when the move state is changed to post, write is first triggered for dependencies while the move
+        state is still 'draft'. In these cases, the analytic lines created should not be deleted.
+        """
+        in_invoice = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'analytic_distribution': {self.analytic_account_1.id: 100},
+                }),
+            ],
+        }])
+        in_invoice.company_id.purchase_lock_date = '2017-01-31'
+        in_invoice.action_post()
+        self.assertTrue(self.get_analytic_lines(in_invoice))
+
     def test_multicurrency_different_rounding_analytic_line(self):
         """If using a foreign currency, the rounding of the analytic_line amount should the one from the company currency"""
         foreign_currency = self.env['res.currency'].create({
