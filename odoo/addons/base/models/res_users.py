@@ -723,7 +723,7 @@ class ResUsers(models.Model):
     def _get_company_ids(self):
         # use search() instead of `self.company_ids` to avoid extra query for `active_test`
         domain = [('active', '=', True), ('user_ids', 'in', self.id)]
-        return self.env['res.company'].search(domain)._ids
+        return (self.company_id | self.env['res.company'].search(domain))._ids
 
     @api.model
     def action_get(self):

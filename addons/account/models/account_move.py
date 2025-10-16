@@ -861,7 +861,11 @@ class AccountMove(models.Model):
     def _compute_company_id(self):
         for move in self:
             if move.journal_id.company_id not in move.company_id.parent_ids:
-                move.company_id = (move.journal_id.company_id or self.env.company)._accessible_branches()[:1]
+                move.company_id = (
+                    (move.journal_id.company_id in self.env.company.parent_ids and self.env.company)
+                    or move.journal_id.company_id
+                    or self.env.company
+                )
 
     @api.depends('move_type', 'origin_payment_id', 'statement_line_id')
     def _compute_journal_id(self):

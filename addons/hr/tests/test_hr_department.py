@@ -17,7 +17,7 @@ class TestHrDepartment(TestMultiCompany):
         '''
             Test that employee_count has only the count of employees in the selected companies
         '''
-        employee_count = self.department.with_company(self.company_a).total_employee  # should only count the 2 employees in company_a
+        employee_count = self.department.with_context(allowed_company_ids=self.company_a.ids).total_employee  # should only count the 2 employees in company_a
         self.assertEqual(employee_count, 2)
 
         self.department._compute_total_employee()

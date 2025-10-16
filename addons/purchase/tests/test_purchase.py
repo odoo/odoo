@@ -494,8 +494,8 @@ class TestPurchase(AccountTestInvoicingCommon):
             })],
         }).button_confirm()
 
-        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
-        self.assertEqual(product.seller_ids[0].company_id, company_a)
+        self.assertEqual(product.seller_ids.partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids.company_id, company_a)
 
         # switch to the company B
         self.env['purchase.order'].with_company(company_b).create({
@@ -507,18 +507,16 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'price_unit': 2,
             })],
         }).button_confirm()
-        product = product.with_company(company_b)
-        self.assertEqual(product.seller_ids[0].partner_id, self.partner_b)
-        self.assertEqual(product.seller_ids[0].company_id, company_b)
+        product = product.with_context(allowed_company_ids=[company_b.id])
+        self.env.invalidate_all()
+        self.assertEqual(product.seller_ids.partner_id, self.partner_b)
+        self.assertEqual(product.seller_ids.company_id, company_b)
 
         # Switch to the company A and check that the vendor list is still the same
-        product = product.with_company(company_a)
-        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
-        self.assertEqual(product.seller_ids[0].company_id, company_a)
-
-        product._invalidate_cache()
-        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
-        self.assertEqual(product.seller_ids[0].company_id, company_a)
+        product = product.with_context(allowed_company_ids=[company_a.id])
+        self.env.invalidate_all()
+        self.assertEqual(product.seller_ids.partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids.company_id, company_a)
 
     def test_discount_po_line_vendorpricelist(self):
         """ Set a discount in VendorPriceList and check if that discount comes in po line and if vendor select

@@ -58,15 +58,15 @@ class TestHrEmployee(TestHrCommon):
             'company_id': company_B.id
         })
 
-        partner.with_company(company_A)._compute_employees_count()
+        partner.with_context(allowed_company_ids=[company_A.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 1)
-        partner.with_company(company_B)._compute_employees_count()
+        partner.with_context(allowed_company_ids=[company_B.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 1)
-        single_company_action = partner.with_company(company_B).action_open_employees()
+        single_company_action = partner.with_context(allowed_company_ids=[company_B.id]).action_open_employees()
         self.assertEqual(single_company_action.get('view_mode'), 'form')
-        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        partner.with_context(allowed_company_ids=[company_A.id, company_B.id])._compute_employees_count()
         self.assertEqual(partner.employees_count, 2)
-        multi_company_action = partner.with_company(company_A).with_company(company_B).action_open_employees()
+        multi_company_action = partner.with_context(allowed_company_ids=[company_A.id, company_B.id]).action_open_employees()
         self.assertEqual(multi_company_action.get('view_mode'), 'kanban')
 
     def test_employee_linked_partner(self):
