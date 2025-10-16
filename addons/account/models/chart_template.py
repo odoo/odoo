@@ -283,7 +283,8 @@ class AccountChartTemplate(models.AbstractModel):
         for prop in list(template_data):
             if prop.startswith('property_'):
                 template_data.pop(prop)
-        data.pop('account.reconcile.model', None)
+        if not force_update:
+            data.pop('account.reconcile.model', None)
         if 'res.company' in data and not force_update:
             data['res.company'][company.id].clear()
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
