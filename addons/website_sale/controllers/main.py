@@ -448,7 +448,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
-        products = search_product[offset:offset + ppg]
+        products = search_product[offset:offset + ppg].with_prefetch()
         products.fetch()
 
         # map each product to its variant, and prefetch the variants
