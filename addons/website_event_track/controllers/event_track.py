@@ -164,6 +164,7 @@ class EventTrackController(http.Controller):
             # event information
             'event': event,
             'main_object': event,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             # tracks display information
             'tracks': tracks_sudo,
             'tracks_by_day': tracks_by_day,
@@ -196,6 +197,7 @@ class EventTrackController(http.Controller):
             'event': event,
             'main_object': event,
             'seo_object': seo_object,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'tag': tag,
             'is_event_user': request.env.user.has_group('event.group_event_user'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
@@ -385,6 +387,7 @@ class EventTrackController(http.Controller):
             # event information
             'event': event,
             'main_object': track,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'track': track,
             # sidebar
             'tracks_other': tracks_other,
@@ -466,6 +469,7 @@ class EventTrackController(http.Controller):
             'event': event,
             'main_object': event,
             'seo_object': event.track_proposal_menu_ids,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
         })
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
