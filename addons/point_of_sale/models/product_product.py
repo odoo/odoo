@@ -8,6 +8,23 @@ class ProductProduct(models.Model):
     _inherit = ['product.product', 'pos.load.mixin']
 
     @api.model
+    def create(self, vals):
+        new_product = super().create(vals)
+        pos_session_id = self.env.context.get('pos_session_id')
+        if pos_session_id and new_product.product_tmpl_id.pos_categ_ids:
+            session = self.env['pos.session'].browse(pos_session_id)
+            config = session.config_id
+
+            # Check if any of the categories is already in the pos
+            if config.iface_available_categ_ids and not set(config.iface_available_categ_ids).intersection(new_product.product_tmpl_id.pos_categ_ids):
+                # Add the first chosen category to the POS by default
+                category = new_product.product_tmpl_id.pos_categ_ids[0]
+                if category not in config.iface_available_categ_ids:
+                    config.link_category_form_pos(category)
+
+        return new_product
+
+    @api.model
     def _load_pos_data_domain(self, data, config):
         return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']])]
 

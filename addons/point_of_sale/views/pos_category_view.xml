@@ -7,7 +7,7 @@
             <form string="Pos Product Categories">
                 <sheet>
                     <field name="image_512" widget="image" class="oe_avatar"/>
-                    <div class="oe_title">
+                    <div class="oe_title row">
                         <h1>
                             <field name="name" class="o_text_overflow" placeholder="e.g. Soft Drinks" required="True"/>
                         </h1>
@@ -38,8 +38,9 @@
             <list string="Product Product Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name" string="PoS Product Category"/>
-                <field name="parent_id" optional="hide"/>
-                <field name="color" widget="color_picker" optional="hide"/>
+                <field name="parent_id"/>
+                <field name="pos_config_ids" widget="many2many_tags"/>
+                <field name="color" widget="color_picker"/>
             </list>
         </field>
     </record>
@@ -49,14 +50,26 @@
         <field name="model">pos.category</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
+                <field name="parent_id" />
                 <templates>
                     <t t-name="card" class="row g-0">
+                        <main class="col ms-4 justify-content-between">
+                            <div class="d-flex gap-2 align-items-center">
+                                <field name="color" widget="color_picker"/>
+                                <field name="name" class="fw-bolder fs-5"/>
+                            </div>
+                            <div class="category-extras">
+                                <div class="d-inline-flex gap-2" t-if="record.parent_id.raw_value">
+                                    <div class="p-0">
+                                        <span>Parent category:</span>
+                                    </div>
+                                    <field name="parent_id" />
+                                </div>
+                            </div>
+                        </main>
                         <aside class="col-4">
                             <field name="image_128" widget="image" alt="Category" options="{'size': [100, 100], 'img_class': 'h-100'}"/>
                         </aside>
-                        <main class="col ms-4">
-                            <field name="name" class="fw-bolder fs-5"/>
-                        </main>
                     </t>
                 </templates>
             </kanban>

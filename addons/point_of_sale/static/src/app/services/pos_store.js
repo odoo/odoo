@@ -2137,7 +2137,11 @@ export class PosStore extends WithLazyGetterTrap {
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
+                        this.reloadData(true);
                     },
+                },
+                additionalContext: {
+                    pos_session_id: this.session.id,
                 },
             }
         );
