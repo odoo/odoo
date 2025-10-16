@@ -11,6 +11,7 @@ class TestWishlistProcess(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['product.template'].search([]).write({'website_published': False})
+        cls.env['res.config.settings'].create({'group_product_variant': True}).execute()
 
     def test_wishlist_ui(self):
         # Setup attributes and attributes values

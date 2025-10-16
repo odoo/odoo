@@ -182,6 +182,13 @@ registry.category("web_tour.tours").add('website_sale_wishlist.dynamic_variants'
             run: "click",
             expectUnloadPage: true,
         },
+        tourUtils.assertWishlistQuantity(1),
+        {
+            // wait for the button to be correctly disabled because the first
+            // variant was already added to the wishlist from the product page.
+            content: "Check that the button is disabled",
+            trigger: "#product_detail form a.btn.o_add_wishlist_dyn.disabled",
+        },
         {
             content: "Select Bottle with second variant from /product",
             trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
