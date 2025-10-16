@@ -91,10 +91,16 @@ export class AnchorPlugin extends Plugin {
         }
         const anchorLink = this.getAnchorLink(element);
         await browser.navigator.clipboard.writeText(anchorLink);
-        const message = _t("Anchor copied to clipboard%(br)sLink: %(anchorLink)s", {
-            anchorLink,
-            br: markup`<br>`,
-        });
+        const message = _t(
+            "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
+            {
+                open_span: markup`<span style=" display: -webkit-box; -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical; overflow: hidden;">`,
+                anchor_link: anchorLink,
+                br: markup`<br>`,
+                close_span: markup`</span>`,
+            }
+        );
         const closeNotification = this.services.notification.add(message, {
             type: "success",
             buttons: [
