@@ -38,9 +38,6 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-_FORCED_MODULES = ('base',)
-
-
 def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, package: ModuleNode) -> bool:
     """
     noupdate is False, unless it is demo data
@@ -445,15 +442,6 @@ def load_modules(
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # loop this step in case extra modules' states are changed to 'to install'/'to update' during loading
-
-        graph.extend(_FORCED_MODULES)
-        for module_name in _FORCED_MODULES:
-            module = graph[module_name]
-            # KeyError means some direct or indirect dependencies
-            # are missing for the forced modules.
-            if module.state not in ('installed', 'to install', 'to upgrade'):
-                module.state = 'to install'
-
         while True:
             if update_module:
                 states = ('installed', 'to upgrade', 'to remove', 'to install')
