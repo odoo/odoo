@@ -10,7 +10,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 if TYPE_CHECKING:
-    from odoo.orm.types import Self
+    from typing import Self
     from odoo.tools.float_utils import RoundingMethod
 
 

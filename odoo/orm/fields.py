@@ -27,12 +27,13 @@ from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids, pa
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
+    from typing import Self
 
     from .environments import Environment
     from .identifiers import IdType
     from .query import FieldSQL, TableSQL
     from .registry import Registry
-    from .types import BaseModel, DomainType, ModelType, Self, ValuesType
+    from .types import BaseModel, DomainType, ModelType, ValuesType
     M = typing.TypeVar("M", bound=BaseModel)
 T = typing.TypeVar("T")
 

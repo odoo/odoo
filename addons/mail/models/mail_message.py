@@ -8,6 +8,7 @@ import textwrap
 from binascii import Error as binascii_error
 from collections import defaultdict
 from lxml import html
+from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
@@ -477,7 +478,7 @@ class MailMessage(models.Model):
                 result = (forbidden, lambda: forbidden._make_access_error(operation))
         return result
 
-    def _get_forbidden_access(self, operation: str) -> api.Self:
+    def _get_forbidden_access(self, operation: str) -> Self:
         """ Return the subset of ``self`` that does not satisfy the specific
         conditions for messages.
         """
