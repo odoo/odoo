@@ -523,3 +523,21 @@ describe("toggle ratio", () => {
         expect(`:iframe .test-options-target img`).not.toHaveAttribute("src", croppedSrc);
     });
 });
+
+test("Should reset crop when removing shape with ratio", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+
+    await contains(":iframe .test-options-target img").click();
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    await waitSidebarUpdated();
+    expect(`:iframe .test-options-target img`).toHaveAttribute("data-aspect-ratio");
+    // Remove the shape.
+    await contains("[data-action-id='setImageShape']").click();
+    await waitSidebarUpdated();
+    expect(`:iframe .test-options-target img`).not.toHaveAttribute("data-aspect-ratio");
+});
