@@ -93,6 +93,8 @@ class ManifestLinter(BaseCase):
                     self._test_manifest_countries_value(module, value)
             elif key == 'icon':
                 self._test_manifest_icon_value(module, value)
+            elif key == 'license':
+                self._test_manifest_license(module, manifest_data, value)
 
     def _test_manifest_icon_value(self, module, value):
         self.assertTrue(
@@ -128,3 +130,18 @@ class ManifestLinter(BaseCase):
                     "Country value %s specified for the icon in manifest of module %s doesn't look like a country code."
                     "Please specify a correct value or remove this key from the manifest.",
                     value, module)
+
+    def _test_manifest_license(self, module: str, manifest: Manifest, value: str):
+        if "enterprise" in manifest.addons_path:
+            self.assertEqual(
+                "OEEL-1",
+                value,
+                f"Module {module!r} is an enterprise module and should be licensed under the Odoo"
+                " Enterprise License (OEEL-1)",
+            )
+        else:
+            self.assertEqual(
+                "LGPL-3",
+                value,
+                f"Module {module!r} is opensource and should be licensed under the LGPL license.",
+            )
