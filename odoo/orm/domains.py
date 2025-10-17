@@ -1065,10 +1065,6 @@ class DomainCondition(Domain):
             return self._optimize(records, OptimizationLevel.DYNAMIC_VALUES)._as_predicate(records)
 
         operator = self.operator
-        if operator in ('child_of', 'parent_of'):
-            # TODO have a specific implementation for these
-            return self._optimize(records, OptimizationLevel.FULL)._as_predicate(records)
-
         assert operator in STANDARD_CONDITION_OPERATORS, "Expecting a sub-set of operators"
         field_expr, value = self.field_expr, self.value
         positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
@@ -1670,7 +1666,7 @@ def _optimize_type_binary_attachment(condition, model):
     return condition
 
 
-@operator_optimization(['parent_of', 'child_of'], OptimizationLevel.FULL)
+@operator_optimization(['parent_of', 'child_of'], OptimizationLevel.DYNAMIC_VALUES)
 def _operator_hierarchy(condition, model):
     """Transform a hierarchy operator into a simpler domain.
 
