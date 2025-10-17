@@ -20,7 +20,7 @@
                     <!--  Optional -->
                     <field name="department_id" optional="hide" readonly="True"/>
                     <field name="date" optional="show" readonly="not is_editable"/>
-                    <field name="product_id" optional="show" readonly="not is_editable" required="1"/>
+                    <field name="product_id" optional="show" readonly="not is_editable"/>
                     <field name="payment_mode" optional="show" readonly="not is_editable"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="analytic_distribution" widget="analytic_distribution"
@@ -189,7 +189,7 @@
 
                             <label for="product_id"/>
                             <div>
-                                <field name="product_id" required="1" readonly="not is_editable"
+                                <field name="product_id" readonly="not is_editable"
                                     context="{
                                         'default_type': 'service',
                                         'default_can_be_expensed': 1,
@@ -210,7 +210,7 @@
                             <div invisible="not product_has_cost">
                                 <div class="o_row">
                                     <field name="quantity" class="oe_inline" readonly="not is_editable"/>
-                                    <field name="product_uom_id" required="1" force_save="1"
+                                    <field name="product_uom_id" force_save="1"
                                            options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"
                                            readonly="not is_editable" widget="many2one_uom"/>
                                 </div>
@@ -284,7 +284,7 @@
                     </div>
                 </sheet>
                 <div class="o_attachment_preview o_center_attachment"/>
-                <chatter/>
+                <chatter reload_on_attachment="True"/>
                 </form>
             </field>
         </record>

@@ -55,7 +55,6 @@ class HrExpense(models.Model):
     name = fields.Char(
         string="Description",
         compute='_compute_name', precompute=True, store=True, readonly=False,
-        required=True,
         copy=True,
     )
     date = fields.Date(string="Expense Date", default=fields.Date.context_today)
@@ -282,14 +281,27 @@ class HrExpense(models.Model):
     # Constraints
     # --------------------------------------------
 
-    @api.constrains('state', 'approval_state', 'total_amount', 'total_amount_currency')
-    def _check_non_zero(self):
-        """ Helper to raise when we should ensure that an expense isn't approved  """
-        for expense in self:
+    @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
+    def _check_required_fields_if_not_draft(self):
+        for expense in self.filtered(lambda expense: expense.state != 'draft'):
+            errors = []
+
+            # Check for required fields 'name' and 'product_id'
+            if not expense.name and not expense.product_id:
+                errors.append(self.env._("Enter a description and select a category to proceed."))
+            elif not expense.name:
+                errors.append(self.env._("Enter a description to proceed."))
+            elif not expense.product_id:
+                errors.append(self.env._("Select a category to proceed."))
+
+            # Check for non-zero amounts
             total_amount_is_zero = expense.company_currency_id.is_zero(expense.total_amount)
             total_amount_currency_is_zero = expense.currency_id.is_zero(expense.total_amount_currency)
-            if (expense.state != 'draft' or expense.approval_state != False) and (total_amount_is_zero or total_amount_currency_is_zero):
-                raise ValidationError(_("Only draft expenses can have a total of 0."))
+            if total_amount_is_zero or total_amount_currency_is_zero:
+                errors.append(self.env._("Only draft expenses can have a total of 0."))
+
+            if errors:
+                raise ValidationError("\n".join(errors))
 
     @api.constrains('account_move_id')
     def _check_o2o_payment(self):
@@ -1120,8 +1132,6 @@ class HrExpense(models.Model):
         for expense in self:
             if user.employee_id != expense.employee_id and not expense.can_approve:
                 raise UserError(_("You do not have the required permission to submit this expense."))
-            if not expense.product_id:
-                raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
                 expense.sudo().manager_id = expense._get_default_responsible_for_approval()
         expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
@@ -1200,11 +1210,6 @@ class HrExpense(models.Model):
         self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
 
     @api.model
-    def _get_untitled_expense_name(self, *args):
-        """ Done in a specific function to be called by hr_expense_extract to keep the same translation """
-        return _("Untitled Expense %s", *args)
-
-    @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
             Create the expenses from files.
@@ -1219,21 +1224,10 @@ class HrExpense(models.Model):
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
 
-        product = self.env['product.product'].search([('can_be_expensed', '=', True)])
-        if product:
-            product = product.filtered(lambda p: p.default_code == "EXP_GEN")[:1] or product[0]
-        else:
-            raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
-
         for attachment in attachments:
-            vals = {
-                'name': self._get_untitled_expense_name(format_date(self.env, fields.Date.context_today(self))),
+            expense = self.env['hr.expense'].create([{
                 'price_unit': 0,
-                'product_id': product.id,
-            }
-            if product.property_account_expense_id:
-                vals['account_id'] = product.property_account_expense_id.id
-            expense = self.env['hr.expense'].create(vals)
+            }])
             attachment.write({'res_model': 'hr.expense', 'res_id': expense.id})
 
             expense._message_set_main_attachment_id(attachment, force=True)
