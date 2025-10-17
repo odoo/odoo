@@ -4,7 +4,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-
 WITHHOLDING_TYPE_SELECTION = [
     ('RT01', '[RT01] Withholding for persons'),
     ('RT02', '[RT02] Withholding for personal businesses'),
@@ -86,6 +85,13 @@ class AccountTax(models.Model):
         match kind:
             case 'withholding':
                 return self.filtered(lambda tax: tax.l10n_it_withholding_type)
+            case 'withholding_no_enasarco':
+                # Enasarco has both withholding and pension fund types,
+                # but it must be considered a pension fund for the checks.
+                return self.filtered(lambda tax:
+                    tax.l10n_it_withholding_type
+                    and tax.l10n_it_withholding_type != 'RT04'
+                )
             case 'pension_fund':
                 return self.filtered(lambda tax: tax.l10n_it_pension_fund_type)
             case 'vat':
@@ -96,6 +102,12 @@ class AccountTax(models.Model):
             case _:
                 return super()._l10n_it_filter_kind(kind)
 
+    @api.onchange("l10n_it_withholding_type")
+    def _onchange_l10n_it_withholding_type(self):
+        """ When no withholding type is selected, there should be no withholding reason, the field is hidden """
+        taxes_to_be_cleared = self.filtered(lambda tax: tax.l10n_it_withholding_reason and not tax.l10n_it_withholding_type)
+        taxes_to_be_cleared.l10n_it_withholding_reason = False
+
     @api.constrains('amount', 'l10n_it_withholding_type', 'l10n_it_withholding_reason', 'l10n_it_pension_fund_type')
     def _validate_withholding(self):
         for tax in self:
@@ -105,3 +117,7 @@ class AccountTax(models.Model):
                 raise ValidationError(_("Tax '%s' has a withholding type, so the withholding reason must also be specified", tax.name))
             if tax.l10n_it_withholding_reason and not tax.l10n_it_withholding_type:
                 raise ValidationError(_("Tax '%s' has a withholding reason, so the withholding type must also be specified", tax.name))
+            if (tax.l10n_it_withholding_type == 'RT04') ^ (tax.l10n_it_pension_fund_type == 'TC07'):
+                raise ValidationError(_("Tax '%s' has one of withholding and pension fund types that do not relate to ENASARCO, and one that does.", tax.name))
+            if tax.l10n_it_withholding_type == 'RT04' and tax.l10n_it_withholding_reason != 'ZO':
+                raise ValidationError(_("Tax '%s' has withholding type ENASARCO, the withholding reason should be [ZO] - Other reason.", tax.name))
