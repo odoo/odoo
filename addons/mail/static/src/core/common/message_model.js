@@ -309,13 +309,13 @@ export class Message extends Record {
         return url(router.stateToUrl({ model: this.thread.model, resId: this.thread.id }));
     }
 
-    isTranslatable(thread) {
+    get isTranslatable() {
         return (
             !this.isEmpty &&
             !this.isBodyEmpty &&
             !this.hasMailNotificationSummary &&
             this.store.hasMessageTranslationFeature &&
-            !["discuss.channel", "mail.box"].includes(thread?.model)
+            !this.channel_id
         );
     }
 

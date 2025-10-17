@@ -7,6 +7,11 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup();
+        this.channel_id = fields.One("discuss.channel", {
+            compute() {
+                return this.thread?.channel;
+            },
+        });
         this.hasEveryoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
