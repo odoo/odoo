@@ -49,6 +49,30 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_cancel_order_from_ui", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.isShown(),
+            ProductScreen.addOrderline("Coca-Cola", "1", "3"),
+            Chrome.clickPlanButton(),
+            Chrome.isSynced(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            FloorScreen.isShown(),
+            Chrome.clickOrders(),
+            TicketScreen.noOrderIsThere(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.noOrderIsThere(),
+            Chrome.storedOrderCount(0),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("OrderSynchronisationTour", {
     steps: () =>
         [
