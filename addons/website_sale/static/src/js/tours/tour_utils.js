@@ -289,7 +289,7 @@ export function pay({ expectUnloadPage = false, waitFinalizeYourPayment = false 
     ];
     if (waitFinalizeYourPayment) {
         steps.push({
-            trigger: "h1:contains(finalize your payment)",
+            trigger: "h1:contains(Please wait...)",
             expectUnloadPage: true,
         });
     }

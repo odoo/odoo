@@ -12,19 +12,6 @@
                 t-value="'alert-success'"
             />
         </t>
-        <t t-out="tx_sudo.provider_id.sudo().pending_msg" position="replace" >
-            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
-                <t t-if="order.commitment_date and order.commitment_date.date() != order.date_order.date()">
-                    Your order will be ready on <span t-field="order.commitment_date" t-options='{"widget": "date"}'/>.
-                </t>
-                <t t-else="">
-                    Your order will be ready soon.
-                </t>
-            </t>
-            <t t-else="">
-                <t>$0</t> <!-- Replaced by old content. -->
-            </t>
-        </t>
         <div id="order_reference" position="replace">
             <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
                 <div class="mt-2 mb-3">
