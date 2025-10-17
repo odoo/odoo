@@ -622,6 +622,55 @@
         </div>
     </template>
 
+    <template id="external_layout_lines">
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_lines_header header">
+            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} z-n1" t-attf-style="{{report_type == 'pdf' and 'top: -50mm; right: -108mm;' or 'top: -142mm; right: -110mm'}}" t-att-width="report_type == 'pdf' and '1064' or '100%'" t-att-height="report_type == 'pdf' and '748' or '100%'" viewBox="0 0 1423 1061" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="o_lines_path_1" d="M1422.5 907h-210c-168.64-9.078-185.42-238.3-199-382C999.921 381.3 860.195 256 657 256c-119.89 0-341.722-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_2" d="M1397.72 924.056h-210c-168.64-9.078-185.42-238.3-198.997-382-13.579-143.7-153.305-269-356.5-269-119.891 0-341.722-.533-405.5-111-8.834-15-28-52.5-28-145"/>
+                <path class="o_lines_path_3" d="M1372.94 941.111h-210c-168.64-9.077-185.417-238.3-198.996-382-13.578-143.7-153.305-269-356.5-269-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_4" d="M1348.17 958.167h-210c-168.648-9.078-185.424-238.3-199.003-382-13.579-143.701-153.305-269-356.5-269-119.89 0-341.722-.533-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_5" d="M1323.39 975.222h-210c-168.646-9.077-185.423-238.3-199.001-382s-153.305-269-356.5-269c-119.891 0-341.722-.532-405.5-111-8.834-15-28-52.5-28-145"/>
+                <path class="o_lines_path_6" d="M1298.61 992.278h-210c-168.643-9.078-185.42-238.3-198.999-382-13.578-143.7-153.305-269-356.5-269-119.89 0-341.721-.533-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_7" d="M1273.83 1009.33h-210c-168.642-9.07-185.418-238.296-198.997-381.997-13.579-143.7-153.305-269-356.5-269-119.89 0-341.722-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_8" d="M1249.06 1026.39h-210c-168.649-9.08-185.426-238.301-199.004-382.001s-153.305-269-356.5-269c-119.891 0-341.722-.533-405.5-111-8.834-15-28-52.5-28-145"/>
+                <path class="o_lines_path_9" d="M1224.28 1043.44h-210c-168.647-9.07-185.424-238.296-199.003-381.996s-153.305-269-356.5-269c-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+                <path class="o_lines_path_10" d="M1199.5 1060.5h-210c-168.645-9.08-185.421-238.3-199-382s-153.305-269-356.5-269c-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
+            </svg>
+            <table class="w-100 table-borderless">
+                <tr>
+                    <td class="align-top text-start">
+                        <t t-call="web.company_address_list"/>
+                    </td>
+                    <td class="align-top text-end">
+                        <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+            <h2 class="text-center" t-out="layout_document_title"/>
+            <t t-call="web.address_layout" custom_layout_address="True" information_block="False"/>
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="o_company_#{company.id}_layout footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} start-0" style="top: -4mm" width="100%" height="206" viewBox="0 0 1508 206" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="o_lines_path_1" d="M1 144C476.147 225.333 1031.85 225.333 1507 144"/>
+                <path class="o_lines_path_2" d="M1 123.571C476.147 204.905 1031.85 204.905 1507 123.571"/>
+                <path class="o_lines_path_3" d="M1 103.143C476.147 184.476 1031.85 184.476 1507 103.143"/>
+                <path class="o_lines_path_4" d="M1 82.7144C476.147 164.048 1031.85 164.048 1507 82.7144"/>
+                <path class="o_lines_path_5" d="M1 62.2856C476.147 143.619 1031.85 143.619 1507 62.2856"/>
+                <path class="o_lines_path_6" d="M1 41.8569C476.147 123.19 1031.85 123.19 1507 41.8569"/>
+                <path class="o_lines_path_7" d="M1 21.4287C476.147 102.762 1031.85 102.762 1507 21.4287"/>
+                <path class="o_lines_path_8" d="M1 1C476.147 82.3333 1031.85 82.3333 1507 1"/>
+            </svg>
+            <t
+                t-call="web.external_layout_footer_content"
+                is_tagline_footer="True"
+                footer_content_classes="(report_type != 'pdf' and 'mx-5' or '')"
+            />
+        </div>
+    </template>
+
     <!-- Public api: layout to t-call from reports -->
     <template id="external_layout">
         <t t-if="not o" t-set="o" t-value="doc"/>
@@ -866,6 +915,13 @@
                 <t t-elif="layout == 'web.external_layout_center'">
                     &amp; .o_layout_center_header {
                         background-color: mix(white, <t t-out='primary'/>, 90%);
+                    }
+                </t>
+                <t t-elif="layout == 'web.external_layout_lines'">
+                    @for $i from 1 through 10 {
+                        .o_lines_path_#{$i} {
+                            stroke: mix(white, <t t-out='primary'/>, $i * 8%);
+                        }
                     }
                 </t>
             }
