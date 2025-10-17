@@ -373,7 +373,8 @@
                 company.report_tables_id == 'bold' and 'o_report_layout_bold o_table_bold' or
                 company.report_tables_id == 'boxed' and 'o_report_layout_boxed o_table_boxed' or
                 company.report_tables_id == 'striped' and 'o_report_layout_striped o_table_striped' or
-                company.report_tables_id == 'bubble' and 'o_report_layout_bubble o_table_boxed-rounded' or ''
+                company.report_tables_id == 'bubble' and 'o_report_layout_bubble o_table_boxed-rounded' or
+                company.report_tables_id == 'column' and 'o_report_layout_column o_table_column' or ''
             "
         />
         <div
@@ -733,6 +734,20 @@
                             strong {
                                 color: preview-color-contrast(<t t-out='primary'/>);
                             }
+                        }
+                    }
+                </t>
+                <t t-elif="company.report_tables_id == 'column'" >
+                    &amp;.o_report_layout_column {
+                        table:not(.o_ignore_layout_styling) {
+                            th {
+                                background-color: <t t-out='secondary'/>;
+                                color: preview-color-contrast(<t t-out='secondary'/>);
+                            }
+                        }
+
+                        #informations &gt; div.col {
+                            border-color: <t t-out='secondary'/>;
                         }
                     }
                 </t>

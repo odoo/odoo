@@ -44,3 +44,11 @@
         margin-right: $o-default-report-margins;
     }
 }
+
+// external_layout_column
+.o_report_layout_column {
+    #informations > div.col:not(:last-child) {
+        margin-right: map-get($spacers, 2);
+        border-right: $border-width solid;
+    }
+}

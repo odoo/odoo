@@ -245,3 +245,41 @@ div#total {
         }
     }
 }
+
+.o_table_column {
+    table:not(.o_ignore_layout_styling) {
+
+        td:first-child, th:first-child {
+            padding-left: 0;
+        }
+
+        td:last-child, th:last-child {
+            padding-right: 0;
+        }
+
+        &:not(.o_total_table) {
+            th:first-child {
+                padding-left: map-get($spacers, 1);
+            }
+
+            th:last-child {
+                padding-right: map-get($spacers, 1);
+            }
+
+            td:not(:last-child) {
+                border-right: $border-width solid $o-gray-400;
+            }
+        }
+
+        border-bottom: $border-width solid $o-gray-400;
+
+        .o_line_section, .o_line_subsection {
+            border-bottom: $border-width solid $o-gray-400;
+            border-top: $border-width solid $o-gray-400;
+
+            .o_price_subtotal_section {
+                padding-right: map-get($spacers, 1);
+            }
+        }
+    }
+}
