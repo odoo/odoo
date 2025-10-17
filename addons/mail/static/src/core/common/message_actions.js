@@ -178,7 +178,7 @@ registerMessageAction("download_files", {
     sequence: 55,
 });
 registerMessageAction("toggle-translation", {
-    condition: ({ message }) => message.isTranslatable(message.thread),
+    condition: ({ message }) => message.isTranslatable,
     icon: ({ message }) =>
         `fa fa-language ${message.showTranslation ? "o-mail-Message-translated" : ""}`,
     name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),

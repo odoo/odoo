@@ -15,11 +15,11 @@ const messagePatch = {
         }
         return super.canReplyTo(thread);
     },
-    isTranslatable(thread) {
+    get isTranslatable() {
         return (
-            super.isTranslatable(thread) ||
+            super.isTranslatable ||
             (this.store.hasMessageTranslationFeature &&
-                thread?.channel?.channel_type === "livechat" &&
+                this.channel_id?.channel_type === "livechat" &&
                 this.store.self?.main_user_id?.share === false)
         );
     },
