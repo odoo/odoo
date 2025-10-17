@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <record id="action_open_shop_page" model="ir.actions.act_url">
+        <field name="name">Open Shop Page</field>
+        <field name="url">/odoo/action-website.website_preview?path=/shop</field>
+        <field name="target">self</field>
+    </record>
 
     <menuitem id="menu_ecommerce"
         name="eCommerce"
         parent="website.menu_website_configuration"
         groups="sales_team.group_sale_salesman"
         sequence="20">
+
+        <menuitem
+            id="menu_open_shop"
+            sequence="1"
+            name="Shop"
+            action="action_open_shop_page"/>
 
         <menuitem id="menu_orders"
             name="Orders"
@@ -15,14 +26,11 @@
                 name="Orders"
                 action="action_orders_ecommerce"
                 sequence="1"/>
-            <menuitem id="menu_orders_unpaid_orders"
-                name="Unpaid Orders"
-                action="action_view_unpaid_quotation_tree"
-                sequence="2"/>
             <menuitem id="menu_orders_abandoned_orders"
                 name="Abandoned Carts"
                 action="action_view_abandoned_tree"
-                sequence="3"/>
+                groups="base.group_no_one"
+                sequence="2"/>
             <menuitem id="menu_orders_customers"
                 name="Customers"
                 action="base.action_partner_customer_form"
@@ -44,6 +52,7 @@
                 groups="product.group_product_pricelist"
                 sequence="3"/>
             <menuitem id="menu_catalog_categories"
+                name="Categories"
                 action="product_public_category_action"
                 sequence="4"/>
             <menuitem id="menu_product_attribute_action"
@@ -55,11 +64,6 @@
                 name="Combo Choices"
                 action="product.product_combo_action"
                 sequence="6"
-            />
-            <menuitem
-                id="product_catalog_product_tags"
-                name="Tags"
-                action="product.product_tag_action"
             />
             <menuitem
                 id="product_catalog_product_ribbons"
@@ -82,6 +86,7 @@
         <menuitem id="menu_ecommerce_payment_methods"
                   action="payment.action_payment_method"
                   name="Payment Methods"
+                  groups="base.group_no_one"
                   sequence="20"
         />
         <menuitem id="menu_ecommerce_payment_tokens"
@@ -116,12 +121,6 @@
         action="sale_report_action_dashboard"
         parent="website.menu_reporting"
         groups="sales_team.group_sale_manager"
-        sequence="30"/>
-
-    <menuitem id="menu_product_pages"
-        name="Products"
-        action="action_product_pages_list"
-        parent="website.menu_content"
         sequence="30"/>
 
 </odoo>
