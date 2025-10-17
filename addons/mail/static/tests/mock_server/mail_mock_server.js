@@ -1329,9 +1329,6 @@ export class StoreMany extends StoreRelation {
         target[key] = (previous_value || []).concat(rel_val);
     }
     _get_id() {
-        if (!this.records || !this.records.length) {
-            return [];
-        }
         const res = [];
 
         if (this.records._name === "mail.message.reaction") {
