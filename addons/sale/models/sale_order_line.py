@@ -1533,7 +1533,7 @@ class SaleOrderLine(models.Model):
         if len(self) == 1:
             res = {
                 'quantity': self.product_uom_qty,
-                'price': self.price_unit,
+                'price': self.price_unit * (1 - (self.discount or 0.0) / 100.0),
                 'readOnly': (
                     self.order_id._is_readonly()
                     or self.product_id.sale_line_warn == 'block'
