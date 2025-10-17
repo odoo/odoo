@@ -1,3 +1,4 @@
+/* global posmodel */
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import { waitFor } from "@odoo/hoot-dom";
@@ -186,6 +187,21 @@ export function waitRequest() {
             },
         },
     ];
+}
+
+export function storedOrderCount(expectedCount) {
+    return {
+        content: `Stored order count should be ${expectedCount}`,
+        trigger: "body",
+        run: () => {
+            const actualCount = posmodel.data.models["pos.order"].length;
+            if (actualCount !== expectedCount) {
+                throw new Error(
+                    `Expected stored order count to be ${expectedCount}, but got ${actualCount}`
+                );
+            }
+        },
+    };
 }
 
 export function isSynced() {
