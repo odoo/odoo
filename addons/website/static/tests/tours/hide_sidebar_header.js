@@ -1,3 +1,4 @@
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -23,10 +24,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Ensure the header is 'Sidebar'",
+            content: "Check that the header changed to 'Sidebar'",
             trigger: ":iframe #wrapwrap>header.o_header_sidebar",
-            timeout: 10000,
         },
+        stepUtils.waitIframeIsReady(),
         {
             content: "Go to the theme tab",
             trigger: ".o-website-builder_sidebar .o-snippets-tabs button[data-name='theme']",
@@ -38,10 +39,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Ensure the header has been hidden",
+            content: "Check that the header has been hidden",
             trigger: ":iframe #wrapwrap:not(:has(:scope > header))",
-            timeout: 10000,
         },
+        stepUtils.waitIframeIsReady(),
         {
             content: "Check that there's no header padding on the #wrapwrap",
             trigger: ":iframe #wrapwrap",
