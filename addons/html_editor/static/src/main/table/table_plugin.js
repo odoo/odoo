@@ -628,8 +628,8 @@ export class TablePlugin extends Plugin {
             if (closestElement(ev.target, "td.o_selected_td")) {
                 this.dependencies.selection.setCursorStart(currentSelection.anchorNode);
             }
+            this.deselectTable();
         }
-        this.deselectTable();
     }
 
     onMouseup(ev) {
