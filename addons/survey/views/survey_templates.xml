@@ -182,6 +182,7 @@
             t-att-data-has-answered="bool(has_answered)"
             t-att-data-is-page-description="bool(question and question.is_page and not is_html_empty(question.description))"
             t-att-data-server-time="server_time"
+            t-att-data-survey-first-submitted="answer.survey_first_submitted"
             t-att-data-survey-last-triggering-answers="survey_last_triggering_answers"
             t-att-data-timer="timer_start"
             t-att-data-time-limit-minutes="time_limit_minutes"/>
@@ -223,11 +224,10 @@
 
             <div class="row">
                 <div class="col-12 text-center mt16">
-                    <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else 'next_skipped'
-                        if answer.survey_first_submitted and skipped_questions.page_id and page in skipped_questions.page_id else 'next'"/>
+                    <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else 'next_post_submit'
+                        if answer.survey_first_submitted and post_submit_questions.page_id and page in post_submit_questions.page_id else 'next'"/>
                     <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
                         <t t-if="submit_value == 'finish'">Submit</t>
-                        <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
                         <t t-else="">Continue</t>
                     </button>
                     <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
@@ -264,10 +264,9 @@
                 <div class="row">
                     <div class="col-12 text-center mt16">
                         <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else
-                            'next_skipped' if answer.survey_first_submitted and skipped_questions and question in skipped_questions else 'next'"/>
+                            'next_post_submit' if answer.survey_first_submitted and post_submit_questions and question in post_submit_questions else 'next'"/>
                         <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
                             <t t-if="submit_value == 'finish'">Submit</t>
-                            <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
                             <t t-else="">Continue</t>
                         </button>
                         <button id="next_page" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} d-none">Next</button>
@@ -351,7 +350,7 @@
         <t t-set="default_constr_error_msg">This question requires an answer.</t>
         <t t-set="default_validation_error_msg">The answer you entered is not valid.</t>
         <t t-set="default_comments_message">If other, please specify:</t>
-        <t t-set="is_skipped_question" t-value="skipped_questions and question in skipped_questions"/>
+        <t t-set="is_post_submit_question" t-value="post_submit_questions and question in post_submit_questions"/>
         <div t-attf-class="js_question-wrapper pb-4
                            #{'d-none' if not display_question else ''}
                            #{'me-2' if extra_right_margin else ''}"
@@ -376,8 +375,8 @@
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
             <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
             <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
-                 border-0 py-0 px-3 alert alert-danger mt-2 #{'slide_in' if is_skipped_question else ''}" role="alert">
-                <span t-if="is_skipped_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
+                 border-0 py-0 px-3 alert alert-danger mt-2 #{'slide_in' if is_post_submit_question else ''}" role="alert">
+                <span t-if="is_post_submit_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
             </div>
         </div>
     </template>
@@ -419,7 +418,7 @@
         <t t-set="answer_line" t-value="answer_lines and not answer_lines[0].skipped and answer_lines[0]"/>
         <div class="o_survey_answer_wrapper o_survey_form_choice"
              t-att-data-name="question.id"
-             t-att-data-is-skipped-question="is_skipped_question or None"
+             t-att-data-is-post-submit-question="is_post_submit_question or None"
              data-question-type="scale">
             <div role="radiogroup" class="btn-group d-flex mb-2" t-att-aria-label="">
                 <t t-foreach="range(question.scale_min, question.scale_max + 1)" t-as="value">
@@ -502,7 +501,7 @@
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
         <div class="row g-2 o_survey_answer_wrapper o_survey_form_choice"
              t-att-data-name="question.id"
-             t-att-data-is-skipped-question="is_skipped_question or None"
+             t-att-data-is-post-submit-question="is_post_submit_question or None"
              data-question-type="simple_choice_radio">
             <t t-set="item_idx" t-value="0"/>
             <t t-set="has_correct_answer" t-value="scoring_display_correction and any(label.is_correct for label in question.suggested_answer_ids)"/>
@@ -637,7 +636,7 @@
                t-att-data-name="question.id"
                t-att-data-question-type="question.question_type"
                t-att-data-sub-questions="question.matrix_row_ids.ids"
-               t-att-data-is-skipped-question="is_skipped_question or None">
+               t-att-data-is-post-submit-question="is_post_submit_question or None">
             <thead>
                 <tr>
                     <th> </th>
