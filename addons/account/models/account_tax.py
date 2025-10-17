@@ -1904,6 +1904,8 @@ class AccountTax(models.Model):
                 manual_field = f'manual_{total_field}'
                 if base_line[manual_field] is not None:
                     tax_details[total_field] = base_line[manual_field]
+                    if suffix == '_currency' and rate:
+                        tax_details['total_excluded'] = company.currency_id.round(tax_details[total_field] / rate)
 
                 for tax_data in tax_details['taxes_data']:
                     tax = tax_data['tax']
@@ -2234,6 +2236,8 @@ class AccountTax(models.Model):
                     values[excluded_rounded_field] = excluded_rounded_amount
                     values[excluded_raw_field] = excluded_raw_amount
                     if base_line[excluded_manual_field] is not None:
+                        excluded_target_amount = base_line[excluded_manual_field]
+                    elif not suffix and base_line['manual_total_excluded_currency'] is not None:
                         excluded_target_amount = excluded_rounded_amount
                     else:
                         excluded_target_amount = excluded_raw_amount
@@ -2246,6 +2250,8 @@ class AccountTax(models.Model):
                         values[tax_base_rounded_field] = tax_data[tax_base_rounded_field]
                         values[tax_base_raw_field] = tax_data[tax_base_raw_field]
                         if tax_base_rounded_field in current_manual_tax_amounts:
+                            values[tax_base_target_field] = current_manual_tax_amounts[tax_base_rounded_field]
+                        elif not suffix and 'base_amount_currency' in current_manual_tax_amounts:
                             values[tax_base_target_field] = tax_data[tax_base_rounded_field]
                         else:
                             values[tax_base_target_field] = tax_data[tax_base_raw_field]
@@ -2254,26 +2260,29 @@ class AccountTax(models.Model):
                         values[tax_base_raw_field] = excluded_raw_amount
                         values[tax_base_target_field] = excluded_target_amount
 
-                    tax_tax_rounded_field = f'tax_amount{suffix}'
-                    tax_tax_raw_field = f'raw_{tax_tax_rounded_field}'
-                    tax_tax_target_field = f'target_{tax_tax_rounded_field}'
-                    values[tax_tax_rounded_field] = 0.0
-                    values[tax_tax_raw_field] = 0.0
-                    values[tax_tax_target_field] = 0.0
+                    tax_rounded_field = f'tax_amount{suffix}'
+                    tax_raw_field = f'raw_{tax_rounded_field}'
+                    tax_target_field = f'target_{tax_rounded_field}'
+                    values[tax_rounded_field] = 0.0
+                    values[tax_raw_field] = 0.0
+                    values[tax_target_field] = 0.0
 
             # Tax amount.
             if tax_data:
+                reverse_charge_sign = -1 if tax_data['is_reverse_charge'] else 1
                 values = values_per_grouping_key[grouping_key]
                 for suffix in ('_currency', ''):
-                    tax_tax_rounded_field = f'tax_amount{suffix}'
-                    tax_tax_raw_field = f'raw_{tax_tax_rounded_field}'
-                    tax_tax_target_field = f'target_{tax_tax_rounded_field}'
-                    values[tax_tax_rounded_field] += tax_data[tax_tax_rounded_field]
-                    values[tax_tax_raw_field] += tax_data[tax_tax_raw_field]
-                    if tax_tax_rounded_field in current_manual_tax_amounts:
-                        values[tax_tax_target_field] += tax_data[tax_tax_rounded_field]
+                    tax_rounded_field = f'tax_amount{suffix}'
+                    tax_raw_field = f'raw_{tax_rounded_field}'
+                    tax_target_field = f'target_{tax_rounded_field}'
+                    values[tax_rounded_field] += tax_data[tax_rounded_field]
+                    values[tax_raw_field] += tax_data[tax_raw_field]
+                    if tax_rounded_field in current_manual_tax_amounts:
+                        values[tax_target_field] += reverse_charge_sign * current_manual_tax_amounts[tax_rounded_field]
+                    elif not suffix and 'tax_amount_currency' in current_manual_tax_amounts:
+                        values[tax_target_field] = tax_data[tax_rounded_field]
                     else:
-                        values[tax_tax_target_field] += tax_data[tax_tax_raw_field]
+                        values[tax_target_field] += tax_data[tax_raw_field]
                 values['taxes_data'].append(tax_data)
 
         return values_per_grouping_key
