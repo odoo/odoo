@@ -103,7 +103,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
                 'country_id': country_in_id,
                 'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."),
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_lut_sez'),
+                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_lut_sez_1'),
             },
         }
 
@@ -120,6 +120,8 @@ class AccountChartTemplate(models.AbstractModel):
             taxes_xml_ids = [f"igst_sale_{rate}_sez_exp" for rate in rates] + [f"igst_purchase_{rate}" for rate in rates] + zero_igst
         elif fiscal_position_xml_ids == 'fiscal_position_in_lut_sez':
             taxes_xml_ids = [f"igst_sale_{rate}_sez_exp_lut" for rate in rates] + zero_igst
+        elif fiscal_position_xml_ids == 'fiscal_position_in_lut_sez_1':
+            taxes_xml_ids = [f"igst_sale_{rate}_sez_lut" for rate in rates] + zero_igst
         return [Command.set(taxes_xml_ids)]
 
     def _post_load_data(self, template_code, company, template_data):
