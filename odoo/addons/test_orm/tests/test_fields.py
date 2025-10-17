@@ -1337,6 +1337,45 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.write({'related_related_name': 'C'})
         self.assertEqual(record.name, 'C')
 
+    def test_25_related_sudo(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+        bar1 = self.env['test_orm.related_bar'].create({'name': 'B1'})
+        bar2 = self.env['test_orm.related_bar'].create({'name': 'B2'})
+        foo1 = self.env['test_orm.related_foo'].create({'name': 'F1', 'bar_id': bar1.id})
+        foo2 = self.env['test_orm.related_foo'].create({'name': 'F2', 'bar_id': bar2.id})
+        record1 = model.create({'name': 'A1', 'foo_id': foo1.id})
+        record2 = model.create({'name': 'A2', 'foo_id': foo2.id})
+        self.env['ir.rule'].create({
+            'name': 'related_foo',
+            'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
+            'domain_force': f"[('id', '=', {foo1.id})]",
+        })
+
+        # check access to fields
+        self.env.invalidate_all()
+        self.assertEqual(record1.foo_bar_name, 'B1')
+        with self.assertRaises(AccessError):
+            record2.foo_bar_name
+        self.assertEqual(record2.foo_bar_name_sudo, 'B2')
+
+        # check environment of generated queries
+        table = record1._as_query().table
+        self.assertFalse(table._model.env.su)
+        self.assertFalse(table.foo_bar_name._table._model.env.su)
+        self.assertFalse(table.foo_bar_name_sudo._table._model.env.su, "compute in sudo, but result keeps the env")
+
+        table = (record1 + record2)._as_query(ordered=True).table
+        rows = self.env.execute_query(table._query.select(
+            table.id,
+            table.foo_id,
+            table.foo_bar_name,
+            table.foo_bar_name_sudo,
+        ))
+        self.assertEqual(rows, [
+            (record1.id, record1.foo_id.id, record1.foo_bar_name, record1.foo_bar_name_sudo),
+            (record2.id, record2.foo_id.id, None, record2.foo_bar_name_sudo),
+        ])
+
     def test_25_related_multi(self):
         """ test write() on several related fields based on a common computed field. """
         foo = self.env['test_orm.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})
