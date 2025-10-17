@@ -1350,27 +1350,36 @@ class ChromeBrowser:
     def stop(self):
         # method may be called during `_open_websocket`
         if hasattr(self, 'ws'):
-            self.screencaster.stop()
+            try:
+                self.screencaster.stop()
 
-            self._websocket_request('Page.stopLoading')
-            self._websocket_request('Runtime.evaluate', params={'expression': """
-            ('serviceWorker' in navigator) &&
-                navigator.serviceWorker.getRegistrations().then(
-                    registrations => Promise.all(registrations.map(r => r.unregister()))
-                )
-            """, 'awaitPromise': True})
-            # wait for the screenshot or whatever
-            wait(self._responses.values(), 10)
-            self._result.cancel()
+                self._websocket_request('Page.stopLoading')
+                self._websocket_request('Runtime.evaluate', params={'expression': """
+                ('serviceWorker' in navigator) &&
+                    navigator.serviceWorker.getRegistrations().then(
+                        registrations => Promise.all(registrations.map(r => r.unregister()))
+                    )
+                """, 'awaitPromise': True})
+                # wait for the screenshot or whatever
+                wait(self._responses.values(), 10)
+                self._result.cancel()
 
-            self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
-            self._websocket_request('Browser.close')
+                self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
+                self._websocket_request('Browser.close')
+            except ChromeBrowserException as e:
+                _logger.runbot("WS error during browser shutdown: %s", e)
+            except Exception:  # noqa: BLE001
+                _logger.warning("Error during browser shutdown", exc_info=True)
             self._logger.info("Closing websocket connection")
             self.ws.close()
 
         self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
         self.chrome.terminate()
-        self.chrome.wait(5)
+        try:
+            self.chrome.wait(5)
+        except subprocess.TimeoutExpired:
+            self._logger.warning("Killing chrome headless with pid %s: still alive", self.chrome.pid)
+            self.chrome.kill()
 
         self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
         shutil.rmtree(self.user_data_dir, ignore_errors=True)
