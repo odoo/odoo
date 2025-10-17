@@ -18,7 +18,7 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
     :param kwargs: Additional parameters passed with the message.
     :return: A dictionary response based on the message type and processing.
     """
-    device_identifier = kwargs.get('device_identifier')
+    device_identifier = kwargs.get('device_identifier', IOT_IDENTIFIER)
     base_response = {
         'owner': kwargs.get('session_id', '0'),  # TODO: remove 'owner' in future versions
         'session_id': kwargs.get('session_id', '0'),
@@ -43,7 +43,11 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
             })
             helpers.get_odoo_server_url.cache_clear()
         case 'restart_odoo':
-            helpers.odoo_restart()
+            helpers.odoo_restart(1)
+            return {
+                **base_response,
+                'status': 'success',
+            }
         case 'remote_debug':
             if IS_WINDOWS:
                 return {}

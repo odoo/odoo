@@ -52,12 +52,9 @@ class WebRtcClient(Thread):
 
                 # Handle regular message
                 message = json.loads(message_str)
-                message["data"]["session_id"] = message["session_id"]
                 result = await self.event_loop.run_in_executor(
                     None,
-                    lambda: communication.handle_message(
-                        message["message_type"], device_identifier=message["device_identifier"], **message["data"]
-                    )
+                    lambda: communication.handle_message(**message)
                 )
                 if result:
                     self.send(result)
