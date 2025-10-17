@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import _, models
+from odoo.tools import is_html_empty
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_custom.controllers.main import CustomController
@@ -81,3 +84,14 @@ class PaymentTransaction(models.Model):
                 provider_name=self.provider_id.name,
             )
         return message
+
+    def _get_status_message(self, **kwargs):
+        """Override of `payment` to add a custom message to `payment_custom` if message is empty."""
+        status_message = super()._get_status_message(**kwargs)
+        if (
+            self.provider_id.sudo().code == "custom"
+            and self.state == "pending"
+            and is_html_empty(status_message)
+        ):
+            return Markup("<h4>%s</h4>") % self.env._("Finalize your payment")
+        return status_message

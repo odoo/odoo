@@ -1,65 +1,63 @@
-import { ConnectionLostError, rpc, RPCError } from '@web/core/network/rpc';
-import { registry } from '@web/core/registry';
-import { Interaction } from '@web/public/interaction';
+import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
 export class PaymentPostProcessing extends Interaction {
-    static selector = 'div[name="o_payment_status"]';
+    static selector = "div[name='o_payment_status']";
 
     setup() {
-        this.timeout = 0;
-        this.pollCount = 0;
+        // Create a bus listener to trigger post-processing
+        this.notificationType = "payment.notify_transaction_processed";
+        this.notificationChannel = this.el.dataset.notificationChannel;
+        this.onProcessingCompleteBind = this.onProcessingComplete.bind(this);
+        this.busService = this.services.bus_service;
+        this.busService.addChannel(this.notificationChannel);
+        this.busService.subscribe(this.notificationType, this.onProcessingCompleteBind);
+
+        // Redirect automatically after 5 seconds
+        this.redirectTimeout = this.waitForTimeout(() => {
+            this.redirectToLandingPage();
+        }, 5000);
     }
 
-    start() {
-        this.poll();
+    async willStart() {
+        // Assume we missed a notification from the postprocessing
+        await this.onProcessingComplete();
     }
 
-    poll() {
-        this.updateTimeout();
-        this.waitForTimeout(async () => {
-            try {
-                // Fetch the post-processing values from the server.
-                const postProcessingValues = await this.waitFor(
-                    rpc('/payment/status/poll', { csrf_token: odoo.csrf_token })
-                );
+    /**
+     * Run the post-processing and redirect the user as soon a final state is reached.
+     *
+     * @returns {Promise<void>}
+     */
+    async onProcessingComplete() {
+        const postProcessingData = await rpc(
+            "/payment/post_process", { csrf_token: odoo.csrf_token }
+        );
+        const { provider_code, state } = postProcessingData;
+        if (PaymentPostProcessing.getFinalStates(provider_code).has(state)) {
+            this.redirectToLandingPage();
+        }
+    }
 
-                // Redirect the user to the landing route if the transaction reached a final state.
-                const { provider_code, state, landing_route } = postProcessingValues;
-                if (PaymentPostProcessing.getFinalStates(provider_code).has(state)) {
-                    window.location = landing_route;
-                } else {
-                    this.poll();
-                }
-            } catch (error) {
-                const isRetryError = error instanceof RPCError && error.data.message === 'retry';
-                const isConnectionLostError = error instanceof ConnectionLostError;
-                if (isRetryError || isConnectionLostError) {
-                    this.poll();
-                }
-                if (!isRetryError) {
-                    throw error;
-                }
-            }
-        }, this.timeout);
+    /**
+     * Clean up bus subscriptions and the timer and redirect to the landing route.
+     */
+    redirectToLandingPage() {
+        // Cleanup before leaving the page, make sure bus listener is disposed properly on redirect.
+        clearTimeout(this.redirectTimeout);
+        this.busService.unsubscribe(this.notificationType, this.onProcessingCompleteBind);
+        this.busService.deleteChannel(this.notificationChannel);
+
+        // Redirect the user to the landing route
+        window.location = this.el.dataset.landingRoute;
     }
 
     static getFinalStates(providerCode) {
         return new Set(['authorized', 'done', 'cancel', 'error']);
     }
-
-    updateTimeout() {
-        if (this.pollCount >= 1 && this.pollCount < 10) {
-            this.timeout = 3000;
-        }
-        if (this.pollCount >= 10 && this.pollCount < 20) {
-            this.timeout = 10000;
-        } else if (this.pollCount >= 20) {
-            this.timeout = 30000;
-        }
-        this.pollCount++;
-    }
 }
 
 registry
-    .category('public.interactions')
-    .add('payment.payment_post_processing', PaymentPostProcessing);
+    .category("public.interactions")
+    .add("payment.payment_post_processing", PaymentPostProcessing);

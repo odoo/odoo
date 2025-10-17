@@ -2,12 +2,13 @@
 
 import logging
 
-import psycopg2
-
 from odoo import http
-from odoo.exceptions import UserError
+from odoo.exceptions import ConcurrencyError
 from odoo.http import request
+from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 from odoo.tools.translate import LazyTranslate
+
+from odoo.addons.payment import utils as payment_utils
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -42,21 +43,28 @@ class PaymentPostProcessing(http.Controller):
         """
         monitored_tx = self._get_monitored_transaction()
         # The session might have expired, or the transaction never existed.
-        values = {"tx": monitored_tx} if monitored_tx else {"payment_not_found": True}
+        if monitored_tx:
+            notification_access_token = payment_utils.generate_access_token([monitored_tx.id])
+            notification_channel = (
+                f"payment_transaction_channel:{monitored_tx.id},{notification_access_token}"
+            )
+            values = {"tx": monitored_tx, "notification_channel": notification_channel}
+        else:
+            values = {"payment_not_found": True}
         template = self.get_payment_status_template_xmlid(monitored_tx)
         return request.render(template, values)
 
-    def get_payment_status_template_xmlid(self, tx):
+    def get_payment_status_template_xmlid(self, tx):  # noqa: ARG002
         return "payment.payment_status"
 
-    @http.route("/payment/status/poll", type="jsonrpc", auth="public")
-    def poll_status(self, **_kwargs):
+    @http.route("/payment/post_process", type="jsonrpc", auth="public")
+    def payment_post_process(self, **_kwargs):
         """Fetch the transaction and trigger its post-processing.
 
         :return: The post-processing values of the transaction.
         :rtype: dict
         """
-        # We only poll the payment status if a payment was found, so the transaction should exist.
+        # We only call the payment post-processing on existing transactions.
         monitored_tx = self._get_monitored_transaction()
 
         # Post-process the transaction before redirecting the user to the landing route and its
@@ -64,23 +72,24 @@ class PaymentPostProcessing(http.Controller):
         if not monitored_tx.is_post_processed:
             try:
                 monitored_tx._post_process()
-            except (psycopg2.OperationalError, psycopg2.IntegrityError):  # Concurrent update error.
-                request.env.cr.rollback()  # Rollback and try later.
-                msg = "retry"
-                raise UserError(msg) from None
-            except Exception:
-                request.env.cr.rollback()
-                _logger.error(
-                    "Encountered an error while post-processing transaction with id %s.",
-                    monitored_tx.id,
+            except PG_CONCURRENCY_EXCEPTIONS_TO_RETRY as ce:
+                # Raising ConcurrencyError to trigger the framework's retrying mechanism.
+                concurrency_error_message = (
+                    "Post-processing failed because of a consurrency error, retrying"
                 )
-                raise
+                raise ConcurrencyError(concurrency_error_message) from ce
+            except Exception as e:
+                # Error is silenced here since to avoid displaying it in the frontend for the
+                # customers, in this page they are redirected after 5 seconds so no use of showing
+                # the error.
+                request.env.cr.rollback()
+                _logger.exception(
+                    "Encountered an error while post-processing transaction with id %s:\n%s",
+                    monitored_tx.id,
+                    e,  # noqa: TRY401
+                )
 
-        return {
-            "provider_code": monitored_tx.provider_code,
-            "state": monitored_tx.state,
-            "landing_route": monitored_tx.landing_route,
-        }
+        return {"state": monitored_tx.state, "provider_code": monitored_tx.provider_code}
 
     @classmethod
     def monitor_transaction(cls, transaction):

@@ -22,6 +22,7 @@ _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 class PaymentTransaction(models.Model):
     _name = "payment.transaction"
+    _inherit = "bus.listener.mixin"
     _description = "Payment Transaction"
     _order = "id desc"
     _rec_name = "reference"
@@ -790,10 +791,12 @@ class PaymentTransaction(models.Model):
             if tx.state in {"authorized", "done"}:
                 tx._validate_amount(payment_data)  # Only validate amount data for successful states
                 if tx.state == "error":  # Amount data validation failed
+                    tx._bus_send("payment.notify_transaction_processed", {})
                     return tx
 
                 if tx.tokenize:
                     tx._tokenize(payment_data)
+        tx._bus_send("payment.notify_transaction_processed", {})
         return tx
 
     @api.model
@@ -1315,3 +1318,46 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         return self.filtered(lambda t: t.state != "draft").sorted()[:1]
+
+    def _get_status_message(self, **_kwargs):
+        """Get the status message relevant to the current transaction's state.
+
+        :return: status message of the transaction.
+        :rtype: Markup
+        """
+        validation_status_messages = {
+            "pending": Markup("<p>%s</p>") % self.env._("Saving your payment method."),
+            "done": Markup("<p>%s</p>") % self.env._("Your payment method has been saved."),
+            "cancel": (
+                Markup("<p>%s</p>")
+                % self.env._("The saving of your payment method has been canceled.")
+            ),
+            "error": (
+                Markup("<p>%s</p><p>%s</p>")
+                % (
+                    self.env._("An error occurred while saving your payment method."),
+                    self.state_message,
+                )
+            ),
+        }
+        if self.operation == "validation" and self.state in validation_status_messages:
+            status_messages = validation_status_messages
+        else:
+            provider_sudo = self.provider_id.sudo()
+            status_messages = {
+                "draft": (
+                    Markup("<p>%s</p>") % self.env._("Your payment has not been processed yet.")
+                ),
+                "pending": provider_sudo.pending_msg,
+                "authorized": provider_sudo.auth_msg,
+                "done": provider_sudo.done_msg,
+                "cancel": provider_sudo.cancel_msg,
+                "error": (
+                    Markup("<p>%s</p><p>%s</p>")
+                    % (
+                        self.env._("An error occurred during the processing of your payment."),
+                        self.state_message,
+                    )
+                ),
+            }
+        return status_messages.get(self.state)
