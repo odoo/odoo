@@ -3,22 +3,36 @@
         padding: 0px;
         border-top: 0px !important;
 
-        &.o_kanban_ungrouped .o_kanban_record {
-            width: 100%;
-            --KanbanRecord-padding-v: #{map-get($spacers, 2)} !important;
-            --KanbanRecord-padding-h: 0px !important;
-            --Ribbon-font-size: 0.6rem;
-            --Ribbon-wrapper-width: 5rem;
-            --Ribbon-height: 1.9;
+        &.o_kanban_ungrouped {
+            .o_kanban_record {
+                width: 100%;
+                --KanbanRecord-padding-v: #{map-get($spacers, 2)} !important;
+                --KanbanRecord-padding-h: 0px !important;
+                --Ribbon-font-size: 0.6rem;
+                --Ribbon-wrapper-width: 5rem;
+                --Ribbon-height: 1.9;
 
-            @include media-breakpoint-up(md) {
-                min-width: 768px;
+                @include media-breakpoint-up(md) {
+                    min-width: 768px;
+                }
+
+                &:not(.o_kanban_ghost) {
+                    border: none;
+                    border-bottom: $border-width solid $border-color;
+                    justify-content: center;
+                }
             }
 
-            &:not(.o_kanban_ghost) {
-                border: none;
-                border-bottom: $border-width solid $border-color;
-                justify-content: center;
+            @include media-breakpoint-down(md) {
+                .o_hr_recruitment_kanban_card_large_screen {
+                    display: none;    
+                }
+            }
+            
+            @media only screen and (min-width: 768px) {
+                .o_hr_recruitment_kanban_card_mobile_screen {
+                    display: none;
+                }
             }
         }
 
@@ -45,11 +59,7 @@
         .o_field_many2one_avatar_user .o_avatar{
             column-gap: 0.375rem;
         }
-    }
-}
-
-.o_kanban_view {
-    .o_kanban_renderer {
+        
         .o_hr_recruitment_kanban_card_mobile_screen {
             min-height: 130px;
         }
@@ -58,23 +68,14 @@
             .o_hr_recruitment_kanban_card_large_screen {
                 display: none;    
             }
-
-            .o_kanban_record {
-                margin: 0 0 ($border-width * -1);
-            }
         }
+    }
+}
 
-        &.o_kanban_ungrouped {
-            @include media-breakpoint-down(md) {
-                .o_hr_recruitment_kanban_card_large_screen {
-                    display: none;    
-                }
-            }
-            @media only screen and (min-width: 768px) {
-                .o_hr_recruitment_kanban_card_mobile_screen {
-                    display: none;
-                }
-            }
+.o_kanban_applicant {
+    .o_kanban_renderer.o_kanban_grouped {
+        .o_kanban_record {
+            margin: 0 0 ($border-width * -1);
         }
     }
 }
