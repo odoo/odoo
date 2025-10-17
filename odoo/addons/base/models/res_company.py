@@ -82,6 +82,7 @@ class ResCompany(models.CachedModel):
         ('bold', 'Bold'),
         ('striped', 'Striped'),
         ('bubble', 'Bubble'),
+        ('column', 'Column'),
     ], string='Table Design', default='light')
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway"), ('Tajawal', 'Tajawal'), ('Noto_Sans_Mono', 'Noto Sans Mono')], default="Lato")
     primary_color = fields.Char()
