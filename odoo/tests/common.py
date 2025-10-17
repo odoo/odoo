@@ -44,7 +44,6 @@ from typing import Optional, Iterable, cast
 from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
-from xmlrpc import client as xmlrpclib
 from uuid import uuid4
 from werkzeug.exceptions import BadRequest
 
@@ -2171,20 +2170,6 @@ class Response(requests.Response):
         return self
 
 
-class Transport(xmlrpclib.Transport):
-    """ see :class:`Opener` """
-    def __init__(self, http_case: HttpCase):
-        self.test_case = http_case
-        self.cr = http_case.cr
-        super().__init__()
-
-    def request(self, *args, **kwargs):
-        self.cr.flush()
-        self.cr.clear()
-        with self.test_case.allow_requests(all_requests=True):
-            return super().request(*args, **kwargs)
-
-
 class JsonRpcException(Exception):
     def __init__(self, code, message):
         super().__init__(message)
@@ -2210,8 +2195,6 @@ class HttpCase(TransactionCase):
         ICP = cls.env['ir.config_parameter']
         ICP.set_str('web.base.url', cls.base_url())
         ICP.env.flush_all()
-        # v8 api with correct xmlrpc exception handling.
-        cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
@@ -2229,9 +2212,6 @@ class HttpCase(TransactionCase):
 
         self._logger = self._logger.getChild(self._testMethodName)
 
-        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self))
-        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self))
-        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self), use_datetime=True)
         # setup an url opener helper
         self.opener = Opener(self)
         self.http_key_sequence = itertools.count()

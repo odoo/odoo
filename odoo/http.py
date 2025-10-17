@@ -443,30 +443,6 @@ def db_filter(dbs, host=None):
     return list(dbs)
 
 
-def dispatch_rpc(service_name, method, params):
-    """
-    Perform a RPC call.
-
-    :param str service_name: either "common", "db" or "object".
-    :param str method: the method name of the given service to execute
-    :param Mapping params: the keyword arguments for method call
-    :return: the return value of the called method
-    :rtype: Any
-    """
-    rpc_dispatchers = {
-        'common': odoo.service.common.dispatch,
-        'db': odoo.service.db.dispatch,
-        'object': odoo.service.model.dispatch,
-    }
-
-    with borrow_request():
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
-
-        dispatch = rpc_dispatchers[service_name]
-        return dispatch(method, params)
-
-
 def get_session_max_inactivity(env):
     if not env or env.cr.closed:
         return SESSION_LIFETIME

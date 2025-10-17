@@ -7,6 +7,7 @@ import psycopg2
 import odoo.api
 import odoo.exceptions
 import odoo.modules.registry
+import odoo.release
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
@@ -189,6 +190,13 @@ class Home(http.Controller):
         headers = [('Content-Type', 'application/json'),
                    ('Cache-Control', 'no-store')]
         return request.make_response(data, headers, status=status)
+
+    @http.route(['/web/version', '/json/version'], type='http', auth='none', save_session=False, readonly=True)
+    def version(self):
+        return request.make_json_response({
+            'version_info': odoo.release.version_info,
+            'version': odoo.release.version,
+        })
 
     @http.route(['/robots.txt'], type='http', auth="none")
     def robots(self, **kwargs):
