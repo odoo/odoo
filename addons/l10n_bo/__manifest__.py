@@ -9,9 +9,8 @@
 Bolivian accounting chart and tax localization.
 
 Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
-
     """,
-    'author': 'Odoo / Cubic ERP',
+    'author': 'Odoo S.A. / Cubic ERP',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',

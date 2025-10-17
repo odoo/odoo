@@ -11,7 +11,7 @@ This is the base module to manage the accounting chart for the Republic of Mauri
     - Fiscal positions
     - Default settings
     """,
-    "author": "Odoo SA",
+    "author": "Odoo S.A.",
     "depends": [
         "account",
     ],

@@ -6,7 +6,7 @@
     used by the website builder and mass mailing editor.
     """,
 
-    'author': "Odoo",
+    'author': 'Odoo S.A.',
     'website': "https://www.odoo.com",
 
     # Categories can be used to filter modules in modules listing

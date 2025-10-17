@@ -11,6 +11,6 @@
             "pos_self_order_pine_labs/static/src/**/*",
         ],
     },
-    "author": "Odoo IN Pvt Ltd",
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
 }
