@@ -202,7 +202,6 @@ export class ClosePosPopup extends Component {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ params: { action: "close" } }),
-                targetAddressSpace: "local",
             }).catch((error) => {
                 logPosMessage(
                     "ClosePosPopup",
