@@ -173,9 +173,6 @@ export class Builder extends Component {
                     }),
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
-                    can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
-
-                    // disable the toolbar for images and icons
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
