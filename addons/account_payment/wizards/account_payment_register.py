@@ -35,15 +35,17 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_method_line_id')
     def _compute_suitable_payment_token_ids(self):
         for wizard in self:
+            wizard.suitable_payment_token_ids = [Command.clear()]
             if wizard.can_edit_wizard and wizard.use_electronic_payment_method:
-                wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
-                    *self.env['payment.token']._check_company_domain(wizard.company_id),
-                    ('provider_id.capture_manually', '=', False),
-                    ('partner_id', '=', wizard.partner_id.id),
-                    ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
-                ])
-            else:
-                wizard.suitable_payment_token_ids = [Command.clear()]
+                batch = wizard._get_batches()[0]
+                partner = batch['lines'].move_id.partner_id
+                if len(partner) == 1:
+                    wizard.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
+                        *self.env['payment.token']._check_company_domain(wizard.company_id),
+                        ('provider_id.capture_manually', '=', False),
+                        ('partner_id', '=', partner.id),
+                        ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
+                    ])
 
     @api.depends('payment_method_line_id')
     def _compute_use_electronic_payment_method(self):
@@ -53,23 +55,17 @@ class AccountPaymentRegister(models.TransientModel):
             codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
             wizard.use_electronic_payment_method = wizard.payment_method_code in codes
 
-    @api.onchange('can_edit_wizard', 'payment_method_line_id', 'journal_id')
+    @api.depends('can_edit_wizard', 'suitable_payment_token_ids', 'journal_id')
     def _compute_payment_token_id(self):
         codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
         for wizard in self:
-            if wizard.can_edit_wizard \
-                    and wizard.payment_method_line_id.code in codes \
-                    and wizard.journal_id \
-                    and wizard.partner_id:
-
-                wizard.payment_token_id = self.env['payment.token'].sudo().search([
-                    *self.env['payment.token']._check_company_domain(wizard.company_id),
-                    ('partner_id', '=', wizard.partner_id.id),
-                    ('provider_id.capture_manually', '=', False),
-                    ('provider_id', '=', wizard.payment_method_line_id.payment_provider_id.id),
-                 ], limit=1)
-            else:
+            if wizard.payment_method_line_id and wizard.payment_method_line_id.code not in codes:
                 wizard.payment_token_id = False
+            elif wizard.payment_token_id in wizard.suitable_payment_token_ids:
+                # The selected payment token is still valid.
+                continue
+            else:
+                wizard.payment_token_id = wizard.suitable_payment_token_ids[:1]
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
