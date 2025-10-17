@@ -6,10 +6,12 @@ from ast import literal_eval
 
 from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
+from odoo.addons.web.models.models import RecordSnapshot
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.lru import LRU
 
 
 class StockMoveLine(models.Model):
@@ -345,6 +347,9 @@ class StockMoveLine(models.Model):
                 vals['picked'] = self.env['stock.move'].browse(vals['move_id']).picked
             if vals.get('quant_id'):
                 vals.update(self._copy_quant_info(vals))
+        vals_done = [val for val in vals_list if val.get('state', '') == "done"]
+        vals_for_preliminary_check = [self._extract_vals_to_preliminary_check(val) for val in vals_done]
+        self._preliminary_action_to_done_moves(vals_for_preliminary_check)
 
         mls = super().create(vals_list)
 
@@ -419,6 +424,9 @@ class StockMoveLine(models.Model):
         return mls
 
     def write(self, vals):
+        done_mls = self.filtered(lambda x: x.state == 'done')
+        if done_mls:
+            done_mls._preliminary_action_to_done_moves(done_mls._extract_vals_to_preliminary_check(vals))
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
             raise UserError(_("Changing the product is only allowed in 'Draft' state."))
 
@@ -584,6 +592,101 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         return self.move_id.picking_type_id or self.is_inventory or self.lot_id or self.move_id.scrap_id
 
+    def _extract_vals_to_preliminary_check(self, vals):
+        to_return = []
+        for ml in self:
+            to_return.append({
+                'product_uom_id':   vals.get('product_uom_id') or ml.product_uom_id.id,
+                'quantity':         vals.get('quantity') or ml.quantity,
+                'product_id':       vals.get('product_id') or ml.product_id.id,
+                'move_id':          vals.get('move_id') or ml.move_id.id,
+                'company_id':       vals.get('company_id') or ml.company_id.id,
+                'id':               vals.get('id') or ml.id,
+                'lot_id':           vals.get('lot_id') or ml.lot_id.id,
+                'lot_name':         vals.get('lot_name') or ml.lot_name,
+                'is_inventory':     vals.get('is_inventory') or ml.is_inventory,
+            })
+        return to_return
+
+    def _preliminary_action_to_done_moves(self, vals):
+        """
+        Loop over all the move lines to do a preliminary check: `quantity` should not
+        be negative and, according to the presence of a picking type or a linked inventory
+        adjustment, enforce some rules on the `lot_id` field. If `quantity` is null, we unlink
+        the line. It is mandatory in order to free the reservation and correctly apply
+        `action_done` on the next move lines.
+        """
+
+        ml_ids_tracked_without_lot = []
+        ml_ids_to_delete = OrderedSet()
+        ml_ids_to_create_lot = OrderedSet()
+        ml_ids_to_check = defaultdict(list)
+        ml_ids_to_add_lot = []
+
+        for value in vals:
+            product_uom_id = self.env['uom.uom'].browse(value['product_uom_id'])
+            value['product'] = self.env['product.product'].browse(value['product_id'])
+            move_id = self.env['stock.move'].browse(value['move_id'])
+            # Check here if `ml.quantity` respects the rounding of `ml.product_uom_id`.
+            uom_qty = product_uom_id.round(value['quantity'], rounding_method='HALF-UP')
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
+            quantity = float_round(value['quantity'], precision_digits=precision_digits, rounding_method='HALF-UP')
+            if float_compare(uom_qty, quantity, precision_digits=precision_digits) != 0:
+                raise UserError(_('The quantity done for the product "%(product)s" doesn\'t respect the rounding precision '
+                                  'defined on the unit of measure "%(unit)s". Please change the quantity done or the '
+                                  'rounding precision of your unit of measure.',
+                                  product=value['product'].display_name, unit=product_uom_id.name))
+
+            qty_done_float_compared = product_uom_id.compare(value['quantity'], 0)
+            if qty_done_float_compared > 0:
+                if value['product'].tracking == 'none':
+                    continue
+                picking_type_id = move_id.picking_type_id
+                if not move_id.picking_type_id or value['is_inventory'] or value['lot_id'] or move_id.scrap_id:
+                    ml_ids_tracked_without_lot.append(value)
+                    continue
+                if not picking_type_id or value['lot_id'] or (not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots):
+                    # If the user disabled both `use_create_lots` and `use_existing_lots`
+                    # checkboxes on the picking type, he's allowed to enter tracked vals
+                    # products without a `lot_id`.
+                    continue
+                if picking_type_id.use_create_lots:
+                    ml_ids_to_check[f"{value['product'], value['company_id']}"].append(value)
+                else:
+                    ml_ids_tracked_without_lot.append(value)
+
+            elif qty_done_float_compared < 0:
+                raise UserError(_('No negative quantities allowed'))
+            elif not value['is_inventory']:
+                ml_ids_to_delete.add(value['id'])
+
+        for vals in ml_ids_to_check.values():
+            lots = self.env['stock.lot'].search([
+                '|', ('company_id', '=', False), ('company_id', '=', vals[0]['company_id']),
+                ('product_id', '=', vals[0]['product'].id),
+                ('name', 'in', [value['lot_name'] for value in vals]),
+            ])
+            lots = {lot.name: lot for lot in lots}
+            for value in vals:
+                lot = lots.get(value['lot_name'])
+                if lot:
+                    ml_ids_to_add_lot.append((value['id'], lot.id))
+                elif value['lot_name']:
+                    ml_ids_to_create_lot.add(value['id'])
+                else:
+                    ml_ids_tracked_without_lot.append(value)
+
+        if ml_ids_tracked_without_lot:
+            products_list = "\n".join(f"- {value['product'].display_name}" for value in ml_ids_tracked_without_lot)
+            raise UserError(
+                _(
+                    "You need to supply a Lot/Serial Number for product:\n%(products)s",
+                    products=products_list,
+                ),
+            )
+
+        return ml_ids_to_create_lot, ml_ids_to_delete, ml_ids_to_add_lot
+
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
@@ -594,76 +697,11 @@ class StockMoveLine(models.Model):
         is done.
         """
 
-        # First, we loop over all the move lines to do a preliminary check: `quantity` should not
-        # be negative and, according to the presence of a picking type or a linked inventory
-        # adjustment, enforce some rules on the `lot_id` field. If `quantity` is null, we unlink
-        # the line. It is mandatory in order to free the reservation and correctly apply
-        # `action_done` on the next move lines.
-        ml_ids_tracked_without_lot = OrderedSet()
-        ml_ids_to_delete = OrderedSet()
-        ml_ids_to_create_lot = OrderedSet()
-        ml_ids_to_check = defaultdict(OrderedSet)
+        ml_ids_to_create_lot, ml_ids_to_delete, ml_ids_to_add_lot = self._preliminary_action_to_done_moves(self._extract_vals_to_preliminary_check({}))
 
-        for ml in self:
-            # Check here if `ml.quantity` respects the rounding of `ml.product_uom_id`.
-            uom_qty = ml.product_uom_id.round(ml.quantity, rounding_method='HALF-UP')
-            precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
-            quantity = float_round(ml.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
-            if float_compare(uom_qty, quantity, precision_digits=precision_digits) != 0:
-                raise UserError(_('The quantity done for the product "%(product)s" doesn\'t respect the rounding precision '
-                                  'defined on the unit of measure "%(unit)s". Please change the quantity done or the '
-                                  'rounding precision of your unit of measure.',
-                                  product=ml.product_id.display_name, unit=ml.product_uom_id.name))
-
-            qty_done_float_compared = ml.product_uom_id.compare(ml.quantity, 0)
-            if qty_done_float_compared > 0:
-                if ml.product_id.tracking == 'none':
-                    continue
-                picking_type_id = ml.move_id.picking_type_id
-                if not ml._exclude_requiring_lot():
-                    ml_ids_tracked_without_lot.add(ml.id)
-                    continue
-                if not picking_type_id or ml.lot_id or (not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots):
-                    # If the user disabled both `use_create_lots` and `use_existing_lots`
-                    # checkboxes on the picking type, he's allowed to enter tracked
-                    # products without a `lot_id`.
-                    continue
-                if picking_type_id.use_create_lots:
-                    ml_ids_to_check[(ml.product_id, ml.company_id)].add(ml.id)
-                else:
-                    ml_ids_tracked_without_lot.add(ml.id)
-
-            elif qty_done_float_compared < 0:
-                raise UserError(_('No negative quantities allowed'))
-            elif not ml.is_inventory:
-                ml_ids_to_delete.add(ml.id)
-
-        for (product, _company), mls in ml_ids_to_check.items():
-            mls = self.env['stock.move.line'].browse(mls)
-            lots = self.env['stock.lot'].search([
-                '|', ('company_id', '=', False), ('company_id', '=', ml.company_id.id),
-                ('product_id', '=', product.id),
-                ('name', 'in', mls.mapped('lot_name')),
-            ])
-            lots = {lot.name: lot for lot in lots}
-            for ml in mls:
-                lot = lots.get(ml.lot_name)
-                if lot:
-                    ml.lot_id = lot.id
-                elif ml.lot_name:
-                    ml_ids_to_create_lot.add(ml.id)
-                else:
-                    ml_ids_tracked_without_lot.add(ml.id)
-
-        if ml_ids_tracked_without_lot:
-            mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
-            products_list = "\n".join(f"- {product_name}" for product_name in mls_tracked_without_lot.mapped("product_id.display_name"))
-            raise UserError(
-                _(
-                    "You need to supply a Lot/Serial Number for product:\n%(products)s",
-                    products=products_list,
-                ),
-            )
+        ml_ids, lot_ids = zip(*ml_ids_to_add_lot)
+        for ml, lot in zip(self.browse(ml_ids), self.env['stock.lot'].browse(lot_ids)):
+            ml.lot_id = lot
         if ml_ids_to_create_lot:
             self.env['stock.move.line'].browse(ml_ids_to_create_lot)._create_and_assign_production_lot()
 
