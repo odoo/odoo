@@ -619,6 +619,28 @@ describe("Import view", () => {
         expect(".o_list_view").toHaveCount(1);
     });
 
+    test("import a CSV file with uppercase extension", async () => {
+        mockService("http", {
+            post(route, params) {
+                expect.step(route);
+                expect(params.ufile[0].name).toBe("fake_file.CSV");
+                return super.post(route, params);
+            },
+        });
+
+        await mountWebClient();
+        await getService("action").doAction(1);
+        await animationFrame();
+
+        const file = new File(["fake_file"], "fake_file.CSV", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        expect.verifySteps(["/base_import/set_file"]);
+        // Check formatting options appear
+        expect(".o_import_data_sidepanel .o_import_formatting").toHaveCount(1);
+    });
+
     test("additional options in debug", async () => {
         serverState.debug = "1";
 
