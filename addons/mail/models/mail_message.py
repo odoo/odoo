@@ -1092,7 +1092,7 @@ class MailMessage(models.Model):
             Store.Many("ended_poll_ids", predicate=lambda m: m.message_type == "mail_poll", sudo=True),
             "subject",
             # sudo: mail.message.subtype - reading subtype on accessible message is allowed
-            Store.One("subtype_id", ["description"], sudo=True),
+            Store.One("subtype_id", ["description", "field_tracked"], sudo=True),
             "write_date",
             *self._get_store_linked_messages_fields(),
             *self._get_store_message_link_previews_fields(),

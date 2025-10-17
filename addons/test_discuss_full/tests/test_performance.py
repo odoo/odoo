@@ -576,8 +576,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_notification(self.channel_channel_public_1),
             ],
             "mail.message.subtype": [
-                {"description": False, "id": self.env.ref("mail.mt_note").id},
-                {"description": False, "id": self.env.ref("mail.mt_comment").id},
+                {
+                    "description": False,
+                    "id": self.env.ref("mail.mt_note").id,
+                    "field_tracked": False,
+                },
+                {
+                    "description": False,
+                    "id": self.env.ref("mail.mt_comment").id,
+                    "field_tracked": False,
+                },
             ],
             "mail.thread": self._filter_threads_fields(
                 self._expected_result_for_thread(self.channel_general),

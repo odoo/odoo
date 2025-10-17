@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MailFieldSelectorValueField">
+        <t t-component="field.component" t-props="fieldComponentProps" t-if="acceptedType and field"/>
+        <t t-else="" t-esc="unsupportedTypesMessage"/>
+    </t>
+    <t t-name="mail.MailSelect" t-inherit="web.TreeEditor.Select">
+        <xpath expr="//t[@t-foreach='props.options']" position="replace">
+            <t t-foreach="props.options" t-as="option" t-key="serialize(option[0])">
+                <option class="text-black o_mail" t-att-value="serialize(option[0])" t-att-selected="option[0] === props.value" t-esc="option[1]" />
+            </t>
+        </xpath>
+    </t>
+</templates>

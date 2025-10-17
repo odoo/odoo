@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime
@@ -10,6 +11,12 @@ from odoo import api, exceptions, models, tools, _
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.tools import parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
+
+import typing
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection
+    from odoo.api import ValuesType
 
 import logging
 
@@ -35,6 +42,18 @@ class Base(models.AbstractModel):
         """Override to ensure the guest context is removed as the target user in a with_user should
         never be considered as being the guest of the outside env."""
         return super().with_user(user).with_context(guest=None)
+
+    @api.model
+    def fields_get(
+        self, allfields: Collection[str] | None = None, attributes: Collection[str] | None = None
+    ) -> dict[str, ValuesType]:
+        fields_info = super().fields_get(allfields=allfields, attributes=attributes)
+        if "tracking" not in (attributes or []):
+            return fields_info
+        for fname, finfo in fields_info.items():
+            field = self._fields.get(fname)
+            finfo["tracking"] = field.tracking if hasattr(field, "tracking") else None
+        return fields_info
 
     # ------------------------------------------------------------
     # CRUD
@@ -809,10 +828,14 @@ class Base(models.AbstractModel):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def _mail_get_message_subtypes(self):
-        return self.env['mail.message.subtype'].search([
+    def _mail_get_message_subtypes(self, target=None):
+        domain = [
             '&', ('hidden', '=', False),
-            '|', ('res_model', '=', self._name), ('res_model', '=', False)])
+            '|', ('res_model', '=', self._name), ('res_model', '=', False)]
+        if target is not None and target != self.env.user.partner_id:
+            domain.insert(0, "&")
+            domain.insert(1, ("field_tracked", "=", False))
+        return self.env["mail.message.subtype"].search(domain)
 
     # ------------------------------------------------------------
     # GATEWAY: NOTIFICATION

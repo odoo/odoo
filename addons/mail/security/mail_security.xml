@@ -236,7 +236,27 @@
             <field name="domain_force">[('internal', '=', False)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
         </record>
-
+        <record id="mail_message_subtype_rule_admin" model="ir.rule">
+            <field name="name">mail.message.subtype: admin: read/update all subtypes</field>
+            <field name="model_id" ref="model_mail_message_subtype"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+        <record id="mail_message_subtype_rule_user" model="ir.rule">
+            <field name="name">mail.message.subtype: user: read/update all subtypes related to user</field>
+            <field name="model_id" ref="model_mail_message_subtype"/>
+            <field name="domain_force">['&amp;', ('user_ids', 'in', user.id), ('field_tracked', '!=', False)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+        <record id="mail_message_subtype_rule_user_non_linked" model="ir.rule">
+            <field name="name">mail.message.subtype: user: read all subtypes non-related to user</field>
+            <field name="model_id" ref="model_mail_message_subtype"/>
+            <field name="domain_force">[('user_ids', 'not in', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
         <record id="mail_activity_rule_user" model="ir.rule">
             <field name="name">mail.activity: user: write/unlink only (created or assigned)</field>
             <field name="model_id" ref="model_mail_activity"/>
@@ -349,6 +369,15 @@
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="mail_custom_message_subtype_rule" model="ir.rule">
+            <field name="name">Mail Custom Message Subtype Rule</field>
+            <field name="model_id" ref="model_mail_custom_message_subtype"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
             <field name="perm_unlink" eval="False"/>
         </record>
 </odoo>

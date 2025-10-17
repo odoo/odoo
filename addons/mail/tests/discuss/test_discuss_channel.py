@@ -116,7 +116,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
-                                "mail.message.subtype": [{"description": False, "id": self.env.ref("mail.mt_comment").id}],
+                                "mail.message.subtype": [{
+                                    "description": False,
+                                    "id": self.env.ref("mail.mt_comment").id,
+                                    "field_tracked": False,
+                                }],
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Group",

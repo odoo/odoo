@@ -126,8 +126,11 @@ class ThreadController(http.Controller):
         record = request.env[follower.res_model].browse(follower.res_id)
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
-        subtypes = record._mail_get_message_subtypes()
-        store = Store().add(subtypes, ["name"]).add(follower, ["subtype_ids"])
+        subtypes = record._mail_get_message_subtypes(target=follower.partner_id)
+        store = Store().add(subtypes, [
+            "name",
+            "field_tracked",
+        ]).add(follower, ["subtype_ids"])
         return {
             "store_data": store.get_result(),
             "subtype_ids": subtypes.sorted(

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="mail_custom_message_subtype_form_view">
+        <field name="name">mail.custom.message.subtype.form.view</field>
+        <field name="model">mail.custom.message.subtype</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="arch" type="xml">
+            <form string="Custom Notification">
+                <sheet>
+                    <group>
+                        <field name="model" invisible="1"/>
+                        <field name="name"/>
+                        <field name="field_tracked" widget="mail_field_selector" options="{'model': 'model', 'only_tracking': True, 'follow_relations': False}"/>
+                        <field name="value_update" widget="mail_field_selector_value" options="{'model': 'model', 'value': 'field_tracked', 'accepted_types': ['boolean', 'many2one', 'selection']}"/>
+                        <field name="domain" widget="dynamic_domain" context="{'default_dynamic_domain_model': context.get('default_model')}"/>
+                    </group>
+                    <group>
+                        <field name="default"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" type="object" name="create_subtype_with_options" class="btn btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 
 from odoo import api, fields, models, tools
+from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class MailMessageSubtype(models.Model):
@@ -42,6 +45,62 @@ class MailMessageSubtype(models.Model):
     hidden = fields.Boolean('Hidden', help="Hide the subtype in the follower options")
     track_recipients = fields.Boolean('Track Recipients',
                                       help="Whether to display all the recipients or only the important ones.")
+    field_tracked = fields.Char(help="Get notified when this field is updated")
+    value_update = fields.Char(
+        help="The notification will be sent only if the tracked field changes "
+        "to the selected value. If no value is selected, "
+        "it will be sent for all updates."
+    )
+    domain = fields.Char(
+        help="The notification will be sent only for records that match the selected domain."
+    )
+    user_ids = fields.Many2many("res.users", help="Users that have access to this subtype.")
+    is_custom = fields.Boolean("Is Custom", compute="_compute_is_custom")
+
+    @api.constrains("res_model")
+    def _check_res_model(self):
+        for subtype in self:
+            if not subtype.res_model:
+                continue
+            if subtype.res_model not in self.env:
+                raise ValidationError(
+                    self.env._("The model '%s' does not exist.", subtype.res_model)
+                )
+
+    @api.constrains("field_tracked", "res_model")
+    def _check_field_tracked(self):
+        for subtype in self:
+            if not subtype.field_tracked:
+                continue
+            model = self.env[subtype.res_model]
+            if subtype.field_tracked not in model._fields:
+                raise ValidationError(
+                    self.env._(
+                        "The field '%(field_tracked)s' does not exist on model '%(res_model)s'.",
+                        field_tracked=subtype.field_tracked,
+                        res_model=subtype.res_model,
+                    )
+                )
+
+    @api.constrains("domain", "res_model")
+    def _check_domain(self):
+        for subtype in self:
+            if not subtype.domain:
+                continue
+            model = self.env[subtype.res_model]
+            try:
+                query = model.sudo()._search(subtype._get_domain())
+                sql = tools.SQL("EXPLAIN %s", query.select())
+                with tools.mute_logger("odoo.sql_db"):
+                    self.env.cr.execute(sql)
+            except Exception:  # noqa: BLE001
+                raise ValidationError(
+                    self.env._(
+                        "The domain '%(domain)s' is not valid on model '%(res_model)s'.",
+                        domain=subtype.domain,
+                        res_model=subtype.res_model,
+                    )
+                )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -55,6 +114,11 @@ class MailMessageSubtype(models.Model):
     def unlink(self):
         self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
         return super(MailMessageSubtype, self).unlink()
+
+    @api.depends("field_tracked")
+    def _compute_is_custom(self):
+        for subtype in self:
+            subtype.is_custom = bool(subtype.field_tracked)
 
     @tools.ormcache('model_name')
     def _get_auto_subscription_subtypes(self, model_name):
@@ -110,3 +174,59 @@ class MailMessageSubtype(models.Model):
         subtypes = self.search(domain)
         internal = subtypes.filtered('internal')
         return subtypes.ids, internal.ids, (subtypes - internal).ids
+
+    def _get_domain(self):
+        self.ensure_one()
+        if not self.domain:
+            return Domain()
+        return Domain(ast.literal_eval(self.domain))
+
+    @api.model
+    def _get_matching_fields_tracked_subtypes(self, thread, fields):
+        """Return the subtypes matching the given thread and fields.
+
+        :param thread: mail.thread record
+        :param fields: list of fields that have been updated on the thread
+        :return: mail.message.subtype recordset
+        """
+        # sudo: search for other users subtypes to notify them if needed
+        return (
+            self.env["mail.message.subtype"]
+            .sudo()
+            .search_fetch(
+                Domain("res_model", "=", thread._name) & Domain("field_tracked", "in", fields),
+                ["id", "field_tracked", "value_update", "domain"],
+            )
+        )
+
+    def _filter_matching_subtypes(self, thread, fields):
+        thread.ensure_one()
+
+        def is_matching(subtype):
+            if not subtype.is_custom:
+                return False
+            return subtype._is_matching_custom_subtypes(thread, fields)
+
+        return self.filtered(is_matching)
+
+    def _is_matching_custom_subtypes(self, thread, fields):
+        thread.ensure_one()
+        self.ensure_one()
+        if self.field_tracked not in fields:
+            return False
+        if not self.value_update:
+            return True
+        tracked_field_name = self.field_tracked
+        tracked_field = thread._fields.get(self.field_tracked)
+        match tracked_field.type:
+            case "many2one" | "integer":
+                value_update = int(self.value_update)
+            case "float" | "monetary":
+                value_update = float(self.value_update)
+            case "boolean":
+                value_update = self.value_update.lower() == "true"
+            case _:
+                value_update = self.value_update
+
+        domain = Domain(tracked_field_name, "=", value_update)
+        return len(thread.filtered_domain(domain)) > 0

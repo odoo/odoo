@@ -65,6 +65,7 @@ For more specific needs, you may also assign custom-defined actions
         'wizard/mail_activity_schedule_views.xml',
         'wizard/mail_blacklist_remove_views.xml',
         'wizard/mail_compose_message_views.xml',
+        'wizard/mail_custom_message_subtype_views.xml',
         'wizard/mail_template_preview_views.xml',
         'wizard/mail_followers_edit_views.xml',
         'wizard/mail_template_reset_views.xml',

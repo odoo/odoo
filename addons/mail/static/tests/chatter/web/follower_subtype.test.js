@@ -36,6 +36,7 @@ test("simplest layout of a followed subtype", async () => {
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:checked`
     );
+    await contains(`button.btn-link`, { text: "Add Notification" });
 });
 
 test("simplest layout of a not followed subtype", async () => {

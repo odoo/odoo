@@ -4,6 +4,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 
 /**
  * @typedef {Object} Props
@@ -20,6 +21,8 @@ export class FollowerSubtypeDialog extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.actionService = useService("action");
+        this.notification = useService("notification");
         this.state = useState({
             /** @type {import("models").MailMessageSubtype[]} */
             subtypes: [],
@@ -75,7 +78,53 @@ export class FollowerSubtypeDialog extends Component {
         this.props.close();
     }
 
+    async addCustomSubtype() {
+        return this.env.services.action.doAction(
+            {
+                name: _t("Create Custom Subtype"),
+                type: "ir.actions.act_window",
+                res_model: "mail.custom.message.subtype",
+                views: [[false, "form"]],
+                view_mode: "form",
+                target: "new",
+                context: {
+                    default_res_model: this.props.follower.thread.model,
+                    default_model: this.props.follower.thread.model,
+                },
+            },
+            {
+                onClose: async (infos) => {
+                    if (!infos || infos.special || infos.dismiss) {
+                        return;
+                    }
+                    this.notification.add(_t("Notification added"), {
+                        type: "success",
+                    });
+                    this.store.insert(infos.store_data);
+                    this.state.subtypes.push(
+                        this.store["mail.message.subtype"].get(infos.subtype_id)
+                    );
+                },
+            }
+        );
+    }
+
+    async editCustomSubtype(subtype) {
+        return this.env.services.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "mail.message.subtype",
+            views: [[false, "form"]],
+            view_mode: "form",
+            res_id: subtype.id,
+            target: "current",
+        });
+    }
+
     get title() {
         return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner_id.name });
+    }
+
+    get isForSelf() {
+        return this.props.follower.partner_id.id === user.partnerId;
     }
 }

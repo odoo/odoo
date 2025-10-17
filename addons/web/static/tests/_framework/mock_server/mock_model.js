@@ -1808,8 +1808,15 @@ export class Model extends Array {
         if (!attributes) {
             return fields;
         }
-
-        return fields.map((field) => pick(field, ...attributes));
+        if (fieldNames) {
+            return fields.map((field) => pick(field, ...attributes));
+        }
+        return Object.fromEntries(
+            Object.entries(fields).map(([fieldName, field]) => [
+                fieldName,
+                pick(field, ...attributes),
+            ])
+        );
     }
 
     /**

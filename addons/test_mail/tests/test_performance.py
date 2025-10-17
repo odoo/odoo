@@ -264,7 +264,7 @@ class TestBaseMailPerformance(BaseMailPerformance):
             'partner_id': self.res_partner_12.id,
         })
 
-        with self.assertQueryCount(admin=3, demo=3):
+        with self.assertQueryCount(admin=4, demo=4):
             record.track = 'X'
 
     @users('admin', 'demo')
@@ -343,7 +343,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=8, employee=8):  # tm: 6 / 6
+        with self.assertQueryCount(admin=9, employee=9):  # tm: 6 / 6
 
             activity.action_feedback(feedback='Zizisse Done !')
 
@@ -379,7 +379,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=12, employee=12):  # tm: 8 / 8
+        with self.assertQueryCount(admin=13, employee=13):  # tm: 8 / 8
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -405,7 +405,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=14, employee=14):  # tm 10 / 10
+        with self.assertQueryCount(admin=15, employee=15):  # tm 10 / 10
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -655,7 +655,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         # use another user already pre-defined with the email notification type,
         # so the ormcache is preserved.
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(admin=41, employee=40):
+        with self.assertQueryCount(admin=42, employee=41):
             record.write({
                 'user_id': self.user_emp_email.id,
             })
@@ -664,7 +664,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(admin=21, employee=20):
+        with self.assertQueryCount(admin=22, employee=21):
             record.write({
                 'user_id': self.user_emp_inbox.id,
             })
@@ -714,7 +714,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_log_with_post(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=5, employee=5):
+        with self.assertQueryCount(admin=6, employee=6):
             record.message_post(
                 body=Markup('<p>Test message_post as log</p>'),
                 subtype_xmlid='mail.mt_note',
@@ -725,7 +725,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_post_no_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=7, employee=7):
+        with self.assertQueryCount(admin=8, employee=8):
             record.message_post(
                 body=Markup('<p>Test Post Performances basic</p>'),
                 partner_ids=[],
@@ -787,13 +787,13 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_track(self):
         record = self.env['mail.performance.tracking'].create({'name': 'Zizizatestname'})
-        with self.assertQueryCount(admin=3, employee=3):
+        with self.assertQueryCount(admin=4, employee=4):
             record.write({'name': 'Zizizanewtestname'})
 
-        with self.assertQueryCount(admin=3, employee=3):
+        with self.assertQueryCount(admin=4, employee=4):
             record.write({'field_%s' % (i): 'Tracked Char Fields %s' % (i) for i in range(3)})
 
-        with self.assertQueryCount(admin=4, employee=4):
+        with self.assertQueryCount(admin=5, employee=5):
             record.write({'field_%s' % (i): 'Field Without Cache %s' % (i) for i in range(3)})
             record.flush_recordset()
             record.write({'field_%s' % (i): 'Field With Cache %s' % (i) for i in range(3)})
@@ -1152,7 +1152,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=42, employee=42):
+        with self.assertQueryCount(admin=43, employee=43):
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -1202,7 +1202,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec1.message_ids), 1)
 
-        with self.assertQueryCount(admin=58, employee=58):
+        with self.assertQueryCount(admin=59, employee=59):
             rec.write({
                 'name': 'Test2',
                 'container_id': self.container.id,
@@ -1239,7 +1239,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=64, employee=64):
+        with self.assertQueryCount(admin=65, employee=65):
             rec.write({
                 'name': 'Test2',
                 'container_id': container_id,
@@ -1272,7 +1272,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(admin=34, employee=34):
+        with self.assertQueryCount(admin=35, employee=35):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
@@ -1560,6 +1560,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     {
                                         "description": False,
                                         "id": self.env.ref("mail.mt_comment").id,
+                                        "field_tracked": False,
                                     },
                                 ],
                                 "mail.notification": [
@@ -1673,6 +1674,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     {
                                         "description": False,
                                         "id": self.env.ref("mail.mt_comment").id,
+                                        "field_tracked": False,
                                     },
                                 ],
                                 "mail.notification": [

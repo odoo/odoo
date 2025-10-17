@@ -21,6 +21,8 @@
             <field name="model">mail.message.subtype</field>
             <field name="arch" type="xml">
                 <form string="Email message">
+                    <field name="is_custom" invisible="1"/>
+                    <field name="user_ids" invisible="1"/>
                     <sheet>
                         <group>
                             <group string='Description'>
@@ -36,6 +38,12 @@
                             <group string='Auto subscription'>
                                 <field name="parent_id"/>
                                 <field name="relation_field"/>
+                            </group>
+                            <group string="custom notifications" invisible="not is_custom and not user_ids">
+                                <field name="field_tracked" widget="mail_field_selector" options="{'model': 'res_model', 'only_tracking': True, 'follow_relations': False}" required="1" groups="!base.group_system"/>
+                                <field name="field_tracked" widget="mail_field_selector" options="{'model': 'res_model', 'only_tracking': True, 'follow_relations': False}" optional="1" groups="base.group_system"/>
+                                <field name="value_update" widget="mail_field_selector_value" options="{'model': 'res_model', 'value': 'field_tracked', 'accepted_types': ['boolean', 'many2one', 'selection']}"/>
+                                <field name="domain" widget="dynamic_domain" context="{'default_dynamic_domain_model': res_model}"/>
                             </group>
                         </group>
                     </sheet>

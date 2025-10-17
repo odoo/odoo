@@ -10,7 +10,7 @@ from markupsafe import Markup
 from odoo import Command
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
 from odoo.tools import mute_logger
@@ -1064,3 +1064,157 @@ class UnfollowLinkTest(MailCommon, HttpCase):
             else:
                 with self.assertRaises(AccessError):
                     self._message_unsubscribe_unreadable_record(user)
+
+
+@tagged("mail_followers", "at_install", "-post_install")  # LEGACY at_install
+class CustomFollowersTest(MailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # create custom subtypes with options
+        cls.track = cls.env["mail.test.track"].create(
+            {
+                "name": "Track 1",
+                "user_id": cls.user_employee.id,
+            }
+        )
+
+    def create_custom_subtype(self, field_tracked="user_id", value_update=None, domain=None):
+        return self.env["mail.message.subtype"].create(
+            {
+                "name": "Subtype 1",
+                "res_model": "mail.test.track",
+                "field_tracked": field_tracked,
+                "value_update": value_update,
+                "domain": domain,
+            }
+        )
+
+    def trigger_notifications(self):
+        self.track.user_id = self.user_admin.id  # change tracked field
+        self.env.flush_all()
+        self.env.cr.precommit.run()
+
+    def test_custom_follower_subtype(self):
+        sub_track_1 = self.create_custom_subtype()
+        self.track.message_subscribe(
+            partner_ids=[self.user_employee.partner_id.id], subtype_ids=sub_track_1.ids
+        )
+        self.trigger_notifications()
+        message = self.env["mail.message"].search(
+            [
+                ("model", "=", "mail.test.track"),
+                ("res_id", "=", self.track.id),
+                ("message_type", "=", "notification"),
+                ("subtype_id", "=", sub_track_1.id),
+            ]
+        )
+        self.assertEqual(
+            len(message), 1, "A message should have been created for the tracked field change."
+        )
+        notifications = self.env["mail.notification"].search(
+            [
+                ("mail_message_id", "=", message.id),
+                ("res_partner_id", "=", self.user_employee.partner_id.id),
+            ]
+        )
+        self.assertEqual(
+            len(notifications), 1, "The follower should have been notified of the change."
+        )
+
+    def test_custom_follower_subtype_value_update(self):
+        subtype_match = self.create_custom_subtype(value_update=str(self.user_admin.id))
+        subtype_no_match = self.create_custom_subtype(value_update=str(self.user_employee.id))
+        subtype = subtype_match | subtype_no_match
+        self.track.message_subscribe(
+            partner_ids=[self.user_employee.partner_id.id], subtype_ids=subtype.ids
+        )
+        self.trigger_notifications()
+        message = self.env["mail.message"].search(
+            [
+                ("model", "=", "mail.test.track"),
+                ("res_id", "=", self.track.id),
+                ("message_type", "=", "notification"),
+                ("subtype_id", "in", subtype.ids),
+            ]
+        )
+        self.assertEqual(
+            len(message), 1, "A message should have been created for the tracked field change."
+        )
+        notifications = self.env["mail.notification"].search(
+            [
+                ("res_partner_id", "=", self.user_employee.partner_id.id),
+            ]
+        )
+        self.assertEqual(
+            len(notifications), 1, "The follower should have been notified of the change."
+        )
+
+    def test_custom_follower_subtype_domain(self):
+        self.track.write({"email_from": "test@test.com"})
+        subtype_domain_match = self.create_custom_subtype(
+            domain='[("email_from", "=", "test@test.com")]'
+        )
+        subtype_domain_no_match = self.create_custom_subtype(
+            domain='[("email_from", "=", "test2@test.com")]'
+        )
+        self.track.message_subscribe(
+            partner_ids=[self.user_employee.partner_id.id],
+            subtype_ids=(subtype_domain_match | subtype_domain_no_match).ids,
+        )
+        self.trigger_notifications()
+        message = self.env["mail.message"].search(
+            [
+                ("model", "=", "mail.test.track"),
+                ("res_id", "=", self.track.id),
+                ("message_type", "=", "notification"),
+                ("subtype_id", "in", (subtype_domain_match | subtype_domain_no_match).ids),
+            ]
+        )
+        self.assertEqual(
+            len(message), 2, "A message should have been created for the tracked field change."
+        )
+        notifications = self.env["mail.notification"].search(
+            [
+                ("res_partner_id", "=", self.user_employee.partner_id.id),
+            ]
+        )
+        self.assertEqual(
+            len(notifications),
+            1,
+            "The follower should have been notified only for the subtype with matching domain.",
+        )
+        self.assertEqual(
+            notifications.mail_message_id.subtype_id,
+            subtype_domain_match,
+            "The notification should be for the subtype with matching domain.",
+        )
+
+    def test_custom_subtype_model_not_existing(self):
+        with self.assertRaises(ValidationError):
+            self.env["mail.message.subtype"].create(
+                {
+                    "name": "Subtype Invalid Model",
+                    "res_model": "non.existing.model",
+                }
+            )
+
+    def test_custom_subtype_field_tracked_not_existing(self):
+        with self.assertRaises(ValidationError):
+            self.env["mail.message.subtype"].create(
+                {
+                    "name": "Subtype Invalid Field",
+                    "res_model": "mail.test.track",
+                    "field_tracked": "non_existing_field",
+                }
+            )
+
+    def test_custom_subtype_domain_not_valid(self):
+        with self.assertRaises(ValidationError):
+            self.env["mail.message.subtype"].create(
+                {
+                    "name": "Subtype Invalid Domain",
+                    "res_model": "mail.test.track",
+                    "domain": '[("non_existing_field", "=", 42)]',
+                }
+            )

@@ -294,7 +294,10 @@ export class Message extends Record {
     }
 
     get isNotification() {
-        return this.message_type === "notification" && this.thread?.model === "discuss.channel";
+        return (
+            this.message_type === "notification" &&
+            (this.thread?.model === "discuss.channel" || this.subtype_id?.is_custom)
+        );
     }
 
     get isSubjectSimilarToThreadName() {
@@ -389,7 +392,7 @@ export class Message extends Record {
     }
 
     get notificationHidden() {
-        return false;
+        return this.subtype_id?.is_custom;
     }
 
     inlineBody = fields.Html("", {

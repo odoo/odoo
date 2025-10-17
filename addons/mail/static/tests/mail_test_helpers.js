@@ -54,6 +54,7 @@ import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_sc
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
 import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
 import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
+import { MailCustomMessageSubtype } from "./mock_server/mock_models/mail_custom_message_subtype";
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
@@ -124,6 +125,7 @@ export const mailModels = {
     MailActivitySchedule,
     MailActivityType,
     MailComposeMessage,
+    MailCustomMessageSubtype,
     MailCannedResponse,
     MailFollowers,
     MailGuest,

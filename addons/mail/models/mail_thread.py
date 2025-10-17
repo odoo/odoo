@@ -651,6 +651,11 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return False
 
+    def _track_extra_subtypes(self, extra_subtypes, initial_values):
+        fields_tracked = list(initial_values.keys())
+        # sudo: need to access subtypes of other users in order to send them notifications
+        return extra_subtypes._filter_matching_subtypes(self, fields_tracked)
+
     def _message_track(self, fields_iter, initial_values_dict):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
@@ -668,44 +673,64 @@ class MailThread(models.AbstractModel):
 
         tracked_fields = self.fields_get(fields_iter, attributes=('string', 'type', 'selection', 'currency_field'))
         tracking = dict()
+        fields_changed = set()
         for record in self:
             try:
-                tracking[record.id] = record._mail_track(tracked_fields, initial_values_dict[record.id])
+                res = record._mail_track(tracked_fields, initial_values_dict[record.id])
+                tracking[record.id] = res
+                if res and res[0]:
+                    fields_changed.update(res[0])
             except MissingError:
                 continue
 
         # find content to log as body
         bodies = self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', {})
         authors = self.env.cr.precommit.data.pop(f'mail.tracking.author.{self._name}', {})
+        extra_subtypes = self.env["mail.message.subtype"]
+        if fields_changed:
+            extra_subtypes = extra_subtypes._get_matching_fields_tracked_subtypes(
+                self, list(fields_changed)
+            )
         for record in self:
             changes, tracking_value_ids = tracking.get(record.id, (None, None))
             if not changes:
                 continue
 
             # find subtypes and post messages or log if no subtype found
-            subtype = record._track_subtype(
-                dict((col_name, initial_values_dict[record.id][col_name])
-                     for col_name in changes)
-            )
+            initial_values = {
+                col_name: initial_values_dict[record.id][col_name] for col_name in changes
+            }
+            subtype = record._track_subtype(initial_values)
+            extra_subtypes_record = record._track_extra_subtypes(extra_subtypes, initial_values)
             author_id = authors[record.id].id if record.id in authors else None
             # _set_log_message takes priority over _track_get_default_log_message even if it's an empty string
             body = bodies[record.id] if record.id in bodies else record._track_get_default_log_message(changes)
+            message = None
             if subtype:
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
                     continue
-                record.message_post(
+                message = record.message_post(
                     body=body,
                     author_id=author_id,
                     subtype_id=subtype.id,
                     tracking_value_ids=tracking_value_ids
                 )
             elif tracking_value_ids:
-                record._message_log(
+                message = record._message_log(
                     body=body,
                     author_id=author_id,
                     tracking_value_ids=tracking_value_ids
                 )
+            if extra_subtypes_record:
+                for extra_subtype in extra_subtypes_record:
+                    record.message_post(
+                        body=body,
+                        author_id=author_id,
+                        parent_id=message.id if message else None,
+                        subtype_id=extra_subtype.id,
+                        tracking_value_ids=tracking_value_ids,
+                    )
 
         return tracking
 
@@ -3258,6 +3283,35 @@ class MailThread(models.AbstractModel):
             self._notify_cancel_by_type_generic('email')
         return True
 
+    def _notify_filter_recipients_by_subtype_domain(self, message, recipients_data):
+        """Filter recipients based on the subtype domain, if any.
+
+        :param record message: mail.message being notified
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like a list of dicts containing information. See
+          ``MailThread._notify_get_recipients()``;
+
+        :return: filtered recipients data
+        """
+        # sudo: accepted to read domain and is_custom for a subtype of another user
+        # to create notifications on their personal subtypes
+        subtype = message.subtype_id.sudo()
+        if subtype.is_custom and subtype.domain:
+            valid_recipients_data = []
+            thread = self.env[message.model].browse(message.res_id)
+            users = (
+                self.env["res.users"].browse(r["uid"] for r in recipients_data if r["uid"]).exists()
+            )
+            thread_by_user = {user.id: thread.with_user(user) for user in users}
+            for r in recipients_data:
+                thread_user = thread
+                if r["uid"]:
+                    thread_user = thread_by_user.get(r["uid"], thread)
+                if thread_user.filtered_domain(subtype._get_domain()):
+                    valid_recipients_data.append(r)
+            return valid_recipients_data
+        return recipients_data
+
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         """ Main notification method. This method basically does two things
 
@@ -3293,6 +3347,7 @@ class MailThread(models.AbstractModel):
         uid2pid = {r['uid']: r['id'] for r in recipients_data if r['id'] and r['uid']}
         users = self.env['res.users'].browse(uid2pid)
         users._fields['partner_id']._insert_cache(users, uid2pid.values())
+        recipients_data = self._notify_filter_recipients_by_subtype_domain(message, recipients_data)
 
         # check for automated content (OOO), before shortcutting if no recipients
         # as OOO may include more people (parent message author, responsible)
