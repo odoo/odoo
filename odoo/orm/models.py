@@ -2024,8 +2024,15 @@ class BaseModel(metaclass=MetaModel):
 
         elif field.type == 'many2many':
             if not field.store:
+                # traverse_related, skip last one if not stored
                 if field.related:
-                    _model, field, alias = field.traverse_related_sql(self, alias, query)
+                    traverse = TableSQL(alias, self, query)
+                    if field.compute_sudo:
+                        traverse = traverse._sudo()
+                    for fname in field.related.split('.')[:-1]:
+                        traverse = traverse[fname]
+                    alias = traverse.id._table._alias
+                    field = field.related_field
                 else:
                     raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
             # special case for many2many fields: prepare a query on the comodel
