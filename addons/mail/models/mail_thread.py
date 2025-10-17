@@ -1050,7 +1050,7 @@ class MailThread(models.AbstractModel):
 
             # search messages linked to email -> alias updating records
             if doc_ids and not loop_new:
-                base_msg_domain = Domain([('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit)])
+                base_msg_domain = Domain([('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit), ('message_type', '=', 'email')])
                 if author_id:
                     msg_domain = Domain('author_id', '=', author_id) & base_msg_domain
                 else:
