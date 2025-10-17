@@ -678,34 +678,6 @@ class Field(typing.Generic[T]):
             delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
-    def traverse_related(self, record: BaseModel) -> tuple[BaseModel, Field]:
-        """ Traverse the fields of the related field `self` except for the last
-        one, and return it as a pair `(last_record, last_field)`. """
-        for name in self.related.split('.')[:-1]:
-            # take the first record when traversing
-            record = record[name][:1]
-        return record, self.related_field
-
-    def traverse_related_sql(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, Field, str]:
-        """ Traverse the related `field` and add needed join to the `query`.
-
-        :returns: tuple ``(model, field, alias)``, where ``field`` is the last
-            field in the sequence, ``model`` is that field's model, and
-            ``alias`` is the model's table alias
-        """
-        assert self.related and not self.store
-
-        if self.compute_sudo:
-            model = model.sudo()
-        *path_fnames, last_fname = self.related.split('.')
-        for path_fname in path_fnames:
-            path_field = model._fields[path_fname]
-            if path_field.type != 'many2one':
-                raise ValueError(f'Cannot convert {self} (related={self.related}) to SQL because {path_fname} is not a Many2one')
-            model, alias = path_field.join(model, alias, query)
-
-        return model, model._fields[last_fname], alias
-
     def _compute_related(self, records: BaseModel) -> None:
         """ Compute the related field ``self`` on ``records``. """
         #
@@ -752,8 +724,23 @@ class Field(typing.Generic[T]):
             record[self.name] = self._process_related(value[self.related_field.name], record.env)
 
     def _compute_sql_related(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        ref_model, field, ref_alias = self.traverse_related_sql(model, alias, query)
-        return ref_model._field_to_sql(ref_alias, field.name, query)
+        # traverse_related
+        assert self.related and not self.store
+        table = TableSQL(alias, model, query)
+
+        env = table._model.env
+        if self.compute_sudo and not env.su:
+            table = table._sudo()
+        else:
+            env = None  # env not changed
+        sql = table
+        for fname in self.related.split('.'):
+            sql = sql[fname]
+        if env is not None:
+            # rebind the table to the original environment
+            table = sql._table
+            sql._table = table._with_model(table._model.with_env(env))
+        return sql
 
     def _process_related(self, value, env: Environment):
         """No transformation by default, but allows override."""
@@ -763,8 +750,13 @@ class Field(typing.Generic[T]):
         """ Inverse the related field ``self`` on ``records``. """
         # store record values, otherwise they may be lost by cache invalidation!
         record_value = {record: record[self.name] for record in records}
+        path = self.related.split('.')[:-1]
+        field = self.related_field
         for record in records:
-            target, field = self.traverse_related(record)
+            target = record
+            for name in path:
+                # take the first record when traversing
+                target = target[name][:1]
             # update 'target' only if 'record' and 'target' are both real or
             # both new (see `test_base_objects.py`, `test_basic`)
             if target and bool(target.id) == bool(record.id):
@@ -1251,8 +1243,8 @@ class Field(typing.Generic[T]):
             return sql_field
         if not self.store or not self.column_type:
             if self.related and not self.store:
-                model, field, alias = self.traverse_related_sql(table._model, table._alias, table._query)
-                return model._field_to_sql(alias, field.name, table._query)
+                # traverse_related
+                return self._compute_sql_related(model, table)
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
         sql_field = SQL.identifier(table._alias, self.name, to_flush=self)
         if self.company_dependent:
