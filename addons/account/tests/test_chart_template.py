@@ -1117,3 +1117,18 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertEqual(company.country_id.code, "BE")
+
+    def test_bank_account_code_prefix(self):
+        """
+            Test that chart template loading works correctly with default value of bank_account_code_prefix.
+        """
+        company = self.env['res.company'].create({'name': 'Test Company Without Bank Prefix'})
+
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            del data['res.company'][company.id]['bank_account_code_prefix']  # use field's default value, which is 'False' instead of ''
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+        self.assertEqual(company.chart_template, 'test')
