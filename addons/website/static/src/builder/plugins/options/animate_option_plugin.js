@@ -47,6 +47,13 @@ export class AnimateOptionPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
+        toolbar_namespace_providers: [
+            withSequence(90, (targetedNodes, editableSelection) =>
+                closestElement(editableSelection.commonAncestorContainer, ".o_animated_text")
+                    ? "compact"
+                    : undefined
+            ),
+        ],
         system_classes: ["o_animating"],
         builder_actions: {
             SetAnimationModeAction,
@@ -57,11 +64,6 @@ export class AnimateOptionPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
-        collapsed_selection_toolbar_predicate: (selectionData) =>
-            !!closestElement(
-                selectionData.editableSelection.commonAncestorContainer,
-                ".o_animated_text"
-            ),
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
     };
 
