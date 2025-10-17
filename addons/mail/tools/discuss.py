@@ -517,7 +517,7 @@ class Store:
         def _add_to_store(self, store: "Store", target, key):
             self._sort_recods()
             super()._add_to_store(store, target, key)
-            if not self.only_data:
+            if not self.only_data and (self.records or self.mode == "REPLACE"):
                 rel_val = self._get_id()
                 target[key] = (
                     target[key] + rel_val if key in target and self.mode != "REPLACE" else rel_val

@@ -214,7 +214,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "description": False,
                         "fetchChannelInfoState": "fetched",
                         "id": channel.id,
-                        "invited_member_ids": [("ADD", [])],
                         "is_editable": True,
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                         "livechat_channel_id": self.livechat_channel.id,
@@ -231,7 +230,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "message_needaction_counter_bus_id": 0,
                         "name": f"Visitor #{self.visitor.id} El Deboulonnator",
                         "requested_by_operator": False,
-                        "rtc_session_ids": [("ADD", [])],
                         "uuid": channel.uuid,
                     }
                 ),
@@ -334,7 +332,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "default_display_mode": False,
                     "fetchChannelInfoState": "fetched",
                     "id": channel.id,
-                    "invited_member_ids": [("ADD", [])],
                     "is_editable": False,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
@@ -344,7 +341,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "message_needaction_counter_bus_id": 0,
                     "name": f"Visitor #{self.visitor.id} El Deboulonnator",
                     "requested_by_operator": False,
-                    "rtc_session_ids": [("ADD", [])],
                     "uuid": channel.uuid,
                 },
             )
