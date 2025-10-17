@@ -8,6 +8,7 @@ import {
     selectFullText,
 } from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
+import { delay } from "@web/core/utils/concurrency";
 
 const checkIfParagraphSelected = (trigger) => ({
     content: "Check if the paragraph is selected.",
@@ -99,6 +100,14 @@ registerWebsitePreviewTour(
             name: "Text",
             groupName: "Text",
         }),
+		{
+		    content: "Wait for the Scroll to finish",
+		    trigger: ":iframe .s_text_block",
+		    run: async function() {
+		        // Default scroll duration is 600ms
+		        await delay(610);
+		    },
+		},
         selectFullText("first paragraph", ".s_text_block p:not([data-selection-placeholder])"),
         checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
         checkIfTextToolbarVisible,
