@@ -334,9 +334,3 @@ class ResPartner(models.Model):
             query = self._search(Domain('id', 'not in', partners.ids) & domain, limit=remaining_limit)
             partners |= self.browse(query)
         return partners
-
-    @api.model
-    def _get_current_persona(self):
-        if not self.env.user or self.env.user._is_public():
-            return (self.env["res.partner"], self.env["mail.guest"]._get_guest_from_context())
-        return (self.env.user.partner_id, self.env["mail.guest"])

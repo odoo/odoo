@@ -93,20 +93,20 @@ class DiscussChannelMember(models.Model):
     def _compute_is_self(self):
         if not self:
             return
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        user, guest = self.env["res.users"]._get_current_persona()
         self.is_self = False
         for member in self:
-            if current_partner and member.partner_id == current_partner:
+            if user and member.partner_id == user.partner_id:
                 member.is_self = True
-            if current_guest and member.guest_id == current_guest:
+            if guest and member.guest_id == guest:
                 member.is_self = True
 
     def _search_is_self(self, operator, operand):
         if operator != 'in':
             return NotImplemented
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        domain_partner = Domain("partner_id", "=", current_partner.id) if current_partner else Domain.FALSE
-        domain_guest = Domain("guest_id", "=", current_guest.id) if current_guest else Domain.FALSE
+        user, guest = self.env["res.users"]._get_current_persona()
+        domain_partner = Domain("partner_id", "=", user.partner_id.id) if user else Domain.FALSE
+        domain_guest = Domain("guest_id", "=", guest.id) if guest else Domain.FALSE
         return domain_partner | domain_guest
 
     def _search_is_pinned(self, operator, operand):

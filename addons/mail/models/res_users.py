@@ -662,3 +662,9 @@ class ResUsers(models.Model):
     @api.model
     def _get_mail_server_setup_end_action(self, smtp_server):
         raise NotImplementedError()
+
+    @api.model
+    def _get_current_persona(self):
+        if not self.env.user or self.env.user._is_public():
+            return (self.env["res.users"], self.env["mail.guest"]._get_guest_from_context())
+        return (self.env.user, self.env["mail.guest"])

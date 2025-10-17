@@ -36,12 +36,10 @@ class IrWebsocket(models.AbstractModel):
 
     @add_guest_to_context
     def _update_mail_presence(self, inactivity_period):
-        partner, guest = self.env["res.partner"]._get_current_persona()
-        if not partner and not guest:
+        user, guest = self.env["res.users"]._get_current_persona()
+        if not user and not guest:
             return
-        self.env["mail.presence"]._try_update_presence(
-            self.env.user if partner else guest, inactivity_period
-        )
+        self.env["mail.presence"]._try_update_presence(user or guest, inactivity_period)
 
     def _prepare_subscribe_data(self, channels, last):
         data = super()._prepare_subscribe_data(channels, last)
@@ -97,9 +95,9 @@ class IrWebsocket(models.AbstractModel):
         return data
 
     def _after_subscribe_data(self, data):
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if current_partner or current_guest:
-            data["missed_presences"]._send_presence(bus_target=current_partner or current_guest)
+        user, guest = self.env["res.users"]._get_current_persona()
+        if user or guest:
+            data["missed_presences"]._send_presence(bus_target=user.partner_id or guest)
 
     def _on_websocket_closed(self, cookies):
         super()._on_websocket_closed(cookies)

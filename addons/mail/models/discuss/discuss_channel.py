@@ -292,13 +292,13 @@ class DiscussChannel(models.Model):
         # given it doesn't need to make (incorrect) guess, at the cost of one extra but fast query.
         # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
         # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if current_guest:
+        user, guest = self.env["res.users"]._get_current_persona()
+        if guest:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_guest.sudo().channel_ids
-        elif current_partner:
+            channels = guest.sudo().channel_ids
+        elif user:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_partner.sudo().channel_ids
+            channels = user.partner_id.sudo().channel_ids
         else:
             channels = self.env["discuss.channel"]
         return [('id', 'in', channels.ids)]
@@ -620,7 +620,7 @@ class DiscussChannel(models.Model):
         if users:
             partners |= users.partner_id
         guests = guests or self.env["mail.guest"]
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        current_user, current_guest = self.env["res.users"]._get_current_persona()
         all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
@@ -665,7 +665,7 @@ class DiscussChannel(models.Model):
                     )
             if new_members:
                 Store(bus_channel=channel).add(channel, "member_count").add(new_members).bus_send()
-            if existing_members and (bus_channel := current_partner.main_user_id or current_guest):
+            if existing_members and (bus_channel := current_user or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
