@@ -33,6 +33,22 @@ class Mailing extends models.Model {
             display_name: "Belgian Event promotion",
             mailing_model_id: 1,
         },
+        {
+            id: 2,
+            display_name: "Sent Belgian Event promotion",
+            mailing_model_id: 1,
+            body_arch: `
+                <div data_name="Mailing" class="o_layout oe_unremovable oe_unmovable o_empty_theme">
+                    <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+                        <div class="row">
+                            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable oe_empty" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE" contenteditable="true">
+                                This element <t t-out="'should be inline'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+        },
     ];
 }
 
@@ -81,6 +97,19 @@ const mailViewArch = `
 </form>
 `;
 
+const readonlyMailViewArch = `
+<form>
+    <field name="mailing_model_name" invisible="1"/>
+    <field name="mailing_model_id" invisible="1"/>
+    <field name="body_html" invisible="1"/>
+    <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+        options="{
+            'inline_field': 'body_html',
+            'dynamic_placeholder': true,
+        }" readonly="true"/>
+</form>
+`;
+
 describe.current.tags("desktop");
 describe("field HTML", () => {
     beforeEach(() => {
@@ -107,5 +136,21 @@ describe("field HTML", () => {
         expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass("o_empty_theme");
         await clickSave();
         await expect.waitForSteps(["web_save mail body"]);
+    });
+    test("t-out field in uneditable mode inline", async () => {
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 2,
+            arch: readonlyMailViewArch,
+        });
+        await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
+        const tElement = await waitFor(":iframe t", { timeout: 3000 });
+
+        // assert that we are in readonly mode (sanity check)
+        expect(":iframe .o_mass_mailing_value.o_readonly").toHaveCount(1);
+
+        // assert that tElement style has inline attibute
+        expect(tElement).toHaveAttribute("data-oe-t-inline", "true");
     });
 });
