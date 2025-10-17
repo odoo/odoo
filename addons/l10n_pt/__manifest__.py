@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['pt'],
-    'author': 'Odoo',
+    'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'description': 'Portugal - Accounting',
     'depends': [

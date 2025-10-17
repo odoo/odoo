@@ -1,5 +1,5 @@
 {
-    'author': 'Odoo',
+    'author': 'Odoo S.A.',
     'name': 'Romania - E-invoicing',
     'category': 'Accounting/Localizations/EDI',
     'description': """

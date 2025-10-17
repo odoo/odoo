@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'author': 'Odoo',
+    'author': 'Odoo S.A.',
     'name': 'Greece - myDATA',
     'category': 'Accounting/Localizations',
     'summary': """Connect to myDATA API implementation for Greece""",
