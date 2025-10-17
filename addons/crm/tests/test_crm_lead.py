@@ -595,6 +595,41 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.probability, 100.0)
         self.assertEqual(lead.stage_id, self.stage_gen_won)  # generic won stage has lower sequence than team won stage
 
+    def test_crm_lead_stages_with_multiple_possible_teams(self):
+        """ Test lead stage is properly set when switching between multiple teams. """
+        self.sales_team_2 = self.env['crm.team'].create({
+            'name': 'Test Sales Team 2',
+            'company_id': False,
+            'user_id': self.user_sales_manager.id,
+        })
+        self.sales_team_2_m1 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_leads.id,
+            'crm_team_id': self.sales_team_2.id,
+        })
+
+        user_teams = self.env['crm.team'].search([
+            ('crm_team_member_all_ids.user_id', '=', self.user_sales_leads.id),
+        ])
+        self.assertIn(self.sales_team_1, user_teams)
+        self.assertIn(self.sales_team_2, user_teams)
+
+        self.stage_team2_1 = self.env['crm.stage'].create({
+            'name': 'New (T2)',
+            'team_ids': [self.sales_team_2.id],
+        })
+
+        lead = self.env['crm.lead'].with_user(self.user_sales_leads).create({
+            'name': 'Test',
+            'contact_name': 'Test Contact',
+            'team_id': self.sales_team_1.id,
+        })
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.stage_id, self.stage_team1_1)
+
+        lead.team_id = self.sales_team_2
+        self.assertEqual(lead.team_id, self.sales_team_2)
+        self.assertEqual(lead.stage_id, self.stage_team2_1)
+
     @users('user_sales_manager')
     def test_crm_lead_unlink_calendar_event(self):
         """ Test res_id / res_model is reset (and hide document button in calendar
