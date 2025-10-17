@@ -240,8 +240,7 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
-        '_trace': [],
-        'create_time': time.time(),
+        '_trace': []
     }
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
