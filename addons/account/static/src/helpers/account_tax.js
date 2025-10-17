@@ -170,7 +170,8 @@ export const accountTaxHelpers = {
      */
     eval_tax_amount_fixed_amount(tax, batch, raw_base, evaluation_context) {
         if (tax.amount_type === "fixed") {
-            return evaluation_context.quantity * tax.amount;
+            const sign = evaluation_context.price_unit < 0.0 ? -1 : 1;
+            return sign * evaluation_context.quantity * tax.amount;
         }
         return null;
     },
