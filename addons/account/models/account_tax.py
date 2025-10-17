@@ -963,7 +963,8 @@ class AccountTax(models.Model):
         :return:                    The tax amount or None if it has be evaluated later.
         """
         if self.amount_type == 'fixed':
-            return evaluation_context['quantity'] * self.amount
+            sign = -1 if evaluation_context['price_unit'] < 0.0 else 1
+            return sign * evaluation_context['quantity'] * self.amount
 
     def _eval_tax_amount_price_included(self, batch, raw_base, evaluation_context):
         """ Eval the tax amount for a single tax during the descending order for price-included taxes.
