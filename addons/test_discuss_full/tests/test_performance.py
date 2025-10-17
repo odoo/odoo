@@ -456,7 +456,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "use_push_to_talk": False,
                     "user_id": {"id": self.users[0].id},
                     "voice_active_duration": 200,
-                    "volumes": [("ADD", [])],
                     "embedded_actions_config_ids": {},
                 },
             },
@@ -661,7 +660,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "group_ids": channel.group_ids.ids,
                 "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": len(self.group_user.all_user_ids),
@@ -669,7 +667,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "general",
                 "parent_channel_id": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_1:
@@ -684,7 +681,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 5,
@@ -692,7 +688,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 1,
                 "name": "public channel 1",
                 "parent_channel_id": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_2:
@@ -707,7 +702,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 5,
@@ -715,7 +709,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "public channel 2",
                 "parent_channel_id": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_1:
@@ -754,7 +747,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "group_ids": [],
                 "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 5,
@@ -762,7 +754,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "group restricted channel 2",
                 "parent_channel_id": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_group_1:
@@ -776,7 +767,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 2,
@@ -784,7 +774,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "",
                 "parent_channel_id": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_1:
@@ -794,14 +783,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "default_display_mode": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test14",
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_2:
@@ -811,14 +798,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "default_display_mode": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test15",
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_3:
@@ -828,14 +813,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "default_display_mode": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test2",
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_4:
@@ -845,14 +828,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "default_display_mode": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test3",
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_1:
@@ -865,7 +846,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
@@ -882,7 +862,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "test1 Ernest Employee",
                 "requested_by_operator": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_2:
@@ -895,7 +874,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
-                "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
@@ -912,7 +890,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "Visitor Ernest Employee",
                 "requested_by_operator": False,
-                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         return {}
