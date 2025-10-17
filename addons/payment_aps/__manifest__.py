@@ -2,7 +2,6 @@
 
 {
     'name': "Payment Provider: Amazon Payment Services",
-    'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "An Amazon payment provider covering the MENA region.",

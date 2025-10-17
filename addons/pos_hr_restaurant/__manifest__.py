@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
     'name': 'POS HR Restaurant',
-    'version': '1.0',
     'category': 'Sales/Point of Sale',
     'summary': 'Link module between pos_hr and pos_restaurant',
     'description': """

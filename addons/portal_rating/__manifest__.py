@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Portal Rating',
     'category': 'Services',
-    'version': '1.0',
     'description': """
 Bridge module adding rating capabilities on portal. It includes notably
 inclusion of rating directly within the customer portal discuss widget.

@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Sell Courses",
     'summary': 'Sell your courses online',
     'description': """Sell your courses using the e-commerce features of the website.""",
     'category': 'Website/eLearning',
-    'version': '1.0',
 
     'depends': ['website_slides', 'website_sale'],
-    'installable': True,
     'data': [
         'data/product_data.xml',
         'report/sale_report_views.xml',

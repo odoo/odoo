@@ -8,7 +8,6 @@ This module allows to fill Sales Order rapidly
 by choosing product variants quantity through a Grid Entry.
     """,
     'category': 'Sales/Sales',
-    'version': '1.0',
     'depends': ['sale', 'product_matrix'],
     'data': [
         'views/product_template_views.xml',

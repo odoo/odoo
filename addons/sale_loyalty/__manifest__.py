@@ -5,7 +5,6 @@
     'summary': 'Use discounts and loyalty programs in sales orders',
     'description': 'Integrate discount and loyalty programs mechanisms in sales orders.',
     'category': 'Sales/Sales',
-    'version': '1.0',
     'depends': ['sale', 'loyalty'],
     'auto_install': True,
     'data': [

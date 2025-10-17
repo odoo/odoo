@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -16,7 +15,6 @@
         'views/data_recycle_templates.xml',
         'security/ir.model.access.csv',
     ],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

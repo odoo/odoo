@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Third Party and Deferred/Electronic Checks Management',
-    'version': "1.0.0",
     'category': 'Accounting/Localizations',
     'summary': 'Checks Management',
     'description': """
@@ -56,5 +55,4 @@ There are 2 main Payment Methods additions:
         'views/report_payment_receipt_templates.xml',
         'wizards/account_payment_register_views.xml',
     ],
-    'installable': True,
 }

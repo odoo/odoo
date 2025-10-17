@@ -11,7 +11,6 @@
         'views/hr_employee_views.xml',
         'views/res_users.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [

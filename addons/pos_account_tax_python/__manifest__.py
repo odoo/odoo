@@ -3,7 +3,6 @@
 {
     'name': "Allow custom taxes in POS",
     'category': 'Accounting/Accounting',
-    'version': '1.0',
     'description': """Add code to manage custom taxes to the POS assets bundle""",
     'depends': ['account_tax_python', 'point_of_sale'],
     'assets': {

@@ -1,13 +1,11 @@
 {
     'name' : 'IM Bus',
-    'version': '1.0',
     'category': 'Hidden',
     'description': "Instant Messaging Bus allow you to send messages to users, in live.",
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [

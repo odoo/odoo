@@ -2,7 +2,6 @@
 
 {
     'name': 'Employee Presence Control',
-    'version': '1.0',
     'category': 'Human Resources',
     'description': """
 Control Employees Presence
@@ -24,7 +23,6 @@ Allows to contact directly the employee in case of unjustified absence.
         'data/sms_data.xml',
         'data/ir_cron.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
      'assets': {

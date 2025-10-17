@@ -3,7 +3,6 @@
 
 {
     'name': 'Delivery - Stock',
-    'version': '1.0',
     'category': 'Shipping Connectors',
     'description': """
 Allows you to add delivery methods in pickings.
@@ -29,7 +28,6 @@ When creating invoices from picking, the system is able to add and compute the s
         'report/product_templates.xml',
     ],
     'demo': ['data/delivery_demo.xml'],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

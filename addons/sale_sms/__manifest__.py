@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -6,7 +5,6 @@
     'summary': "Ease SMS integration with sales capabilities",
     'description': "Ease SMS integration with sales capabilities",
     'category': 'Sales/Sales',
-    'version': '1.0',
     'depends': ['sale', 'sms'],
     'data': [
         'security/ir.model.access.csv',

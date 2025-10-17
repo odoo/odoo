@@ -2,7 +2,6 @@
 
 {
     'name': 'Indonesia - Point of Sale',
-    'version': '1.0',
     'description': """Indonesian Point of Sale""",
     'category': 'Accounting/Localizations/Point of Sale',
     'depends': [

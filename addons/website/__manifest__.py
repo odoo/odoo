@@ -7,7 +7,6 @@
     'sequence': 20,
     'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/app/website',
-    'version': '1.0',
     'depends': [
         'digest',
         'web',
@@ -27,7 +26,6 @@
             'geoip2': 'python3-geoip2',
         },
     },
-    'installable': True,
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
         'security/website_security.xml',

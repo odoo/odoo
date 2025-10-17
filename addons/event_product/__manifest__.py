@@ -1,6 +1,5 @@
 {
     'name': 'Events Product',
-    'version': '1.0',
     'category': 'Marketing/Events',
     'depends': ['event', 'product', 'account'],
     'data': [
@@ -12,7 +11,6 @@
         'data/event_product_demo.xml',
         'data/event_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {},
     'author': 'Odoo S.A.',

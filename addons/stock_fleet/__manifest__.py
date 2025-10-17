@@ -4,7 +4,6 @@
     'name': 'Stock Transport',
     'summary': 'Stock Transport: Dispatch Management System',
     'description': 'Transport Management: organize packs in your fleet, or carriers.',
-    'version': '1.0',
     'depends': ['stock_picking_batch', 'fleet'],
     'demo': [
         'data/stock_fleet_demo.xml',

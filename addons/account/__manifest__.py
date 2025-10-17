@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Invoicing',
@@ -91,7 +90,6 @@ You could use this simplified accounting in case you work with an (external) acc
     'demo': [
         'demo/account_demo.xml',
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': '_account_post_init',
     'assets': {

@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Testing the Import/Export invoices with UBL/CII",
-    'version': '1.0',
     'category': 'Accounting/Accounting',
     'description': """
 This module tests the module 'account_edi_ubl_cii', it is separated since dependencies to some
@@ -25,7 +23,6 @@ valid ones.
         'l10n_nl',
         'l10n_au',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -60,7 +59,6 @@
     'demo': [
         'data/demo_data.xml',
     ],
-    'installable': True,
     'application': True,
     'website': 'https://www.odoo.com/app/point-of-sale-shop',
     'assets': {

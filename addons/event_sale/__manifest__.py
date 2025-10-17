@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Events Sales',
@@ -37,7 +36,6 @@ this event.
         'data/event_sale_demo.xml',
         'data/event_registration_demo.xml',  # needs event_sale_demo
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [

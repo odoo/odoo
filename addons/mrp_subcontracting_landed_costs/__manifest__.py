@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Landed Costs With Subcontracting order',
-    'version': '1.0',
     'summary': 'Advanced views to manage landed cost for subcontracting orders',
     'description': """
 This module allows users to more easily identify subcontracting orders when applying landed costs,

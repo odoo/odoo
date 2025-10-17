@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Spreadsheet dashboard",
-    "version": "1.0",
     "category": "Productivity/Dashboard",
     "summary": "Spreadsheet",
     "description": "Spreadsheet",
     "depends": ["spreadsheet"],
-    "installable": True,
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "data": [

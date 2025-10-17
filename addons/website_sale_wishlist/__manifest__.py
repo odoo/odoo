@@ -7,7 +7,6 @@
 Allow shoppers of your eCommerce store to create personalized collections of products they want to buy and save them for future reference.
     """,
     'category': 'Website/Website',
-    'version': '1.0',
     'depends': ['website_sale'],
     'data': [
         'security/ir_rule.xml',
@@ -16,7 +15,6 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         'views/templates.xml',
         'views/svg_templates.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_sale_wishlist/static/src/interactions/**/*',

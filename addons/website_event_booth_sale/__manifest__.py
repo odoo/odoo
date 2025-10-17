@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Online Event Booth Sale',
     'category': 'Marketing/Events',
-    'version': '1.0',
     'summary': 'Events, sell your booths online',
     'description': """
 Use the e-commerce to sell your event booths.

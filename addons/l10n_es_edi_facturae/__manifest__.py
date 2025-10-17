@@ -2,7 +2,6 @@
 
 {
     'name': 'Spain - Facturae EDI',
-    'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'website': 'https://www.facturae.gob.es/face/Paginas/FACE.aspx',
     'description': """
@@ -36,7 +35,6 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     'demo': [
         'demo/l10n_es_edi_facturae_demo.xml',
     ],
-    'installable': True,
     'auto_install': ['l10n_es'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

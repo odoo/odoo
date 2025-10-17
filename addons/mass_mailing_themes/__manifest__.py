@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -18,7 +17,6 @@ Design gorgeous mails
         'data/ir_attachment_data.xml',
         'views/mass_mailing_themes_templates.xml'
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

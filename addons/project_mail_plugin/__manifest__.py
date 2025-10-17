@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Project Mail Plugin',
-    'version': '1.0',
     'category': 'Services/Project',
     'sequence': 5,
     'summary': 'Integrate your inbox with projects',
@@ -16,7 +14,6 @@
         'project',
         'mail_plugin',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Partnership / Membership',
-    'version': '1.0',
     'category': 'Sales/CRM',
     'description': """
 This module allows you to manage all operations for managing memberships and partnerships.

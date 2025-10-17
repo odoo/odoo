@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Attachments List and Document Indexation',
@@ -13,7 +12,6 @@ Attachments list and document indexation
 The `pdfminer.six` Python library has to be installed in order to index PDF files
 """,
     'depends': ['web'],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

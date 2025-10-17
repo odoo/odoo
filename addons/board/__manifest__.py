@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Dashboards',
-    'version': '1.0',
     'category': 'Productivity',
     'sequence': 225,
     'summary': 'Build your own dashboards',

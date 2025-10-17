@@ -2,7 +2,6 @@
 
 {
     'name': "MRP Project Sale",
-    'version': '1.0',
     'summary': "Technical Bridge",
     'category': 'Services/Project',
     'depends': ['project_mrp', 'sale_mrp', 'sale_project'],

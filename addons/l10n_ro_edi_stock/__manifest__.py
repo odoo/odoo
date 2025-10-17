@@ -1,6 +1,5 @@
 {
     'name': 'Romania - E-Transport',
-    'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'description': """
 E-Transport implementation for Romania
@@ -20,7 +19,6 @@ E-Transport implementation for Romania
 
         'report/report_deliveryslip.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': "LGPL-3",
 }

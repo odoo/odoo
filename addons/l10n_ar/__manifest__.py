@@ -117,6 +117,5 @@ Master Data:
         'demo/account_supplier_invoice_demo.xml',
         'demo/account_supplier_refund_demo.xml',
     ],
-    'installable': True,
     'license': 'LGPL-3',
 }

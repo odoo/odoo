@@ -9,7 +9,6 @@ Create coupon, promotion codes, gift cards and loyalty programs to boost your sa
 Coupon & promotion programs can be edited in the Catalog menu of the Website app.
     """,
     'category': 'Website/Website',
-    'version': '1.0',
     'depends': ['website_sale', 'website_links', 'sale_loyalty'],
     'data': [
         'security/ir.model.access.csv',

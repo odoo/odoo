@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -17,7 +16,6 @@ This module allows a customer to give rating.
         'views/mail_message_views.xml',
         'security/ir.model.access.csv'
     ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             "rating/static/src/core/common/**/*",

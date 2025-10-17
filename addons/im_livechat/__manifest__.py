@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Live Chat',
-    'version': '1.0',
     'sequence': 210,
     'summary': 'Chat with your website visitors',
     'category': 'Website/Live Chat',
@@ -72,7 +70,6 @@ Help your customers with this chat, and analyse their feedback.
         "demo/im_livechat_channel/im_livechat_support_bot_session_7.xml",
     ],
     'depends': ["mail", "rating", "digest", "utm"],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_frontend': [

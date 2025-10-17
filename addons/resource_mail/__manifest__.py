@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Resource Mail',
-    'version': '1.0',
     'category': 'Hidden',
     'description': """Integrate features developped in Mail in use case involving resources instead of users""",
     'depends': ['resource', 'mail'],

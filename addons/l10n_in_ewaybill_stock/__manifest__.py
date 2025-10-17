@@ -21,7 +21,6 @@ This module enables users to create E-waybill from Inventory App without generat
         'views/stock_picking_views.xml',
         'report/ewaybill_report_inherit.xml'
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

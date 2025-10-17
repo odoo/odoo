@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Test testing utilities",
     'category': "Hidden/Tests",

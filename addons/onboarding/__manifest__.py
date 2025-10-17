@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -11,7 +10,6 @@ This module allows to manage onboardings and their progress
 ================================================================================
     """,
     'depends': ['web'],
-    'installable': True,
     'data': [
         'views/onboarding_templates.xml',
         'views/onboarding_views.xml',

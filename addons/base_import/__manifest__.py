@@ -24,7 +24,6 @@ Re-implement Odoo's file import system:
     'depends': ['web'],
     'version': '2.0',
     'category': 'Hidden/Tools',
-    'installable': True,
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',

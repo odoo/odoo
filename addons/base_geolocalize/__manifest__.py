@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Partners Geolocation',
@@ -16,7 +15,6 @@ Partners Geolocation
         'views/res_config_settings_views.xml',
         'data/data.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

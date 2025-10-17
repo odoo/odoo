@@ -3,7 +3,6 @@
 {
     'name': 'Skills e-learning',
     'category': 'Human Resources/Employees',
-    'version': '1.0',
     'summary': 'Add completed courses to resume of your employees',
     'description':
         """

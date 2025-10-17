@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Course Certifications",
     'summary': 'Add certification capabilities to your courses',
     'description': """This module lets you use the full power of certifications within your courses.""",
     'category': 'Website/eLearning',
-    'version': '1.0',
     'depends': ['website_slides', 'survey'],
-    'installable': True,
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',

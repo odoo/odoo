@@ -2,7 +2,6 @@
 {
     'name': 'Malaysia - UBL PINT',
     'countries': ['my'],
-    'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'icon': '/account/static/description/l10n.png',
     'description': """
@@ -14,7 +13,6 @@
         'views/res_company_view.xml',
         'views/res_partner_view.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3'
 }

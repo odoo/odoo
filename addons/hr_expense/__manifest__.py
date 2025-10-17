@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -54,7 +53,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'views/hr_employee_views.xml',
     ],
     'demo': ['data/hr_expense_demo.xml'],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

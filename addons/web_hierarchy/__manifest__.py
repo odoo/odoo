@@ -3,7 +3,6 @@
 {
     'name': 'Web Hierarchy',
     'category': 'Hidden',
-    'version': '1.0',
     'description':
         """
 Odoo Web Hierarchy view

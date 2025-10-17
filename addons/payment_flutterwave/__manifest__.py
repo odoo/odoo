@@ -2,7 +2,6 @@
 
 {
     'name': "Payment Provider: Flutterwave",
-    'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "A Nigerian payment provider covering several African countries.",

@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Website Live Chat',
     'category': 'Website/Live Chat',
     'summary': 'Chat with your website visitors',
-    'version': '1.0',
     'description': "Allow website visitors to chat with the collaborators.",
     'depends': ['website', 'im_livechat'],
-    'installable': True,
     'auto_install': True,
     'data': [
         'views/website_livechat.xml',

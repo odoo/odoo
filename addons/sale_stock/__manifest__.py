@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Sales and Warehouse Management',
-    'version': '1.0',
     'category': 'Sales/Sales',
     'summary': 'Quotation, Sales Orders, Delivery & Invoicing Control',
     'description': """
@@ -43,7 +41,6 @@ Preferences
         'wizard/stock_rules_report_views.xml',
     ],
     'demo': ['data/sale_order_demo.xml'],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [

@@ -11,7 +11,6 @@ To configure product attributes, activate *Attributes & Variants* in the Website
 Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).
     """,
     'category': 'Website/Website',
-    'version': '1.0',
     'depends': ['website_sale'],
     'data': [
         'security/ir.model.access.csv',
@@ -23,7 +22,6 @@ Finally, the module comes with an option to display an attribute summary table i
         'data/product_attribute_category_data.xml',
         'data/demo.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_sale_comparison/static/src/interactions/**/*',

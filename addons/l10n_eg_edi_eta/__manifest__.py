@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Egypt E-Invoicing",
-    'summary': """
-            Egypt Tax Authority Invoice Integration
-        """,
+    'summary': "Egypt Tax Authority Invoice Integration",
     'description': """
 Egypt Tax Authority Invoice Integration
 ==============================================================================

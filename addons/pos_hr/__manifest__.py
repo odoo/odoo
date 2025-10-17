@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -22,7 +21,6 @@ The actual till still requires one user but an unlimited number of employees can
         'views/res_config_settings_views.xml',
         'wizard/pos_daily_sales_reports.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [

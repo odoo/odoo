@@ -2,7 +2,6 @@
 
 {
     'name': 'Project Stock',
-    'version': '1.0',
     'summary': 'Link Stock pickings to Project',
     'category': 'Services/Project',
     'depends': ['stock', 'project'],

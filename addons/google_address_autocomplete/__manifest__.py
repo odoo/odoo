@@ -3,7 +3,6 @@
 {
     'name': "Google Address Autocomplete",
     'summary': 'Assist with automatic completion & suggestions when filling address',
-    'version': '1.0',
     'description': """
 This module Auto complete the address data.
     """,

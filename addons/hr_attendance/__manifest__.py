@@ -33,7 +33,6 @@ actions(Check in/Check out) performed by them.
     'demo': [
         'data/hr_attendance_demo.xml'
     ],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

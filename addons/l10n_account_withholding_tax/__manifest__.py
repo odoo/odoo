@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Withholding Tax on Payment',
-    'version': "1.0",
     'description': """Allows to register withholding taxes during the payment of an invoice or bill.""",
     'category': 'Accounting/Localizations',
     'depends': ['account'],
@@ -23,7 +22,6 @@
             'l10n_account_withholding_tax/static/src/helpers/*.js',
         ],
     },
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

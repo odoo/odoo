@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Delivery Stock Picking Batch',
-    'version': '1.0',
     'category': 'Supply Chain/Inventory',
     'summary': 'Batch Transfer, Carrier',
     'description': """
@@ -15,7 +13,6 @@ Allows to prepare batches depending on their carrier
     'data': [
         'views/stock_picking_type_views.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

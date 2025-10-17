@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Sales Expense',
-    'version': '1.0',
     'category': 'Sales/Sales',
     'summary': 'Quotation, Sales Orders, Delivery & Invoicing Control',
     'description': """
@@ -20,7 +18,6 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
         'views/hr_expense_views.xml',
         'views/sale_order_views.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

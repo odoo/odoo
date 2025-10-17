@@ -1,6 +1,5 @@
 {
     'name': 'Argentinean - Stock',
-    'version': '1.0',
     'description': """Argentinean - Stock""",
     'category': 'Accounting/Localizations',
     'depends': ['l10n_ar', 'stock_account'],
@@ -13,7 +12,6 @@
         # Reports
         'views/report_delivery_guide.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

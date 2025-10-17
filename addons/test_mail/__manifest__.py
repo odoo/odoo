@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Mail Tests',
-    'version': '1.0',
     'category': 'Hidden',
     'sequence': 9876,
     'summary': 'Mail Tests: performances and tests specific to mail',
@@ -28,7 +26,6 @@ tests independently to functional aspects of other models. """,
             'test_mail/static/tests/tours/*',
         ],
     },
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

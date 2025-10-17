@@ -1,6 +1,5 @@
 {
     'name': 'Türkiye - Nilvera',
-    'version': '1.0',
     'category': 'Accounting/Accounting',
     'description': """
 Base module containing core functionalities required by other Nilvera modules.

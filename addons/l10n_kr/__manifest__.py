@@ -2,7 +2,6 @@
     'name': "Republic of Korea - Accounting",
     'icon': '/account/static/description/l10n.png',
     'countries': ['kr'],
-    'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Accounting Module for the Republic of Korea

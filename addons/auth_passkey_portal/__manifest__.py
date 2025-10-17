@@ -1,6 +1,5 @@
 {
     'name': 'Passkeys Portal',
-    'version': '1.0',
     'summary': 'Passkeys for portal users',
     'description': """
 The implementation of Passkeys using the webauthn protocol.

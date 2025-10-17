@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Discuss',
@@ -135,7 +134,6 @@ For more specific needs, you may also assign custom-defined actions
         "demo/mail_poll_demo.xml",
         "demo/mail_canned_response_demo.xml",
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': '_mail_post_init',
     'assets': {

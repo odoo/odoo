@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -63,7 +62,6 @@
         'data/mail_template_demo.xml',
         'data/project_demo.xml',
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': '_project_post_init',
     'uninstall_hook': '_project_uninstall_hook',

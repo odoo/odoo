@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Hr Recruitment Interview Forms",
-    'version': '1.0',
     'category': 'Human Resources',
     'summary': 'Surveys',
     'description': """

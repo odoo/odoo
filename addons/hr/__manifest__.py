@@ -51,7 +51,6 @@
     'demo': [
         'data/hr_demo.xml'
     ],
-    'installable': True,
     'application': True,
     'assets': {
         'web._assets_primary_variables': [

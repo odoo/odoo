@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Maintenance - HR',
-    'version': '1.0',
     'sequence': 125,
     'category': 'Human Resources',
     'description': """
@@ -15,7 +13,6 @@ Bridge between HR and Maintenance.""",
         'views/hr_views.xml',
         'wizard/hr_departure_wizard_views.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

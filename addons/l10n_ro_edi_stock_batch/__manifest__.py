@@ -1,6 +1,5 @@
 {
     'name': 'Romania - E-Transport Batch Pickings',
-    'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'description': """
 E-Transport implementation for Batch Pickings in Romania
@@ -12,7 +11,6 @@ E-Transport implementation for Batch Pickings in Romania
 
         'report/report_picking_batch.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': "LGPL-3",
 }

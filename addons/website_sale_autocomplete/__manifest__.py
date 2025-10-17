@@ -4,7 +4,6 @@
     'name': 'Google places autocompletion',
     'category': 'Website/Website',
     'summary': 'Assist your users with automatic completion & suggestions when filling their address during checkout',
-    'version': '1.0',
     'description': "Assist your users with automatic completion & suggestions when filling their address during checkout",
     'depends': [
         'website_sale',
@@ -25,7 +24,6 @@
         ],
     },
     'auto_install': True,
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

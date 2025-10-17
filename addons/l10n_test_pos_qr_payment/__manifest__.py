@@ -1,9 +1,7 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'POS QR Tests',
-    'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 9876,
     'description': """
@@ -18,7 +16,6 @@
         'l10n_hk',
         'l10n_br',
     ],
-    'installable': True,
     'assets': {
         'web.assets_tests': [
             'l10n_test_pos_qr_payment/static/tests/**/*',

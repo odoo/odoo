@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
     'version': '1.9',
@@ -51,7 +50,6 @@ Key Features
         'data/event_demo.xml',
         'data/event_registration_demo.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             'event/static/src/client_action/**/*',

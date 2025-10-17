@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Maintenance',
-    'version': '1.0',
     'sequence': 100,
     'category': 'Supply Chain/Maintenance',
     'description': """
@@ -21,7 +19,6 @@ Track equipment and maintenance requests""",
         'views/res_config_settings_views.xml',
     ],
     'demo': ['data/maintenance_demo.xml'],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

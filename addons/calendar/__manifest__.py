@@ -39,7 +39,6 @@ If you need to manage your meetings, you should install the CRM module.
         'wizard/calendar_popover_delete_wizard.xml',
         'wizard/mail_activity_schedule_views.xml',
     ],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

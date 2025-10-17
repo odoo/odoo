@@ -3,7 +3,6 @@
 {
     'name': "POS - Event",
     'category': "Technical",
-    'version': "1.0",
     'summary': 'Link module between Point of Sale and Event',
     'depends': ['point_of_sale', 'event_product'],
     'data': [
@@ -18,7 +17,6 @@
         'data/event_product_demo.xml',
         'data/point_of_sale_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [

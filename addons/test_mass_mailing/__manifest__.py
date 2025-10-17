@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Mass Mail Tests',
-    'version': '1.0',
     'category': 'Marketing/Email Marketing',
     'sequence': 8765,
     'summary': 'Mass Mail Tests: feature and performance tests for mass mailing',
@@ -19,7 +17,6 @@ test_mail. """,
     'data': [
         'security/ir.model.access.csv',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

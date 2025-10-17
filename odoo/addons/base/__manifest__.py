@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -91,7 +90,6 @@ The kernel of Odoo, needed for all installation.
             'base/static/tests/**/*',
         ],
     },
-    'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',
     'author': 'Odoo S.A.',

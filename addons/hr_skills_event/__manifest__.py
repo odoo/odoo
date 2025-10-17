@@ -3,7 +3,6 @@
 {
     'name': 'Skills Events',
     'category': 'Hidden',
-    'version': '1.0',
     'summary': 'Link training events to resume of your employees',
     'description':
         """

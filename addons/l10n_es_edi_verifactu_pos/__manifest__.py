@@ -2,7 +2,6 @@
 
 {
     'name': 'Spain - Veri*Factu for Point of Sale',
-    'version': '1.0',
     'category': 'Accounting/Localizations/Point of Sale',
     'summary': "Add Veri*Factu support to Point of Sale",
     'depends': [

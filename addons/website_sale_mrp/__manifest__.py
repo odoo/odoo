@@ -2,7 +2,6 @@
 
 {
     'name': 'Kit Availability',
-    'version': '1.0',
     'category': 'Website/Website',
     'summary': 'Manage Kit product inventory & availability',
     'description': """

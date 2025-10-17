@@ -4,7 +4,7 @@ import logging
 from os.path import join as opj
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
-from odoo.tests import tagged, BaseCase
+from odoo.tests import BaseCase, tagged
 from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
@@ -38,10 +38,22 @@ class ManifestLinter(BaseCase):
     def _test_manifest_values(self, manifest_data: Manifest):
         module = manifest_data.name
         verified_keys = [
-            'application', 'auto_install',
-            'summary', 'description', 'author',
-            'demo', 'data', 'test',
-            # todo installable ?
+            'application',
+            'auto_install',
+            'category',
+            'data',
+            'demo',
+            'description',
+            'external_dependencies',
+            'iap_paid_service',
+            'installable',
+            'post_init_hook',
+            'post_load',
+            'pre_init_hook',
+            'summary',
+            'test',
+            'version',
+            'website',
         ]
 
         if len(manifest_data.get('countries', [])) == 1 and 'l10n' not in module:
@@ -56,9 +68,16 @@ class ManifestLinter(BaseCase):
                        value,
                         _DEFAULT_MANIFEST[key],
                         f"Setting manifest key {key} to the default manifest value for module {module!r}. "
-                        "You can remove this key from the dict to reduce noise/inconsistencies between manifests specifications"
-                        " and ease understanding of manifest content."
+                        "You can remove this key from the dict to reduce noise/inconsistencies"
+                        " between manifests specifications and ease understanding of manifest"
+                        " content."
                     )
+                    if key == 'summary':
+                        self.assertNotIn(
+                            '\n',
+                            value,
+                            f"Module {module!r} summary should be a one-line short description",
+                        )
 
                 expected_type = type(_DEFAULT_MANIFEST[key])
                 if not isinstance(value, expected_type):
@@ -70,9 +89,8 @@ class ManifestLinter(BaseCase):
                         _logger.warning(
                             "Wrong type for manifest value %s in module %s, expected bool or list",
                             key, module)
-                else:
-                    if key == 'countries':
-                        self._test_manifest_countries_value(module, value)
+                elif key == 'countries':
+                    self._test_manifest_countries_value(module, value)
             elif key == 'icon':
                 self._test_manifest_icon_value(module, value)
 
@@ -107,6 +125,6 @@ class ManifestLinter(BaseCase):
         for value in values:
             if value and len(value) != 2:
                 _logger.warning(
-                    "Country value %s specified for the icon in manifest of module %s doesn't look like a country code"
+                    "Country value %s specified for the icon in manifest of module %s doesn't look like a country code."
                     "Please specify a correct value or remove this key from the manifest.",
                     value, module)

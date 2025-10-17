@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Mail Tests (Full)',
-    'version': '1.0',
     'category': 'Hidden',
     'sequence': 9876,
     'summary': 'Mail Tests: performances and tests specific to mail with all sub-modules',
@@ -39,7 +37,6 @@ real applications. """,
             'test_mail_full/static/tests/tours/**/*',
         ],
     },
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -22,7 +21,6 @@
     'demo': [
         'data/pos_loyalty_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [

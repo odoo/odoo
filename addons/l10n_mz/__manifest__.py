@@ -5,7 +5,6 @@
     'description': """
 Mozambican Accounting localization
     """,
-    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['mz'],
     'category': 'Accounting/Localizations/Account Charts',

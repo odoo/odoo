@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -6,7 +5,6 @@
     'name': 'Live Event Tracks',
     'category': 'Marketing/Events',
     'sequence': 1006,
-    'version': '1.0',
     'summary': 'Support live tracks: streaming, participation, youtube',
     'website': 'https://www.odoo.com/app/events',
     'depends': [
@@ -20,7 +18,6 @@
     'demo': [
         'data/event_track_demo.xml'
     ],
-    'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live/static/src/scss/website_event_track_live.scss',
