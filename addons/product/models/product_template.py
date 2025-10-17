@@ -947,17 +947,38 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
-        return {
-            ptav.id: [
-                value.id
-                for filter_line in ptav.exclude_for.filtered(
-                    lambda filter_line: filter_line.product_tmpl_id == self
-                ) for value in filter_line.value_ids if value.ptav_active
-            ]
-            for ptav in product_template_attribute_values if (
-                ptav.ptav_active or combination_ids and ptav.id in combination_ids
-            )
-        }
+        result = {}
+
+        domain_ptav = [('ptav_active', '=', True)]
+
+        if combination_ids:
+            domain_ptav = expression.OR([
+                domain_ptav,
+                [('id', 'in', combination_ids)]
+            ])
+
+        domain_ptav = expression.AND([
+            domain_ptav,
+            [('id', 'in', product_template_attribute_values.ids)],
+        ])
+
+        exclusion_ids_by_ptav = dict(self.env['product.template.attribute.exclusion']._read_group(
+            domain=[
+                ('product_template_attribute_value_id', 'any', domain_ptav),
+                ('product_tmpl_id', '=', self.id),
+            ],
+            groupby=['product_template_attribute_value_id'],
+            aggregates=['id:recordset'],
+        ))
+
+        for ptav in product_template_attribute_values:
+            if ptav.ptav_active or combination_ids and ptav.id in combination_ids:
+                if exclusions := exclusion_ids_by_ptav.get(ptav):
+                    result[ptav.id] = exclusions.value_ids.filtered(lambda x: x.ptav_active).ids
+                else:
+                    result[ptav.id] = []
+
+        return result
 
     def _get_parent_attribute_exclusions(self, parent_combination):
         """Get exclusions coming from the parent combination.
