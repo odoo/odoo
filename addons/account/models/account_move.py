@@ -293,7 +293,10 @@ class AccountMove(models.Model):
             ('no', 'No'),
             ('at_date', 'At Date'),
             ('monthly', 'Monthly'),
+            ('bimonthly', 'Bimonthly'),
             ('quarterly', 'Quarterly'),
+            ('four_months', 'Every 4 months'),
+            ('semi_annually', 'Semi-annually'),
             ('yearly', 'Yearly'),
         ],
         default='no', required=True, copy=False,
@@ -4660,8 +4663,29 @@ class AccountMove(models.Model):
 
     @api.model
     def _apply_delta_recurring_entries(self, date, date_origin, period):
-        '''Advances date by `period` months, maintaining original day of the month if possible.'''
-        deltas = {'monthly': 1, 'quarterly': 3, 'yearly': 12}
+        '''Advances date by `period` months, maintaining original day of the month if possible.
+
+        This method handles various recurring periods:
+        - monthly: 1 month
+        - bimonthly: 2 months
+        - quarterly: 3 months
+        - four_months: 4 months
+        - semi_annually: 6 months
+        - yearly: 12 months
+
+        :param date: Current date to advance
+        :param date_origin: Original date used as reference
+        :param period: Period type
+        :return: New date advanced by the period from the date_origin
+        '''
+        deltas = {
+            'monthly': 1,
+            'bimonthly': 2,
+            'quarterly': 3,
+            'four_months': 4,
+            'semi_annually': 6,
+            'yearly': 12
+        }
         prev_months = (date.year - date_origin.year) * 12 + date.month - date_origin.month
         return date_origin + relativedelta(months=deltas[period] + prev_months)
 
