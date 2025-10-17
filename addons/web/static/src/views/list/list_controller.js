@@ -224,6 +224,7 @@ export class ListController extends Component {
                 onAskMultiSaveConfirmation: this.onAskMultiSaveConfirmation.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
+            useSendBeaconToSaveUrgently: true,
         };
     }
 
