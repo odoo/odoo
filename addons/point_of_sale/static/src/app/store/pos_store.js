@@ -1189,86 +1189,97 @@ export class PosStore extends Reactive {
 
         // Filter out orders that are already being synced
         orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        const orderIdsToDelete = this.getOrderIdsToDelete();
+        const context = this.getSyncAllOrdersContext(orders, options);
 
-        try {
-            const orderIdsToDelete = this.getOrderIdsToDelete();
-            if (orderIdsToDelete.length > 0) {
-                await this.deleteOrders([], orderIdsToDelete);
-            }
-
-            const context = this.getSyncAllOrdersContext(orders, options);
-            await this.preSyncAllOrders(orders);
-
-            // Allow us to force the sync of the orders In the case of
-            // pos_restaurant is usefull to get unsynced orders
-            // for a specific table
-            if (orders.length === 0) {
-                return;
-            }
-
-            // Add order IDs to the syncing set
-            orders.forEach((order) => this.syncingOrders.add(order.id));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
-
-            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
-            const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
-                context,
-            });
-            const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords, [], false);
-
-            for (const line of newData["pos.order.line"]) {
-                const refundedOrderLine = line.refunded_orderline_id;
-
-                if (refundedOrderLine) {
-                    const order = refundedOrderLine.order_id;
-                    if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                    }
-                    refundedOrderLine.refunded_qty = refundedOrderLine.refund_orderline_ids.reduce(
-                        (sum, obj) => sum + Math.abs(obj.qty),
-                        0
-                    );
-                }
-            }
-
-            this.postSyncAllOrders(newData["pos.order"]);
-
-            if (data["pos.session"].length > 0) {
-                // Replace the original session by the rescue one. And the rescue one will have
-                // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
-                this.models["pos.order"]
-                    .getAll()
-                    .filter((order) => order.state === "draft")
-                    .forEach((order) => (order.session_id = this.session));
-            }
-
-            // Remove only synced orders from the pending orders
-            orders.forEach((o) => this.removePendingOrder(o));
-            orders.map((order) => order.clearCommands());
-            return newData["pos.order"];
-        } catch (error) {
-            if (options.throw) {
-                throw error;
-            }
-
-            // After an error on the sync, verify order state by asking the server
-            if (error instanceof ConnectionLostError) {
-                console.warn("Offline mode active, order will be synced later");
-            } else {
-                this.deviceSync.readDataFromServer();
-            }
-
-            return error;
-        } finally {
-            orders.forEach((order) => this.syncingOrders.delete(order.id));
+        // Delete orders first
+        if (orderIdsToDelete.length > 0) {
+            await this.deleteOrders([], orderIdsToDelete);
         }
+
+        // Allow us to force the sync of the orders In the case of
+        // pos_restaurant is usefull to get unsynced orders
+        // for a specific table
+        if (orders.length === 0) {
+            return;
+        }
+
+        // We are now syncing orders one by one to avoid cancelling all sync
+        // when one order fails, this also avoid timeout issues with a lot of orders
+        let errorOccurred = false;
+        let newSession = false;
+        const syncedOrders = [];
+        for (const order of orders) {
+            await this.preSyncAllOrders([order]);
+
+            // Add order ID to the syncing set
+            this.syncingOrders.add(order.id);
+            order.recomputeOrderData();
+
+            const serialized = order.serialize({ orm: true });
+            try {
+                const data = await this.data.call("pos.order", "sync_from_ui", [[serialized]], {
+                    context,
+                });
+                const missingRecords = await this.data.missingRecursive(data);
+                const newData = this.models.loadData(missingRecords, [], false);
+
+                for (const line of newData["pos.order.line"]) {
+                    const refundedOrderLine = line.refunded_orderline_id;
+
+                    if (refundedOrderLine) {
+                        const order = refundedOrderLine.order_id;
+                        if (order) {
+                            delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                        }
+                        refundedOrderLine.refunded_qty =
+                            refundedOrderLine.refund_orderline_ids.reduce(
+                                (sum, obj) => sum + Math.abs(obj.qty),
+                                0
+                            );
+                    }
+                }
+
+                this.postSyncAllOrders(newData["pos.order"]);
+                this.removePendingOrder(order);
+                syncedOrders.push(...newData["pos.order"]);
+                order.clearCommands();
+                newSession = newSession || data["pos.session"].length > 0;
+            } catch (error) {
+                if (options.throw) {
+                    throw error;
+                }
+
+                // After an error on the sync, verify order state by asking the server
+                if (error instanceof ConnectionLostError) {
+                    console.warn("Offline mode active, order will be synced later");
+                } else {
+                    errorOccurred = true;
+                }
+            } finally {
+                orders.forEach((order) => this.syncingOrders.delete(order.id));
+            }
+        }
+
+        if (errorOccurred) {
+            // In that case we assume the order data isn't valid anymore, so we
+            // try to read data from server, to be sure to have the latest state
+            // the order can be deleted from the server side during the sync_from_ui call
+            this.deviceSync.readDataFromServer();
+        }
+
+        if (newSession) {
+            // Replace the original session by the rescue one. And the rescue one will have
+            // a higher id than the original one since it's the last one created.
+            const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
+            session.delete();
+            this.models["pos.order"]
+                .getAll()
+                .filter((order) => order.state === "draft")
+                .forEach((order) => (order.session_id = this.session));
+        }
+
+        return syncedOrders;
     }
 
     push_single_order(order) {
