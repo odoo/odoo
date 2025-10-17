@@ -69,11 +69,11 @@
                                    'flex-row-reverse': isAlignedRight,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
-                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
+                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited))">
-                                        <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="false"/>
+                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or isEditing or message.edited))">
+                                        <LinkPreviewList t-if="!isEditing and message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="false"/>
                                         <t t-else="">
                                             <div t-if="message.bubbleColor and !props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
                                                 'o-blue': message.bubbleColor === 'blue',
@@ -86,7 +86,7 @@
                                                 </svg>
                                             </div>
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block text-body" t-att-class="{
-                                                'w-100': state.isEditing,
+                                                'w-100': isEditing,
                                                 'shadow-sm': message.bubbleColor,
                                                 'o-rounded-bubble': message.bubbleColor and props.squashed,
                                                 'o-rounded-bottom-bubble': message.bubbleColor and !props.squashed,
@@ -105,14 +105,14 @@
                                                 <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
                                                             'p-1': message.is_note,
-                                                            'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
+                                                            'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
                                                             'mb-0': !message.is_note,
-                                                            'py-2': !message.is_note and !state.isEditing,
-                                                            'pt-2 pb-1': !message.is_note and state.isEditing,
+                                                            'py-2': !message.is_note and !isEditing,
+                                                            'pt-2 pb-1': !message.is_note and isEditing,
                                                             'o-note': message.is_note,
                                                             'o-rounded-bubble': props.squashed,
-                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !state.isEditing and !message.is_note and !props.squashed,
-                                                            'flex-grow-1': state.isEditing,
+                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.is_note and !props.squashed,
+                                                            'flex-grow-1': isEditing,
                                                             }" t-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-esc="message.inlineBody"/>
                                                     <Composer t-elif="props.message.eq(props.messageEdition?.editingMessage)" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
@@ -160,7 +160,7 @@
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !state.isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
+    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': isAlignedRight,
             'mx-1': !isMobileOS,
