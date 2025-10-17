@@ -758,8 +758,9 @@ FullCalendar.TimeGrid = (function (exports, core, internal$1, preact, internal$2
                     let hStyle = (!isMirror && rect) ? this.computeSegHStyle(rect) : { left: 0, right: 0 };
                     let isInset = Boolean(rect) && rect.stackForward > 0;
                     let isShort = Boolean(rect) && (rect.span.end - rect.span.start) < eventShortHeight; // look at other places for this problem
+                    let needsMargin = Boolean(isInset) && rect.thickness < 1 && rect.stackDepth <= rect.stackForward;
                     return (preact.createElement("div", { className: 'fc-timegrid-event-harness' +
-                            (isInset ? ' fc-timegrid-event-harness-inset' : ''), key: forcedKey || instanceId, style: Object.assign(Object.assign({ visibility: isVisible ? '' : 'hidden' }, vStyle), hStyle) },
+                            (isInset ? ' fc-timegrid-event-harness-inset' : ''), key: forcedKey || instanceId, style: Object.assign(Object.assign({ visibility: isVisible ? '' : 'hidden', marginRight: needsMargin ? '20px' : '0' }, vStyle), hStyle) },
                         preact.createElement(TimeColEvent, Object.assign({ seg: seg, isDragging: isDragging, isResizing: isResizing, isDateSelecting: isDateSelecting, isSelected: instanceId === eventSelection, isShort: isShort }, internal$1.getSegMeta(seg, todayRange, nowDate)))));
                 })));
         }
