@@ -473,20 +473,6 @@ class IrQwebFieldDuration(models.AbstractModel):
         return float(value)
 
 
-class IrQwebFieldRelative(models.AbstractModel):
-    _name = 'ir.qweb.field.relative'
-    _description = 'Qweb Field Relative'
-    _inherit = ['ir.qweb.field.relative']
-
-    # get formatting from ir.qweb.field.relative but edition/save from datetime
-
-
-class IrQwebFieldQweb(models.AbstractModel):
-    _name = 'ir.qweb.field.qweb'
-    _description = 'Qweb Field qweb'
-    _inherit = ['ir.qweb.field.qweb']
-
-
 def html_to_text(element):
     """ Converts HTML content with HTML-specified line breaks (br, p, div, ...)
     in roughly equivalent textual content.
