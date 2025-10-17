@@ -60,6 +60,14 @@
                             <field name="pos_self_ordering_primary_color" widget="color"/>
                         </div>
                     </setting>
+                    <setting string="Customize QR Ticket" help="Customize the QR code ticket displayed" invisible="pos_self_ordering_mode != 'mobile'">
+                        <div class="content-group mt-3">
+                            <div class="row">
+                                <label for="pos_self_ordering_qr_ticket_footer" class="col-lg-3" string="Footer"/>
+                            </div>
+                            <field name="pos_self_ordering_qr_ticket_footer" class="w-100" options="{'codeview': true, 'height': 112, 'resizable': true}" />
+                        </div>
+                    </setting>
                 </block>
             </block>
 

@@ -1,5 +1,6 @@
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { patch } from "@web/core/utils/patch";
+import { OrderQrTicket } from "@pos_self_order/overrides/components/order_qr_ticket/order_qr_ticket";
 
 patch(PosStore.prototype, {
     async getServerOrders() {
@@ -23,5 +24,12 @@ patch(PosStore.prototype, {
             tag: "pos_qr_stands",
             params: { data: user_data },
         });
+    },
+    async printOrderQrTicket() {
+        const order = this.getOrder();
+        await Promise.all([
+            this.syncAllOrders({ orders: [order] }),
+            this.printer.print(OrderQrTicket, { order }, this.printOptions),
+        ]);
     },
 });

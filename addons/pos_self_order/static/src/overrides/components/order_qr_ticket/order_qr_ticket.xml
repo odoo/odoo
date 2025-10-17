@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_self_order.OrderQrTicket">
+        <div class="pos-receipt pos-qr-ticket p-2">
+            <img t-att-src="props.order.config.receiptLogoUrl" alt="Logo" class="pos-receipt-logo pos-company-logo"/>
+
+
+            <t t-set="company" t-value="props.order.company" />
+            <div class="pt-3 justify-content-center text-center">
+                <div>
+                    <t t-if="company.street" t-out="company.street"/>
+                    <t t-if="company.city" t-out="', ' + company.city"/>
+                    <t t-if="company.state_id?.code" t-out="', ' + company.state_id.code"/>
+                    <t t-if="company.zip" t-out="', ' +  company.zip"/>
+                </div>
+                <div t-if="company.phone">
+                    Tel: <t t-out="company.phone"/>
+                </div>
+                <div t-if="company.website" t-out="company.website"/>
+            </div>
+
+            <hr />
+
+            <div>Table: <span class="pos-table-number"><t t-out="props.order.table_id.table_number" /></span></div>
+            <t t-set="date_order" t-value="props.order.formatDateOrTime('date_order')" />
+            <div>Date: <t t-out="date_order" /></div>
+            <div t-if="props.order?.getCashierName() and (!props.order.preset_id or props.order.preset_id.identification === 'name')" class="cashier">
+                <div>Served by: <t t-esc="props.order.getCashierName()" /></div>
+            </div>
+
+            <hr />
+
+            <div class="text-center pt-2">Please scan your QR code to place order:</div>
+            <img id="posqrcode" t-att-src="qrCode" class="pos-receipt-logo" height="240" width="240"/>
+
+            <div class="pt-3">
+                <t t-if="pos.config.self_ordering_qr_ticket_footer" t-out="ticketFooter"/>
+            </div>
+
+            <div class="pos-qr-ticket-footer text-center pt-5">
+                <span>Powered by <b> Odoo </b></span>
+            </div>
+        </div>
+    </t>
+
+</templates>

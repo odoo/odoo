@@ -58,6 +58,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
                         "tracking_number": None,
                         "uuid": str(uuid4()),
                     },
+                    "order_uuid": None,
                     "table_identifier": None,
                 }
             }),

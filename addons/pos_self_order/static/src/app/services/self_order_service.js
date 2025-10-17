@@ -577,6 +577,12 @@ export class SelfOrder extends Reactive {
                     );
                 }
 
+                const orderUuid = this.router.getOrderUuid();
+                if (orderUuid) {
+                    const order = this.models["pos.order"].getBy("uuid", orderUuid);
+                    this.currentTable = order?.table_id;
+                }
+
                 this.ordering = true;
             }
 
@@ -668,6 +674,7 @@ export class SelfOrder extends Reactive {
                     access_token: this.access_token,
                     table_identifier:
                         this.currentOrder?.self_ordering_table_id?.identifier || tableIdentifier,
+                    order_uuid: this.router.getOrderUuid(),
                 }
             );
             const result = this.models.connectNewData(data);
@@ -695,6 +702,7 @@ export class SelfOrder extends Reactive {
 
     async getUserDataFromServer(tokens = []) {
         const tableIdentifier = this.router.getTableIdentifier([]);
+        const orderUuid = this.router.getOrderUuid();
         const dbAccessToken = this.models["pos.order"]
             .filter((o) => o.state === "draft" && o.isSynced)
             .map((order) => ({
@@ -712,7 +720,7 @@ export class SelfOrder extends Reactive {
         }));
 
         const accessTokens = [...dbAccessToken, ...argTokens];
-        if (Object.keys(accessTokens).length === 0 && !tableIdentifier) {
+        if (Object.keys(accessTokens).length === 0 && !tableIdentifier && !orderUuid) {
             return;
         }
 
@@ -721,25 +729,36 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
                 table_identifier: tableIdentifier,
+                order_uuid: orderUuid,
             });
             const result = this.models.connectNewData(data);
             const openOrder = result["pos.order"]?.find((o) => o.state === "draft");
-            if (openOrder && this.router.activeSlot !== "confirmation") {
-                this.selectedOrderUuid = openOrder.uuid;
+            if (this.router.activeSlot !== "confirmation") {
+                if (openOrder) {
+                    this.selectedOrderUuid = openOrder.uuid;
 
-                // Remove all other open orders in draft and add orderline in the current order
-                const lineCmd = [];
-                for (const order of this.models["pos.order"].filter((o) => o.state === "draft")) {
-                    if (order.uuid !== openOrder.uuid) {
-                        lineCmd.push(...order.lines);
-                        order.delete();
+                    // Remove all other open orders in draft and add orderline in the current order
+                    const lineCmd = [];
+                    for (const order of this.models["pos.order"].filter(
+                        (o) => o.state === "draft"
+                    )) {
+                        if (order.uuid !== openOrder.uuid) {
+                            lineCmd.push(...order.lines);
+                            order.delete();
+                        }
+                    }
+
+                    openOrder.update({
+                        lines: [["link", lineCmd]],
+                    });
+                    openOrder.recomputeChanges();
+                } else {
+                    if (this.router.getOrderUuid()) {
+                        this.currentOrder.delete();
+                        this.currentTable = null;
+                        this.router.removeOrderUuid();
                     }
                 }
-
-                openOrder.update({
-                    lines: [["link", lineCmd]],
-                });
-                openOrder.recomputeChanges();
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
         } catch (error) {
@@ -771,6 +790,7 @@ export class SelfOrder extends Reactive {
                 cleanOrders = true;
             } else if (error?.data?.name === "odoo.exceptions.UserError") {
                 message = error.data.message;
+                this.currentTable = null;
             }
         } else if (error instanceof ConnectionLostError) {
             this.dialog.add(NetworkConnectionLostPopup, {

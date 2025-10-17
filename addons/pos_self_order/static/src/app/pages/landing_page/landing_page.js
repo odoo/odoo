@@ -80,7 +80,9 @@ export class LandingPage extends Component {
         }
 
         return (
-            this.draftOrder.length > 0 && this.selfOrder.config.self_ordering_pay_after === "each"
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            (this.draftOrder.length > 1 ||
+                (this.draftOrder.length === 1 && this.draftOrder[0].lines.length > 0))
         );
     }
 
@@ -102,12 +104,17 @@ export class LandingPage extends Component {
 
     start() {
         if (
-            this.draftOrder.length > 0 &&
-            this.selfOrder.config.self_ordering_pay_after === "each"
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            (this.draftOrder.length > 1 ||
+                (this.draftOrder.length === 1 && this.draftOrder[0].lines.length > 0))
         ) {
             return;
         }
-        if (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id) {
+        if (
+            this.selfOrder.hasPresets() &&
+            !this.selfOrder.currentOrder.preset_id &&
+            !this.router.getOrderUuid()
+        ) {
             this.router.navigate("location");
         } else {
             this.router.navigate("product_list");

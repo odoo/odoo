@@ -32,7 +32,7 @@ class WebManifest(webmanifest.WebManifest):
         return super()._get_scoped_app_icons(app_id)
 
     @http.route()
-    def scoped_app_icon_png(self, app_id):
+    def scoped_app_icon_png(self, app_id, add_padding=False):
         if app_id == "pos_self_order" and request.env.company.uses_default_logo:
-            return super().scoped_app_icon_png('point_of_sale')
-        return super().scoped_app_icon_png(app_id)
+            return super().scoped_app_icon_png('point_of_sale', add_padding)
+        return super().scoped_app_icon_png(app_id, add_padding)
