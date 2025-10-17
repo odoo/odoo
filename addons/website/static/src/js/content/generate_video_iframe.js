@@ -6,8 +6,6 @@ const SUPPORTED_DOMAINS = [
     "player.vimeo.com",
     "vimeo.com",
     "dailymotion.com",
-    "player.youku.com",
-    "youku.com",
 ];
 
 /**
