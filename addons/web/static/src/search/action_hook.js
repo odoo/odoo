@@ -98,10 +98,8 @@ export function useSetupAction(params = {}) {
                 rootRef.el.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
             } else if (scrolling.content) {
                 const contentEl =
-                    rootRef.el.querySelector(
-                        ".o_component_with_search_panel > .o_renderer_with_searchpanel," +
-                            ".o_component_with_search_panel > .o_renderer"
-                    ) || rootRef.el.querySelector(".o_content");
+                    rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer") ||
+                    rootRef.el.querySelector(".o_content");
                 if (contentEl) {
                     contentEl.scrollTop = scrolling.content.top || 0;
                     contentEl.scrollLeft = scrolling.content.left || 0;
@@ -122,10 +120,8 @@ export function useSetupAction(params = {}) {
                     };
                 } else {
                     const contentEl =
-                        rootRef.el.querySelector(
-                            ".o_component_with_search_panel > .o_renderer_with_searchpanel," +
-                                ".o_component_with_search_panel > .o_renderer"
-                        ) || rootRef.el.querySelector(".o_content");
+                        rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer") ||
+                        rootRef.el.querySelector(".o_content");
                     if (contentEl) {
                         state[scrollSymbol] = {
                             content: { left: contentEl.scrollLeft, top: contentEl.scrollTop },
