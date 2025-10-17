@@ -704,6 +704,28 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
     });
 
+    QUnit.test("Import view: import a CSV file with uppercase extension", async function (assert) {
+        registerFakeHTTPService((route, params) => {
+            assert.strictEqual(route, "/base_import/set_file");
+            assert.strictEqual(
+                params.ufile[0].name,
+                "fake_file.CSV",
+                "file with uppercase .CSV extension is correctly uploaded to the server"
+            );
+        });
+        await createImportAction();
+
+        // Simulate uploading a .CSV file (uppercase extension)
+        const file = new File(["fake_file"], "fake_file.CSV", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file'].d-none", file);
+
+        assert.containsOnce(
+            target,
+            ".o_import_data_sidepanel .o_import_formatting",
+            "formatting options are shown for uppercase extention .CSV file"
+        );
+    });
+
     QUnit.test("Import view: additional options in debug", async function (assert) {
         patchWithCleanup(odoo, { debug: true });
         registerFakeHTTPService();
