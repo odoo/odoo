@@ -655,7 +655,7 @@ class DiscussChannel(models.Model):
         if rating_sudo := self.sudo().rating_ids[:1]:
             rating_sudo.write({"rating": rate, "feedback": reason})
         else:
-            partner, _ = self.env["res.partner"]._get_current_persona()
+            user, _ = self.env["res.users"]._get_current_persona()
             # sudo: rating.rating - live chat customers can create ratings
             rating_values = {
                 "rating": rate,
@@ -665,7 +665,7 @@ class DiscussChannel(models.Model):
                 "res_id": self.id,
                 "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
                 "rated_partner_id": self.livechat_agent_partner_ids[:1].id,
-                "partner_id": partner.id,
+                "partner_id": user.partner_id.id,
             }
             rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
         rating_body = Markup(
@@ -800,8 +800,8 @@ class DiscussChannel(models.Model):
                 question_msg.user_raw_script_answer_id = selected_answer.id
                 if store := self.env.context.get("message_post_store"):
                     store.add(message).add(question_msg.mail_message_id)
-                partner, guest = self.env["res.partner"]._get_current_persona()
-                Store(bus_channel=partner or guest).add_model_values(
+                user, guest = self.env["res.users"]._get_current_persona()
+                Store(bus_channel=user or guest).add_model_values(
                     "ChatbotStep",
                     {
                         "id": (self.chatbot_current_step_id.id, question_msg.mail_message_id.id),
