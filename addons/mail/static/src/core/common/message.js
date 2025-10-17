@@ -100,7 +100,7 @@ export class Message extends Component {
         this.escape = escape;
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
-            isEditing: false,
+            isEditing: false, // @deprecated
             isHovered: false,
             isClicked: false,
             expandOptions: false,
@@ -129,12 +129,6 @@ export class Message extends Component {
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
-        useEffect(
-            (editingMessage) => {
-                this.state.isEditing = this.props.message.eq(editingMessage);
-            },
-            () => [this.props.messageEdition?.editingMessage]
-        );
         onMounted(() => {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
@@ -212,12 +206,16 @@ export class Message extends Component {
         );
         useEffect(
             () => {
-                if (!this.state.isEditing) {
+                if (!this.isEditing) {
                     this.prepareMessageBody(this.messageBody.el);
                 }
             },
-            () => [this.state.isEditing, this.message.body]
+            () => [this.isEditing, this.message.body]
         );
+    }
+
+    get isEditing() {
+        return this.props.message.eq(this.props.messageEdition?.editingMessage);
     }
 
     get attClass() {
@@ -244,7 +242,7 @@ export class Message extends Component {
                 this.props.message
             ),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
-            "o-editing": this.state.isEditing,
+            "o-editing": this.isEditing,
         };
     }
 
