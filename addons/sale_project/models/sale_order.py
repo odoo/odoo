@@ -269,7 +269,7 @@ class SaleOrder(models.Model):
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
         task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
         if project or task:
-            service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
+            service_sol = next((sol for sol in created_records.order_line if sol.is_service), self.env['sale.order.line'])
             if project and not project.sale_line_id:
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:
