@@ -1821,7 +1821,7 @@ class AccountMove(models.Model):
         errors = {}
         for kind_code, kind_desc, min_len in (
             ('vat', _('VAT'), 1),
-            ('withholding', _('Withholding'), 0),
+            ('withholding_no_enasarco', _('Withholding'), 0),
             ('pension_fund', _('Pension Fund'), 0),
         ):
             errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len))
