@@ -40,6 +40,13 @@ class PaymentProvider(models.Model):
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
+    def _get_final_states(self):
+        """Override of `payment` to add 'pending' as a final state."""
+        final_states = super()._get_final_states()
+        if self.code == 'custom':
+            final_states.add('pending')
+        return final_states
+
     # === ACTION METHODS ===#
 
     def action_recompute_pending_msg(self):

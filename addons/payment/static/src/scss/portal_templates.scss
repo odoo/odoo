@@ -1,4 +1,9 @@
-div[name="o_payment_status_alert"] div > p {
+.o_payment_status_pending > p {
+    font-size: $lead-font-size;
+    font-weight: $lead-font-weight;
+}
+
+div[name="o_payment_status_alert"] #o_payment_status_message > p {
     margin-bottom: 0;
 }
 
@@ -6,4 +11,10 @@ div[name="o_payment_status_alert"] div > p {
     @include media-breakpoint-up(md) {
         border-left: $border-width solid $border-color;
     }
+}
+
+.o_payment_summary div {
+    border: $border-width solid $border-color;
+    padding: map-get($spacers, 3);
+    border-radius: $border-radius;
 }
