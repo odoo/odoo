@@ -29,9 +29,20 @@ class DriverController(http.Controller):
         We specify in data from which session_id that action is called
         And call the action of specific device
         """
-        if device_identifier == "test_protocol":
-            # Special case for testing if a protocol is working
-            return True
+        if device_identifier == helpers.get_identifier():
+            match data.get('action'):
+                case "restart_odoo":
+                    event_manager.events.append({
+                        'time': time.time(),
+                        'device_identifier': device_identifier,
+                        'owner': session_id,
+                        'status': 'success',
+                    })
+                    time.sleep(2)  # wait for the server to catch the event before restarting
+                    return helpers.odoo_restart()
+                case _:
+                    # Special case for testing if longpolling protocol is working
+                    return True
 
         # If device_identifier is a type of device, we take the first device of this type
         # required for longpolling with community db
