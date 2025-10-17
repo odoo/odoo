@@ -14,12 +14,13 @@
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# Ilya Rozhkov <ceo@docsly.kz>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 18:38+0000\n"
-"PO-Revision-Date: 2025-10-15 09:51+0000\n"
+"PO-Revision-Date: 2025-10-17 09:01+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/account/"
 "ru/>\n"
@@ -761,30 +762,29 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Уважаемый\n"
+"        Здравствуйте,\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Брэндон Фриман</t> (<t "
-"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Брэндон Фримен</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)!\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Брэндон Фриман</t>,\n"
+"            <t t-out=\"object.partner_id.name or ''\">Брэндон Фримен</t>!\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Представляем вам\n"
+"        Во вложении вы найдете ваш счет\n"
 "        <t t-if=\"object.name\">\n"
-"            счёт-фактуру <span style=\"font-weight:bold;\" t-"
-"out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            счет <span style=\"font-weight:bold;\" t-out=\"object.name or ''"
+"\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            счёт-фактуру\n"
+"            счет\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (со ссылкой: <t t-out=\"object.invoice_origin or ''\">SUB003</"
-"t>)\n"
+"            (со ссылкой: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
+"\n"
 "        </t>\n"
-"        на сумму <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        на сумму <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total, object.currency_id) or ''\">143 750,00 $</span>\n"
 "        от <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Оплата по этому счету уже произведена.\n"
@@ -796,23 +796,24 @@ msgstr ""
 "                Пожалуйста, используйте следующую информацию для оплаты: "
 "<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
-"                    на счёт <strong t-"
-"out=\"object.partner_bank_id.acc_number\"/>\n"
+"                    на счет <strong t-out="
+"\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
 "                .\n"
 "            </t>\n"
 "        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and "
-"object.timesheet_count\">\n"
+"        <t t-if="
+"\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            P.S.: вы можете просмотреть свои табели учёта времени <a t-att-"
-"href=\"'/my/timesheets?search_in=invoice&search=%s' % object.name\">на "
+"            P.S.: Вы можете просмотреть свои табели учета рабочего времени "
+"<a t-att-href="
+"\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">на "
 "портале.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Не стесняйтесь обращаться к нам, если у вас есть вопросы.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
-"o-mail-quote-container=\"1\">\n"
+"        Не стесняйтесь обращаться к нам, если у вас возникнут вопросы.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" "
+"data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
 "quote=\"1\">--<br data-o-mail-quote=\"1\"/>Митчелл Админ</t>\n"
@@ -4450,6 +4451,10 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
+"В некоторых странах в соответствии с их внутренним законодательством "
+"применяется удержание налога у источника с суммы счетов. Любое удержание у "
+"источника будет уплачено клиентом в налоговые органы. Ни при каких "
+"обстоятельствах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
@@ -8096,6 +8101,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Функция группировки не поддерживается механизмом '%(engine)s'. Удалите "
+"значение группировки в '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9834,7 +9841,7 @@ msgstr "Июнь"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "Поставщик KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -13493,7 +13500,7 @@ msgstr "Сторнировано"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
-msgstr ""
+msgstr "Сторнировано"
 
 #. module: account
 #. odoo-python
@@ -15643,7 +15650,7 @@ msgstr "Страна, из которой используются налого�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The currency rate must be strictly positive."
-msgstr "Курс валют должен быть строго положительным."
+msgstr "Курс валюты должен быть строго положительным."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id

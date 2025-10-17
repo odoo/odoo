@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-15 18:36+0000\n"
-"PO-Revision-Date: 2025-08-26 14:54+0000\n"
+"PO-Revision-Date: 2025-10-17 09:01+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-18/website_slides/sr_Latn/>\n"
@@ -190,6 +190,14 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Zdravo<br/><br/>\n"
+"        Upisani ste na novi kurs: <t t-out=\"object.channel_id.name or ''\""
+">Osnove baštovanstva</t>.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
@@ -203,6 +211,14 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Zdravo<br/><br/>\n"
+"        Pozvani ste da pogledate ovaj kurs: <t t-out="
+"\"object.channel_id.name or ''\">Osnove baštovanstva</t>.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_completed
@@ -237,6 +253,35 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style="
+"\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Zdravo <t t-out="
+"\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p><b>Čestitamo!</b></p>\n"
+"                        <p>Završili ste kurs <b t-out="
+"\"object.channel_id.name or ''\">Osnove baštovanstva</b></p>\n"
+"                        <p>Pogledajte ostale dostupne kurseve.</p><br/>\n"
+"\n"
+"                        <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color:"
+" #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px;\">\n"
+"                                Istražite kurseve\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Uživajte u ovom ekskluzivnom sadržaju!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\" "
+"data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out="
+"\"object.channel_id.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br "
+"data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
@@ -274,6 +319,38 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Zdravo<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> je "
+"podelio/la <strong t-out=\"object.name or ''\">dokument</strong> sa tobom!\n"
+"                        </p><div style="
+"\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\""
+"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\""
+" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_url\" style"
+"=\"background-color: #875a7b; padding: 8px 16px 8px 16px;"
+"                                 text-decoration: none; color: #fff; border-"
+"radius: 5px;\">\n"
+"                                Vidi <strong t-out=\"object.name or ''\""
+">Dokument</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -312,6 +389,39 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Zdravo<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> je "
+"podelio/la <t t-out=\"object.slide_category or ''\">dokument</t> <strong "
+"t-out=\"object.name or ''\">Drveće</strong> sa vama!\n"
+"                        </p><div style="
+"\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + "
+"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\""
+"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + "
+"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" "
+"style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">Vidi <strong t-out=\""
+"object.name or ''\">Drveće</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -352,6 +462,41 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Zdravo<br/><br/>\n"
+"                        Postoji nešto novo na kursu <strong t-out="
+"\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> koji "
+"pratite:<br/><br/>\n"
+"                        </p><center><strong t-out=\"object.name or ''\""
+">Trees</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\""
+"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" style"
+"=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: "
+"none; color: #fff; border-radius: 5px;\">Vidi sadržaj</a>\n"
+"                        </div>\n"
+"                        Uživajte u ovom ekskluzivnom sadržaju!\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -686,6 +831,8 @@ msgid ""
 "<small><span class=\"badge text-bg-success fw-normal\"><i class=\"fa fa-"
 "check\"/> Completed</span></small>"
 msgstr ""
+"<small><span class=\"badge text-bg-success fw-normal\"><i class="
+"\"fa fa-check\"/> Završeno</span></small>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -712,6 +859,8 @@ msgid ""
 "<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Add Quiz</"
 "span>"
 msgstr ""
+"<span class=\"badge text-bg-primary badge-hide fw-normal m-1\">Dodaj "
+"kviz</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -733,6 +882,8 @@ msgid ""
 "<span class=\"badge text-bg-success pull-right\"><i class=\"fa fa-check\"/> "
 "Completed</span>"
 msgstr ""
+"<span class=\"badge text-bg-success pull-right\"><i class=\"fa fa-check\"/> "
+"Završeno</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -799,6 +950,8 @@ msgid ""
 "<span class=\"o_wslides_arrow badge bg-secondary mt-2 ms-2\">New Content</"
 "span>"
 msgstr ""
+"<span class=\"o_wslides_arrow badge bg-secondary mt-2 ms-2\">Novi "
+"sadržaj</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -848,6 +1001,8 @@ msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Invited\">Invited</"
 "span>"
 msgstr ""
+"<span class=\"text-muted text-truncate mw-100\" title=\"Invited\">Pozvan/"
+"a</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -855,12 +1010,16 @@ msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Ongoing\">Ongoing</"
 "span>"
 msgstr ""
+"<span class=\"text-muted text-truncate mw-100\" title=\"U toku\">U "
+"toku</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid ""
 "<span class=\"text-muted text-truncate mw-100\" title=\"Total\">Total</span>"
 msgstr ""
+"<span class=\"text-muted text-truncate mw-100\" title=\"Ukupno\""
+">Ukupno</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -928,6 +1087,16 @@ msgid ""
 ">\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-"
+"label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>"
+"\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class="
+"\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>"
+"\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -935,6 +1104,8 @@ msgid ""
 "<span name=\"done_members_count_label\" class=\"text-muted text-truncate "
 "mw-100\" title=\"Finished\">Finished</span>"
 msgstr ""
+"<span name=\"done_members_count_label\" class=\"text-muted text-truncate mw-"
+"100\" title=\"Finished\">Završeno</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -953,7 +1124,7 @@ msgstr "<span> sati</span>"
 #. module: website_slides
 #: model_terms:web_tour.tour,rainbow_man_message:website_slides.slides_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr ""
+msgstr "<span><b>Bravo!</b> Prošli ste sve korake ovog putovanja.</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -1027,6 +1198,7 @@ msgstr "<strong>Još uvek nema učesnika!</strong>"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<strong>Sharing is caring!</strong> Your email(s) will arrive shortly."
 msgstr ""
+"<strong>Deljenje je briga!</strong> Vaš(i) email(ovi) će uskoro stići."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -2520,7 +2692,7 @@ msgstr "Datum (stariji ka novijem)"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "Default training image"
-msgstr ""
+msgstr "Podrazumevana slika kursa"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_gamification_challenge__challenge_category
@@ -3018,7 +3190,7 @@ msgstr "Datoteka je prevelika. Datoteka ne sme da pređe 25MB"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Model pomoćnika za strimovanje datoteka za kontrolere"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3354,7 +3526,7 @@ msgstr "Kako da pronađete kvalitetno drvo"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_3
 msgid "How to plant a potted.list"
-msgstr ""
+msgstr "Kako posaditi biljku u saksiji.list"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3598,7 +3770,7 @@ msgstr "Zanimljive činjenice"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
 msgid "Interesting List Facts"
-msgstr ""
+msgstr "Zanimljive činjenice sa liste"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
@@ -3989,12 +4161,12 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "List Infographic"
-msgstr ""
+msgstr "Infografik liste"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
 msgid "List planting in hanging bottles on wall"
-msgstr ""
+msgstr "Lista sadnje u visećim bocama na zidu"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6788,7 +6960,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 msgid "Your email(s) will arrive shortly."
-msgstr ""
+msgstr "Vaš(i) email(ovi) će uskoro stići."
 
 #. module: website_slides
 #. odoo-python
@@ -6876,7 +7048,7 @@ msgstr "putem email-a."
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "copy"
-msgstr ""
+msgstr "kopija"
 
 #. module: website_slides
 #. odoo-javascript

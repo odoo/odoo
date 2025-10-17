@@ -628,15 +628,14 @@ export const accountTaxHelpers = {
         let remaining_errors = nb_of_errors;
 
         // Take absolute value of factors and sort them by largest absolute value first
-        const factors = target_factors.map((x) => Math.abs(x.factor));
-        factors.sort((a, b) => b - a);
-        const sum_of_factors = factors.reduce((a, b) => a + b, 0);
+        const factors = target_factors.map((x, i) => [i, Math.abs(x.factor)]);
+        factors.sort((a, b) => b[1] - a[1]);
+        const sum_of_factors = factors.reduce((sum, x) => sum + x[1], 0.0);
         if (sum_of_factors === 0.0) {
             return amounts_to_distribute;
         }
 
-        for (let i = 0; i < target_factors.length; i++) {
-            const factor = factors[i];
+        for (const [i, factor] of factors) {
             if (remaining_errors === 0) {
                 break;
             }
@@ -928,6 +927,12 @@ export const accountTaxHelpers = {
                 const manual_field = `manual_${total_field}`;
                 if (base_line[manual_field] !== null) {
                     tax_details[total_field] = base_line[manual_field];
+                    if (suffix === "_currency" && rate) {
+                        tax_details.total_excluded = roundPrecision(
+                            tax_details[total_field] / rate,
+                            company.currency_id.rounding
+                        );
+                    }
                 }
 
                 for (const tax_data of tax_details.taxes_data) {
@@ -1277,6 +1282,8 @@ export const accountTaxHelpers = {
 
                     let excluded_target_amount;
                     if (base_line[excluded_manual_field] !== null) {
+                        excluded_target_amount = base_line[excluded_manual_field];
+                    } else if (suffix === "" && base_line.manual_total_excluded_currency !== null) {
                         excluded_target_amount = excluded_rounded_amount;
                     } else {
                         excluded_target_amount = excluded_raw_amount;
@@ -1292,6 +1299,12 @@ export const accountTaxHelpers = {
                         values[tax_base_raw_field] = tax_data[tax_base_raw_field];
 
                         if (tax_base_rounded_field in current_manual_tax_amounts) {
+                            values[tax_base_target_field] =
+                                current_manual_tax_amounts[tax_base_rounded_field];
+                        } else if (
+                            suffix === "" &&
+                            "base_amount_currency" in current_manual_tax_amounts
+                        ) {
                             values[tax_base_target_field] = tax_data[tax_base_rounded_field];
                         } else {
                             values[tax_base_target_field] = tax_data[tax_base_raw_field];
@@ -1302,31 +1315,38 @@ export const accountTaxHelpers = {
                         values[tax_base_target_field] = excluded_target_amount;
                     }
 
-                    const tax_tax_rounded_field = `tax_amount${suffix}`;
-                    const tax_tax_raw_field = `raw_${tax_tax_rounded_field}`;
-                    const tax_tax_target_field = `target_${tax_tax_rounded_field}`;
+                    const tax_rounded_field = `tax_amount${suffix}`;
+                    const tax_raw_field = `raw_${tax_rounded_field}`;
+                    const tax_target_field = `target_${tax_rounded_field}`;
 
-                    values[tax_tax_rounded_field] = 0.0;
-                    values[tax_tax_raw_field] = 0.0;
-                    values[tax_tax_target_field] = 0.0;
+                    values[tax_rounded_field] = 0.0;
+                    values[tax_raw_field] = 0.0;
+                    values[tax_target_field] = 0.0;
                 }
             }
 
             // Tax amount.
             if (tax_data) {
+                const reverse_charge_sign = tax_data.is_reverse_charge ? -1 : 1;
                 const values = values_per_grouping_key[grouping_key];
                 for (const suffix of ["_currency", ""]) {
-                    const tax_tax_rounded_field = `tax_amount${suffix}`;
-                    const tax_tax_raw_field = `raw_${tax_tax_rounded_field}`;
-                    const tax_tax_target_field = `target_${tax_tax_rounded_field}`;
+                    const tax_rounded_field = `tax_amount${suffix}`;
+                    const tax_raw_field = `raw_${tax_rounded_field}`;
+                    const tax_target_field = `target_${tax_rounded_field}`;
 
-                    values[tax_tax_rounded_field] += tax_data[tax_tax_rounded_field];
-                    values[tax_tax_raw_field] += tax_data[tax_tax_raw_field];
+                    values[tax_rounded_field] += tax_data[tax_rounded_field];
+                    values[tax_raw_field] += tax_data[tax_raw_field];
 
-                    if (tax_tax_rounded_field in current_manual_tax_amounts) {
-                        values[tax_tax_target_field] += tax_data[tax_tax_rounded_field];
+                    if (tax_rounded_field in current_manual_tax_amounts) {
+                        values[tax_target_field] +=
+                            reverse_charge_sign * current_manual_tax_amounts[tax_rounded_field];
+                    } else if (
+                        suffix === "" &&
+                        "tax_amount_currency" in current_manual_tax_amounts
+                    ) {
+                        values[tax_target_field] = tax_data[tax_rounded_field];
                     } else {
-                        values[tax_tax_target_field] += tax_data[tax_tax_raw_field];
+                        values[tax_target_field] += tax_data[tax_raw_field];
                     }
                 }
                 values.taxes_data.push(tax_data);
