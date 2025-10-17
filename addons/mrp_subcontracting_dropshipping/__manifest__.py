@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -14,7 +13,6 @@ This bridge module allows to manage subcontracting with the dropshipping module.
         'data/mrp_subcontracting_dropshipping_data.xml',
         'views/purchase_order_views.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

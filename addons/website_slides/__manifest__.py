@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
     'version': '2.7',
@@ -67,7 +66,6 @@ Featuring
         'data/slide_user_demo.xml',
         'data/slide_user_gamification_demo.xml',
     ],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

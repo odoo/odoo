@@ -1,9 +1,7 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Website Modules Test',
-    'version': '1.0',
     'category': 'Hidden',
     'sequence': 9876,
     'description': """This module contains tests related to website modules.
@@ -20,7 +18,6 @@ installed.""",
         'website_sale_comparison',
         'website_sale_wishlist',
     ],
-    'installable': True,
     'assets': {
         'web.assets_tests': [
             'test_website_modules/static/tests/**/*',

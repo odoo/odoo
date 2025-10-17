@@ -2,7 +2,6 @@
 
 {
     'name': "Payment Provider: AsiaPay",
-    'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "An payment provider based in Hong Kong covering most Asian countries.",

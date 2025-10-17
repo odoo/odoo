@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 
 {
     "name": "Uganda - Accounting",
     "countries": ["ug"],
-    "version": "1.0.0",
     "category": "Accounting/Localizations/Account Charts",
     "author": "Odoo S.A.",
     "license": "LGPL-3",

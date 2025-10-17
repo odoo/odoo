@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Online Event Booths',
     'category': 'Marketing/Events',
-    'version': '1.0',
     'summary': 'Events, display your booths on your website',
     'description': """
 Display your booths on your website for the users to register.

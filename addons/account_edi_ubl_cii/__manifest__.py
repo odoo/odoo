@@ -1,6 +1,5 @@
 {
     'name': "Import/Export electronic invoices with UBL/CII",
-    'version': '1.0',
     'category': 'Accounting/Accounting',
     'description': """
 Electronic invoicing module
@@ -32,7 +31,6 @@ Pro rules and show the errors.
             'account_edi_ubl_cii/static/src/scss/**/*',
         ],
     },
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

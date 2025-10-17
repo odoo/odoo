@@ -1,6 +1,5 @@
 {
     'name': 'HR - Livechat',
-    'version': '1.0',
     'category': 'Human Resources',
     'description': """
 Bridge between HR and Livechat.""",

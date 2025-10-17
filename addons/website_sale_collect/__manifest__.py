@@ -2,7 +2,6 @@
 
 {
     'name': "Click & Collect",
-    'version': '1.0',
     'category': 'Website/Website',
     'description': """
 Allows customers to check in-store stock, pay on site, and pick up their orders at the shop.

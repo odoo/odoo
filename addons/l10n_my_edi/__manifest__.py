@@ -2,7 +2,6 @@
 {
     'name': 'Malaysia - E-invoicing',
     'countries': ['my'],
-    'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'icon': '/account/static/description/l10n.png',
     "summary": "E-invoicing using MyInvois",
@@ -32,7 +31,6 @@
         'wizard/myinvois_consolidate_invoice_wizard.xml',
         'wizard/myinvois_document_status_update_wizard.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3'
 }

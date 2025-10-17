@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'LATAM Localization Base',
-    'version': '1.0',
     'category': 'Accounting/Localizations',
     'sequence': 14,
     'author': 'Odoo S.A., ADHOC SA',
@@ -62,7 +61,6 @@ This module is compatible with base_vat module in order to be able to validate V
             'l10n_latam_base/static/src/components/select_menu_wrapper/**.*',
         ],
     },
-    'installable': True,
     'post_init_hook': '_set_default_identification_type',
     'license': 'LGPL-3',
 }

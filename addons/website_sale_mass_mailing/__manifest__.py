@@ -8,7 +8,6 @@
         process.
     """,
     'category': 'Website/Website',
-    'version': '1.0',
     'depends': ['website_sale', 'website_mass_mailing'],
     'data': [
         'views/res_config_settings_views.xml',

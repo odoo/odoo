@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -9,7 +8,6 @@
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['mail'],
     'auto_install': True,
-    'installable': True,
     'data': [
         'views/res_users_views.xml',
         'data/mailbot_data.xml',

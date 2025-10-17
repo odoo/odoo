@@ -91,7 +91,6 @@
     'demo': [
         'data/demo.xml',
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': '_post_init_hook',
     'uninstall_hook': 'uninstall_hook',

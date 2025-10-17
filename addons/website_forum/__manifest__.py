@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -57,7 +56,6 @@ Ask questions, get answers, no distractions
         'data/forum_tag_demo.xml',
         'data/forum_post_demo.xml',
     ],
-    'installable': True,
     'assets': {
         'website.assets_editor': [
             'website_forum/static/src/js/systray_items/*.js',

@@ -1,7 +1,6 @@
 {
     'name': 'API Documentation',
     'category': 'Hidden',
-    'version': '1.0',
     'description': """
 Odoo Dynamic API Documentation
 ==============================

@@ -2,7 +2,6 @@
 
 {
     'name': 'Ecuador - Sale',
-    'version': '1.0',
     'description': """Ecuador Sale""",
     'category': 'Accounting/Localizations/Sale',
     'depends': [

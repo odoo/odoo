@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -32,7 +31,6 @@
     'demo': [
         'data/purchase_stock_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'post_init_hook': '_create_buy_rules',
     'assets': {

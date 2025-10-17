@@ -11,7 +11,6 @@
         'data/test.translation.model1.csv',
         'data/test.translation.model1-translated.csv',
     ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             'test_translation/static/tests/tours/constraint.js',

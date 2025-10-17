@@ -3,7 +3,6 @@
     'name': 'Cambodia - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['kh'],
-    'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
     Chart Of Account and Taxes for Cambodia.

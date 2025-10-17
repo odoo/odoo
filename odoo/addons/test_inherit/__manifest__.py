@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'test-inherit',
     'version': '0.1',
@@ -9,7 +8,6 @@
         'ir.model.access.csv',
         'demo_data.xml',
     ],
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

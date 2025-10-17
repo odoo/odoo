@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Product Matrix",
@@ -7,7 +6,6 @@
 Please refer to Sale Matrix or Purchase Matrix for the use of this module.
     """,
     'category': 'Sales/Sales',
-    'version': '1.0',
     'depends': ['account'],
     # Account dependency for section_and_note widget.
     'data': [

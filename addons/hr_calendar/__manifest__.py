@@ -2,7 +2,6 @@
 
 {
     'name': "Display Working Hours in Calendar",
-    'version': '1.0',
     'category': 'Human Resources/Employees',
     'depends': ['hr', 'calendar'],
     'auto_install': True,

@@ -3,7 +3,6 @@
     'name': 'Bulgaria - Report ledger',
     'icon': '/account/static/description/l10n.png',
     'countries': ['bg'],
-    'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Report ledger for Bulgaria

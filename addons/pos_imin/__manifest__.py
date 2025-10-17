@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'POS iMin',
-    'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'iMin ePOS Printers in PoS',

@@ -2,7 +2,6 @@
     'name': 'Bahrain - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['bh'],
-    'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Bahrain in Odoo.

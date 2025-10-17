@@ -2,7 +2,6 @@
 
 {
     'name': 'Google Calendar',
-    'version': '1.0',
     'category': 'Productivity',
     'depends': ['google_account', 'calendar'],
     'data': [
@@ -13,7 +12,6 @@
         'views/res_users_views.xml',
         'views/google_calendar_views.xml',
         ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             'google_calendar/static/src/scss/google_calendar.scss',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "delivery_mondialrelay",
     'summary': """ Let's choose a Point Relais® as shipping address """,

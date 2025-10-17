@@ -2,7 +2,6 @@
 
 {
     'name': 'Hungary - E-invoicing',
-    'version': '1.0.0',
     'category': 'Accounting/Localizations/EDI',
     'author': 'DO Tech (OdooTech Zrt.), BDSC Business Consulting Kft. & Odoo S.A.',
     'description': """

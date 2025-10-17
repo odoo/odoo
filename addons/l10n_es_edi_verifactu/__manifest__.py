@@ -2,7 +2,6 @@
 
 {
     'name': 'Spain - Veri*Factu',
-    'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': "Module for sending Spanish Veri*Factu XML to the AEAT",
     'website': "https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/spain.html#veri-factu",
@@ -28,7 +27,6 @@
             'l10n_es_edi_verifactu/static/src/css/warning.scss',
         ],
     },
-    'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

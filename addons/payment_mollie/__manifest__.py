@@ -2,7 +2,6 @@
 
 {
     'name': 'Payment Provider: Mollie',
-    'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "A Dutch payment provider covering several European countries.",

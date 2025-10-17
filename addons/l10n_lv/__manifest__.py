@@ -1,6 +1,5 @@
 {
     'name': "Latvia - Accounting",
-    'version': '1.0.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['lv'],
     'description': """

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Purchase Matrix",
@@ -8,7 +7,6 @@ This module allows to fill Purchase Orders rapidly
 by choosing product variants quantity through a Grid Entry.
     """,
     'category': 'Supply Chain/Purchase',
-    'version': '1.0',
     'depends': ['purchase', 'product_matrix'],
     'data': [
         'views/purchase_views.xml',

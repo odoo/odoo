@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Cloudflare Turnstile',
     'category': 'Website/Website',
-    'version': '1.0',
     'description': """
 This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.
     """,
@@ -27,5 +25,4 @@ This module implements Cloudflare Turnstile so that you can prevent bot spam on 
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'installable': True,
 }

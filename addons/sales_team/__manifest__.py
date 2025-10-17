@@ -24,7 +24,6 @@ Using this application you can manage Sales Teams with CRM and/or Sales
         'data/crm_team_demo.xml',
         'data/crm_tag_demo.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             'sales_team/static/src/**/*',

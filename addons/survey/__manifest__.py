@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Surveys',
@@ -55,7 +54,6 @@ sent mails with personal token for the invitation of the survey.
         'data/survey_demo_certification_user_input_line.xml',
         'data/survey_demo_conditional.xml',
     ],
-    'installable': True,
     'application': True,
     'sequence': 220,
     'assets': {

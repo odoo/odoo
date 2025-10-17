@@ -2,7 +2,6 @@
 
 {
     'name': 'Sales',
-    'version': '1.2',
     'category': 'Sales/Sales',
     'summary': 'Sales internal machinery',
     'description': """
@@ -60,7 +59,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/product_demo.xml',
         'data/sale_demo.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_backend': [
             'sale/static/src/scss/sale_onboarding.scss',

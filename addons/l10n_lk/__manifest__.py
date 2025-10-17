@@ -16,7 +16,6 @@ Forms
 - VAT001
 - WHT001
     """,
-    "version": "1.0",
     "author": "Odoo S.A.",
     "category": "Accounting/Localizations/Account Charts",
     "website": "https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html",

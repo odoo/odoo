@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -42,7 +41,6 @@ Dashboard / Reports for Warehouse Management includes:
         'report/stock_avco_audit_report_views.xml',
         'report/stock_valuation_report.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'post_init_hook': '_post_init_hook',
     'assets': {

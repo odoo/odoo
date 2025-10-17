@@ -2,7 +2,6 @@
 
 {
     'name': 'Project Stock Account',
-    'version': '1.0',
     'summary': 'Handle analytics in Stock pickings with Project',
     'category': 'Services/Project',
     'depends': ['stock_account', 'project_stock'],

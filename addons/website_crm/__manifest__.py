@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -22,7 +21,6 @@ This module includes contact phone and mobile numbers validation.""",
         'views/website_visitor_views.xml',
         'views/website_templates_contactus.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'website.website_builder_assets': [

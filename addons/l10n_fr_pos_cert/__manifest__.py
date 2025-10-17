@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -22,7 +21,6 @@ The module adds following features:
     Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
     'depends': ['l10n_fr_account', 'point_of_sale'],
-    'installable': True,
     'auto_install': True,
     'data': [
         'views/pos_views.xml',

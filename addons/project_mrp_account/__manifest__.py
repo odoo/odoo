@@ -2,7 +2,6 @@
 
 {
     'name': "MRP Account Project",
-    'version': '1.0',
     'summary': "Monitor MRP account using project",
     'category': 'Services/Project',
     'depends': ['mrp_account', 'project_mrp'],

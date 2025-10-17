@@ -9,7 +9,6 @@ Activates:
 - Chart of accounts
     """,
     'category': 'Accounting/Localizations/Account Charts',
-    'version': '1.0',
     'depends': [
         'account',
         'l10n_gcc_invoice',

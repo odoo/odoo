@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Website profile',
     'category': 'Website/Website',
-    'version': '1.0',
     'summary': 'Access the website profile of the users',
     'description': "Allows to access the website profile of the users and see their statistics (karma, badges, etc..)",
     'depends': [

@@ -3,7 +3,6 @@
 
 {
     'name': 'Task Logs',
-    'version': '1.0',
     'category': 'Services/Timesheets',
     'sequence': 23,
     'summary': 'Track employee time on tasks',
@@ -46,7 +45,6 @@ up a management by affair.
     'demo': [
         'data/hr_timesheet_demo.xml',
     ],
-    'installable': True,
     'post_init_hook': 'create_internal_project',
     'uninstall_hook': '_uninstall_hook',
     'assets': {

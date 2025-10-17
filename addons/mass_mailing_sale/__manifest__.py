@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Mass mailing on sale orders',
     'category': 'Marketing/Email Marketing',
-    'version': '1.0',
     'summary': 'Add sale order UTM info on mass mailing',
     'description': """UTM and mass mailing on sale orders""",
     'depends': ['sale', 'mass_mailing'],

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -44,7 +43,6 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'data/crm_lead_demo.xml',
         'data/res_partner_grade_demo.xml',
     ],
-    'installable': True,
     'assets': {
         'web.assets_frontend': [
             'website_crm_partner_assign/static/src/interactions/**/*',

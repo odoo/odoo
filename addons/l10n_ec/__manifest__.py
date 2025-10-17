@@ -65,5 +65,4 @@ Master Data:
     'demo': [
         'demo/demo_company.xml',
     ],
-    'installable': True,
 }

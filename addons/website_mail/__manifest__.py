@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -13,7 +12,6 @@ Module holding mail improvements for website. It holds the follow widget.
     'data': [
         'views/website_mail_templates.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [

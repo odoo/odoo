@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Mass mailing on track speakers',
     'category': 'Marketing/Email Marketing',
-    'version': '1.0',
     'description':
         """
 Mass mail event track speakers

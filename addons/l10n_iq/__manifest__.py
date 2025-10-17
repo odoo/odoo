@@ -11,7 +11,6 @@ Activates:
 - Taxes
     """,
     "category": "Accounting/Localizations/Account Charts",
-    "version": "1.0",
     "depends": [
         "account",
     ],

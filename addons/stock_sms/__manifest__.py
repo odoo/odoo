@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -6,7 +5,6 @@
     'summary': 'Send text messages when final stock move',
     'description': "Send text messages when final stock move",
     'category': 'Supply Chain/Inventory',
-    'version': '1.0',
     'depends': ['stock', 'sms'],
     'data': [
         'data/sms_data.xml',

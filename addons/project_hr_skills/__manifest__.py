@@ -7,7 +7,6 @@
         Search project tasks according to the assignees' skills
     """,
     'category': 'Services/Project',
-    'version': '1.0',
     'depends': ['project', 'hr_skills'],
     'auto_install': True,
     'data': [

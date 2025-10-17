@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -64,7 +63,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'demo': [
         'data/hr_holidays_demo.xml',
     ],
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

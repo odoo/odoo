@@ -3,7 +3,6 @@
 {
     'name': 'Indonesia E-faktur (Coretax)',
     'icon': '/account/static/description/l10n.png',
-    'version': '1.0',
     'description': """
         E-invoicing feature provided by DJP (Indonesian Tax Office). As of January 1st 2025,
         Indonesia is using CoreTax system, which changes the file format and content of E-Faktur.
@@ -35,7 +34,6 @@
         "views/efaktur_document.xml",
         "views/uom_uom.xml",
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -12,7 +11,6 @@ A tax defined as python code consists of two snippets of python code which are e
 "Python Code" defines the amount of the tax.
         """,
     'category': 'Accounting/Accounting',
-    'version': '1.0',
     'depends': ['account'],
     'data': [
         'views/account_tax_views.xml',

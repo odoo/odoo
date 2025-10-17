@@ -7,7 +7,6 @@ Nigerian localization.
 =========================================================
     """,
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
-    'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ng'],
     'category': 'Accounting/Localizations/Account Charts',

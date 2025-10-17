@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Event CRM',
-    'version': '1.0',
     'category': 'Marketing/Events',
     'website': 'https://www.odoo.com/app/events',
     'description': "Create leads from event registrations.",
@@ -28,7 +26,6 @@
             'event_crm/static/tests/tours/*.js',
         ],
     },
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

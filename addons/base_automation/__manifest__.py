@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Automation Rules',
-    'version': '1.0',
     'category': 'Sales/Sales',
     'description': """
 This module allows to implement automation rules for any object.

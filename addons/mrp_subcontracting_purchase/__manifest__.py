@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -16,7 +15,6 @@ This bridge module adds some smart buttons between Purchase and Subcontracting
     'demo': [
         'data/mrp_subcontracting_purchase_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

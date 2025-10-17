@@ -3,7 +3,6 @@
     'name': 'Lithuania - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['lt'],
-    'version': '1.0.0',
     'description': """
 Chart of Accounts (COA) Template for Lithuania's Accounting.
 
@@ -33,5 +32,4 @@ This module also includes:
     'demo': [
         'demo/demo_company.xml',
     ],
-    'installable': True,
 }

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': "Website Mail Group",
     'summary': "Add a website snippet for the mail groups.",
-    'version': '1.0',
     'depends': ['mail_group', 'website'],
     'auto_install': True,
     'data': [

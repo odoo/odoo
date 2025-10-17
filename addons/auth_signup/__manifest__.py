@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -7,7 +6,6 @@
 Allow users to sign up and reset their password
 ===============================================
     """,
-    'version': '1.0',
     'category': 'Hidden/Tools',
     'auto_install': True,
     'depends': [

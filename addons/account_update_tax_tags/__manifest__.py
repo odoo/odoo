@@ -2,7 +2,6 @@
     'name': 'Account - Allow updating tax grids',
     'category': 'Accounting/Accounting',
     'summary': 'Allow updating tax grids on existing entries',
-    'version': '1.0',
     'description': """
     This module allows updating tax grids on existing accounting entries.
     In debug mode a button to update your entries' tax grids will be available

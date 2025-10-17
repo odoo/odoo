@@ -1,6 +1,5 @@
 {
     'name': 'Italy - Sale E-invoicing',
-    'version': '1.0',
     'depends': [
         'l10n_it_edi',
         'sale',
@@ -11,7 +10,6 @@
     'data': [
         'views/sale_order_views.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

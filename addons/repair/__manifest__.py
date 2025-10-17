@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
     'name': 'Repairs',
-    'version': '1.0',
     'sequence': 230,
     'category': 'Supply Chain/Inventory',
     'summary': 'Repair damaged products',
@@ -37,7 +35,6 @@ The following topics are covered by this module:
     ],
     'demo': ['data/repair_demo.xml'],
     'post_init_hook': '_create_warehouse_data',
-    'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [

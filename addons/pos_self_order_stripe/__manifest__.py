@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     "name": "POS Self Order Stripe",
     "summary": "Addon for the Self Order App that allows customers to pay by Stripe.",

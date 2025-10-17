@@ -1,9 +1,7 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Website Test',
-    'version': '1.0',
     'category': 'Hidden',
     'sequence': 9876,
     'summary': 'Website Test, mainly for module install/uninstall tests',
@@ -28,7 +26,6 @@ models which only purpose is to run tests.""",
         'views/test_model_views.xml',
         'data/test_website_data.xml',
     ],
-    'installable': True,
     'assets': {
         'test_website.test_bundle': [
             'http://test.external.link/javascript1.js',

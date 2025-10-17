@@ -1,6 +1,5 @@
 {
     'name': 'Survey CRM',
-    'version': '1.0',
     'category': 'Marketing/Surveys',
     'summary': 'Generate leads from surveys',
     'description': """

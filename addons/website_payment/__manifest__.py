@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Website Payment',
     'category': 'Website/Website',
     'summary': 'Payment integration with website',
-    'version': '1.0',
     'description': """
 This is a bridge module that adds multi-website support for payment providers.
     """,

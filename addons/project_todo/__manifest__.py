@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'To-Do',
-    'version': '1.0',
     'category': 'Productivity/To-Do',
     'summary': 'Organize your work with memos and to-do lists',
     'sequence': 260,
@@ -19,7 +17,6 @@
         'views/project_todo_menus.xml',
         'wizard/mail_activity_todo_create.xml',
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': '_todo_post_init',
     'assets': {

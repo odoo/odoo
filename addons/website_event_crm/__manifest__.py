@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Website Events CRM',
-    'version': '1.0',
     'category': 'Website/Website',
     'website': 'https://www.odoo.com/app/events',
     'description': "Allow per-order lead creation mode",
@@ -14,7 +12,6 @@
     'demo': [
         'data/event_crm_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

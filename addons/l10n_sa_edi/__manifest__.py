@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -13,9 +12,7 @@
         'base_vat',
         'certificate',
     ],
-    'summary': """
-        E-Invoicing, Universal Business Language
-    """,
+    'summary': "E-Invoicing, Universal Business Language",
     'description': """
 E-invoice implementation for Saudi Arabia; Integration with ZATCA
     """,

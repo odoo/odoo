@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -89,7 +88,6 @@
         'views/stock_reference_views.xml',
         'views/uom_uom_views.xml',
     ],
-    'installable': True,
     'application': True,
     'pre_init_hook': 'pre_init_hook',
     'post_init_hook': '_assign_default_mail_template_picking_id',

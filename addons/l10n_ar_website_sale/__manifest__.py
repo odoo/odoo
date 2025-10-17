@@ -1,6 +1,5 @@
 {
     'name': 'Argentinean eCommerce',
-    'version': '1.0',
     'category': 'Accounting/Localizations/Website',
     'countries': ['ar'],
     'icon': '/base/static/img/country_flags/ar.png',
@@ -19,7 +18,6 @@
             'l10n_ar_website_sale/static/src/scss/*.scss',
         ]
     },
-    'installable': True,
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

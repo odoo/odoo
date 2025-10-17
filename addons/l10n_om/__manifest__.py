@@ -1,6 +1,5 @@
 {
     'name': 'Oman - Accounting',
-    'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Odoo S.A.',
     'description': """

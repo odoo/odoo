@@ -2,7 +2,6 @@
 
 {
     'name': 'Stock - Maintenance',
-    'version': '1.0',
     'category': 'Supply Chain/Inventory',
     'description': """
 Stock in Maintenance

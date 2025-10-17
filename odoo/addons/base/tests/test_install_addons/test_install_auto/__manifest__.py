@@ -1,6 +1,5 @@
 {
     'name': 'test_install_auto',
-    'version': '1.0',
     'category': 'Hidden/Tools',
     'description': "",
     'depends': ['test_install_base'],
