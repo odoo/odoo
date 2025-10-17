@@ -1005,6 +1005,70 @@ class TestTaxesComputation(TestTaxCommon):
             },
             rounding_method='round_globally',
         )
+
+        tax1.include_base_amount = False
+        tax1.price_include_override = False
+
+        # Negative price, negative quantity
+        self.assert_taxes_computation(
+            tax1,
+            -10.0,
+            {
+                'total_included': 22.0,
+                'total_excluded': 20.0,
+                'taxes_data': (
+                    (20.0, 2.0),
+                ),
+            },
+            rounding_method='round_globally',
+            quantity=-2,
+        )
+
+        # Negative price, positive quantity
+        self.assert_taxes_computation(
+            tax1,
+            -10.0,
+            {
+                'total_included': -22.0,
+                'total_excluded': -20.0,
+                'taxes_data': (
+                    (-20.0, -2.0),
+                ),
+            },
+            rounding_method='round_globally',
+            quantity=2,
+        )
+
+        # Edge case 1: null price, negative quantity
+        self.assert_taxes_computation(
+            tax1,
+            0.0,
+            {
+                'total_included': -1.0,
+                'total_excluded': 0.0,
+                'taxes_data': (
+                    (0.0, -1.0),
+                ),
+            },
+            rounding_method='round_globally',
+            quantity=-1,
+        )
+
+        # Edge case 2: null price, positive quantity
+        self.assert_taxes_computation(
+            tax1,
+            0.0,
+            {
+                'total_included': 1.0,
+                'total_excluded': 0.0,
+                'taxes_data': (
+                    (0.0, 1.0),
+                ),
+            },
+            rounding_method='round_globally',
+            quantity=1,
+        )
+
         self._run_js_tests()
 
     def test_adapt_price_unit_to_another_taxes(self):

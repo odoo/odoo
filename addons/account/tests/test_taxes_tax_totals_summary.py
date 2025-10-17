@@ -1188,6 +1188,49 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 }
                 yield 8, self.populate_document(document_params), expected_values
 
+        document_params = self.init_document(
+            lines=[
+                {'price_unit': -20.00, 'tax_ids': tax1, 'quantity': -1.0},
+                {'price_unit': 0.00, 'tax_ids': tax1, 'quantity': -1.0},
+                {'price_unit': -20.00, 'tax_ids': tax1, 'quantity': 1.0},
+            ],
+            currency=self.foreign_currency,
+            rate=0.5,
+        )
+        with self.with_tax_calculation_rounding_method('round_globally'):
+            expected_values = {
+                'same_tax_base': True,
+                'currency_id': self.foreign_currency.id,
+                'company_currency_id': self.currency.id,
+                'base_amount_currency': 1.0,
+                'base_amount': 2.0,
+                'tax_amount_currency': -1.0,
+                'tax_amount': -2.0,
+                'total_amount_currency': 0.0,
+                'total_amount': 0.0,
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'base_amount_currency': 1.00,
+                        'base_amount': 2.00,
+                        'tax_amount_currency': -1.0,
+                        'tax_amount': -2.0,
+                        'tax_groups': [
+                            {
+                                'id': self.tax_groups[0].id,
+                                'base_amount_currency': 1.00,
+                                'base_amount': 2.00,
+                                'tax_amount_currency': -1.0,
+                                'tax_amount': -2.0,
+                                'display_base_amount_currency': None,
+                                'display_base_amount': None,
+                            },
+                        ],
+                    },
+                ],
+            }
+            yield 9, self.populate_document(document_params), expected_values
+
     def test_taxes_l10n_be_generic_helpers(self):
         for test_index, document, expected_values in self._test_taxes_l10n_be():
             with self.subTest(test_index=test_index):
