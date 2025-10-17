@@ -27,7 +27,7 @@
                     Use first row as header
                 </CheckBox>
             </div>
-            <div t-if="fileExtension === '.csv'" class="o_import_formatting pt-3 pb-4 border-top">
+            <div t-if="fileExtension.toLowerCase() === '.csv'" class="o_import_formatting pt-3 pb-4 border-top">
                 <h4>Formatting</h4>
                 <div t-foreach="Object.entries(props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
                     <label t-att-for="`${option[0]}-${option_index}`">
