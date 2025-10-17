@@ -236,6 +236,8 @@ class AccountAnalyticLine(models.Model):
                 {line._get_distribution_key(): 100},
                 line.analytic_distribution or {},
             )
+            if not final_distribution:
+                continue
             amount_fname = line._split_amount_fname()
             vals_list = [
                 {amount_fname: line[amount_fname] * percent / 100} | empty_account | {
