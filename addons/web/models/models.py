@@ -159,7 +159,11 @@ class Base(models.AbstractModel):
                 if not field_spec:
                     continue
 
-                co_records = self[field_name]
+                self_context = self
+                if 'context' in field_spec:
+                    self_context = self.with_context(**field_spec['context'])
+
+                co_records = self_context[field_name]
 
                 if 'order' in field_spec and field_spec['order']:
                     co_records = co_records.with_context(active_test=False).search(
@@ -173,9 +177,6 @@ class Base(models.AbstractModel):
                         # filter out inaccessible corecords in case of "cache pollution"
                         values[field_name] = [id_ for id_ in values[field_name] if id_ in order_key]
                         values[field_name] = sorted(values[field_name], key=order_key.__getitem__)
-
-                if 'context' in field_spec:
-                    co_records = co_records.with_context(**field_spec['context'])
 
                 if 'fields' in field_spec:
                     if field_spec.get('limit') is not None:
@@ -2203,9 +2204,10 @@ class RecordSnapshot(dict):
         """ Set the value of field ``name`` from the record's value. """
         if self.record._fields[field_name].type in ('one2many', 'many2many'):
             # x2many fields are serialized as a dict of line snapshots
-            lines = self.record[field_name]
+            record = self.record
             if 'context' in self.fields_spec[field_name]:
-                lines = lines.with_context(**self.fields_spec[field_name]['context'])
+                record = record.with_context(**self.fields_spec[field_name]['context'])
+            lines = record[field_name]
             sub_fields_spec = self.fields_spec[field_name].get('fields') or {}
             self[field_name] = {line.id: RecordSnapshot(line, sub_fields_spec) for line in lines}
         else:
