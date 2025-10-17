@@ -585,6 +585,43 @@
     </template>
 
 
+    <template id="external_layout_dual">
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_dual_header header">
+            <svg class="position-absolute start-0 top-0 z-n1" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h1000v16L0 60z" t-att-fill="company.primary_color" fill-opacity=".15"/>
+            </svg>
+            <svg class="position-absolute start-0 top-0 z-n1" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h80L0 160z" t-att-fill="company.secondary_color" fill-opacity=".15"/>
+            </svg>
+            <table class="w-100 table-borderless">
+                <tr>
+                    <td class="align-top pe-2">
+                        <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </td>
+                    <td class="align-top ps-2 text-end">
+                        <t t-call="web.company_address_list"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout_body" custom_layout_address="True">
+            <t t-out="0"/>
+        </t>
+        <div t-attf-class="o_company_#{company.id}_layout o_layout_dual_footer footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed o_dual_shape_1' or 'position-absolute bottom-0'}} start-0" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h1000v16L0 60z" t-att-fill="company.primary_color" fill-opacity=".15" transform="rotate(180 500 30)"/>
+            </svg>
+            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} end-0" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h80L0 160z" t-att-fill="company.secondary_color" fill-opacity=".15" transform="rotate(180 40 80)"/>
+            </svg>
+            <t
+                t-call="web.external_layout_footer_content"
+                footer_content_classes="(report_type != 'pdf' and 'mx-5' or '')"
+                is_tagline_footer="True"
+            />
+        </div>
+    </template>
+
     <!-- Public api: layout to t-call from reports -->
     <template id="external_layout">
         <t t-if="not o" t-set="o" t-value="doc"/>
