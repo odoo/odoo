@@ -428,7 +428,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
     model_cls._setup_done__ = True
 
     for field in model_cls._fields.values():
-        field.prepare_setup()
+        field._setup_done = False
 
     # 5. determine and validate rec_name
     if model_cls._rec_name:
@@ -529,6 +529,15 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment):
 
     for name in bad_fields:
         pop_field(model_cls, name)
+
+    # set _sequence to order field with write_sequence + natural order of _fields
+    field_indexes = {
+        field: index for index, field in enumerate(sorted(
+            model_cls._fields.values(), key=lambda f: f.write_sequence,
+        ))
+    }
+    for field in model_cls._fields.values():
+        field._sequence = field_indexes[field]
 
 
 def _add_manual_models(env: Environment):

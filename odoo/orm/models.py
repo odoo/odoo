@@ -3843,7 +3843,7 @@ class BaseModel(metaclass=MetaModel):
             # Monetary fields need their corresponding currency field in cache
             # for rounding values. X2many fields must be written last, because
             # they flush other fields when deleting lines.
-            for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
+            for field, value in sorted(field_values):
                 field.write(self, value)
 
             # determine records depending on new values
@@ -4309,9 +4309,10 @@ class BaseModel(metaclass=MetaModel):
             records.modified(self._fields, create=True)
 
             if other_fields:
+                other_fields = sorted(other_fields)
                 # discard default values from context for other fields
                 others = records.with_context(clean_context(self.env.context))
-                for field in sorted(other_fields, key=attrgetter('_sequence')):
+                for field in other_fields:
                     field.create([
                         (other, data['stored'][field.name])
                         for other, data in zip(others, data_list)
@@ -5441,7 +5442,7 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Invalid field %r on model %r" % (e.args[0], self._name))
 
         # convert monetary fields after other columns for correct value rounding
-        for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
+        for field, value in sorted(field_values):
             value = field.convert_to_cache(value, self, validate)
             field._update_cache(self, value)
 

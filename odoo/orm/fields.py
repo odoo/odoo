@@ -87,9 +87,6 @@ def determine(needle, records: BaseModel, *args):
     raise TypeError("Determination requires a callable or method name")
 
 
-_global_seq = itertools.count()
-
-
 class Field(typing.Generic[T]):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
@@ -258,7 +255,8 @@ class Field(typing.Generic[T]):
     is_text: bool = False               # whether the field is a text type in the database
     falsy_value: T | None = None        # falsy value for comparisons (optional)
 
-    write_sequence: int = 0             # field ordering for write()
+    write_sequence: int = 0             # default field ordering for write/create/new()
+    _sequence: int = 0                  # field ordering for write/create/new()
     # Database column type (ident, spec) for non-company-dependent fields.
     # Company-dependent fields are stored as jsonb (see column_type).
     _column_type: tuple[str, str] | None = None
@@ -267,7 +265,6 @@ class Field(typing.Generic[T]):
     _module: str | None = None          # the field's module name
     _modules: tuple[str, ...] = ()      # modules that define this field
     _setup_done = True                  # whether the field is completely set up
-    _sequence: int                      # absolute ordering of the field
     _base_fields__: tuple[Self, ...] = ()  # the fields defining self, in override order
     _extra_keys__: tuple[str, ...] = ()  # unknown attributes set on the field
     _direct: bool = False               # whether self may be used directly (shared)
@@ -319,7 +316,6 @@ class Field(typing.Generic[T]):
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string
-        self._sequence = next(_global_seq)
         self._args__ = ReadonlyDict({key: val for key, val in kwargs.items() if val is not SENTINEL})
 
     def __str__(self):
@@ -384,7 +380,7 @@ class Field(typing.Generic[T]):
     # and are always recreated as toplevel fields.  On those fields, the base
     # setup is useless, because only field._args__ is used for setting up other
     # fields.  We therefore skip the base setup for those fields.  The only
-    # attributes of those fields are: '_sequence', '_args__', 'model_name', 'name'
+    # attributes of those fields are: '_args__', 'model_name', 'name'
     # and '_module', which makes their __dict__'s size minimal.
 
     def __set_name__(self, owner: type[BaseModel], name: str) -> None:
@@ -532,9 +528,6 @@ class Field(typing.Generic[T]):
     #
     # Complete field setup: everything else
     #
-
-    def prepare_setup(self) -> None:
-        self._setup_done = False
 
     def setup(self, model: BaseModel) -> None:
         """ Perform the complete setup of a field. """
@@ -1886,6 +1879,18 @@ class Field(typing.Generic[T]):
             records = records.__class__(records.env, tuple(other_ids), records._prefetch_ids)
             write_value = self.convert_to_write(value, records)
             records.write({self.name: write_value})
+
+    def __lt__(self, other):
+        return self._sequence < other._sequence
+
+    def __le__(self, other):
+        return self._sequence <= other._sequence
+
+    def __gt__(self, other):
+        return self._sequence > other._sequence
+
+    def __ge__(self, other):
+        return self._sequence >= other._sequence
 
     ############################################################################
     #
