@@ -105,7 +105,7 @@ export class PivotRenderer extends Component {
             Object.assign(formatOptions, formatter.extractOptions(fieldInfo));
         }
         if (formatType === "monetary") {
-            if (cell.currencyIds.length > 1) {
+            if (cell.currencyIds?.length > 1) {
                 formatOptions.currencyId = user.activeCompany.currency_id;
                 return {
                     rawValue: cell.value,
@@ -113,7 +113,7 @@ export class PivotRenderer extends Component {
                     currencies: cell.currencyIds,
                 };
             }
-            formatOptions.currencyId = cell.currencyIds[0];
+            formatOptions.currencyId = cell.currencyIds?.[0];
         }
         return { value: formatter(cell.value, formatOptions) };
     }
