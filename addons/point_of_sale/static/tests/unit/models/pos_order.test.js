@@ -207,6 +207,56 @@ describe("pos.order", () => {
         expect(order.presetRequirementsFilled).toBe(true);
     });
 
+    test("isCustomerRequired", async () => {
+        const posStore = await setupPosEnv();
+        const order = await getFilledOrder(posStore);
+        const existingPartner = posStore.models["res.partner"].get(3);
+
+        expect(order.isCustomerRequired).toBe(false);
+        {
+            // preset - name identification
+            const namePreset = posStore.models["pos.preset"].get(3);
+            order.preset_id = namePreset;
+            expect(order.isCustomerRequired).toBe(true);
+            // with floating order name
+            order.floating_order_name = "TEST-P";
+            expect(order.isCustomerRequired).toBe(false);
+            order.floating_order_name = "";
+            // with assigned partner
+            order.partner_id = existingPartner;
+            expect(order.isCustomerRequired).toBe(false);
+            order.partner_id = false;
+        }
+        {
+            // preset - address identification
+            const addressPreset = posStore.models["pos.preset"].get(4);
+            order.preset_id = addressPreset;
+            expect(order.isCustomerRequired).toBe(true);
+            // with assigned partner
+            order.partner_id = existingPartner;
+            expect(order.isCustomerRequired).toBe(false);
+            order.partner_id = false;
+        }
+        {
+            // order invoicing
+            order.preset_id = false;
+            order.to_invoice = true;
+            expect(order.isCustomerRequired).toBe(true);
+            order.to_invoice = false;
+        }
+        {
+            // split payment (customer account)
+            const customerAccountMethod = posStore.models["pos.payment.method"].get(3);
+            order.addPaymentline(customerAccountMethod);
+            expect(order.isCustomerRequired).toBe(true);
+            order.partner_id = existingPartner;
+            expect(order.isCustomerRequired).toBe(false);
+            order.partner_id = false;
+            order.removePaymentline(order.payment_ids[0]);
+        }
+        expect(order.isCustomerRequired).toBe(false);
+    });
+
     test("setShippingDate and getShippingDate with Luxon", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();

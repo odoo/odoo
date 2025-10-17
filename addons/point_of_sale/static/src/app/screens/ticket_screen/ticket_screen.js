@@ -654,6 +654,16 @@ export class TicketScreen extends Component {
         this.pos.setOrder(order);
         this.pos.navigateToOrderScreen(order);
     }
+
+    onClickNewOrder() {
+        const order = this.pos.createNewOrder({
+            preset_id: this.state.selectedPreset || null,
+        });
+        this.pos.selectedOrderUuid = order.uuid;
+        this.pos.addPendingOrder([order.id]);
+        this.pos.navigateToOrderScreen(order);
+    }
+
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
         orderStates.set("SYNCED", { text: _t("Paid") });

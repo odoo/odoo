@@ -1234,7 +1234,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.setNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
-        if (this.config.use_presets) {
+        if (this.config.use_presets && !data["preset_id"]) {
             this.selectPreset(this.config.default_preset_id, order);
         }
 

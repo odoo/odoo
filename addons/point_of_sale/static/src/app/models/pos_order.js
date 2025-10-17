@@ -142,6 +142,19 @@ export class PosOrder extends Base {
             : false;
     }
 
+    get isCustomerRequired() {
+        if (this.partner_id) {
+            return false;
+        }
+        const splitPayment = this.payment_ids.some(
+            (payment) => payment.payment_method_id.split_transactions
+        );
+        const invalidPartnerPreset =
+            (this.preset_id?.needsName && !this.floating_order_name) ||
+            this.preset_id?.needsPartner;
+        return invalidPartnerPreset || this.isToInvoice() || Boolean(splitPayment);
+    }
+
     get presetRequirementsFilled() {
         const invalidCustomer =
             (this.preset_id?.needsName && !(this.floating_order_name || this.partner_id)) ||
@@ -765,7 +778,6 @@ export class PosOrder extends Base {
         this.to_invoice = to_invoice;
     }
 
-    // FIXME remove this
     isToInvoice() {
         return this.to_invoice;
     }
@@ -892,7 +904,7 @@ export class PosOrder extends Base {
     }
 
     canBeValidated() {
-        return this.isPaid() && this._isValidEmptyOrder();
+        return this.isPaid() && this._isValidEmptyOrder() && !this.isCustomerRequired;
     }
 
     // NOTE: Overrided in pos_loyalty to put loyalty rewards at this end of array.
