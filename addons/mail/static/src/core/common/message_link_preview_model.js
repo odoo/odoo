@@ -13,6 +13,10 @@ export class MessageLinkPreview extends Record {
         return !this.message_id.thread?.isFocused;
     }
 
+    get hasDeleteAll() {
+        return this.message_id.message_link_preview_ids.length > 1;
+    }
+
     hide() {
         rpc("/mail/link_preview/hide", { message_link_preview_ids: [this.id] });
     }
