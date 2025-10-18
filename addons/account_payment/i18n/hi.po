@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-08-21 17:21+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -114,12 +114,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>चेतावनी!</strong> इस भुगतान के लिए एक रिफंड बकाया है.\n"
-"                        इसके प्रोसेस होने के लिए कुछ देर इंतज़ार करें. अगर कुछ मिनटों में भी"
-" रिफंड बकाया रहता है,\n"
+"                        इसके प्रोसेस होने के लिए कुछ देर इंतज़ार करें. अगर कुछ मिनटों में "
+"भी रिफंड बकाया रहता है,\n"
 "                        तो कृपया अपने भुगतान प्रोवाइडर का कॉन्फ़िगरेशन जांचें।"
 
 #. module: account_payment
@@ -131,10 +133,9 @@ msgstr "ग्राहक के %s तक भुगतान करने प�
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
-msgstr ""
-"इस इनवॉइस पर पहले ही पेमेंट किया जा चुका है, कृपया दोबारा पेमेंट न करें।"
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
+msgstr "इस इनवॉइस पर पहले ही पेमेंट किया जा चुका है, कृपया दोबारा पेमेंट न करें।"
 
 #. module: account_payment
 #. odoo-python
@@ -201,11 +202,6 @@ msgstr "ट्रांज़ैक्शन कैप्चर करें"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "बंद करें"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "कोड"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -324,8 +320,7 @@ msgstr "आईडी"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr ""
-"सभी बकाया इनवॉइस का भुगतान करना असंभव है, अगर उनकी मुद्रा एक जैसी नहीं है।"
+msgstr "सभी बकाया इनवॉइस का भुगतान करना असंभव है, अगर उनकी मुद्रा एक जैसी नहीं है।"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -662,8 +657,7 @@ msgstr "वह जर्नल जिसमें सफल लेन-देन 
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr ""
-"संदर्भ %(ref)s वाले लेन-देन से संबंधित पेमेंट पोस्ट कर दिया गया है: %(link)s"
+msgstr "संदर्भ %(ref)s वाले लेन-देन से संबंधित पेमेंट पोस्ट कर दिया गया है: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -704,14 +698,12 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
-"आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: ट्रांज़ैक्शन फ़ेल हो गया.<br/>"
+msgstr "आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: ट्रांज़ैक्शन फ़ेल हो गया.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
-"आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: अमान्य क्रेडिट कार्ड आईडी।"
+msgstr "आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: अमान्य क्रेडिट कार्ड आईडी।"
 
 #. module: account_payment
 #. odoo-python
@@ -769,7 +761,8 @@ msgstr "ट्रांज़ैक्शन रद्द करें"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
 "आप किसी ऐसी भुगतान विधि को नहीं हटा सकते जो 'चालू' या 'टेस्ट' स्थिति में प्रोवाइडर से "
@@ -817,3 +810,6 @@ msgstr "लागू किया गया है."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "बकाया"
+
+#~ msgid "Code"
+#~ msgstr "कोड"

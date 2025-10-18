@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-10-15 00:20+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -114,12 +114,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Attention !</strong> Un remboursement est en attente pour ce paiement.\n"
-"                        Attendez un moment pour qu'il soit traité. Si le remboursement est toujours en attente après\n"
-"                        quelques minutes, veuillez vérifier la configuration de votre intermédiaire de paiement."
+"<strong>Attention !</strong> Un remboursement est en attente pour ce "
+"paiement.\n"
+"                        Attendez un moment pour qu'il soit traité. Si le "
+"remboursement est toujours en attente après\n"
+"                        quelques minutes, veuillez vérifier la configuration "
+"de votre intermédiaire de paiement."
 
 #. module: account_payment
 #. odoo-python
@@ -131,8 +136,8 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "Un paiement a déjà été effectué pour cette facture, assurez-vous de ne pas "
 "payer deux fois."
@@ -202,11 +207,6 @@ msgstr "Capturer la transaction"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Fermer"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Code"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -335,7 +335,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"En mode test, un faux paiement est traité via une interface de paiement test.\n"
+"En mode test, un faux paiement est traité via une interface de paiement "
+"test.\n"
 "Ce mode est conseillé lors de la configuration du fournisseur."
 
 #. module: account_payment
@@ -437,8 +438,7 @@ msgstr "Paiements en ligne"
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
-msgstr ""
-"L’option de paiement en ligne n’a pas été activée dans les paramètres."
+msgstr "L’option de paiement en ligne n’a pas été activée dans les paramètres."
 
 #. module: account_payment
 #. odoo-python
@@ -696,8 +696,8 @@ msgstr "Il n'y a aucun montant à payer."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
 msgstr ""
-"Une erreur s’est produite lors du traitement de votre paiement : facture non"
-" valide."
+"Une erreur s’est produite lors du traitement de votre paiement : facture non "
+"valide."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -712,15 +712,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
-"Une erreur s’est produite lors du traitement de votre paiement : échec de la"
-" transaction.<br/>"
+"Une erreur s’est produite lors du traitement de votre paiement : échec de la "
+"transaction.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-"Une erreur s’est produite lors du traitement de votre paiement : identifiant"
-" de carte de crédit invalide."
+"Une erreur s’est produite lors du traitement de votre paiement : identifiant "
+"de carte de crédit invalide."
 
 #. module: account_payment
 #. odoo-python
@@ -778,10 +778,12 @@ msgstr "Annuler la transaction"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Vous ne pouvez pas supprimer un mode de paiement qui est lié à un fournisseur dont le statut est activé ou test.\n"
+"Vous ne pouvez pas supprimer un mode de paiement qui est lié à un "
+"fournisseur dont le statut est activé ou test.\n"
 "Fournisseur(s) lié(s) : %s"
 
 #. module: account_payment
@@ -801,7 +803,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Vous devez d'abord désactiver un fournisseur de paiement avant de supprimer son journal. \n"
+"Vous devez d'abord désactiver un fournisseur de paiement avant de supprimer "
+"son journal. \n"
 "Fournisseurs associés : %s"
 
 #. module: account_payment
@@ -825,3 +828,6 @@ msgstr "a été appliqué."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "en retard"
+
+#~ msgid "Code"
+#~ msgstr "Code"

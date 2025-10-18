@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_payment
 #. odoo-python
@@ -27,8 +29,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s – Платеж по рассрочке на сумму <strong>%(amount)s</strong>, срок"
-" оплаты – <strong class=\"text-primary\">%(date)s</strong>"
+"#%(number)s – Платеж по рассрочке на сумму <strong>%(amount)s</strong>, срок "
+"оплаты – <strong class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -111,12 +113,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Внимание!</strong> По данному платежу ожидается возврат средств.\n"
-"                        Подождите немного, пока он будет обработан. Если через\n"
-"                        через несколько минут, проверьте конфигурацию вашего платежного провайдера."
+"                        Подождите немного, пока он будет обработан. Если "
+"через\n"
+"                        через несколько минут, проверьте конфигурацию вашего "
+"платежного провайдера."
 
 #. module: account_payment
 #. odoo-python
@@ -127,11 +133,11 @@ msgstr "Скидка будет применена, если клиент опл
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
-"По данному счету уже был произведен платеж. Пожалуйста, убедитесь, что вы не"
-" оплачиваете его повторно."
+"По данному счету уже был произведен платеж. Пожалуйста, убедитесь, что вы не "
+"оплачиваете его повторно."
 
 #. module: account_payment
 #. odoo-python
@@ -198,11 +204,6 @@ msgstr "Захват транзакции"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Закрыть"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Код"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -328,7 +329,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"В тестовом режиме через тестовый платежный интерфейс обрабатывается фальшивый платеж.\n"
+"В тестовом режиме через тестовый платежный интерфейс обрабатывается "
+"фальшивый платеж.\n"
 "Этот режим рекомендуется использовать при настройке провайдера."
 
 #. module: account_payment
@@ -408,8 +410,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
-"Обратите внимание, что токены провайдеров, настроенные только на авторизацию"
-" транзакций (вместо фиксации суммы), недоступны."
+"Обратите внимание, что токены провайдеров, настроенные только на авторизацию "
+"транзакций (вместо фиксации суммы), недоступны."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
@@ -768,10 +770,12 @@ msgstr "Пустая транзакция"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Вы не можете удалить метод оплаты, связанный с провайдером, находящимся во включенном или тестовом состоянии.\n"
+"Вы не можете удалить метод оплаты, связанный с провайдером, находящимся во "
+"включенном или тестовом состоянии.\n"
 "Связанные провайдеры (ы): %s"
 
 #. module: account_payment
@@ -791,7 +795,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Перед удалением журнала необходимо сначала деактивировать провайдера платежей.\n"
+"Перед удалением журнала необходимо сначала деактивировать провайдера "
+"платежей.\n"
 "Связанные провайдеры: %s"
 
 #. module: account_payment
@@ -815,3 +820,6 @@ msgstr "было применено."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "Просрочен"
+
+#~ msgid "Code"
+#~ msgstr "Код"

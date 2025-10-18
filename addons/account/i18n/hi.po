@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
@@ -998,14 +998,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid ""
 "<small class=\"form-text text-muted\">\n"
-"                    You can choose how you want us to send your invoices, "
-"and with which electronic format.\n"
-"                </small>"
+"                        You can choose how you want us to send your "
+"invoices, and with which electronic format.\n"
+"                    </small>"
 msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                    आप यह चुन सकते हैं कि हम आपको इनवॉइस किस तरीके से भेजें और किस "
-"डिजिटल फ़ॉर्मेट में भेजें.\n"
-"                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -3615,11 +3611,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "ऑटोमैटिक एंट्री डिफ़ॉल्ट जर्नल"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "ऑटोमैटिक सिक्वेंस"
@@ -4032,6 +4023,11 @@ msgid "Based on Payment"
 msgstr "पेमेंट के आधार पर"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "बेसिक"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
 msgstr "बैच पेमेंट सिक्वेंस"
@@ -4157,11 +4153,6 @@ msgstr "ब्लॉक किया गया"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "बॉडी कॉन्टेंट बिलकुल टेंप्लेट की तरह है"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -4422,6 +4413,7 @@ msgstr "आगे ले जाएं"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4432,6 +4424,16 @@ msgstr "कैश"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "कैश अकाउंट"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr "कैश बेकरी"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
+msgstr "कैश बार"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4468,6 +4470,11 @@ msgstr "कैश बेसिस टैक्स"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "कैश बेसिस ट्रांज़िशन अकाउंट"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
+msgstr "कैश क्लोद शॉप"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4523,10 +4530,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "कैश डिस्काउंट राइट-ऑफ़ लॉस अकाउंट"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr "कैश फर्नीचर शॉप"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "कैश रजिस्टर"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr "कैश रेस्टोरेंट"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4786,6 +4803,7 @@ msgstr "क्लोजिंग"
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_code
 #: model:ir.model.fields,field_description:account.field_account_payment_method__code
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__code
+#: model:ir.model.fields,field_description:account.field_account_payment_register__payment_method_code
 #: model:ir.model.fields,field_description:account.field_account_report_line__code
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
@@ -5264,6 +5282,11 @@ msgstr "पेमेंट बनाएं"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Create Payments"
 msgstr "पेमेंट बनाएं"
+
+#. module: account
+#: model:ir.model,website_form_label:account.model_res_partner
+msgid "Create a Customer"
+msgstr "ग्राहक बनाएं"
 
 #. module: account
 #. odoo-python
@@ -6278,6 +6301,12 @@ msgstr "जब आप प्रॉडक्ट खरीदते हैं, त
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product"
 msgstr "जब आप प्रॉडक्ट बेचते हैं, तो लगने वाले डिफ़ॉल्ट टैक्स."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Default value for 'company_id' for %(record)s is not an integer"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -9210,6 +9239,11 @@ msgid "Invalid fiscal year last day"
 msgstr "वित्तीय वर्ष का अंतिम दिन अमान्य"
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "इन्वेंट्री वैल्यूएशन"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "इन्वेंट्री वैल्यू"
@@ -9588,11 +9622,6 @@ msgstr "इनवॉइस/बिल/मेनडेट"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "इनवॉइसिंग"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -11166,6 +11195,16 @@ msgid "Next Activity"
 msgstr "अगली गतिविधि"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "अगली गतिविधि कैलेंडर इवेंट"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_move__activity_date_deadline
@@ -12552,6 +12591,12 @@ msgid ""
 msgstr "जिन पार्टनर के बैंक खाते की जानकारी नहीं है, उनके पेमेंट छोड़ दिए जाएंगे."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
+#: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
+msgid "Payments that have been reconciled with this invoice."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
 msgid "Percent"
 msgstr "प्रतिशत"
@@ -13103,14 +13148,23 @@ msgid "RD Expenses"
 msgstr "आरडी एक्सपेंस"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "रेटिंग"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "री-सिक्वेंस"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -13226,6 +13280,12 @@ msgstr "मिलाई गई लाइनें"
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_excluding_exchange_diff_ids
 msgid "Reconciled Lines Excluding Exchange Diff"
 msgstr "मिलाई गई लाइनें, जिसमें विदेशी मुद्रा के अंतर शामिल नहीं है"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
+#: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
+msgid "Reconciled Payments"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -13933,6 +13993,7 @@ msgstr "इस पेज को सेव करें और फिर इस �
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "अपने बैंक के ऐप से मुझे स्कैन करें."
 
@@ -14487,6 +14548,11 @@ msgid "Show Aba Routing"
 msgstr "Aba राउंटिंग दिखाएं"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "अकाउंटिंग फ़ीचर दिखाएं - सिर्फ़ पढ़ने के लिए"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -14513,6 +14579,11 @@ msgstr "ई-इनवॉइस बटन दिखाएं"
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
 msgstr "ई-इनवॉइस स्टेटस बटन दिखाएं"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "अकाउंटिंग के सभी फ़ीचर दिखाएं"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -14866,6 +14937,12 @@ msgstr "उप कुल"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Successfully unsubscribed from invoice notifications"
 msgstr "आपको अब इनवॉइस से संबंधित कोई सूचना नहीं मिलेगी"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid "Suggested"
+msgstr "सुझाया गया"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__suitable_journal_ids
@@ -19045,19 +19122,6 @@ msgid "[Not set]"
 msgstr "[सेट नहीं]"
 
 #. module: account
-#: model:res.groups,comment:account.group_account_user
-msgid ""
-"access to all Accounting features, including reporting, asset management, "
-"analytic accounting, without configuration rights."
-msgstr ""
-
-#. module: account
-#: model:res.groups,comment:account.group_account_readonly
-msgid ""
-"access to all the accounting data but in readonly mode, no actions allowed."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
 msgstr "बिल का करेंसी एक्टिवेट करें"
@@ -19066,11 +19130,6 @@ msgstr "बिल का करेंसी एक्टिवेट करे�
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
 msgstr "इनवॉइस की करेंसी एक्टिवेट करें"
-
-#. module: account
-#: model:res.groups,comment:account.group_account_basic
-msgid "adds the accounting dashboard, bank management and follow-up reports."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -19596,44 +19655,16 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} पेमेंट रसीद (Ref {{ object.name or 'n/a' }})"
 
-#~ msgid "Basic"
-#~ msgstr "बेसिक"
-
-#~ msgid "Cash Bakery"
-#~ msgstr "कैश बेकरी"
-
-#~ msgid "Cash Bar"
-#~ msgstr "कैश बार"
-
-#~ msgid "Cash Clothes Shop"
-#~ msgstr "कैश क्लोद शॉप"
-
-#~ msgid "Cash Furn. Shop"
-#~ msgstr "कैश फर्नीचर शॉप"
-
-#~ msgid "Cash Restaurant"
-#~ msgstr "कैश रेस्टोरेंट"
-
-#~ msgid "Create a Customer"
-#~ msgstr "ग्राहक बनाएं"
-
-#~ msgid "Inventory Valuation"
-#~ msgstr "इन्वेंट्री वैल्यूएशन"
-
-#~ msgid "Next Activity Calendar Event"
-#~ msgstr "अगली गतिविधि कैलेंडर इवेंट"
-
-#~ msgid "Ratings"
-#~ msgstr "रेटिंग"
-
-#~ msgid "Show Accounting Features - Readonly"
-#~ msgstr "अकाउंटिंग फ़ीचर दिखाएं - सिर्फ़ पढ़ने के लिए"
-
-#~ msgid "Show Full Accounting Features"
-#~ msgstr "अकाउंटिंग के सभी फ़ीचर दिखाएं"
-
-#~ msgid "Suggested"
-#~ msgstr "सुझाया गया"
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    You can choose how you want us to send your invoices, "
+#~ "and with which electronic format.\n"
+#~ "                </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                    आप यह चुन सकते हैं कि हम आपको इनवॉइस किस तरीके से भेजें और किस "
+#~ "डिजिटल फ़ॉर्मेट में भेजें.\n"
+#~ "                </small>"
 
 #~ msgid ""
 #~ "<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"

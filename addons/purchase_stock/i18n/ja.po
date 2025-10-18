@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
@@ -36,6 +36,12 @@ msgstr "%(otd)s %%"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
 msgstr "+ %d 日"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -106,7 +112,8 @@ msgstr "在庫可能プロダクトは、在庫を管理するプロダクトで
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
@@ -164,7 +171,9 @@ msgstr "購入して補充"
 msgid ""
 "Change the applied filters to receive suggestions about quantities to "
 "replenish for desired products."
-msgstr "適用されているフィルタを変更して、目的のプロダクトの補充数量に関する提案を受け取ります。"
+msgstr ""
+"適用されているフィルタを変更して、目的のプロダクトの補充数量に関する提案を受"
+"け取ります。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -247,7 +256,9 @@ msgstr "購買オーダ確定に必要な日数"
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
-msgstr "購買オーダを確定するまでに必要な日数。購買オーダをいつ確定すべきかを定義します。"
+msgstr ""
+"購買オーダを確定するまでに必要な日数。購買オーダをいつ確定すべきかを定義しま"
+"す。"
 
 #. module: purchase_stock
 #. odoo-python
@@ -274,7 +285,9 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
-msgstr "インストールされているモジュールに応じて、製品のルートを定義できます。つまり、購入、製造、注文時に補充するかどうかなどです。"
+msgstr ""
+"インストールされているモジュールに応じて、製品のルートを定義できます。つま"
+"り、購入、製造、注文時に補充するかどうかなどです。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -544,10 +557,12 @@ msgstr "マニュアルでのフォローが必要かもしれません。"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
-"仕入先のリードタイムの​​許容誤差。システムがプロダクトを再オーダするための購買オーダを生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も前にスケジュールされます。"
+"仕入先のリードタイムの​​許容誤差。システムがプロダクトを再オーダするための購買"
+"オーダを生成するとき、予期しない仕入先の遅延に対処するために、それらは何日も"
+"前にスケジュールされます。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -578,6 +593,12 @@ msgstr "昨年の翌月"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr "影響を受ける次の転送(複数):"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -611,9 +632,10 @@ msgstr "OTD"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
-msgstr "ODooはアングロサクソン人のエントリを生成できません。 %s の総評価は0です。"
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
+msgstr ""
+"ODooはアングロサクソン人のエントリを生成できません。 %s の総評価は0です。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -654,12 +676,13 @@ msgstr "オーダポイント"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"過去x日間の、時間通りに届いたプロダクト数をオーダ済プロダクト数で割ったもの。xはシステムパラメータpurchase_stock.on_time_delivery_days"
-" またはデフォルトの365。"
+"過去x日間の、時間通りに届いたプロダクト数をオーダ済プロダクト数で割ったもの。"
+"xはシステムパラメータpurchase_stock.on_time_delivery_days またはデフォルトの"
+"365。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -806,7 +829,9 @@ msgstr "購買オーダ数"
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr "仕入先から顧客に直接配達する場合は、住所を入力して下さい。それ以外の場合は、空のままにして自分の会社に配達します。"
+msgstr ""
+"仕入先から顧客に直接配達する場合は、住所を入力して下さい。それ以外の場合は、"
+"空のままにして自分の会社に配達します。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -897,7 +922,9 @@ msgstr "見積依頼のスケジュールを早めに設定し、遅延を回避
 msgid ""
 "Set a reference period to estimate sales, and use the percentage to take "
 "into account seasonability and the increase/decrease of business."
-msgstr "販売実績を予測するための基準期間を設定し、その割合を季節性や増減を考慮して使用します。"
+msgstr ""
+"販売実績を予測するための基準期間を設定し、その割合を季節性や増減を考慮して使"
+"用します。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -970,10 +997,12 @@ msgstr "販売と需要に基づく数量を提案"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__number_of_days
 msgid ""
-"Suggested quantities to replenish will be computed for all filtered products"
-"              in this catalog in order to cover this amount of days of "
-"average demand."
-msgstr "このカタログ内のフィルタリングされたすべてのプロダクトについて、平均需要日数をカバーするために補充提案数量が計算されます。"
+"Suggested quantities to replenish will be computed for all filtered "
+"products              in this catalog in order to cover this amount of days "
+"of average demand."
+msgstr ""
+"このカタログ内のフィルタリングされたすべてのプロダクトについて、平均需要日数"
+"をカバーするために補充提案数量が計算されます。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
@@ -1008,29 +1037,34 @@ msgstr "次の補充オーダが生成されました"
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
-msgstr "購買オーダの数量は、請求額より少ないことを示しています。払い戻しを依頼する必要があります。"
+msgstr ""
+"購買オーダの数量は、請求額より少ないことを示しています。払い戻しを依頼する必"
+"要があります。"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"オペレーションタイプ (%(operation_type)s) の倉庫とロケーション (%(location)s) "
-":再オーダ規則(%(reordering_rule)s)、プロダクト%(product)s用、が一致しません。オペレーションタイプを変更するか、見積依頼をキャンセルして下さい。"
+"オペレーションタイプ (%(operation_type)s) の倉庫とロケーション (%"
+"(location)s) :再オーダ規則(%(reordering_rule)s)、プロダクト%(product)s用、が"
+"一致しません。オペレーションタイプを変更するか、見積依頼をキャンセルして下さ"
+"い。"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
-"プロダクト%sの購買オーダを生成するのにマッチする仕入先価格がありません（仕入先が定義されていない、最小数量に達していない、日付が無効であるなど）。 "
-"プロダクトフォームに移動し、仕入先のリストに記入してください。"
+"プロダクト%sの購買オーダを生成するのにマッチする仕入先価格がありません（仕入"
+"先が定義されていない、最小数量に達していない、日付が無効であるなど）。 プロダ"
+"クトフォームに移動し、仕入先のリストに記入してください。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -1039,26 +1073,31 @@ msgid ""
 "This account is used in automated inventory valuation to record the price "
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
-msgstr "このアカウントは、自動在庫評価で使用され、このベンダー請求書を検証するときに、発注書と関連するベンダー請求書の間の価格差を記録します。"
+msgstr ""
+"このアカウントは、自動在庫評価で使用され、このベンダー請求書を検証するとき"
+"に、発注書と関連するベンダー請求書の間の価格差を記録します。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
-msgstr "このアカウントは、購入価格と会計コストの価格差を評価するために使用されます。"
+msgstr ""
+"このアカウントは、購入価格と会計コストの価格差を評価するために使用されます。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
-"これにより、仕入先に顧客への配送を要求するために、プロダクトに適用する直送ルートが追加されます。 "
-"直送するプロダクトは、販売オーダが確定されると、見積依頼を生成します。これはオンデマンドフローです。要求された配送先住所は、倉庫ではなく、顧客の配送先住所になります。"
+"これにより、仕入先に顧客への配送を要求するために、プロダクトに適用する直送"
+"ルートが追加されます。 直送するプロダクトは、販売オーダが確定されると、見積依"
+"頼を生成します。これはオンデマンドフローです。要求された配送先住所は、倉庫で"
+"はなく、顧客の配送先住所になります。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -1167,15 +1206,18 @@ msgstr "製品を購入すると、この倉庫に配送できます"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
-"プロダクトが<b>%s</b>で必要な場合、<br/>必要を満たすために見積依頼が作成されます。<br/>メモ：この規則は、入荷ルートの規則<br/>と組み合わせて使用されます。"
+"プロダクトが<b>%s</b>で必要な場合、<br/>必要を満たすために見積依頼が作成され"
+"ます。<br/>メモ：この規則は、入荷ルートの規則<br/>と組み合わせて使用されま"
+"す。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
-msgstr "ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
+msgstr ""
+"ベンダーは、名前、TIN、電子メール、または内部参照で見つけることができます。"
 
 #. module: purchase_stock
 #. odoo-python

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -26,8 +26,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s - Delbetalning av <strong>%(amount)s</strong> som förfaller till"
-" betalning den <strong class=\"text-primary\">%(date)s</strong>"
+"#%(number)s - Delbetalning av <strong>%(amount)s</strong> som förfaller till "
+"betalning den <strong class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -110,12 +110,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Varning!</strong> Det finns en återbetalning som väntar på denna betalning.\n"
-"                        Vänta en stund för att den ska behandlas. Om återbetalningen fortfarande är väntande om\n"
-"                        några minuter, vänligen kontrollera din betalningsleverantörs konfiguration."
+"<strong>Varning!</strong> Det finns en återbetalning som väntar på denna "
+"betalning.\n"
+"                        Vänta en stund för att den ska behandlas. Om "
+"återbetalningen fortfarande är väntande om\n"
+"                        några minuter, vänligen kontrollera din "
+"betalningsleverantörs konfiguration."
 
 #. module: account_payment
 #. odoo-python
@@ -126,8 +131,8 @@ msgstr "En rabatt kommer att tillämpas om kunden betalar innan %s ingår."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "En betalning har redan gjorts på denna faktura, se till att inte betala två "
 "gånger."
@@ -197,11 +202,6 @@ msgstr "Fånga transaktion"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Stäng"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Kod"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -661,8 +661,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
-"Betalningen relaterad till transaktionen med referens %(ref)s har bokförts: "
-"%(link)s"
+"Betalningen relaterad till transaktionen med referens %(ref)s har bokförts: %"
+"(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -772,10 +772,12 @@ msgstr "Ogiltig transaktion"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Du kan inte ta bort en betalningsmetod som är kopplad till en leverantör i aktiverat eller testat tillstånd.\n"
+"Du kan inte ta bort en betalningsmetod som är kopplad till en leverantör i "
+"aktiverat eller testat tillstånd.\n"
 "Länkade leverantör(er): %s"
 
 #. module: account_payment
@@ -785,8 +787,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
-"Du kan inte avinstallera denna modul eftersom betalningar som använder denna"
-" betalningsmetod redan finns."
+"Du kan inte avinstallera denna modul eftersom betalningar som använder denna "
+"betalningsmetod redan finns."
 
 #. module: account_payment
 #. odoo-python
@@ -795,7 +797,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Du måste först inaktivera en betalningsleverantör innan du kan radera dess journal.\n"
+"Du måste först inaktivera en betalningsleverantör innan du kan radera dess "
+"journal.\n"
 "Länkade leverantörer: %s"
 
 #. module: account_payment
@@ -819,3 +822,6 @@ msgstr "har tillämpats."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "försenad"
+
+#~ msgid "Code"
+#~ msgstr "Kod"

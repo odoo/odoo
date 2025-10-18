@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr
-# 
+#
 # Translators:
 # Triine Aavik <triine@avalah.ee>, 2024
 # Leaanika Randmets, 2024
@@ -14,19 +14,19 @@
 # Martin Aavastik <martin@avalah.ee>, 2024
 # Stevin Lilla, 2024
 # JanaAvalah, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: JanaAvalah, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
@@ -69,9 +69,7 @@ msgid "1 Phone Call"
 msgstr "1 Telefonikõne"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -102,6 +100,19 @@ msgid "4 Days after Interview"
 msgstr "4 päeva pärast invervjuud"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>READ</b></small></a>"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid ""
@@ -113,8 +124,19 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
+msgid ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Company\"/>"
+msgstr ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Company\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -129,15 +151,10 @@ msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
 msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
-msgid "<small><b>READ</b></small>"
-msgstr "<small><b>LOE</b></small>"
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<i class=\"fa fa-suitcase fa-fw me-1 text-primary\" title=\"Position\"/>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -161,17 +178,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
-"Reason</span>"
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</"
+"span>"
 msgstr ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailsed "
 "põhjused</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
-msgstr ""
-"<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -188,6 +199,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "<span class=\"o_stat_text\">Connected Since</span>"
 msgstr "<span class=\"o_stat_text\">Ühendatud alates</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "<span class=\"o_stat_text\">Contact</span>"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
@@ -248,9 +264,26 @@ msgid "<span>new Employees</span>"
 msgstr "<span>uued töötajad</span>"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,description:hr.job_hrm
+msgid ""
+"A Human Resources (HR) Manager is responsible for overseeing an "
+"organization's workforce and ensuring\n"
+"                that all HR functions are effectively managed. This includes "
+"recruiting, hiring, onboarding, and\n"
+"                training new employees, as well as managing employee "
+"relations, performance, and compensation. The HR\n"
+"                manager also ensures compliance with labor laws and company "
+"policies, while fostering a positive work\n"
+"                environment. They may handle conflict resolution, conduct "
+"employee evaluations, and implement programs\n"
+"                to improve employee engagement and retention. Additionally, "
+"HR managers play a strategic role in\n"
+"                aligning the workforce with the organization's goals and "
+"objectives."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -259,9 +292,39 @@ msgid "A full-time position <br>Attractive salary package."
 msgstr "Täiskohaga töökoht <br>Atraktiivne palgapakett."
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "A good company embraces technological innovation"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "A good company fosters innovation and creativity"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
 msgstr "Kasutajat ei saa siduda mitme sama ettevõtte töötajaga."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Ability to build client relationships."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Ability to handle confidential information"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Ability to inspire employee engagement"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Ability to manage multiple tasks"
+msgstr ""
 
 #. module: hr
 #. odoo-javascript
@@ -276,13 +339,7 @@ msgid "Absent"
 msgstr "Puuduvad"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Achieve monthly sales objectives"
 msgstr "Saavuta igakuised müügieesmärgid"
 
@@ -362,10 +419,9 @@ msgid "Activity schedule plan Wizard"
 msgstr "Tegevuste ajakava plaani viisard"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
-#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid "Add a new employee"
-msgstr "Lisage uus töötaja"
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Adaptability"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -390,10 +446,7 @@ msgid "Additional Note"
 msgstr "Lisamärkus"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -409,10 +462,7 @@ msgstr "Haldus"
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Administrative Work"
 msgstr "Administratiivne töö"
 
@@ -435,19 +485,19 @@ msgstr "Töötajate põhjalik kohalolekukontroll"
 #: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_group__alias_contact
-#: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,field_description:hr.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
 msgstr "Turvakontakti alias"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Allow employees to update their own data"
-msgstr "Võimaldage töötajatel oma andmeid ise uuendada"
+msgid "Allow employees to update Work Information on My Profile"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid "Allow employees to update their own data."
-msgstr "Võimaldage töötajatel oma andmeid ise uuendada"
+msgid "Allow employees to update Work Information on My Profile."
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -495,34 +545,219 @@ msgid "Archived"
 msgstr "Arhiveeritud"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
+msgid ""
+"As a Human Resources Manager at our company, you will<b>work closely with "
+"all\n"
+"                                departments to design and implement HR "
+"initiatives that align with our business\n"
+"                                objectives</b>. Join our expanding "
+"organization, which offers competitive benefits and\n"
+"                                ample opportunities for growth while "
+"collaborating with seasoned professionals.\n"
+"                                <br>\n"
+"                                This role is both <b>strategic and "
+"operational</b>, focusing on recruitment, employee\n"
+"                                engagement, and performance management. We "
+"seek a proactive leader who can effectively\n"
+"                                manage talent acquisition, develop training "
+"programs, and implement retention\n"
+"                                strategies. Success in this position "
+"requires strong analytical skills, in-depth\n"
+"                                knowledge of labor laws, and the ability to "
+"foster a diverse and inclusive workplace\n"
+"                                culture while enhancing employee "
+"satisfaction and productivity."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid ""
+"As a consultant at our company, you will <b>collaborate with diverse "
+"departments to\n"
+"                                assess business needs, design tailored "
+"strategies, and drive successful implementation\n"
+"                                of solutions</b>. Join a forward-thinking "
+"organization that offers competitive benefits\n"
+"                                and opportunities for advancement, working "
+"alongside industry experts. We are looking\n"
+"                                for an accomplished consultant with a strong "
+"background in delivering measurable\n"
+"                                outcomes.\n"
+"                                <br>\n"
+"                                This role demands both <b>creative problem-"
+"solving and strategic analysis</b>,\n"
+"                                requiring you to think critically about "
+"client challenges. We expect candidates to be\n"
+"                                self-motivated, with a strong \"get it "
+"done\" mentality. To thrive in this position, you\n"
+"                                should possess excellent analytical skills, "
+"the ability to translate insights into\n"
+"                                actionable recommendations, and the talent "
+"for building rapport with stakeholders across\n"
+"                                all levels of the organization."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid ""
+"As a developer at our company, you will <b>collaborate with product "
+"managers, designers,\n"
+"                                and other engineers to design, develop, and "
+"deploy innovative software solutions</b>.\n"
+"                                Join us at a rapidly growing organization "
+"that offers competitive benefits and\n"
+"                                opportunities for career advancement while "
+"working alongside industry leaders.\n"
+"                                We’re looking for a skilled developer with a "
+"passion for technology and innovation.\n"
+"                                <br>\n"
+"                                In this role, you will be responsible for "
+"<b>writing clean, maintainable code,\n"
+"                                participating in code reviews, and "
+"troubleshooting issues</b>. Your work will involve\n"
+"                                both creative <b>problem-solving and "
+"rigorous analysis</b>, requiring you to think\n"
+"                                outside the box to deliver effective "
+"solutions. We seek a proactive candidate with a\n"
+"                                strong \"get it done\" mentality. Success in "
+"this position hinges on your ability to\n"
+"                                tackle complex challenges and deliver high-"
+"quality results in a fast-paced environment."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
-"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
-"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
-"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"As a trainee at our company, you will <b>work with various departments to "
+"assist in\n"
+"                                creating and launching innovative products</"
+"b>. Join our growing team, offering\n"
+"                                excellent benefits and valuable learning "
+"opportunities alongside experienced\n"
+"                                professionals.\n"
+"                                <br>\n"
+"                                This role is both <b>creative and "
+"structured</b>, encouraging out-of-the-box thinking.\n"
+"                                We are looking for a proactive individual "
+"with a strong get it done mindset. Successful\n"
+"                                candidates will have the chance to grow "
+"within the company based on their fit and\n"
+"                                performance."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_marketing
+msgid ""
+"As an employee of our company, you will <b>collaborate with each department "
+"to create and deploy\n"
+"                                disruptive products.</b> Come work at a "
+"growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside "
+"accomplished leaders. We're seeking an experienced and outstanding member of "
+"staff.\n"
 "                                <br><br>\n"
-"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
-"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                This position is both <b>creative and "
+"rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and "
+"have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
-"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
-"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
-"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"As an employee of our company, you will <b>collaborate with each department "
+"to create and deploy\n"
+"                                disruptive products.</b> Come work at a "
+"growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside "
+"accomplished leaders. We're seeking an experienced and outstanding member of "
+"staff.\n"
 "                                <br><br>\n"
-"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
-"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                This position is both <b>creative and "
+"rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and "
+"have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid ""
+"As our Chief Technology Officer, you will <b>work closely with product, "
+"marketing, and\n"
+"                                operations teams to create and launch "
+"innovative technology solutions that set us apart\n"
+"                                in the industry</b>. Join our fast-growing "
+"company, where you’ll enjoy competitive\n"
+"                                benefits and opportunities for professional "
+"growth while collaborating with top experts\n"
+"                                in the field.\n"
+"                                <br>\n"
+"                                In this role, you will <b>define and execute "
+"our technology strategy and roadmap</b>,\n"
+"                                ensuring it aligns with our business goals. "
+"This position is both <b>creative and\n"
+"                                analytical</b>, requiring you to think "
+"outside the box while implementing effective\n"
+"                                solutions. We are looking for a proactive "
+"leader with a strong \"get it done\" mentality\n"
+"                                who can tackle challenges head-on and drive "
+"projects to successful completion.\n"
+"                                <br>\n"
+"                                To excel in this position, you will need "
+"<b>extensive experience in software\n"
+"                                architecture, cloud computing, and data "
+"security</b>, along with a strong background in\n"
+"                                team leadership and agile project "
+"management. Your excellent communication skills will\n"
+"                                be vital for conveying complex technical "
+"ideas to non-technical stakeholders and\n"
+"                                fostering collaboration across all "
+"departments."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid ""
+"As the Chief Executive Officer of our company, you will <b>steer the overall "
+"strategic\n"
+"                                direction and operational execution, "
+"ensuring that all departments work cohesively to\n"
+"                                drive innovation and competitive advantage</"
+"b>. Join a high-growth organization that\n"
+"                                offers comprehensive benefits and ample "
+"opportunities for leadership development while\n"
+"                                collaborating with a talented executive "
+"team. We seek a visionary leader with a\n"
+"                                demonstrated track record of scaling "
+"successful businesses.\n"
+"                                <br>\n"
+"                                In this role, you will be responsible for "
+"<b>crafting and implementing the company’s\n"
+"                                long-term strategy, promoting a culture of "
+"innovation, accountability, and performance\n"
+"                                excellence</b>. Candidates should be "
+"proactive, embodying a \"get it done\" mindset while\n"
+"                                effectively addressing complex challenges. "
+"Success in this position requires strong\n"
+"                                analytical and problem-solving skills, deep "
+"market insights, and the ability to foster\n"
+"                                relationships with stakeholders, investors, "
+"and clients to enhance our strategic\n"
+"                                objectives."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
 msgstr "Määramine"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Assist in organizing company events"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Assist with daily project tasks"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -557,11 +792,7 @@ msgid "Automatically subscribe members of those departments to the channel."
 msgstr "Registreerige nende osakondade liikmed automaatselt kanalile."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Autonomy"
@@ -618,15 +849,16 @@ msgid "Bachelor"
 msgstr "Bakalaureus"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Bachelor Degree or Higher"
 msgstr "Bakalaureusekraad või kõrgem"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Background in project management"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
@@ -643,6 +875,21 @@ msgstr "Pangakonto"
 #: model:ir.model,name:hr.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Pangakontod"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "Bank Address"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "Bank Information"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "Bank Name"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -679,10 +926,26 @@ msgid "Basic Employee"
 msgstr "Keskmine töötaja"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Be enthusiastic"
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/background_image/background_image.xml:0
 msgid "Binary file"
 msgstr "Binaarne fail"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday
+msgid "Birthday"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Build and maintain stakeholder relationships"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
@@ -709,6 +972,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
 msgstr "Sertifikaadi tase"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Challenge the customer idea"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
@@ -748,10 +1016,23 @@ msgid "Citizenship"
 msgstr "Kodakondsus"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_city
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_city
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "City"
 msgstr "Linn"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Clear vision for company direction"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Client Interaction"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -772,6 +1053,21 @@ msgstr "Töötaja %s juhendaja pole määratud."
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
 msgid "Code"
 msgstr "Kood"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Collaborate with cross-functional departments"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Collaboration"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Collaboration across teams is encouraged"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -832,6 +1128,16 @@ msgid "Complete Name"
 msgstr "Täielik nimi"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Compliance and Regulations"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Conduct thorough business needs assessments"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
 msgstr "Seadistused"
@@ -841,6 +1147,17 @@ msgstr "Seadistused"
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Configuration"
 msgstr "Seaded"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Confirm"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Conflict Resolution"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
@@ -870,6 +1187,11 @@ msgid "Contact Phone"
 msgstr "Kontakttelefon"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Continuous improvement is part of its culture"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
 msgid "Contract Type"
 msgstr "Lepingu tüüp"
@@ -885,13 +1207,23 @@ msgid "Contractor"
 msgstr "Töövõtja"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_contract
+msgid "Contracts Management"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_country
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_country
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Country"
 msgstr "Riik"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
 msgid "Country Code"
 msgstr "Riigikood"
@@ -920,9 +1252,21 @@ msgstr "Loo töötaja"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.server,name:hr.action_hr_employee_create_users
+#: model:ir.actions.server,name:hr.action_hr_employee_create_users_confirmation
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Create User"
 msgstr "Loo kasutaja"
+
+#. module: hr
+#: model:ir.model,website_form_label:hr.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_create_job_position
+msgid "Create a Job Position"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -946,9 +1290,16 @@ msgid "Create an Activity Plan"
 msgstr "Loo tegevusplaan"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
+#. odoo-javascript
+#: code:addons/hr/static/src/views/hr_graph_controller.xml:0
+#: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Create an employee."
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -997,27 +1348,41 @@ msgid "Current Number of Employees"
 msgstr "Töötajate arv hetkeseisuga"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
-#: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Currently enrolled in final study years"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Customer Relationship"
 msgstr "Kliendisuhted"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
-#: model:ir.model.fields,field_description:hr.field_res_users__birthday
-msgid "Date of Birth"
-msgstr "Sünnikuupäev"
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Cybersecurity"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Debug and resolve software issues"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Deep understanding of technology trends"
+msgstr ""
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_departure_reason.py:0
 msgid "Default departure reasons cannot be deleted."
 msgstr "Vaikimisi töölt lahkumise põhjuseid ei saa kustutada."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Define and communicate company vison"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1047,15 +1412,20 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
 msgid ""
-"Demonstration of different Odoo services for each client and convincing the client about functionality of the application.\n"
+"Demonstration of different Odoo services for each client and convincing the "
+"client about functionality of the application.\n"
 "The candidate should have excellent communication skills.\n"
 "Relationship building and influencing skills\n"
 "Expertise in New Client Acquisition (NCAs) and Relationship Management.\n"
 "Gathering market and customer information.\n"
-"Coordinating with the sales and support team for adopting different strategies\n"
-"Reviewing progress and identifying opportunities and new areas for development.\n"
-"Building strong relationships with clients / customers for business growth profitability.\n"
-"Keep regular interaction with key clients for better extraction and expansion."
+"Coordinating with the sales and support team for adopting different "
+"strategies\n"
+"Reviewing progress and identifying opportunities and new areas for "
+"development.\n"
+"Building strong relationships with clients / customers for business growth "
+"profitability.\n"
+"Keep regular interaction with key clients for better extraction and "
+"expansion."
 msgstr ""
 
 #. module: hr
@@ -1137,6 +1507,26 @@ msgid "Dependant"
 msgstr "Ülalpeetav"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Details"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Develop and implement training programs"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Develop customized strategies and solutions"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Develop technology strategy and vision"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
 msgid "Direct subordinates"
@@ -1169,26 +1559,42 @@ msgid "Discussion Channel"
 msgstr "Sõnumite kanal"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
+#: model:ir.model.fields,field_description:hr.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:hr.field_mail_alias__display_name
+#: model:ir.model.fields,field_description:hr.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr.field_res_partner__display_name
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__display_name
+#: model:ir.model.fields,field_description:hr.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Kuvatav nimi"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
-msgid ""
-"Display remote work settings for each employee and dedicated reports. "
-"Presence icons will be updated with remote work location."
+#. odoo-javascript
+#: code:addons/hr/static/src/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field.js:0
+msgid "Display avatar name"
 msgstr ""
-"Kuva kaugtöö seadeid igale töötajale ja seotud aruandlust. Kohaloleku "
-"ikoonile lisatakse kaugtöö asukoht."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Diversity and Inclusion"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1207,25 +1613,29 @@ msgid "Driving License"
 msgstr "Juhiload"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                            You can make a real contribution to the success of the company.\n"
+"                            You can make a real contribution to the success "
+"of the company.\n"
 "                            <br>\n"
-"                            Several activities are often organized all over the year, such as weekly\n"
-"                            sports sessions, team building events, monthly drink, and much more."
+"                            Several activities are often organized all over "
+"the year, such as weekly\n"
+"                            sports sessions, team building events, monthly "
+"drink, and much more."
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Eagerness to learn and adapt"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1240,9 +1650,11 @@ msgid "Education"
 msgstr "Haridus"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
 #: model:ir.model.fields,field_description:hr.field_hr_employee__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_email
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Email"
 msgstr "E-post"
@@ -1263,9 +1675,12 @@ msgstr "Hädaabi"
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 #: model:hr.contract.type,name:hr.contract_type_employee
 #: model:ir.model,name:hr.model_hr_employee
-#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
+#: model:ir.model.fields,field_description:hr.field_res_partner__employee
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_id
+#: model:ir.model.fields,field_description:hr.field_res_users__employee
 #: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__employee
@@ -1335,6 +1750,7 @@ msgstr "Töötaja lõpetamine"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_type
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Employee Type"
 msgstr "Töötaja tüüp"
 
@@ -1348,6 +1764,11 @@ msgstr "Uuendamise õigused töötajatele"
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank account to pay salaries"
 msgstr "Töötaja pangakonto palkade maksmiseks"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Employee development is a core focus"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
@@ -1378,13 +1799,16 @@ msgstr "Töötaja töötunnid"
 #: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 #: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:res.groups.privilege,name:hr.res_groups_privilege_employees
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
@@ -1409,6 +1833,12 @@ msgid "Employees Tags"
 msgstr "Töötajate sildid"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Employees profile"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Employment Type"
@@ -1426,7 +1856,21 @@ msgid "Enrich employee profiles with skills and resumes"
 msgstr "Täiendage töötajate profiili CV ja oskustega."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Ensure compliance with labor laws"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Ethical practices guide all operations"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Excellent problem-solving abilities"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1443,20 +1887,49 @@ msgid ""
 msgstr "Sellele ametikohale planeeritud töötajate arv pärast värbamist."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Experience in prioritizing product features"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Experience in public speaking engagements"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Experience in writing online content"
 msgstr "Kogemus veebisisu kirjutamisel"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Experience with agile methodologies"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Experience with global markets"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Experience with open-source technologies"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Experience with our HR software systems"
+msgstr ""
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
 msgstr "Kogemustega arendaja"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Expertise in financial management strategies"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -1469,9 +1942,55 @@ msgstr ""
 "Piiratud juurdepääsuga väline kasutaja, loodud ainult andmete jagamiseks."
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Facilitate workshops and stakeholder meetings"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Familiarity with Agile methodologies"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Familiarity with DevOps practices"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Familiarity with emerging technologies"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Familiarity with employee wellness programs"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Familiarity with industry-specific tools"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Familiarity with user experience (UX) principles"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Familiarity with web development frameworks"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family Status"
 msgstr "Perekonnaseis"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_state
+msgid "Fed. State"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
@@ -1483,6 +2002,15 @@ msgstr "Naine"
 #: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
 msgstr "Õppevaldkond"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/views/hr_graph_controller.xml:0
+#: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Find all the information on employees."
+msgstr ""
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
@@ -1520,14 +2048,27 @@ msgstr ""
 "olema \"channel\"."
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Foster a culture of innovation"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Foster a positive workplace cultures"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Foster innovation and new solutions"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
 msgid "Freelancer"
 msgstr "Vabakutseline"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1562,13 +2103,7 @@ msgid "Give more details about the reason of archiving the employee."
 msgstr ""
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Google Adwords experience"
 msgstr "Google Adwords'i kogemus"
 
@@ -1578,9 +2113,7 @@ msgid "Graduate"
 msgstr "Keskharidus"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -1629,13 +2162,8 @@ msgid "Has Message"
 msgstr "On sõnum"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Highly creative and autonomous"
 msgstr "Väga loominguline ja autonoomne"
 
@@ -1697,15 +2225,29 @@ msgid "Human Resources Manager"
 msgstr "Personalijuht"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_discuss_channel__id
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
+#: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__id
+#: model:ir.model.fields,field_description:hr.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan__id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__id
+#: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:hr.field_mail_alias__id
+#: model:ir.model.fields,field_description:hr.field_res_company__id
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr.field_res_partner__id
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__id
+#: model:ir.model.fields,field_description:hr.field_res_users__id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
@@ -1811,6 +2353,16 @@ msgid "Import Template for Employees"
 msgstr "Impordi töötajatele mall"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "In-depth knowledge of labor laws"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Innovation"
+msgstr ""
+
+#. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
 msgstr "Vahepealne"
@@ -1852,6 +2404,16 @@ msgid "Is System"
 msgstr "On süsteem"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "It prioritizes data-driven decision-making"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "It prioritizes employee well-being and development"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Job"
@@ -1881,11 +2443,6 @@ msgid "Job Positions"
 msgstr "Ametipositsioon"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Job Summary"
-msgstr "Ametikoha lühikirjeldus"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_title
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_title
@@ -1901,6 +2458,11 @@ msgstr "Ametinimetus"
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
 msgstr "Ametikohad"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Knowledge of diversity and inclusion initiatives"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__lang
@@ -1967,15 +2529,39 @@ msgid "Launch Plan"
 msgstr "Rakenda plaan"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Lead engineering and development teams"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Lead strategic planning and execution"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Lead the entire sales cycle"
 msgstr "Juhi kogu müügitsüklit"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Leadership"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Leadership Development"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Learn company processes and tools"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Learning"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1985,8 +2571,8 @@ msgstr "Elukaaslasega"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
-msgid "Let's create a job position."
-msgstr "Loo ametikoht."
+msgid "Let's create a job position"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2006,30 +2592,14 @@ msgid "Long Term Projects"
 msgstr "Pikaajalised projektid"
 
 #. module: hr
-#: model_terms:hr.job,description:hr.job_hrm
-msgid ""
-"Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
-"Lorem Ipsum has been the industry's standard dummy text ever since the "
-"1500s, when an unknown printer took a galley of type and scrambled it to "
-"make a type specimen book. It has survived not only five centuries, but also"
-" the leap into electronic typesetting, remaining essentially unchanged. It "
-"was popularised in the 1960s with the release of Letraset sheets containing "
-"Lorem Ipsum passages, and more recently with desktop publishing software "
-"like Aldus PageMaker including versions of Lorem Ipsum."
-msgstr ""
-"Lorem Ipsum on lihtsalt trükitehnika ja paigutuse tööstuse näidistekst. "
-"Lorem Ipsum on olnud tööstuse standardne näidistekst alates 1500. aastatest,"
-" kui tundmatu trükikoda võttis tüüposade galeriid ja segas selle, et "
-"koostada tüüpnäidiste raamat. See on ellu jäänud mitte ainult viis sajandit,"
-" vaid ka hüppe elektroonilisse paigutusse, jäädes sisuliselt muutumatuks. "
-"Seda populariseeriti 1960. aastatel, kui ilmusid Letraset'i lehed, mis "
-"sisaldasid Lorem Ipsum'i lõike, ja hiljem lauatrükkimise tarkvarade, nagu "
-"Aldus PageMaker, versioonidega, mis sisaldasid Lorem Ipsum'i lõike."
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Peamine manus"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Maintain and update existing systems"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
@@ -2037,7 +2607,23 @@ msgid "Male"
 msgstr "Mees"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Manage employee performance evaluations"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Manage technology budget and resources"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Manage the contracts of your employees or create contract templates"
+msgstr ""
+
+#. module: hr
 #: model:hr.department,name:hr.dep_management
+#: model_terms:hr.job,website_description:hr.job_developer
 msgid "Management"
 msgstr "Juhatus"
 
@@ -2088,13 +2674,8 @@ msgid "Master Department"
 msgstr "Peaosakond"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Master demos of our software"
 msgstr "Tarkvara demod"
 
@@ -2141,6 +2722,11 @@ msgid "Must Have"
 msgstr "Peab olema"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 msgid "My Activity Deadline"
@@ -2177,13 +2763,7 @@ msgid "Nationality (Country)"
 msgstr "Kodakondsus (riik)"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Negotiate and contract"
 msgstr "Läbirääkimised ja lepingud"
 
@@ -2238,21 +2818,12 @@ msgid "Nice to have"
 msgstr "Hea kui oleks"
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/views/hr_graph_controller.xml:0
-#: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
-msgid "No Data"
-msgstr "Andmed puuduvad"
-
-#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
 msgstr "Silte ei leitud. Loo uus"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2263,7 +2834,6 @@ msgstr "Ei mingeid rumalaid juhte ega tööriistu ega jäika tööaega"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2353,10 +2923,10 @@ msgstr "Juht: halda kõiki töötajaid"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid ""
-"Oops! It seems there is a problem with your team structure."
-"                        We found a circular reporting loop and no one in "
-"that loop is linked to a user.                        Please double-check "
-"that everyone reports to the correct manager."
+"Oops! It seems there is a problem with your team "
+"structure.                        We found a circular reporting loop and no "
+"one in that loop is linked to a user.                        Please double-"
+"check that everyone reports to the correct manager."
 msgstr ""
 
 #. module: hr
@@ -2367,9 +2937,9 @@ msgstr "Ava profiil"
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
-msgid "Operation not supported"
-msgstr "Toiming pole toetatud"
+#: code:addons/hr/models/hr_department.py:0
+msgid "Operation not Supported."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
@@ -2409,6 +2979,16 @@ msgid "Out of Working hours"
 msgstr "Tööajaväline"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Oversee operational and financial performance"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Oversee recruitment and hiring processes"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
 #: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
@@ -2423,8 +3003,8 @@ msgstr "PIN-kood"
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
 #: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
-"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
-" enabled in Configuration) and to change the cashier in the Point of Sale "
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
+"enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
 "PIN-kood, mida kasutatakse sisse- ja väljaregistreerimiseks Puudumiste "
@@ -2442,19 +3022,18 @@ msgid "Parent Path"
 msgstr "Põhiliin"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Participate in team meetings and discussions"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
 msgid "Partner-related data of the user"
 msgstr "Partner-related data of the user"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Passion for software products"
 msgstr "Kirg tarkvaratoodete vastu"
 
@@ -2465,9 +3044,7 @@ msgid "Passport No"
 msgstr "Passi nr"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2476,9 +3053,7 @@ msgid "Perfect written English"
 msgstr "Väga hea inglise keel kirjas"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2492,15 +3067,15 @@ msgid "Permanent"
 msgstr "Püsiv"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Personal Evolution"
 msgstr "Isiklik areng:"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Personal Project"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2509,9 +3084,11 @@ msgid "Personal information update."
 msgstr "Isikuandmete uuendus."
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__phone
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__phone
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_phone
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Phone"
 msgstr "Telefon"
@@ -2561,9 +3138,7 @@ msgid "Plans Count"
 msgstr "Plaanide loendus"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2576,12 +3151,13 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_group__alias_contact
-#: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,help:hr.field_maintenance_team__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Dokumendil sõnumite postitamise reeglid mailgateway'd kasutades.\n"
 "- igaüks: igaüks saab postitada\n"
@@ -2619,6 +3195,11 @@ msgstr "Kohalolekut hallatakse ekraani, e-posti ja IP-aadressi kontrolliga."
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
 msgstr "Kohal"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Previous internship or project experience"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -2697,14 +3278,56 @@ msgid "Private Zip"
 msgstr "Postiindeks"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Problem-Solving"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Problem-solving"
+msgstr ""
+
+#. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
 msgstr "Professionaalsed teenused "
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Proficiency in crisis management"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Proficiency in data analytics tools"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Proficiency in relevant industry tools"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Properties"
 msgstr "Omadused"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Proven track record in innovation"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Provide ongoing support and guidance"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display_string
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__birthday_public_display_string
+msgid "Public Date of Birth"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2712,23 +3335,10 @@ msgid "Public Employee"
 msgstr "Avalik töötaja"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Qualify the customer needs"
 msgstr "Täpsustage kliendi vajadused"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
-#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"Quickly find all the information you need for your employees such as contact"
-" data, job position, availability, etc."
-msgstr ""
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
@@ -2748,9 +3358,7 @@ msgid "Ready to recruit more efficiently?"
 msgstr "Kas olete valmis värbama tõhusamalt?"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2764,22 +3372,22 @@ msgid "Reason"
 msgstr "Põhjus"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
-msgid "Reason Code"
-msgstr "Põhjuse kood"
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
 msgstr "Värbamine"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-#: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 msgid "Register Departure"
 msgstr "Registreerimisosakond"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Related Contact"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -2801,6 +3409,7 @@ msgstr "Seotud partnerite arv"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Related User"
 msgstr "Seotud kasutaja"
 
@@ -2818,11 +3427,6 @@ msgstr "Seotud töötajad nende privaatse aadressi alusel"
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "Seotud kasutajanimi ressursi juurdepääsu haldamiseks."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
-msgid "Remote Work"
-msgstr "Kaugtöö"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2859,11 +3463,6 @@ msgid "Resource Calendar"
 msgstr "Ressursside kalender"
 
 #. module: hr
-#: model:ir.model,name:hr.model_resource_calendar
-msgid "Resource Working Time"
-msgstr "Tööaja ressurss"
-
-#. module: hr
 #: model:ir.model,name:hr.model_resource_resource
 msgid "Resources"
 msgstr "Ressursid"
@@ -2889,6 +3488,11 @@ msgstr "Vastutav kasutaja"
 #: model:hr.departure.reason,name:hr.departure_retired
 msgid "Retired"
 msgstr "Pensionil"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Risk Management"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -2933,6 +3537,11 @@ msgstr "Kool"
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
 msgstr "Hooajaline"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Seeking feedback enhances overall performance"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -2987,10 +3596,21 @@ msgid "Show employees"
 msgstr "Näita töötajaid"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday_public_display
+msgid "Show to all employees"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Single"
 msgstr "Vallaline"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Skill Development"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
@@ -3009,15 +3629,18 @@ msgid "Social Security Number"
 msgstr "Isikukood"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Software Industry Knowledge"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 msgid "Some employee already have a work contact"
 msgstr "Mõnel töötajal on juba tööleping"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -3045,6 +3668,7 @@ msgstr "Alguskuupäev"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "State"
 msgstr "Staatus"
 
@@ -3074,27 +3698,45 @@ msgid "Statutory"
 msgstr "Seadusjärgne"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+msgid "Strategic Vision"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street
+msgid "Street"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street 2..."
 msgstr "Tänav 2..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street..."
 msgstr "Tänav..."
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
-#: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
-#: model_terms:hr.job,website_description:hr.job_hrm
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_street2
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_street2
+msgid "Street2"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Strong analytical skills"
 msgstr "Tugev analüüsivõime"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Strong communication and interpersonal skills"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -3111,6 +3753,11 @@ msgid "Student"
 msgstr "Üliõpilane"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Summary"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Tag Name"
 msgstr "Sildi nimi"
@@ -3124,9 +3771,13 @@ msgstr "Sildi nimi on juba loodud!"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Tags"
 msgstr "Sildid"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_hrm
+msgid "Talent Acquisition"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -3134,13 +3785,14 @@ msgid "Target"
 msgstr "Eesmärk"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Team-oriented mindset"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
-#: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
-#: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Technical Expertise"
 msgstr "Tehniline kogemus"
 
@@ -3153,6 +3805,11 @@ msgstr "Tehniline valdkond, siduge kasutaja loomisel selle töötajaga"
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
 msgstr "Tehniline valdkond, kas luua töötaja"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_cto
+msgid "Technology Strategy"
+msgstr ""
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
@@ -3176,6 +3833,7 @@ msgstr ""
 "Märgi ID peab olema unikaalne. Antud märgi ID on seotud teise töötajaga."
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
 #: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -3187,15 +3845,14 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
 msgid ""
-"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
-"              He develops and monitors the annual budget in collaboration with Sales.\n"
-"              He defines the products and customers portfolio according to the marketing plan.\n"
-"              This mission requires strong collaboration with Technical Service and Sales."
+"The Marketing Manager defines the mid- to long-term marketing strategy for "
+"his covered market segments\n"
+"                in the World. He develops and monitors the annual budget in "
+"collaboration with Sales. He defines the\n"
+"                products and customers portfolio according to the marketing "
+"plan. This mission requires strong\n"
+"                collaboration with Technical Service and Sales."
 msgstr ""
-"Turundusjuht määratleb oma hõlmatud turusegmentide keskmise ja pikaajalise turundusstrateegia kogu maailmas.\n"
-"              Ta koostab ja jälgib igaaastast eelarvet koostöös müügiga.\n"
-"              Ta määratleb tooted ja kliendiportaali vastavalt turundusplaanile.\n"
-"              See missioon nõuab tihedat koostööd tehnilise teeninduse ja müügiga."
 
 #. module: hr
 #. odoo-python
@@ -3291,15 +3948,6 @@ msgid ""
 msgstr "Seda välja kasutatakse määramaks ajavööndit, kus töötaja töötab."
 
 #. module: hr
-#. odoo-javascript
-#: code:addons/hr/static/src/views/hr_graph_controller.xml:0
-#: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
-msgid ""
-"This report gives you an overview of your employees based on the measures of"
-" your choice."
-msgstr ""
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
 msgstr ""
@@ -3327,13 +3975,11 @@ msgstr "Nipp: Kus on Bryan?"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid ""
-"To avoid multi company issues (losing the access to your previous contracts,"
-" leaves, ...), you should create another employee in the new company "
-"instead."
+"To avoid multi company issues (losing the access to your previous contracts, "
+"leaves, ...), you should create another employee in the new company instead."
 msgstr ""
-"To avoid multi company issues (losing the access to your previous contracts,"
-" leaves, ...), you should create another employee in the new company "
-"instead."
+"To avoid multi company issues (losing the access to your previous contracts, "
+"leaves, ...), you should create another employee in the new company instead."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -3352,9 +3998,7 @@ msgid "Trainee"
 msgstr "Koolitatav"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -3374,6 +4018,16 @@ msgid "Unarchive"
 msgstr "Võta arhiivist välja"
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_consultant
+msgid "Understanding of IT strategy development"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_developer
+msgid "Understanding of user experience (UX) principles"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
@@ -3386,6 +4040,11 @@ msgstr "Määramata"
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Lugemata sõnumid"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Update and maintain project documentation"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -3402,10 +4061,34 @@ msgid "User"
 msgstr "Kasutaja"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "User Creation Notification"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "User already exists for Those Employees %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "User already exists with the same email for Employees %s"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
 msgstr "Kasutaja partner"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Users %s creation successful"
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -3442,6 +4125,13 @@ msgid "Visa No"
 msgstr "Viisa nr"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Warning"
@@ -3450,19 +4140,21 @@ msgstr "Hoiatus"
 #. module: hr
 #: model_terms:hr.job,description:hr.job_consultant
 msgid ""
-"We are currently looking for someone like that to join our Consultant team."
+"We are looking for a Consultant to provide expert advice and strategic "
+"solutions,\n"
+"                driving business growth. Strong analytical skills and a "
+"proven track record in delivering results are\n"
+"                essential."
 msgstr ""
-"Oleme otsimas praegu kedagi sellist, kes liituks meie "
-"konsultatsioonimeeskonnaga."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
 msgid ""
-"We are currently looking for someone like that to join our Web team.\n"
-"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+"We are looking for an experience developer to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or "
+"meet clients to explain the technical\n"
+"                possibilities that can meet their needs."
 msgstr ""
-"Otsime praegu kedagi, kes liituks meie veebimeeskonnaga.\n"
-"                Keegi, kes suudab kiiresti koodi kirjutamisest üle minna analüüsile või kohtuda klientidega, et selgitada tehnilisi võimalusi, mis vastavad nende vajadustele."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
@@ -3479,9 +4171,7 @@ msgid "Website communication history"
 msgstr "Veebilehe suhtluse ajalugu"
 
 #. module: hr
-#: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
-#: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -3510,6 +4200,12 @@ msgid ""
 msgstr ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_res_partner__employee
+#: model:ir.model.fields,help:hr.field_res_users__employee
+msgid "Whether this contact is an Employee."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -3648,6 +4344,14 @@ msgstr "Tööajad"
 
 #. module: hr
 #. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You are not allowed to access \"Employee\" (hr.employee) records.\n"
+"We can redirect you to the public employee list."
+msgstr ""
+
+#. module: hr
+#. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid ""
 "You are not allowed to create an employee because the user does not have "
@@ -3658,8 +4362,8 @@ msgstr "Töötajat ei saa luua sest kasutajal puuduvad vastavad õigused %s"
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid ""
-"You are only allowed to update your preferences. Please contact a HR officer"
-" to update other information."
+"You are only allowed to update your preferences. Please contact a HR officer "
+"to update other information."
 msgstr ""
 "Teil on lubatud ainult oma eelistusi uuendada. Muu teabe uuendamiseks võtke "
 "ühendust personalitöötajaga."
@@ -3683,50 +4387,107 @@ msgid "You do not have access to this document."
 msgstr "Teil puudub sellele dokumendile ligipääs."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "You need to set a valid work email address for %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "You need to set the work email address for %s"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
 msgid ""
-"You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.\n"
-"You will have to become familiar with the existing tools (books, class supports, Odoo presentation’s slides, commercial tools),\n"
-"to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,\n"
+"You participate to the update of our tutorial tools and pre-sales tools "
+"after the launch of a new version of Odoo. Indeed, any new version of the "
+"software brings significant improvements in terms of functionalities, "
+"ergonomics and configuration.\n"
+"You will have to become familiar with the existing tools (books, class "
+"supports, Odoo presentation’s slides, commercial tools),\n"
+"to participate to the update of those tools in order to make them "
+"appropriate for the new version of the software and, for sure,\n"
 "to suggest improvements in order to cover the new domains of the software.\n"
-"You join the Implementation Assistance department. This team of 3 people go with Odoo’s clients in the set up of the software. Your role will be\n"
-"to animate webinars in order to show the different functionalities of the software.\n"
+"You join the Implementation Assistance department. This team of 3 people go "
+"with Odoo’s clients in the set up of the software. Your role will be\n"
+"to animate webinars in order to show the different functionalities of the "
+"software.\n"
 "to be involved in the support of the customers and\n"
 "to answer to their questions.\n"
 "You help the support manager to set up new support services by\n"
 "being involved in the treatment of new cases,\n"
 "contributing to the set up of a new politic,\n"
-"being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
+"being involved into satisfaction surveys in order to have a better knowledge "
+"of how the support given is seen by the customers."
 msgstr ""
-"Osalete meie õpetustööriistade ja eelmüügivahendite uuendamisel pärast uue Odoo versiooni turuletoomist. Tõepoolest, iga uus tarkvaraversioon toob kaasa märkimisväärseid täiustusi funktsionaalsuse, ergonoomika ja konfiguratsiooni osas.\n"
-"Peate tutvuma olemasolevate tööriistadega (raamatud, klassitöötlused, Odoo esitluste slaidid, ärilised tööriistad),\n"
-"et osaleda nende tööriistade uuendamisel, et need vastaksid uue tarkvaraversiooni nõudmistele.\n"
-"Samuti on teil kindlasti vaja soovitada täiustusi, et katta tarkvara uusi valdkondi.\n"
-"Liitute Rakendamise Abi osakonnaga. See kolmeliikmeline meeskond aitab Odoo klientidel tarkvara seadistamisel. Teie rolliks on\n"
+"Osalete meie õpetustööriistade ja eelmüügivahendite uuendamisel pärast uue "
+"Odoo versiooni turuletoomist. Tõepoolest, iga uus tarkvaraversioon toob "
+"kaasa märkimisväärseid täiustusi funktsionaalsuse, ergonoomika ja "
+"konfiguratsiooni osas.\n"
+"Peate tutvuma olemasolevate tööriistadega (raamatud, klassitöötlused, Odoo "
+"esitluste slaidid, ärilised tööriistad),\n"
+"et osaleda nende tööriistade uuendamisel, et need vastaksid uue "
+"tarkvaraversiooni nõudmistele.\n"
+"Samuti on teil kindlasti vaja soovitada täiustusi, et katta tarkvara uusi "
+"valdkondi.\n"
+"Liitute Rakendamise Abi osakonnaga. See kolmeliikmeline meeskond aitab Odoo "
+"klientidel tarkvara seadistamisel. Teie rolliks on\n"
 "korraldada veebinare, et näidata tarkvara erinevaid funktsioone.\n"
 "olla seotud klienditoega ja\n"
 "vastata nende küsimustele.\n"
 "Aitate tugijuhtidel uute tugiteenuste seadistamisel, osaledes:\n"
 "uute juhtumite käsitlemises,\n"
 "uue poliitika väljatöötamises,\n"
-"rahulolu-uuringutes, et saada parem ülevaade sellest, kuidas kliendid antud tuge tajuvad."
+"rahulolu-uuringutes, et saada parem ülevaade sellest, kuidas kliendid antud "
+"tuge tajuvad."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_cto
 msgid ""
-"You will take part in the consulting services we provide to our partners and customers: design, analysis, development, testing, project management, support/coaching. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.\n"
+"You will take part in the consulting services we provide to our partners and "
+"customers: design, analysis, development, testing, project management, "
+"support/coaching. You will work autonomously as well as coordinate and "
+"supervise small distributed development teams for some projects. Optionally, "
+"you will deliver Odoo training sessions to partners and customers (8-10 "
+"people/session). You will report to the Head of Professional Services and "
+"work closely with all developers and consultants.\n"
 "\n"
-"The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
+"The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-"
+"Neuve and Namur)."
 msgstr ""
-"Osalete meie partneritele ja klientidele pakutavates konsultatsiooniteenustes: disain, analüüs, arendus, testimine, projektijuhtimine, tugi/mentorlus. Töötate iseseisvalt ning koordineerite ja juhite väikeseid hajutatud arendusmeeskondi mõnede projektide puhul. Soovi korral viite läbi Odoo koolitusi partneritele ja klientidele (8-10 inimest/sessioon). Raporteerite Professionaalteenuste juhile ja töötate tihedalt koos kõigi arendajate ja konsultantidega.\n"
+"Osalete meie partneritele ja klientidele pakutavates "
+"konsultatsiooniteenustes: disain, analüüs, arendus, testimine, "
+"projektijuhtimine, tugi/mentorlus. Töötate iseseisvalt ning koordineerite ja "
+"juhite väikeseid hajutatud arendusmeeskondi mõnede projektide puhul. Soovi "
+"korral viite läbi Odoo koolitusi partneritele ja klientidele (8-10 inimest/"
+"sessioon). Raporteerite Professionaalteenuste juhile ja töötate tihedalt "
+"koos kõigi arendajate ja konsultantidega.\n"
 "\n"
 "Töökohaks on Grand-Rosière (1367), Belgium (Louvain-La-Neuve ja Namur vahel)."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"You're about to invite new users. %s users will be created with the default "
+"user template's rights. Adding new users may increase your subscription "
+"cost. Do you wish to continue?"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "ZIP"
 msgstr "Postiindeks"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_zip
+#: model:ir.model.fields,field_description:hr.field_res_partner_bank__bank_zip
+msgid "Zip"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -3735,14 +4496,31 @@ msgid "addresses linked to registered employees"
 msgstr "aadress on seotud registreeritud töötajaga"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "cohabitant"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "osakond"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "divorced"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
 msgstr "nt Hoone 2, kaugtöö jne."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "e.g. Founder, Motorized, Building B, ..."
+msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3771,9 +4549,21 @@ msgid "e.g. myprivateemail@example.com"
 msgstr "nt myprivateemail@example.com"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0
+msgid "id"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers
 msgid "km"
 msgstr "km"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "married"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__miles
@@ -3787,6 +4577,117 @@ msgid "restricted to employees"
 msgstr "piiratud töötajatega"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "widower"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "<small><b>READ</b></small>"
+#~ msgstr "<small><b>LOE</b></small>"
+
+#~ msgid ""
+#~ "<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
+#~ msgstr ""
+#~ "<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
+
+#~ msgid "Add a new employee"
+#~ msgstr "Lisage uus töötaja"
+
+#~ msgid "Allow employees to update their own data"
+#~ msgstr "Võimaldage töötajatel oma andmeid ise uuendada"
+
+#~ msgid "Allow employees to update their own data."
+#~ msgstr "Võimaldage töötajatel oma andmeid ise uuendada"
+
+#~ msgid "Date of Birth"
+#~ msgstr "Sünnikuupäev"
+
+#~ msgid ""
+#~ "Display remote work settings for each employee and dedicated reports. "
+#~ "Presence icons will be updated with remote work location."
+#~ msgstr ""
+#~ "Kuva kaugtöö seadeid igale töötajale ja seotud aruandlust. Kohaloleku "
+#~ "ikoonile lisatakse kaugtöö asukoht."
+
+#~ msgid "Job Summary"
+#~ msgstr "Ametikoha lühikirjeldus"
+
+#~ msgid "Let's create a job position."
+#~ msgstr "Loo ametikoht."
+
+#~ msgid ""
+#~ "Lorem Ipsum is simply dummy text of the printing and typesetting "
+#~ "industry. Lorem Ipsum has been the industry's standard dummy text ever "
+#~ "since the 1500s, when an unknown printer took a galley of type and "
+#~ "scrambled it to make a type specimen book. It has survived not only five "
+#~ "centuries, but also the leap into electronic typesetting, remaining "
+#~ "essentially unchanged. It was popularised in the 1960s with the release "
+#~ "of Letraset sheets containing Lorem Ipsum passages, and more recently "
+#~ "with desktop publishing software like Aldus PageMaker including versions "
+#~ "of Lorem Ipsum."
+#~ msgstr ""
+#~ "Lorem Ipsum on lihtsalt trükitehnika ja paigutuse tööstuse näidistekst. "
+#~ "Lorem Ipsum on olnud tööstuse standardne näidistekst alates 1500. "
+#~ "aastatest, kui tundmatu trükikoda võttis tüüposade galeriid ja segas "
+#~ "selle, et koostada tüüpnäidiste raamat. See on ellu jäänud mitte ainult "
+#~ "viis sajandit, vaid ka hüppe elektroonilisse paigutusse, jäädes "
+#~ "sisuliselt muutumatuks. Seda populariseeriti 1960. aastatel, kui ilmusid "
+#~ "Letraset'i lehed, mis sisaldasid Lorem Ipsum'i lõike, ja hiljem "
+#~ "lauatrükkimise tarkvarade, nagu Aldus PageMaker, versioonidega, mis "
+#~ "sisaldasid Lorem Ipsum'i lõike."
+
+#~ msgid "No Data"
+#~ msgstr "Andmed puuduvad"
+
+#~ msgid "Operation not supported"
+#~ msgstr "Toiming pole toetatud"
+
+#~ msgid "Reason Code"
+#~ msgstr "Põhjuse kood"
+
+#~ msgid "Remote Work"
+#~ msgstr "Kaugtöö"
+
+#~ msgid "Resource Working Time"
+#~ msgstr "Tööaja ressurss"
+
+#~ msgid ""
+#~ "The Marketing Manager defines the mid- to long-term marketing strategy "
+#~ "for his covered market segments in the World.\n"
+#~ "              He develops and monitors the annual budget in collaboration "
+#~ "with Sales.\n"
+#~ "              He defines the products and customers portfolio according "
+#~ "to the marketing plan.\n"
+#~ "              This mission requires strong collaboration with Technical "
+#~ "Service and Sales."
+#~ msgstr ""
+#~ "Turundusjuht määratleb oma hõlmatud turusegmentide keskmise ja "
+#~ "pikaajalise turundusstrateegia kogu maailmas.\n"
+#~ "              Ta koostab ja jälgib igaaastast eelarvet koostöös müügiga.\n"
+#~ "              Ta määratleb tooted ja kliendiportaali vastavalt "
+#~ "turundusplaanile.\n"
+#~ "              See missioon nõuab tihedat koostööd tehnilise teeninduse ja "
+#~ "müügiga."
+
+#~ msgid ""
+#~ "We are currently looking for someone like that to join our Consultant "
+#~ "team."
+#~ msgstr ""
+#~ "Oleme otsimas praegu kedagi sellist, kes liituks meie "
+#~ "konsultatsioonimeeskonnaga."
+
+#~ msgid ""
+#~ "We are currently looking for someone like that to join our Web team.\n"
+#~ "                Someone who can snap out of coding and perform analysis "
+#~ "or meet clients to explain the technical possibilities that can meet "
+#~ "their needs."
+#~ msgstr ""
+#~ "Otsime praegu kedagi, kes liituks meie veebimeeskonnaga.\n"
+#~ "                Keegi, kes suudab kiiresti koodi kirjutamisest üle minna "
+#~ "analüüsile või kohtuda klientidega, et selgitada tehnilisi võimalusi, mis "
+#~ "vastavad nende vajadustele."

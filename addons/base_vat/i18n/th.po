@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_vat
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
@@ -29,11 +29,9 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
-"10XXXXXXXXY หรือ 20XXXXXXXXY หรือ 15XXXXXXXXY หรือ 16XXXXXXXXY หรือ "
-"17XXXXXXXXY"
+"10XXXXXXXXY หรือ 20XXXXXXXXY หรือ 15XXXXXXXXY หรือ 16XXXXXXXXY หรือ 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
@@ -63,8 +61,7 @@ msgstr "49-098-576 หรือ 49098576"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
-"CHE-123.456.788 TVA หรือ CHE-123.456.788 MWST หรือ CHE-123.456.788 IVA"
+msgstr "CHE-123.456.788 TVA หรือ CHE-123.456.788 MWST หรือ CHE-123.456.788 IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -82,8 +79,7 @@ msgstr "ตั้งค่าการกำหนดค่า"
 msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
-msgstr ""
-"การเชื่อมต่อกับเซิร์ฟเวอร์ VIES ล้มเหลว ไม่สามารถตรวจสอบหมายเลข VAT %s ได้"
+msgstr "การเชื่อมต่อกับเซิร์ฟเวอร์ VIES ล้มเหลว ไม่สามารถตรวจสอบหมายเลข VAT %s ได้"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -127,9 +123,7 @@ msgstr "หมายเลข VAT ของยุโรปจะถูกตร�
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
-msgstr ""
-"ตัวอย่าง: '219999830019' (รูปแบบ: 12 หลัก ตัวเลขทั้งหมด "
-"หลักตรวจสอบที่ถูกต้อง)"
+msgstr "ตัวอย่าง: '219999830019' (รูปแบบ: 12 หลัก ตัวเลขทั้งหมด หลักตรวจสอบที่ถูกต้อง)"
 
 #. module: base_vat
 #. odoo-python
@@ -168,9 +162,15 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
-"หากทำเครื่องหมายในช่องนี้ "
-"ฐานะทางการเงินเริ่มต้นที่ใช้จะขึ้นอยู่กับผลลัพธ์ของการตรวจสอบโดยบริการ VIES "
-"ของยุโรป"
+"หากทำเครื่องหมายในช่องนี้ ฐานะทางการเงินเริ่มต้นที่ใช้จะขึ้นอยู่กับผลลัพธ์ของการตรวจสอบโดยบริการ "
+"VIES ของยุโรป"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -201,8 +201,8 @@ msgstr "เลขประจำตัวผู้เสียภาษี"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
-"%(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
 
 #. module: base_vat
@@ -221,8 +221,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ "
-"คุณสามารถใช้ '/' เพื่อระบุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
+"หมายเลขประจำตัวผู้เสียภาษี ค่าที่นี่จะได้รับการตรวจสอบตามรูปแบบประเทศ คุณสามารถใช้ '/' "
+"เพื่อระบุว่าพาร์ทเนอร์ไม่ต้องเสียภาษี"
 
 #. module: base_vat
 #. odoo-python
@@ -234,8 +234,8 @@ msgstr "หมายเลข VAT %s ไม่สามารถตีควา�
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
 msgstr ""
 "คำขอสำหรับการตรวจสอบ VAT ไม่ได้รับการดำเนินการ บริการ VIES "
 "ตอบกลับโดยมีข้อผิดพลาดดังต่อไปนี้: %s"

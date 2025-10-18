@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp
-# 
+#
 # Translators:
 # Abe Manyo, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp
@@ -25,14 +25,16 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
 msgid ""
 " * Draft: The MO is not confirmed yet.\n"
-" * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+" * Confirmed: The MO is confirmed, the stock rules and the reordering of the "
+"components are trigerred.\n"
 " * In Progress: The production has started (on the MO or on the WO).\n"
 " * To Close: The production is done, the MO has to be closed.\n"
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * Draft: MO belum dikonfirmasi.\n"
-" * Dikonfirmasi: MO dikonfirmasi, peraturan stok dan pemesanan ulang komponen dipicu.\n"
+" * Dikonfirmasi: MO dikonfirmasi, peraturan stok dan pemesanan ulang "
+"komponen dipicu.\n"
 " * Sedang Berlangsung: Produksi sudah dimulai (pada MO atau pada SPK).\n"
 " * Untuk Ditutup: Produksi selesai, MO harus ditutup.\n"
 " * Selesai: MO ditutup, pergerakan stok diposting. \n"
@@ -48,13 +50,11 @@ msgstr " <br/><br/> Komponen akan diambil dari <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/> Produk yang dimanufaktur akan digerakkan ke "
-"<b>%(destination)s</b>, <br/> seperti yang ditentukan dari tujuan "
-"<b>%(operation)s</b>."
+" <br/><br/> Produk yang dimanufaktur akan digerakkan ke <b>%(destination)s</"
+"b>, <br/> seperti yang ditentukan dari tujuan <b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -210,6 +210,12 @@ msgid "+ %d day(s)"
 msgstr "+ %d hari"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
 msgstr "- Gambaran Umum"
@@ -228,11 +234,13 @@ msgstr ""
 msgid ""
 "1 Step: Consume components from stock and produce.\n"
 "              2 Steps: Pick components from stock and then produce.\n"
-"              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock."
+"              3 Steps: Pick components from stock, produce, and then move "
+"final product(s) from production area to stock."
 msgstr ""
 "Langkah 1: Gunakan komponen dari stok dan produksi.\n"
 "              Langkah 2: Pilih komopnen dari stok lalu produksi.\n"
-"              Langkah 3: Pilih komponen dari stok, produksi, lalu pindahkan produk final dari area produksi ke stok."
+"              Langkah 3: Pilih komponen dari stok, produksi, lalu pindahkan "
+"produk final dari area produksi ke stok."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -298,13 +306,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Upload files to your product\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings or specifications.\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Unggah file ke produk Anda\n"
 "                    </p><p>\n"
-"                        Gunakan fitur ini untuk menyimpan file apapun, seperti gambar atau spesifikasi.\n"
+"                        Gunakan fitur ini untuk menyimpan file apapun, "
+"seperti gambar atau spesifikasi.\n"
 "                    </p>"
 
 #. module: mrp
@@ -424,11 +434,11 @@ msgstr "<span class=\"o_stat_text\">Bongkar Ulang</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid ""
 "<span class=\"text-muted\">Modifying the quantity to produce will also "
-"modify the quantities of components to consume for this manufacturing "
-"order.</span>"
+"modify the quantities of components to consume for this manufacturing order."
+"</span>"
 msgstr ""
-"<span class=\"text-muted\">Memodifikasi kuantitas untuk diproduksi juga akan"
-" memodifikasi kuantitas komponen untuk dikonsumsi untuk manufacturing order "
+"<span class=\"text-muted\">Memodifikasi kuantitas untuk diproduksi juga akan "
+"memodifikasi kuantitas komponen untuk dikonsumsi untuk manufacturing order "
 "ini.</span>"
 
 #. module: mrp
@@ -598,10 +608,12 @@ msgstr "? Ini dapat berujung pada ketidaksamaan dalam inventaris Anda."
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
-"                                Instead, it is used to decompose a BoM into its components when:"
+"                                Instead, it is used to decompose a BoM into "
+"its components when:"
 msgstr ""
 "BoM tipe Kit tidak diproduksi dengan manufacturing order.<br/>\n"
-"                                Alih-alih, digunakan untuk menguraikan BoM menjadi komponennya saat:"
+"                                Alih-alih, digunakan untuk menguraikan BoM "
+"menjadi komponennya saat:"
 
 #. module: mrp
 #. odoo-python
@@ -685,9 +697,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
-"Tambahkan produk sampingan pada BoM. Dapat pula digunakan untuk menghasilkan"
-" beberapa produk jadi sekaligus. Tanpa opsi ini Anda hanya melakukan: A + B "
-"= C. Dengan opsi: A + B = C + D."
+"Tambahkan produk sampingan pada BoM. Dapat pula digunakan untuk menghasilkan "
+"beberapa produk jadi sekaligus. Tanpa opsi ini Anda hanya melakukan: A + B = "
+"C. Dengan opsi: A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -735,11 +747,13 @@ msgstr "Semua Produk"
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs!"
 msgstr ""
 "Semua kuantitas produk harus lebih dari atau sama dengan 0.\n"
 "Baris dengan 0 kuantitas dapat digunakan sebagai baris opsional.\n"
-"Anda harus menginstal modul mrp_byproduct bila Anda ingin mengelola produk ekstra pada BoM!"
+"Anda harus menginstal modul mrp_byproduct bila Anda ingin mengelola produk "
+"ekstra pada BoM!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -773,8 +787,8 @@ msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
 "for prior approval"
 msgstr ""
-"Izinkan user manufaktur untuk memodifikasi kuantitas untuk dikonsumsi, tanpa"
-" membutuhkan persetujuan terlebih dahulu"
+"Izinkan user manufaktur untuk memodifikasi kuantitas untuk dikonsumsi, tanpa "
+"membutuhkan persetujuan terlebih dahulu"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
@@ -871,8 +885,8 @@ msgstr "Apakah Anda yakin ingin membatalkan manufacturing order ini?"
 #: code:addons/mrp/models/product.py:0
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
-"been used for this product, the change of unit of measure can not be done.If"
-" you want to change it, please archive the product and create a new one."
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
 msgstr ""
 "Karena satuan ukuran lainnya (contoh : %(problem_uom)s) alih-alih %(uom)s "
 "telah digunakan untuk produk ini, satuan ukuran baru tidak dapat digunakan. "
@@ -947,8 +961,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"Cetak Otomatis label nomor lot/seri saat tombol \"Buat nomor seri/lot baru\""
-" digunakan."
+"Cetak Otomatis label nomor lot/seri saat tombol \"Buat nomor seri/lot baru\" "
+"digunakan."
 
 #. module: mrp
 #. odoo-javascript
@@ -989,13 +1003,13 @@ msgstr "Tersedia"
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added. In "
-"case the product is subcontracted, this can be used to determine the date at"
-" which components should be sent to the subcontractor."
+"case the product is subcontracted, this can be used to determine the date at "
+"which components should be sent to the subcontractor."
 msgstr ""
-"Lead time rata-rata dalam hari untuk memanufaktur produk ini. Pada kasus BOM"
-" multi-level, lead time manufaktur komponen akan ditambahkan. Dalam kasus "
-"produk di subkontrak, ini dapat digunakan untuk menentukan tanggal pada mana"
-" komponen harusnya dikirim ke subkontraktor."
+"Lead time rata-rata dalam hari untuk memanufaktur produk ini. Pada kasus BOM "
+"multi-level, lead time manufaktur komponen akan ditambahkan. Dalam kasus "
+"produk di subkontrak, ini dapat digunakan untuk menentukan tanggal pada mana "
+"komponen harusnya dikirim ke subkontraktor."
 
 #. module: mrp
 #. odoo-javascript
@@ -1081,8 +1095,7 @@ msgstr "Urutan Backorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
-msgid ""
-"Backorder sequence, if equals to 0 means there is not related backorder"
+msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
 "Urutan backorder, bila sama dengan 0 berarti tidak ada backorder terkait"
 
@@ -1162,8 +1175,8 @@ msgstr "Daftar Kebutuhan Material (BOM)"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__mo_bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_bom_id
 msgid ""
-"Bills of Materials, also called recipes, are used to autocomplete components"
-" and work order instructions."
+"Bills of Materials, also called recipes, are used to autocomplete components "
+"and work order instructions."
 msgstr ""
 "BoM, juga disebut resep, digunakan untuk menyelesaikan otomatis instruksi "
 "komponen dan SPK."
@@ -1172,11 +1185,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
 "                order or a pack of products."
 msgstr ""
 "BoM memungkinkan Anda untuk mendefinisikan daftar bahan\n"
-"                baku yang digunakan untuk membuat produk jadi; melalui manufacturing\n"
+"                baku yang digunakan untuk membuat produk jadi; melalui "
+"manufacturing\n"
 "                order atau paket produk."
 
 #. module: mrp
@@ -1434,8 +1449,8 @@ msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
 msgstr ""
-"Mengubah produk atau varian akan secara permanen me-reset semua data terkait"
-" varian yang dienkode."
+"Mengubah produk atau varian akan secara permanen me-reset semua data terkait "
+"varian yang dienkode."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1576,13 +1591,13 @@ msgstr "Hitung berdasarkan waktu yang dilacak"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
-"buying or manufacturing the components and/or subassemblies."
-"                                                       Also note that "
-"purchase security lead times will be added when appropriate."
+"buying or manufacturing the components and/or "
+"subassemblies.                                                       Also "
+"note that purchase security lead times will be added when appropriate."
 msgstr ""
 "Hitung hari yang dibutuhkan untuk menyuplai ulang semua komponen dari BoM, "
-"baik melalui membeli atau memanufaktur komponen dan/atau subassemblies. Juga"
-" catat bahwa lead time keamanan pembelian akan ditambahkan bila diperlukan."
+"baik melalui membeli atau memanufaktur komponen dan/atau subassemblies. Juga "
+"catat bahwa lead time keamanan pembelian akan ditambahkan bila diperlukan."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1756,8 +1771,8 @@ msgstr "Buat Backorder"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid ""
-"Create a backorder if you expect to process the remaining products later. Do"
-" not create a backorder if you will not process the remaining products."
+"Create a backorder if you expect to process the remaining products later. Do "
+"not create a backorder if you will not process the remaining products."
 msgstr ""
 "Buat backorder bila Anda akan memproses produk yang tersisa nanti. Jangan "
 "buat backorder bila ANda tidak akan memproses produk yang tersisa."
@@ -1782,10 +1797,13 @@ msgstr "Buat performa SPK baru"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Create and confirm Manufacturing Orders this many days in advance, to have "
+"enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Buat dan konfirmasi Manufacturing Orders X hari sebelumnya, agar memiliki cukup waktu untuk memulihkan komponen atau memanufaktur produk yang setengah-jadi.\n"
+"Buat dan konfirmasi Manufacturing Orders X hari sebelumnya, agar memiliki "
+"cukup waktu untuk memulihkan komponen atau memanufaktur produk yang setengah-"
+"jadi.\n"
 "Mohon diingat bahwa lead time keamanan juga akan diperhitungkan."
 
 #. module: mrp
@@ -1809,8 +1827,8 @@ msgid ""
 "started simultaneously."
 msgstr ""
 "Buat ketergantungan tingkat operasi yang akan memengaruhi perencanaan dan "
-"status SPK setelah konfirmasi MO. Apabila fitur ini dicentang, dan tidak ada"
-" yang diisi, Odoo akan menganggap semua operasi dapat dimulai secara "
+"status SPK setelah konfirmasi MO. Apabila fitur ini dicentang, dan tidak ada "
+"yang diisi, Odoo akan menganggap semua operasi dapat dimulai secara "
 "bersamaan."
 
 #. module: mrp
@@ -1886,15 +1904,22 @@ msgstr "Mata Uang"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Jumlah produk saat ini.\n"
-"Dalam konteks dengan Lokasi Stok tunggal, ini termasuk barang-barang yang disimpan di lokasi ini atau sub-lokasinya.\n"
-"Dalam konteks dengan Gudang tunggal, ini termasuk barang-barang yang disimpan di Lokasi Stok Gudang ini atau sub-lokasinya.\n"
-"Selain itu, ini termasuk barang-barang yang disimpan di lokasi stok manapun dengan tipe 'internal'."
+"Dalam konteks dengan Lokasi Stok tunggal, ini termasuk barang-barang yang "
+"disimpan di lokasi ini atau sub-lokasinya.\n"
+"Dalam konteks dengan Gudang tunggal, ini termasuk barang-barang yang "
+"disimpan di Lokasi Stok Gudang ini atau sub-lokasinya.\n"
+"Selain itu, ini termasuk barang-barang yang disimpan di lokasi stok manapun "
+"dengan tipe 'internal'."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -2004,17 +2029,27 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
 msgid ""
-"Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+"Defines if you can consume more or less components than the quantity defined "
+"on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
-"  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
-"  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
+"  * Allowed with warning: allowed for all manufacturing users with summary "
+"of consumption differences when closing the manufacturing order.\n"
+"  Note that in the case of component Highlight Consumption, where "
+"consumption is registered manually exclusively, consumption warnings will "
+"still be issued when appropriate also.\n"
+"  * Blocked: only a manager can close a manufacturing order when the BoM "
+"consumption is not respected."
 msgstr ""
-"Tentukan bila dapat mengonsumsi lebih banyak atau lebih sedikit komponen daripada kuantitas di BoM:\n"
+"Tentukan bila dapat mengonsumsi lebih banyak atau lebih sedikit komponen "
+"daripada kuantitas di BoM:\n"
 "  * Izinkan: diizinkan untuk semua user manufaktur.\n"
-"  * Izinkan dengan peringatan: diizinkan untuk semua user manufaktur dengan ringkasan perbedaan konsumsi saat menutup manufacturing order.\n"
-"  Mohon diingat pada kasus Konsumsi Highlight komponen, dimana konsumsi didaftarkan eksklusif secara manual, peringatan konsumsi akan tetap diberikan saat diperlukan.\n"
-"  * Blokir: hanya manajer yang dapat menutup manufacturing order saat konsumsi BoM tidak sesuai."
+"  * Izinkan dengan peringatan: diizinkan untuk semua user manufaktur dengan "
+"ringkasan perbedaan konsumsi saat menutup manufacturing order.\n"
+"  Mohon diingat pada kasus Konsumsi Highlight komponen, dimana konsumsi "
+"didaftarkan eksklusif secara manual, peringatan konsumsi akan tetap "
+"diberikan saat diperlukan.\n"
+"  * Blokir: hanya manajer yang dapat menutup manufacturing order saat "
+"konsumsi BoM tidak sesuai."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2437,14 +2472,20 @@ msgstr "Laporan Forecast"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Jumlah Perkiraan (dihitung dengan rumus: jumlah di tangan - keluar + masuk)\n"
-"Dalam konteks dengan Lokasi Stok tunggal, ini termasuk barang-barang yang disimpan di lokasi ini atau sub-lokasinya.\n"
-"Dalam konteks dengan Gudang tunggal, ini termasuk barang-barang yang disimpan di Lokasi Stok Gudang ini atau sub-lokasinya.\n"
-"Selain itu, ini termasuk barang-barang yang disimpan di lokasi stok manapun dengan tipe 'internal'."
+"Dalam konteks dengan Lokasi Stok tunggal, ini termasuk barang-barang yang "
+"disimpan di lokasi ini atau sub-lokasinya.\n"
+"Dalam konteks dengan Gudang tunggal, ini termasuk barang-barang yang "
+"disimpan di Lokasi Stok Gudang ini atau sub-lokasinya.\n"
+"Selain itu, ini termasuk barang-barang yang disimpan di lokasi stok manapun "
+"dengan tipe 'internal'."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2674,8 +2715,7 @@ msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
-"Jika varian produk didefinisikan, BOM hanya tersedia untuk produk ini."
+msgstr "Jika varian produk didefinisikan, BOM hanya tersedia untuk produk ini."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -2735,8 +2775,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
-"Bila kotak ini dicentang, Odoo akan secara otomatis mencetak laporan alokasi"
-" MO saat selesai dan telah menugaskan pergerakkan."
+"Bila kotak ini dicentang, Odoo akan secara otomatis mencetak laporan alokasi "
+"MO saat selesai dan telah menugaskan pergerakkan."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -2750,11 +2790,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels"
-" of a MO when it is done."
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a MO when it is done."
 msgstr ""
-"Bila kotak ini dicentang, Odoo akan secara otomatis mencetak label produk MO"
-" saat selesai."
+"Bila kotak ini dicentang, Odoo akan secara otomatis mencetak label produk MO "
+"saat selesai."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -2780,8 +2820,7 @@ msgstr "Impor Templat untuk BoM"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"Impossible to plan the workorder. Please check the workcenter "
-"availabilities."
+"Impossible to plan the workorder. Please check the workcenter availabilities."
 msgstr ""
 "Mustahil untuk merencanakan workorder. Mohon periksa ketersediaan pusat "
 "kerja."
@@ -2790,8 +2829,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Impossible to plan. Please check the workcenter availabilities."
-msgstr ""
-"Mustahil untuk direncanakan. Silakan periksa ketersediaan pusat kerja."
+msgstr "Mustahil untuk direncanakan. Silakan periksa ketersediaan pusat kerja."
 
 #. module: mrp
 #. odoo-javascript
@@ -2839,8 +2877,7 @@ msgstr "Pergerakan Stok Persediaan"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
-msgid ""
-"Inventory moves for which you must scan a lot number at this work order"
+msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 "Pergerakan stok persediaan yang harus Anda pindai nomor lotnya pada SPK ini"
 
@@ -3076,10 +3113,12 @@ msgstr "Keluar"
 #: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
 msgid ""
 "Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material."
+"Select Bill of Materials to visualise this document as a product attachment "
+"when this product is in a bill of material."
 msgstr ""
 "Biarkan tersembunyi bila dokumen hanya dapat diakses pada formulir produk.\n"
-"Pilih BoM untuk memvisualisasikan dokumen sebagai lampiran produk saat produk ini dalam BoM."
+"Pilih BoM untuk memvisualisasikan dokumen sebagai lampiran produk saat "
+"produk ini dalam BoM."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3465,21 +3504,29 @@ msgstr "Visibilitas Hari Manufaktur"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc."
 msgstr ""
-"Operasi manufaktur diproses pada Pusat Kerja. Pusat Kerja dapat terdiri dari\n"
-"                pekerja dan/atau mesin, mereka digunakan untuk ongkos, jadwal, perencanaan kapasitas, dsb."
+"Operasi manufaktur diproses pada Pusat Kerja. Pusat Kerja dapat terdiri "
+"dari\n"
+"                pekerja dan/atau mesin, mereka digunakan untuk ongkos, "
+"jadwal, perencanaan kapasitas, dsb."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"Operasi manufaktur diproses pada Pusat Kerja. Pusat Kerja dapat terdiri dari\n"
-"                pekerja dan/atau mesin, mereka digunakan untuk ongkos, jadwal, perencanaan kapasitas, dsb.\n"
+"Operasi manufaktur diproses pada Pusat Kerja. Pusat Kerja dapat terdiri "
+"dari\n"
+"                pekerja dan/atau mesin, mereka digunakan untuk ongkos, "
+"jadwal, perencanaan kapasitas, dsb.\n"
 "                Mereka dapat didefinisikan via menu konfigurasi."
 
 #. module: mrp
@@ -3488,7 +3535,8 @@ msgstr ""
 msgid ""
 "Manufacturing readiness for this MO, as per bill of material configuration:\n"
 "            * Ready: The material is available to start the production.\n"
-"            * Waiting: The material is not available to start the production.\n"
+"            * Waiting: The material is not available to start the "
+"production.\n"
 msgstr ""
 "Kesiapan Manufaktur untuk MO ini, sesuai konfigurasi BoM:\n"
 "            * Siap: Material tersedia untuk memulai produksi.\n"
@@ -3685,6 +3733,12 @@ msgstr "Tipe Aktivitas Berikutnya"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
 msgstr "Tidak Backorder"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "No BoM Found"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -3899,12 +3953,17 @@ msgstr "Target OEE"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
-"                                install the IoT App on a computer that is on the same local network as the\n"
-"                                barcode operator and configure the routing of the reports."
+"                                install the IoT App on a computer that is on "
+"the same local network as the\n"
+"                                barcode operator and configure the routing "
+"of the reports."
 msgstr ""
-"Secara default Odoo membuka pratinjau PDF. Bila Anda ingin mencetak secara instan,\n"
-"                                instal App IoT pada komputer yang berada di jaringan lokal yang sama dengan\n"
-"                                operator barcode dan konfigurasikan routing laporan."
+"Secara default Odoo membuka pratinjau PDF. Bila Anda ingin mencetak secara "
+"instan,\n"
+"                                instal App IoT pada komputer yang berada di "
+"jaringan lokal yang sama dengan\n"
+"                                operator barcode dan konfigurasikan routing "
+"laporan."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -3922,8 +3981,7 @@ msgstr "Di Tangan"
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
 msgstr ""
-"Hanya manufacturing order dalam status draft atau dikonfirmasi yang dapat "
-"%s."
+"Hanya manufacturing order dalam status draft atau dikonfirmasi yang dapat %s."
 
 #. module: mrp
 #. odoo-python
@@ -3966,10 +4024,12 @@ msgstr "Tipe Operasi"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
-"                Each operation is done at a specific Work Center and has a specific duration."
+"                Each operation is done at a specific Work Center and has a "
+"specific duration."
 msgstr ""
 "Operasi mendefinisikan apa yang harus dilakukan untuk menyelesaikkan SPK.\n"
-"                Setiap operasi dilakukan pada Pusat Kerja tertentu dan memiliki durasi tertentu."
+"                Setiap operasi dilakukan pada Pusat Kerja tertentu dan "
+"memiliki durasi tertentu."
 
 #. module: mrp
 #. odoo-javascript
@@ -4068,8 +4128,7 @@ msgstr "Efektivitas Peralatan Keseluruhan, berdasarkan bulan lalu"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr ""
-"Efektivitas Keseluruhan Peralatan: tidak ada waktu kerja atau diblokir"
+msgstr "Efektivitas Keseluruhan Peralatan: tidak ada waktu kerja atau diblokir"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__pdf
@@ -4826,8 +4885,7 @@ msgstr "Referensi harus unik tiap perusahaan!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
-msgid ""
-"Reference of the document that generated this production order request."
+msgid "Reference of the document that generated this production order request."
 msgstr "Referensi dari dokumen yang membuat permintaan order produksi ini."
 
 #. module: mrp
@@ -4957,8 +5015,7 @@ msgstr "Tanggal Terjadwal"
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Dijadwalkan sebelum SPK sebelumnya, dijadwalkan dari %(start)s sampai "
-"%(end)s"
+"Dijadwalkan sebelum SPK sebelumnya, dijadwalkan dari %(start)s sampai %(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -5198,11 +5255,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders are already done, so you cannot unplan this manufacturing order.\n"
+"Some work orders are already done, so you cannot unplan this manufacturing "
+"order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Beberapa SPK sudah selesai, jadi Anda tidak dapat membatalkan rencana manufacturing order ini.\n"
+"Beberapa SPK sudah selesai, jadi Anda tidak dapat membatalkan rencana "
+"manufacturing order ini.\n"
 "\n"
 "Sayang apabila pekerjaan yang sudah selesai tersebut dibuang, kan?"
 
@@ -5210,11 +5269,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders have already started, so you cannot unplan this manufacturing order.\n"
+"Some work orders have already started, so you cannot unplan this "
+"manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Beberapa SPK sudah dimulai, jadi Anda tidak dapat membatalkan rencana manufacturing order ini.\n"
+"Beberapa SPK sudah dimulai, jadi Anda tidak dapat membatalkan rencana "
+"manufacturing order ini.\n"
 "\n"
 "Sayang apabila pekerjaan yang sudah dilakukan dibuang, kan?"
 
@@ -5230,8 +5291,7 @@ msgstr "Lokasi Sumber"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
-msgid ""
-"Specific number of pieces that can be produced in parallel per product."
+msgid "Specific number of pieces that can be produced in parallel per product."
 msgstr ""
 "Jumlah bagian spesifik yang dapat diproduksi secara parallel per produk."
 
@@ -5560,8 +5620,8 @@ msgid ""
 "The percentage of the final production cost for this by-product. The total "
 "of all by-products' cost share must be smaller or equal to 100."
 msgstr ""
-"Persentase biaya produksi final untuk baris produk sampingan ini. Total cost"
-" share semua produk sampingan harus lebih kecil dari atau sama dengan 100."
+"Persentase biaya produksi final untuk baris produk sampingan ini. Total cost "
+"share semua produk sampingan harus lebih kecil dari atau sama dengan 100."
 
 #. module: mrp
 #. odoo-python
@@ -5612,11 +5672,11 @@ msgstr "Kuantitas untuk dibongkar harus positif!"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"The serial number %(number)s used for byproduct %(product_name)s has already"
-" been produced"
+"The serial number %(number)s used for byproduct %(product_name)s has already "
+"been produced"
 msgstr ""
-"Nomor seri %(number)s yang digunakan untuk produk sampingan %(product_name)s"
-" sudah diproduksi"
+"Nomor seri %(number)s yang digunakan untuk produk sampingan %(product_name)s "
+"sudah diproduksi"
 
 #. module: mrp
 #. odoo-python
@@ -5706,8 +5766,8 @@ msgid ""
 msgstr ""
 "Field ini digunakan untuk menghitung durasi yang diharapkan pada SPK di "
 "pusat kerja ini. Contohnya, bila SPK membutuhkan satu jam dan faktor "
-"efisiensi adalah 100%, maka durasi yang diharapkan adalah 1 jam. Bila faktor"
-" efisiensi adalah 200%, durasi yang diharapkan akan menjadi 30 menit."
+"efisiensi adalah 100%, maka durasi yang diharapkan adalah 1 jam. Bila faktor "
+"efisiensi adalah 200%, durasi yang diharapkan akan menjadi 30 menit."
 
 #. module: mrp
 #. odoo-javascript
@@ -5728,11 +5788,15 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid ""
-"This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                You can filter on the product to see all the past movements for the product."
+"This menu gives you the full traceability of inventory operations on a "
+"specific product.\n"
+"                You can filter on the product to see all the past movements "
+"for the product."
 msgstr ""
-"Menu ini memungkinkan Anda untuk menelusuri penuh operasi inventaris untuk produk tertentu.\n"
-"                Anda dapat memfilter produk untuk melihat semua pergerakan di masa lalu untuk produk tersebut."
+"Menu ini memungkinkan Anda untuk menelusuri penuh operasi inventaris untuk "
+"produk tertentu.\n"
+"                Anda dapat memfilter produk untuk melihat semua pergerakan "
+"di masa lalu untuk produk tersebut."
 
 #. module: mrp
 #. odoo-python
@@ -6222,8 +6286,8 @@ msgstr "Validasi"
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 msgid ""
 "Values cannot be set and validated because a Lot/Serial Number needs to be "
-"specified for a tracked product that is having its consumed amount "
-"increased:%(products)s"
+"specified for a tracked product that is having its consumed amount increased:"
+"%(products)s"
 msgstr ""
 "Value tidak dapat ditetapkan dan divalidasi karena Nomor Lot/Seri harus "
 "ditentukan untuk produk yang dilacak yang memiliki jumlah konsumsinya "
@@ -6339,8 +6403,8 @@ msgstr "Sejarah komunikasi situs"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a operation type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same"
-" operation type.If not,the operation type is not taken into account in the "
+"try to create a Manufacturing Order for that product using a BoM of the same "
+"operation type.If not,the operation type is not taken into account in the "
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
@@ -6354,11 +6418,15 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
 msgid ""
-"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+"When activated, then the registration of consumption for that component is "
+"recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually "
+"on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
-"Saat diaktifkan, pendaftaran konsumsi untuk komponen tersebut akan secara eksklusif dicatat manual.\n"
-"Bila tidak diaktifkan, dan konsumsi komponen apapun diedit secara manual pada manufacturing order, Odoo mengasumsikan juga konsumsi manual."
+"Saat diaktifkan, pendaftaran konsumsi untuk komponen tersebut akan secara "
+"eksklusif dicatat manual.\n"
+"Bila tidak diaktifkan, dan konsumsi komponen apapun diedit secara manual "
+"pada manufacturing order, Odoo mengasumsikan juga konsumsi manual."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6392,8 +6460,8 @@ msgid ""
 "maintenance alerts, scrap products, etc."
 msgstr ""
 "Dengan control panel pusat kerja Odoo, pekerja Anda dapat memulai SPK di "
-"toko dan mengikuti instruksi worksheet. Pemeriksaan kualitas secara sempurna"
-" terintegrasi dalam proses tersebut. Pekerja dapat memicu feedback loop, "
+"toko dan mengikuti instruksi worksheet. Pemeriksaan kualitas secara sempurna "
+"terintegrasi dalam proses tersebut. Pekerja dapat memicu feedback loop, "
 "peringatan maintenance, membuang produk, dsb."
 
 #. module: mrp
@@ -6402,8 +6470,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
-"Wizard untuk kasus konsumsi dalam peringatan/ketat dan lebih banyak komponen"
-" telah digunakan di MO (terkait bom)"
+"Wizard untuk kasus konsumsi dalam peringatan/ketat dan lebih banyak komponen "
+"telah digunakan di MO (terkait bom)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6507,8 +6575,8 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
-"Operasi SPK memungkinkan Anda untuk membuat dan mengelola operasi manufaktur"
-" yang harus diikuti di pusat kerja Anda untuk membuat produk. Mereka akan "
+"Operasi SPK memungkinkan Anda untuk membuat dan mengelola operasi manufaktur "
+"yang harus diikuti di pusat kerja Anda untuk membuat produk. Mereka akan "
 "dilampirkan ke BoM yang akan menentukan komponen yang dibutuhkan."
 
 #. module: mrp
@@ -6556,10 +6624,12 @@ msgstr "Pusat kerja"
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+"                    Operations are defined in the bill of materials or added "
+"in the manufacturing order directly."
 msgstr ""
 "SPK dalah operasi untuk dilakukan sebagai bagian dari manufacturing order.\n"
-"                    Operasi ditentukan di BoM atau ditambahkan langsung di manufacturing order."
+"                    Operasi ditentukan di BoM atau ditambahkan langsung di "
+"manufacturing order."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6568,10 +6638,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"            Operations are defined in the bill of materials or added in the manufacturing order directly."
+"            Operations are defined in the bill of materials or added in the "
+"manufacturing order directly."
 msgstr ""
 "SPK dalah operasi untuk dilakukan sebagai bagian dari manufacturing order.\n"
-"                    Operasi ditentukan di BoM atau ditambahkan langsung di manufacturing order."
+"                    Operasi ditentukan di BoM atau ditambahkan langsung di "
+"manufacturing order."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6734,8 +6806,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"You cannot change the workcenter of a work order that is in progress or "
-"done."
+"You cannot change the workcenter of a work order that is in progress or done."
 msgstr ""
 "Anda tidak dapat merubah pusat kerja SPK yang sedang berlangsung atau "
 "selesai."
@@ -6835,19 +6906,26 @@ msgid ""
 "                            Please confirm it has been done on purpose.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Please review your component consumption or ask a manager to validate\n"
-"                            <span invisible=\"mrp_production_count != 1\">this manufacturing order</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
+"                            Please review your component consumption or ask "
+"a manager to validate\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">this manufacturing order</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
-"Anda mengonsumsi kuantitas yang berbeda dari yang diharapkan untuk produk-produk berikut.\n"
+"Anda mengonsumsi kuantitas yang berbeda dari yang diharapkan untuk produk-"
+"produk berikut.\n"
 "                        <b invisible=\"consumption == 'strict'\">\n"
 "                            Mohon konfirmasi ini sengaja dilakukan.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Mohon tinjau konsumsi komponen Anda atau tanya manajer untuk memvalidasi\n"
-"                            <span invisible=\"mrp_production_count != 1\">manufacturing order ini</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">manufacturing order berikut</span>.\n"
+"                            Mohon tinjau konsumsi komponen Anda atau tanya "
+"manajer untuk memvalidasi\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">manufacturing order ini</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">manufacturing order berikut</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -6873,8 +6951,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
-" Productivity Losses."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
 msgstr ""
 "Anda harus mendefinisikan setidaknya satu kehilangan produktivitas di "
 "kategori 'Performa'. Coba buat dari aplikasi Produksi, menu: Konfigurasi / "
@@ -6902,11 +6980,11 @@ msgstr "Anda harus menyediakan lot untuk produk jadi."
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
-"Anda harus menyuplai Nomor Seri/Lot untuk produk dan 'konsumsi' mereka: "
-"%(missing_products)s"
+"Anda harus menyuplai Nomor Seri/Lot untuk produk dan 'konsumsi' mereka: %"
+"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

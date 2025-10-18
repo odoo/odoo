@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/"
+"41243/es_419/)\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: account_payment
 #. odoo-python
@@ -110,12 +112,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>¡Advertencia!</strong> Hay un reembolso pendiente para este pago.\n"
-"                        Espere un momento a que se procese. Si el reembolso sigue pendiente en\n"
-"                        unos minutos, verifique la configuración de su proveedor de pago."
+"                        Espere un momento a que se procese. Si el reembolso "
+"sigue pendiente en\n"
+"                        unos minutos, verifique la configuración de su "
+"proveedor de pago."
 
 #. module: account_payment
 #. odoo-python
@@ -127,10 +133,9 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
-msgstr ""
-"Ya realizó un pago para esta factura, asegúrese de no pagar dos veces."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
+msgstr "Ya realizó un pago para esta factura, asegúrese de no pagar dos veces."
 
 #. module: account_payment
 #. odoo-python
@@ -199,11 +204,6 @@ msgid "Close"
 msgstr "Cerrar"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Código"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
@@ -269,8 +269,7 @@ msgstr "Descuento por pago anticipado de"
 #. module: account_payment
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
-msgstr ""
-"Habilite pagos con tarjeta de crédito y débito compatibles con Stripe."
+msgstr "Habilite pagos con tarjeta de crédito y débito compatibles con Stripe."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
@@ -329,7 +328,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"En el modo de prueba, se procesa un pago falso mediante una interfaz de pago de prueba.\n"
+"En el modo de prueba, se procesa un pago falso mediante una interfaz de pago "
+"de prueba.\n"
 "Se recomienda este modo al establecer el proveedor."
 
 #. module: account_payment
@@ -400,8 +400,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
-"Tenga en cuenta que solo están disponibles los tokens de los proveedores que"
-" permiten captar el importe."
+"Tenga en cuenta que solo están disponibles los tokens de los proveedores que "
+"permiten captar el importe."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -659,8 +659,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
-"Se ha registrado el pago relacionado a la transacción con referencia "
-"%(ref)s: %(link)s"
+"Se ha registrado el pago relacionado a la transacción con referencia %"
+"(ref)s: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -767,10 +767,12 @@ msgstr "Transacción nula"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"No puede eliminar un método de pago vinculado a un proveedor en el estado habilitado o de prueba.\n"
+"No puede eliminar un método de pago vinculado a un proveedor en el estado "
+"habilitado o de prueba.\n"
 "Proveedores vinculados: %s"
 
 #. module: account_payment
@@ -813,3 +815,6 @@ msgstr "se aplicó."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "vencidas"
+
+#~ msgid "Code"
+#~ msgstr "Código"

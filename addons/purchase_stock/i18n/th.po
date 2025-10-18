@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
@@ -36,6 +36,12 @@ msgstr "%(otd)s %%"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
 msgstr "+ %d วัน"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -106,7 +112,8 @@ msgstr "สินค้าที่จัดเก็บได้คือสิ
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
@@ -275,8 +282,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"ขึ้นอยู่กับโมดูลที่ติดตั้งสิ่งนี้จะช่วยให้คุณกำหนดเส้นทางของสินค้าได้ไม่ว่าจะซื้อ"
-" ผลิต เติมสินค้าตามคำสั่งซื้อ และอื่นๆ"
+"ขึ้นอยู่กับโมดูลที่ติดตั้งสิ่งนี้จะช่วยให้คุณกำหนดเส้นทางของสินค้าได้ไม่ว่าจะซื้อ ผลิต เติมสินค้าตามคำสั่งซื้อ "
+"และอื่นๆ"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -546,12 +553,11 @@ msgstr "อาจจำเป็นต้องดำเนินการด้
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "อัตราข้อผิดพลาดขั้นต้นสำหรับระยะเวลารอคอยสินค้าของผู้ขาย "
-"เมื่อระบบสร้างใบสั่งซื้อสำหรับการเรียงลำดับสินค้าใหม่ "
-"พวกเขาจะถูกกำหนดเวลาล่วงหน้าหลายวัน "
+"เมื่อระบบสร้างใบสั่งซื้อสำหรับการเรียงลำดับสินค้าใหม่ พวกเขาจะถูกกำหนดเวลาล่วงหน้าหลายวัน "
 "เพื่อรับมือกับความล่าช้าของผู้จำหน่ายที่คาดไม่ถึง"
 
 #. module: purchase_stock
@@ -585,6 +591,12 @@ msgid "Next transfer(s) impacted:"
 msgstr "การโอนย้ายครั้งต่อไปได้รับผลกระทบ:"
 
 #. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
+
+#. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/kanban_controller.js:0
 msgid "No product to buy found"
@@ -616,11 +628,9 @@ msgstr "OTD"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
-msgstr ""
-"Odoo ไม่สามารถสร้างรายการ anglo saxon ได้ การประเมินมูลค่ารวมของ %s "
-"เป็นศูนย์"
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
+msgstr "Odoo ไม่สามารถสร้างรายการ anglo saxon ได้ การประเมินมูลค่ารวมของ %s เป็นศูนย์"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -661,13 +671,12 @@ msgstr "จุดคำสั่ง"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"ในช่วง x วันที่ผ่านมา จำนวนสินค้าที่ได้รับตรงเวลาหารด้วยจำนวนการสั่งซื้อ "
-"products.x อาจเป็นพารามิเตอร์ระบบ purchase_stock.on_time_delivery_days หรือ "
-"ค่าเริ่มต้น 365"
+"ในช่วง x วันที่ผ่านมา จำนวนสินค้าที่ได้รับตรงเวลาหารด้วยจำนวนการสั่งซื้อ products.x "
+"อาจเป็นพารามิเตอร์ระบบ purchase_stock.on_time_delivery_days หรือ ค่าเริ่มต้น 365"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -980,9 +989,9 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__number_of_days
 msgid ""
-"Suggested quantities to replenish will be computed for all filtered products"
-"              in this catalog in order to cover this amount of days of "
-"average demand."
+"Suggested quantities to replenish will be computed for all filtered "
+"products              in this catalog in order to cover this amount of days "
+"of average demand."
 msgstr ""
 
 #. module: purchase_stock
@@ -1018,33 +1027,30 @@ msgstr "สร้างคำสั่งเติมสินค้าต่อ
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
-msgstr ""
-"จำนวนในใบสั่งซื้อของคุณระบุว่ามีจำนวนน้อยกว่าที่เรียกเก็บเงิน "
-"คุณควรดำเนินการขอเงินคืน"
+msgstr "จำนวนในใบสั่งซื้อของคุณระบุว่ามีจำนวนน้อยกว่าที่เรียกเก็บเงิน คุณควรดำเนินการขอเงินคืน"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"คลังสินค้าของชนิดการดำเนินงาน (%(operation_type)s) ไม่สอดคล้องกับสถานที่ "
-"(%(location)s) ของกฎการจัดลำดับใหม่ (%(reordering_rule)s) สำหรับผลิตภัณฑ์ "
-"%(product)s เปลี่ยนประเภทการดำเนินการหรือยกเลิกการขอใบเสนอราคา"
+"คลังสินค้าของชนิดการดำเนินงาน (%(operation_type)s) ไม่สอดคล้องกับสถานที่ (%"
+"(location)s) ของกฎการจัดลำดับใหม่ (%(reordering_rule)s) สำหรับผลิตภัณฑ์ %(product)s "
+"เปลี่ยนประเภทการดำเนินการหรือยกเลิกการขอใบเสนอราคา"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
-"ไม่มีราคาของผู้ขายที่ตรงกันเพื่อสร้างใบสั่งซื้อสำหรับสินค้า %s "
-"(ไม่มีการกำหนดผู้ขาย จำนวนไม่ถึงปริมาณขั้นต่ำ วันที่ไม่ถูกต้อง ...) "
-"ไปที่แบบฟอร์มสินค้าและกรอกรายชื่อผู้ขาย"
+"ไม่มีราคาของผู้ขายที่ตรงกันเพื่อสร้างใบสั่งซื้อสำหรับสินค้า %s (ไม่มีการกำหนดผู้ขาย "
+"จำนวนไม่ถึงปริมาณขั้นต่ำ วันที่ไม่ถูกต้อง ...) ไปที่แบบฟอร์มสินค้าและกรอกรายชื่อผู้ขาย"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -1055,31 +1061,28 @@ msgid ""
 "validating this vendor bill."
 msgstr ""
 "บัญชีนี้ใช้ในการประเมินมูลค่าสินค้าคงคลังอัตโนมัติ "
-"เพื่อบันทึกความแตกต่างของราคาระหว่างใบสั่งซื้อและใบเรียกเก็บเงินของผู้ขายที่เกี่ยวข้อง"
-" เมื่อตรวจสอบใบเรียกเก็บเงินของผู้ขายนี้"
+"เพื่อบันทึกความแตกต่างของราคาระหว่างใบสั่งซื้อและใบเรียกเก็บเงินของผู้ขายที่เกี่ยวข้อง "
+"เมื่อตรวจสอบใบเรียกเก็บเงินของผู้ขายนี้"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
-msgstr ""
-"บัญชีนี้จะใช้ในการประเมินผลต่างของราคาระหว่างราคาซื้อและต้นทุนทางบัญชี"
+msgstr "บัญชีนี้จะใช้ในการประเมินผลต่างของราคาระหว่างราคาซื้อและต้นทุนทางบัญชี"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
-"นี่เป็นการเพิ่มเส้นทางการดรอปชิปที่จะใช้กับสินค้า "
-"เพื่อขอให้ผู้ขายจัดส่งให้กับลูกค้าของคุณ "
-"สินค้าที่จัดส่งจะสร้างคำขอซื้อเพื่อขอใบเสนอราคาเมื่อคำสั่งซื้อได้รับการยืนยันแล้ว"
-" นี่คือการดำเนินการตามความต้องการ "
-"ที่อยู่สำหรับจัดส่งที่ร้องขอจะเป็นที่อยู่สำหรับจัดส่งของลูกค้า "
+"นี่เป็นการเพิ่มเส้นทางการดรอปชิปที่จะใช้กับสินค้า เพื่อขอให้ผู้ขายจัดส่งให้กับลูกค้าของคุณ "
+"สินค้าที่จัดส่งจะสร้างคำขอซื้อเพื่อขอใบเสนอราคาเมื่อคำสั่งซื้อได้รับการยืนยันแล้ว "
+"นี่คือการดำเนินการตามความต้องการ ที่อยู่สำหรับจัดส่งที่ร้องขอจะเป็นที่อยู่สำหรับจัดส่งของลูกค้า "
 "ซึ่งไม่ใช่คลังสินค้าของคุณ"
 
 #. module: purchase_stock
@@ -1093,8 +1096,7 @@ msgstr "ซึ่งจะกำหนดประเภทการดำเน
 msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
-msgstr ""
-"วันที่เหล่านั้นไม่สามารถแก้ไขได้ตามใบเสร็จรับเงิน %s ที่ได้รับการตรวจสอบแล้ว"
+msgstr "วันที่เหล่านั้นไม่สามารถแก้ไขได้ตามใบเสร็จรับเงิน %s ที่ได้รับการตรวจสอบแล้ว"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1190,12 +1192,12 @@ msgstr "เมื่อซื้อสินค้าแล้วก็สาม
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "เมื่อสินค้ามีความจำเป็นใน <b>%s</b> <br/> "
-"คำขอใบเสนอราคาจะถูกสร้างขึ้นเพื่อตอบสนองความต้องการ <br/>หมายเหตุ: "
-"กฎนี้จะใช้ร่วมกับกฎ <br/> ของเส้นทางการรับสินค้า"
+"คำขอใบเสนอราคาจะถูกสร้างขึ้นเพื่อตอบสนองความต้องการ <br/>หมายเหตุ: กฎนี้จะใช้ร่วมกับกฎ "
+"<br/> ของเส้นทางการรับสินค้า"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__partner_id
