@@ -1129,6 +1129,13 @@
         we-select.o_we_user_value_widget {
             position: relative;
 
+            &[data-disabled] {
+                we-toggler {
+                    opacity: .5;
+                    cursor: not-allowed;
+                }
+            }
+
             &:not(.o_we_icon_select) we-toggler {
                 @include large-component();
             }

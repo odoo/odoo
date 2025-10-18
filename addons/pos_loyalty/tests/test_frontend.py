@@ -414,7 +414,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'product_ids': self.desk_organizer,
                 'reward_point_amount': 1,
                 'reward_point_mode': 'order',
-                'minimum_qty': 2,
+                'minimum_qty': 3,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
@@ -556,6 +556,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'limit_categories': True,
             'iface_available_categ_ids': [(6, 0, [pos_category.id])],
         })
+        self.whiteboard_pen.write({'pos_categ_ids': [(6, 0, [pos_category.id])]})
         self.main_pos_config.open_ui()
 
         LoyaltyProgram = self.env['loyalty.program']
@@ -584,7 +585,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         ewallet_bbb = self.env['loyalty.card'].search([('partner_id', '=', partner_bbb.id), ('program_id', '=', ewallet_program.id)])
         self.assertEqual(len(ewallet_bbb), 1)
         self.assertAlmostEqual(ewallet_bbb.points, 10, places=2)
-        self.whiteboard_pen.write({'pos_categ_ids': [(6, 0, [pos_category.id])]})
         self.desk_pad.write({'pos_categ_ids': [(6, 0, [pos_category.id])]})
         # Run the tour consume ewallets.
         self.start_pos_tour("EWalletProgramTour2")

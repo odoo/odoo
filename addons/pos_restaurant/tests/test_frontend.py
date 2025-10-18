@@ -528,6 +528,12 @@ class TestFrontend(TestFrontendCommon):
         """
         self.start_pos_tour("OrderSynchronisationTour")
 
+    def test_cancel_order_from_ui(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_cancel_order_from_ui')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, "cancel", "The order should be in cancel state")
+
     def test_book_and_release_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_book_and_release_table', login="pos_user")

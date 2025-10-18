@@ -214,3 +214,10 @@ export function nthColumnContains(nRow, nCol, string) {
         },
     ];
 }
+
+export function noOrderIsThere() {
+    return {
+        content: "No orders should be visible on the Ticket Screen",
+        trigger: ".ticket-screen:not(:has(.order-row))",
+    };
+}

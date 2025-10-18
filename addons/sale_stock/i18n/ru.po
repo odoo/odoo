@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_stock
+# * sale_stock
 #
 # Translators:
 # Nadia Martynova, 2024
@@ -8,21 +8,24 @@
 # Ilya Rozhkov, 2025
 # Anastasiia Koroleva, 2025
 #
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-22 18:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Anastasiia Koroleva, 2025\n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-10-16 10:47+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
+"sale_stock/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -72,6 +75,11 @@ msgid ""
 "Shipped\n"
 "                                    </span>"
 msgstr ""
+"<span class="
+"\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Отправлено\n"
+"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -164,6 +172,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Синий: Не доставлено / Не начато\n"
+"            Оранжевый: Частично доставлено\n"
+"            Зеленый: Полностью доставлено"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -441,7 +452,7 @@ msgstr "Перенести ожидаемые даты доставки на"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
-msgstr ""
+msgstr "Доставок еще нет! Автоматизируйте их с помощью заказов на продажу."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -528,6 +539,10 @@ msgid ""
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
+"Уменьшите количество отложенных заказов с помощью резервирования, управления "
+"локациями, предложений по умному\n"
+"                пополнению запасов, коннекторов для служб доставки, сканера "
+"штрихкодов и т. д."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -694,7 +709,7 @@ msgstr "Отчет о нормах запасов"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_valuation_layer
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Уровень оценки запасов"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -717,6 +732,11 @@ msgid ""
 "                        You should probably update the partner on this "
 "document."
 msgstr ""
+"Адрес доставки в заказе на продажу был изменен:<br/>\n"
+"                        С <strong>«%(old_address)s»</strong> на "
+"<strong>«%(new_address)s»</strong>,\n"
+"                        Возможно, вам следует обновить контрагента в этом "
+"документе."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -805,12 +825,14 @@ msgstr "Когда начать отгрузку"
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
 msgstr ""
+"Необходимо указать склад для строки, которая использует доставку в другую "
+"компанию."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
-msgstr ""
+msgstr "Чтобы продолжить, необходимо указать склад в вашем заказе на продажу."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
