@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Joan Ignasi Florit <jfloritmir@gmail.com>, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
@@ -21,19 +21,19 @@
 # Josep Anton Belchi, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
 # Noemi Pla, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -127,26 +127,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Avís!</strong> Hi ha un abonament pendent per aquest pagament.\n"
-"                        Espereu un moment perquè es processi. Si l'abonament encara està pendent en uns\n"
-"                        pocs minuts, comproveu la configuració del vostre proveïdor de pagaments."
+"                        Espereu un moment perquè es processi. Si l'abonament "
+"encara està pendent en uns\n"
+"                        pocs minuts, comproveu la configuració del vostre "
+"proveïdor de pagaments."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
 msgstr ""
-"S'aplicarà un descompte si el client efectua el pagament abans del %s "
-"inclòs."
+"S'aplicarà un descompte si el client efectua el pagament abans del %s inclòs."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "Ja s'ha fet un pagament per a aquesta factura. Assegura't de no pagar dues "
 "vegades."
@@ -216,11 +219,6 @@ msgstr "Capturar transacció"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Tancar"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Codi"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -327,7 +325,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"En mode de prova, un pagament fals es processa a través d'una interfície de pagament de prova.\n"
+"En mode de prova, un pagament fals es processa a través d'una interfície de "
+"pagament de prova.\n"
 "Es recomana aquest mode quan es configura el proveïdor."
 
 #. module: account_payment
@@ -658,8 +657,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
-"S'ha publicat el pagament relacionat amb la transacció amb referència "
-"%(ref)s: %(link)s"
+"S'ha publicat el pagament relacionat amb la transacció amb referència %"
+"(ref)s: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -765,10 +764,12 @@ msgstr "Transacció buida"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"No és possible eliminar un mètode de pagament que estigui vinculat a un proveïdor en l'estat habilitat o de prova.\n"
+"No és possible eliminar un mètode de pagament que estigui vinculat a un "
+"proveïdor en l'estat habilitat o de prova.\n"
 "Proveïdor(s) vinculat(s): %s"
 
 #. module: account_payment
@@ -788,7 +789,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Primer heu de desactivar un proveïdor de pagaments abans d'eliminar el seu diari.\n"
+"Primer heu de desactivar un proveïdor de pagaments abans d'eliminar el seu "
+"diari.\n"
 "Proveïdors enllaçats: %s"
 
 #. module: account_payment
@@ -812,3 +814,6 @@ msgstr "ha estat aplicat"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "vençudes"
+
+#~ msgid "Code"
+#~ msgstr "Codi"
