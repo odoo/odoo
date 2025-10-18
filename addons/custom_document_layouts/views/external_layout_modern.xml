@@ -241,8 +241,22 @@
                   </td>
 
                   <!-- PARTIE DROITE : Tableau des totaux -->
-                  <td style="border: none; border-left: 1px solid black; padding: 0px; vertical-align: top; width: 80%;">
-
+                  <td style="border: none; border-left: 1px solid black; padding: 0px; vertical-align: top; width: 100%;">
+                    <!-- Calcul du bic_amount sur les lignes de facture -->
+                    <t t-set="bic_amount" t-value="0"/>
+                    <t t-set="tva_amount" t-value="0"/>
+                    <t t-if="o._fields.get('invoice_line_ids')">
+                      <t t-foreach="o.invoice_line_ids" t-as="line">
+                        <t t-foreach="line.tax_ids" t-as="tax">
+                          <t t-if="'BIC' in tax.name.upper()">
+                            <t t-set="bic_amount" t-value="bic_amount + (line.price_subtotal * (tax.amount / 100))"/>
+                          </t>
+                          <t t-elif="'TVA' in tax.name.upper()">
+                            <t t-set="tva_amount" t-value="tva_amount + (line.price_subtotal * (tax.amount / 100))"/>
+                          </t>
+                        </t>
+                      </t>
+                    </t>
                     <!-- ================================================= -->
                     <!-- TABLEAU DES TOTAUX FINANCIERS                    -->
                     <!-- ================================================= -->
@@ -266,85 +280,49 @@
                         <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
                           <strong>TVA</strong>
                         </td>
-                        <!-- Pourcentage fixe - MODIFIABLE : peut être rendu dynamique -->
                         <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;">
                           18%
                         </td>
-                        <!-- Montant TVA (affiché même si = 0) -->
                         <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
-                          <span t-esc="'{:,.2f}'.format(o.amount_tax or 0).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                          <t t-set="bic_amount" t-value="0"/>
+                          <t t-if="o._fields.get('tax_totals') and o.tax_totals">
+                            <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
+                              <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
+                                <t t-if="'BIC' in tax_group.get('group_name', '').upper()">
+                                  <t t-set="bic_amount" t-value="bic_amount + float(tax_group.get('tax_amount_currency', 0))"/>
+                                </t>
+                              </t>
+                            </t>
+                          </t>
+                          <span t-esc="'{:,.2f}'.format((o.amount_tax or 0) - bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                         </td>
                       </tr>
 
-                      <!-- LIGNE 3 : TOTAL GÉNÉRAL TTC (déplacé avant BIC) -->
-                      <tr t-if="o._fields.get('amount_total') and o.amount_total">
+                      <!-- LIGNE BIC : affichée seulement si bic_amount > 0 -->
+                      <tr t-if="bic_amount > 0">
+                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
+                          <strong>BIC</strong>
+                        </td>
+                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;">
+                          2%
+                        </td>
+                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
+                          <span t-esc="'{:,.2f}'.format(bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                        </td>
+                      </tr>
+                      <!-- LIGNE 4 : TOTAL GÉNÉRAL TTC (déplacé avant BIC) -->
+
+                      <tr t-if="o._fields.get('amount_total')">
                         <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
                           <strong>Total Général TTC F</strong>
                         </td>
-                        <!-- Colonne vide pour alignement -->
                         <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;"></td>
-                        <!-- Montant total en gras -->
                         <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
                           <strong>
                             <span t-esc="'{:,.2f}'.format(o.amount_total).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                           </strong>
                         </td>
                       </tr>
-
-                      <!-- LIGNE 4 : BIC (maintenant en dernière position) -->
-                      <t t-if="o._fields.get('tax_totals') and o.tax_totals">
-                        <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
-                          <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
-                            <!-- Condition : seulement si BIC existe et montant > 0 -->
-                            <t t-if="'BIC' in tax_group.get('group_name', '').upper() and float(tax_group.get('tax_amount_currency', 0)) > 0">
-                              <tr>
-                                <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
-                                  <strong t-out="tax_group.get('group_name', 'BIC')"/>
-                                </td>
-                                <!-- Pourcentage BIC fixe -->
-                                <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;">
-                                  2%
-                                </td>
-                                <!-- Montant BIC formaté -->
-                                <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
-                                  <t t-set="formatted_bic_tax" t-value="'{:,.2f}'.format(float(tax_group.get('tax_amount_currency', 0))).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
-                                  <span t-out="formatted_bic_tax"/>
-                                </td>
-                              </tr>
-                            </t>
-                          </t>
-                        </t>
-                      </t>
-
-                      <!-- LIGNE 5 : NET À PAYER (TTC + BIC) - NOUVELLE SECTION -->
-                      <tr t-if="o._fields.get('amount_total') and o.amount_total">
-                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%; background-color: #f0f0f0;">
-                          <strong>Net à payer F CFA</strong>
-                        </td>
-                        <!-- Colonne vide pour alignement -->
-                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%; background-color: #f0f0f0;"></td>
-                        <!-- Calcul TTC + BIC -->
-                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap; background-color: #f0f0f0;">
-                          <strong>
-                            <!-- Calcul du montant BIC total -->
-                            <t t-set="total_bic" t-value="0"/>
-                            <t t-if="o._fields.get('tax_totals') and o.tax_totals">
-                              <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
-                                <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
-                                  <t t-if="'BIC' in tax_group.get('group_name', '').upper()">
-                                    <t t-set="total_bic" t-value="total_bic + float(tax_group.get('tax_amount_currency', 0))"/>
-                                  </t>
-                                </t>
-                              </t>
-                            </t>
-
-                            <!-- Calcul Net à payer = TTC + BIC -->
-                            <t t-set="net_a_payer" t-value="o.amount_total + total_bic"/>
-                            <span t-esc="'{:,.2f}'.format(net_a_payer).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
-                          </strong>
-                        </td>
-                      </tr>
-
                     </table>
                   </td>
                 </tr>
@@ -362,7 +340,7 @@
                 <t t-if="o._name == 'account.move'">
                   <t t-if="o._fields.get('amount_total') and o.amount_total">
                     ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE 
-                                                                                <!-- Conversion automatique du montant en lettres -->
+                                                                                                                                                                                                                                                                    <!-- Conversion automatique du montant en lettres -->
                     <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
                     CFA.
                   </t>

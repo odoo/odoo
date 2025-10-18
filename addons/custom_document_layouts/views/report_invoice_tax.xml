@@ -12,11 +12,33 @@
         <xpath expr="//table[@name='invoice_line_table']//tbody//tr//td[@name='td_subtotal']" position="before">
             <td class="text-end" style="width: 12%; white-space: nowrap;">
                 <t t-if="line.tax_ids and line.price_unit">
-                    <t t-set="tax_amount" t-value="int(line.price_total - line.price_subtotal)"/>
-                    <t t-set="formatted_tax" t-value="'{:,}'.format(tax_amount).replace(',', ' ')"/>
-                    <span t-out="formatted_tax"/>
+                    <!-- Calcul total des taxes pour cette ligne (TVA + BIC) -->
+                    <t t-set="total_tax_line" t-value="line.price_total - line.price_subtotal"/>
+
+                    <!-- Calcul du BIC pour cette ligne -->
+                    <t t-set="line_bic_amount" t-value="0"/>
+                    <t t-foreach="line.tax_ids" t-as="tax">
+                        <t t-if="'BIC' in (tax.name or '').upper()">
+                            <!-- BIC = 2% du prix HT de cette ligne -->
+                            <t t-set="line_bic_amount" t-value="line.price_subtotal * 0.02"/>
+                        </t>
+                    </t>
+
+                    <!-- TVA seule = Total taxes - BIC -->
+                    <t t-set="tva_only" t-value="total_tax_line - line_bic_amount"/>
+
+                    <!-- Si TVA > 0, afficher le montant, sinon afficher un trait -->
+                    <t t-if="tva_only > 0">
+                        <t t-set="tax_amount" t-value="int(tva_only)"/>
+                        <t t-set="formatted_tax" t-value="'{:,}'.format(tax_amount).replace(',', ' ')"/>
+                        <span t-out="formatted_tax"/>
+                    </t>
+                    <t t-else="">
+                        <span class="text-muted">-</span>
+                    </t>
                 </t>
                 <t t-else="">
+                    <!-- Pas de taxe du tout : afficher un trait -->
                     <span class="text-muted">-</span>
                 </t>
             </td>
