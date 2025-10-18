@@ -52,7 +52,7 @@ class ProductTemplateAttributeLine(models.Model):
             values = self.env['product.attribute.value'].search([
                 ('attribute_id', '=', self.attribute_id.id),
             ], limit=2)
-            self.value_ids = values if len(values) = 1 else False
+            self.value_ids = values if len(values) == 1 else False
         else:
             self.value_ids = self.value_ids.filtered(
                 lambda pav: pav.attribute_id == self.attribute_id
