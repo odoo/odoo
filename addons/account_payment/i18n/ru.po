@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2025-10-16 08:31+0000\n"
 "Last-Translator: Ilya Rozhkov <ceo@docsly.kz>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
@@ -23,8 +23,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: account_payment
@@ -118,8 +118,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Внимание!</strong> По данному платежу ожидается возврат средств.\n"
 "                        Подождите, пока он будет обработан. Если через "
@@ -136,11 +138,11 @@ msgstr "Скидка будет применена, если клиент опл
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
-"По данному счету уже был произведен платеж. Пожалуйста, убедитесь, что вы не"
-" оплачиваете его повторно."
+"По данному счету уже был произведен платеж. Пожалуйста, убедитесь, что вы не "
+"оплачиваете его повторно."
 
 #. module: account_payment
 #. odoo-python
@@ -207,11 +209,6 @@ msgstr "Списание средств"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Закрыть"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Код"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -753,7 +750,8 @@ msgstr "Аннулировать транзакцию"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
 "Вы не можете удалить метод оплаты, связанный с провайдером, находящимся во "
@@ -777,7 +775,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Перед удалением журнала необходимо сначала деактивировать провайдера платежей.\n"
+"Перед удалением журнала необходимо сначала деактивировать провайдера "
+"платежей.\n"
 "Связанные провайдеры: %s"
 
 #. module: account_payment
@@ -801,3 +800,6 @@ msgstr "было применено."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "просрочен"
+
+#~ msgid "Code"
+#~ msgstr "Код"

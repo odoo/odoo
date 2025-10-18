@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2024
@@ -12,19 +12,19 @@
 # gezza <geza.nagy@oregional.hu>, 2024
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Valics Lehel, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Valics Lehel, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -110,12 +110,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Figyelem!</strong> Van egy függő visszatérítés ehhez a fizetéshez.\n"
-"                        Várjon egy kicsit, amíg feldolgozásra kerül. Ha a visszatérítés függőben marad\n"
-"                        pár perc múlva is, akkor kérjük ellenőrizze a fizetési szolgáltató konfogurációját."
+"                        Várjon egy kicsit, amíg feldolgozásra kerül. Ha a "
+"visszatérítés függőben marad\n"
+"                        pár perc múlva is, akkor kérjük ellenőrizze a "
+"fizetési szolgáltató konfogurációját."
 
 #. module: account_payment
 #. odoo-python
@@ -126,8 +130,8 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 
 #. module: account_payment
@@ -197,11 +201,6 @@ msgid "Close"
 msgstr "Bezárás"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Kód"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
 msgstr "Beállítások"
@@ -242,8 +241,7 @@ msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
 msgstr ""
-"Kész, az Ön online fizetése sikeresen feldolgozva. Köszönjük a "
-"megrendelését!"
+"Kész, az Ön online fizetése sikeresen feldolgozva. Köszönjük a megrendelését!"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
@@ -304,7 +302,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Teszt módban egy nem valós tranzakció kerül feldolgozásra teszt fizetési interfészen.\n"
+"Teszt módban egy nem valós tranzakció kerül feldolgozásra teszt fizetési "
+"interfészen.\n"
 "Használata javasolt a szolgáltató beállítása során."
 
 #. module: account_payment
@@ -685,8 +684,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-"Hiba történt a fizetés feldolgozása közben: érvénytelen bankkártya "
-"azonosító."
+"Hiba történt a fizetés feldolgozása közben: érvénytelen bankkártya azonosító."
 
 #. module: account_payment
 #. odoo-python
@@ -744,7 +742,8 @@ msgstr "Érvénytelen tranzakció"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
 
@@ -785,3 +784,6 @@ msgstr "alkalmazva lett"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr ""
+
+#~ msgid "Code"
+#~ msgstr "Kód"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
@@ -111,12 +111,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Cảnh báo!</strong> Một khoản hoàn tiền cho khoản thanh toán này vẫn còn treo.\n"
-"                        Hãy chờ xử lý thêm một lúc. Nếu khoản hoàn tiền vẫn ở trạng thái treo trong \n"
-"                        vài phút, hãy kiểm tra cấu hình nhà cung cấp dịch vụ thanh toán của bạn."
+"<strong>Cảnh báo!</strong> Một khoản hoàn tiền cho khoản thanh toán này vẫn "
+"còn treo.\n"
+"                        Hãy chờ xử lý thêm một lúc. Nếu khoản hoàn tiền vẫn "
+"ở trạng thái treo trong \n"
+"                        vài phút, hãy kiểm tra cấu hình nhà cung cấp dịch vụ "
+"thanh toán của bạn."
 
 #. module: account_payment
 #. odoo-python
@@ -127,8 +132,8 @@ msgstr "Chiết khấu sẽ được áp dụng nếu khách hàng thanh toán v
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "Hóa đơn này đã được thanh toán, hãy đảm bảo bạn không thanh toán hai lần."
 
@@ -197,11 +202,6 @@ msgstr "Chấp nhận giao dịch"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Đóng"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Mã"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -299,8 +299,8 @@ msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
 msgstr ""
-"Không thể thanh toán tất cả hóa đơn quá hạn nếu chúng không có cùng một loại"
-" tiền tệ."
+"Không thể thanh toán tất cả hóa đơn quá hạn nếu chúng không có cùng một loại "
+"tiền tệ."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -308,7 +308,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Trong chế độ kiểm thử, một khoản thanh toán giả sẽ được xử lý thông qua giao diện thanh toán kiểm thử.\n"
+"Trong chế độ kiểm thử, một khoản thanh toán giả sẽ được xử lý thông qua giao "
+"diện thanh toán kiểm thử.\n"
 "Nên dùng chế độ này khi thiết lập nhà cung cấp dịch vụ thanh toán."
 
 #. module: account_payment
@@ -741,10 +742,12 @@ msgstr "Giao dịch trống"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Bạn không thể xóa phương thức thanh toán được liên kết với nhà cung cấp ở trạng thái kích hoạt hoặc kiểm thử.\n"
+"Bạn không thể xóa phương thức thanh toán được liên kết với nhà cung cấp ở "
+"trạng thái kích hoạt hoặc kiểm thử.\n"
 "(Các) nhà cung cấp được liên kết:%s"
 
 #. module: account_payment
@@ -764,7 +767,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Trước tiên, bạn phải hủy kích hoạt nhà cung cấp dịch vụ thanh toán trước khi xóa sổ nhật ký của nhà cung cấp dịch vụ đó.\n"
+"Trước tiên, bạn phải hủy kích hoạt nhà cung cấp dịch vụ thanh toán trước khi "
+"xóa sổ nhật ký của nhà cung cấp dịch vụ đó.\n"
 "Nhà cung cấp được liên kết: %s"
 
 #. module: account_payment
@@ -788,3 +792,6 @@ msgstr "đã được áp dụng."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "quá hạn"
+
+#~ msgid "Code"
+#~ msgstr "Mã"
