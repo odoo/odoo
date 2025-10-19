@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 00:59+0000\n"
+"POT-Creation-Date: 2025-10-17 18:36+0000\n"
 "PO-Revision-Date: 2025-09-17 10:57+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -8320,16 +8320,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/res_partner.py:0
-msgid ""
-"The following contacts %(partner_name)s have PoS orders and there is at "
-"least one open PoS session.\n"
-"Please close the open sessions %(session_name)s before deleting them, or "
-"archive the contacts instead."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid ""
 "The following refund orders can't be part of a consolidated invoice because "
@@ -9732,6 +9722,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot change the payment of a printed order."
 msgstr "인쇄가 완료된 주문서의 결제는 변경할 수 없습니다."
@@ -9758,6 +9756,14 @@ msgstr "당일 미결 상태인 주문서가 있는 경우에는 POS를 닫을 �
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
 msgstr "다음 이전부터 시작하는 세션을 만들 수 없습니다: %(lock_date_info)s"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/res_partner.py:0
+msgid ""
+"You cannot delete a customer that has point of sales orders. You can archive "
+"it instead."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

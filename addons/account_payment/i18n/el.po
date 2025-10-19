@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2024
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2024
@@ -10,19 +10,19 @@
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Charalampos Loukas, 2025
 # Anastasia Mimou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anastasia Mimou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -35,7 +35,7 @@ msgstr ""
 
 #. module: account_payment
 #. odoo-javascript
-#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "%s day(s) overdue"
 msgstr ""
 
@@ -112,12 +112,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Προσοχή!</strong> Υπάρχει εκκρεμής επιστροφή χρημάτων για αυτή την πληρωμή.\n"
-"                        Περιμένετε λίγο μέχρι να επεξεργαστεί. Αν η επιστροφή χρημάτων είναι ακόμα εκκρεμής σε\n"
-"                        λίγα λεπτά, παρακαλώ ελέγξτε τη ρύθμιση του παρόχου πληρωμών σας."
+"<strong>Προσοχή!</strong> Υπάρχει εκκρεμής επιστροφή χρημάτων για αυτή την "
+"πληρωμή.\n"
+"                        Περιμένετε λίγο μέχρι να επεξεργαστεί. Αν η "
+"επιστροφή χρημάτων είναι ακόμα εκκρεμής σε\n"
+"                        λίγα λεπτά, παρακαλώ ελέγξτε τη ρύθμιση του παρόχου "
+"πληρωμών σας."
 
 #. module: account_payment
 #. odoo-python
@@ -128,8 +133,8 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 
 #. module: account_payment
@@ -179,8 +184,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Είστε σίγουροι ότι θέλετε να ακυρώσετε την εξουσιοδοτημένη συναλλαγή; Αυτή η"
-" ενέργεια δεν μπορεί να αναιρεθεί."
+"Είστε σίγουροι ότι θέλετε να ακυρώσετε την εξουσιοδοτημένη συναλλαγή; Αυτή η "
+"ενέργεια δεν μπορεί να αναιρεθεί."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -199,11 +204,6 @@ msgstr "Καταγραφή Συναλλαγής"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Κλείσιμο"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Κωδικός"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -231,7 +231,18 @@ msgid "Discount Date"
 msgstr "Ημερομηνία Έκπτωσης"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -292,7 +303,18 @@ msgid "Has a pending refund"
 msgstr "Έχει εκκρεμή επιστροφή χρημάτων"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_journal__id
+#: model:ir.model.fields,field_description:account_payment.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
+#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -310,7 +332,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Στη λειτουργία δοκιμής, επεξεργάζεται μια ψεύτικη πληρωμή μέσω διεπαφής δοκιμής πληρωμής.\n"
+"Στη λειτουργία δοκιμής, επεξεργάζεται μια ψεύτικη πληρωμή μέσω διεπαφής "
+"δοκιμής πληρωμής.\n"
 "Αυτή η λειτουργία συνιστάται κατά την ρύθμιση του παρόχου."
 
 #. module: account_payment
@@ -681,8 +704,8 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας:  πρόβλημα με την"
-" επικύρωση ταυτότητας της πιστωτικής κάρτας."
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας:  πρόβλημα με την "
+"επικύρωση ταυτότητας της πιστωτικής κάρτας."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -754,11 +777,12 @@ msgstr "Άκυρη συναλλαγή"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Δεν μπορείτε να διαγράψετε μια μέθοδο πληρωμής που είναι συνδεδεμένη με έναν"
-" πάροχο στην ενεργοποιημένη ή δοκιμαστική κατάσταση. Συνδεδεμένος "
+"Δεν μπορείτε να διαγράψετε μια μέθοδο πληρωμής που είναι συνδεδεμένη με έναν "
+"πάροχο στην ενεργοποιημένη ή δοκιμαστική κατάσταση. Συνδεδεμένος "
 "πάροχος(οι): %s"
 
 #. module: account_payment
@@ -778,18 +802,19 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Πρέπει πρώτα να απενεργοποιήσετε έναν πάροχο πληρωμών πριν διαγράψετε το ημερολόγιο του.\n"
+"Πρέπει πρώτα να απενεργοποιήσετε έναν πάροχο πληρωμών πριν διαγράψετε το "
+"ημερολόγιο του.\n"
 "Συνδεδεμένοι πάροχοι: %s"
 
 #. module: account_payment
 #. odoo-javascript
-#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "due in %s day(s)"
 msgstr ""
 
 #. module: account_payment
 #. odoo-javascript
-#: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
+#: code:addons/account_payment/static/src/interactions/portal_my_invoices_payment_list.js:0
 msgid "due today"
 msgstr ""
 
@@ -802,3 +827,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr ""
+
+#~ msgid "Code"
+#~ msgstr "Κωδικός"

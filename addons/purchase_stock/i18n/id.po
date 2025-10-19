@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Abe Manyo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:37+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: purchase_stock
@@ -36,6 +36,12 @@ msgstr "%(otd)s %%"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d day(s)"
 msgstr "+ %d hari"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -96,11 +102,13 @@ msgstr "Produk storable adalah produk yang mana Anda kelola stoknya."
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Menurut konfigurasi produk, kuantitas yang diterima dapat secara otomatis dihitung menggunakan mekanisme:\n"
+"Menurut konfigurasi produk, kuantitas yang diterima dapat secara otomatis "
+"dihitung menggunakan mekanisme:\n"
 "  - Manual: kuantitas ditetapkan manual pada baris\n"
 "  - Pergerakan Stok: kuantitas yang datang dari picking yang dikonfirmasi\n"
 
@@ -434,8 +442,8 @@ msgstr "Tindakan manual mungkin dibutuhkan."
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Margin kesalahan untuk tanggal yang dijanjikan pemasok. Ketika sistem "
 "membuat Order Pembelian untuk pengadaan produk, akan dijadwalkan lebih awal "
@@ -456,6 +464,12 @@ msgstr "Majukkan tanggal pembuatan permintaan yang diharapkan sebanyak"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr "Transfer berikutnya yang terdampak:"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+msgid "No Vendor Found"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -488,8 +502,8 @@ msgstr "OTD"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo tidak dapat membuat entri anglo saxon. Valuasi total %s adalah nol."
 
@@ -532,8 +546,8 @@ msgstr "Titik Order"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past x days; the number of products received on time divided by the"
-" number of ordered products.x is either the System Parameter "
+"Over the past x days; the number of products received on time divided by the "
+"number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
 "Selama x hari terakhir; jumlah produk yang diterima tepat waktu dibagi "
@@ -664,8 +678,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
-"Masukkan alamat jika Anda ingin mengirim langsung dari pemasok ke pelanggan."
-" Jika tidak, biarkan kosong untuk menerima pengiriman di perusahaan Anda "
+"Masukkan alamat jika Anda ingin mengirim langsung dari pemasok ke pelanggan. "
+"Jika tidak, biarkan kosong untuk menerima pengiriman di perusahaan Anda "
 "sendiri."
 
 #. module: purchase_stock
@@ -846,25 +860,24 @@ msgstr ""
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid ""
 "The warehouse of operation type (%(operation_type)s) is inconsistent with "
-"location (%(location)s) of reordering rule (%(reordering_rule)s) for product"
-" %(product)s. Change the operation type or cancel the request for quotation."
+"location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
+"%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
-"Tipe operasi gudang () tidak konsisten dengan lokasi "
-"(%(operation_type)s%(location)s) dari peraturan pemesanan ulang "
-"(%(reordering_rule)s) untuk produk %(product)s. Ubah tipe operasi atau "
-"batalkan RFQ."
+"Tipe operasi gudang () tidak konsisten dengan lokasi (%(operation_type)s%"
+"(location)s) dari peraturan pemesanan ulang (%(reordering_rule)s) untuk "
+"produk %(product)s. Ubah tipe operasi atau batalkan RFQ."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
-"There is no matching vendor price to generate the purchase order for product"
-" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
-" Go on the product form and complete the list of vendors."
+"There is no matching vendor price to generate the purchase order for product "
+"%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
+"Go on the product form and complete the list of vendors."
 msgstr ""
 "Tidak ada harga vendor yang cocok untuk membuat SPB untuk produk %s (tidak "
-"ada vendor yang didefinisikan, kuantitas minimum tidak teraih, tanggal tidak"
-" valid, ...). Pergi ke formulir produk dan selesaikan daftar vendor."
+"ada vendor yang didefinisikan, kuantitas minimum tidak teraih, tanggal tidak "
+"valid, ...). Pergi ke formulir produk dan selesaikan daftar vendor."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
@@ -884,17 +897,17 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
-"Akun ini akan digunakan untuk menilai perbedaan harga antara harga pembelian"
-" dan modal akuntansi."
+"Akun ini akan digunakan untuk menilai perbedaan harga antara harga pembelian "
+"dan modal akuntansi."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid ""
-"This adds a dropshipping route to apply on products in order to request your"
-" vendors to deliver to your customers. A product to dropship will generate a"
-" purchase request for quotation once the sales order confirmed. This is a "
-"on-demand flow. The requested delivery address will be the customer delivery"
-" address and not your warehouse."
+"This adds a dropshipping route to apply on products in order to request your "
+"vendors to deliver to your customers. A product to dropship will generate a "
+"purchase request for quotation once the sales order confirmed. This is a on-"
+"demand flow. The requested delivery address will be the customer delivery "
+"address and not your warehouse."
 msgstr ""
 "Ini akan menambahkan rute dropship untuk diterapkan pada produk untuk "
 "meminta pemasok Anda mengirim langsung ke pelanggan Anda. Produk akan di-"
@@ -921,8 +934,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr ""
-"Tanggal-tanggal tersebut telah diupdate sesuai dengan tanda terima %s."
+msgstr "Tanggal-tanggal tersebut telah diupdate sesuai dengan tanda terima %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -1006,8 +1018,8 @@ msgstr "Ketika produk dibeli, mereka bisa dikirim ke gudang ini"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
-"created to fulfill the need.<br/>Note: This rule will be used in combination"
-" with the rules<br/>of the reception route(s)"
+"created to fulfill the need.<br/>Note: This rule will be used in combination "
+"with the rules<br/>of the reception route(s)"
 msgstr ""
 "Saat produk dibutuhkan di <b>%s</b>, <br/> RFQ dibuat untuk memenuhi "
 "kebutuhan tersebut.<br/>Catatan: Peraturan ini akan digunakan bersamaan "
@@ -1020,7 +1032,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
-"Anda tidak dapat mengurangi kuantitas yang dipesan sampai di bawah kuantitas yang diterima.\n"
+"Anda tidak dapat mengurangi kuantitas yang dipesan sampai di bawah kuantitas "
+"yang diterima.\n"
 "Buat return terlebih dahulu."
 
 #. module: purchase_stock

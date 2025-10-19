@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_attendance
-# 
+#
 # Translators:
 # Kira Petersen, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-10-17 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
@@ -25,8 +25,8 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
 msgstr ""
-"\"Tjek ud\"-tidspunktet kan ikke være tidligere end \"tjek-"
-"ind\"-tidspunktet. "
+"\"Tjek ud\"-tidspunktet kan ikke være tidligere end \"tjek-ind\"-"
+"tidspunktet. "
 
 #. module: hr_attendance
 #. odoo-python
@@ -42,7 +42,9 @@ msgstr "'Dokumentation'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
-msgid "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
+"title=\"Period\"/>"
 msgstr ""
 "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
 "title=\"Periode\"/>"
@@ -64,10 +66,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Ikke tilgængelig\">\n"
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not "
+"available\" title=\"Ikke tilgængelig\">\n"
 "                                    </span>"
 
 #. module: hr_attendance
@@ -150,10 +154,12 @@ msgstr "Aktive medarbejdere"
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid ""
-"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"Add a few employees to be able to select an employee here and perform his "
+"check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"Tilføj et par medarbejdere for at kunne vælge en medarbejder her, og udfør vedkommendes ind- og udtjekning.\n"
+"Tilføj et par medarbejdere for at kunne vælge en medarbejder her, og udfør "
+"vedkommendes ind- og udtjekning.\n"
 "                Du kan oprettte medarbejdere i Medarbejderermenuen."
 
 #. module: hr_attendance
@@ -371,8 +377,7 @@ msgid ""
 "schedule."
 msgstr ""
 "Automatisk udtjekning af medarbejdere på baggrund af deres arbejdsplan med "
-"en ekstra tolerance. Gælder ikke for medarbejdere med fleksible "
-"arbejdstider."
+"en ekstra tolerance. Gælder ikke for medarbejdere med fleksible arbejdstider."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -479,8 +484,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"Kan ikke udføre udtjekning på %(empl_name)s, da tilsvarende indtjekning ikke"
-" kunde findes. Dine fremmøder er højst sandsynligt blevet ændret manuelt af "
+"Kan ikke udføre udtjekning på %(empl_name)s, da tilsvarende indtjekning ikke "
+"kunde findes. Dine fremmøder er højst sandsynligt blevet ændret manuelt af "
 "HR."
 
 #. module: hr_attendance
@@ -675,12 +680,8 @@ msgid "Define the way the user will be identified by the application."
 msgstr "Angiv, hvordan brugeren identificeres af appen."
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Departement"
-msgstr "Afdeling"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
 msgstr "Afdeling"
 
@@ -731,8 +732,8 @@ msgstr "Vis tid"
 msgid ""
 "Do not have access, user cannot edit the attendances that are not his own."
 msgstr ""
-"Har ikke adgang, bruger kan ikke redigere fremmøde, som ikke er vedkommendes"
-" egen."
+"Har ikke adgang, bruger kan ikke redigere fremmøde, som ikke er vedkommendes "
+"egen."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -956,8 +957,8 @@ msgstr "Identificér manuelt"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
-"If checked, days not covered by an attendance will be visible in the Report."
-" Does not apply to employees with a flexible working schedule."
+"If checked, days not covered by an attendance will be visible in the Report. "
+"Does not apply to employees with a flexible working schedule."
 msgstr ""
 "Hvis denne indstilling er aktiveret, vises dage uden registreret fremmøde i "
 "rapporten. Dette gælder ikke for medarbejdere med fleksible arbejdstider."
@@ -1509,18 +1510,18 @@ msgid ""
 "This attendance was automatically checked out because the employee exceeded "
 "the allowed time for their scheduled work hours."
 msgstr ""
-"Dette fremmøde blev tjekket ud automatisk, fordi medarbejderen overskred den"
-" tilladte arbejdstid."
+"Dette fremmøde blev tjekket ud automatisk, fordi medarbejderen overskred den "
+"tilladte arbejdstid."
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
-"This attendance was automatically created to cover an unjustified absence on"
-" that day."
+"This attendance was automatically created to cover an unjustified absence on "
+"that day."
 msgstr ""
-"Dette fremmøde blev oprettet automatisk for at dække over uberettiget fravær"
-" på den dag."
+"Dette fremmøde blev oprettet automatisk for at dække over uberettiget fravær "
+"på den dag."
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__to_approve
@@ -1739,3 +1740,6 @@ msgstr "eller"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "med en valgfri pinkode"
+
+#~ msgid "Departement"
+#~ msgstr "Afdeling"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-10-17 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
@@ -27,8 +27,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s - <strong>%(amount)s</strong>의 할부금 납부일 <strong class=\"text-"
-"primary\">%(date)s</strong>"
+"#%(number)s - <strong>%(amount)s</strong>의 할부금 납부일 <strong "
+"class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -47,8 +47,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Pay Now</span>"
 msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
-"지불하기</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> 지"
+"불하기</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -111,12 +111,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>주의!</strong> 해당 결제에 대한 환불이 보류 중입니다.\n"
 "                        처리될 때까지 잠시만 기다리세요. 이후에도 환불이\n"
-"                        계속 보류 중인 경우에는 결제대행업체 환경 설정을 확인하시기 바랍니다."
+"                        계속 보류 중인 경우에는 결제대행업체 환경 설정을 확인"
+"하시기 바랍니다."
 
 #. module: account_payment
 #. odoo-python
@@ -127,9 +130,10 @@ msgstr "%s일까지 결제가 접수되면 할인이 적용됩니다."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
-msgstr "이 청구서는 이미 결제가 완료되었습니다. 중복 결제가 되지 않도록 주의하세요. "
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
+msgstr ""
+"이 청구서는 이미 결제가 완료되었습니다. 중복 결제가 되지 않도록 주의하세요. "
 
 #. module: account_payment
 #. odoo-python
@@ -196,11 +200,6 @@ msgid "Close"
 msgstr "닫기"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "코드"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
 msgstr "환경 설정"
@@ -251,7 +250,9 @@ msgstr "미결제 할부 표시"
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
-msgstr "완료. 귀하의 온라인 결제가 성공적으로 처리되었습니다. 주문해 주셔서 감사합니다."
+msgstr ""
+"완료. 귀하의 온라인 결제가 성공적으로 처리되었습니다. 주문해 주셔서 감사합니"
+"다."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
@@ -325,7 +326,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"테스트 모드에서는 테스트 결제용 인터페이스를 통해서 결제를 가짜로 처리합니다.\n"
+"테스트 모드에서는 테스트 결제용 인터페이스를 통해서 결제를 가짜로 처리합니"
+"다.\n"
 "공급업체 설정 시 이 모드를 사용하시는 것이 좋습니다."
 
 #. module: account_payment
@@ -402,7 +404,9 @@ msgstr "금액을 매입할 수 있는 업체의 토큰만 사용하실 수 있�
 msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr "트랜잭션만 (금액 매입 대신) 승인하도록 설정되어 있는 업체의 토큰은 사용하실 수 없습니다."
+msgstr ""
+"트랜잭션만 (금액 매입 대신) 승인하도록 설정되어 있는 업체의 토큰은 사용하실 "
+"수 없습니다."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
@@ -649,7 +653,8 @@ msgstr "전표에 트랜잭션을 성공적으로 반영하여 발행하였습�
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr "참조 내역 %(ref)s인 트랜잭션에 대한 결제 항목이 발행되었습니다: %(link)s"
+msgstr ""
+"참조 내역 %(ref)s인 트랜잭션에 대한 결제 항목이 발행되었습니다: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -752,10 +757,12 @@ msgstr "금지된 거래"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"활성화되어 있거나 테스트 중인 업체에 연결되어 있는 결제 수단은 삭제할 수 없습니다. \n"
+"활성화되어 있거나 테스트 중인 업체에 연결되어 있는 결제 수단은 삭제할 수 없습"
+"니다. \n"
 "연결되어 있는 업체: %s"
 
 #. module: account_payment
@@ -764,7 +771,9 @@ msgstr ""
 msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
-msgstr "이 모듈은 삭제할 수 없습니다. 이미 해당 결제 방법을 사용하여 진행한 결제 내역이 있습니다."
+msgstr ""
+"이 모듈은 삭제할 수 없습니다. 이미 해당 결제 방법을 사용하여 진행한 결제 내역"
+"이 있습니다."
 
 #. module: account_payment
 #. odoo-python
@@ -797,3 +806,6 @@ msgstr "적용되었습니다."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "기한 초과"
+
+#~ msgid "Code"
+#~ msgstr "코드"

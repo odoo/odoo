@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-03 00:59+0000\n"
+"POT-Creation-Date: 2025-10-17 18:36+0000\n"
 "PO-Revision-Date: 2025-09-12 01:00+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -8422,20 +8422,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/res_partner.py:0
-msgid ""
-"The following contacts %(partner_name)s have PoS orders and there is at "
-"least one open PoS session.\n"
-"Please close the open sessions %(session_name)s before deleting them, or "
-"archive the contacts instead."
-msgstr ""
-"Los siguientes contactos %(partner_name)s tienen pedidos de TPV y hay al "
-"menos una sesión de TPV abierta.\n"
-"Cierre las sesiones abiertas %(session_name)s antes de eliminarlas o archive "
-"los contactos en su lugar."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid ""
 "The following refund orders can't be part of a consolidated invoice because "
@@ -9896,6 +9882,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot change the payment of a printed order."
 msgstr "No puede cambiar el pago de un pedido impreso."
@@ -9922,6 +9916,14 @@ msgstr "No puede cerrar el TPV si aún hay pedidos en borrador para este día."
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot create a session starting before: %(lock_date_info)s"
 msgstr "No puede crear una sesión que inicie antes del %(lock_date_info)s"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/res_partner.py:0
+msgid ""
+"You cannot delete a customer that has point of sales orders. You can archive "
+"it instead."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10337,6 +10339,17 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid ""
+#~ "The following contacts %(partner_name)s have PoS orders and there is at "
+#~ "least one open PoS session.\n"
+#~ "Please close the open sessions %(session_name)s before deleting them, or "
+#~ "archive the contacts instead."
+#~ msgstr ""
+#~ "Los siguientes contactos %(partner_name)s tienen pedidos de TPV y hay al "
+#~ "menos una sesión de TPV abierta.\n"
+#~ "Cierre las sesiones abiertas %(session_name)s antes de eliminarlas o "
+#~ "archive los contactos en su lugar."
 
 #~ msgid "You cannot invoice orders belonging to different companies."
 #~ msgstr "No puede facturar pedidos que pertenezcan a diferentes empresas."
