@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # pezzin <christian.pezzin@gmail.com>, 2024
 # Marianna Ciofani, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: account_payment
 #. odoo-python
@@ -29,8 +30,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s - Rata di <strong>%(amount)s</strong> da pagare entro il <strong"
-" class=\"text-primary\">%(date)s</strong>"
+"#%(number)s - Rata di <strong>%(amount)s</strong> da pagare entro il <strong "
+"class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -113,12 +114,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Attenzione!</strong> È presente un rimborso in sospeso per questo pagamento.\n"
-"                        Aspetta un momento per l'elaborazione. Se il rimborso è ancora in sospeso dopo\n"
-"                        alcuni minuti, controlla le impostazioni del fornitore di pagamento."
+"<strong>Attenzione!</strong> È presente un rimborso in sospeso per questo "
+"pagamento.\n"
+"                        Aspetta un momento per l'elaborazione. Se il "
+"rimborso è ancora in sospeso dopo\n"
+"                        alcuni minuti, controlla le impostazioni del "
+"fornitore di pagamento."
 
 #. module: account_payment
 #. odoo-python
@@ -129,8 +135,8 @@ msgstr "Verrà applicato uno sconto se il cliente paga prima del %s incluso."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "È stato già effettuato un pagamento per questa fattura, assicurati di non "
 "pagare due volte."
@@ -180,8 +186,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Annullare veramente la transazione autorizzata? Questa azione non può essere"
-" revocata."
+"Annullare veramente la transazione autorizzata? Questa azione non può essere "
+"revocata."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -200,11 +206,6 @@ msgstr "Registra transazione"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Chiudi"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Codice"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -303,8 +304,7 @@ msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
 msgstr ""
-"Impossibile pagare tutte le fatture in ritardo se non hanno la stessa "
-"valuta."
+"Impossibile pagare tutte le fatture in ritardo se non hanno la stessa valuta."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -312,7 +312,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"In modalità di prova, un pagamento finto viene processato attraverso un'interfaccia di pagamento di prova.\n"
+"In modalità di prova, un pagamento finto viene processato attraverso "
+"un'interfaccia di pagamento di prova.\n"
 "Questa modalità è consigliata quando si configura il fornitore."
 
 #. module: account_payment
@@ -630,8 +631,7 @@ msgstr "Il token di accesso non è valido."
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
-"L'importo da rimborsare deve essere positivo e non può essere superiore a "
-"%s."
+"L'importo da rimborsare deve essere positivo e non può essere superiore a %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
@@ -753,10 +753,12 @@ msgstr "Annulla transazione"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Non è possibile eliminare un metodo di pagamento collegato ad un fornitore nello stato abilitato o di prova.\n"
+"Non è possibile eliminare un metodo di pagamento collegato ad un fornitore "
+"nello stato abilitato o di prova.\n"
 "Fornitore/i collegato/i: %s"
 
 #. module: account_payment
@@ -776,7 +778,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"È necessario disattivare un fornitore di pagamento prima di eliminare il giornale corrispondente.\n"
+"È necessario disattivare un fornitore di pagamento prima di eliminare il "
+"giornale corrispondente.\n"
 "Fornitori collegati: %s"
 
 #. module: account_payment
@@ -800,3 +803,6 @@ msgstr "è stato applicato."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "in ritardo"
+
+#~ msgid "Code"
+#~ msgstr "Codice"

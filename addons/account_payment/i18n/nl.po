@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
@@ -112,12 +112,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Waarschuwing!</strong> Er is een terugbetaling in behandeling voor deze betaling.\n"
-"                        Wacht even totdat het is verwerkt. Als de terugbetaling nog steeds in behandeling is over een\n"
-"                        enkele minuten, controleer de configuratie van je betaalprovider."
+"<strong>Waarschuwing!</strong> Er is een terugbetaling in behandeling voor "
+"deze betaling.\n"
+"                        Wacht even totdat het is verwerkt. Als de "
+"terugbetaling nog steeds in behandeling is over een\n"
+"                        enkele minuten, controleer de configuratie van je "
+"betaalprovider."
 
 #. module: account_payment
 #. odoo-python
@@ -128,11 +133,11 @@ msgstr "Er wordt een korting toegepast als de klant vóór %s betaalt."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
-"Er is al een betaling gedaan voor deze factuur, zorg ervoor dat je niet twee"
-" keer betaalt."
+"Er is al een betaling gedaan voor deze factuur, zorg ervoor dat je niet twee "
+"keer betaalt."
 
 #. module: account_payment
 #. odoo-python
@@ -199,11 +204,6 @@ msgstr "Verrichting vastleggen"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Afsluiten"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Code"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -301,8 +301,8 @@ msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
 msgstr ""
-"Onmogelijk om alle vervallen facturen te betalen als ze niet dezelfde valuta"
-" hebben."
+"Onmogelijk om alle vervallen facturen te betalen als ze niet dezelfde valuta "
+"hebben."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -310,7 +310,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"In de testmodus wordt een nepbetaling verwerkt via een testbetalingsinterface.\n"
+"In de testmodus wordt een nepbetaling verwerkt via een "
+"testbetalingsinterface.\n"
 "Deze modus wordt geadviseerd bij het instellen van de provider."
 
 #. module: account_payment
@@ -627,8 +628,7 @@ msgstr "Het toegangstoken is ongeldig."
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
-"Het terug te betalen bedrag moet positief zijn en mag niet hoger zijn dan "
-"%s."
+"Het terug te betalen bedrag moet positief zijn en mag niet hoger zijn dan %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
@@ -642,8 +642,8 @@ msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
 msgstr ""
-"De betaling met betrekking tot de transactie met kenmerk %(ref)s is geboekt:"
-" %(link)s"
+"De betaling met betrekking tot de transactie met kenmerk %(ref)s is geboekt: "
+"%(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -687,8 +687,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
-"Er was een fout met het verwerken van je betalingen: transactie "
-"mislukt.<br/>"
+"Er was een fout met het verwerken van je betalingen: transactie mislukt.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -752,10 +751,12 @@ msgstr "Ongeldige transactie"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Je kunt een betaalmethode die is gekoppeld aan een provider in de ingeschakelde of teststatus niet verwijderen.\n"
+"Je kunt een betaalmethode die is gekoppeld aan een provider in de "
+"ingeschakelde of teststatus niet verwijderen.\n"
 "Gekoppelde provider(s): %s"
 
 #. module: account_payment
@@ -775,7 +776,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Je moet eerst een betaalprovider deactiveren voordat je het dagboek ervan verwijdert. \n"
+"Je moet eerst een betaalprovider deactiveren voordat je het dagboek ervan "
+"verwijdert. \n"
 "Gekoppelde providers: %s"
 
 #. module: account_payment
@@ -799,3 +801,6 @@ msgstr "is toegepast."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "te laat"
+
+#~ msgid "Code"
+#~ msgstr "Code"
