@@ -117,10 +117,11 @@ DictionaryObject.get = _unwrapping_get
 
 # Make sure all the correct delimiters are included
 # https://github.com/py-pdf/pypdf/commit/8c542f331828c5839fda48442d89b8ac5d3984ac
-NameObject.renumber_table.update({
-    **{chr(i): f"#{i:02X}".encode() for i in b"#()<>[]{}/%"},
-    **{chr(i): f"#{i:02X}".encode() for i in range(33)},
-})
+if hasattr(NameObject, 'renumber_table'):
+    NameObject.renumber_table.update({
+        **{chr(i): f"#{i:02X}".encode() for i in b"#()<>[]{}/%"},
+        **{chr(i): f"#{i:02X}".encode() for i in range(33)},
+    })
 
 
 if hasattr(PdfWriter, 'write_stream'):
