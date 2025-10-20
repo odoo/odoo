@@ -1246,3 +1246,9 @@ class TestWebReadGroup(common.TransactionCase):
             )
 
             self.assertEqual(spy_web_read.call_count, 1)
+
+    def test_query_non_int_read_group(self):
+        result = self.env["test_orm.view.str.id"].formatted_read_group([], ["name"], ["__count"])
+        self.assertEqual(result, [{"name": "test", "__count": 1, "__extra_domain": [("name", "=", "test")]}])
+        result = self.env["test_orm.view.str.id"].formatted_read_group([], [], ["name:count"])
+        self.assertEqual(result, [{"name:count": 1, "__extra_domain": [(1, "=", 1)]}])

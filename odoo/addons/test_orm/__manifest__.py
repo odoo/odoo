@@ -3,7 +3,7 @@
     'version': '1.0',
     'category': 'Hidden/Tests',
     'description': """A module to test the ORM.""",
-    'depends': ['base', 'web'],
+    'depends': ['base'],
     'installable': True,
     'data': [
         'data/test_access_rights_data.xml',
