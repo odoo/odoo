@@ -9,7 +9,7 @@ import { useGifPicker } from "./gif_picker";
 
 registerComposerAction("add-gif", {
     condition: ({ composer, owner, store }) =>
-        (store.hasGifPickerFeature || store.self.main_user_id?.is_admin) &&
+        (store.hasGifPickerFeature || store.self_user?.is_admin) &&
         !owner.env.inChatter &&
         !composer.message,
     isPicker: true,

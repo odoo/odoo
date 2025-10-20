@@ -449,7 +449,7 @@ const threadPatch = {
         return (
             this.allowedToLeaveChannelTypes.includes(this.channel?.channel_type) &&
             this.group_ids.length === 0 &&
-            this.store.self_partner
+            this.store.self_user
         );
     },
     get allowedToUnpinChannelTypes() {
@@ -515,7 +515,7 @@ const threadPatch = {
     async leaveChannel({ force = false } = {}) {
         if (
             this.channel?.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
+            this.create_uid?.eq(this.store.self_user) &&
             !force
         ) {
             await this.askLeaveConfirmation(

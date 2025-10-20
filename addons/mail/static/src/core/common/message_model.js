@@ -180,7 +180,7 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get allowsEdition() {
-        return this.store.self.main_user_id?.is_admin || this.isSelfAuthored;
+        return this.store.self_user?.is_admin || this.isSelfAuthored;
     }
 
     get bubbleColor() {
@@ -431,7 +431,7 @@ export class Message extends Record {
             !this.is_transient &&
                 !this.isPending &&
                 this.thread &&
-                this.store.self_partner?.main_user_id?.share === false &&
+                this.store.self_user?.share === false &&
                 this.persistent
         );
     }

@@ -50,12 +50,12 @@
                 <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                     <img class="o-mail-DiscussContent-selfAvatar ms-3 me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="store.self.avatarUrl"/>
                     <div class="fw-bold flex-shrink-1 text-dark">
-                        <t t-if="store.self_partner" t-esc="store.self.name"/>
+                        <t t-if="store.self_user" t-esc="store.self_user.name"/>
                         <t t-else="">
                             <AutoresizeInput
                                 className="'py-1'"
                                 onValidate.bind="renameGuest"
-                                value="store.self.name"
+                                value="store.self_guest.name"
                             />
                         </t>
                     </div>

@@ -45,12 +45,12 @@ export class ChannelInvitation extends Component {
             250
         );
         onWillStart(() => {
-            if (this.store.self_partner) {
+            if (this.store.self_user) {
                 this.fetchPartnersToInvite();
             }
         });
         onMounted(() => {
-            if (this.store.self_partner && this.props.thread) {
+            if (this.store.self_user && this.props.thread) {
                 this.inputRef.el.focus();
             }
         });

@@ -87,7 +87,7 @@ export class MailGuest extends Record {
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (this.store.self.main_user_id?.share !== false) {
+        if (this.store.self_user?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         if (this.id === -1) {

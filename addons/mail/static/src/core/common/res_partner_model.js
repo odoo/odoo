@@ -57,7 +57,7 @@ export class ResPartner extends Record {
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
         onUpdate() {
-            if (this.eq(this.store.self_partner) && this.im_status === "offline") {
+            if (this.eq(this.store.self_user?.partner_id) && this.im_status === "offline") {
                 this.store.env.services.im_status.updateBusPresence();
             }
         },
@@ -103,7 +103,7 @@ export class ResPartner extends Record {
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (this.store.self.main_user_id?.share !== false) {
+        if (this.store.self_user?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         return imageUrl("res.partner", this.id, "avatar_128", {

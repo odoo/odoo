@@ -3,9 +3,9 @@
 
     <t t-name="mail.DiscussSidebarMailboxes">
         <div class="d-flex flex-column flex-grow-0 o-gap-0_5 bg-inherit">
-            <Mailbox t-if="store.self.main_user_id?.notification_type === 'inbox'" mailbox="store.inbox"/>
+            <Mailbox t-if="store.self_user?.notification_type === 'inbox'" mailbox="store.inbox"/>
             <Mailbox mailbox="store.starred"/>
-            <Mailbox t-if="store.self.main_user_id?.notification_type === 'inbox'" mailbox="store.history"/>
+            <Mailbox t-if="store.self_user?.notification_type === 'inbox'" mailbox="store.history"/>
         </div>
     </t>
 
