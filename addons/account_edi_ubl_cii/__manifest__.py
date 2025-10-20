@@ -36,4 +36,5 @@ Pro rules and show the errors.
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }

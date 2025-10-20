@@ -41,4 +41,5 @@ E-invoice implementation
     ],
     'license': 'LGPL-3',
     'post_init_hook': '_l10n_it_edi_create_param',
+    'uninstall_hook': 'uninstall_hook',
 }
