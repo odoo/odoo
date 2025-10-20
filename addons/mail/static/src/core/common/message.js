@@ -14,9 +14,6 @@ import { renderToElement } from "@web/core/utils/render";
 import {
     Component,
     onMounted,
-    onPatched,
-    onWillDestroy,
-    onWillUpdateProps,
     toRaw,
     useChildSubEnv,
     useEffect,
@@ -36,7 +33,7 @@ import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
-import { useLongPress } from "@mail/utils/common/hooks";
+import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 
 /**
@@ -76,10 +73,10 @@ export class Message extends Component {
     };
     static props = [
         "asCard?",
-        "registerMessageRef?",
         "hasActions?",
         "onParentMessageClick?",
         "message",
+        "messageRefs?",
         "previousMessage?",
         "squashed?",
         "thread?",
@@ -110,12 +107,7 @@ export class Message extends Component {
                 predicate: () => !this.isEditing,
             });
         }
-        onWillUpdateProps((nextProps) => {
-            this.props.registerMessageRef?.(this.props.message, null);
-        });
-        onMounted(() => this.props.registerMessageRef?.(this.props.message, this.root));
-        onPatched(() => this.props.registerMessageRef?.(this.props.message, this.root));
-        onWillDestroy(() => this.props.registerMessageRef?.(this.props.message, null));
+        useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions({

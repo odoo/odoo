@@ -3,6 +3,7 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
+    reactive,
     toRaw,
     useComponent,
     useEffect,
@@ -657,4 +658,51 @@ export function useInDiscussCallView() {
             },
         },
     });
+}
+
+/** @typedef {import("@web/core/utils/hooks").useChildRef} useChildRef */
+
+/**
+ * Hook that works like `useChildRef()` but allow many refs that each child component can save using an id of their choice.
+ * @see useChildRef
+ */
+export function useChildRefs() {
+    return reactive(new Map());
+}
+
+export class UseForwardRefsToParent {
+    constructor(propName, getRefIdFn, ref) {
+        const component = useComponent();
+        this.ref = ref;
+        // Note: The `useChildRefs()` Map is shared with all children, using useEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
+        // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
+        useEffect(
+            (map, key) => {
+                this.registerRef(map, key);
+                () => this.removeRef(map, key);
+            },
+            () => [component.props[propName], getRefIdFn(component.props)]
+        );
+    }
+
+    registerRef(map, key) {
+        map?.set(key, this.ref);
+    }
+
+    removeRef(map, key) {
+        map?.delete(key);
+    }
+}
+
+/** @typedef {import("@web/core/utils/hooks").useForwardRefToParent} useForwardRefToParent */
+/**
+ * Hook that works like `useForwardRefToParent()` but allow many refs that each child component can save using an id of their choice.
+ * @see useForwardRefToParent
+ *
+ * @param {string} propName name of prop that contains a `useChildRefs()` object
+ * @param {(Props) => any} getRefIdFn function whose evaluation returns the key in `useChildRefs()` object to save the `ref`, with props passed as param.
+ * @param {import("@web/core/utils/hooks").Ref} ref the `ref` that is saved in `useChildRefs()` at key from `getRefIdFn` function evaluation
+ */
+export function useForwardRefsToParent(propName, getRefIdFn, ref) {
+    new UseForwardRefsToParent(propName, getRefIdFn, ref);
 }

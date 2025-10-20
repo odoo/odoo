@@ -1,28 +1,17 @@
-import {
-    Component,
-    onMounted,
-    onPatched,
-    onWillDestroy,
-    onWillUpdateProps,
-    useRef,
-} from "@odoo/owl";
+import { useForwardRefsToParent } from "@mail/utils/common/hooks";
+import { Component, useRef } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export class NotificationMessage extends Component {
     static template = "mail.NotificationMessage";
-    static props = ["message", "thread", "registerMessageRef?"];
+    static props = ["message", "messageRefs?", "thread"];
 
     setup() {
         super.setup();
         this.root = useRef("root");
-        onWillUpdateProps((nextProps) => {
-            this.props.registerMessageRef?.(this.props.message, null);
-        });
-        onMounted(() => this.props.registerMessageRef?.(this.props.message, this.root));
-        onPatched(() => this.props.registerMessageRef?.(this.props.message, this.root));
-        onWillDestroy(() => this.props.registerMessageRef?.(this.props.message, null));
+        useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
         this.escape = escape;
         this.store = useService("mail.store");
     }

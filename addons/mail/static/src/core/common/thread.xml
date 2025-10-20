@@ -23,14 +23,14 @@
                     <div t-if="msg.threadAsFirstUnread?.eq(props.thread) and (prevMsg or props.thread.markedAsUnread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bold z-1 px-2">
                         <div class="o-mail-Thread-newMessageLine flex-grow-1 border border-danger rounded-start-3 opacity-100 shadow-sm my-1"/><span class="o-ps-1_5 pe-1 bg-danger o-text-white rounded text-uppercase shadow-sm o-xxsmaller">New</span>
                     </div>
-                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" thread="props.thread" registerMessageRef="registerMessageRef" />
+                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" messageRefs="messageRefs" thread="props.thread"/>
                     <Message
                         t-elif="!msg.isNotification"
                         asCard="props.thread.model === 'mail.box'"
                         className="getMessageClassName(msg)"
                         message="msg"
+                        messageRefs="messageRefs"
                         previousMessage="prevMsg"
-                        registerMessageRef="registerMessageRef"
                         squashed="isSquashed(msg, prevMsg)"
                         onParentMessageClick.bind="() => msg.parent_id and env.messageHighlight?.highlightMessage(msg.parent_id, props.thread)"
                         thread="props.thread"

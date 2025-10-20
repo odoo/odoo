@@ -31,7 +31,7 @@ const threadPatch = {
     applyScrollContextually(thread) {
         if (thread.self_member_id && thread.scrollUnread) {
             if (thread.firstUnreadMessage) {
-                const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
+                const messageEl = this.messageRefs.get(thread.firstUnreadMessage.id)?.el;
                 if (!messageEl) {
                     return;
                 }
