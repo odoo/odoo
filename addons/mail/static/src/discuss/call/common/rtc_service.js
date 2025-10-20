@@ -788,46 +788,16 @@ export class Rtc extends Record {
             values: { is_transcribing: newState },
         });
 
-        if (newState) {
-            // 2. Turning ON: Upgrade connection if needed, and wait for it.
-            if (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED) {
-                const upgradePromise = new Promise((resolve, reject) => {
-                    const onStateChange = ({ detail: { state } }) => {
-                        if (state === this.SFU_CLIENT_STATE.CONNECTED) {
-                            this.network.removeEventListener("stateChange", onStateChange);
-                            resolve();
-                        }
-                        if (state === this.SFU_CLIENT_STATE.CLOSED) {
-                            this.network.removeEventListener("stateChange", onStateChange);
-                            reject(new Error("SFU connection failed"));
-                        }
-                    };
-                    this.network.addEventListener("stateChange", onStateChange);
-                    this.upgradeConnectionDebounce();
-                });
+        // 2. If turning ON and not connected -> trigger the upgrade, wait and setTranscription (by _handleSfuClientStateChange).
+        if (
+            newState &&
+            (!this.sfuClient || this.sfuClient.state !== this.SFU_CLIENT_STATE.CONNECTED)
+        ) {
+            this.upgradeConnectionDebounce();
 
-                try {
-                    await upgradePromise;
-                } catch (e) {
-                    this.notification.add(
-                        _t("Transcription failed: could not connect to the media server."),
-                        { type: "warning" }
-                    );
-                    // Revert the state on the backend.
-                    await rpc("/mail/rtc/session/update_and_broadcast", {
-                        session_id: this.selfSession.id,
-                        values: { is_transcribing: false },
-                    });
-                    return;
-                }
-            }
-            // 3. Send the START command.
-            this.sfuClient.setTranscription(true);
-        } else {
-            // 4. Turning OFF: Just send the command if we are connected.
-            if (this.sfuClient && this.sfuClient.state === this.SFU_CLIENT_STATE.CONNECTED) {
-                this.sfuClient.setTranscription(false);
-            }
+            // 3. If already connected, send the command immediately.
+        } else if (this.sfuClient && this.sfuClient.state === this.SFU_CLIENT_STATE.CONNECTED) {
+            this.sfuClient.setTranscription(newState);
         }
     }
 
@@ -1368,9 +1338,20 @@ export class Rtc extends Record {
                 this.sfuClient.updateUpload("audio", this.state.audioTrack);
                 this.sfuClient.updateUpload("camera", this.state.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.state.screenTrack);
+                this.sfuClient.setTranscription(this.channel.is_transcribing);
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
+                    if (this.channel?.is_transcribing) {
+                        this.notification.add(
+                            _t("Transcription failed: could not connect to the media server."),
+                            { type: "warning" }
+                        );
+                        this.env.services.rpc("/mail/rtc/session/update_and_broadcast", {
+                            session_id: this.selfSession.id,
+                            values: { is_transcribing: false },
+                        });
+                    }
                     if (!this.state.channel) {
                         return;
                     }
