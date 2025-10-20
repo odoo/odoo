@@ -5239,6 +5239,162 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_compute_date_finished_with_workcenter_calendar(self):
+        """
+        Test that finished date of the production depends properly on the workcenter availability.
+
+        Have two wokcenters: WC1 (op 1,2,3) opened 8/5, WC2 opened 24/5 (op 4,5,6)
+
+        Check finish date for a production of:
+            - 1 unit (start of the day, end of the day and end of week)
+            - 6 units (exceeds one day of work for WC1)
+
+        Also check finish date for production with some dependencies:
+        - 2 -> 1,4,5
+        - 4 -> 3
+        - 5 -> 4
+        - 6 -> 4
+        """
+
+        calendars = self.env['resource.calendar'].sudo().create([
+            {
+                'company_id': False,
+                'attendance_ids': [
+                    Command.create({
+                        'dayofweek': str(weekday),
+                        'day_period': period,
+                        'hour_from': 8 if period == 'morning' else 13,
+                        'hour_to': 12 if period == 'morning' else 17,
+                        'name': f'Day {weekday} {period} H {"8 12" if period == "morning" else "13 17"}',
+                    })
+                    for weekday in range(5)
+                    for period in ('morning', 'afternoon')
+                ],
+                'leave_ids': [Command.create({
+                    'date_from': datetime(2024, 1, 8, 0, 0, 0),
+                    'date_to': datetime(2024, 1, 9, 0, 0, 0),
+                })],
+                'name': 'Test calendar 40h',
+                'tz': 'UTC',
+            },
+            {
+                'company_id': False,
+                'attendance_ids': [
+                    Command.create({
+                        'dayofweek': str(weekday),
+                        'day_period': period,
+                        'hour_from': 0 if period == 'morning' else 12,
+                        'hour_to': 12 if period == 'morning' else 24,
+                        'name': f'Day {weekday} {period} H {"0 12" if period == "morning" else "12 24"}',
+                    })
+                    for weekday in range(5)
+                    for period in ('morning', 'afternoon')
+                ],
+                'leave_ids': [Command.create({
+                    'date_from': datetime(2024, 1, 8, 0, 0, 0),
+                    'date_to': datetime(2024, 1, 9, 0, 0, 0),
+                })],
+                'name': 'Test full calendar 24h/5d',
+                'tz': 'UTC',
+            }
+        ])
+
+        workcenters = self.env['mrp.workcenter'].create([
+            {
+                'name': 'Simple Workcenter',
+                'default_capacity': 1,
+                'time_start': 0,
+                'time_stop': 0,
+                'time_efficiency': 50,
+                'resource_calendar_id': calendars[0].id,
+            },
+            {
+                'name': 'Simple Workcenter',
+                'default_capacity': 1,
+                'time_start': 0,
+                'time_stop': 0,
+                'time_efficiency': 100,
+                'resource_calendar_id': calendars[1].id,
+            }
+        ])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'allow_operation_dependencies': True,
+            'operation_ids': [
+                Command.create({'name': 'Op 1', 'workcenter_id': workcenters[0].id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'time_cycle_manual': 3}),
+                Command.create({'name': 'Op 2', 'workcenter_id': workcenters[0].id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'time_cycle_manual': 6}),
+                Command.create({'name': 'Op 3', 'workcenter_id': workcenters[0].id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'time_cycle_manual': 9}),
+                Command.create({'name': 'Op 4', 'workcenter_id': workcenters[1].id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'time_cycle_manual': 24}),
+                Command.create({'name': 'Op 5', 'workcenter_id': workcenters[1].id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'time_cycle_manual': 30}),
+                Command.create({'name': 'Op 6', 'workcenter_id': workcenters[1].id,
+                        'time_mode_batch': 1, 'time_mode': "auto", 'time_cycle_manual': 36}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_1.id, 'product_qty': 1}),
+            ]
+        })
+
+        production = self.env['mrp.production'].create(
+            {
+                'product_id': self.product_6.id,
+                'bom_id': bom.id,
+                'product_qty': 1,
+                'date_start': datetime(2024, 1, 1, 8, 0, 0),
+            },
+        )
+        production.action_confirm()
+        self.assertAlmostEqual(production.date_finished, datetime(2024, 1, 1, 9, 30, 0), delta=timedelta(seconds=2))
+
+        production.write({'date_start': datetime(2024, 1, 1, 16, 0, 0), 'product_qty': 10})
+        # Start at 16pm, so still 5h to do the next day
+        self.assertAlmostEqual(production.date_finished, datetime(2024, 1, 2, 14, 0, 0), delta=timedelta(seconds=2))
+
+        production.write({'date_start': datetime(2024, 1, 5, 16, 0, 0)})
+        # The workcenter does not work in the weekend + the monday is a leave
+        self.assertAlmostEqual(production.date_finished, datetime(2024, 1, 9, 14, 0, 0), delta=timedelta(seconds=2))
+
+        # Add dependencies
+        wo1, wo2, wo3, wo4, wo5, wo6 = bom.operation_ids
+        wo2.write({'blocked_by_operation_ids': [wo1.id, wo4.id, wo5.id]})
+        wo4.write({'blocked_by_operation_ids': [wo3.id]})
+        wo5.write({'blocked_by_operation_ids': [wo4.id]})
+        wo6.write({'blocked_by_operation_ids': [wo4.id]})
+
+        production_w_dep = self.env['mrp.production'].create({
+                'product_id': self.product_6.id,
+                'bom_id': bom.id,
+                'product_qty': 10,
+                'date_start': datetime(2024, 1, 1, 8, 0, 0),
+            },
+        )
+        # The dependencies are not transfered in the mo yet, since the mo is not confirmed yet.
+        self.assertAlmostEqual(production_w_dep.date_finished, datetime(2024, 1, 1, 23, 0, 0), delta=timedelta(seconds=2))
+        production_w_dep.action_confirm()
+        # Due to the defined dependencies, all other operations (1,3,4,5,6) must be completed before operation 2.
+        # By that time, WC1 (working 8h/day) has accumulated 1h of work, and WC2 (24h availability) has 15h of work.
+        # Operation 2 is initially planned for January 1 at 23:00, but since WC1 only works from 8:00-17:00,
+        # it is postponed to the next available slot on January 2 at 8:00.
+        # Given that operation 2 takes 2 hours, the expected production finish time is January 2 at 10:00.
+        self.assertAlmostEqual(production_w_dep.date_finished, datetime(2024, 1, 2, 10, 0, 0), delta=timedelta(seconds=2))
+        self.env['mrp.workorder'].create({
+            'production_id': production_w_dep.id,
+            'name': 'Additionnal Step',
+            'workcenter_id': workcenters[1].id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'duration_expected': 600,
+        })
+        # Same as before except Operation 2 is initially planned for January 2 at 9:00
+        self.assertAlmostEqual(production_w_dep.date_finished, datetime(2024, 1, 2, 11, 0, 0), delta=timedelta(seconds=2))
+
+
     def test_workorders_without_worcenter_planned_slots(self):
         """
         Test that updating a workorder duration does not crash when others are unplanned.

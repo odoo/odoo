@@ -7,7 +7,7 @@ import math
 import re
 
 from ast import literal_eval
-from collections import defaultdict
+from collections import defaultdict, deque
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _, Command, SUPERUSER_ID
@@ -754,7 +754,7 @@ class MrpProduction(models.Model):
         late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
         return ['|', ('move_raw_ids', 'in', late_stock_moves.ids), ('move_finished_ids', 'in', late_stock_moves.ids)]
 
-    @api.depends('company_id', 'date_start', 'is_planned', 'product_id', 'workorder_ids.duration_expected')
+    @api.depends('company_id', 'date_start', 'is_planned', 'product_id', 'workorder_ids.duration_expected', 'workorder_ids.blocked_by_workorder_ids')
     def _compute_date_finished(self):
         for production in self:
             if not production.date_start or production.is_planned or production.state == 'done':
@@ -762,9 +762,71 @@ class MrpProduction(models.Model):
             days_delay = production.bom_id.produce_delay
             date_finished = production.date_start + relativedelta(days=days_delay)
             if production._should_postpone_date_finished(date_finished):
-                workorder_expected_duration = sum(production.workorder_ids.mapped('duration_expected'))
-                date_finished = date_finished + relativedelta(minutes=workorder_expected_duration or 60)
+                if calc_date_finished := production._calculate_expected_finished_date(date_finished):
+                    date_finished = calc_date_finished
+                else:
+                    date_finished = date_finished + relativedelta(minutes=sum(production.workorder_ids.mapped('duration_expected')))
+
+                if date_finished == production.date_start:
+                    date_finished = date_finished + relativedelta(minutes=60)
             production.date_finished = date_finished
+
+    def _calculate_expected_finished_date(self, date_start):
+        """
+        Calculate the expected completion date of all work orders based on workcenter availability and dependencies.
+        Return False if at least one workorder has an unavaible workcenter
+        """
+        if not self.workorder_ids:
+            return date_start
+        date_finished_per_workcenter = defaultdict(lambda: date_start)
+
+        for wo in self._topological_sort_workorders(self.workorder_ids):
+            wo_date_start = max(
+                [
+                    date_finished_per_workcenter[wc]
+                    for wc in wo.workcenter_id.ids + wo.blocked_by_workorder_ids.workcenter_id.ids
+                ],
+                default=date_start,
+            )
+
+            from_date = False
+            if wo.workcenter_id and wo.workcenter_id.resource_calendar_id:
+                from_date, to_date = wo.workcenter_id._get_first_available_slot(wo_date_start, wo.duration_expected)
+            if not (from_date and isinstance(to_date, datetime.datetime)):
+                return False
+
+            date_finished_per_workcenter[wo.workcenter_id.id] = to_date
+        return max(date_finished_per_workcenter.values())
+
+    def _topological_sort_workorders(self, workorders):
+        """
+        Return workorders ordered so that each workorder comes after all its dependency.
+        This topological ordering is based on Kahn's algorithm for directed graphs.
+        """
+        dependency_graph = defaultdict(list)
+        indegree = defaultdict(int)
+
+        for wo in workorders:
+            for dep_wo in wo.blocked_by_workorder_ids:
+                dependency_graph[dep_wo.id].append(wo.id)
+                indegree[wo.id] += 1
+
+        queue = deque(wo.id for wo in workorders if indegree[wo.id] == 0)
+        ordered_ids = []
+
+        while queue:
+            node = queue.popleft()
+            ordered_ids.append(node)
+
+            for blocked_node_id in dependency_graph[node]:
+                indegree[blocked_node_id] -= 1
+                if indegree[blocked_node_id] == 0:
+                    queue.append(blocked_node_id)
+
+        if len(ordered_ids) != len(workorders):
+            raise ValidationError(_("You cannot create cyclic dependency."))
+
+        return self.env['mrp.workorder'].browse(ordered_ids)
 
     @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'never_product_template_attribute_value_ids')
     def _compute_move_raw_ids(self):
