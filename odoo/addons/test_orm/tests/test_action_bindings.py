@@ -10,7 +10,6 @@ class TestActionBindings(common.TransactionCase):
 
         # first make sure there is no bound action
         self.env.ref('base.action_partner_merge').unlink()
-        self.env.ref('web.download_contact').unlink()
         bindings = Actions.get_bindings('res.partner')
         self.assertFalse(bindings.get('action'))
         self.assertFalse(bindings.get('report'))
