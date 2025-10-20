@@ -1234,7 +1234,9 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'date': fields.Date.from_string(line3.date),
         }])
         # test split with canceled/draft lines
-        statement2 = self.env['account.bank.statement'].with_context({'split_line_id': line2.id}).create({})
+        statement2 = self.env['account.bank.statement'].with_context({'split_line_id': line2.id}).create({
+            'date': fields.Date.from_string(line2.date),
+        })
         self.assertRecordValues(statement1 + statement2, [{
             'is_complete': False,
             'balance_end': 2,

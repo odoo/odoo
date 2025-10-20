@@ -412,7 +412,7 @@ class AccountBankStatementLine(models.Model):
         self.env.remove_to_compute(self.env['account.move']._fields['narration'], st_lines.move_id)
 
         # No need for the user to manage their status (from 'Draft' to 'Posted')
-        st_lines.move_id.action_post()
+        st_lines.filtered(lambda st_line: st_line.journal_id.type != "cash").move_id.action_post()
         return st_lines.with_env(self.env)  # clear the context
 
     def write(self, vals):
@@ -472,7 +472,7 @@ class AccountBankStatementLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _check_allow_unlink(self):
-        if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
+        if self.statement_id.filtered(lambda stmt: stmt.is_statement_posted and stmt.is_valid and stmt.is_complete):
             raise UserError(_("You can not delete a transaction from a valid statement.\n"
                               "If you want to delete it, please remove the statement first."))
 
