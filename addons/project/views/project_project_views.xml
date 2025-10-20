@@ -368,6 +368,7 @@
                 >
                     <field name="allow_milestones"/>
                     <field name="rating_count" />
+                    <field name="show_ratings"/>
                     <field name="privacy_visibility"/>
                     <field name="last_update_color"/>
                     <field name="is_milestone_deadline_exceeded"/>
@@ -438,7 +439,7 @@
                                     <div t-if="record.alias_email.value" class="text-muted text-truncate" t-att-title="record.alias_email.value">
                                         <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><field name="alias_email"/>
                                     </div>
-                                    <div t-if="record.rating_count.raw_value &gt; 0" class="d-flex text-muted">
+                                    <div t-if="record.show_ratings.raw_value and record.rating_count.raw_value &gt; 0" class="d-flex text-muted">
                                         <b class="me-1">
                                             <span class="fa mt4 fa-smile-o fw-bolder text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
                                             <span class="fa mt4 fa-meh-o fw-bolder text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
