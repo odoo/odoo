@@ -251,7 +251,8 @@ class StockMove(models.Model):
             if move.product_id.cost_method == 'fifo':
                 move.value = move.product_id._run_fifo(move._get_valued_qty())
             else:
-                move.value = move.product_id.standard_price * move.quantity
+                qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                move.value = move.product_id.standard_price * qty
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
