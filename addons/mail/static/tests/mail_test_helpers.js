@@ -77,6 +77,7 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+import { Rtc } from "@mail/discuss/call/common/rtc_service";
 
 export * from "./mail_test_helpers_contains";
 
@@ -309,6 +310,12 @@ let discussAsTabId = 0;
  * }} [options]
  */
 export async function start(options) {
+    patchWithCleanup(Rtc.prototype, {
+        start() {
+            super.start();
+            after(() => this.clear());
+        },
+    });
     if (!MockServer.current) {
         await startServer();
     }
