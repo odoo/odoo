@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { CodeToolbar } from "./code_toolbar";
 import { renderToElement } from "@web/core/utils/render";
 import { withSequence } from "@html_editor/utils/resource";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
@@ -38,15 +37,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
     };
 
     setup() {
-        /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.codeToolbar = this.dependencies.overlay.createOverlay(CodeToolbar, {
-            positionOptions: {
-                position: "top-fit",
-                flip: false,
-            },
-            closeOnPointerdown: false,
-        });
-        this.addDomListener(this.document, "scroll", this.codeToolbar.close, true);
         this.addCodeBlocks();
     }
 
@@ -104,7 +94,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
     setupNewCodeBlock({ name, props }) {
         if (name === "syntaxHighlighting") {
             Object.assign(props, {
-                codeToolbar: this.codeToolbar,
                 autofocus: props.host.dataset.syntaxHighlightingAutofocus === "true",
                 onTextareaFocus: () => this.dependencies.history.stageFocus(),
             });
