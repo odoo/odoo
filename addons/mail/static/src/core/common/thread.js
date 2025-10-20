@@ -50,7 +50,6 @@ export class Thread extends Component {
         "scrollRef?",
         "showEmptyMessage?",
         "showJumpPresent?",
-        "messageActions?",
     ];
     static defaultProps = {
         jumpPresent: 0,
@@ -58,7 +57,6 @@ export class Thread extends Component {
         showDates: true,
         showEmptyMessage: true,
         showJumpPresent: true,
-        messageActions: true,
     };
     static template = "mail.Thread";
 

@@ -35,7 +35,7 @@
                         onParentMessageClick.bind="() => msg.parent_id and env.messageHighlight?.highlightMessage(msg.parent_id, props.thread)"
                         thread="props.thread"
                         isFirstMessage="msg_first"
-                        hasActions="props.messageActions and !msg.eq(props.thread.from_message_id)"
+                        hasActions="!msg.eq(props.thread.from_message_id)"
                         showDates="props.showDates"
                     />
                 </t>
