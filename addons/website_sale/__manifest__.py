@@ -61,6 +61,7 @@
         'views/product_ribbon_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
+        'views/res_country_group_views.xml',
         'views/sale_order_views.xml',
         'views/website_base_unit_views.xml',
         'views/website_pages_views.xml',

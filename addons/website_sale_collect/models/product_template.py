@@ -21,6 +21,7 @@ class ProductTemplate(models.Model):
             and product_or_template.is_storable
         ):
             # Enable the Click & Collect Availability widget.
+            # TODO VCR
             res['show_click_and_collect_availability'] = True
 
             # Prepare the delivery stock data.
