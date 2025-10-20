@@ -1,4 +1,4 @@
-import { fields, getKwArgs, webModels } from "@web/../tests/web_test_helpers";
+import { getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 import { ensureArray } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 
@@ -8,9 +8,6 @@ import { patch } from "@web/core/utils/patch";
  */
 
 export class ResUsersSettings extends webModels.ResUsersSettings {
-    is_discuss_sidebar_category_channel_open = fields.Generic({ default: true });
-    is_discuss_sidebar_category_chat_open = fields.Generic({ default: true });
-
     /**
      * @param {number} guest_id
      * @param {number} partner_id

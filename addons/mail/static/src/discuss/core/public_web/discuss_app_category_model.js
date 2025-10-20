@@ -2,8 +2,28 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { fields, Record } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 
+export const DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS = "discuss_sidebar_category_folded_";
+
 export class DiscussAppCategory extends Record {
     static id = "id";
+
+    static new() {
+        const record = super.new(...arguments);
+        record.onStorage = record.onStorage.bind(record);
+        browser.addEventListener("storage", record.onStorage);
+        return record;
+    }
+
+    delete() {
+        browser.removeEventListener("storage", this.onStorage);
+        super.delete(...arguments);
+    }
+
+    onStorage(ev) {
+        if (ev.key === `${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`) {
+            this.is_open = ev.newValue !== "true";
+        }
+    }
 
     /**
      * @param {import("models").Thread} t1
@@ -40,56 +60,30 @@ export class DiscussAppCategory extends Record {
             return this.store.discuss;
         },
     });
-    _openLocally = false;
-    localStateKey = fields.Attr(null, {
-        compute() {
-            if (this.saveStateToServer) {
-                return null;
-            }
-            return `discuss_sidebar_category_${this.id}_open`;
-        },
-        onUpdate() {
-            if (this.localStateKey) {
-                this._openLocally = JSON.parse(
-                    browser.localStorage.getItem(this.localStateKey) ?? "true"
-                );
-            }
-        },
-    });
     /** @type {number} */
     sequence;
 
-    get open() {
-        return this.saveStateToServer
-            ? this.store.settings[this.serverStateKey]
-            : this._openLocally;
-    }
-
-    get saveStateToServer() {
-        return this.serverStateKey && this.store.self_user?.share === false;
-    }
-
-    set open(value) {
-        if (this.saveStateToServer) {
-            this.store.settings[this.serverStateKey] = value;
-            this.store.env.services.orm.call(
-                "res.users.settings",
-                "set_res_users_settings",
-                [[this.store.settings.id]],
-                {
-                    new_settings: {
-                        [this.serverStateKey]: value,
-                    },
-                }
+    is_open = fields.Attr(false, {
+        /** @this {import("models").DiscussApp} */
+        compute() {
+            return !(
+                browser.localStorage.getItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`) ??
+                false
             );
-        } else {
-            this._openLocally = value;
-            browser.localStorage.setItem(this.localStateKey, value);
-        }
-    }
+        },
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            if (!this.is_open) {
+                browser.localStorage.setItem(
+                    `${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`,
+                    true
+                );
+            } else {
+                browser.localStorage.removeItem(`${DISCUSS_SIDEBAR_CATEGORY_FOLDED_LS}${this.id}`);
+            }
+        },
+    });
 
-    /** @type {string} */
-    serverStateKey;
     threads = fields.Many("mail.thread", {
         sort(t1, t2) {
             return this.sortThreads(t1, t2);

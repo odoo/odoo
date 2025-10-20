@@ -247,8 +247,7 @@ class TestUserSettings(MailCommon):
     @users('employee')
     def test_set_res_users_settings_should_send_notification_on_bus(self):
         settings = self.user_employee.res_users_settings_id
-        settings.is_discuss_sidebar_category_chat_open = False
-        settings.is_discuss_sidebar_category_channel_open = False
+        settings.channel_notifications = False
 
         with self.assertBus(
                 [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
@@ -256,17 +255,17 @@ class TestUserSettings(MailCommon):
                     'type': 'res.users.settings',
                     'payload': {
                         'id': settings.id,
-                        'is_discuss_sidebar_category_chat_open': True,
+                        'channel_notifications': "no_notif",
                     },
                 }]):
-            settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})
+            settings.set_res_users_settings({'channel_notifications': "no_notif"})
 
     @users('employee')
     def test_set_res_users_settings_should_set_settings_properly(self):
         settings = self.user_employee.res_users_settings_id
-        settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})
+        settings.set_res_users_settings({'channel_notifications': "no_notif"})
         self.assertEqual(
-            settings.is_discuss_sidebar_category_chat_open,
-            True,
-            "category state should be updated correctly"
+            settings.channel_notifications,
+            "no_notif",
+            "channel_notifications state should be updated correctly"
         )

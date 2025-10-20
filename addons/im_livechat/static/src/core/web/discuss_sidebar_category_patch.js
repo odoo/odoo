@@ -11,7 +11,7 @@ const DiscussSidebarCategoryPatch = {
         if (
             this.store.has_access_livechat &&
             this.category.livechat_channel_id &&
-            this.category.open
+            this.category.is_open
         ) {
             actions.push({
                 onSelect: () => {
