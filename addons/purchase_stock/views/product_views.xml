@@ -26,7 +26,7 @@
             <div name="o_kanban_qty_available_and_on_hand" position="after">
                 <div t-if="record.type.raw_value === 'consu' and record.monthly_demand.raw_value != 0" name="kanban_monthly_demand">
                     <span class="text-muted small me-1">Monthly Demand:</span>
-                    <span class="fw-bold ms-1" t-esc="Math.round(record.monthly_demand.raw_value *100)/100" name="kanban_monthly_demand_qty"/>
+                    <span class="fw-bold ms-1" t-out="record.monthly_demand.raw_value" name="kanban_monthly_demand_qty"/>
                     <field name="uom_id" class="text-muted small ms-1" groups="uom.group_uom"/>
                 </div>
                 <div name="kanban_purchase_suggest" t-if="record.suggested_qty.raw_value != 0">

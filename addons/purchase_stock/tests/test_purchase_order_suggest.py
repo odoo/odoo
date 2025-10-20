@@ -638,4 +638,4 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             [(test_product, 1)], date=today - relativedelta(days=1), warehouse=other_warehouse
         )
         # TODO fix not working on local with Debug & without step_delay (maybe due to xml Math.round)
-        self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin')
+        self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin', debug=True)
