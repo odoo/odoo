@@ -7,7 +7,6 @@ import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { Component } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
-
 export class MailComposerAttachmentSelector extends Component {
     static template = "mail.MailComposerAttachmentSelector";
     static components = { FileUploader };
@@ -35,7 +34,9 @@ export class MailComposerAttachmentSelector extends Component {
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });
         const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
-        await this.operations.saveRecord([attachment.id]);
+        if (attachment) {
+            await this.operations.saveRecord([attachment.id]);
+        }
     }
 }
 
@@ -43,4 +44,6 @@ export const mailComposerAttachmentSelector = {
     component: MailComposerAttachmentSelector,
 };
 
-registry.category("fields").add("mail_composer_attachment_selector", mailComposerAttachmentSelector);
+registry
+    .category("fields")
+    .add("mail_composer_attachment_selector", mailComposerAttachmentSelector);
