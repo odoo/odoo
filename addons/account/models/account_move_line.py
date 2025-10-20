@@ -1652,6 +1652,7 @@ class AccountMoveLine(models.Model):
         matching2lines = None  # lazy cache
         lines_to_unreconcile = self.env['account.move.line']
         st_lines_to_unreconcile = self.env['account.bank.statement.line']
+        tax_lock_check_ids = []
         for line in self:
             if not any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in vals):
                 line_to_write -= line
@@ -1666,7 +1667,7 @@ class AccountMoveLine(models.Model):
 
             # Check the tax lock date.
             if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['tax']):
-                line._check_tax_lock_date()
+                tax_lock_check_ids.append(line.id)
 
             # Break the reconciliation.
             if (
@@ -1694,6 +1695,8 @@ class AccountMoveLine(models.Model):
             except UserError:
                 st_lines_to_unreconcile -= st_line
         st_lines_to_unreconcile.action_undo_reconciliation()
+
+        self.browse(tax_lock_check_ids)._check_tax_lock_date()
 
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
@@ -1728,6 +1731,9 @@ class AccountMoveLine(models.Model):
             self.move_id._synchronize_business_models(['line_ids'])
             if any(field in vals for field in ['account_id', 'currency_id']):
                 self._check_constrains_account_id_journal_id()
+
+            # double check modified lines in case a tax field was changed on a line that didn't previously affect tax
+            self.browse(tax_lock_check_ids)._check_tax_lock_date()
 
             if not self.env.context.get('tracking_disable', False):
                 # Log changes to move lines on each move
