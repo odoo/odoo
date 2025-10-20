@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("donation_snippet_use", {
         },
         {
             content: "Donate with custom amount set",
-            trigger: ".s_donation_donate_btn",
+            trigger: ".s_donation_donate_btn.o_ready_to_donate",
             run: "click",
         },
         {
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("donation_snippet_use", {
         },
         {
             content: "Donate with custom amount set",
-            trigger: ".s_donation_donate_btn",
+            trigger: ".s_donation_donate_btn.o_ready_to_donate",
             run: "click",
             expectUnloadPage: true,
         },
@@ -144,7 +144,7 @@ registry.category("web_tour.tours").add("donation_snippet_use_2", {
         },
         {
             content: "Donate using the selected amount",
-            trigger: ".s_donation_donate_btn",
+            trigger: ".s_donation_donate_btn.o_ready_to_donate",
             run: "click",
         },
         {
