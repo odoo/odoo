@@ -229,7 +229,14 @@ class TestHttpSession(TestHttpBase):
     def test_session09_logout(self):
         sid = self.authenticate('admin', 'admin').sid
         self.assertTrue(odoo.http.root.session_store.get(sid), "session should exist")
-        self.url_open('/web/session/logout', allow_redirects=False).raise_for_status()
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": odoo.http.Request.csrf_token(self),
+            },
+            allow_redirects=False
+        ).raise_for_status()
         self.assertFalse(odoo.http.root.session_store.get(sid), "session should not exist")
 
     def test_session10_explicit_session(self):
@@ -237,7 +244,13 @@ class TestHttpSession(TestHttpBase):
         admin_session = self.authenticate('admin', 'admin')
         with self.assertLogs('odoo.http') as capture:
             qs = urlencode({'debug': 1, 'session_id': forged_sid})
-            self.url_open(f'/web/session/logout?{qs}').raise_for_status()
+            self.url_open(
+                f'/web/session/logout?{qs}',
+                method='POST',
+                data={
+                    "csrf_token": odoo.http.Request.csrf_token(self),
+                },
+            ).raise_for_status()
         self.assertEqual(len(capture.output), 1)
         self.assertRegex(capture.output[0],
             r"^WARNING:odoo.http:<function odoo\.addons\.\w+\.controllers\.\w+\.logout> "

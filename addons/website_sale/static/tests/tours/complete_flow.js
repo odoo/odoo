@@ -1,5 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
+import { post } from "@web/core/network/http_service";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
@@ -263,8 +265,9 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
                         kwargs: {},
                     });
                 });
-                def2.then(function () {
-                    window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box Test';
+                def2.then(async function () {
+                    const url = await post('/web/session/logout?redirect=/shop?search=Storage Box Test', { csrf_token: odoo.csrf_token }, "url");
+                    redirect(url);
                 });
             },
             expectUnloadPage: true,

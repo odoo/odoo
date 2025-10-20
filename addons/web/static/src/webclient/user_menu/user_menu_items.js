@@ -6,6 +6,8 @@ import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
+import { post } from "@web/core/network/http_service";
+import { redirect } from "@web/core/utils/urls";
 
 function supportItem(env) {
     const url = session.support_url;
@@ -125,10 +127,10 @@ function logOutItem(env) {
         type: "item",
         id: "logout",
         description: _t("Log out"),
-        href: `${browser.location.origin}${route}`,
-        callback: () => {
+        callback: async () => {
             browser.navigator.serviceWorker?.controller?.postMessage("user_logout");
-            browser.location.href = route;
+            const url = await post(route, { csrf_token: odoo.csrf_token }, "url");
+            redirect(url);
         },
         sequence: 70,
     };

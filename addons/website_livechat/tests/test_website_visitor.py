@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, fields
+from odoo import Command, fields, http
 from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
 from odoo.tests import new_test_user, tagged
 from odoo.exceptions import AccessError
@@ -94,7 +94,13 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
         channel_2._close_livechat_session()
 
         # After logout, a new visitor is created and reassigned to the original session
-        self.url_open("/web/session/logout")
+        self.url_open(
+            "/web/session/logout",
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
         self.url_open(self.tracked_page.url)
         visitor_3 = self._get_last_visitor()
         self.assertEqual(channel_1.livechat_visitor_id, visitor_3)

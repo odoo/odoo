@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.tests import common, tagged, HttpCase
@@ -191,11 +192,12 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
         # require the session id.
         res = self.url_open('/web/login')
         csrf_anchor = '<input type="hidden" name="csrf_token" value="'
-        self.url_open('/web/login', timeout=200, data={
+        res = self.url_open('/web/login', timeout=200, data={
             'login': login,
             'password': pwd,
             'csrf_token': res.text.partition(csrf_anchor)[2].partition('"')[0],
         })
+        self.session = http.root.session_store.get(res.cookies["session_id"])
 
 
 class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
@@ -243,7 +245,13 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         # Portal connects
         # ------------------------------------------------------------
 
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
         self._authenticate_via_web(self.user_portal.login, 'portal')
 
         self.assertFalse(
@@ -268,7 +276,13 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         # ------------------------------------------------------------
 
         # portal user disconnects
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
 
         # visit some pages
         self.url_open(self.tracked_page.url)
@@ -302,7 +316,13 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         # ------------------------------------------------------------
 
         # admin disconnects
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
 
         # visit some pages
         self.url_open(self.tracked_page.url)

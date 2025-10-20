@@ -135,7 +135,13 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         user.
         """
         self.start_tour('/odoo', 'totp_tour_setup', login='test_user')
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": http.Request.csrf_token(self),
+            },
+        )
 
         headers = {
             "Content-Type": "application/json",
