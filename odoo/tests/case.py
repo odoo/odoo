@@ -250,19 +250,42 @@ class TestCase(_TestCase):
 
     @property
     def canonical_tag(self):
+        return self.get_canonical_tag()
+
+    def _make_canonical_tag(self=None, tag='', module=None, test_class=None, test_method=None, params=None):
+        if module:
+            tag = f'{tag}/{module}'
+        if test_class:
+            tag = f'{tag}:{test_class}'
+        if test_method:
+            tag = f'{tag}.{test_method}'
+        if params:
+            tag = f'{tag}[{params}]'
+        return tag
+
+    def _get_canonical_tags_params(self, log):
         module = self.__module__
         for prefix in ('odoo.addons.', 'odoo.upgrade.'):
             if module.startswith(prefix):
                 module = module[len(prefix):]
 
         module = module.replace('.', '/')
-        return f'/{module}.py:{self.__class__.__name__}.{self._testMethodName}'
+        module = f'{module}.py'
 
-    def get_log_metadata(self):
-        metadata = {
-            'canonical_tag': self.canonical_tag,
+        return {
+            'module': module,
+            'test_class': self.__class__.__name__,
+            'test_method': self._testMethodName,
+            'params': None,
         }
-        return metadata
+
+    def get_canonical_tag(self, log=None):
+        return self._make_canonical_tag(**self._get_canonical_tags_params(log))
+
+    def get_log_metadata(self, _log):
+        return {
+            'canonical_tag': self.get_canonical_tag(_log),
+        }
 
 
 class _SubTest(TestCase):

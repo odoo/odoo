@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import re
 from contextlib import suppress
 
@@ -112,6 +113,19 @@ class HootCommon(odoo.tests.HttpCase):
         params_filter = ''.join([f'&id={h}' for h in param_filter_elems])
         return module_filter + params_filter
 
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        if log and hasattr(self, '_cross_module'):
+            message = log.msg
+            if log.args:
+                message = log.msg % log.args
+            if '[HOOT] Test "@' in message:
+                match = re.search(r'\[HOOT\] Test "(@([^/]+)/[^"]+)"', message)
+                if match:
+                    test = match.group(1)
+                    result['params'] = test
+        return result
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class HootSuite(HootCommon):
@@ -153,6 +167,19 @@ class HootSuite(HootCommon):
         self.assertEqual(self._get_hoot_filters(addons_from_asset_bundle, ['web']), '&id=e39ce9ba', '@web/core eplicitly selected')
         self._test_params = [('-', '@web/core')]
         self.assertEqual(self._get_hoot_filters(addons_from_asset_bundle, ['web']), '&id=001ee314&id=-e39ce9ba', '@web/core explicitly excluded')
+
+    def test_canonical_tags(self):
+        message = '''[HOOT] Test "@web/core/some test" failed:
+Failed assertion:
+...
+'''
+        log = logging.LogRecord('', '', '', '', message, None, None)
+        self.addCleanup(delattr, self, '_cross_module')
+        self._cross_module = True
+        tag = self.get_canonical_tag(log=log)
+        self.assertEqual(tag, '/web/tests/test_js.py:HootSuite.test_canonical_tags[@web/core/some test]')
+        # Note that in theory the file part won't be present in the tag since the test is cross-module,
+        # but for the purpose of this test we keep it simple since this class don't inherit from CrossModule
 
     @odoo.tests.no_retry
     def test_hoot(self):
