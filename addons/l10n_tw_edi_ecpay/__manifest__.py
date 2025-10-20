@@ -22,4 +22,5 @@
         "views/l10n_tw_edi_invoice_cancel_view.xml",
         "views/l10n_tw_edi_invoice_print_view.xml",
     ],
+    "uninstall_hook": "uninstall_hook",
 }

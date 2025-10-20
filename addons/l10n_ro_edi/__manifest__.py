@@ -17,6 +17,7 @@ E-invoice implementation for Romania
         'views/res_config_settings_views.xml',
     ],
     'auto_install': True,
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [
