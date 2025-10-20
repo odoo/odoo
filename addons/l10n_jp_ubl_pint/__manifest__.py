@@ -8,5 +8,6 @@
     """,
     'depends': ['account_edi_ubl_cii'],
     'installable': True,
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3'
 }
