@@ -3,6 +3,7 @@ import { generateListDefinition } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 /**
+ * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  * @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model
  */
 

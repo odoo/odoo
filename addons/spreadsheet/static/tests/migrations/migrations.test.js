@@ -815,3 +815,18 @@ test("Date filters are migrated", () => {
 
     expect(filters[0].disabledPeriods).toBe(undefined);
 });
+
+test("Odoo Menu references are converted starting from 19.1.1", () => {
+    const data = {
+        version: "18.5.10",
+        chartOdooMenusReferences: {
+            chart1: "menu.menu_1",
+            chart2: "menu.menu_2",
+        },
+    };
+    const migratedData = load(data);
+    expect(migratedData.odooLinkReferences).toEqual({
+        chart1: { type: "odooMenu", odooMenuId: "menu.menu_1" },
+        chart2: { type: "odooMenu", odooMenuId: "menu.menu_2" },
+    });
+});
