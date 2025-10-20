@@ -124,7 +124,7 @@
                 <field name="pricing_type" invisible="1"/>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_manage_reporting')]" position="inside">
-                <div role="menuitem" groups="project.group_project_manager">
+                <div role="menuitem" t-if="record.show_ratings.raw_value" groups="project.group_project_manager">
                    <a name="action_view_all_rating" type="object">
                     Customer Ratings
                     </a>
