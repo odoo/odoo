@@ -241,52 +241,6 @@
                   </td>
                   <!-- PARTIE DROITE : Tableau des totaux -->
                   <td style="border: none; border-left: 1px solid black; padding: 0px; vertical-align: top; width: 100%;">
-                    <!-- Calcul du bic_amount sur les lignes de facture -->
-                    <!-- 1. Initialisation des variables -->
-                    <t t-set="bic_ht" t-value="0"/>
-                    <t t-set="has_tva18" t-value="False"/>
-                    <t t-set="has_bic" t-value="False"/>
-
-                    <!-- 2. Parcours des lignes pour détecter la présence de TVA 18% et BIC -->
-                    <t t-if="o._fields.get('invoice_line_ids')">
-                      <t t-foreach="o.invoice_line_ids" t-as="line">
-                        <t t-set="line_has_tva18" t-value="False"/>
-                        <t t-set="line_has_bic" t-value="False"/>
-                        <t t-foreach="line.tax_ids" t-as="tax">
-                          <t t-if="'TVA' in tax.name.upper() and tax.amount == 18">
-                            <t t-set="line_has_tva18" t-value="True"/>
-                          </t>
-                          <t t-if="'BIC' in tax.name.upper()">
-                            <t t-set="line_has_bic" t-value="True"/>
-                          </t>
-                        </t>
-                        <!-- Si la ligne a TVA 18% ET BIC -->
-                        <t t-if="line_has_tva18 and line_has_bic">
-                          <t t-set="bic_ht" t-value="bic_ht + line.price_subtotal"/>
-                          <t t-set="has_tva18" t-value="True"/>
-                          <t t-set="has_bic" t-value="True"/>
-                        </t>
-                        <!-- Si la ligne a BIC mais PAS TVA 18% -->
-                        <t t-elif="line_has_bic">
-                          <t t-set="bic_ht" t-value="bic_ht + line.price_subtotal"/>
-                          <t t-set="has_bic" t-value="True"/>
-                        </t>
-                      </t>
-                    </t>
-
-                    <!-- 3. Calcul du montant TVA 18% sur les lignes où TVA 18% et BIC existent -->
-                    <t t-set="bic_tva18" t-value="has_tva18 and (bic_ht * 0.18) or 0"/>
-
-                    <!-- 4. Calcul du BIC selon la logique décrite -->
-                    <t t-set="bic_amount" t-value="0"/>
-                    <t t-if="has_bic">
-                      <t t-if="has_tva18">
-                        <t t-set="bic_amount" t-value="(bic_ht + bic_tva18) * 0.02"/>
-                      </t>
-                      <t t-else="">
-                        <t t-set="bic_amount" t-value="bic_ht * 0.02"/>
-                      </t>
-                    </t>
                     <!-- ================================================= -->
                     <!-- TABLEAU DES TOTAUX FINANCIERS                    -->
                     <!-- ================================================= -->
@@ -340,6 +294,40 @@
                           <span t-esc="'{:,.2f}'.format(bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                         </td>
                       </tr>
+                      <!-- Calcul du HTVA des lignes avec BIC et TVA 18% -->
+                      <t t-set="htva_bic_vat18" t-value="0"/>
+                      <t t-if="o._fields.get('invoice_line_ids')">
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and 'BIC' in tax.tax_group_id.name.upper()">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and 'VAT' in tax.tax_group_id.name.upper() and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <!-- On additionne le HTVA uniquement si BIC et TVA 18% sont présents sur la ligne -->
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="htva_bic_vat18" t-value="htva_bic_vat18 + line.price_subtotal"/>
+                          </t>
+                          <!-- Si BIC seul ou TVA seule, on n'ajoute rien -->
+                        </t>
+                      </t>
+
+                      <!-- Ligne d'affichage pour test -->
+                      <tr>
+                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
+                          <strong>HTVA (BIC &amp; TVA 18%)</strong>
+                        </td>
+                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;"></td>
+                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
+                          <span t-esc="'{:,.2f}'.format(htva_bic_vat18).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                        </td>
+                      </tr>
+
+                      <!-- Calcul de la somme des TVA 18% associée au BIC -->
                       <t t-set="somme_tva18_bic" t-value="0"/>
                       <t t-if="o._fields.get('invoice_line_ids')">
                         <t t-foreach="o.invoice_line_ids" t-as="line">
