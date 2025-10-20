@@ -6,3 +6,4 @@ from . import test_web_group_expand
 from . import test_web_read
 from . import test_web_read_group
 from . import test_web_save
+from . import test_x2many

@@ -3,7 +3,7 @@
     'version': '1.0',
     'category': 'Hidden/Tests',
     'description': """A module to test the ORM.""",
-    'depends': ['base', 'web', 'web_tour'],
+    'depends': ['base', 'web'],
     'installable': True,
     'data': [
         'data/test_access_rights_data.xml',
@@ -16,11 +16,6 @@
         'security/test_orm_security.xml',
         'views/test_orm_views.xml',
     ],
-    'assets': {
-        'web.assets_tests': [
-            'test_orm/static/tests/tours/x2many.js',
-        ],
-    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
