@@ -5581,7 +5581,7 @@ class BaseModel(metaclass=MetaModel):
             raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
 
         ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
-        return self.__class__(self.env, ids, self._prefetch_ids)
+        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5627,7 +5627,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         predicate = Domain(domain)._as_predicate(self)
         ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
-        return self.__class__(self.env, ids, self._prefetch_ids)
+        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
@@ -5930,7 +5930,8 @@ class BaseModel(metaclass=MetaModel):
                 prefetch_ids_list.append(arg._prefetch_ids)
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
-        return self.__class__(self.env, tuple(ids), Prefetch.union(prefetch_ids_list))
+        ids = tuple(ids)
+        return self.__class__(self.env, ids, Prefetch.union(ids, *prefetch_ids_list))
 
     def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
@@ -5941,7 +5942,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
             ids = tuple(id_ for id_ in self._ids if id_ not in other_ids)
-            return self.__class__(self.env, ids, self._prefetch_ids)
+            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -5953,8 +5954,8 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
-            ids = {id_: None for id_ in self._ids if id_ in other_ids}
-            return self.__class__(self.env, tuple(ids), self._prefetch_ids)
+            ids = tuple({id_: None for id_ in self._ids if id_ in other_ids})
+            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
@@ -5980,7 +5981,7 @@ class BaseModel(metaclass=MetaModel):
             except AttributeError:
                 raise TypeError(f"unsupported operand types in: {self} | {arg!r}")
         ids = tuple(dict.fromkeys(ids))
-        return self.__class__(self.env, ids, Prefetch.union(prefetch_ids_list))
+        return self.__class__(self.env, ids, Prefetch.union(ids, *prefetch_ids_list))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
@@ -6064,7 +6065,7 @@ class BaseModel(metaclass=MetaModel):
             # important: one must call the field's getter
             return self._fields[key].__get__(self)
         ids = self._ids[key] if isinstance(key, slice) else (self._ids[key],)
-        return self.__class__(self.env, ids, self._prefetch_ids)
+        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
