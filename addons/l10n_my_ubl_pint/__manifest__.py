@@ -15,5 +15,6 @@
         'views/res_partner_view.xml',
     ],
     'installable': True,
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3'
 }
