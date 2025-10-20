@@ -281,7 +281,29 @@
                           <span t-esc="'{:,.2f}'.format((o.amount_tax or 0) - bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                         </td>
                       </tr>
-                      
+                      <!-- Calcul du montant BIC -->
+                      <t t-set="htva_bic_vat18" t-value="0"/>
+                      <t t-set="somme_tva18_bic" t-value="0"/>
+                      <t t-if="o._fields.get('invoice_line_ids')">
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and 'BIC' in tax.tax_group_id.name.upper()">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and 'VAT' in tax.tax_group_id.name.upper() and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="htva_bic_vat18" t-value="htva_bic_vat18 + line.price_subtotal"/>
+                            <t t-set="somme_tva18_bic" t-value="somme_tva18_bic + (line.price_subtotal * 0.18)"/>
+                          </t>
+                        </t>
+                      </t>
+                      <t t-set="bic_amount" t-value="(htva_bic_vat18 + somme_tva18_bic) * 0.02"/>
+
                       <!-- Ligne BIC (affichée seulement si bic_amount > 0) -->
                       <tr t-if="bic_amount > 0">
                         <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
@@ -294,6 +316,7 @@
                           <span t-esc="'{:,.2f}'.format(bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
                         </td>
                       </tr>
+
                       <!-- Calcul du HTVA des lignes avec BIC et TVA 18% -->
                       <t t-set="htva_bic_vat18" t-value="0"/>
                       <t t-if="o._fields.get('invoice_line_ids')">
@@ -315,18 +338,6 @@
                           <!-- Si BIC seul ou TVA seule, on n'ajoute rien -->
                         </t>
                       </t>
-
-                      <!-- Ligne d'affichage pour test -->
-                      <tr>
-                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
-                          <strong>HTVA (BIC &amp; TVA 18%)</strong>
-                        </td>
-                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;"></td>
-                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
-                          <span t-esc="'{:,.2f}'.format(htva_bic_vat18).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
-                        </td>
-                      </tr>
-
                       <!-- Calcul de la somme des TVA 18% associée au BIC -->
                       <t t-set="somme_tva18_bic" t-value="0"/>
                       <t t-if="o._fields.get('invoice_line_ids')">
@@ -349,16 +360,6 @@
                         </t>
                       </t>
 
-                      <!-- Ligne d'affichage pour test -->
-                      <tr>
-                        <td style="text-align: left; padding: 2px; border: 1px solid black; width: 30%;">
-                          <strong>somme_tva18_bic</strong>
-                        </td>
-                        <td style="text-align: center; padding: 2px; border: 1px solid black; width: 15%;"></td>
-                        <td style="text-align: right; padding: 2px; border: 1px solid black; width: 55%; white-space: nowrap;">
-                          <span t-esc="'{:,.2f}'.format(somme_tva18_bic).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
-                        </td>
-                      </tr>
                       <!-- LIGNE 4 : TOTAL GÉNÉRAL TTC (déplacé avant BIC) -->
 
                       <tr t-if="o._fields.get('amount_total')">
