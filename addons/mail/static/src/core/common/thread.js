@@ -2,11 +2,10 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/core/common/record";
-import { useVisible } from "@mail/utils/common/hooks";
+import { useChildRefs, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
-    markRaw,
     onMounted,
     onWillDestroy,
     onWillPatch,
@@ -72,7 +71,7 @@ export class Thread extends Component {
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
-        this.registerMessageRef = this.registerMessageRef.bind(this);
+        this.messageRefs = reactive(useChildRefs(), () => this.scrollToHighlighted());
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
@@ -89,9 +88,6 @@ export class Thread extends Component {
             ? useState(this.env.messageHighlight)
             : null;
         this.scrollingToHighlight = false;
-        this.refByMessageId = reactive(new Map(), () => {
-            this.scrollToHighlighted();
-        });
         useEffect(
             () => {
                 this.scrollToHighlighted();
@@ -221,7 +217,7 @@ export class Thread extends Component {
                 if (!this.props.jumpToNewMessage) {
                     return;
                 }
-                const el = this.refByMessageId.get(
+                const el = this.messageRefs.get(
                     this.props.thread.self_member_id.new_message_separator_ui - 1
                 )?.el;
                 if (el) {
@@ -525,14 +521,6 @@ export class Thread extends Component {
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
     }
 
-    registerMessageRef(message, ref) {
-        if (!ref) {
-            this.refByMessageId.delete(message.id);
-            return;
-        }
-        this.refByMessageId.set(message.id, markRaw(ref));
-    }
-
     reset() {
         this.state.mountedAndLoaded = false;
         this.loadOlderState.ready = false;
@@ -609,7 +597,7 @@ export class Thread extends Component {
         if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
             return;
         }
-        const el = this.refByMessageId.get(this.messageHighlight.highlightedMessageId)?.el;
+        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.el;
         if (el) {
             this.scrollingToHighlight = true;
 
