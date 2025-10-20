@@ -17,7 +17,6 @@
     ],
     'assets': {
         'web.assets_tests': [
-            'test_orm/static/tests/tours/constraint.js',
             'test_orm/static/tests/tours/x2many.js',
         ],
     },

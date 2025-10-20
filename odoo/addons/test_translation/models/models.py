@@ -85,3 +85,15 @@ class TestTranslationModel2(models.Model):
     _description = 'Translation Test 2'
 
     model1_id = fields.Many2one('test.translation.model1', required=True, ondelete='cascade')
+
+
+class TestTranslationConstraint(models.Model):
+    _name = 'test.translation.constraint'
+    _description = "Translation Constraint Test"
+
+    code = fields.Integer('Code')
+
+    _positive_code = models.Constraint(
+        'CHECK(code >= 0)',
+        "The code must be positive !",
+    )
