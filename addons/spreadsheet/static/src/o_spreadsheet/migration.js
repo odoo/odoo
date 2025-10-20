@@ -159,6 +159,18 @@ migrationStepRegistry.add("18.5.10", {
     },
 });
 
+migrationStepRegistry.add("19.1.1", {
+    migrate(data) {
+        const odooDataSourceRefs = {};
+        for (const [chartId, menuId] of Object.entries(data.chartOdooMenusReferences || {})) {
+            odooDataSourceRefs[chartId] = { type: "odooMenu", odooMenuId: menuId };
+        }
+        delete data.chartOdooMenusReferences;
+        data.odooLinkReferences = odooDataSourceRefs;
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {

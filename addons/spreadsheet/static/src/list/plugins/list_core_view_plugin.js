@@ -378,6 +378,9 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     isListUnused(listId) {
-        return this._getUnusedLists().includes(listId);
+        return (
+            this._getUnusedLists().includes(listId) &&
+            !this.getters.isDataSourceLinkedToChart("list", listId)
+        );
     }
 }

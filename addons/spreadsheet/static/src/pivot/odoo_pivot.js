@@ -666,11 +666,11 @@ pivotRegistry.add("ODOO", {
         !field.name.includes(".") && // relational field path are not supported as measures (e.g. 'company_id.partner_id')
         field.store,
     isGroupable: (field) => field.groupable,
-    isPivotUnused: () => true,
     canHaveCustomGroup: (field) =>
         field.groupable &&
         !field.isCustomField &&
         ["many2one", "char", "one2many", "many2many", "selection"].includes(field.type),
+    isPivotUnused: (getters, pivotId) => !getters.isDataSourceLinkedToChart("pivot", pivotId),
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);
