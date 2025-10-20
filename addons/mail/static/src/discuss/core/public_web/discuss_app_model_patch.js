@@ -24,7 +24,6 @@ const discussAppPatch = {
                     id: "channels",
                     name: _t("Channels"),
                     sequence: 10,
-                    serverStateKey: "is_discuss_sidebar_category_channel_open",
                 };
             },
             eager: true,
@@ -46,7 +45,6 @@ const discussAppPatch = {
             id: "chats",
             name: _t("Direct messages"),
             sequence: 30,
-            serverStateKey: "is_discuss_sidebar_category_chat_open",
         };
     },
 };

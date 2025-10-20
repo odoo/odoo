@@ -10,7 +10,7 @@
 
     <t t-name="mail.DiscussSidebarCategories.category">
         <DiscussSidebarCategory category="category"/>
-        <t t-if="category.open">
+        <t t-if="category.is_open">
             <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
         </t>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
@@ -35,25 +35,23 @@
             <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start" t-att-class="{ 'align-items-baseline o-gap-0_5': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact gap-1': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xsmaller o-mt-0_5" t-att-class="{
-                        'oi oi-chevron-down': category.open,
-                        'oi oi-chevron-right': !category.open,
+                        'oi oi-chevron-down': category.is_open,
+                        'oi oi-chevron-right': !category.is_open,
                     }"/>
                     <span class="rounded p-1"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
                     <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 o-mt-0_5"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.is_open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
                     <span class="o-mail-DiscussSidebarCategory-title text-break smaller"
-                        t-att-class="{
-                            'fs-bold': category.open,
-                        }"
+                        t-att-class="{ 'fs-bold': category.is_open }"
                     >
                         <t t-esc="category.name"/>
                     </span>
                 </t>
             </button>
             <t t-if="actions.length and !store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>
-            <div t-if="!category.open and category.threadsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
+            <div t-if="!category.is_open and category.threadsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
                 <t t-esc="category.threadsWithCounter.length"/>
             </div>
         </div>
@@ -91,7 +89,7 @@
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
                 <ul t-if="subChannels.length > 0" class="o-mail-DiscussSidebarChannel-subChannelList list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column">
                     <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">
-                        <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !thread.discussAppCategory.open"/>
+                        <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !thread.discussAppCategory.is_open"/>
                     </t>
                 </ul>
             </t>

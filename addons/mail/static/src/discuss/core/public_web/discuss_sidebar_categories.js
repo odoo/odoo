@@ -159,7 +159,7 @@ export class DiscussSidebarChannel extends Component {
         if (sub.eq(this.store.discuss.thread)) {
             return true;
         }
-        if (!this.thread.discussAppCategory.open) {
+        if (!this.thread.discussAppCategory.is_open) {
             return false;
         }
         if (
@@ -226,11 +226,7 @@ export class DiscussSidebarCategory extends Component {
     }
 
     toggle() {
-        if (this.store.channels.status === "fetching") {
-            return;
-        }
-        this.category.open = !this.category.open;
-        this.discusscorePublicWebService.broadcastCategoryState(this.category);
+        this.category.is_open = !this.category.is_open;
     }
 }
 

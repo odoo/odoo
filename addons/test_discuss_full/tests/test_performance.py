@@ -448,8 +448,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "settings": {
                     "channel_notifications": False,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
-                    "is_discuss_sidebar_category_channel_open": True,
-                    "is_discuss_sidebar_category_chat_open": True,
                     "livechat_expertise_ids": [],
                     "livechat_lang_ids": [],
                     "livechat_username": False,
