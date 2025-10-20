@@ -463,7 +463,7 @@ class IrActionsReport(models.Model):
         :param image_format union['jpg', 'png']: format of the image
         :return list[bytes|None]:
         """
-        if (modules.module.current_test or tools.config['test_enable']) and not self.env.context.get('force_image_rendering'):
+        if modules.module.current_test:
             return [None] * len(bodies)
         wkhtmltoimage_version = _wkhtml().wkhtmltoimage_version
         if not wkhtmltoimage_version or wkhtmltoimage_version < parse_version('0.12.0'):
