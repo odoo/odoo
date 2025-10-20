@@ -54,9 +54,8 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async open(options = {}) {
-        const thread = await this._createThread({ persist: false, options });
-        await thread?.openChatWindow({ focus: true });
-        return thread;
+        const channel = await this._createChannel({ persist: false, options });
+        await channel?.openChatWindow({ focus: true });
     }
 
     /**
@@ -75,25 +74,25 @@ export class LivechatService {
             await this.store.ChatWindow.get({ thread: temporaryThread })?.close({ force: true });
             temporaryThread?.delete();
         };
-        const savedThread = await this._createThread({ originThread: thread, persist: true });
-        if (!savedThread) {
+        const savedChannel = await this._createChannel({ originThread: thread, persist: true });
+        if (!savedChannel) {
             await deleteTemporary();
             return;
         }
-        savedThread.fetchNewMessages();
+        savedChannel.fetchNewMessages();
         this.env.services["mail.store"].initialize();
-        savedThread.readyToSwapDeferred.then(async () => {
-            if (!savedThread?.exists()) {
+        savedChannel.readyToSwapDeferred.then(async () => {
+            if (!savedChannel?.exists()) {
                 return;
             }
             // Do not load unread messaes: new messages were loaded to avoid
             // flickering, we do not want another load that would result in the
             // same issue.
-            savedThread.scrollUnread = false;
+            savedChannel.scrollUnread = false;
             deleteTemporary();
-            savedThread.openChatWindow({ focus: true });
+            savedChannel.openChatWindow({ focus: true });
         });
-        return savedThread;
+        return savedChannel;
     }
 
     /**
@@ -110,7 +109,7 @@ export class LivechatService {
      * @param {import("models").Thread} [param0.originThread]
      * @returns {Promise<import("models").Thread>}
      */
-    async _createThread({ originThread, persist = false, options = {} }) {
+    async _createChannel({ originThread, persist = false, options = {} }) {
         const { store_data, channel_id } = await rpc(
             "/im_livechat/get_session",
             {
@@ -136,7 +135,7 @@ export class LivechatService {
             channel.livechat_operator_id.id,
             ONE_DAY_TTL * 7
         );
-        return channel.thread;
+        return channel;
     }
 
     getSessionExtraParams(thread, options) {
