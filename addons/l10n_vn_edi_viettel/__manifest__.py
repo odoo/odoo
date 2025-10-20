@@ -24,5 +24,6 @@ Using SInvoice by Viettel
         "wizard/l10n_vn_edi_cancellation_request_views.xml",
     ],
     "author": "Odoo S.A.",
+    "uninstall_hook": "uninstall_hook",
     "license": "LGPL-3",
 }

@@ -49,4 +49,5 @@ Also provides Nemhandel registration and invoice sending throught the Odoo Acces
     },
     'license': 'LGPL-3',
     'pre_init_hook': '_pre_init_nemhandel',
+    'uninstall_hook': 'uninstall_hook',
 }
