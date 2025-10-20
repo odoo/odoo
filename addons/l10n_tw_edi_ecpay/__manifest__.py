@@ -10,7 +10,6 @@
         =====================
         This module allows the user to send their invoices to the Ecpay system.
     """,
-    "website": "https://www.odoo.com",
     'author': 'Odoo S.A.',
     "license": "LGPL-3",
     "depends": ["l10n_tw"],

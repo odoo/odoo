@@ -11,7 +11,7 @@
 E-invoice implementation
     """,
     'category': 'Accounting/Localizations/EDI',
-    'website': 'http://www.odoo.com/',
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/italy.html',
     'data': [
         'security/ir.model.access.csv',
         'data/account.account.tag.csv',

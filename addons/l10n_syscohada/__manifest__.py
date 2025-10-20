@@ -16,7 +16,7 @@ Countries that use OHADA are the following:
 
     Democratic Republic of the Congo, Senegal, Chad, Togo.
     """,
-    'website': 'http://biblio.ohada.org/pmb/opac_css/doc_num.php?explnum_id=2063',
+    'website': 'https://biblio.ohada.org/pmb/opac_css/doc_num.php?explnum_id=2063',
     'depends': [
         'account',
     ],

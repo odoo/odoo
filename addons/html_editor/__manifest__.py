@@ -8,7 +8,6 @@ This addon provides an extensible, maintainable editor.
     """,
 
     'author': 'Odoo S.A.',
-    'website': "https://www.odoo.com",
     'category': 'Hidden',
     'depends': ['base', 'bus', 'web'],
     'data': [

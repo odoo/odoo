@@ -78,6 +78,18 @@ class ManifestLinter(BaseCase):
                             value,
                             f"Module {module!r} summary should be a one-line short description",
                         )
+                    elif key == 'website':
+                        self.assertNotEqual(
+                            value,
+                            'https://www.odoo.com',
+                            f"Module {module!r} website is redirecting to odoo.com, which is"
+                            " useless and should be avoid unless there is a dedicated page for it.",
+                        )
+                        self.assertEqual(
+                            bool(value),
+                            value.startswith('https://'),
+                            f"Module {module!r} website ({value}) should be a valid and secure url",
+                        )
 
                 expected_type = type(_DEFAULT_MANIFEST[key])
                 if not isinstance(value, expected_type):
