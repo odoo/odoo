@@ -13,6 +13,7 @@ import logging
 from markupsafe import Markup
 import re
 import os
+from lxml import etree, html
 from textwrap import shorten
 
 from odoo import api, fields, models, _, modules
@@ -651,7 +652,7 @@ class AccountMove(models.Model):
     # === Misc Information === #
     narration = fields.Html(
         string='Terms and Conditions',
-        compute='_compute_narration', store=True, readonly=False,
+        compute='_compute_narration', inverse='_inverse_narration', store=True, readonly=False,
     )
     is_move_sent = fields.Boolean(
         readonly=True,
@@ -1949,6 +1950,10 @@ class AccountMove(models.Model):
                 narration = _('Terms & Conditions: %s', baseurl)
                 del context
             move.narration = narration or False
+
+    def _inverse_narration(self):
+        for move in self:
+            move.narration = self._set_links_to_new_tab(move.narration)
 
     def _get_partner_credit_warning_exclude_amount(self):
         # to extend in module 'sale'; see there for details
@@ -3935,6 +3940,22 @@ class AccountMove(models.Model):
 
     def check_move_sequence_chain(self):
         return self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain()
+
+    @api.model
+    def _set_links_to_new_tab(self, narration_html):
+        """
+        Parses the given HTML string and adds target="_blank" to all <a> tags
+        to ensure they open in a new tab.
+        """
+        if not isinstance(narration_html, (str, bytes)):
+            return narration_html
+        try:
+            root = html.fromstring(narration_html)
+            for link in root.xpath('//a'):
+                link.set('target', '_blank')
+            return html.tostring(root, encoding='unicode')
+        except etree.ParserError:
+            return narration_html
 
     def _get_unlink_logger_message(self):
         """ Before unlink, get a log message for audit trail if restricted.

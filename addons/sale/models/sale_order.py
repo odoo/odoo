@@ -147,6 +147,7 @@ class SaleOrder(models.Model):
     note = fields.Html(
         string="Terms and conditions",
         compute='_compute_note',
+        inverse='_inverse_note',
         store=True, readonly=False, precompute=True)
 
     partner_invoice_id = fields.Many2one(
@@ -396,6 +397,10 @@ class SaleOrder(models.Model):
                 if order.partner_id.lang:
                     order = order.with_context(lang=order.partner_id.lang)
                 order.note = order.env.company.invoice_terms
+
+    def _inverse_note(self):
+        for sales_order in self:
+            sales_order.note = self.env['account.move']._set_links_to_new_tab(sales_order.note)
 
     @api.model
     def _get_note_url(self):
