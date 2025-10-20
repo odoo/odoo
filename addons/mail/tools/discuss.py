@@ -417,7 +417,7 @@ class Store:
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
-            extra_fields = self.kwargs.get("extra_fields", [])
+            extra_fields = list(self.kwargs.get("extra_fields", []))
             if self.dynamic_fields:
                 extra_fields += self.dynamic_fields(calling_record)
             params = {
