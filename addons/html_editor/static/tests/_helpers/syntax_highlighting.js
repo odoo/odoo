@@ -1,6 +1,7 @@
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { unformat } from "./format";
 import { EmbeddedSyntaxHighlightingComponent } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
+import { LANGUAGES } from "@html_editor/others/embedded_components/backend/syntax_highlighting/code_toolbar";
 import { expect } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
@@ -92,6 +93,22 @@ export const testTextareaRange = (editor, { el, value, range }, message) => {
     );
 };
 
+const TOOLBAR = (language) =>
+    unformat(
+        `<div class="o_code_toolbar">
+        <div data-prevent-closing-overlay="true">
+            <button class="btn o-dropdown dropdown-toggle dropdown" name="language" title="${language}" aria-expanded="false">
+                <span class="px-1">${language}</span>
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <button class="text-nowrap btn o_clipboard_button">
+                <span class="mx-1 fa fa-clipboard"></span>
+                <span>Copy</span>
+            </button>
+        </div>
+    </div>`
+    );
+
 /**
  * Clean the given content to facilitate testing and parse the expected result
  * given as a `HighlightedContent` object (or an array thereof), then compare
@@ -176,6 +193,7 @@ export const highlightedPre = ({
                 "\n",
                 "\\n"
             )}","languageId":"${language.toLowerCase()}"}'>
+            ${TOOLBAR(LANGUAGES[language])}
             <pre>//PRE//</pre>${textareaRange === null ? "" : "[]"}
             <textarea //TEXTAREA// class="o_prism_source" contenteditable="true"></textarea>
         </div>`
