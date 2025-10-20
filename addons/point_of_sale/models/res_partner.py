@@ -102,5 +102,5 @@ class ResPartner(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_pos_no_orders(self):
-        if any(self.mapped('pos_order_ids')):
+        if self.sudo().pos_order_ids:
             raise ValidationError(_('You cannot delete a customer that has point of sales orders. You can archive it instead.'))
