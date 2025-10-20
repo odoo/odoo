@@ -489,7 +489,7 @@
                                     </div>
                                 </div>
                                 <!--terms and conditions-->
-                                <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
+                                <div class="text-muted mb-3" t-if="not is_html_empty(o.narration)" name="comment">
                                     <span t-field="o.narration"/>
                                 </div>
                             </div>
