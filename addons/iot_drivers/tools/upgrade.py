@@ -41,40 +41,36 @@ def get_db_branch(server_url):
 @toggleable
 @require_db
 def check_git_branch(server_url=None):
-    """Check if the local branch is the same as the connected Odoo DB and
-    checkout to match it if needed.
+    """Update the Odoo code using git to match the branch of the connected database.
+    This method will also update the Python requirements and system packages, based
+    on requirements.txt and packages.txt files.
+
+    If the database cannot be reached, we fetch the last changes from the current branch.
 
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
     if IS_TEST:
         return
-    db_branch = get_db_branch(server_url)
-    if not db_branch:
-        _logger.warning("Could not get the database branch, skipping git checkout")
-        return
 
     try:
-        if not git('ls-remote', 'origin', db_branch):
-            db_branch = 'master'
+        branch = get_db_branch(server_url) or git('symbolic-ref', '-q', '--short', 'HEAD')
+        if not branch:
+            _logger.warning("Could not get the database branch, skipping git checkout")
 
-        local_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
-        _logger.info("IoT Box git branch: %s / Associated Odoo db's git branch: %s", local_branch, db_branch)
+        # Repository updates
+        shallow_lock = path_file("odoo/.git/shallow.lock")
+        if shallow_lock.exists():
+            shallow_lock.unlink()  # In case of previous crash/power-off, clean old lockfile
+        checkout(branch)
+        update_requirements()
 
-        if db_branch != local_branch:
-            # Repository updates
-            shallow_lock = path_file("odoo/.git/shallow.lock")
-            if shallow_lock.exists():
-                shallow_lock.unlink()  # In case of previous crash/power-off, clean old lockfile
-            checkout(db_branch)
-            update_requirements()
+        # System updates
+        update_packages()
 
-            # System updates
-            update_packages()
-
-            # Miscellaneous updates (version migrations)
-            misc_migration_updates()
-            _logger.warning("Update completed, restarting...")
-            odoo_restart()
+        # Miscellaneous updates (version migrations)
+        misc_migration_updates()
+        _logger.warning("Update completed, restarting...")
+        odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 
@@ -103,7 +99,7 @@ def checkout(branch, remote=None):
     remote = remote or git('config', f'branch.{branch}.remote') or 'origin'
     _ensure_production_remote(remote)
 
-    _logger.warning("Checking out %s/%s", remote, branch)
+    _logger.info("Checking out %s/%s", remote, branch)
     git('remote', 'set-branches', remote, branch)
     git('fetch', remote, branch, '--depth=1', '--prune')  # refs/remotes to avoid 'unknown revision'
     git('reset', 'FETCH_HEAD', '--hard')
