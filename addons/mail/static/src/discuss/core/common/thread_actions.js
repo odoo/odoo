@@ -41,7 +41,7 @@ registerThreadAction("notification-settings", {
     },
     actionPanelOuterClass: "bg-100 border border-secondary",
     condition: ({ channel, owner, store }) =>
-        channel && store.self_partner && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+        channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     setup({ owner }) {
         if (!owner.props.chatWindow) {
             this.popover = usePopover(NotificationSettings, {
@@ -163,7 +163,7 @@ registerThreadAction("delete-thread", {
     condition({ owner, store, thread }) {
         return (
             thread?.parent_channel_id &&
-            store.self.main_user_id?.eq(thread.create_uid) &&
+            store.self_user?.eq(thread.create_uid) &&
             !owner.isDiscussContent
         );
     },

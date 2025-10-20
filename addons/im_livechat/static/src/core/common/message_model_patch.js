@@ -20,7 +20,7 @@ const messagePatch = {
             super.isTranslatable ||
             (this.store.hasMessageTranslationFeature &&
                 this.channel_id?.channel_type === "livechat" &&
-                this.store.self?.main_user_id?.share === false)
+                this.store.self_user?.share === false)
         );
     },
 };

@@ -39,7 +39,9 @@ class CreateChatDialog extends Component {
 
     onClickConfirm() {
         const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
+        const partners_to = [
+            ...new Set([this.store.self_user?.partner_id.id, ...selectedPartnersId]),
+        ];
         if (partners_to.length === 1) {
             this.store.createGroupChat({ partners_to });
         } else {
@@ -157,7 +159,7 @@ export class DiscussCommandPalette {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 8;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let partners = [];
-        if (this.store.self_partner) {
+        if (this.store.self_user) {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&
@@ -168,8 +170,8 @@ export class DiscussCommandPalette {
                 .sortPartnerSuggestions(partners, this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
         }
-        const selfPartner = this.store.self_partner?.in(partners)
-            ? this.store.self_partner
+        const selfPartner = this.store.self_user?.partner_id?.in(partners)
+            ? this.store.self_user.partner_id
             : undefined;
         if (selfPartner) {
             // selfPersona filtered here to put at the bottom as lowest priority

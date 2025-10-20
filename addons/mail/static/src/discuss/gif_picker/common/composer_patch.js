@@ -25,7 +25,7 @@ const composerPatch = {
     },
     get hasGifPicker() {
         return (
-            (this.store.hasGifPickerFeature || this.store.self.main_user_id?.is_admin) &&
+            (this.store.hasGifPickerFeature || this.store.self_user?.is_admin) &&
             !this.env.inChatter &&
             !this.props.composer.message
         );

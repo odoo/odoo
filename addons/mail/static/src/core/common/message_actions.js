@@ -164,7 +164,7 @@ registerMessageAction("delete", {
 });
 registerMessageAction("download_files", {
     condition: ({ message, store }) =>
-        message.attachment_ids.length > 1 && store.self.main_user_id?.share === false,
+        message.attachment_ids.length > 1 && store.self_user?.share === false,
     icon: "fa fa-download",
     name: _t("Download Files"),
     onSelected: ({ message }) =>

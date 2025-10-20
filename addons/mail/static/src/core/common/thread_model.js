@@ -498,10 +498,10 @@ export class Thread extends Record {
      * Get the effective persona performing actions on this thread.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
      *
-     * @returns {import("models").Persona}
+     * @returns {import("models").ResPartner | import("models").MailGuest}
      */
     get effectiveSelf() {
-        return this.store.self_partner || this.store.self_guest;
+        return this.store.self_user?.partner_id || this.store.self_guest;
     }
 
     async fetchNewMessages() {
@@ -719,8 +719,8 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            if (this.store.self_partner) {
-                tmpData.author_id = this.store.self_partner;
+            if (this.store.self_user) {
+                tmpData.author_id = this.store.self_user.partner_id;
             } else {
                 tmpData.author_guest_id = this.store.self_guest;
             }

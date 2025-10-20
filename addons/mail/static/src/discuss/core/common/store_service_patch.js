@@ -80,7 +80,7 @@ const storeServicePatch = {
             chat.open({ focus: true, bypassCompact: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self.id
+                (partnerId) => partnerId !== this.store.self_user?.partner_id?.id
             );
             const chat = await this.joinChat(correspondentId, true);
             chat.open({ focus: true, bypassCompact: true });

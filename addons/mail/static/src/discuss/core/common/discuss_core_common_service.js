@@ -115,7 +115,7 @@ export class DiscussCoreCommon {
         }
         if (
             thread.channel?.channel_type !== "channel" &&
-            this.store.self_partner &&
+            this.store.self_user &&
             thread.self_member_id
         ) {
             // disabled on non-channel threads and
@@ -126,7 +126,7 @@ export class DiscussCoreCommon {
             !thread.loadNewer &&
             !message.isSelfAuthored &&
             thread.composer.isFocused &&
-            this.store.self_partner &&
+            this.store.self_user &&
             thread.newestPersistentMessage?.eq(thread.newestMessage) &&
             !thread.markedAsUnread
         ) {

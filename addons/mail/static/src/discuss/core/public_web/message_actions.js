@@ -5,7 +5,7 @@ registerMessageAction("create-or-view-thread", {
     condition: ({ message, store, thread }) =>
         message.thread?.eq(thread) &&
         message.thread.hasSubChannelFeature &&
-        store.self.main_user_id?.share === false,
+        store.self_user?.share === false,
     icon: "fa fa-comments-o",
     onSelected: ({ message }) => {
         if (message.linkedSubChannel) {

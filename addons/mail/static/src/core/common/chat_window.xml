@@ -49,7 +49,7 @@
             <div class="d-flex flex-shrink-0 me-1">
                 <ActionList actions="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" inline="true" thread="thread"/>
             </div>
-            <t t-if="this.store.inPublicPage and !this.store.self_partner">
+            <t t-if="this.store.inPublicPage and !this.store.self_user">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
                     <img class="o-mail-DiscussContent-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
                 </button>
@@ -58,7 +58,7 @@
                     className="'py-1 me-2'"
                     autofocus="true"
                     onValidate.bind="renameGuest"
-                    value="store.self.name"
+                    value="store.self_guest.name"
                 />
             </t>
         </div>

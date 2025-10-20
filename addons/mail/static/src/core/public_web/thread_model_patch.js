@@ -63,7 +63,7 @@ patch(Thread.prototype, {
         this.store.discuss.activeTab = !this.store.env.services.ui.isSmall
             ? "notification"
             : this.model === "mail.box"
-            ? this.store.self.main_user_id?.notification_type === "inbox"
+            ? this.store.self_user?.notification_type === "inbox"
                 ? "inbox"
                 : "starred"
             : ["chat", "group"].includes(this.channel?.channel_type)

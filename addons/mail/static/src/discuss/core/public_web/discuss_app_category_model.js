@@ -66,7 +66,7 @@ export class DiscussAppCategory extends Record {
     }
 
     get saveStateToServer() {
-        return this.serverStateKey && this.store.self?.main_user_id?.share === false;
+        return this.serverStateKey && this.store.self_user?.share === false;
     }
 
     set open(value) {
