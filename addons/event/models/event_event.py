@@ -18,6 +18,7 @@ from odoo.tools import format_date, format_datetime, format_time, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -204,6 +205,19 @@ class EventEvent(models.Model):
         string='General Questions', domain=[('once_per_order', '=', True)])
     specific_question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
         string='Specific Questions', domain=[('once_per_order', '=', False)])
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'event_ticket_ids' in vals:
+            self._check_consistent_company_id()
+        return res
+
+    def _check_consistent_company_id(self):
+        for ticket in self.event_ticket_ids:
+            product_ticket = ticket.product_id
+            event_company = ticket.company_id
+            if product_ticket.product_tmpl_id.company_id and product_ticket.product_tmpl_id.company_id != event_company:
+                raise UserError("User Error: You can't include tickets belonging to a different company than the company of the event")
 
     def _compute_use_barcode(self):
         use_barcode = self.env['ir.config_parameter'].sudo().get_bool('event.use_event_barcode')
