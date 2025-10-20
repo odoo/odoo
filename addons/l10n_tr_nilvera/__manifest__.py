@@ -14,5 +14,6 @@ Base module containing core functionalities required by other Nilvera modules.
     ],
     'post_init_hook': '_l10n_tr_nilvera_post_init',
     'author': 'Odoo S.A.',
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
