@@ -3,49 +3,23 @@ import {
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    onWillStart,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import {
     getPreValue,
     highlightPre,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
-
-const LANGUAGES = {
-    plaintext: "Plain Text",
-    markdown: "Markdown",
-    javascript: "Javascript",
-    typescript: "Typescript",
-    jsdoc: "JSDoc",
-    java: "Java",
-    python: "Python",
-    html: "HTML",
-    xml: "XML",
-    svg: "SVG",
-    json: "JSON",
-    css: "CSS",
-    sass: "SASS",
-    scss: "SCSS",
-    sql: "SQL",
-    diff: "Diff",
-};
+import { CodeToolbar } from "./code_toolbar";
 
 export class EmbeddedSyntaxHighlightingComponent extends Component {
     static template = "html_editor.EmbeddedSyntaxHighlighting";
 
+    static components = { CodeToolbar };
     static props = {
         value: { type: String },
         languageId: { type: String },
         autofocus: { type: Boolean },
-        codeToolbar: { type: Object },
         onTextareaFocus: { type: Function },
         host: { type: Object },
     };
@@ -53,7 +27,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
     setup() {
         super.setup();
         this.state = useState({
-            isActive: false,
             host: this.props.host,
             highlightedValue: "",
         });
@@ -69,7 +42,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
 
             // Activate and focus the textarea if required.
             if (this.props.autofocus) {
-                this.state.isActive = true;
                 if (this.textarea !== this.document.activeElement) {
                     this.textarea.focus();
                     this.props.onTextareaFocus();
@@ -77,21 +49,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             }
             this.highlight();
         });
-
-        onWillUnmount(() => {
-            this.props.codeToolbar.close();
-        });
-
-        // Activate/deactivate the code toolbar.
-        useEffect(
-            () => {
-                this.props.codeToolbar.close();
-                if (this.state.isActive) {
-                    this.openCodeToolbar();
-                }
-            },
-            () => [this.state.isActive]
-        );
 
         useEffect(this.highlight.bind(this), () => [
             this.embeddedState.value,
@@ -128,18 +85,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             this.props.onTextareaFocus();
         }
         this.embeddedState.value = this.textarea.value;
-    }
-
-    openCodeToolbar() {
-        this.props.codeToolbar.open({
-            target: this.state.host,
-            props: {
-                target: this.state.host,
-                prismSource: this.textarea,
-                languages: LANGUAGES,
-                onLanguageChange: this.onLanguageChange.bind(this),
-            },
-        });
     }
 
     onInput() {
@@ -220,24 +165,6 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         this.pre.scrollLeft = this.textarea.scrollLeft;
     }
 
-    onHover() {
-        const isLanguageSelectorOpen = !!this.document.querySelector(
-            ".dropdown-menu.o_language_selector"
-        );
-        if (!isLanguageSelectorOpen) {
-            this.state.isActive = true;
-        }
-    }
-
-    onLeave(ev) {
-        const isLanguageSelectorOpen = !!this.document.querySelector(
-            ".dropdown-menu.o_language_selector"
-        );
-        if (!isLanguageSelectorOpen && !ev.relatedTarget?.closest?.(".o_code_toolbar")) {
-            this.state.isActive = false;
-        }
-    }
-
     /**
      * Change the language when selecting a new one via the code toolbar.
      *
@@ -245,11 +172,9 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
      */
     onLanguageChange(languageId) {
         if (languageId && this.embeddedState.languageId !== languageId) {
-            this.props.codeToolbar.close();
             this.textarea.focus();
             this.props.onTextareaFocus();
             this.embeddedState.languageId = languageId;
-            this.openCodeToolbar();
         }
     }
 }
