@@ -8,6 +8,13 @@
     'depends': ['web', 'test_orm'],
 
     'data': ['ir.model.access.csv'],
+
+    'assets': {
+        'web.assets_tests': [
+            'test_web/static/tests/tours/x2many.js',
+        ],
+    },
+
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
