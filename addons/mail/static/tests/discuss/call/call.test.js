@@ -36,8 +36,9 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 describe.current.tags("desktop");
 defineMailModels();
 
+let streams = [];
 beforeEach(() => {
-    mockGetMedia();
+    streams = mockGetMedia();
 });
 
 test("basic rendering", async () => {
