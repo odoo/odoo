@@ -130,7 +130,7 @@
             </div>
         </div>
     </div>
-    <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
+    <NavigableList t-if="suggestion and !composerService.htmlEnabled" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
 
 <t t-name="mail.Composer.sendButton">
@@ -193,7 +193,7 @@
 
     <t t-name="mail.Composer.suggestionPartner">
         <t t-set="partner" t-value="option.partner"/>
-        <ImStatus t-if="partner" persona="partner"/>
+        <ImStatus t-if="option.showImStatus and partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
         </strong>
