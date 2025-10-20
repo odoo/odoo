@@ -7,7 +7,6 @@
 Allows the outsourcing of services. This module allows one to sell services provided
 by external providers and will automatically generate purchase orders directed to the service seller.
     """,
-    'website': 'https://www.odoo.com/',
     'category': 'Sales/Sales',
     'depends': [
         'sale',

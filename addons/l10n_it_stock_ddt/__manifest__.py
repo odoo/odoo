@@ -1,6 +1,5 @@
 {
     'name': "Italy - Stock DDT",
-    'website': 'https://www.odoo.com',
     'category': 'Accounting/Localizations/EDI',
     'version': '0.1',
     'description': """
