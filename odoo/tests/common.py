@@ -2452,17 +2452,13 @@ class HttpCase(TransactionCase):
             # code = ""
             self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
 
-            error = False
+            error = None
             try:
                 browser._wait_code_ok(code, timeout, error_checker=error_checker)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
-                if code:
-                    message = 'The test code "%s" failed' % code
-                else:
-                    message = "Some js test failed"
-                self.fail('%s\n\n%s' % (message, error))
+                self.fail(str(error))
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
