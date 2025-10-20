@@ -4326,3 +4326,28 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(delivery.move_ids.product_qty, 0.01)
         self.assertEqual(delivery.move_ids.stock_valuation_layer_ids.quantity, -0.01)
         self.assertEqual(self.product1.qty_available, 0.00)
+
+    def test_stock_move_value_with_different_uom(self):
+        """ Ensure that the stock move value is correctly computed
+        when the move's UoM differs from the product's UoM.
+        """
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.supplier_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom': self.env.ref('uom.product_uom_dozen').id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.supplier_location.id,
+            })]
+        })
+        self.product1.standard_price = 10
+        self.assertEqual(self.product1.uom_id, self.env.ref('uom.product_uom_unit'))
+        picking.action_confirm()
+        move = picking.move_ids
+        move.quantity = 1
+        move.picked = True
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(move.value, 120, "The move value should match the price in the correct UoM (12 * 10$).")
