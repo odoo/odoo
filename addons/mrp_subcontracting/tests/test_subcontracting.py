@@ -1546,6 +1546,42 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
 
+    def test_provide_multiple_serial_numbers(self):
+        finished_product = self.env['product.product'].create([{
+            'name': 'Some Product',
+            'type': 'product',
+            'tracking': 'serial',
+        }])
+        self.env['mrp.bom'].create({
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(self.subcontractor_partner1.id)],
+        })
+        finished_serials = self.env['stock.lot'].create([{
+            'name': f'SN{i + 1}',
+            'product_id': finished_product.id,
+            'company_id': self.env.company.id,
+        } for i in range(3)])
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': finished_product.name,
+                'product_id': finished_product.id,
+                'product_uom_qty': 3,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': self.env['stock.warehouse'].search([], limit=1).lot_stock_id.id,
+            })],
+        })
+        receipt.action_assign()
+        receipt.write({
+            'move_ids_without_package': [Command.update(receipt.move_ids_without_package.id, {'lot_ids': finished_serials, 'quantity': 3})]
+        })
+        self.assertEqual(receipt.move_line_ids.lot_id, finished_serials)
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingPortal(TransactionCase):

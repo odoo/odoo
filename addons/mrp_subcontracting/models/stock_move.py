@@ -100,10 +100,15 @@ class StockMove(models.Model):
             else:
                 productions = production.sudo().with_context(allow_more=True)._split_productions({production: ([1] * int(qty))})
 
+            unused_serials = self.lot_ids - productions.lot_producing_id
             for production in productions:
                 production.qty_producing = 1
                 if not production.lot_producing_id:
-                    production.action_generate_serial()
+                    if unused_serials:
+                        production.lot_producing_id = unused_serials[:1]
+                        unused_serials -= production.lot_producing_id
+                    else:
+                        production.action_generate_serial()
                 production.with_context(cancel_backorder=False).subcontracting_record_component()
         else:
             production.qty_producing = qty
