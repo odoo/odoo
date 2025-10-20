@@ -1,5 +1,5 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
-import { after, afterEach, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
+import { after, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
@@ -432,28 +432,13 @@ export async function patchUiSize({ height, size, width }) {
     await resize({ width, height });
 }
 
-/** @type {MediaStream[]} */
-export const streams = [];
-/** @type {AudioContext[]} */
-const audioContexts = [];
-
-afterEach(() => {
-    // stop all streams and contexts as some tests may not do actions that lead to proper cleanup
-    streams.splice(0).forEach((stream) => closeStream(stream));
-    audioContexts.splice(0).forEach((ctx) => ctx.close?.().catch(() => {}));
-});
-
-function createAudioStream({ frequency = 440 } = {}) {
+function createAudioStream() {
     const ctx = new window.AudioContext();
-    audioContexts.push(ctx);
     const dest = ctx.createMediaStreamDestination();
-    const osc = ctx.createOscillator();
-
-    osc.frequency.value = frequency;
-    osc.connect(dest);
-    ctx.resume?.().catch(() => {});
-    osc.start();
-    streams.push(dest.stream);
+    after(() => {
+        closeStream(dest.stream);
+        ctx.close().catch(() => {});
+    });
     return dest.stream;
 }
 
@@ -461,8 +446,8 @@ export function createVideoStream() {
     const canvas = document.createElement("canvas");
     canvas.width = 1;
     canvas.height = 1;
-    const stream = canvas.captureStream(1);
-    streams.push(stream);
+    const stream = canvas.captureStream();
+    after(() => closeStream(stream));
     return stream;
 }
 
@@ -471,6 +456,7 @@ export function createVideoStream() {
  * Also mocks the permissions API to return "granted" for camera and microphone permissions by default.
  */
 export function mockGetMedia() {
+    const streams = [];
     // Mock permissions API to return "granted" by default.
     patchWithCleanup(browser.navigator.permissions, {
         async query() {
@@ -485,13 +471,22 @@ export function mockGetMedia() {
     patchWithCleanup(browser.navigator.mediaDevices, {
         getUserMedia(constraints) {
             if (constraints.audio) {
-                return createAudioStream();
+                const audioStream = createAudioStream();
+                streams.push(audioStream);
+                return audioStream;
             } else {
-                return createVideoStream();
+                const videoStream = createVideoStream();
+                streams.push(videoStream);
+                return videoStream;
             }
         },
-        getDisplayMedia: createVideoStream,
+        getDisplayMedia: () => {
+            const videoStream = createVideoStream();
+            streams.push(videoStream);
+            return videoStream;
+        },
     });
+    return streams;
 }
 
 /**
@@ -913,7 +908,7 @@ export function patchVoiceMessageAudio() {
                     addModule(url) {},
                 };
             }
-            close() {}
+            async close() {}
             /** @returns {AnalyserNode} */
             createAnalyser() {
                 return new browser.AnalyserNode();
