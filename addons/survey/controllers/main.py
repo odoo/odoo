@@ -527,6 +527,8 @@ class Survey(http.Controller):
 
         if answer_sudo.state == 'done':
             return {}, {'error': 'unauthorized'}
+        if answer_sudo.is_session_answer and not answer_sudo.test_entry and not survey_sudo.session_question_can_answer:
+            return {}, {'error': 'validation', 'fields': {survey_sudo.session_question_id.id: _('We do not accept submissions for this question anymore.')}}
 
         questions, page_or_question_id = survey_sudo._get_survey_questions(answer=answer_sudo,
                                                                            page_id=post.get('page_id'),

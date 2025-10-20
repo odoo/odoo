@@ -65,6 +65,13 @@ class UserInputSession(http.Controller):
         # Note that at this stage survey.session_state can be False meaning that the survey has ended (session closed)
         return request.render('survey.user_input_session_manage', self._prepare_manage_session_values(survey))
 
+    @http.route('/survey/session/disable_answers/<string:survey_token>', type='jsonrpc', auth='user', website=True)
+    def survey_session_disable_answers(self, survey_token, **kwargs):
+        """ This route is called when the host shows answers to prevent more submissions. """
+        if (survey := self._fetch_from_token(survey_token)) and survey.session_state == 'in_progress':
+            survey.session_question_can_answer = False
+        return {}
+
     @http.route('/survey/session/next_question/<string:survey_token>', type='jsonrpc', auth='user', website=True)
     def survey_session_next_question(self, survey_token, go_back=False, **kwargs):
         """ This route is called when the host goes to the next question of the session.
@@ -99,6 +106,7 @@ class UserInputSession(http.Controller):
         if next_question:
             now = datetime.datetime.now()
             survey.write({
+                'session_question_can_answer': True,
                 'session_question_id': next_question.id,
                 'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
