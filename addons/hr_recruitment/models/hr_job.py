@@ -63,7 +63,7 @@ class HrJob(models.Model):
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many(
         "res.users",
-        domain="[('id', 'in', allowed_user_ids)]",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         string="Interviewers",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",

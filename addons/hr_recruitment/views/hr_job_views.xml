@@ -22,7 +22,6 @@
                 >
                 <field name="active"/>
                 <field name="alias_email"/>
-                <field name="allowed_user_ids" invisible="1"/>
                 <templates>
                     <t t-name="menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
@@ -418,7 +417,6 @@
                 <field name="alias_name" column_invisible="True"/>
                 <field name="alias_id" invisible="not alias_name" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <field name="allowed_user_ids" invisible="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
             </field>
