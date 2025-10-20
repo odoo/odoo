@@ -3977,7 +3977,8 @@ class AccountMove(models.Model):
 
                 if vals.get('state') == 'posted':
                     self.flush_recordset()  # Ensure that the name is correctly computed
-                    self._hash_moves()
+                    if move_to_hash := self.filtered(lambda move: move.journal_id.type != 'cash'):
+                        move_to_hash._hash_moves()
                 super(AccountMove, self.browse(move_ids_review_done)).write({'review_state': 'reviewed'})
                 super(AccountMove, self.browse(move_ids_review_todo)).write({'review_state': 'todo'})
 

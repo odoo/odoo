@@ -878,13 +878,20 @@ class AccountChartTemplate(models.AbstractModel):
             del template_data['res.company']
         return template_data
 
-    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', cash_prefix='', code_digits=0):
+        cash_prefix = cash_prefix or company.cash_account_code_prefix
         bank_prefix = bank_prefix or company.bank_account_code_prefix
         code_digits = code_digits or int(template_data.get('code_digits', 6))
         return {
             'account_journal_suspense_account_id': {
                 'name': _("Bank Suspense Account"),
                 'prefix': bank_prefix,
+                'code_digits': code_digits,
+                'account_type': 'asset_current',
+            },
+            'account_journal_cash_suspense_account_id': {
+                'name': _("Cash Suspense Account"),
+                'prefix': cash_prefix,
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
             },
@@ -934,8 +941,9 @@ class AccountChartTemplate(models.AbstractModel):
         """
         # Create utility bank_accounts
         bank_prefix = company.bank_account_code_prefix
+        cash_prefix = company.cash_account_code_prefix
         code_digits = int(template_data.get('code_digits', 6))
-        accounts_data = self._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
+        accounts_data = self._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, cash_prefix=cash_prefix, code_digits=code_digits)
         for fname in list(accounts_data):
             if company[fname]:
                 del accounts_data[fname]

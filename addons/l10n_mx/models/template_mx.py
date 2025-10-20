@@ -60,8 +60,8 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
-        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', cash_prefix='', code_digits=0):
+        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, cash_prefix=cash_prefix, code_digits=code_digits)
         if company.account_fiscal_country_id.code == 'MX':
             accounts_data.update({
                 'default_cash_difference_income_account_id': {
