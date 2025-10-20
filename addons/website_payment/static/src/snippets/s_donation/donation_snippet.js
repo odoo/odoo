@@ -16,7 +16,10 @@ export class DonationSnippet extends Interaction {
             "t-on-click.withTarget": this.onPrefilledClick,
             "t-att-class": (el) => ({ "active": el === this.activeButtonEl }),
         },
-        ".s_donation_donate_btn": { "t-on-click.withTarget": this.onDonateClick },
+        ".s_donation_donate_btn": {
+            "t-on-click.withTarget": this.locked(this.onDonateClick, true),
+            "t-att-class": () => ({ "o_ready_to_donate": true }), // See TEST_01_DONATION_FIX
+        },
         "#s_donation_range_slider": { "t-on-input": this.onRangeSliderInput },
         "#s_donation_amount_input": {
             "t-on-input": () => {
@@ -37,6 +40,14 @@ export class DonationSnippet extends Interaction {
     }
 
     async willStart() {
+        // TODO this is not perfect compared to 18.0: there can be a delay where
+        // the donation button does nothing because the currency is being
+        // loaded (while before it waited for the currency inside the handler).
+        // See TEST_01_DONATION_FIX which was adapted to this new behavior, as
+        // it cannot be restored in stable versions in a stable way.
+        // TODO also the rpc promise should be cached, not the currency,
+        // otherwise the RPC can still be done twice if they trigger before
+        // completion of the first one.
         cachedCurrency ||= await this.waitFor(rpc("/website/get_current_currency"));
         this.currency = cachedCurrency;
     }
