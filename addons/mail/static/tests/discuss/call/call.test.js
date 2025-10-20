@@ -11,7 +11,6 @@ import {
     SIZES,
     start,
     startServer,
-    streams,
     triggerEvents,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
@@ -39,8 +38,9 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 describe.current.tags("desktop");
 defineMailModels();
 
+let streams = [];
 beforeEach(() => {
-    mockGetMedia();
+    streams = mockGetMedia();
 });
 
 test("basic rendering", async () => {
