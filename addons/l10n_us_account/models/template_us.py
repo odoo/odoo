@@ -89,6 +89,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'account_account_us_income',
                 'account_sale_tax_id': default_sales_tax,
                 'account_purchase_tax_id': default_purchase_tax,
+                'negative_format_reports': 'parenthesis',
             },
         }
 
