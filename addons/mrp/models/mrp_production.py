@@ -764,9 +764,31 @@ class MrpProduction(models.Model):
             days_delay = production.bom_id.produce_delay
             date_finished = production.date_start + relativedelta(days=days_delay)
             if production._should_postpone_date_finished(date_finished):
-                workorder_expected_duration = sum(production.workorder_ids.mapped('duration_expected'))
-                date_finished = date_finished + relativedelta(minutes=workorder_expected_duration or 60)
+                date_finished = production._calculate_expected_finished_date(date_finished) or \
+                    (date_finished + relativedelta(minutes=sum(production.workorder_ids.mapped('duration_expected')) or 60))
             production.date_finished = date_finished
+
+    def _calculate_expected_finished_date(self, date_start):
+        """
+        Return the expected completion date of production based on workcenter availability.
+
+        If at least one workorder has an unavailable workcenter, returns False.
+
+        :param date_start: begin the computation at this datetime (datetime)
+        """
+        if not isinstance(date_start, datetime.datetime) or not self.workorder_ids:
+            return False
+
+        date_finished_per_workcenter = defaultdict(lambda: date_start)
+        for wo in self.workorder_ids:
+            if not wo.workcenter_id.resource_calendar_id:
+                return False
+            wo_optimal_date_start = date_finished_per_workcenter[wo.workcenter_id.id]
+            _, to_date = wo.workcenter_id._get_first_available_slot(wo_optimal_date_start, wo.duration_expected)
+            if not isinstance(to_date, datetime.datetime):
+                return False
+            date_finished_per_workcenter[wo.workcenter_id.id] = to_date
+        return max(date_finished_per_workcenter.values())
 
     @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'never_product_template_attribute_value_ids')
     def _compute_move_raw_ids(self):
