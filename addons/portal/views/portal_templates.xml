@@ -106,9 +106,12 @@
                     <i class="fa fa-fw fa-th me-1 small text-primary-emphasis"/> Apps
                 </a>
                 <div id="o_logout_divider" class="dropdown-divider"/>
-                <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item ps-3">
-                    <i class="fa fa-fw fa-sign-out me-1 small text-primary-emphasis"/> Logout
-                </a>
+                <form method="POST" action="/web/session/logout" role="menuitem" class="dropdown-item p-0">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <button id="o_logout" type="submit" class="btn w-100 ps-3 text-start">
+                        <i class="fa fa-fw fa-sign-out small text-primary-emphasis"/> Logout
+                    </button>
+                </form>
             </div>
         </li>
     </template>

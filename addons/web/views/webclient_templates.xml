@@ -191,7 +191,12 @@
                     You are logged in.
                 </p>
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 pt-3">
-                    <a class="btn btn-primary" href="/web/session/logout">Log out</a>
+                    <form method="POST" action="/web/session/logout" class="text-center">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <button type="submit" class="btn btn-primary">
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </t>

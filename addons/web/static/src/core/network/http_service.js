@@ -36,6 +36,9 @@ export async function post(route, params = {}, readMethod = "json") {
         method: "POST",
     });
     checkResponseStatus(response);
+    if ( readMethod === "url" ) {
+        return response.url;
+    }
     return response[readMethod]();
 }
 

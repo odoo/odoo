@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { session } from "@web/session";
+import { post } from "@web/core/network/http_service";
 
 import * as passkeyLib from "@auth_passkey/../lib/simplewebauthn";
 
@@ -154,8 +155,9 @@ export class CheckIdentityDialog extends Component {
         this.formProps = {
             close: this.props.close,
         };
-        this.env.dialogData.dismiss = () => {
-            redirect("/web/session/logout");
+        this.env.dialogData.dismiss = async () => {
+            const url = await post('/web/session/logout', { csrf_token: odoo.csrf_token }, "url");
+            redirect(url);
         };
     }
 }
