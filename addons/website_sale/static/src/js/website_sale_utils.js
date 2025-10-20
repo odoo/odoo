@@ -92,7 +92,10 @@ function updateCartNavBar(data) {
     // Adjust the cart's left column width to accommodate the cart summary (right column). The left
     // column of an empty cart initially takes the full width, but adding products (e.g. via quick 
     // reorder) enables the cart summary on the right.
-    document.querySelector('.oe_cart').classList.toggle('col-lg-7', !!data.cart_quantity);
+    // In some cases (e.g., updating range dates), `cart_quantity` may be undefined.
+    // In that case, we try to get the value from `website_sale.total` instead.
+    // A cart cannot have a total of 0.
+    document.querySelector('.oe_cart').classList.toggle('col-lg-7', !!(data.cart_quantity || data['website_sale.total']));
 
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
