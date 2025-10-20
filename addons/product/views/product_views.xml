@@ -653,7 +653,7 @@ action = {
                     <t t-name="card" class="p-0">
                     <!-- TODO : not getting border when select record -->
                         <div class="d-flex flex-grow-1 m-2">
-                            <div class="p-2 pt-1 d-flex flex-column m-0"
+                            <div class="p-2 pt-1 d-flex flex-column m-0 mw-75"
                                     t-attf-id="product-{{record.id.raw_value}}">
                                 <div class="d-flex">
                                     <field class="mt-1 me-1"
@@ -678,7 +678,7 @@ action = {
                             </div>
                             <field
                                 name="image_128"
-                                class="ms-auto"
+                                class="ms-auto mw-25"
                                 invisible="not image_128"
                                 widget="image"
                                 options="{'size': [55, 55], 'img_class': 'object-fit-contain'}"
