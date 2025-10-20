@@ -120,3 +120,17 @@ class ResPartner(models.Model):
             **super().open_commercial_entity(),
             **({'target': 'new'} if self.env.context.get('target') == 'new' else {}),
         }
+<<<<<<< 46ecacb8b336f4c8586b900d13cca2d951c3006d
+||||||| 88043b84f7a017dfff790deeb64510fc62698c96
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_pos_no_orders(self):
+        if any(self.mapped('pos_order_ids')):
+            raise ValidationError(_('You cannot delete a customer that has point of sales orders. You can archive it instead.'))
+=======
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_pos_no_orders(self):
+        if self.sudo().pos_order_ids:
+            raise ValidationError(_('You cannot delete a customer that has point of sales orders. You can archive it instead.'))
+>>>>>>> 458f107a908d938420954fc783ca76e0cdac4ec1
