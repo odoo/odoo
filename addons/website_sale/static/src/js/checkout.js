@@ -24,6 +24,24 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
         this.billingContainer = this.el.querySelector('#billing_container');
         await this._prepareDeliveryMethods();
+        // Monitor when the page is restored from the bfcache.
+        window.addEventListener('pageshow', this._onNavigationBack);
+    },
+
+    destroy() {
+        window.removeEventListener('pageshow', this._onNavigationBack);
+    },
+
+    /**
+     * Reload the page when the page is restored from the bfcache.
+     *
+     * @param {PageTransitionEvent} event - The pageshow event.
+     * @private
+     */
+    _onNavigationBack(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
     },
 
     // #=== EVENT HANDLERS ===#
