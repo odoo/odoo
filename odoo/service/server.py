@@ -15,6 +15,7 @@ import signal
 import socket
 import subprocess
 import sys
+import textwrap
 import threading
 import time
 from collections import deque
@@ -677,6 +678,10 @@ class ThreadedServer(CommonServer):
                          else logger.warning if not report.testsRun \
                          else logger.info
                         log("%s when loading database %r", report, db)
+                        for test, errmsg in report.errors:
+                            _logger.info("Error: %s - %s", test, textwrap.shorten(errmsg, width=50))
+                        for test, errmsg in report.failures:
+                            _logger.info("Failed: %s - %s", test, textwrap.shorten(errmsg, width=50))
             self.stop()
             return rc
 
