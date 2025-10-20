@@ -11,4 +11,10 @@
     <record model="test.translation.model2" id="test_translation_model2_record1">
         <field name="model1_id" ref="test_translation.test_translation_model1_record1"/>
     </record>
+
+    <record id="action_constraint" model="ir.actions.act_window">
+        <field name="name">Constraint translation</field>
+        <field name="res_model">test.translation.constraint</field>
+        <field name="view_mode">list,form</field>
+    </record>
 </odoo>
