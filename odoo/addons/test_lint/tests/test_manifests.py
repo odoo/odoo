@@ -4,7 +4,7 @@ import logging
 from os.path import join as opj
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
-from odoo.tests import BaseCase, tagged
+from odoo.tests import BaseCase, HttpCase, tagged
 from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
@@ -157,3 +157,25 @@ class ManifestLinter(BaseCase):
                 value,
                 f"Module {module!r} is opensource and should be licensed under the LGPL license.",
             )
+
+
+@tagged('-standard', 'external', 'at_install', '-post_install')
+class ManifestNightlyLinter(HttpCase):
+
+    def test_manifests_websites(self):
+        checked = set()
+        for manifest in Manifest.all_addon_manifests():
+            if (
+                (url := manifest.get('website', ''))
+                and url not in checked
+                # Do not request non-odoo pages every night
+                and url.startswith('https://www.odoo.com')
+            ):
+                module = manifest.name
+                with self.subTest(module=module):
+                    res = self.url_open(url)
+                    checked.add(url)
+                    self.assertEqual(
+                        res.status_code, 200,
+                        f"Module {module!r} website link is broken: '{url}'",
+                    )
