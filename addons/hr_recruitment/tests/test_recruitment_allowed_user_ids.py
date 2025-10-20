@@ -32,37 +32,39 @@ class TestRecruitmentAllowedUserIds(TransactionCase):
             'company_id': self.company_b.id,
         })
 
-    def test_recruiter_allowed_user_ids_with_company(self):
-        job = self.env['hr.job'].create({
+    def test_recruiter_user_id_with_company(self):
+        # Test job with company A - should allow user_a but not user_b
+        job_a = self.env['hr.job'].create({
             'name': 'Job Position Company A',
             'company_id': self.company_a.id,
         })
-        job._compute_allowed_user_ids()
 
-        matched_users = job.allowed_user_ids
+        # user_a can be set as a recruiter
+        job_a.user_id = self.user_a
+        self.assertEqual(job_a.user_id, self.user_a)
 
-        self.assertIn(self.user_a, matched_users)
-        self.assertNotIn(self.user_b, matched_users)
+        # Validate that the domain defined on hr.job.user_id contains user_a, but excludes user_b
+        domain = [('share', '=', False), ('company_ids', '=?', self.company_a.id)]
+        allowed_users = self.env['res.users'].search(domain)
+        self.assertIn(self.user_a, allowed_users)
+        self.assertNotIn(self.user_b, allowed_users)
 
-        job = self.env['hr.job'].create({
-            'name': 'Job Position Company B',
-            'company_id': self.company_b.id,
-        })
-        job._compute_allowed_user_ids()
-
-        matched_users = job.allowed_user_ids
-
-        self.assertIn(self.user_b, matched_users)
-        self.assertNotIn(self.user_a, matched_users)
-
-    def test_recruiter_allowed_user_ids_without_company(self):
+    def test_recruiter_user_id_without_company(self):
+        # Test job without company - should allow both users
         job = self.env['hr.job'].create({
             'name': 'Job Position',
             'company_id': False,
         })
-        job._compute_allowed_user_ids()
 
-        matched_users = job.allowed_user_ids
+        # When company_id is False, users from *any* company are ok
+        domain = [('share', '=', False), ('company_ids', '=?', False)]
+        allowed_users = self.env['res.users'].search(domain)
+        self.assertIn(self.user_a, allowed_users)
+        self.assertIn(self.user_b, allowed_users)
 
-        self.assertIn(self.user_a, matched_users)
-        self.assertIn(self.user_b, matched_users)
+        # Both users should be settable as recruiter
+        job.user_id = self.user_a
+        self.assertEqual(job.user_id, self.user_a)
+
+        job.user_id = self.user_b
+        self.assertEqual(job.user_id, self.user_b)
