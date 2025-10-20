@@ -107,8 +107,10 @@
                             <h1><field name="name" placeholder="e.g. Europe"/></h1>
                         </div>
                         <group name="country_group">
-                            <field name="code" />
-                            <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                            <group name="base_country_group">
+                                <field name="code"/>
+                                <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_country_group_form" model="ir.ui.view">
+        <field name="name">res.country.group.form.inherit.website.sale</field>
+        <field name="model">res.country.group</field>
+        <field name="inherit_id" ref="base.view_country_group_form"/>
+        <field name="arch" type="xml">
+            <group name="country_group" position="inside">
+                <group name="ecommerce_country_group">
+                    <div class="o_horizontal_separator mb-2 text-uppercase fw-bolder small" colspan="2">eCommerce</div>
+                    <field name="show_line_subtotals_tax_selection"/>
+                    <field name="language_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="delivery.availability">
+        <div class="border rounded p-3 w-100">
+            <div
+                name="delivery_availability"
+                t-if="Object.keys(this.state.deliveryStockData || {}).length !== 0"
+                class="flex-row"
+            >
+                <hr/>
+                <h6>
+                    <i class="fa fa-fw fa-truck text-muted"/>
+                    Delivery
+                    <i
+                        class="fa fa-info-circle cursor-pointer ms-1"
+                        data-tooltip="Restrictions may apply"
+                        data-tooltip-delay="0"
+                    />
+                </h6>
+                <div t-if="this.state.deliveryStockData.in_stock">
+                    <div
+                        t-if="this.state.deliveryStockData.show_quantity"
+                        class="text-muted"
+                    >
+                        <i class="fa fa-fw fa-circle text-warning"/>
+                        Only <t t-out="this.state.deliveryStockData.quantity"/> available
+                    </div>
+                    <div t-else="" class="text-muted">
+                        <i class="fa fa-fw fa-circle text-success"/> Available
+                    </div>
+                </div>
+                <div t-else="" class="text-muted">
+                    <i class="fa fa-fw fa-circle text-danger"/> Not available
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

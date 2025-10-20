@@ -606,6 +606,14 @@
     </template>
 
     <template id="website_sale.cta_wrapper" name="CTA Wrapper">
+        <owl-component
+            t-if="combination_info.get('show_delivery_availability')"
+            name="delivery.availability"
+            t-att-props="json.dumps({
+                'deliveryStockData': combination_info.get('delivery_stock_data', {}),
+            })"
+            t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
+        />
         <div
             id="o_wsale_cta_wrapper"
             t-att-class="'d-flex flex-wrap align-items-center gap-2 mb-4' +
