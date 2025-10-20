@@ -1709,4 +1709,9 @@ patch(Order.prototype, {
             return super.removeOrderline(lineToRemove);
         }
     },
+    async add_product(product, options) {
+        const res = await super.add_product(...arguments);
+        this._updateRewards();
+        return res;
+    },
 });
