@@ -461,7 +461,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     const expectedModalHtml = /* xml */ `
         <header class="modal-header">
             <h4 class="modal-title text-break flex-grow-1">Oops!</h4>
-            <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Close" tabindex="-1"></button>
+            <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Close" tabindex="-1" data-available-offline=""></button>
         </header>
         <main class="modal-body">
             <div role="alert">
@@ -469,7 +469,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                 <details>
                     <summary class="mb-1 link-info">See technical details</summary>
                     <div class="text-bg-100 clearfix mt-2 position-relative o_error_detail pb-2">
-                        <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis"><span class="fa fa-clipboard"></span></button>
+                        <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis" data-available-offline=""><span class="fa fa-clipboard"></span></button>
                         <div class="ps-1 pt-1 ps-md-3 pt-md-3">
                             <p class="m-0"><b>Odoo Server Error</b></p>
                             <p class="d-block small text-info">ERROR INFO</p>
@@ -482,7 +482,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             </div>
         </main>
         <footer class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
-            <button class="btn btn-primary o-default-button">Close</button>
+            <button class="btn btn-primary o-default-button" data-available-offline="">Close</button>
         </footer>`
         .trim()
         .replaceAll(/>[\n\s]+</gm, "><");

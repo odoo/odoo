@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, OwlError, onError, onWillStart, xml } from "@odoo/owl";
 import {
     makeMockEnv,
     mockService,
     mountWithCleanup,
-    onRpc,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -17,7 +16,7 @@ import {
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
 import { UncaughtPromiseError } from "@web/core/errors/error_service";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 
@@ -162,49 +161,6 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     Promise.reject(error);
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR: A normal error occured"]);
-});
-
-test("handle CONNECTION_LOST_ERROR", async () => {
-    expect.errors(1);
-    mockService("notification", {
-        add(message) {
-            expect.step(`create (${message})`);
-            return () => {
-                expect.step(`close`);
-            };
-        },
-    });
-    const values = [false, true]; // simulate the 'back online status' after 2 'version_info' calls
-    onRpc("/web/webclient/version_info", async () => {
-        expect.step("version_info");
-        const online = values.shift();
-        if (online) {
-            return true;
-        } else {
-            return Promise.reject();
-        }
-    });
-
-    await makeMockEnv();
-    const error = new ConnectionLostError("/fake_url");
-    Promise.reject(error);
-    await animationFrame();
-    patchWithCleanup(Math, {
-        random: () => 0,
-    });
-    // wait for timeouts
-    await advanceTime(2000);
-    await advanceTime(3500);
-    expect.verifySteps([
-        "create (Connection lost. Trying to reconnect...)",
-        "version_info",
-        "version_info",
-        "close",
-        "create (Connection restored. You are back online.)",
-    ]);
-    expect.verifyErrors([
-        `Error: Connection to "/fake_url" couldn't be established or was interrupted`,
-    ]);
 });
 
 test("will let handlers from the registry handle errors first", async () => {

@@ -33,16 +33,16 @@
 
     <t t-name="web.Dialog.header">
         <t t-if="fullscreen">
-            <button class="btn oi oi-arrow-left oi-large" aria-label="Close" tabindex="-1" t-on-click="dismiss" />
+            <button class="btn oi oi-arrow-left oi-large" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
         <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen, 'fs-5': props.size == 'sm' }">
             <t t-esc="props.title"/>
         </h4>
         <t t-if="onExpand">
-            <button type="button" class="fa fa-expand btn opacity-75 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
+            <button type="button" class="fa fa-expand btn opacity-75 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand" data-available-offline=""/>
         </t>
         <t t-if="!fullscreen">
-            <button type="button" class="btn-close" t-att-class="{'position-absolute top-0 end-0 mt-1 me-1': design == 'minimal' and !onExpand  }" aria-label="Close" tabindex="-1" t-on-click="dismiss"/>
+            <button type="button" class="btn-close" t-att-class="{'position-absolute top-0 end-0 mt-1 me-1': design == 'minimal' and !onExpand  }" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
     </t>
 </templates>

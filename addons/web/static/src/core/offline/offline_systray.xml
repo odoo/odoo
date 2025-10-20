@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.OfflineSystray">
+        <div t-if="status.offline" t-on-click="() => this.offlineService.checkConnection()">
+            <i t-if="env.isSmall"
+                class="fa fa-chain-broken o_nav_entry text-danger"
+                role="img"
+                aria-label="Working offline"
+                data-tooltip="Working offline"/>
+            <button t-else=""
+                class="o_nav_entry px-2 o_tag opacity-75 rounded-pill text-bg-danger"
+                data-available-offline=""
+                data-tooltip="Click to check connection">
+                <i class="fa fa-chain-broken me-1"></i> Working offline
+            </button>
+        </div>
+    </t>
+
+</templates>
+

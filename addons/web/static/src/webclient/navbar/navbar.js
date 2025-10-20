@@ -15,6 +15,7 @@ import {
     useRef,
     useState,
     onWillUnmount,
+    useChildSubEnv,
 } from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 
@@ -69,6 +70,9 @@ export class NavBar extends Component {
             },
             () => [adaptCounter]
         );
+
+        // allow systray items to trigger an adapt when their layout changes
+        useChildSubEnv({ redrawNavbar: renderAndAdapt });
 
         this.state = useState({
             isAllAppsMenuOpened: false,

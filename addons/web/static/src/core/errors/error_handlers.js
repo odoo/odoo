@@ -1,6 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "../browser/browser";
-import { ConnectionLostError, RPCError, rpc } from "../network/rpc";
+import { RPCError } from "../network/rpc";
 import { registry } from "../registry";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
@@ -82,54 +80,6 @@ export function rpcErrorHandler(env, error, originalError) {
 errorHandlerRegistry.add("rpcErrorHandler", rpcErrorHandler, { sequence: 97 });
 
 // -----------------------------------------------------------------------------
-// Lost connection errors
-// -----------------------------------------------------------------------------
-
-let connectionLostNotifRemove = null;
-/**
- * @param {OdooEnv} env
- * @param {UncaughError} error
- * @param {Error} originalError
- * @returns {boolean}
- */
-export function lostConnectionHandler(env, error, originalError) {
-    if (!(error instanceof UncaughtPromiseError)) {
-        return false;
-    }
-    if (originalError instanceof ConnectionLostError) {
-        if (connectionLostNotifRemove) {
-            // notification already displayed (can occur if there were several
-            // concurrent rpcs when the connection was lost)
-            return true;
-        }
-        connectionLostNotifRemove = env.services.notification.add(
-            _t("Connection lost. Trying to reconnect..."),
-            { sticky: true }
-        );
-        let delay = 2000;
-        browser.setTimeout(function checkConnection() {
-            rpc("/web/webclient/version_info", {})
-                .then(function () {
-                    if (connectionLostNotifRemove) {
-                        connectionLostNotifRemove();
-                        connectionLostNotifRemove = null;
-                    }
-                    env.services.notification.add(_t("Connection restored. You are back online."), {
-                        type: "info",
-                    });
-                })
-                .catch(() => {
-                    // exponential backoff, with some jitter
-                    delay = delay * 1.5 + 500 * Math.random();
-                    browser.setTimeout(checkConnection, delay);
-                });
-        }, delay);
-        return true;
-    }
-}
-errorHandlerRegistry.add("lostConnectionHandler", lostConnectionHandler, { sequence: 98 });
-
-// -----------------------------------------------------------------------------
 // Default handler
 // -----------------------------------------------------------------------------
 
@@ -182,5 +132,7 @@ if (user.isInternalUser === undefined) {
         );
     }
 } else {
-    registry.category("error_handlers").add("swallowAllVisitorErrors", swallowAllVisitorErrors, { sequence: 0 });
+    registry
+        .category("error_handlers")
+        .add("swallowAllVisitorErrors", swallowAllVisitorErrors, { sequence: 0 });
 }

@@ -552,6 +552,57 @@ test(`editable list with edit="0"`, async () => {
     expect.verifySteps(["switch to form - resId: 1 activeIds: 1,2,3,4"]);
 });
 
+test.tags("desktop");
+test(`[Offline] editable list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo"/></list>`,
+    });
+    expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4);
+
+    expect(`.o_searchview`).toHaveCount(1);
+    await contains(`.o_data_cell`).click();
+    expect(`tbody tr.o_selected_row`).toHaveCount(1, { message: "should have editable row" });
+
+    getService("offline").status.offline = true;
+    await animationFrame();
+    expect(`.o_searchview`).toHaveCount(0);
+    await contains(`.o_data_cell`).click();
+    expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
+});
+
+test.tags("desktop");
+test(`[Offline] list with priority widget`, async () => {
+    Foo._fields.priority = fields.Selection({
+        selection: [
+            [0, "Not Prioritary"],
+            [1, "Prioritary"],
+        ],
+        default: 0,
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="priority" widget="priority"/>
+                <field name="foo"/>
+            </list>`,
+    });
+
+    expect(".o_field_widget[name=priority] .o_priority_star").not.toHaveClass("o_disabled");
+
+    getService("offline").status.offline = true;
+    await animationFrame();
+    expect(".o_field_widget[name=priority] .o_priority_star").toHaveClass("o_disabled");
+
+    getService("offline").status.offline = false;
+    await animationFrame();
+    expect(".o_field_widget[name=priority] .o_priority_star").not.toHaveClass("o_disabled");
+});
+
 test(`non-editable list with open_form_view`, async () => {
     await mountView({
         resModel: "foo",

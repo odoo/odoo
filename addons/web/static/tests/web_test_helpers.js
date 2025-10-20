@@ -13,8 +13,8 @@ import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company";
 import { ResCountry } from "./_framework/mock_server/mock_models/res_country";
 import { ResCurrency } from "./_framework/mock_server/mock_models/res_currency";
-import { ResGroupsPrivilege } from "./_framework/mock_server/mock_models/res_groups_privilege";
 import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
+import { ResGroupsPrivilege } from "./_framework/mock_server/mock_models/res_groups_privilege";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./_framework/mock_server/mock_models/res_users_settings";
@@ -42,7 +42,7 @@ export {
     findComponent,
     getDropdownMenu,
     mountWithCleanup,
-    waitUntilIdle,
+    waitUntilIdle
 } from "./_framework/component_test_helpers";
 export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
 export {
@@ -52,7 +52,7 @@ export {
     makeDialogMockEnv,
     makeMockEnv,
     mockService,
-    restoreRegistry,
+    restoreRegistry
 } from "./_framework/env_test_helpers";
 export {
     clickKanbanLoadMore,
@@ -74,7 +74,7 @@ export {
     toggleKanbanColumnActions,
     toggleKanbanRecordDropdown,
     validateKanbanColumn,
-    validateKanbanRecord,
+    validateKanbanRecord
 } from "./_framework/kanban_test_helpers";
 export { Command, registerInlineViewArchs } from "./_framework/mock_server/mock_model";
 export {
@@ -88,14 +88,14 @@ export {
     MockServer,
     onRpc,
     stepAllNetworkCalls,
-    withUser,
+    withUser
 } from "./_framework/mock_server/mock_server";
 export {
     getKwArgs,
     makeKwArgs,
     makeServerError,
     MockServerError,
-    unmakeKwArgs,
+    unmakeKwArgs
 } from "./_framework/mock_server/mock_server_utils";
 export { serverState } from "./_framework/mock_server_state.hoot";
 export { patchWithCleanup } from "./_framework/patch_test_helpers";
@@ -117,10 +117,7 @@ export {
     openAddCustomFilterDialog,
     pagerNext,
     pagerPrevious,
-    removeFacet,
-    saveFavorite,
-    saveAndEditFavorite,
-    selectGroup,
+    removeFacet, saveAndEditFavorite, saveFavorite, selectGroup,
     switchView,
     toggleActionMenu,
     toggleFavoriteMenu,
@@ -131,13 +128,12 @@ export {
     toggleMenuItemOption,
     toggleSaveFavorite,
     toggleSearchBarMenu,
-    validateSearch,
+    validateSearch
 } from "./_framework/search_test_helpers";
 export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export {
-    installLanguages,
-    patchTranslations,
-    allowTranslations,
+    allowTranslations, installLanguages,
+    patchTranslations
 } from "./_framework/translation_test_helpers";
 export {
     clickButton,
@@ -146,15 +142,13 @@ export {
     clickFieldDropdownItem,
     clickModalButton,
     clickSave,
-    clickViewButton,
-    expectMarkup,
+    clickViewButton, editSelectMenu, expectMarkup,
     fieldInput,
     hideTab,
     mountView,
     mountViewInDialog,
     parseViewProps,
-    selectFieldDropdownItem,
-    editSelectMenu,
+    selectFieldDropdownItem
 } from "./_framework/view_test_helpers";
 export { mountWebClient, useTestClientAction } from "./_framework/webclient_test_helpers";
 

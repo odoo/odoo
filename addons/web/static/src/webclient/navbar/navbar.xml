@@ -110,7 +110,7 @@
               <small class="d-flex align-items-center justify-content-between ms-2">
                   <a href="/odoo" class="btn btn-primary" t-on-click.prevent="onAllAppsBtnClick"><i class="oi oi-apps"></i><span class="px-2">All Apps</span></a>
               </small>
-              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeAppMenuSidebar"/>
+              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeAppMenuSidebar" data-available-offline=""/>
           </div>
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <div t-if="!state.isAllAppsMenuOpened and currentApp" class="d-flex align-items-center m-3 mb-0">
@@ -178,7 +178,7 @@
                     </t>
                     <t t-else="">
                         <Dropdown>
-                            <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid">
+                            <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid" data-available-offline="">
                                 <span t-esc="section.name" t-att-data-section="section.id" />
                             </button>
                             <t t-set-slot="content">

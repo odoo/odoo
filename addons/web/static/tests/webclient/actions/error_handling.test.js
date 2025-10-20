@@ -145,8 +145,6 @@ test("connection lost when opening form view from kanban", async () => {
     });
     await contains(".o_kanban_record").click();
     expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_notification").toHaveCount(1);
-    expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -204,8 +202,6 @@ test("connection lost when coming back to kanban from form", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_view .o_kanban_renderer").toHaveCount(1);
     expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_notification").toHaveCount(1);
-    expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
     expect.verifySteps([
         "/web/webclient/load_menus",
         "/web/action/load",
