@@ -306,16 +306,6 @@ class BaseCase(case.TestCase):
     registry: Registry = None
     env: api.Environment = None
     cr: Cursor = None
-    def __init_subclass__(cls):
-        """Assigns default test tags ``standard`` and ``post_install`` to test
-        cases not having them. Also sets a completely unnecessary
-        ``test_module`` attribute.
-        """
-        super().__init_subclass__()
-        if cls.__module__.startswith('odoo.addons.'):
-            if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard', 'post_install'}
-            cls.test_module = cls.__module__.split('.')[2]
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
     warm = True             # False during warm-up phase (see :func:`warmup`)
@@ -327,13 +317,24 @@ class BaseCase(case.TestCase):
     _registry_readonly_enabled = True
     test_cursor_lock_timeout: int = 20
 
+    @classmethod
+    def __init_subclass__(cls):
+        """Assigns default test tags ``standard`` and ``post_install`` to test
+        cases not having them. Also sets a completely unnecessary
+        ``test_module`` attribute.
+        """
+        super().__init_subclass__()
+        if cls.__module__.startswith('odoo.addons.'):
+            if getattr(cls, 'test_tags', None) is None:
+                cls.test_tags = {'standard', 'post_install'}
+            cls.test_module = cls.__module__.split('.')[2]
+
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
         if methodName != 'runTest':
             self.test_tags = self.test_tags | set(self.get_method_additional_tags(getattr(self, methodName)))
-
 
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
