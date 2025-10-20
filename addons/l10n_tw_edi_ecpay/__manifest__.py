@@ -25,4 +25,5 @@
         "views/l10n_tw_edi_invoice_print_view.xml",
     ],
     "installable": True,
+    "uninstall_hook": "uninstall_hook",
 }
