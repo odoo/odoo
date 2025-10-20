@@ -31,7 +31,7 @@ import {
 import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
-import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
+import { cleanupNavigator } from "../mock/navigator";
 import { cleanupNetwork, throttleNetwork } from "../mock/network";
 import {
     cleanupWindow,
@@ -1701,9 +1701,6 @@ export class Runner {
             }
             if (preset.tags?.length) {
                 this._include(this.state.includeSpecs.tag, preset.tags, INCLUDE_LEVEL.preset);
-            }
-            if (preset.platform) {
-                mockUserAgent(preset.platform);
             }
             if (typeof preset.touch === "boolean") {
                 this.beforeEach(() => mockTouch(preset.touch));
