@@ -75,7 +75,7 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
-import { Network } from "@mail/discuss/call/common/rtc_service";
+import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
@@ -313,6 +313,12 @@ let discussAsTabId = 0;
  * }} [options]
  */
 export async function start(options) {
+    patchWithCleanup(Rtc.prototype, {
+        start() {
+            super.start();
+            after(() => this.clear());
+        },
+    });
     if (!MockServer.current) {
         await startServer();
     }
