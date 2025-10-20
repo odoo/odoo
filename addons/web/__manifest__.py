@@ -369,6 +369,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/env.js',
             'web/static/src/session.js',
             'web/static/src/core/utils/transitions.scss',
+            'web/static/src/polyfills/set.js',  # polyfill for addons/web/static/src/core/utils/indexed_db.js
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
         ],
