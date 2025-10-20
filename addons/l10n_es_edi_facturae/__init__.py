@@ -27,3 +27,7 @@ def _l10n_es_edi_facturae_post_init_hook(env):
         Template._load_data({
             'account.tax': tax_data,
         })
+
+
+def uninstall_hook(env):
+    env["res.partner"]._clear_removed_edi_formats("es_facturae")
