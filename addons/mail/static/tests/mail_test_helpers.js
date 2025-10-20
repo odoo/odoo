@@ -78,6 +78,7 @@ import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
 import { Network } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { SoundEffects } from "@mail/core/common/sound_effects_service";
 
 export * from "./mail_test_helpers_contains";
 
@@ -358,6 +359,11 @@ export async function start(options) {
         env = getMockEnv() || (await makeMockEnv({}));
     }
     env.testEnv = true;
+    patchWithCleanup(SoundEffects.prototype, {
+        _setAudioSrc(audio, srcPath) {
+            audio["data-src"] = srcPath;
+        },
+    });
     await mountWithCleanup(WebClient, { env, target });
     await loadEmoji();
     return Object.assign(env, { ...options?.env, target });
