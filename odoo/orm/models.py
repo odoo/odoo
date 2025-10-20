@@ -6043,7 +6043,7 @@ class BaseModel(metaclass=MetaModel):
                             yield '$'
                         # no need to match r'.*' in else because we only use .match()
 
-                    like_regex = re.compile("".join(build_like_regex(unaccent(value), '=' in comparator)))
+                    like_regex = re.compile("".join(build_like_regex(unaccent(value), '=' in comparator)), flags=re.DOTALL)
                 falsy_value = field.falsy_value
                 if falsy_value is not None and comparator in ('=', '!=') and not value and falsy_value is not False:
                     comparator = 'in' if comparator == '=' else 'not in'
