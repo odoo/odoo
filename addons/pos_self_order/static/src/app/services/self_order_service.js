@@ -693,7 +693,6 @@ export class SelfOrder extends Reactive {
                 order_access_tokens: accessTokens,
                 table_identifier: tableIdentifier,
             });
-            this.selectedOrderUuid = null;
             const result = this.models.connectNewData(data);
             const openOrder = result["pos.order"]?.find((o) => o.state === "draft");
             if (openOrder && this.router.activeSlot !== "confirmation") {
