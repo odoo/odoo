@@ -49,11 +49,12 @@ class HrJob(models.Model):
     user_id = fields.Many2one(
         "res.users",
         "Recruiter",
-        domain="[('share', '=', False), ('id', 'in', allowed_user_ids)]",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         default=lambda self: self.env.user,
         tracking=True,
         help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.",
     )
+    # TODO (master): remove the field `allowed_user_ids`.
     allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_user_ids', readonly=True)
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
@@ -63,7 +64,7 @@ class HrJob(models.Model):
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
     interviewer_ids = fields.Many2many(
         "res.users",
-        domain="[('id', 'in', allowed_user_ids)]",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
         string="Interviewers",
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
     )
