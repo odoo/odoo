@@ -301,7 +301,7 @@ export class Builder extends Component {
     }
 
     lowerPanelEntries() {
-        return this.editor.resources["lower_panel_entries"] ?? [];
+        return this.editor.getResource("lower_panel_entries");
     }
 
     editColorCombination(presetId) {
