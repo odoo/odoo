@@ -418,32 +418,33 @@ class TestSelectorSelection(TransactionCase):
 
     def test_selector_parser_parameters(self):
         tags = ','.join([
-            ':FakeClassA[@web/test]',
-            '-/web:FakeClassA[@web/test/x]',
-        ])
-        tags = TagsSelector(tags, available_modules=['base', 'mail', 'web'])
-        class FakeClassA(TransactionCase, CrossModule):
-            pass
-
-        fc = FakeClassA()
-        tags.check(fc)
-        self.assertEqual(fc._test_params, [('+', '@web/test'), ('-', '@web/test/x')])
-
-
-    def test_selector_parser_cross_module_parameters(self):
-        tags = ','.join([
             '/base:FakeClassA[failfast=0,filter=-livechat]',
             #'/base:FakeClassA[filter=[-barecode,-stock_x]]',
             '/other[notForThisClass]',
             '-/base:FakeClassA[arg1,arg2]',
         ])
         tags = TagsSelector(tags)
+
         class FakeClassA(TransactionCase):
             pass
 
         fc = FakeClassA()
         tags.check(fc)
         self.assertEqual(fc._test_params, [('+', 'failfast=0,filter=-livechat'), ('-', 'arg1,arg2')])
+
+    def test_selector_parser_cross_module_parameters(self):
+        tags = ','.join([
+            ':FakeClassA[@web/test]',
+            '-/web:FakeClassA[@web/test/x]',
+        ])
+        tags = TagsSelector(tags, available_modules=['base', 'mail', 'web'])
+
+        class FakeClassA(TransactionCase, CrossModule):
+            pass
+
+        fc = FakeClassA()
+        tags.check(fc)
+        self.assertEqual(fc._test_params, [('+', '@web/test'), ('-', '@web/test/x')])
 
     def test_negative_parameters_translate(self):
         tags = TagsSelector('.test_negative_parameters_translate')

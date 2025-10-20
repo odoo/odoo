@@ -140,17 +140,6 @@ class HOOTCommon(odoo.tests.HttpCase):
         self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
 
 
-@odoo.tests.tagged('hoot', 'post_install', '-at_install')
-class HootSuite(QunitCommon, HOOTCommon, odoo.tests.CrossModule):
-    def test_js(self, modules):
-        print(self._test_params)
-        print(modules)
-
-    def test_js_mobile(self, modules):
-        print(self._test_params)
-        print(modules)
-
-
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
 
@@ -211,6 +200,20 @@ class WebSuite(QunitCommon, HOOTCommon):
                     if RE_ONLY.search(fp.read().decode('utf-8')):
                         self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
 
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        if self._testMethodName == 'test_unit_desktop' and log:
+            message = log.msg
+            if log.args:
+                message = log.msg % log.args
+            if '[HOOT] Test "@' in message:
+                match = re.search(r'\[HOOT\] Test "(@([^/]+)/[^"]+)"', message)
+                if match:
+                    # module = match.group(2)
+                    test = match.group(1)
+                    # result['module'] = module
+                    result['params'] = test
+        return result
 
 @odoo.tests.tagged('post_install', '-at_install')
 class MobileWebSuite(QunitCommon, HOOTCommon):
