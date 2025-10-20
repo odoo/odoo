@@ -49,6 +49,13 @@ class EventEventTicket(models.Model):
     # reports
     color = fields.Char('Color', default="#875A7B")
 
+    @api.depends('company_id', 'product_id', 'event_id')
+    def create(self, vals):
+        res = super().create(vals)
+        if len(self.env.companies) > 1 and any(k in vals for k in ('company_id', 'product_id', 'event_id')):
+            res.event_id._check_consistent_company_id()
+        return res
+
     @api.depends('end_sale_datetime', 'event_id.date_tz')
     def _compute_is_expired(self):
         for ticket in self:
