@@ -674,6 +674,7 @@ export function makeActionManager(env, router = _router) {
                     name: v.display_name,
                     type: v.type,
                     multiRecord: v.multiRecord,
+                    availableOffline: v.availableOffline,
                 };
                 if (view.type === v.type) {
                     viewSwitcherEntry.active = true;
@@ -1218,8 +1219,13 @@ export function makeActionManager(env, router = _router) {
                 continue;
             }
             if (session.view_info[type]) {
-                const { icon, display_name, multi_record: multiRecord } = session.view_info[type];
-                views.push({ icon, display_name, multiRecord, type });
+                const {
+                    icon,
+                    display_name,
+                    multi_record: multiRecord,
+                    available_offline: availableOffline,
+                } = session.view_info[type];
+                views.push({ icon, display_name, multiRecord, type, availableOffline });
             } else {
                 unknown.push(type);
             }
@@ -1238,6 +1244,9 @@ export function makeActionManager(env, router = _router) {
         let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
         if (env.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
+        }
+        if (env.services.offline.status.offline && !view.availableOffline) {
+            view = views.find((v) => v.availableOffline);
         }
 
         const controller = _makeController({
@@ -1875,7 +1884,7 @@ export function makeActionManager(env, router = _router) {
 }
 
 export const actionService = {
-    dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
+    dependencies: ["dialog", "effect", "localization", "notification", "offline", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },

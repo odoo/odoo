@@ -95,7 +95,7 @@ test("[Offline] Many2ManyCheckBoxesField", async () => {
 
     expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
 
-    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(1);
 });
 test("Many2ManyCheckBoxesField (readonly)", async () => {
     Partner._records[0].timmy = [12];

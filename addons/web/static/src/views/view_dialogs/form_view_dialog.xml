@@ -6,10 +6,10 @@
       <View t-props="viewProps"/>
       <t t-set-slot="footer">
         <t t-if="props.preventEdit and props.preventCreate">
-          <button class="btn btn-primary" t-on-click="() => props.close()">Close</button>
+          <button class="btn btn-primary" t-on-click="() => props.close()" data-available-offline="">Close</button>
         </t>
         <t t-else="">
-          <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Ok</button>
+          <button class="btn btn-primary o-default-button" t-on-click="() => props.close()" data-available-offline="">Ok</button>
         </t>
       </t>
     </Dialog>

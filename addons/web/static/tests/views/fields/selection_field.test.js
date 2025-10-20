@@ -127,10 +127,10 @@ test("[Offline] SelectionField on many2one field", async () => {
                 <field name="product_id" widget="selection" />
             </form>`,
     });
-    expect(".o_select_menu").toHaveCount(1);
-    await contains(".o_field_widget[name='product_id'] input").click();
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone"]);
-    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+    expect(".o_field_widget[name='product_id'] span").toHaveCount(1, {
+        message: "field should be readonly",
+    });
+    expect(".o_field_widget[name='product_id']").toHaveText("xphone");
 });
 
 test("unset selection field with 0 as key", async () => {

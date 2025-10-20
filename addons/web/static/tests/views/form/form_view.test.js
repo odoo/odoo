@@ -255,6 +255,49 @@ test(`simple form rendering`, async () => {
     expect(`label.o_form_label_empty:contains(type_ids)`).toHaveCount(0);
 });
 
+test(`[Offline] form switches to readonly in offline mode`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field" string="f3_description"/>
+                <field name="float_field"/>
+                <field name="child_ids">
+                    <list>
+                        <field name="foo"/>
+                        <field name="bar"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
+
+    getService("offline").status.offline = true;
+    await animationFrame();
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(0);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(0);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(0);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(0);
+
+    getService("offline").status.offline = false;
+    await animationFrame();
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
+});
+
 test(`form rendering with class and style attributes`, async () => {
     await mountView({
         resModel: "partner",

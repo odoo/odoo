@@ -112,7 +112,7 @@ rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
 });
 
 export class RelationalModel extends Model {
-    static services = ["action", "dialog", "notification", "orm"];
+    static services = ["action", "dialog", "notification", "orm", "offline"];
     static Record = RelationalRecord;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
@@ -128,10 +128,11 @@ export class RelationalModel extends Model {
      * @param {RelationalModelParams} params
      * @param {Services} services
      */
-    setup(params, { action, dialog, notification }) {
+    setup(params, { action, dialog, notification, offline }) {
         this.action = action;
         this.dialog = dialog;
         this.notification = notification;
+        this.offline = offline;
 
         this.bus = new EventBus();
 
@@ -284,6 +285,7 @@ export class RelationalModel extends Model {
         }
         if (
             !this.isReady || // first load of the model
+            this.offline.status.offline || // use the cache if we are offline
             // monorecord, loading a different id, or creating a new record (onchange)
             (config.isMonoRecord && (this.root.config.resId !== config.resId || !config.resId))
         ) {

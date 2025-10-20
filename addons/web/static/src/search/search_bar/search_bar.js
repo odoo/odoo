@@ -13,6 +13,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useNavigation } from "@web/core/navigation/navigation";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 const parsers = registry.category("parsers");
 
@@ -85,6 +86,8 @@ export class SearchBar extends Component {
         // derived state
         this.items = useState([]);
         this.subItems = {};
+
+        this.offlineStatus = useOfflineStatus();
 
         this.facetContainerRef = useRef("facetContainerRef");
         this.menuRef = useChildRef();

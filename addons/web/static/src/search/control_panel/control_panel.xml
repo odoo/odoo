@@ -93,15 +93,19 @@
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
                         <div t-if="env.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
                             <Dropdown menuClass="{o_cp_switch_buttons: true, o_custom_bottom_sheet: true }">
-                                <button class="btn btn-secondary">
+                                <button class="btn btn-secondary" data-available-offline="">
                                     <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
                                     <i class="oi-fw" t-att-class="activeView.icon"/>
                                 </button>
                                 <t t-set-slot="content">
                                     <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                        <DropdownItem onSelected="() => this.switchView(view.type)" class="view.active ? 'selected' : ''">
-                                            <i class="oi-fw" t-att-class="view.icon"/>
-                                            <span class="ms-1" t-out="view.name"/>
+                                        <DropdownItem 
+                                            tag="'button'"
+                                            attrs="{ 'data-available-offline': view.availableOffline}"
+                                            onSelected="() => this.switchView(view.type)"
+                                            class="view.active ? 'selected' : ''">
+                                                <i class="oi-fw" t-att-class="view.icon"/>
+                                                <span class="ms-1" t-out="view.name"/>
                                         </DropdownItem>
                                     </t>
                                 </t>
@@ -111,6 +115,7 @@
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
                                 <button class="btn btn-secondary o_switch_view "
                                     t-attf-class="o_{{view.type}} {{view.active ? 'active' : ''}}"
+                                    t-att-data-available-offline="view.availableOffline"
                                     t-att-data-tooltip="view.name"
                                     t-custom-click="(ev, isMiddleClick) => this.switchView(view.type, isMiddleClick)"
                                     t-att-aria-label="view.name + ' View'"
