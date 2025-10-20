@@ -57,7 +57,7 @@ class UomUom(models.Model):
                 # Only set a default sequence before the record creation, or on module update if
                 # there is no value.
                 continue
-            uom.sequence = int(uom.relative_factor * 100.0)
+            uom.sequence = min(int(uom.relative_factor * 100.0), 1000)
 
     def _compute_rounding(self):
         """ All Units of Measure share the same rounding precision defined in 'Product Unit'.
