@@ -1,9 +1,12 @@
-li p {
-    margin-bottom: 0px;
-}
+[contenteditable="true"] {
+    li p {
+        margin-bottom: 0;
+    }
 
-li * {
-    color: inherit;
+    // Invalidate `--heading-color` when under colored element in editable
+    :where([style*="color:"]) {
+        --heading-color: none;
+    }
 }
 
 // Checklist
