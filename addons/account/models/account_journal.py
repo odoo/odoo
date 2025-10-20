@@ -124,6 +124,12 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain="[('account_type', '=', 'asset_current')]",
     )
+    cash_suspense_account_id = fields.Many2one(
+        comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
+        compute='_compute_cash_suspense_account_id',
+        help="Suspense account that will be used for cash journal when hashing a statement line", string='Cash Suspense Account',
+        domain="[('account_type', '=', 'asset_current')]",
+    )
     non_deductible_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
@@ -520,6 +526,18 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = journal.company_id.account_journal_suspense_account_id
             else:
                 journal.suspense_account_id = False
+
+    @api.depends('company_id', 'type')
+    def _compute_cash_suspense_account_id(self):
+        for journal in self:
+            if journal.type != 'cash':
+                journal.cash_suspense_account_id = False
+            elif journal.cash_suspense_account_id:
+                journal.cash_suspense_account_id = journal.cash_suspense_account_id
+            elif journal.company_id.account_journal_cash_suspense_account_id:
+                journal.cash_suspense_account_id = journal.company_id.account_journal_cash_suspense_account_id
+            else:
+                journal.cash_suspense_account_id = False
 
     @api.depends('company_id')
     @api.depends_context('move_date', 'has_tax')
