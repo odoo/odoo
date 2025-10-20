@@ -934,6 +934,11 @@ class CrossModule(case.TestCase):
     def _callTestMethod(self, method):
         method(self._test_modules)
 
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        result['module'] = None
+        return result
+
 
 class Like:
     """
