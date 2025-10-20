@@ -63,8 +63,16 @@ class Driver(Thread):
             response = {'status': 'error', 'result': str(e), 'action_args': {**data}}
 
         # Make response available to /event route or websocket
+<<<<<<< d1443d86560fb9bdcfb2fc6913909399dfc02283
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
         if self.device_type not in ["printer", "payment"]:
+||||||| c943a882624900743f02719560b70a0a683f095a
+        # printers handle their own events (low on paper, etc.)
+        if self.device_type != "printer":
+=======
+        # printers handle their own events (low on paper, etc.)
+        if self.device_type not in ["printer", "payment"]:
+>>>>>>> e63f9e714282423106da532f440b4fd7d6bb0dc1
             event_manager.device_changed(self, response)
 
     def _check_if_action_is_duplicate(self, action_unique_id):

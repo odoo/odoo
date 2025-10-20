@@ -52,15 +52,31 @@ class EventManager:
         :param Driver device: actual device class
         :param dict data: data returned by the device (optional)
         """
+<<<<<<< d1443d86560fb9bdcfb2fc6913909399dfc02283
         data = data or (request.params.get('data', {}) if request else {})
+||||||| c943a882624900743f02719560b70a0a683f095a
+        if data:
+            # Notify via websocket
+            send_to_controller({
+                **device.data,
+                'session_id': data.get('action_args', {}).get('session_id', ''),
+                'iot_box_identifier': helpers.get_identifier(),
+                'device_identifier': device.device_identifier,
+                **data,
+            })
+        else:
+            data = request.params.get('data', {}) if request else {}
+=======
+        data = data or request.params.get('data', {}) if request else {}
+>>>>>>> e63f9e714282423106da532f440b4fd7d6bb0dc1
 
         # Make notification available to longpolling event route
         event = {
             **device.data,
             'device_identifier': device.device_identifier,
-            'time': time.time(),
             **data,
         }
+<<<<<<< d1443d86560fb9bdcfb2fc6913909399dfc02283
         send_to_controller({
             **event,
             'session_id': data.get('action_args', {}).get('session_id', ''),
@@ -68,6 +84,15 @@ class EventManager:
             **data,
         })
         webrtc_client.send(event)
+||||||| c943a882624900743f02719560b70a0a683f095a
+=======
+        send_to_controller({
+            **event,
+            'session_id': data.get('action_args', {}).get('session_id', ''),
+            'iot_box_identifier': helpers.get_identifier(),
+            **data,
+        })
+>>>>>>> e63f9e714282423106da532f440b4fd7d6bb0dc1
         self.events.append(event)
         for session in self.sessions:
             session_devices = self.sessions[session]['devices']
