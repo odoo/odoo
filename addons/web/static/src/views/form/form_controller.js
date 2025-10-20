@@ -629,6 +629,7 @@ export class FormController extends Component {
     }
 
     async save(params) {
+        console.log("Saving from FormController");
         const record = this.model.root;
         let saved = false;
         if (this.props.saveRecord) {

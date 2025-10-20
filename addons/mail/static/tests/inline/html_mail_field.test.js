@@ -16,6 +16,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { mailModels } from "../mail_test_helpers";
+import { registry } from "@web/core/registry";
 
 function setSelectionInHtmlField(selector = "p", fieldName = "body") {
     const anchorNode = queryOne(`[name='${fieldName}'] .odoo-editor-editable ${selector}`);
@@ -71,7 +72,8 @@ beforeEach(() => {
     });
 });
 
-test("HtmlMail save inline html", async function () {
+test.multi(1000);
+test.only("HtmlMail save inline html", async function () {
     enableTransitions();
     useCustomStyleRules(`.test-h1-inline .note-editable h1 { color: #111827 !important; }`);
     onRpc("web_save", ({ args }) => {
@@ -80,12 +82,27 @@ test("HtmlMail save inline html", async function () {
         );
         expect.step("web_save");
     });
+    const formView = registry.category("views").get("form");
+    class CustomFormController extends formView.Controller {
+        async onWillSaveRecord(record) {
+            super.onWillSaveRecord(...arguments);
+            expect.step(`onWillSaveRecord.${record.resId}`);
+        }
+    }
+    registry.category("views").add(
+        "custom_form",
+        {
+            ...formView,
+            Controller: CustomFormController,
+        },
+        { force: true }
+    );
     await mountView({
         type: "form",
         resId: 1,
         resModel: "custom.message",
         arch: `
-        <form>
+        <form js_class="custom_form">
             <field name="body" widget="html_mail" class="test-h1-inline"/>
         </form>`,
     });
@@ -93,9 +110,11 @@ test("HtmlMail save inline html", async function () {
     await insertText(htmlEditor, "/heading1");
     await press("enter");
     expect(".odoo-editor-editable").toHaveInnerHTML("<h1> first </h1>");
+    // await contains(".o_form_renderer").focus();
+    // await animationFrame();
 
     await clickSave();
-    await expect.waitForSteps(["web_save"]);
+    await expect.waitForSteps(["onWillSaveRecord.1", "web_save"]);
 });
 
 test("HtmlMail don't have access to column commands", async function () {
