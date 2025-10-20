@@ -1,6 +1,6 @@
 import re
 import warnings
-from collections.abc import Iterable, Reversible
+from collections.abc import Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
@@ -194,16 +194,20 @@ class OriginIds(Reversible):  # noqa: PLW1641
 
 class PrefetchUnion(Reversible):
     """ A prefetch object for the concatenation/union of recordsets.
-    The constructor takes the `_prefetch_ids` of the recordsets in the
-    concatenation/union.
+    The constructor takes the ids of the concatenation/union and the prefetch
+    ids of the recordsets in the concatenation/union.  The given ids are
+    redundant but have priority when iterating, which makes them prioritary
+    when prefetching.
     """
-    __slots__ = ('_prefetches',)
+    __slots__ = ('_ids', '_prefetches')
 
-    def __init__(self, prefetches: Iterable[Reversible]):
+    def __init__(self, ids: tuple, *prefetches: Reversible):
+        self._ids = ids
         self._prefetches = prefetches
 
     def __iter__(self):
-        prev_it = ()
+        prev_it = self._ids
+        yield from prev_it
         # flatten out prefetches in order to avoid recursion errors
         stack = list(reversed(self._prefetches))
         while stack:
@@ -217,7 +221,8 @@ class PrefetchUnion(Reversible):
             prev_it = it
 
     def __reversed__(self):
-        prev_it = ()
+        prev_it = self._ids
+        yield from prev_it
         # flatten out prefetches in order to avoid recursion errors
         stack = list(self._prefetches)
         while stack:
