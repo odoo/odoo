@@ -101,6 +101,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_participant_info(self, edi_identification):
+        # DEPRECATED: Peppol moved from CNAME to NAPTR DNS records
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
         edi_mode = self.env.company._get_peppol_edi_mode()
@@ -118,27 +119,69 @@ class ResPartner(models.Model):
     @api.model
     @handle_demo
     def _check_peppol_participant_exists(self, participant_info, edi_identification):
-        participant_identifier = participant_info.findtext('{*}ParticipantIdentifier')
-        service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
         service_href = ''
-        if service_metadata is not None:
-            service_href = service_metadata.attrib.get('href', '')
+        if isinstance(participant_info, dict):
+            participant_identifier = participant_info.get('identifier', '')
+            if services := participant_info.get('services', []):
+                service_href = services[0].get('href', '')
+        else:
+            # DEPRECATED: we now use Odoo peppol API to fetch participant info and get a json response
+            # keeping this branch for compatibility
+            participant_identifier = participant_info.findtext('{*}ParticipantIdentifier') or ''
+            service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
+            if service_metadata is not None:
+                service_href = service_metadata.attrib.get('href', '')
 
-        if edi_identification != participant_identifier or 'hermes-belgium' in service_href:
-            # all Belgian companies are pre-registered on hermes-belgium, so they will
-            # technically have an existing SMP url but they are not real Peppol participants
-            return False
+        # all Belgian companies are pre-registered on hermes-belgium, so they will
+        # technically have an existing SMP url but they are not real Peppol participants
+        # NOTE: peppol identifier must be case insensitive
+        return edi_identification.lower() == participant_identifier.lower() and 'hermes-belgium' not in service_href
 
-        return True
+    @api.model
+    def _peppol_lookup_participant(self, edi_identification):
+        """NAPTR DNS peppol participant lookup through Odoo's Peppol proxy"""
+        if (edi_mode := self.env.company._get_peppol_edi_mode()) == 'demo':
+            return
+
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['peppol'][edi_mode]
+        query = parse.urlencode({'peppol_identifier': edi_identification.lower()})
+        endpoint = f'{origin}/api/peppol/1/lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=TIMEOUT)
+        except requests.exceptions.RequestException as e:
+            _logger.debug("failed to query peppol participant %s: %s", edi_identification, e)
+            return
+
+        try:
+            decoded_response = response.json()
+        except ValueError:
+            _logger.error('invalid JSON response %s when querying peppol participant %s', response.status_code, edi_identification)
+            return
+
+        if error := decoded_response.get('error'):
+            if error.get('code') != 'NOT_FOUND':
+                _logger.error('error when querying peppol participant %s: %s', edi_identification, error.get('message', 'unknown error'))
+            return
+
+        if not response.ok:
+            _logger.error('unsuccessful response %s when querying peppol participant %s', response.status_code, edi_identification)
+            return
+
+        return decoded_response.get('result')
 
     def _check_document_type_support(self, participant_info, ubl_cii_format, process_type='billing'):
+        edi_builder = self._get_edi_builder(ubl_cii_format)
+        expected_customization_id = edi_builder._get_customization_id(process_type=process_type)
+        if isinstance(participant_info, dict):
+            return any(expected_customization_id in (service.get('document_id') or '') for service in participant_info.get('services', []))
+
+        # DEPRECATED: participant_info as XML fetched directly from SMP
         service_references = participant_info.findall(
             '{*}ServiceMetadataReferenceCollection/{*}ServiceMetadataReference'
         )
-        edi_builder = self._get_edi_builder(ubl_cii_format)
-        document_type = edi_builder._get_customization_id(process_type=process_type)
         for service in service_references:
-            if document_type in parse.unquote_plus(service.attrib.get('href', '')):
+            if expected_customization_id in parse.unquote_plus(service.attrib.get('href', '')):
                 return True
         return False
 
@@ -186,7 +229,8 @@ class ResPartner(models.Model):
         The SML (Service Metadata Locator) assigns a DNS name to each peppol participant.
         This DNS name resolves into the SMP (Service Metadata Publisher) of the participant.
         The DNS address is of the following form:
-        - "http://B-" + hexstring(md5(lowercase(ID-VALUE))) + "." + ID-SCHEME + "." + SML-ZONE-NAME + "/" + url_encoded(ID-SCHEME + "::" + ID-VALUE)
+        strip-trailing(base32(sha256(lowercase(ID-VALUE))),"=") + "." + ID-SCHEME + "." + SML-ZONE-NAME
+        The lookup should be done on NAPTR DNS from 2025-11-01
         (ref:https://peppol.helger.com/public/locale-en_US/menuitem-docs-doc-exchange)
         """
         self.ensure_one()
@@ -229,7 +273,7 @@ class ResPartner(models.Model):
             return 'not_verified'
 
         edi_identification = f"{peppol_eas}:{peppol_endpoint}".lower()
-        participant_info = self._get_participant_info(edi_identification)
+        participant_info = self._peppol_lookup_participant(edi_identification)
         if participant_info is None:
             return 'not_valid'
         else:
