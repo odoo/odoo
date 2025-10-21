@@ -109,16 +109,45 @@ export class PaymentAdyen extends PaymentInterface {
         return data;
     }
 
-    _adyenPay(uuid) {
-        var order = this.pos.getOrder();
+    _adyenReversalData() {
+        const order = this.pos.getOrder();
+        const line = order.getSelectedPaymentline();
+        return {
+            SaleToPOIRequest: {
+                MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
+                    MessageCategory: "Reversal",
+                }),
+                ReversalRequest: {
+                    ReversalReason: "MerchantCancel",
+                    ReversedAmount: Math.abs(line.amount),
+                    OriginalPOITransaction: {
+                        POITransactionID: {
+                            TransactionID: line.uiState.adyenRefundTransactionId,
+                            TimeStamp: line.uiState.adyenRefundTransactionTimestamp,
+                        },
+                    },
+                    SaleData: {
+                        SaleToAcquirerData: `currency=${this.pos.currency.name}`,
+                        SaleTransactionID: {
+                            TransactionID: `${order.uuid}--${order.session_id.id}`,
+                            TimeStamp: DateTime.utc().toISO(),
+                        },
+                    },
+                },
+            },
+        };
+    }
 
-        if (order.getSelectedPaymentline().amount < 0) {
-            this._show_error(_t("Cannot process transactions with negative amount."));
-            return Promise.resolve();
+    _adyenPay(uuid) {
+        const order = this.pos.getOrder();
+        const line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
+
+        if (line.amount < 0 && !line.uiState.adyenRefundTransactionId) {
+            this._show_error(_t("Cannot refund non-Adyen transactions via Adyen."));
+            return false;
         }
 
-        var data = this._adyenPayData();
-        var line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
+        const data = line.amount < 0 ? this._adyenReversalData() : this._adyenPayData();
         line.setTerminalServiceId(this.most_recent_service_id);
         return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
     }
@@ -158,7 +187,7 @@ export class PaymentAdyen extends PaymentInterface {
         });
     }
 
-    _adyenCheckPaymentStatus() {
+    _adyenCheckPaymentStatus(paymentServiceId, isRefund) {
         const data = {
             SaleToPOIRequest: {
                 MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
@@ -167,6 +196,11 @@ export class PaymentAdyen extends PaymentInterface {
                 TransactionStatusRequest: {
                     ReceiptReprintFlag: true,
                     DocumentQualifier: ["CustomerReceipt", "CashierReceipt"],
+                    MessageReference: {
+                        SaleID: this._adyenGetSaleId(),
+                        ServiceID: paymentServiceId,
+                        MessageCategory: isRefund ? "Reversal" : "Payment",
+                    },
                 },
             },
         };
@@ -256,7 +290,10 @@ export class PaymentAdyen extends PaymentInterface {
                     return;
                 }
 
-                const response = await this._adyenCheckPaymentStatus();
+                const response = await this._adyenCheckPaymentStatus(
+                    serviceId,
+                    !!paymentLine.uiState.adyenRefundTransactionId
+                );
                 if (response && isPaymentStillValid()) {
                     this._adyenHandlePaymentStatus(response, paymentLine, resolve, intervalId);
                 }
@@ -265,7 +302,7 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     processPaymentResponse(line, header, body) {
-        const paymentResponse = body.PaymentResponse;
+        const paymentResponse = body.PaymentResponse ?? body.ReversalResponse;
         const additionalResponse = new URLSearchParams(paymentResponse.Response.AdditionalResponse);
         const isPaymentSuccessful = this.isPaymentSuccessful(header, paymentResponse.Response);
         if (isPaymentSuccessful) {
@@ -337,13 +374,13 @@ export class PaymentAdyen extends PaymentInterface {
             );
         }
 
-        const tip_amount = payment_result.AmountsResp.TipAmount;
+        const tip_amount = payment_result?.AmountsResp?.TipAmount ?? 0;
         if (config.adyen_ask_customer_for_tip && tip_amount > 0) {
             this.pos.setTip(tip_amount);
             line.setAmount(payment_result.AmountsResp.AuthorizedAmount);
         }
 
-        line.transaction_id = additional_response.get("pspReference");
+        line.transaction_id = payment_response.POIData.POITransactionID.TransactionID;
         line.card_type = additional_response.get("cardType");
         line.cardholder_name = additional_response.get("cardHolderName") || "";
     }
