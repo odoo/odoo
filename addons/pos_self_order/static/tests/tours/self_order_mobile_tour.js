@@ -338,3 +338,12 @@ registry.category("web_tour.tours").add("test_mobile_self_order_preparation_chan
             Utils.clickBtn("Ok"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("self_order_mobile_no_access_token", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            Utils.negateStep(Utils.checkBtn("Order")),
+        ].flat(),
+});
