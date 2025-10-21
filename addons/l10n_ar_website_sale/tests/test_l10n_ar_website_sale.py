@@ -1,8 +1,8 @@
-from datetime import datetime
+from odoo.fields import Command, Datetime
+from odoo.tests import tagged
 
 from odoo.addons.l10n_ar.tests.common import TestAr
 from odoo.addons.website_sale.tests.common import MockRequest
-from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -32,16 +32,15 @@ class TestL10nArWebsiteSale(TestAr):
             'name': 'Color',
             'display_type': 'color',
         })
-        cls.color_white = cls.env['product.attribute.value'].create({
+        cls.color_white, cls.color_black = cls.env['product.attribute.value'].create([{
             'name': 'White',
             'html_color': '#FFFFFF',
             'attribute_id': cls.color_attribute.id,
-        })
-        cls.color_black = cls.env['product.attribute.value'].create({
+        }, {
             'name': 'Black',
             'html_color': '#000000',
             'attribute_id': cls.color_attribute.id,
-        })
+        }])
 
     def assertDictContains(self, actual_dict, expected_subset):
         """Assert that actual_dict contains all key-value pairs from expected_subset."""
@@ -55,8 +54,8 @@ class TestL10nArWebsiteSale(TestAr):
                 product_or_template=product_id or self.product_1,
                 quantity=quantity,
                 uom=self.uom_unit,
-                date=datetime(2025, 5, 21),
-                website=self.ar_website
+                date=Datetime.today(),
+                website=self.ar_website,
             )
 
     def test_default_website_sale_legal_values(self):
@@ -73,21 +72,47 @@ class TestL10nArWebsiteSale(TestAr):
                 'l10n_ar_price_tax_excluded': 1000.00,
             })
 
-        with self.cr.savepoint():
-            with self.subTest(scenario="Mixed taxes - 10.5% excluded + 27% included"):
-                template = self.env['account.chart.template']
-                tax_27_included = template.ref('ri_tax_vat_27_ventas')
-                tax_10_5_excluded = template.ref('ri_tax_vat_10_ventas')
+        with self.subTest(scenario="Mixed taxes - 10.5% excluded + 27% included"):
+            AccountChartTemplate = self.env['account.chart.template']
+            tax_27_included = AccountChartTemplate.ref('ri_tax_vat_27_ventas')
+            tax_10_5_excluded = AccountChartTemplate.ref('ri_tax_vat_10_ventas')
 
-                tax_27_included.price_include = True
-                tax_10_5_excluded.price_include = False
+            tax_27_included.price_include = True
+            tax_10_5_excluded.price_include = False
 
-                self.product_1.taxes_id = (tax_27_included + tax_10_5_excluded).ids
-                combo = self._get_combination_info()
-                self.assertDictContains(combo, {
-                    'list_price': 1082.68,                 # Computed price including all taxes
-                    'l10n_ar_price_tax_excluded': 787.40,  # Reverse calculated base price
-                })
+            self.product_1.taxes_id = tax_27_included + tax_10_5_excluded
+            combo = self._get_combination_info()
+            self.assertDictContains(combo, {
+                'list_price': 1082.68,                 # Computed price including all taxes
+                'l10n_ar_price_tax_excluded': 787.40,  # Reverse calculated base price
+            })
+
+    def test_price_calculation_with_pricelist_rules(self):
+        """Check that pricelist rules are taken into account."""
+        self._enable_pricelists()
+        self.pricelist.update({
+            'website_id': self.ar_website.id,
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'fixed',
+                    'fixed_price': 888.0,
+                    'min_quantity': 5.0,
+                    'applied_on': '1_product',
+                    'product_tmpl_id': self.product_1.id,
+                }),
+                Command.create({
+                    'compute_price': 'formula',
+                    'price_surcharge': 2.0,
+                    'applied_on': '3_global',
+                }),
+            ],
+        })
+
+        info_qty_3 = self._get_combination_info(quantity=3)
+        self.assertEqual(info_qty_3['l10n_ar_price_tax_excluded'], 1002.0)
+
+        info_qty_5 = self._get_combination_info(quantity=5)
+        self.assertEqual(info_qty_5['l10n_ar_price_tax_excluded'], 888.0)
 
     def test_product_variant_prices_with_attributes(self):
         """Test variant-specific price calculation with color attribute values."""
