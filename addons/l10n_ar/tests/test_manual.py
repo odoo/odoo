@@ -247,7 +247,7 @@ class TestManual(common.TestAr):
                             'id': self.tax_other.tax_group_id.id,
                             'base_amount_currency': 10000.0,
                             'tax_amount_currency': 100.0,
-                            'display_base_amount_currency': None,
+                            'display_base_amount_currency': False,
                         },
                     ],
                 },
