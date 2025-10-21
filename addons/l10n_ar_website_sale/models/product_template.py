@@ -16,8 +16,6 @@ class ProductTemplate(models.Model):
         '''
 
         res = super()._get_sales_prices(website)
-        fiscal_position_id = request.fiscal_position
-        pricelist_prices = request.pricelist._compute_price_rule(self, 1.0)
 
         if (
             website
@@ -25,11 +23,12 @@ class ProductTemplate(models.Model):
             and website.l10n_ar_website_sale_show_both_prices
             and website.show_line_subtotals_tax_selection == 'tax_included'
         ):
+            pricelist_prices = request.pricelist._compute_price_rule(self, 1.0)
             for template_id, template_val in res.items():
                 # Get applicable taxes for the product and map them using the website's FPOS
                 template = self.env['product.template'].browse(template_id)
                 product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
-                mapped_taxes = fiscal_position_id.map_tax(product_taxes)
+                mapped_taxes = request.fiscal_position.map_tax(product_taxes)
 
                 # Compute the tax-excluded value
                 total_excluded_value = mapped_taxes.compute_all(
@@ -47,8 +46,6 @@ class ProductTemplate(models.Model):
         combination_info = super()._get_additionnal_combination_info(
             product_or_template, quantity, uom, date, website
         )
-        pricelist_prices = request.pricelist._compute_price_rule(self, 1.0)
-
         if (
             website
             and website.company_id.country_code == 'AR'
@@ -60,11 +57,8 @@ class ProductTemplate(models.Model):
             mapped_taxes = request.fiscal_position.map_tax(product_taxes)
 
             # Compute price per unit of product or template
-            unit_price = (
-                pricelist_prices[self.id][0]
-                if product_or_template._name == 'product.template'
-                else product_or_template.lst_price
-            )
+            pricelist_prices = request.pricelist._compute_price_rule(product_or_template, quantity)
+            unit_price = pricelist_prices[product_or_template.id][0]
 
             # Compute the tax-excluded value
             total_excluded_value = mapped_taxes.compute_all(
