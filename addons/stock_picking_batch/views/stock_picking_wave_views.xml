@@ -120,10 +120,10 @@
             </xpath>
             <xpath expr="//div[@name='picking_type_backorder_count']" class="row" position="after">
                 <div class="row">
-                    <a class="col-8 offset-4 text-truncate" name="action_wave" type="object">
+                    <a class="text-truncate" name="action_wave" type="object">
                         <div t-if="record.count_picking_wave.raw_value > 0"  class="row">
-                            <span class="col-6">Waves</span>
-                            <field name="count_picking_wave" class="col-2 text-end"/>
+                            <span class="col">Waves</span>
+                            <field name="count_picking_wave" class="col text-end"/>
                         </div>
                     </a>
                 </div>

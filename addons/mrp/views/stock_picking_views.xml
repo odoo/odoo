@@ -49,59 +49,62 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr='//div[@name="stock_picking"]' position="after">
-                <div t-if="record.code.raw_value == 'mrp_operation'" class="px-2">
-                    <a t-if="!selection_mode" type="object" name="get_mrp_stock_picking_action_picking_type">
-                        <field name="name" class="fw-bold fs-4"/>
-                    </a>
+            <xpath expr='//t[@name="stock_picking"]' position="after">
+                <t t-if="record.code.raw_value == 'mrp_operation'">
+                    <span class="d-flex d-flew-row align-items-baseline px-2">
+                        <a t-if="!selection_mode" type="object" name="get_mrp_stock_picking_action_picking_type">
+                            <field name="name" class="fw-bold fs-4"/>
+                        </a>
+                    </span>
                     <field t-if="selection_mode" name="name" class="fw-bold fs-4"/>
-                    <field name="warehouse_id" class="d-block" groups="stock.group_stock_multi_warehouses"/>
-                    <div t-if="!selection_mode" class="row mt-3">
-                        <div class="col-6">
-                            <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_confirmed': 1, 'default_picking_type_id': id}">
-                                <span t-if="record.count_mo_todo.raw_value > 0">
-                                    <field name="count_mo_todo"/> To Manufacture
-                                </span>
-                                <span t-else="">Open</span>
-                            </button>
-                        </div>
-                        <div class="col-6 stock-overview-links">
-                            <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
-                                    <div class="row">
-                                        <span class="col-6">Waiting</span>
-                                        <field class="col-2 text-end" name="count_mo_waiting"/>
-                                    </div>
-                                </a>
+                    <field name="warehouse_id" class="d-block px-2" groups="stock.group_stock_multi_warehouses"/>
+                    <div class="container-fluid px-2">
+                        <div t-if="!selection_mode" class="row mt-3">
+                            <div class="col">
+                                <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_confirmed': 1, 'default_picking_type_id': id}">
+                                    <span t-if="record.count_mo_todo.raw_value > 0">
+                                        <field name="count_mo_todo"/> To Manufacture
+                                    </span>
+                                    <span t-else="">Open</span>
+                                </button>
                             </div>
-                            <div t-if="record.count_mo_late.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_late_mo': 1, 'default_picking_type_id': id}">
-                                    <div class="row">
-                                        <span class="col-6">Late</span>
-                                        <field class="col-2 text-end" name="count_mo_late"/>
-                                    </div>
-                                </a>
-                            </div>
-                            <div t-if="record.count_mo_in_progress.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_in_progress': 1, 'default_picking_type_id': id}">
-                                    <div class="row">
-                                        <span class="col-6">In Progress</span>
-                                        <field class="col-2 text-end" name="count_mo_in_progress"/>
-                                    </div>
-                                </a>
-                            </div>
-                            <div t-if="record.count_mo_to_close.raw_value > 0" class="row">
-                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_to_close': 1, 'default_picking_type_id': id}">
-                                    <div class="row">
-                                        <span class="col-6">To Close</span>
-                                        <field class="col-2 text-end" name="count_mo_to_close"/>
-                                    </div>
-                                </a>
+                            <div class="col-auto stock-overview-links px-5">
+                                <div t-if="record.count_mo_waiting.raw_value > 0" class="col-auto">
+                                    <a class="text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
+                                        <div class="row overflow-hidden">
+                                            <span class="col">Waiting</span>
+                                            <field class="col text-end" name="count_mo_waiting"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_mo_late.raw_value > 0" class="col-auto">
+                                    <a class="text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_late_mo': 1, 'default_picking_type_id': id}">
+                                        <div class="row overflow-hidden">
+                                            <span class="col">Late</span>
+                                            <field class="col text-end" name="count_mo_late"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_mo_in_progress.raw_value > 0" class="col-auto">
+                                    <a class="text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_in_progress': 1, 'default_picking_type_id': id}">
+                                        <div class="row overflow-hidden">
+                                            <span class="col">In Progress</span>
+                                            <field class="col text-end" name="count_mo_in_progress"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_mo_to_close.raw_value > 0" class="col-auto">
+                                    <a class="text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_to_close': 1, 'default_picking_type_id': id}">
+                                        <div class="row overflow-hidden">
+                                            <span class="col">To Close</span>
+                                            <field class="col text-end" name="count_mo_to_close"/>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <field t-if="!selection_mode" name="kanban_dashboard_graph" class="mt-auto" graph_type="bar" widget="picking_type_dashboard_graph"/>
-                </div>
+                </t>
             </xpath>
         </field>
     </record>
