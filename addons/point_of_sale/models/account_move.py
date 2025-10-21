@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -100,11 +101,20 @@ class AccountMove(models.Model):
             action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
         return action
 
+<<<<<<< 00fbe38c7cd3d30dca336a0a8e14573af1fb694a
     @api.model
     def _load_pos_data_fields(self, config_id):
         result = super()._load_pos_data_fields(config_id)
         return result or ['id']
 
+||||||| 4d7cfa920f2cac50634a1bf2a6082cc79411d82f
+=======
+    def button_draft(self):
+        if self.sudo().pos_order_ids:
+            raise UserError(_("You cannot reset to draft an invoice linked to a POS order. You must refund the order or create a credit note instead."))
+        return super().button_draft()
+
+>>>>>>> 53818f68653c7130c518bea14a622d814be8a7a4
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
