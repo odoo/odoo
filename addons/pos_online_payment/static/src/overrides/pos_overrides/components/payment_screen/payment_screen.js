@@ -114,6 +114,7 @@ patch(PaymentScreen.prototype, {
                         return false;
                     }
 
+                    await this.pos.syncAllOrders({ orders: [this.currentOrder] });
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.currentOrder.selectPaymentline(onlinePaymentLine);
                     const onlinePaymentData = {
