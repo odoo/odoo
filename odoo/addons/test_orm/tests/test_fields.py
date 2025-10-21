@@ -1783,7 +1783,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             'child_of': (company0.id, company1.id, company2.id),
             'parent_of': (company0.id, company1.id, company2.id),
         })
-        test_field('partner_id', [company1.id, company2.id], {
+        test_field('partner_id', [company1.partner_id.id, company2.partner_id.id], {
             'child_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
             'parent_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
         })
