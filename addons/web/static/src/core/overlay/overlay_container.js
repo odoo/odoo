@@ -57,7 +57,7 @@ class OverlayItem extends Component {
     }
 }
 
-const STATIC_OVERLAYS = 10;
+const STATIC_OVERLAYS = 0;
 const tmp = `
     <t t-set="overlay" t-value="this.staticList[%(index)s]"/>
     <ErrorHandler t-if="overlay and isVisible(overlay)" onError="(error) => this.handleError(overlay, error)">

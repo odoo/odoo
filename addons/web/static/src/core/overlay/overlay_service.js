@@ -14,12 +14,18 @@ const services = registry.category("services");
  * }} OverlayServiceAddOptions
  */
 
+let SERVICE_KEY = 0;
 export const overlayService = {
     start() {
+        const thisKey = SERVICE_KEY++;
+        let registryKey = `OverlayContainer`;
+        if (thisKey !== 0) {
+            registryKey += `_${thisKey}`;
+        }
         let nextId = 0;
         const overlays = reactive({});
 
-        mainComponents.add("OverlayContainer", {
+        mainComponents.add(registryKey, {
             Component: OverlayContainer,
             props: { overlays },
         });

@@ -6,12 +6,14 @@ import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelector } from "@mass_mailing/themes/theme_selector/theme_selector";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
-import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, status, toRaw, useChildSubEnv, useEffect, useEnv, useRef } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
+import { overlayService } from "@web/core/overlay/overlay_service";
+import { popoverService } from "@web/core/popover/popover_service";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -42,6 +44,14 @@ export class MassMailingHtmlField extends HtmlField {
             // Theme Selector, no need to wait for the user selection.
             loadBundle("mass_mailing.assets_builder");
         }
+
+        let subServices = Object.create(this.env.services);
+        useChildSubEnv({ services: subServices })
+        onWillStart(async () => {
+            subServices.overlay = await overlayService.start(this.env);
+            subServices.popover = await popoverService.start(this.env, subServices);
+        })
+
 
         this.keepLastIframe = new KeepLast();
         this.resetIframe();
