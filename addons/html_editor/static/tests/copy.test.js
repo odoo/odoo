@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe("range collapsed", () => {
     test("should ignore copying an empty selection with empty clipboardData", async () => {
@@ -43,7 +44,10 @@ describe("range not collapsed", () => {
     test.tags("focus required");
     test("should copy a selection as text/plain, text/html and application/vnd.odoo.odoo-editor in table", async () => {
         await setupEditor(
-            `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`
+            `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`,
+            // Exclude the selection placeholder plugin so we have a DOM that
+            // really starts with a table.
+            { config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") } }
         );
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });

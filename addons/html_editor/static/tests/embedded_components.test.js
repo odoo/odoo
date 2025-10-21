@@ -385,16 +385,19 @@ describe("Mount and Destroy embedded components", () => {
         expect.verifySteps(["mount 1", "mount 2", "mount 3"]);
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
                     <div>
                         <div class="click count-2">Count:2</div>
                         <div class="innerEditable-2">
                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
+                                <p data-selection-placeholder=""><br></p>
                                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
                                     <div>
                                         <div class="click count-1">Count:1</div>
                                         <div class="innerEditable-1">
                                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
+                                                <p data-selection-placeholder=""><br></p>
                                                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
                                                     <div>
                                                         <div class="click count-3">Count:3</div>
@@ -405,10 +408,12 @@ describe("Mount and Destroy embedded components", () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <p data-selection-placeholder=""><br></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <p data-selection-placeholder=""><br></p>
                             </div>
                         </div>
                     </div>
@@ -438,6 +443,7 @@ describe("Mount and Destroy embedded components", () => {
         // outermost host.
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
                 <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             `)
@@ -579,6 +585,7 @@ describe("Selection after embedded component insertion", () => {
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
                 <p>[]<br></p>`)
         );
@@ -608,6 +615,7 @@ describe("Selection after embedded component insertion", () => {
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
                 <p>[]a</p>`)
         );
@@ -930,7 +938,7 @@ describe("In-editor manipulations", () => {
         );
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>`
+            `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div><p data-selection-placeholder=""><br></p>`
         );
     });
 
@@ -944,7 +952,7 @@ describe("In-editor manipulations", () => {
         const historyPlugin = plugins.get("history");
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
-            `<div><p>a</p></div><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>`
+            `<div><p>a</p></div><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p data-selection-placeholder=""><br></p>`
         );
     });
 
@@ -1001,6 +1009,7 @@ describe("editable descendants", () => {
         );
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="shallow">
                         <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
@@ -1015,6 +1024,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -1048,9 +1058,11 @@ describe("editable descendants", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="deep">
                         <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                            <p data-selection-placeholder=""><br></p>
                             <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
@@ -1058,6 +1070,7 @@ describe("editable descendants", () => {
                                     </div>
                                 </div>
                             </div>
+                            <p data-selection-placeholder=""><br></p>
                         </div>
                     </div>
                 </div>
@@ -1105,6 +1118,7 @@ describe("editable descendants", () => {
         expect.verifySteps(["patched"]);
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="shallow">
                         <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
@@ -1121,6 +1135,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
         // No mutation should be added to the next step
@@ -1191,6 +1206,7 @@ describe("editable descendants", () => {
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">
                     <div contenteditable="true" data-embedded-editable="shallow" data-oe-protected="false">
                         <p>shallow</p>
@@ -1199,6 +1215,7 @@ describe("editable descendants", () => {
                         <p>deep</p>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -1233,9 +1250,11 @@ describe("editable descendants", () => {
         );
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                     <div class="shallow">
                         <div data-embedded-editable="shallow" data-oe-protected="false" contenteditable="true">
+                            <p data-selection-placeholder=""><br></p>
                             <div data-embedded="simpleWrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
@@ -1243,6 +1262,7 @@ describe("editable descendants", () => {
                                     </div>
                                 </div>
                             </div>
+                            <p data-selection-placeholder=""><br></p>
                         </div>
                     </div>
                     <div>
@@ -1253,6 +1273,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
         const wrapper = el.querySelector(`[data-embedded="wrapper"]`);

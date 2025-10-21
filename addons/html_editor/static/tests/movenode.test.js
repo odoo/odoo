@@ -314,6 +314,7 @@ describe("click", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <table class="o_selected_table">
                     <tbody>
                         <tr>

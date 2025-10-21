@@ -141,11 +141,13 @@ describe("Adjust base container on delete", () => {
             },
             // The P is added by the deletion, not by `cleanEmptyStructuralContainers`.
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <div contenteditable="true">
                         <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -162,11 +164,13 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <div contenteditable="true">
                         <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
@@ -253,11 +257,13 @@ describe("Adjust base container on delete", () => {
                 deleteBackward(editor);
             },
             contentAfterEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <div contenteditable="true">
                         <div class="o-paragraph o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></div>
                     </div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `),
         });
     });
