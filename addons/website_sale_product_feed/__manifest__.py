@@ -2,6 +2,7 @@
 
 {
     'name': "Google Merchant Center",
+    'version': '1.1',
     'category': 'Website/Website',
     'sequence': 50,
     'summary': "Synchronize your products with Google Merchant Center",
