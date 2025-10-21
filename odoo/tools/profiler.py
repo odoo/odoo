@@ -122,6 +122,7 @@ class Collector:
             and self.profiler.entry_count() >= self.profiler.entry_count_limit
         ):
             self.profiler.end()
+            return
         if entry is None:
             entry = {}
         if 'start' not in entry:
@@ -143,8 +144,10 @@ class Collector:
         """ Return the entries of the collector after postprocessing. """
         if not self._processed:
             self.post_process()
+            self.processed_entries = self._entries
+            self._entries = None  # avoid modification after processing
             self._processed = True
-        return self._entries
+        return self.processed_entries
 
     def summary(self):
         return f"{'='*10} {self.name} {'='*10} \n Entries: {len(self._entries)}"
@@ -223,7 +226,9 @@ class _BasePeriodicCollector(Collector):
 
     def stop(self):
         self._end_time = real_time()
-        self.__thread.join()
+        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
+        if self.__thread.is_alive() and self.__thread is not threading.current_thread():
+            self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.add)
 
 
