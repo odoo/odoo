@@ -3,6 +3,7 @@
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged, TransactionCase
+from odoo.tests.common import new_test_user
 
 
 @tagged("post_install", "-at_install")
@@ -214,3 +215,29 @@ class TestDiscussTools(TransactionCase):
         store.add_model_values("key1", {})
         store.add_model_values("mail.thread", {"id": 1, "model": "res.partner"})
         self.assertEqual(store.get_result(), {"mail.thread": [{"id": 1, "model": "res.partner"}]})
+
+    # 3xx Tests with real models
+
+    def test_350_non_list_extra_fields_copy_when_following_relations(self):
+        """Test that non-list extra_fields are properly copied when following relations."""
+        user = new_test_user(self.env, "test_user_350@example.com")
+        store = Store()
+        store.add(user, Store.One("partner_id", extra_fields="email"))
+        self.assertEqual(store.get_result()["res.partner"][0]["email"], "test_user_350@example.com")
+
+    def test_355_single_extra_fields_copy_with_records(self):
+        """Test that dynamic_fields apply individually to each record even when list extra_fields are present."""
+        user_a = new_test_user(self.env, "test_user_355_a@example.com")
+        user_b = new_test_user(self.env, "test_user_355_b@example.com")
+        store = Store()
+        store.add(
+            user_a + user_b,
+            Store.One(
+                "partner_id",
+                [],
+                dynamic_fields=lambda user: ["email"] if user == user_a else [],
+                extra_fields=["name"],
+            ),
+        )
+        self.assertEqual(store.get_result()["res.partner"][0]["email"], "test_user_355_a@example.com")
+        self.assertNotIn("email", store.get_result()["res.partner"][1])
