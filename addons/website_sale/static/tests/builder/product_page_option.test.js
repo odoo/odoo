@@ -1,6 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
-import { contains, dataURItoBlob, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    dataURItoBlob,
+    defineModels,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -62,10 +68,9 @@ test("Product page options", async () => {
         return [];
     });
 
-    const base64Image = (
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5"
-        + "AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA"
-    );
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5" +
+        "AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA";
     onRpc("ir.attachment", "search_read", () => [
         {
             mimetype: "image/png",
@@ -81,14 +86,10 @@ test("Product page options", async () => {
             original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
         };
     });
-    onRpc(
-        "/web/image/hoot.png",
-        () => {
-            // converted image won't be used if original is not larger
-            return dataURItoBlob(base64Image + "A".repeat(1000));
-        },
-        { pure: true },
-    );
+    onRpc("/web/image/hoot.png", () => {
+        // converted image won't be used if original is not larger
+        return dataURItoBlob(base64Image + "A".repeat(1000));
+    });
     onRpc("/html_editor/modify_image/1", () => {
         expect.step("modify_image");
         return base64Image; // Simulate image compression/convertion
@@ -122,7 +123,7 @@ test("Product page options", async () => {
         // Save the image changes
         "save",
         // Reload the view
-        "theme_customize_data_get"
+        "theme_customize_data_get",
     ]);
 
     // Make sure that clicking quickly on a builder button after an clicking on

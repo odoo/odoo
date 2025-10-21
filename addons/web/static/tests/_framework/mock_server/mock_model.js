@@ -172,7 +172,7 @@ function createRawInstance(ModelClass) {
  * @param {string} fieldName
  */
 function fieldNotFoundError(modelName, fieldName, consequence) {
-    let message = `cannot find a definition for field "${fieldName}" in model "${modelName}"`;
+    let message = `Cannot find a definition for field "${fieldName}" in model "${modelName}"`;
     if (consequence) {
         message += `: ${consequence}`;
     }
@@ -542,9 +542,6 @@ function isValidFieldValue(record, fieldDef) {
         case "text": {
             return typeof value === "string";
         }
-        case "json": {
-            return typeof value === "string" || typeof value === "object";
-        }
         case "boolean": {
             return typeof value === "boolean";
         }
@@ -797,7 +794,7 @@ function orderByField(model, orderBy, records) {
         } else {
             if (!["boolean", "number", "string"].includes(typeof v1) || typeof v1 !== typeof v2) {
                 throw new MockServerError(
-                    `cannot order by field "${fieldNameSpec}" in model "${
+                    `Cannot order by field "${fieldNameSpec}" in model "${
                         model._name
                     }": values must be of the same primitive type (got ${typeof v1} and ${typeof v2})`
                 );
@@ -934,7 +931,7 @@ function parseView(model, params) {
     for (const [name, node] of Object.entries(groupbyNodes)) {
         const field = fields[name];
         if (!isM2OField(field)) {
-            throw new MockServerError("cannot group: 'groupby' can only target many2one fields");
+            throw new MockServerError("Cannot group: 'groupby' can only target many2one fields");
         }
         field.views = {};
         const coModel = getRelation(field);
@@ -1258,7 +1255,7 @@ function updateComodelRelationalFields(model, record, originalRecord) {
 function validateFieldDefinition(fieldName, fieldDef) {
     if (fieldDef[S_FIELD] && fieldDef.name) {
         throw new MockServerError(
-            `cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
+            `Cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
         );
     }
     delete fieldDef[S_FIELD];
@@ -1271,7 +1268,7 @@ function validateFieldDefinition(fieldName, fieldDef) {
  * @param {number | false} viewId
  */
 function viewNotFoundError(modelName, viewType, viewId, consequence) {
-    let message = `cannot find an arch for view "${viewType}" with ID ${JSON.stringify(
+    let message = `Cannot find an arch for view "${viewType}" with ID ${JSON.stringify(
         viewId
     )} in model "${modelName}"`;
     if (consequence) {
@@ -1756,7 +1753,7 @@ export class Model extends Array {
         const ids = [];
         for (const values of allValues) {
             if ("id" in values) {
-                throw new MockServerError(`cannot create a record with a given ID value`);
+                throw new MockServerError(`Cannot create a record with a given ID value`);
             }
             const record = { id: this._getNextId() };
             ids.push(record.id);
@@ -1798,7 +1795,7 @@ export class Model extends Array {
             } else {
                 if (!(field.type in DEFAULT_FIELD_VALUES)) {
                     throw new MockServerError(
-                        `missing default value for field type "${field.type}"`
+                        `Missing default value for field type "${field.type}"`
                     );
                 }
                 result[fieldName] = DEFAULT_FIELD_VALUES[field.type]();
@@ -1863,10 +1860,10 @@ export class Model extends Array {
             }
             const [, fieldName, func] = fspec.match(R_AGGREGATE_FUNCTION);
             if (func && !(func in AGGREGATOR_FUNCTIONS)) {
-                throw new MockServerError(`invalid aggregation function "${func}"`);
+                throw new MockServerError(`Invalid aggregation function "${func}"`);
             }
             if (!this._fields[fieldName]) {
-                throw new MockServerError(`invalid field in "${fspec}"`);
+                throw new MockServerError(`Invalid field in "${fspec}"`);
             }
             return { fieldName, func, name: fspec };
         });
@@ -2330,7 +2327,7 @@ export class Model extends Array {
         const supportedTypes = ["many2one", "selection"];
         if (!supportedTypes.includes(field.type)) {
             throw new MockServerError(
-                `only category types ${supportedTypes.join(" and ")} are supported, got "${
+                `Only category types ${supportedTypes.join(" and ")} are supported, got "${
                     field.type
                 }"`
             );
@@ -2471,7 +2468,7 @@ export class Model extends Array {
         const supportedTypes = ["many2many", "many2one", "selection"];
         if (!supportedTypes.includes(field.type)) {
             throw new MockServerError(
-                `only filter types ${supportedTypes} are supported, got "${field.type}"`
+                `Only filter types ${supportedTypes} are supported, got "${field.type}"`
             );
         }
         let modelDomain = kwargs.search_domain || [];
@@ -3089,7 +3086,7 @@ export class Model extends Array {
                 const fieldDef = this._fields[fieldName];
                 if (!isValidFieldValue(record, fieldDef)) {
                     throw new MockServerError(
-                        `invalid value for field "${fieldName}" on ${getRecordQualifier(
+                        `Invalid value for field "${fieldName}" on ${getRecordQualifier(
                             record
                         )} in model "${this._name}": expected "${fieldDef.type}" and got: ${
                             record[fieldName]
@@ -3383,7 +3380,7 @@ export class Model extends Array {
         for (const id of ids) {
             if (!id) {
                 throw new MockServerError(
-                    `cannot read: falsy ID value would result in an access error on the actual server`
+                    `Cannot read: falsy ID value would result in an access error on the actual server`
                 );
             }
             const record = modelMap[this._name][id];
@@ -3617,7 +3614,7 @@ export class Model extends Array {
                         ids = [...command[2]];
                     } else {
                         throw new MockServerError(
-                            `command "${JSON.stringify(
+                            `Command "${JSON.stringify(
                                 value
                             )}" is not supported by the MockServer on field "${fieldName}" in model "${
                                 this._name
@@ -3635,7 +3632,7 @@ export class Model extends Array {
                             continue;
                         }
                         throw new MockServerError(
-                            `invalid ID "${JSON.stringify(
+                            `Invalid ID "${JSON.stringify(
                                 value
                             )}" for a many2one on field "${fieldName}" in model "${this._name}"`
                         );
