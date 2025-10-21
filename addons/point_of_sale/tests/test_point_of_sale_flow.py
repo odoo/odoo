@@ -841,6 +841,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
+        # It should no be possible to make the invoice draft
+        with self.assertRaises(UserError):
+            invoice.button_draft()
+
         # I close the session to generate the journal entries
         current_session.action_pos_session_closing_control()
 
