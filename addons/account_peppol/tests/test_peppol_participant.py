@@ -1,8 +1,10 @@
 import json
 from contextlib import contextmanager
-from requests import Session, PreparedRequest, Response
-from psycopg2 import IntegrityError
 from unittest.mock import patch
+from urllib.parse import parse_qs, quote_plus
+
+from psycopg2 import IntegrityError
+from requests import PreparedRequest, Response, Session
 
 from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged, TransactionCase, freeze_time
@@ -54,14 +56,29 @@ class TestPeppolParticipant(TransactionCase):
         response = Response()
         response.status_code = 200
         url = r.path_url.lower()
-        if url.endswith('/iso6523-actorid-upis%3A%3A9925%3ABE0239843188'.lower()):
-            # 9925:0000000000 is not on Peppol
-            response.status_code = 404
-            return response
-
-        if url.endswith('/iso6523-actorid-upis%3A%3A0208%3A0239843188'.lower()):
-            # 0208:0000000000 is on Peppol
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0239843188</id:ParticipantIdentifier></smp:ServiceGroup>'
+        if r.path_url.startswith('/api/peppol/1/lookup'):
+            peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+            if peppol_identifier == "0208:0239843188":
+                # 0208:0239843188 is on Peppol
+                response.json = lambda: {
+                    "result": {
+                        "identifier": peppol_identifier,
+                        "smp_base_url": "http://example.com/smp",
+                        "ttl": 60,
+                        "service_group_url": "http://example.com/smp/iso6523-actorid-upis%3A%3A" + quote_plus(peppol_identifier),
+                        "services": []
+                    }
+                }
+            elif peppol_identifier == "9925:be0239843188":
+                # the rest is not on Peppol
+                response.status_code = 404
+                response.json = lambda: {
+                    "error": {
+                        "code": "NOT_FOUND",
+                        "message": "no naptr record",
+                        "retryable": False,
+                    },
+                }
             return response
 
         body = json.loads(r.body)

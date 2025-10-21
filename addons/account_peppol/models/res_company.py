@@ -285,12 +285,13 @@ class ResCompany(models.Model):
     def _get_company_info_on_peppol(self, edi_identification):
 
         def _get_peppol_provider(participant_info):
-            service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
-            service_href = ''
-            if service_metadata is not None:
-                service_href = service_metadata.attrib.get('href', '')
-            if not service_href:
+            if not participant_info:
                 return None
+            services = participant_info.get('services', [])
+            if not services:
+                return None
+
+            service_href = services[0].get('href')
 
             provider_name = None
             with contextlib.suppress(requests.exceptions.RequestException, etree.XMLSyntaxError):
@@ -305,7 +306,7 @@ class ResCompany(models.Model):
         external_provider = None
         error_msg = ''
         if (
-            (participant_info := self.partner_id._get_participant_info(edi_identification)) is not None
+            (participant_info := self.partner_id._peppol_lookup_participant(edi_identification)) is not None
             and (is_company_on_peppol := self.partner_id._check_peppol_participant_exists(participant_info, edi_identification))
         ):
             error_msg = _(
