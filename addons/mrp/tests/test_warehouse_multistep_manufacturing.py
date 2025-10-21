@@ -24,6 +24,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         warehouse_form.name = 'Test Warehouse'
         warehouse_form.code = 'TWH'
         cls.warehouse = warehouse_form.save()
+        cls.warehouse.manufacture_pull_id.route_id.product_selectable = True
+        cls.warehouse.mto_pull_id.route_id.product_selectable = True
+        #check warehouse : routes must exist and have product_selectable set to True
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
@@ -139,12 +142,12 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         components and move_orig/move_dest. Ensure that everything is created
         correctly.
         """
-        with Form(self.warehouse) as warehouse:
+        with Form(self.warehouse) as warehouse:  #TWH
             warehouse.manufacture_steps = 'pbm_sam'
 
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.finished_product
-        production_form.picking_type_id = self.warehouse.manu_type_id
+        production_form.picking_type_id = self.warehouse.manu_type_id  #TWHMANUF
         production = production_form.save()
         production.action_confirm()
 
@@ -162,7 +165,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         move_finished_ids = production.move_finished_ids
         self.assertEqual(len(move_finished_ids), 1)
         self.assertEqual(move_finished_ids.product_id, self.finished_product)
-        self.assertEqual(move_finished_ids.picking_type_id, self.warehouse.manu_type_id)
+        self.assertEqual(move_finished_ids.picking_type_id, self.warehouse.manu_type_id) #BWHMANUF vs TWHMANUF
         production.button_mark_done()
         sam_move = move_finished_ids.move_dest_ids
         self.assertEqual(len(sam_move), 1)

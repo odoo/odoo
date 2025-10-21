@@ -273,9 +273,6 @@ class MrpWorkorder(models.Model):
             if not workorder.blocked_by_workorder_ids or all(wo.state == 'cancel' for wo in workorder.blocked_by_workorder_ids):
                 workorder.qty_ready = workorder.qty_remaining
                 continue
-            if workorder.product_tracking == 'serial':
-                workorder.qty_ready = 1 if all(wo.state == 'done' for wo in workorder.blocked_by_workorder_ids) else 0
-                continue
             workorder_qty_ready = workorder.qty_remaining + workorder.qty_produced + workorder.qty_reported_from_previous_wo
             for wo in workorder.blocked_by_workorder_ids:
                 if wo.state != 'cancel':

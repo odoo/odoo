@@ -451,7 +451,7 @@ class MrpProduction(models.Model):
     @api.depends('move_finished_ids.date_deadline')
     def _compute_date_deadline(self):
         for production in self:
-            if not production.date_deadline:
+            if production.move_finished_ids and not production.date_deadline: # Avoid to reassign False if there's no finished moves as it will call compute_move_finished_ids and immediately delete the newly created moves
                 production.date_deadline = min(production.move_finished_ids.filtered('date_deadline').mapped('date_deadline'), default=False)
 
     @api.depends('workorder_ids.duration_expected')
@@ -790,9 +790,9 @@ class MrpProduction(models.Model):
         production_with_move_finished_ids_to_unlink_ids = OrderedSet()
         ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         for production in self:
-            if production.id in ignored_mo_ids:
+            if production.id in ignored_mo_ids or not production.move_finished_ids or production.state == 'draft':
                 continue
-            if production.state != 'draft' or production.move_finished_ids or production.move_byproduct_ids:
+            if production.state != 'draft':  # or production.move_finished_ids or production.move_byproduct_ids
                 updated_values = {}
                 if production.date_finished:
                     updated_values['date'] = production.date_finished
@@ -803,21 +803,19 @@ class MrpProduction(models.Model):
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
                     ]
                 continue
-            production_with_move_finished_ids_to_unlink_ids.add(production.id)
+            if production.product_id:
+                production._create_update_move_finished()
+            else:
+                production_with_move_finished_ids_to_unlink_ids.add(production.id)
 
         production_with_move_finished_ids_to_unlink = self.browse(production_with_move_finished_ids_to_unlink_ids)
 
         # delete to remove existing moves from database and clear to remove new records
-        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.delete(m) for m in production_with_move_finished_ids_to_unlink.move_finished_ids.ids]
-        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.clear()]
-
-        for production in production_with_move_finished_ids_to_unlink:
-            if production.product_id:
-                production._create_update_move_finished()
-            else:
-                production.move_finished_ids = [
-                    Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
-                ]
+        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.unlink(m.id) for m in production_with_move_finished_ids_to_unlink.move_finished_ids if m.bom_line_id]
+        # Since move_finished_ids is a one2many with 'cascade' unlinking, we can use unlink rather than delete.
+        # Moreover, as we we need to unlink each record, we can simply use 'clear'.
+        # By simplifying this step, we avoid trying to unlink already deleted records.
+        # production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.clear()]
 
     @api.depends('bom_id', 'product_id', 'move_raw_ids.product_id', 'workorder_ids')
     def _compute_show_generate_bom(self):
