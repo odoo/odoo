@@ -16,11 +16,12 @@
                         <field name="qty_max" class="text-center" style="width:50px;"/>
                         <label for="qty_max" string="items" class="fw-bolder ps-3" />
                     </div>
-                    <span class="o_form_label oe_inline fw-bolder">Includes</span>
-                    <div>
+                    <span class="o_form_label oe_inline fw-bolder" invisible="is_upsell">Includes</span>
+                    <div invisible="is_upsell">
                         <field name="qty_free" class="text-center" style="width:50px;"/>
                         <label for="qty_free" string="free" class="fw-bolder ps-3" />
                     </div>
+                    <field name="is_upsell"/>
                 </group>
                 <group>
                     <field name="base_price" widget="monetary" options="{'field_digits': True}"/>

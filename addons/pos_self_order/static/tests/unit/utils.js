@@ -103,6 +103,6 @@ export const addComboProduct = async (store) => {
             qty: 1,
         },
     ];
-    store.addToCart(productCombo, 2, "", {}, {}, comboValues);
+    await store.addToCart(productCombo, 2, "", {}, {}, comboValues);
     return store.currentOrder.lines.find((ol) => ol.combo_line_ids.length); // Parent Combo line
 };

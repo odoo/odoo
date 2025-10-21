@@ -65,5 +65,5 @@ test("getPrice", async () => {
 
     // For combo parent line
     const parentLine = await addComboProduct(store);
-    expect(comp.getPrice(parentLine)).toBe(2125);
+    expect(comp.getPrice(parentLine)).toBe(500);
 });

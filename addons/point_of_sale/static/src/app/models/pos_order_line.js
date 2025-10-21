@@ -446,6 +446,13 @@ export class PosOrderline extends PosOrderlineAccounting {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
 
+    get parentLine() {
+        if (this.combo_parent_id) {
+            return this.combo_parent_id.parentLine;
+        }
+        return this;
+    }
+
     get packLotLines() {
         return this.pack_lot_ids.map(
             (l) =>

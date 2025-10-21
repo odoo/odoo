@@ -32,5 +32,53 @@ export class ProductComboItem extends models.ServerModel {
             product_id: 11,
             extra_price: 50,
         },
+        {
+            id: 5,
+            combo_id: 1,
+            product_id: 8,
+            extra_price: 0,
+        },
+        {
+            id: 6,
+            combo_id: 1,
+            product_id: 9,
+            extra_price: 35,
+        },
+        {
+            id: 7,
+            combo_id: 2,
+            product_id: 10,
+            extra_price: 0,
+        },
+        {
+            id: 8,
+            combo_id: 2,
+            product_id: 11,
+            extra_price: 50,
+        },
+        {
+            id: 9,
+            combo_id: 1,
+            product_id: 8,
+            extra_price: 0,
+        },
+        {
+            id: 10,
+            combo_id: 1,
+            product_id: 9,
+            extra_price: 35,
+        },
+        {
+            id: 11,
+            combo_id: 2,
+            product_id: 10,
+            extra_price: 0,
+        },
+        {
+            id: 12,
+            combo_id: 2,
+            product_id: 11,
+            extra_price: 50,
+        },
     ];
 }

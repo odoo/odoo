@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useState, onMounted } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { QuantityButtons } from "@point_of_sale/app/components/buttons/quantity_buttons/quantity_buttons";
@@ -12,44 +12,63 @@ export class ComboConfiguratorPopup extends Component {
         productTemplate: Object,
         getPayload: Function,
         close: Function,
+        title: { type: String, optional: true },
         line: { type: Object, optional: true },
+        values: { type: Object, optional: true },
     };
 
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");
 
-        const selected = this.props.line?.getAllLinesInCombo()?.reduce((acc, value) => {
-            if (!value.combo_item_id) {
-                return acc;
-            }
+        let combo = {};
+        let selected = undefined;
+        let configuration = {};
 
-            acc[value.combo_item_id.id] = 1 + (acc[value.combo_item_id.id] || 0);
-            return acc;
-        }, {});
+        // We either have this.props.line (editing an existing combo line)
+        // or this.props.values (configuring a new combo to add from pre chosen values)
+        // or neither (new combo from scratch)
+        if (this.props.line) {
+            combo = { ...this.props.line?.selectedComboIds };
+            selected = this.props.line?.getAllLinesInCombo()?.reduce((acc, value) => {
+                if (!value.combo_item_id) {
+                    return acc;
+                }
+
+                acc[value.combo_item_id.id] = 1 + (acc[value.combo_item_id.id] || 0);
+                return acc;
+            }, {});
+            configuration = this.props.line?.getAllLinesInCombo().reduce((acc, line) => {
+                if (!line.combo_item_id) {
+                    return acc;
+                }
+
+                acc[line.combo_item_id.id] = {
+                    attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
+                    price_extra: line.extra_price,
+                    attribute_custom_values: line.custom_attribute_value_ids.reduce((acc, val) => {
+                        acc[val.custom_product_template_attribute_value_id.id] = val.custom_value;
+                        return acc;
+                    }, {}),
+                };
+                return acc;
+            }, {});
+        } else if (this.props.values) {
+            selected = Object.values(this.props.values).reduce((acc, value) => {
+                for (const [key, val] of Object.entries(value)) {
+                    if (key === "upsell") {
+                        continue;
+                    }
+                    acc[val.combo_item.id] = (acc[val.combo_item.id] || 0) + val.qty;
+                }
+                return acc;
+            }, {});
+            configuration = this.configurationFromValues;
+        }
 
         this.state = useState({
-            combo: { ...this.props.line?.selectedComboIds } || {},
-            configuration:
-                this.props.line?.getAllLinesInCombo().reduce((acc, line) => {
-                    if (!line.combo_item_id) {
-                        return acc;
-                    }
-
-                    acc[line.combo_item_id.id] = {
-                        attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
-                        price_extra: line.extra_price,
-                        attribute_custom_values: line.custom_attribute_value_ids.reduce(
-                            (acc, val) => {
-                                acc[val.custom_product_template_attribute_value_id.id] =
-                                    val.custom_value;
-                                return acc;
-                            },
-                            {}
-                        ),
-                    };
-                    return acc;
-                }, {}) || {},
+            combo,
+            configuration,
             qty: Object.fromEntries(
                 this.props.productTemplate.combo_ids.map((combo) => [
                     combo.id,
@@ -63,12 +82,51 @@ export class ComboConfiguratorPopup extends Component {
             ),
         });
 
-        onMounted(() => {
+        onWillStart(() => {
             this.autoSelectSingleChoices();
-            if (!this.hasMultipleChoices()) {
+            if (!this.hasMultipleChoices() || this.autoConfirmApplicableCombo) {
                 this.confirm();
             }
         });
+    }
+
+    get title() {
+        if (this.props.title) {
+            return this.props.title;
+        }
+        return this.props.productTemplate.display_name;
+    }
+
+    get configurationFromValues() {
+        const values = this.props.values;
+        const conf = {};
+        for (const comboId in values) {
+            for (const lineUuid in values[comboId]) {
+                if (lineUuid === "upsell") {
+                    continue;
+                }
+                const line = this.pos.models["pos.order.line"].getBy("uuid", lineUuid);
+                conf[values[comboId][lineUuid].combo_item.id] = {
+                    attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
+                    attribute_custom_values: Object.fromEntries(
+                        line.custom_attribute_value_ids.map((c) => [
+                            c.custom_product_template_attribute_value_id.id,
+                            c.custom_value,
+                        ])
+                    ),
+                    price_extra: line.price_extra,
+                };
+            }
+        }
+        return conf;
+    }
+
+    get autoConfirmApplicableCombo() {
+        return (
+            this.props.values &&
+            this.isConfirmButtonEnabled() &&
+            !Object.values(this.props.values).some((acc) => Object.keys(acc).includes("upsell"))
+        );
     }
 
     shouldShowCombo(combo) {
@@ -99,9 +157,11 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     formattedComboPrice(comboItem) {
-        return this.pos.currency.isZero(comboItem.extra_price)
-            ? ""
-            : this.env.utils.formatCurrency(comboItem.extra_price);
+        if (this.pos.currency.isZero(comboItem.extra_price)) {
+            return "";
+        }
+        const priceSign = comboItem.extra_price > 0 ? "+" : "-";
+        return priceSign + " " + this.env.utils.formatCurrency(comboItem.extra_price);
     }
 
     getSelectedComboItems() {

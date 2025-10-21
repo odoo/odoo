@@ -4,6 +4,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -237,5 +238,63 @@ registry.category("web_tour.tours").add("ProductComboDiscountTour", {
             inLeftSide([Numpad.click("%"), Numpad.click("2"), Numpad.click("0")]),
             ProductScreen.totalAmountIs("80.00"),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Add products that can be part of a combo
+            ProductScreen.clickDisplayedProduct("Combo Product 2"),
+            ProductScreen.clickDisplayedProduct("Combo Product 4"),
+            ProductScreen.clickDisplayedProduct("Combo Product 6"),
+
+            // Convert to combo
+            ProductScreen.clickApplyCombo(),
+
+            // Check that orderline is now a combo
+            inLeftSide([
+                { ...ProductScreen.clickLine("Office Combo")[0], isActive: ["mobile"] },
+                ...Order.hasLine({
+                    productName: "Office Combo",
+                    quantity: "1",
+                    withClass: ".selected",
+                }),
+                ...ProductScreen.clickControlButtonMore(),
+                ...ProductScreen.clickBreakCombo(),
+                ...Order.hasLine({ productName: "Combo Product 2", quantity: "1" }),
+                ...Order.hasLine({ productName: "Combo Product 4", quantity: "1" }),
+                ...Order.hasLine({ productName: "Combo Product 6", quantity: "1" }),
+                ...Order.doesNotHaveLine({ productName: "Office Combo" }),
+            ]),
+
+            ProductScreen.clickDisplayedProduct("Second Product 2"),
+            ProductScreen.clickDisplayedProduct("Second Product 4"),
+            ProductScreen.clickDisplayedProduct("Second Product 9"),
+            // Select attributes
+            ProductConfiguratorPopup.pickColor("Blue"),
+            ProductConfiguratorPopup.selectedColor("Blue"),
+            Dialog.confirm(),
+
+            // Convert to combo
+            ProductScreen.clickApplyCombo(
+                true,
+                ["Second Combo Product", "Office Combo"],
+                "Second Combo Product",
+                true
+            ),
+
+            // Check that orderline is now a combo
+            inLeftSide([
+                ...Order.hasLine({ productName: "Second Combo Product", quantity: "1" }),
+                ...Order.hasLine({
+                    productName: "Second Product 9",
+                    quantity: "1",
+                    attributeLine: "Blue",
+                }),
+            ]),
         ].flat(),
 });
