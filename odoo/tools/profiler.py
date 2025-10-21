@@ -279,9 +279,9 @@ class MemoryCollector(_BasePeriodicCollector):
         })
 
     def stop(self):
+        super().stop()
         _lock.release()
         tracemalloc.stop()
-        super().stop()
 
     def post_process(self):
         for i, entry in enumerate(self._entries):
