@@ -3,11 +3,11 @@ import { fields, Record } from "@mail/core/common/record";
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 
 export class ChatWindow extends Record {
-    static id = "thread";
+    static id = "channel";
 
     actionsDisabled = false;
     bypassCompact = false;
-    thread = fields.One("mail.thread", { inverse: "chat_window" });
+    channel = fields.One("discuss.channel", { inverse: "chatWindow" });
     autofocus = 0;
     jumpToNewMessage = 0;
     hidden = false;
@@ -33,10 +33,6 @@ export class ChatWindow extends Record {
             }
         },
     });
-
-    get displayName() {
-        return this.thread?.displayName;
-    }
 
     get isOpen() {
         return Boolean(this.hubAsOpened);

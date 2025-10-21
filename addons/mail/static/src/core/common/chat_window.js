@@ -53,7 +53,7 @@ export class ChatWindow extends Component {
         });
         this.ui = useService("ui");
         this.contentRef = useRef("content");
-        this.threadActions = useThreadActions({ thread: () => this.thread });
+        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
@@ -62,13 +62,6 @@ export class ChatWindow extends Component {
             closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
             messageHighlight: this.messageHighlight,
         });
-    }
-
-    get composerType() {
-        if (this.thread.model !== "discuss.channel") {
-            return "note";
-        }
-        return undefined;
     }
 
     get hasActionsMenu() {
@@ -80,12 +73,12 @@ export class ChatWindow extends Component {
         );
     }
 
-    get thread() {
-        return this.props.chatWindow.thread;
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 
     get showImStatus() {
-        return this.thread?.channel?.channel_type === "chat" && this.thread.correspondent;
+        return this.channel.channel_type === "chat" && this.channel.correspondent;
     }
 
     get attClass() {
@@ -173,9 +166,9 @@ export class ChatWindow extends Component {
         return _t("Open Actions Menu");
     }
 
-    async renameThread(name) {
-        const thread = toRaw(this.thread);
-        await thread.rename(name);
+    async renameChannel(name) {
+        const channel = toRaw(this.channel);
+        await channel.rename(name);
         this.state.editingName = false;
     }
 

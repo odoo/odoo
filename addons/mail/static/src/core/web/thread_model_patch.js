@@ -77,8 +77,7 @@ const threadPatch = {
     },
     async unpin() {
         await this.store.chatHub.initPromise;
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        await chatWindow?.close();
+        this.channel?.chatWindow?.close();
         await super.unpin(...arguments);
     },
     async follow() {

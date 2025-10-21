@@ -78,9 +78,9 @@ export class LivechatChannelInfoList extends Component {
 
     openVisitorProfile() {
         if (this.ui.isSmall) {
-            this.store.ChatWindow.get({ thread: this.props.thread })?.fold();
+            this.props.thread.channel.chatWindow?.fold();
         } else {
-            this.props.thread.openChatWindow({ focus: true });
+            this.props.thread.channel.openChatWindow({ focus: true });
         }
     }
 

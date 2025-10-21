@@ -15,25 +15,25 @@ const chatWindowPatch = {
         this.livechatStep = CW_LIVECHAT_STEP.NONE;
     },
     close(options = {}) {
-        if (this.thread?.channel?.channel_type !== "livechat") {
+        if (this.channel.channel_type !== "livechat") {
             return super.close(...arguments);
         }
         if (options.force) {
             this.livechatStep = CW_LIVECHAT_STEP.NONE;
             return super.close(...arguments);
         }
-        const isSelfVisitor = this.thread.livechatVisitorMember?.persona?.eq(this.store.self);
+        const isSelfVisitor = this.channel.livechatVisitorMember?.persona?.eq(this.store.self);
         switch (this.livechatStep) {
             case CW_LIVECHAT_STEP.NONE: {
-                if (this.thread.isTransient) {
-                    this.thread.delete();
+                if (this.channel.isTransient) {
+                    this.channel.delete({ closeChatWindow: false });
                     super.close(...arguments);
                     break;
                 }
-                if (this.thread.livechat_end_dt) {
+                if (this.channel.livechat_end_dt) {
                     if (isSelfVisitor) {
                         this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
-                        this.open({ focus: true, notifyState: this.thread?.state !== "open" });
+                        this.open({ focus: true, notifyState: this.channel.state !== "open" });
                     } else {
                         super.close(...arguments);
                     }
@@ -41,7 +41,7 @@ const chatWindowPatch = {
                 }
                 this.actionsDisabled = true;
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
-                if (!isSelfVisitor && this.thread.channel?.channel_member_ids.length > 2) {
+                if (!isSelfVisitor && this.channel.channel_member_ids.length > 2) {
                     super.close(...arguments);
                     break;
                 }
@@ -53,7 +53,7 @@ const chatWindowPatch = {
             case CW_LIVECHAT_STEP.CONFIRM_CLOSE: {
                 this.actionsDisabled = false;
                 if (isSelfVisitor) {
-                    this.open({ focus: true, notifyState: this.thread?.state !== "open" });
+                    this.open({ focus: true, notifyState: this.channel.state !== "open" });
                     this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
                 } else {
                     this.livechatStep = CW_LIVECHAT_STEP.NONE;
