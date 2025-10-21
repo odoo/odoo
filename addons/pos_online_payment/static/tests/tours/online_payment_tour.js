@@ -58,3 +58,23 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             Dialog.confirm(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_selected_customer_after_adding_payment_sync", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Letter Tray", "10"),
+            ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("48.0"),
+            PaymentScreen.emptyPaymentlines("48.0"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "48.0"),
+            PaymentScreen.clickPartnerButton(),
+            PaymentScreen.clickCustomer("A simple PoS man!"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
+            Dialog.is("Scan to Pay"),
+        ].flat(),
+});
