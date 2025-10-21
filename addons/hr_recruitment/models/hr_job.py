@@ -277,7 +277,7 @@ class HrJob(models.Model):
             defaults.update({
                 'job_id': self.id,
                 'department_id': self.department_id.id,
-                'company_id': self.department_id.company_id.id if self.department_id else self.company_id.id,
+                'company_id': self.department_id.company_id.id or self.company_id.id,
                 'user_id': self.user_id.id,
             })
         return values
