@@ -317,14 +317,18 @@ class Domain:
 
     def __and__(self, other):
         """Domain & Domain"""
+        if isinstance(other, DomainBool):
+            return other & self
         if isinstance(other, Domain):
-            return DomainAnd.apply([self, other])
+            return DomainAnd.apply((self, other))
         return NotImplemented
 
     def __or__(self, other):
         """Domain | Domain"""
+        if isinstance(other, DomainBool):
+            return other | self
         if isinstance(other, Domain):
-            return DomainOr.apply([self, other])
+            return DomainOr.apply((self, other))
         return NotImplemented
 
     def __invert__(self):
