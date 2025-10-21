@@ -9,7 +9,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -57,16 +60,12 @@ test("Add image as cover", async () => {
         original: { id: 1, image_src: "/web/image/hoot.png", mimetype: "image/png" },
     }));
 
-    onRpc(
-        "/web/image/hoot.png",
-        () => {
-            const base64Image =
-                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
-                "A".repeat(1000); // converted image won't be used if original is not larger
-            return dataURItoBlob(base64Image);
-        },
-        { pure: true }
-    );
+    onRpc("/web/image/hoot.png", () => {
+        const base64Image =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
+            "A".repeat(1000); // converted image won't be used if original is not larger
+        return dataURItoBlob(base64Image);
+    });
 
     const blogPostTitle = "Title of Test Post";
 
