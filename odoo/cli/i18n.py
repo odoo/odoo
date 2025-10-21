@@ -104,7 +104,7 @@ class I18n(Command):
     def run(self, cmdargs):
         parsed_args = self.parser.parse_args(args=cmdargs)
 
-        config_args = []
+        config_args = ['--no-http']
         if parsed_args.config:
             config_args += ['-c', parsed_args.config]
         if parsed_args.db_name:
