@@ -1107,7 +1107,16 @@ class SaleOrder(models.Model):
 
         if not program or not program.active:
             return {'error': _('This code is invalid (%s).', code), 'not_found': True}
-        elif (program.limit_usage and program.total_order_count >= program.max_usage) or\
+
+        # Lock the loyalty program row to block several processes that try to
+        # read it at the same time. We also use NOWAIT to make sure we trigger a
+        # serialization error when the processes don't have the lock and thus,
+        # trigger a retry of the transaction.
+        self.env.cr.execute("""
+            SELECT id FROM loyalty_program WHERE id=%s FOR UPDATE NOWAIT
+        """, (program.id,))
+
+        if (program.limit_usage and program.total_order_count >= program.max_usage) or\
             (program.date_to and program.date_to < fields.Date.context_today(self)):
             return {'error': _('This code is expired (%s).', code)}
 
