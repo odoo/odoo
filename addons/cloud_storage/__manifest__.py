@@ -8,6 +8,7 @@
     "depends": ["base_setup", "mail"],
     "data": [
         "views/settings.xml",
+        "data/ir_cron.xml",
     ],
     'assets': {
         'web.assets_backend': [
