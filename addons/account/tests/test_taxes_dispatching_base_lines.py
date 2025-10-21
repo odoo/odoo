@@ -240,3 +240,121 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
         base_lines = AccountTax._dispatch_global_discount_lines(base_lines, self.env.company)
         AccountTax._squash_global_discount_lines(base_lines, self.env.company)
         self.assertEqual(len(base_lines), 3)
+
+    def test_dispatch_taxes_into_new_base_lines(self):
+
+        def assert_tax_totals_summary_after_dispatching(document, exclude_function, expected_values):
+            new_base_lines = AccountTax._dispatch_taxes_into_new_base_lines(
+                base_lines=document['lines'],
+                company=self.env.company,
+                exclude_function=exclude_function,
+            )
+
+            extra_base_lines = AccountTax._turn_removed_taxes_into_new_base_lines(new_base_lines, self.env.company)
+            self.assert_tax_totals_summary(
+                document={
+                    **document,
+                    'lines': new_base_lines + extra_base_lines,
+                },
+                expected_values=expected_values,
+                soft_checking=True,
+            )
+
+        AccountTax = self.env['account.tax']
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax1 = self.fixed_tax(1, include_base_amount=True)
+        tax2 = self.fixed_tax(5)
+        tax3 = self.percent_tax(21)
+        taxes = tax1 + tax2 + tax3
+
+        document_params = self.init_document(
+            lines=[
+                {'price_unit': 16.79, 'tax_ids': taxes},
+                {'price_unit': 16.79, 'tax_ids': taxes},
+            ],
+            currency=self.foreign_currency,
+            rate=0.5,
+        )
+        document = self.populate_document(document_params)
+
+        expected_values = {
+            'base_amount_currency': 33.58,
+            'tax_amount_currency': 19.47,
+            'total_amount_currency': 53.05,
+        }
+        self.assert_tax_totals_summary(document, expected_values, soft_checking=True)
+
+        assert_tax_totals_summary_after_dispatching(
+            document=document,
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax1,
+            expected_values={
+                **expected_values,
+                'base_amount_currency': 35.58,
+                'tax_amount_currency': 17.47,
+            },
+        )
+        assert_tax_totals_summary_after_dispatching(
+            document=document,
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax2,
+            expected_values={
+                **expected_values,
+                'base_amount_currency': 43.58,
+                'tax_amount_currency': 9.47,
+            },
+        )
+        assert_tax_totals_summary_after_dispatching(
+            document=document,
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax3,
+            expected_values={
+                **expected_values,
+                'base_amount_currency': 41.05,
+                'tax_amount_currency': 12.0,
+            },
+        )
+
+        taxes.price_include_override = 'tax_included'
+
+        document_params = self.init_document(
+            lines=[
+                {'price_unit': 21.53, 'tax_ids': taxes},
+                {'price_unit': 21.53, 'tax_ids': taxes},
+            ],
+            currency=self.foreign_currency,
+            rate=0.5,
+        )
+        document = self.populate_document(document_params)
+
+        expected_values = {
+            'base_amount_currency': 25.32,
+            'tax_amount_currency': 17.74,
+            'total_amount_currency': 43.06,
+        }
+        self.assert_tax_totals_summary(document, expected_values, soft_checking=True)
+
+        assert_tax_totals_summary_after_dispatching(
+            document=document,
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax1,
+            expected_values={
+                **expected_values,
+                'base_amount_currency': 27.32,
+                'tax_amount_currency': 15.74,
+            },
+        )
+        assert_tax_totals_summary_after_dispatching(
+            document=document,
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax2,
+            expected_values={
+                **expected_values,
+                'base_amount_currency': 35.32,
+                'tax_amount_currency': 7.74,
+            },
+        )
+        assert_tax_totals_summary_after_dispatching(
+            document=document,
+            exclude_function=lambda base_line, tax_data: tax_data['tax'] == tax3,
+            expected_values={
+                **expected_values,
+                'base_amount_currency': 31.06,
+                'tax_amount_currency': 12.0,
+            },
+        )
