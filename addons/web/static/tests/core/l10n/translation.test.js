@@ -59,14 +59,10 @@ test("url is given by the session", async () => {
     patchWithCleanup(session, {
         translationURL: "/get_translations",
     });
-    onRpc(
-        "/get_translations/*",
-        function (request) {
-            expect(request.url).toInclude("/get_translations/");
-            return this.loadTranslations();
-        },
-        { pure: true }
-    );
+    onRpc("/get_translations/*", function (request) {
+        expect(request.url).toInclude("/get_translations/");
+        return this.loadTranslations();
+    });
     await makeMockEnv();
 });
 
@@ -158,7 +154,10 @@ test("_t fills the format specifiers in translated terms with formatted lists", 
     });
     await mockLang("fr_FR");
     const translatedStr1 = _t("Due in %s days", ["30", "60", "90"]);
-    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {due_dates: ["30", "60", "90"], user: "Mitchell"});
+    const translatedStr2 = _t("Due in %(due_dates)s days for %(user)s", {
+        due_dates: ["30", "60", "90"],
+        user: "Mitchell",
+    });
     expect(translatedStr1).toBe("Échéance dans 30, 60 et 90 jours");
     expect(translatedStr2).toBe("Échéance dans 30, 60 et 90 jours pour Mitchell");
 });
