@@ -1386,7 +1386,7 @@ class Base(models.AbstractModel):
         return model_domain_image
 
     @api.model
-    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
+    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=None):
         """
         Return the values in the image of the provided domain by field_name.
 

@@ -2690,7 +2690,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             variant.write({'barcode': f'cherry_{index}'})
 
         @api.model
-        def load_product_from_pos_patch(self, config_id, domain, offset=0, limit=0):
+        def load_product_from_pos_patch(self, config_id, domain, offset=0, limit=None):
             load_product_from_pos_stats['count'] += 1
             result = super(product_template, self).load_product_from_pos(config_id, domain, offset, limit)
             lowered_name = result['product.template'][0]['display_name'].lower()

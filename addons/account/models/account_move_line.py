@@ -1949,7 +1949,7 @@ class AccountMoveLine(models.Model):
                 line._copy_data_extend_business_fields(vals)
         return vals_list
 
-    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
+    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=None):
         if field_name != 'account_root_id' or set_count:
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)
 
