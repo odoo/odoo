@@ -110,14 +110,14 @@
                                 </div>
                             </button>
                         </div>
-                        <div class="row align-items-center">
-                            <div class="o_employee_avatar ms-2 p-0 h-100 mw-25">
+                        <div class="d-flex flex-column flex-sm-row align-items-center">
+                            <div class="o_employee_avatar ms-2 p-0">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="image_1920" widget='image' class="m-0" options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <div class="col">
-                                <div class="oe_title mw-75 ps-0 pe-2">
+                            <div class="col px-4">
+                                <div class="oe_title ps-0 pe-sm-2">
                                     <h1 class="d-flex flex-row align-items-center">
                                         <field name="name" placeholder="Employee's Name"
                                             required="True" style="font-size: min(4vw, 2.6rem);"/>
@@ -127,15 +127,15 @@
                                     </h1>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-75"/>
+                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-100 w-sm-75"/>
                                     </h5>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"  class="w-75"/>
+                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"  class="w-100 w-sm-75"/>
                                     </h5>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"  class="w-75"/>
+                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"  class="w-100 w-sm-75"/>
                                     </h5>
                                     <h5>
                                         <i class="fa fa-tags fa-fw me-1 text-primary" title="Tags"/>
