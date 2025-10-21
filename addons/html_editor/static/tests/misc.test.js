@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, tick, waitFor } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
 import { withSequence } from "@html_editor/utils/resource";
@@ -78,11 +78,21 @@ test("with an empty selector and a <br>", async () => {
 test("no arrow key press or mouse click should keep selection near a contenteditable='false'", async () => {
     await testEditor({
         contentBefore: '[]<hr contenteditable="false">',
+        contentAfterEdit:
+            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+            '<hr contenteditable="false">' +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: "[]<hr>",
     });
     await testEditor({
         contentBefore: '<hr contenteditable="false">[]',
-        contentAfter: "<hr>[]",
+        // Wait for selectionchange listener:
+        stepFunction: async () => await tick(),
+        contentAfterEdit:
+            '<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p>' +
+            '<hr contenteditable="false">' +
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+        contentAfter: "<hr><p>[]<br></p>",
     });
 });
 

@@ -14,7 +14,7 @@ describe("insert separator", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: insertSeparator,
-            contentAfterEdit: `<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfterEdit: `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
             contentAfter: "<hr><p>[]<br></p>",
         });
     });
@@ -23,7 +23,7 @@ describe("insert separator", () => {
         await testEditor({
             contentBefore: "<p>[]abc<br></p>",
             stepFunction: insertSeparator,
-            contentAfterEdit: `<hr contenteditable="false"><p>[]abc<br></p>`,
+            contentAfterEdit: `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p>[]abc<br></p>`,
             contentAfter: "<hr><p>[]abc<br></p>",
         });
     });
