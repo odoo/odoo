@@ -351,7 +351,7 @@
                                                 >1.05</span>
                                             </td>
                                             <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['subtotals'][subtotal_index]['tax_groups'][tax_group_index]['group_name']"/>
-                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
+                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">
                                                 <td class="text-end">
                                                     <strong class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</strong>
                                                     <strong t-if="arabic_tax_group_name != tax_group['group_name']" class="text-nowrap">/
