@@ -1,10 +1,8 @@
-# coding: utf-8
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import werkzeug
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessError
-
 
 
 class PosPaymentMethod(models.Model):
@@ -47,18 +45,20 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def stripe_connection_token(self):
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Stripe"))
-        
+        self._stripe_check_access()
+
         return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', 'terminal/connection_tokens')
 
     def _stripe_calculate_amount(self, amount):
         currency = self.journal_id.currency_id or self.company_id.currency_id
-        return round(amount/currency.rounding)
+        return round(amount / currency.rounding)
 
-    def stripe_payment_intent(self, amount):
+    def _stripe_check_access(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Do not have access to fetch token from Stripe"))
+
+    def stripe_payment_intent(self, amount):
+        self._stripe_check_access()
 
         # For Terminal payments, the 'payment_method_types' parameter must include
         # at least 'card_present' and the 'capture_method' must be set to 'manual'.
@@ -80,6 +80,20 @@ class PosPaymentMethod(models.Model):
 
         return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', 'payment_intents', data=params)
 
+    def stripe_refund(self, payment_intent_id, amount):
+        self._stripe_check_access()
+
+        id_type = "payment_intent" if payment_intent_id.startswith("pi") else "charge"
+        params = [
+            (id_type, payment_intent_id),
+            ("amount", self._stripe_calculate_amount(abs(amount))),
+        ]
+
+        try:
+            return self.sudo()._get_stripe_payment_provider()._send_api_request("POST", "refunds", data=params)
+        except ValidationError as error:
+            return {"error": error}
+
     @api.model
     def stripe_capture_payment(self, paymentIntentId, amount=None):
         """Captures the payment identified by paymentIntentId.
@@ -89,8 +103,7 @@ class PosPaymentMethod(models.Model):
                        amount is captured. Specifying a larger amount allows
                        overcapturing to support tips.
         """
-        if not self.env.user.has_group('point_of_sale.group_pos_user'):
-            raise AccessError(_("Do not have access to fetch token from Stripe"))
+        self._stripe_check_access()
 
         endpoint = ('payment_intents/%s/capture') % (werkzeug.urls.url_quote(paymentIntentId))
 
