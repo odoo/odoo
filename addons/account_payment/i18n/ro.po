@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Larisa Pop, 2024
 # Lyall Kindmurr, 2024
 # Andrei C, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: account_payment
 #. odoo-python
@@ -114,12 +115,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
-"<strong>Atenție!</strong> Există o rambursare în așteptare pentru această plată.\n"
-"                        Așteptați un moment pentru a fi procesată. Dacă rambursarea este încă în așteptare în\n"
-"                        câteva minute, vă rugăm să verificați configurația furnizorului de plată."
+"<strong>Atenție!</strong> Există o rambursare în așteptare pentru această "
+"plată.\n"
+"                        Așteptați un moment pentru a fi procesată. Dacă "
+"rambursarea este încă în așteptare în\n"
+"                        câteva minute, vă rugăm să verificați configurația "
+"furnizorului de plată."
 
 #. module: account_payment
 #. odoo-python
@@ -130,8 +136,8 @@ msgstr "O reducere va fi aplicată dacă clientul plătește până la %s inclus
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
 "O plată a fost deja efectuată pentru această factură, vă rugăm să vă "
 "asigurați că nu plătiți de două ori."
@@ -181,8 +187,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Sunteți sigur că doriți să anulați tranzacția autorizată? Această acțiune nu"
-" poate fi anulată."
+"Sunteți sigur că doriți să anulați tranzacția autorizată? Această acțiune nu "
+"poate fi anulată."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -201,11 +207,6 @@ msgstr "Captură tranzacție"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "Închide"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "Cod"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -311,7 +312,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"În modul de testare, o plată falsă este procesată printr-o interfață de plată de testare.\n"
+"În modul de testare, o plată falsă este procesată printr-o interfață de "
+"plată de testare.\n"
 "Acest mod este recomandat la configurarea furnizorului."
 
 #. module: account_payment
@@ -382,8 +384,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
-"Rețineți că doar token-urile de la furnizori care permit captarea sumei sunt"
-" disponibile."
+"Rețineți că doar token-urile de la furnizori care permit captarea sumei sunt "
+"disponibile."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -746,10 +748,12 @@ msgstr "Anulare tranzacție"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Nu puteți șterge o metodă de plată care este conectată la un furnizor în starea activată sau de testare.\n"
+"Nu puteți șterge o metodă de plată care este conectată la un furnizor în "
+"starea activată sau de testare.\n"
 "Furnizori conectați: %s"
 
 #. module: account_payment
@@ -769,7 +773,8 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Mai întâi trebuie să dezactivați un furnizor de plăți înainte de a-i șterge jurnalul.\n"
+"Mai întâi trebuie să dezactivați un furnizor de plăți înainte de a-i șterge "
+"jurnalul.\n"
 "Furnizori conectați: %s"
 
 #. module: account_payment
@@ -793,3 +798,6 @@ msgstr "a fost aplicată"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "restant"
+
+#~ msgid "Code"
+#~ msgstr "Cod"

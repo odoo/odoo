@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # 何彬 <vnsoft.he@gmail.com>, 2024
 # kunqing shi, 2025
 # Chloe Wang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2025-10-16 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
@@ -29,8 +30,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s - 分期付款 <strong>%(amount)s</strong> 到期日<strong class=\"text-"
-"primary\">%(date)s</strong>"
+"#%(number)s - 分期付款 <strong>%(amount)s</strong> 到期日<strong "
+"class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -49,8 +50,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Pay Now</span>"
 msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-"
-"inline\">立即支付</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\">立"
+"即支付</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -113,12 +114,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 
 #. module: account_payment
 #. odoo-python
@@ -129,11 +134,11 @@ msgstr "A discount will be applied if the customer pays before %s included."
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 
 #. module: account_payment
 #. odoo-python
@@ -200,11 +205,6 @@ msgstr "捕捉交易"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "关闭"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "代码"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -747,10 +747,12 @@ msgstr "无效交易"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 
 #. module: account_payment
@@ -794,3 +796,6 @@ msgstr "已套用。"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "逾期"
+
+#~ msgid "Code"
+#~ msgstr "代码"
