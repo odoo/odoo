@@ -375,7 +375,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for tax_amount, discount_amount in epd_tax_to_discount.items():
                 vals_list.append({
                     'charge_indicator': 'false',
-                    'allowance_charge_reason_code': '66',
+                    'allowance_charge_reason_code': '64',
                     'allowance_charge_reason': _("Conditional cash/payment discount"),
                     'amount': discount_amount,
                     'currency_dp': 2,
@@ -1643,7 +1643,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         base_amount = base_line['tax_details'][f'total_excluded{currency_suffix}']
         return {
             'cbc:ChargeIndicator': {'_text': 'false' if base_amount < 0.0 else 'true'},
-            'cbc:AllowanceChargeReasonCode': {'_text': '66' if base_amount < 0.0 else 'ZZZ'},
+            'cbc:AllowanceChargeReasonCode': {'_text': '64' if base_amount < 0.0 else 'ZZZ'},
             'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
             'cbc:Amount': {
                 '_text': self.format_float(abs(base_amount), vals['currency_dp']),
