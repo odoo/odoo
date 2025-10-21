@@ -129,9 +129,10 @@ class Collector:
     def progress(self, entry=None, frame=None):
         """ Checks if the limits were met and add to the entries"""
         if self.profiler.entry_count_limit \
-            and self.profiler.entry_count() >= self.profiler.entry_count_limit:
-            self.profiler.end()
-
+            and self.profiler.counter >= self.profiler.entry_count_limit:
+            self.profiler._end_event.set()
+            return
+        self.profiler.counter += 1
         self.add(entry=entry,frame=frame)
 
     def _get_stack_trace(self, frame=None):
@@ -203,6 +204,7 @@ class _BasePeriodicCollector(Collector):
         self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
         self.last_frame = None
+        self._stop_event = threading.Event()
 
     def start(self):
         interval = self.profiler.params.get(f'{self.name}_interval')
@@ -219,12 +221,13 @@ class _BasePeriodicCollector(Collector):
         self.last_time = real_time()
         while self.active:  # maybe add a check on parent_thread state?
             self.progress()
-            time.sleep(self.frame_interval)
+            self._stop_event.wait(self.frame_interval)
 
         self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
 
     def stop(self):
         self.active = False
+        self._stop_event.set()
         self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.progress)
 
@@ -279,9 +282,10 @@ class MemoryCollector(_BasePeriodicCollector):
         })
 
     def stop(self):
+        super().stop()
         _lock.release()
         tracemalloc.stop()
-        super().stop()
+        
 
     def post_process(self):
         for i, entry in enumerate(self._entries):
@@ -551,7 +555,11 @@ class Profiler:
         self.sub_profilers = []
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
         self.done = False
+        self.counter = 0
         self.exit_stack = ExitStack()
+
+        self._end_event = threading.Event()
+        self._end_caller = None
 
         if db is ...:
             # determine database from current thread
@@ -604,10 +612,22 @@ class Profiler:
         self.start_cpu_time = real_cpu_time()
         for collector in self.collectors:
             collector.start()
+
+        self._end_caller = threading.Thread(target=self._wait_and_end, name=f"ProfilerEndCaller-{id(self)}", daemon=True)
+        self._end_caller.start()
+
         return self
 
     def __exit__(self, *args):
         self.end()
+
+    def _wait_and_end(self):
+        """Background helper thread: wait until end is requested, then call end()."""
+        self._end_event.wait()
+        try:
+            self.end()
+        except Exception:
+            _logger.exception("Exception while calling profiler.end() from end-caller thread")
 
     def end(self):
         if self.done:
@@ -654,6 +674,7 @@ class Profiler:
         except OperationalError:
             _logger.exception("Could not save profile in database")
         finally:
+            self._end_event.set()
             self.exit_stack.close()
             if self.params:
                 del self.init_thread.profiler_params
