@@ -2247,8 +2247,7 @@ class Website(models.Model):
                 ORDER BY _best_similarity DESC
                 LIMIT 1000
             """, SQL("\nUNION ALL\n").join(subqueries))  # UNION ALL allows to hit GIST indexes in subplans.
-            self.env.cr.execute(query)
-            ids = {row[0] for row in self.env.cr.fetchall()}
+            ids = {row[0] for row in self.env.execute_query(query)}
             domain = Domain.AND([domain, Domain([('id', 'in', list(ids))])])
             records = model.search_read(domain, direct_fields, limit=limit)
             for record in records:
