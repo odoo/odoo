@@ -245,8 +245,37 @@ class Store:
         if index not in self.data[model_name]:
             self.data[model_name][index] = {}
 
+<<<<<<< 20744c36abff4fe07e964b3bb5800358e095f89b
     @staticmethod
     def _format_fields(fields):
+        if fields is None:
+            return []
+        if isinstance(fields, dict):
+            return [Store.Attr(key, value) for key, value in fields.items()]
+        if not isinstance(fields, list):
+            return [fields]
+        return list(fields)  # prevent mutation of original list
+||||||| 78cc8b11bd29b5df7bdc27ab8b01fddd8ff6d268
+    def _format_fields(self, records, fields):
+        if fields is None:
+            return []
+        if isinstance(fields, dict):
+            fields = [Store.Attr(key, value) for key, value in fields.items()]
+        if not isinstance(fields, list):
+            fields = [fields]
+        if hasattr(records, "_field_store_repr"):
+            return [f for field in fields for f in records._field_store_repr(field)]
+        return fields
+=======
+    def _format_fields(self, records, fields):
+        fields = Store._static_format_fields(fields)
+        if hasattr(records, "_field_store_repr"):
+            return [f for field in fields for f in records._field_store_repr(field)]
+        return fields
+>>>>>>> 8ab6d06946c4c408f2b36d45d8edbf5cf8badb98
+
+    @staticmethod
+    def _static_format_fields(fields):
         if fields is None:
             return []
         if isinstance(fields, dict):
@@ -416,7 +445,13 @@ class Store:
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
+<<<<<<< 20744c36abff4fe07e964b3bb5800358e095f89b
             extra_fields = Store._format_fields(self.kwargs.get("extra_fields"))
+||||||| 78cc8b11bd29b5df7bdc27ab8b01fddd8ff6d268
+            extra_fields = list(self.kwargs.get("extra_fields", []))
+=======
+            extra_fields = Store._static_format_fields(self.kwargs.get("extra_fields"))
+>>>>>>> 8ab6d06946c4c408f2b36d45d8edbf5cf8badb98
             if self.dynamic_fields:
                 extra_fields += self.dynamic_fields(calling_record)
             params = {
