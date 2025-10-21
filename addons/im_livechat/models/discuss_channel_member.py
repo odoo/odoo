@@ -168,7 +168,7 @@ class DiscussChannelMember(models.Model):
             return new_fields
         return super()._get_store_partner_fields(target, fields)
 
-    def _get_store_guest_fields(self, fields):
+    def _get_store_guest_fields(self, target: Store.Target, fields):
         self.ensure_one()
         if self.channel_id.channel_type == 'livechat':
             return [
@@ -178,7 +178,7 @@ class DiscussChannelMember(models.Model):
                 *self.env["mail.guest"]._get_store_avatar_fields(),
                 *self.env["mail.guest"]._get_store_im_status_fields(),
             ]
-        return super()._get_store_guest_fields(fields)
+        return super()._get_store_guest_fields(target, fields)
 
     def _get_rtc_invite_members_domain(self, *a, **kw):
         domain = super()._get_rtc_invite_members_domain(*a, **kw)

@@ -348,30 +348,23 @@ class DiscussChannelMember(models.Model):
         members._notify_mute()
 
     def _to_store_persona(self, target: Store.Target, fields=None):
-        if fields == "avatar_card":
-            fields = [
-                *self.env["res.partner"]._get_store_avatar_fields(),
-                *self.env["res.partner"]._get_store_im_status_fields(),
-                "name"
-            ]
         return [
             # sudo: res.partner - reading partner related to a member is considered acceptable
-            Store.Attr(
+            Store.One(
                 "partner_id",
-                lambda m: Store.One(
-                    m.partner_id.sudo(),
-                    (p_fields := m._get_store_partner_fields(target, fields)),
-                    extra_fields=self.env["res.partner"]._get_store_mention_fields()
-                    if p_fields or p_fields is None
-                    else None,
-                ),
+                [],
+                dynamic_fields=lambda m: m._get_store_partner_fields(target, fields),
+                extra_fields=self.env["res.partner"]._get_store_mention_fields() if fields != [] else [],
                 predicate=lambda m: m.partner_id,
+                sudo=True,
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
-            Store.Attr(
+            Store.One(
                 "guest_id",
-                lambda m: Store.One(m.guest_id.sudo(), m._get_store_guest_fields(fields)),
+                [],
+                dynamic_fields=lambda m: m._get_store_guest_fields(target, fields),
                 predicate=lambda m: m.guest_id,
+                sudo=True,
             ),
         ]
 
@@ -387,10 +380,26 @@ class DiscussChannelMember(models.Model):
 
     def _get_store_partner_fields(self, target: Store.Target, fields):
         self.ensure_one()
+        if fields == "avatar_card":
+            return [
+                "name",
+                *self.partner_id._get_store_avatar_fields(),
+                *self.partner_id._get_store_im_status_fields(),
+            ]
+        if fields is None:
+            return self.partner_id._to_store_defaults(target)
         return fields
 
-    def _get_store_guest_fields(self, fields):
+    def _get_store_guest_fields(self, target: Store.Target, fields):
         self.ensure_one()
+        if fields == "avatar_card":
+            return [
+                "name",
+                *self.guest_id._get_store_avatar_fields(),
+                *self.guest_id._get_store_im_status_fields(),
+            ]
+        if fields is None:
+            return self.guest_id._to_store_defaults(target)
         return fields
 
     # --------------------------------------------------------------------------
