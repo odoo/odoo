@@ -95,6 +95,7 @@ test("creating list directly inside table column (td)", async () => {
     await insertText(editor, "A. ");
     expect(getContent(el)).toBe(
         unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table">
                 <tbody>
                     <tr>

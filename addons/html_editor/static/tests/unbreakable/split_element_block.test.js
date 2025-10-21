@@ -26,9 +26,13 @@ test("should replace splitElementBlock with insertLineBreak (selection end)", as
 });
 test("should not split a contenteditable='false'", async () => {
     const { editor, el } = await setupEditor(`<p contenteditable="false">ab</p>`);
-    const p = el.querySelector("p");
+    const p = el.querySelector("p[contenteditable=false]");
     editor.shared.split.splitBlockNode({ targetNode: p, targetOffset: 0 });
-    expect(getContent(el)).toBe(`<p contenteditable="false">ab</p>`);
+    expect(getContent(el)).toBe(
+        '<p data-selection-placeholder=""><br></p>' +
+            '<p contenteditable="false">ab</p>' +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
+    );
 });
 test("should split an explicit contenteditable='true' if its ancestor isContentEditable", async () => {
     await testEditor({
