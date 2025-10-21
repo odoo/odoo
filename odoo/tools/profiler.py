@@ -119,10 +119,11 @@ class Collector:
         if (
             check_limit
             and self.profiler.entry_count_limit
-            and self.profiler.entry_count() >= self.profiler.entry_count_limit
+            and self.profiler.counter >= self.profiler.entry_count_limit
         ):
             self.profiler.end()
             return
+        self.profiler.counter += 1
         if entry is None:
             entry = {}
         if 'start' not in entry:
@@ -511,6 +512,7 @@ class Profiler:
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
         self.done = False
         self.exit_stack = ExitStack()
+        self.counter = 0
 
         if db is ...:
             # determine database from current thread
