@@ -2117,6 +2117,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
                 'author_id': self.other_partner.id,
                 'model': test_updates[0]._name,
                 'res_id': test_updates[0].id,
+                'message_type': 'email'
             } for x in range(4)  # 4 + 1 posted before = 5 aka threshold
         ])
         with self.mock_mail_gateway():

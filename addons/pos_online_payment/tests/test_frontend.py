@@ -330,6 +330,15 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             session.action_pos_session_close()
             self.assertEqual(session.state, 'closed')
 
+    def test_selected_customer_after_adding_payment_sync(self):
+        """ Test that the selected customer is kept after adding an online payment."""
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_selected_customer_after_adding_payment_sync', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
+        self.assertEqual(order.partner_id.name, "A simple PoS man!", "The selected customer was not kept after adding an online payment.")
+        self.assertEqual(order.state, "draft", "The order should still be in draft state.")
+        self.assertEqual(len(order.payment_ids), 0, "There should be no payment line in the order.")
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests

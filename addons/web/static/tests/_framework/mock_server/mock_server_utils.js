@@ -1,6 +1,19 @@
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 
 /**
+ * @typedef {{
+ *  code?: number;
+ *  context?: import("@web/core/context").Context;
+ *  description?: string;
+ *  message?: string;
+ *  subType?: string;
+ *  errorName?: string;
+ *  type?: string;
+ *  args?: unknown[];
+ * }} ServerErrorInit
+ */
+
+/**
  * @template T
  * @typedef {import("./mock_server").KwArgs<T>} KwArgs
  */
@@ -46,7 +59,7 @@ export function getKwArgs(allArgs, ...argNames) {
     const args = [...allArgs];
     const kwargs = args.at(-1)?.[KWARGS_SYMBOL] ? args.pop() : makeKwArgs({});
     if (args.length > argNames.length) {
-        throw new MockServerError("more positional arguments than there are given argument names");
+        throw new MockServerError("More positional arguments than there are given argument names");
     }
     for (let i = 0; i < args.length; i++) {
         if (args[i] !== null && args[i] !== undefined) {
@@ -71,7 +84,7 @@ export function getRecordQualifier(record) {
 }
 
 /**
- * @param {Record<string, string | any>} params
+ * @param {ServerErrorInit} params
  */
 export function makeServerError({
     code,
@@ -85,15 +98,16 @@ export function makeServerError({
 } = {}) {
     return makeErrorFromResponse({
         code: code || 200,
-        message: message || "Odoo Server Error",
         data: {
             name: errorName || `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
             arguments: args || [],
             context: context || {},
             subType,
-            message: description,
+            message: description || message,
         },
+        message: message || "Odoo Server Error",
+        type: "server",
     });
 }
 

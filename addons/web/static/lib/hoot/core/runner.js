@@ -31,7 +31,7 @@ import {
 import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
-import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
+import { cleanupNavigator } from "../mock/navigator";
 import { cleanupNetwork, throttleNetwork } from "../mock/network";
 import {
     cleanupWindow,
@@ -169,8 +169,11 @@ function formatIncludes(values) {
  */
 function formatAssertions(assertions) {
     const lines = [];
-    for (const { failedDetails, label, message, number } of assertions) {
+    for (const { additionalMessage, failedDetails, label, message, number } of assertions) {
         const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
+        if (additionalMessage) {
+            formattedMessage.push(`(${additionalMessage})`);
+        }
         lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
             for (const detail of failedDetails) {
@@ -1430,7 +1433,6 @@ export class Runner {
      * @param {boolean} [canEraseParent]
      */
     _erase(job, canEraseParent = false) {
-        job.minimize();
         if (job instanceof Suite) {
             if (!job.reporting.failed) {
                 this.suites.delete(job.id);
@@ -1440,6 +1442,7 @@ export class Runner {
                 this.tests.delete(job.id);
             }
         }
+        job.minimize();
         if (canEraseParent && job.parent) {
             const jobIndex = job.parent.jobs.indexOf(job);
             if (jobIndex >= 0) {
@@ -1698,9 +1701,6 @@ export class Runner {
             }
             if (preset.tags?.length) {
                 this._include(this.state.includeSpecs.tag, preset.tags, INCLUDE_LEVEL.preset);
-            }
-            if (preset.platform) {
-                mockUserAgent(preset.platform);
             }
             if (typeof preset.touch === "boolean") {
                 this.beforeEach(() => mockTouch(preset.touch));
