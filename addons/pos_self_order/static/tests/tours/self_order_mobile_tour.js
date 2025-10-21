@@ -423,3 +423,12 @@ registry.category("web_tour.tours").add("test_self_order_table_sharing-meal_mode
             CartPage.checkProduct("Coca-Cola", "2.20", "1"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("self_order_mobile_no_access_token", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            Utils.negateStep(Utils.checkBtn("Order")),
+        ].flat(),
+});
