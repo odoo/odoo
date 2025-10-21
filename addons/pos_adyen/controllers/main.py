@@ -27,19 +27,20 @@ class PosAdyenController(http.Controller):
             or msg_header.get('ProtocolVersion') != '3.0' \
             or msg_header.get('MessageClass') != 'Service' \
             or msg_header.get('MessageType') != 'Response' \
-            or msg_header.get('MessageCategory') != 'Payment' \
+            or msg_header.get('MessageCategory') not in ['Payment', 'Reversal'] \
             or not msg_header.get('POIID'):
             _logger.warning('Received an unexpected Adyen notification')
             return
 
         terminal_identifier = msg_header['POIID']
+        response_name = 'PaymentResponse' if msg_header.get('MessageCategory') == 'Payment' else 'ReversalResponse'
         adyen_pm_sudo = request.env['pos.payment.method'].sudo().search([('adyen_terminal_identifier', '=', terminal_identifier)], limit=1)
         if not adyen_pm_sudo:
             _logger.warning('Received an Adyen event notification for a terminal not registered in Odoo: %s', terminal_identifier)
             return
 
         try:
-            adyen_additional_response = data['SaleToPOIResponse']['PaymentResponse']['Response']['AdditionalResponse']
+            adyen_additional_response = data['SaleToPOIResponse'][response_name]['Response']['AdditionalResponse']
             pos_hmac = PosAdyenController._get_additional_data_from_unparsed(adyen_additional_response, 'metadata.pos_hmac')
 
             if not pos_hmac or not consteq(pos_hmac, adyen_pm_sudo._get_hmac(msg_header['SaleID'], msg_header['ServiceID'], msg_header['POIID'], data['SaleToPOIResponse']['PaymentResponse']['SaleData']['SaleTransactionID']['TransactionID'])):
@@ -47,9 +48,9 @@ class PosAdyenController(http.Controller):
                 return
 
             # The HMAC is removed to prevent anyone from using it in place of Adyen.
-            pos_hmac_metadata_raw = 'metadata.pos_hmac='+pos_hmac
+            pos_hmac_metadata_raw = 'metadata.pos_hmac=' + pos_hmac
             safe_additional_response = adyen_additional_response.replace('&'+pos_hmac_metadata_raw, '').replace(pos_hmac_metadata_raw, '')
-            data['SaleToPOIResponse']['PaymentResponse']['Response']['AdditionalResponse'] = safe_additional_response
+            data['SaleToPOIResponse'][response_name]['Response']['AdditionalResponse'] = safe_additional_response
         except (KeyError, AttributeError):
             _logger.warning('Received an invalid Adyen event notification: \n%s', pprint.pformat(data))
             return

@@ -135,9 +135,16 @@ class PosPaymentMethod(models.Model):
                 'TransactionStatusRequest': {
                     'ReceiptReprintFlag': True,
                     'DocumentQualifier': ['CustomerReceipt', 'CashierReceipt'],
+                    'MessageReference': {
+                        'SaleID': UNPREDICTABLE_ADYEN_DATA,
+                        'ServiceID': UNPREDICTABLE_ADYEN_DATA,
+                        'MessageCategory': UNPREDICTABLE_ADYEN_DATA,
+                    },
                 },
             },
         })
+
+        is_reversal_data = operation == 'terminal_request' and self._is_valid_adyen_request_data(data, self._get_expected_reversal_request())
 
         is_payment_request_with_acquirer_data = operation == 'terminal_request' and self._is_valid_adyen_request_data(data, self._get_expected_payment_request(True))
 
@@ -160,15 +167,16 @@ class PosPaymentMethod(models.Model):
 
         is_payment_request_without_acquirer_data = operation == 'terminal_request' and self._is_valid_adyen_request_data(data, self._get_expected_payment_request(False))
 
-        if not is_payment_request_without_acquirer_data and not is_payment_request_with_acquirer_data and not is_adjust_data and not is_cancel_data and not is_capture_data and not is_payment_status_data:
+        if not is_payment_request_without_acquirer_data and not is_payment_request_with_acquirer_data and not is_adjust_data and not is_cancel_data and not is_capture_data and not is_payment_status_data and not is_reversal_data:
             raise UserError(_('Invalid Adyen request'))
 
-        if is_payment_request_with_acquirer_data or is_payment_request_without_acquirer_data:
-            acquirer_data = data['SaleToPOIRequest']['PaymentRequest']['SaleData'].get('SaleToAcquirerData')
+        if is_payment_request_with_acquirer_data or is_payment_request_without_acquirer_data or is_reversal_data:
+            request_name = 'ReversalRequest' if is_reversal_data else 'PaymentRequest'
+            acquirer_data = data['SaleToPOIRequest'][request_name]['SaleData'].get('SaleToAcquirerData')
             msg_header = data['SaleToPOIRequest']['MessageHeader']
-            metadata = 'metadata.pos_hmac=' + self._get_hmac(msg_header['SaleID'], msg_header['ServiceID'], msg_header['POIID'], data['SaleToPOIRequest']['PaymentRequest']['SaleData']['SaleTransactionID']['TransactionID'])
+            metadata = 'metadata.pos_hmac=' + self._get_hmac(msg_header['SaleID'], msg_header['ServiceID'], msg_header['POIID'], data['SaleToPOIRequest'][request_name]['SaleData']['SaleTransactionID']['TransactionID'])
 
-            data['SaleToPOIRequest']['PaymentRequest']['SaleData']['SaleToAcquirerData'] = acquirer_data + '&' + metadata if acquirer_data else metadata
+            data['SaleToPOIRequest'][request_name]['SaleData']['SaleToAcquirerData'] = acquirer_data + '&' + metadata if acquirer_data else metadata
 
         return self._proxy_adyen_request_direct(data, operation)
 
@@ -224,6 +232,30 @@ class PosPaymentMethod(models.Model):
         if with_acquirer_data:
             res['SaleToPOIRequest']['PaymentRequest']['SaleData']['SaleToAcquirerData'] = UNPREDICTABLE_ADYEN_DATA
         return res
+
+    def _get_expected_reversal_request(self):
+        return {
+            'SaleToPOIRequest': {
+                'MessageHeader': self._get_expected_message_header('Reversal'),
+                'ReversalRequest': {
+                    'ReversalReason': 'MerchantCancel',
+                    'ReversedAmount': UNPREDICTABLE_ADYEN_DATA,
+                    'OriginalPOITransaction': {
+                        'POITransactionID': {
+                            'TransactionID': UNPREDICTABLE_ADYEN_DATA,
+                            'TimeStamp': UNPREDICTABLE_ADYEN_DATA,
+                        }
+                    },
+                    'SaleData': {
+                        'SaleToAcquirerData': UNPREDICTABLE_ADYEN_DATA,
+                        'SaleTransactionID': {
+                            'TransactionID': UNPREDICTABLE_ADYEN_DATA,
+                            'TimeStamp': UNPREDICTABLE_ADYEN_DATA,
+                        }
+                    }
+                },
+            },
+        }
 
     @api.model
     def _get_valid_acquirer_data(self):
