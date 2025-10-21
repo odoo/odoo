@@ -129,10 +129,10 @@ class Collector:
     def progress(self, entry=None, frame=None):
         """ Checks if the limits were met and add to the entries"""
         if self.profiler.entry_count_limit \
-            and self.profiler.entry_count() >= self.profiler.entry_count_limit:
+            and self.profiler.counter >= self.profiler.entry_count_limit:
             self.profiler.end()
             return
-
+        self.profiler.counter += 1
         self.add(entry=entry,frame=frame)
 
     def _get_stack_trace(self, frame=None):
@@ -557,6 +557,7 @@ class Profiler:
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
         self.done = False
         self.exit_stack = ExitStack()
+        self.counter = 0
 
         if db is ...:
             # determine database from current thread
