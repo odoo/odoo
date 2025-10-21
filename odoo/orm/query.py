@@ -182,7 +182,7 @@ class Query:
             SQL(" GROUP BY %s", self.groupby) if self.groupby else _SQL_EMPTY,
             SQL(" HAVING %s", self.having) if self.having else _SQL_EMPTY,
             SQL(" ORDER BY %s", self._order) if self._order else _SQL_EMPTY,
-            SQL(f" LIMIT {int(self.limit)}") if self.limit else _SQL_EMPTY,
+            SQL(f" LIMIT {int(self.limit)}") if self.limit is not None else _SQL_EMPTY,
             SQL(f" OFFSET {int(self.offset)}") if self.offset else _SQL_EMPTY,
         )
 
