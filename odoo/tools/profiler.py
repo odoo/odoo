@@ -199,6 +199,7 @@ class _BasePeriodicCollector(Collector):
         self._end_time = real_time()
         self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
+        self._stop_event = threading.Event()
 
     def start(self):
         interval = self.profiler.params.get(f'{self.name}_interval')
@@ -215,17 +216,17 @@ class _BasePeriodicCollector(Collector):
         while self._end_time is None:
             self.add()
             self.sleep()
-        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
 
     def sleep(self):
         # Note: This may not be very precise. Most systems will sleep at
         # minimum between 1 and 5 ms. "The suspension time may be longer
         # than requested by an arbitrary amount, because of the scheduling
         # of other activity in the system."
-        time.sleep(self.frame_interval)
+        self._stop_event.wait(self.frame_interval)
 
     def stop(self):
         self._end_time = real_time()
+        self._stop_event.set()
         self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
         if self.__thread.is_alive() and self.__thread is not threading.current_thread():
             self.__thread.join()
