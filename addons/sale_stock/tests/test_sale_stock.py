@@ -2283,3 +2283,74 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'location_id': loc_perso.id, 'location_dest_id': out_location.id, 'quantity': 1},
             {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'quantity': 1},
         ])
+
+    def test_update_picking_sale_order(self):
+        """ Checks that updating the SO directly on the picking form properly updates the move as well.
+        """
+        self.new_product.is_storable = False
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                })
+            ]
+        })
+        sale_order.action_confirm()
+        so_delivery = sale_order.picking_ids
+        self.assertEqual(so_delivery.move_ids.sale_line_id, sale_order.order_line)
+
+        new_delivery = self.env['stock.picking'].create({
+            'picking_type_id': so_delivery.picking_type_id.id,
+            'location_id': so_delivery.location_id.id,
+            'location_dest_id': so_delivery.location_dest_id.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 2,
+                    'location_id': so_delivery.location_id.id,
+                    'location_dest_id': so_delivery.location_dest_id.id,
+                }),
+                Command.create({
+                    'product_id': self.new_product.id,
+                    'product_uom_qty': 3,
+                    'location_id': so_delivery.location_id.id,
+                    'location_dest_id': so_delivery.location_dest_id.id,
+                }),
+            ],
+        })
+        new_delivery.action_confirm()
+        self.assertFalse(new_delivery.sale_id)
+        self.assertRecordValues(new_delivery.move_ids, [
+            {'product_id': self.product_a.id, 'sale_line_id': False},
+            {'product_id': self.new_product.id, 'sale_line_id': False},
+        ])
+
+        new_delivery.sale_id = sale_order
+        # Only corresponding lines should be set, but missing SO line will be created at picking's validation.
+        self.assertRecordValues(new_delivery.move_ids, [
+            {'product_id': self.product_a.id, 'sale_line_id': sale_order.order_line.id},
+            {'product_id': self.new_product.id, 'sale_line_id': False},
+        ])
+
+        new_delivery.button_validate()
+        self.assertRecordValues(new_delivery.move_ids, [
+            {'product_id': self.product_a.id, 'sale_line_id': sale_order.order_line[0].id},
+            {'product_id': self.new_product.id, 'sale_line_id': sale_order.order_line[1].id},
+        ])
+        self.assertRecordValues(sale_order.order_line, [
+            {'product_id': self.product_a.id, 'product_uom_qty': 1, 'qty_delivered': 2},
+            {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3},
+        ])
+
+        # Remove sale order from the original delivery. Its validation should no longer impact the sale order.
+        so_delivery.sale_id = False
+        self.assertRecordValues(so_delivery.move_ids, [
+            {'product_id': self.product_a.id, 'sale_line_id': False},
+        ])
+        so_delivery.button_validate()
+        self.assertRecordValues(sale_order.order_line, [
+            {'product_id': self.product_a.id, 'product_uom_qty': 1, 'qty_delivered': 2},
+            {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3},
+        ])
