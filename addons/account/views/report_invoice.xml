@@ -388,7 +388,7 @@
 
                 <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
                     <tr class="o_taxes">
-                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
+                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is False">
                             <td style="max-width: 200px;">
                                 <span t-out="tax_group['group_name']">Tax 15%</span>
                             </td>
