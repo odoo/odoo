@@ -1150,12 +1150,21 @@ export function makeActionManager(env, router = _router) {
         const w = browser.open(url, "_blank");
         if (!w || w.closed || typeof w.closed === "undefined") {
             const msg = _t(
-                "A popup window has been blocked. You may need to change your " +
-                    "browser settings to allow popup windows for this page."
+                "A popup window has been blocked. You may need to change your browser settings to allow popup windows for this page. You can also copy the link and paste it in a new tab."
             );
             env.services.notification.add(msg, {
                 sticky: true,
                 type: "warning",
+                buttons: [
+                    {
+                        name: _t("Copy"),
+                        primary: true,
+                        onClick: async () => {
+                            const fullUrl = new URL(url, window.location.origin).href;
+                            navigator.clipboard.writeText(fullUrl);
+                        },
+                    },
+                ],
             });
         }
     }
