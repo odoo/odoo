@@ -138,13 +138,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         :return: the created move (if any)
         """
         self.ensure_one()
-        journal = journal or self.company_id.peppol_purchase_journal_id
+
+        journal, move_type = self._peppol_get_import_journal_and_move_type(attachment, journal)
         if not journal:
             return {}
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
-            'move_type': 'in_invoice',
+            'move_type': move_type,
             'peppol_move_state': peppol_state,
             'peppol_message_uuid': uuid,
         })
@@ -162,6 +163,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         move._autopost_bill()
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
+
+    def _peppol_get_import_journal_and_move_type(self, attachment, journal=None):
+        self.ensure_one()
+        return journal or self.company_id.peppol_purchase_journal_id, 'in_invoice'
 
     def _peppol_get_new_documents(self, skip_no_journal=False):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
