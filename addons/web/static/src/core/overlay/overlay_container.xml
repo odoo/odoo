@@ -3,6 +3,7 @@
 
     <t t-name="web.OverlayContainer">
         <div class="o-overlay-container" t-ref="root">
+            <t t-if="staticTemplate" t-call="{{ staticTemplate }}"/>
             <t t-foreach="sortedOverlays" t-as="overlay" t-key="overlay.id">
                 <ErrorHandler t-if="isVisible(overlay)" onError="(error) => this.handleError(overlay, error)">
                     <OverlayItem env="overlay.env" component="overlay.component" props="overlay.props"/>
