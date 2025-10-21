@@ -2138,6 +2138,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         new_product_qty = self.product_id.uom_id._compute_quantity(max(0, self.product_qty - qty), self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit'))
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
+        self._recompute_state()
         return new_move_vals
 
     def _post_process_created_moves(self):
