@@ -57,6 +57,7 @@ class EventManager:
         event = {
             **device.data,
             'device_identifier': device.device_identifier,
+            'time': time.time(),
             **data,
         }
         send_to_controller({
