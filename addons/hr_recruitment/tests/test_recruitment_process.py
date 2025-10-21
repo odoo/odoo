@@ -144,3 +144,49 @@ class TestRecruitmentProcess(TestHrCommon):
         # Make sure the applicant are created in the right company
         applicant = self.env['hr.applicant'].search([('email_from', 'ilike', 'Richard_Anderson@yahoo.com')], limit=1)
         self.assertEqual(applicant.company_id, other_company, 'Applicant should be created in the right company')
+
+    def test_email_application_department_with_no_company(self):
+        """
+        Test that applicants created from incoming emails are assigned the job's company when the job's department
+        has no company set.
+        """
+        mystery_company = self.env["res.company"].create({"name": "Mystery Company"})
+        _mail_alias_domain = self.env["mail.alias.domain"].create(
+            {
+                "company_ids": [(4, mystery_company.id)],
+                "name": "test.example.com",
+            }
+        )
+        alias = self.env["mail.alias"].create(
+            {
+                "alias_domain_id": mystery_company.alias_domain_id.id,
+                "alias_name": "mystery_job",
+                "alias_model_id": self.env["ir.model"]._get_id("hr.job"),
+            }
+        )
+
+        mystery_department = self.env["hr.department"].create({"name": "Mystery Department", "company_id": False})
+        mystery_job = self.env["hr.job"].create(
+            {
+                "name": "Mystery Job",
+                "company_id": mystery_company.id,
+                "department_id": mystery_department.id,
+                "alias_id": alias.id,
+            }
+        )
+
+        email = f"""MIME-Version: 1.0
+Message-ID: <verymysteriousapplication>
+From: Applicant <test@example.com>
+To: {mystery_job.alias_id.display_name}
+Subject: Job Application
+Content-Type: text/plain; charset="UTF-8"
+
+I want to work for you!"""
+
+        applicant_from_email = self.env["mail.thread"].message_process("hr.applicant", email)
+        applicant = self.env["hr.applicant"].browse(applicant_from_email)
+        self.assertEqual(
+            applicant.department_id, mystery_department, "Applicant should be assigned to the right department"
+        )
+        self.assertEqual(applicant.company_id, mystery_company, "Applicant should be created in the right company")
