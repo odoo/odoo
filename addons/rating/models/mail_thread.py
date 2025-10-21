@@ -4,6 +4,7 @@ import datetime
 import markupsafe
 
 from odoo import _, fields, models, tools
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailThread(models.AbstractModel):
@@ -189,6 +190,12 @@ class MailThread(models.AbstractModel):
         same_author = rating.partner_id and rating.partner_id == message.author_id
         if same_author and rating.res_model == message.model and rating.res_id == message.res_id:
             rating.message_id = message.id
+            if (
+                issubclass(self.pool[self._name], self.pool["rating.mixin"])
+                and self._has_field_access(self._fields["rating_avg"], 'read')
+            ):
+                if store := self.env.context.get("message_post_store"):
+                    store.add(self, self._get_store_rating_stats_fields(), as_thread=True)
         super()._message_post_after_hook(message, msg_values)
 
     def _get_allowed_message_params(self):
@@ -203,3 +210,17 @@ class MailThread(models.AbstractModel):
             rating_ids.message_id = False
             rating_ids.unlink()
         return super()._message_update_content(message, body=body, **kwargs)
+
+    def _get_store_rating_stats_fields(self):
+        all_stats = {}
+        if self._allow_publish_rating_stats():
+            all_stats = self._rating_get_stats_per_record()
+        return [
+            "rating_avg",
+            "rating_count",
+            Store.Attr(
+                "rating_stats",
+                lambda record, all_stats=all_stats: all_stats.get(record.id),
+                predicate=lambda record: record._allow_publish_rating_stats(),
+            ),
+        ]
