@@ -53,7 +53,11 @@ export class TestEPos extends Component {
                     ? data.epson_printer_ip
                     : data.pos_epson_printer_ip;
             if (!printer_ip) {
-                throw new Error("No printer IP configured");
+                this.notification.add(
+                    _t("Please configure a valid ePoS url in order to test the printer"),
+                    { type: "danger" }
+                );
+                return;
             }
             const url = window.location.protocol + "//" + printer_ip;
             this.address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
