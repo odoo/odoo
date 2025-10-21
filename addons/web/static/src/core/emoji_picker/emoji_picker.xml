@@ -52,7 +52,7 @@
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </div>
-            <div class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary" t-att-class="{ 'opacity-0': !state.emojiNavbarRepr }" t-ref="navbar">
+            <div class="o-EmojiPicker-navbar bg-100 d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary" t-att-class="{ 'opacity-0': !state.emojiNavbarRepr }" t-ref="navbar">
                 <t t-if="currentNavbarPanel">
                     <t t-set="allCategories" t-value="getAllCategories()"/>
                     <t t-foreach="currentNavbarPanel" t-as="navbarItemId" t-key="navbarItemId">
