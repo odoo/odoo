@@ -246,15 +246,20 @@ class Store:
             self.data[model_name][index] = {}
 
     def _format_fields(self, records, fields):
-        if fields is None:
-            return []
-        if isinstance(fields, dict):
-            fields = [Store.Attr(key, value) for key, value in fields.items()]
-        if not isinstance(fields, list):
-            fields = [fields]
+        fields = Store._static_format_fields(fields)
         if hasattr(records, "_field_store_repr"):
             return [f for field in fields for f in records._field_store_repr(field)]
         return fields
+
+    @staticmethod
+    def _static_format_fields(fields):
+        if fields is None:
+            return []
+        if isinstance(fields, dict):
+            return [Store.Attr(key, value) for key, value in fields.items()]
+        if not isinstance(fields, list):
+            return [fields]
+        return list(fields)  # prevent mutation of original list
 
     def _get_records_data_list(self, records, fields):
         abstract_fields = [field for field in fields if isinstance(field, (dict, Store.Attr))]
@@ -417,7 +422,7 @@ class Store:
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
-            extra_fields = list(self.kwargs.get("extra_fields", []))
+            extra_fields = Store._static_format_fields(self.kwargs.get("extra_fields"))
             if self.dynamic_fields:
                 extra_fields += self.dynamic_fields(calling_record)
             params = {
