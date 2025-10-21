@@ -770,6 +770,11 @@ class TestDomainOptimize(TransactionCase):
             Domain('id', 'parent_of', categ_child.ids).optimize_full(model),
             Domain('id', 'in', OrderedSet([categ_child.id, categ.id])),
         )
+        categ_child2 = model.create({'name': 'child', 'parent': categ.id})
+        self.assertEqual(
+            Domain('id', 'child_of', (categ_child2 + categ + categ_child).ids).optimize_full(model),
+            Domain('parent_path', '=like', f"{categ.parent_path}%"),  # Remove prefix covered
+        )
 
     def test_not_optimize(self):
         # optimizations are tested with nary

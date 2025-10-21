@@ -1744,11 +1744,17 @@ def _operator_hierarchy(condition, model):
 def _operator_child_of_domain(comodel: BaseModel, parent):
     """Return a set of ids or a domain to find all children of given model"""
     if comodel._parent_store and parent == comodel._parent_name:
-        domain = Domain.OR(
-            DomainCondition('parent_path', '=like', rec.parent_path + '%')  # type: ignore
-            for rec in comodel
+
+        parent_paths = []
+        for path in sorted(comodel.mapped('parent_path')):
+            if parent_paths and path.startswith(parent_paths[-1]):
+                # Prefix is already takes in account => don't add it
+                continue
+            parent_paths.append(path)
+
+        return Domain.OR(
+            DomainCondition('parent_path', '=like', path + '%') for path in parent_paths
         )
-        return domain
     else:
         # recursively retrieve all children nodes with sudo(); the
         # filtering of forbidden records is done by the rest of the
