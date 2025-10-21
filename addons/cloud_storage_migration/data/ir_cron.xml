@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_manual_migrate_local_to_cloud_storage" model="ir.cron">
+            <field name="name">Migrate Local Attachment Binaries to Cloud Storage</field>
+            <field name="model_id" ref="base.model_ir_attachment"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_migrate_local_to_cloud_storage()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">9999</field>
+            <field name="interval_type">months</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=9999)).strftime('%Y-%m-%d 22:00:00')"/>
+        </record>
+    </data>
+</odoo>
+
