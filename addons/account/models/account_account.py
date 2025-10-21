@@ -428,7 +428,7 @@ class AccountAccount(models.Model):
             for root in roots
         )
 
-    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
+    def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=None):
         if field_name != 'root_id' or set_count:
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)
 

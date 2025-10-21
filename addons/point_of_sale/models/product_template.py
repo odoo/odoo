@@ -81,7 +81,7 @@ class ProductTemplate(models.Model):
         return domain
 
     @api.model
-    def load_product_from_pos(self, config_id, domain, offset=0, limit=0):
+    def load_product_from_pos(self, config_id, domain, offset=0, limit=None):
         load_archived = self.env.context.get('load_archived', False)
         domain = Domain(domain)
         config = self.env['pos.config'].browse(config_id)
@@ -221,14 +221,14 @@ class ProductTemplate(models.Model):
         self._process_pos_ui_product_product(read_records, config)
         return read_records
 
-    def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
+    def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=None):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
             order='sequence,default_code,name',
             offset=offset,
-            limit=limit if limit else False
+            limit=limit or None,
         )
 
     def _process_pos_ui_product_product(self, products, config_id):
