@@ -1,0 +1,54 @@
+.o_dialog .modal-content {
+    --modal-footer-border-width: 0;
+    --modal-header-border-width: 0;
+
+    .modal-header {
+        &:has(.btn-close) {
+            margin-right: var(--modal-header-padding-y);
+        }
+        .btn-close {
+            position: unset !important;
+            margin: calc(-0.5 * var(--modal-header-padding-y)) calc(-0.5 * var(--modal-header-padding-x) * 2)
+                calc(-0.5 * var(--modal-header-padding-y)) auto !important;
+        }
+    }
+
+    .modal-body {
+        --modal-padding: 0 16px;
+
+        > p:last-child {
+            margin-bottom: 4px;
+        }
+    }
+}
+
+.o_dialog .modal-content.o_confirmation_dialog,
+.o_dialog .modal-content.o_alert_dialog {
+    --modal-border-radius: 0.4rem;
+    padding: 0 0.75rem;
+
+    .modal-header {
+        &:has(.btn-close) {
+            margin-right: 0;
+        }
+        .modal-title {
+            font-size: 1.1rem;
+        }
+    }
+}
+
+.o_dialog .modal-content.o_alert_dialog {
+    --heading-color: var(--danger);
+    .modal-header {
+        .modal-title {
+            font-weight: bold;
+            font-size: 1.5rem;
+            letter-spacing: 0.25px;
+        }
+    }
+    .modal-body {
+        p {
+            font-size: 1.05em;
+        }
+    }
+}
