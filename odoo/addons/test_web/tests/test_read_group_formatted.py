@@ -2158,7 +2158,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                                 AND "res_currency_rate"."name" < %s
                             ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
-                            LIMIT %s
+                            LIMIT 1
                         ) AS "before_rate" ON (TRUE)
                         LEFT JOIN LATERAL (
                             SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
@@ -2167,7 +2167,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                                 "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
                             ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT %s
+                            LIMIT 1
                         ) AS "after_rate" ON (TRUE)
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
                     "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
@@ -2267,7 +2267,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                                 AND "res_currency_rate"."name" < %s
                             ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
-                            LIMIT %s
+                            LIMIT 1
                         ) AS "before_rate" ON (TRUE)
                         LEFT JOIN LATERAL (
                             SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
@@ -2276,7 +2276,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                                 "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
                             ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT %s
+                            LIMIT 1
                         ) AS "after_rate" ON (TRUE)
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
                     "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
