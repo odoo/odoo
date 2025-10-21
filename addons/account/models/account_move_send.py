@@ -273,10 +273,18 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _check_move_constrains(self, moves):
-        if any(move.state != 'posted' for move in moves):
-            raise UserError(_("You can't generate invoices that are not posted."))
-        if any(not move.is_sale_document(include_receipts=True) for move in moves):
-            raise UserError(_("You can only generate sales documents."))
+        for move in moves:
+            if move_constraints := self._get_move_constraints(move):
+                raise UserError(next(iter(move_constraints.values()), None))
+
+    @api.model
+    def _get_move_constraints(self, move):
+        constraints = {}
+        if move.state != 'posted':
+            constraints['not_posted'] = _("You can't generate invoices that are not posted.")
+        if not move.is_sale_document(include_receipts=True):
+            constraints['not_sale_document'] = _("You can only generate sales documents.")
+        return constraints
 
     @api.model
     def _check_invoice_report(self, moves, **custom_settings):

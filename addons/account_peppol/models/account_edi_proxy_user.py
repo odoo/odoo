@@ -129,13 +129,13 @@ class AccountEdiProxyClientUser(models.Model):
         :return: `True` if the document was saved, `False` if it was not
         """
         self.ensure_one()
-        journal = self.company_id.peppol_purchase_journal_id
+        journal, move_type = self._peppol_get_import_journal_and_move_type(attachment)
         if not journal:
             return False
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
-            'move_type': 'in_invoice',
+            'move_type': move_type,
             'peppol_move_state': peppol_state,
             'peppol_message_uuid': uuid,
         })
@@ -153,6 +153,10 @@ class AccountEdiProxyClientUser(models.Model):
         move._autopost_bill()
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return True
+
+    def _peppol_get_import_journal_and_move_type(self, attachment):
+        self.ensure_one()
+        return self.company_id.peppol_purchase_journal_id, 'in_invoice'
 
     def _peppol_get_new_documents(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
