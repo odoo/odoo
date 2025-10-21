@@ -7,7 +7,8 @@
             <t t-if="o.company_id.country_id.code == 'SA' and o.is_sale_document() and not o._l10n_sa_is_legal() " t-set="custom_header_sa">
                 <div class="fw-bold text-center mt-2">
                     <h5>THIS IS NOT A LEGAL DOCUMENT</h5>
-                    <h5>هذا المستند ليس مستنداً قانونياً</h5>
+                    <h5 t-if="display_in_en" t-translation="off">THIS IS NOT A LEGAL DOCUMENT</h5>
+                    <h5 t-if="display_in_ar" t-translation="off">هذا المستند ليس مستنداً قانونياً</h5>
                 </div>
                 <!-- To help with centering the previous div in flex justify between-->
                 <div t-if="is_html_empty(o.company_id.report_header)" class="col-1"/>
