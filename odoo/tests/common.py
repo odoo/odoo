@@ -7,6 +7,7 @@ helpers and classes to write tests.
 from __future__ import annotations
 
 import base64
+import binascii
 import concurrent.futures
 import contextlib
 import difflib
@@ -1667,7 +1668,6 @@ class ChromeBrowser:
                 return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
-                self.screencaster.save()
                 try:
                     self._result.set_exception(ChromeBrowserException(message))
                 except CancelledError:
@@ -1732,7 +1732,6 @@ which leads to stray network requests and inconsistencies."""
             return
 
         self.take_screenshot()
-        self.screencaster.save()
         try:
             self._result.set_exception(ChromeBrowserException(message))
         except CancelledError:
@@ -1770,7 +1769,7 @@ which leads to stray network requests and inconsistencies."""
             if not base_png:
                 self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
-            decoded = base64.b64decode(base_png, validate=True)
+            decoded = binascii.a2b_base64(base_png)
             save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
 
         self._logger.info('Asking for screenshot')
@@ -1833,13 +1832,14 @@ which leads to stray network requests and inconsistencies."""
         except CancelledError:
             # regular-ish shutdown
             return
+        except ChromeBrowserException:
+            self.screencaster.save()
+            raise
         except Exception as e:
             err = e
 
         self.take_screenshot()
         self.screencaster.save()
-        if isinstance(err, ChromeBrowserException):
-            raise err
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
@@ -1965,9 +1965,9 @@ class Screencaster:
         if self.stopped:
             # if already stopped, drop the frames as we might have removed the directory already
             return
-        outfile = self.frames_dir / f'frame_{len(self.frames):05d}.b64'
+        outfile = self.frames_dir / f'frame_{len(self.frames):05d}.png'
         try:
-            outfile.write_text(data)
+            outfile.write_bytes(binascii.a2b_base64(data.encode()))
         except FileNotFoundError:
             return
         self.frames.append({
@@ -1982,6 +1982,8 @@ class Screencaster:
             shutil.rmtree(self.frames_dir, ignore_errors=True)
 
     def save(self):
+        if self.stopped:
+            return
         self.browser._websocket_send('Page.stopScreencast')
         # Wait for frames just in case, ideally we'd wait for the Browse.close
         # event or something but that doesn't exist.
@@ -1991,15 +1993,13 @@ class Screencaster:
             self._logger.debug('No screencast frames to encode')
             return
 
+        frames, self.frames = self.frames, []
         t = time.time()
         duration = 1/24
         concat_script_path = self.frames_dir.with_suffix('.txt')
         with concat_script_path.open("w") as concat_file:
-            for f, next_frame in zip_longest(self.frames, islice(self.frames, 1, None)):
-                frame = base64.b64decode(f['file_path'].read_bytes(), validate=True)
-                f['file_path'].unlink()
-                frame_file_path = f['file_path'].with_suffix('.png')
-                frame_file_path.write_bytes(frame)
+            for f, next_frame in zip_longest(frames, islice(frames, 1, None)):
+                frame_file_path = f['file_path']
 
                 if f['timestamp'] is not None:
                     end_time = next_frame['timestamp'] if next_frame else t
