@@ -143,7 +143,7 @@
                             </group>
                         </page>
                         <page string="Sales" name="sales" invisible="1 or not sale_ok">
-                            <group name="sale">
+                            <group name="sale" class="o_label_nowrap">
                                 <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1">
                                     <field
                                         name="uom_ids"
@@ -156,9 +156,7 @@
                                 <group name="extra_info" string="Extra Info">
                                     <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
                                 </group>
-                            </group>
-                            <group>
-                                <group string="Quotation Description" name="description">
+                                <group string="Short Description" name="description">
                                     <field colspan="2" name="description_sale" nolabel="1" placeholder="This note is added to sales orders and invoices."/>
                                 </group>
                             </group>
@@ -524,7 +522,11 @@
                     <attribute name="context">{'product_template_id': product_tmpl_id}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
-                    <field name="additional_product_tag_ids" widget="many2many_tags"/>
+                    <field
+                        name="additional_product_tag_ids"
+                        widget="many2many_tags"
+                        invisible="product_variant_count == 1"
+                    />
                 </field>
                 <field name="uom_ids" position="attributes">
                     <attribute name="context">{'product_id': id}</attribute>

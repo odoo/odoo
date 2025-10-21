@@ -23,7 +23,7 @@
             <field name="service_tracking" position="attributes">
                 <attribute name="invisible" add="not sale_ok" separator="or"/>
             </field>
-            <group name="description" position="after">
+            <group name="sale" position="inside">
                 <t groups="sales_team.group_sale_salesman">
                     <group string="Warning on Sales Orders" groups="sale.group_warning_sale">
                         <field name="sale_line_warn_msg"

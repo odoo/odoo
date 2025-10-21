@@ -178,10 +178,20 @@
                        placeholder="Displayed in bottom of product pages"/>
                 <field name="description_ecommerce" invisible="1" />         <!-- Adding this field as we needed in product_barcodelookup module to store value in this field -->
             </group>
-            <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
-                <group colspan="2" name="product_template_images" string="eCommerce Media" invisible="not sale_ok">
-                    <field
+            <field name="description_sale" position="attributes">
+                <attribute name="placeholder">This note is added to sales orders, invoices, eCommerce listing and SEO descriptions.</attribute>
+            </field>
+            <group name="expense_info" position="before">
+                <group string="Long Description" name="ecom_description">
+                   <field
                         colspan="2"
+                        name="description_ecommerce"
+                        nolabel="1"
+                        placeholder="A detailed, formatted description to promote your product on this page."
+                    />
+                </group>
+                <group name="product_template_images" string="Media" invisible="not sale_ok">
+                    <field
                         name="product_template_image_ids"
                         class="o_website_sale_image_list"
                         context="{'default_name': name}"
@@ -192,27 +202,8 @@
                         options="{'convert_to_webp': True}"
                     />
                 </group>
-            </xpath>
-            <xpath expr="//page[@name='sales']//group[@name='description']" position="before">
-                <group string="Ecommerce Description" name="ecom_description">
-                   <field
-                        colspan="2"
-                        name="description_ecommerce"
-                        nolabel="1"
-                        placeholder="A detailed,formatted description to promote your product on
-                                     this page. Use '/' to discover more features."
-                    />
-                </group>
-            </xpath>
-            <xpath expr="//group[@name='extra_info']//field[@name='product_tag_ids']" position="before">
-                <field
-                    name="website_id"
-                    options="{'no_create': True}"
-                    groups="website.group_multi_website"
-                    placeholder="All"
-                />
-            </xpath>
-            <group name="extra_info" position="inside">
+            </group>
+            <field name="product_tag_ids" position="before">
                 <field name="publish_on" invisible="1"/> <!-- Needed for next fields and elements -->
                 <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"/>
                 <label invisible="website_published" for="publish_on" string="Publish on"/>
@@ -221,12 +212,18 @@
                     <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
                 </div>
                 <field name="website_sequence" groups="base.group_no_one"/>
+                <field
+                    name="website_id"
+                    options="{'no_create': True}"
+                    groups="website.group_multi_website"
+                    placeholder="All"
+                />
                 <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                 <field
                     name="website_ribbon_id"
                     options="{'no_quick_create': True}"
                 />
-            </group>
+            </field>
             <group name="extra_info" position="attributes">
                 <attribute name="string">Ecommerce Shop</attribute>
             </group>
