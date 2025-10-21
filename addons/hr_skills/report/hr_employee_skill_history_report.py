@@ -48,6 +48,7 @@ class HrEmployeeSkillReport(models.BaseModel):
                     ORDER BY date ASC
                 )
             SELECT DISTINCT ON(date_table.date, emp_skill_level.employee_id, emp_skill_level.skill_id)
+                row_number() OVER () AS id,
                 date_table.date AS date,
                 emp_skill_level.employee_id,
                 emp_skill_level.skill_id,
