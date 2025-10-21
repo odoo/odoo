@@ -382,8 +382,14 @@ export class PosOrder extends PosOrderAccounting {
      * @param {Orderline} line
      * @returns {boolean} true if the line was removed, false otherwise
      */
-    removeOrderline(line) {
-        const linesToRemove = line.getAllLinesInCombo();
+    removeOrderline(line, deep = true) {
+        let linesToRemove = [];
+        if (deep) {
+            linesToRemove = line.getAllLinesInCombo();
+        } else {
+            linesToRemove = [line];
+        }
+
         for (const lineToRemove of linesToRemove) {
             if (lineToRemove.refunded_orderline_id?.uuid in this.uiState.lineToRefund) {
                 delete this.uiState.lineToRefund[lineToRemove.refunded_orderline_id.uuid];

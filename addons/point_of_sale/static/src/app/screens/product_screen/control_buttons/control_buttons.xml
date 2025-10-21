@@ -44,6 +44,9 @@
                 <button t-if="this.displayProductInfoBtn()" t-att-class="buttonClass" t-on-click="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id, currentOrder.getSelectedOrderline().product_id)">
                     <i class="fa fa-info-circle me-1" role="img" aria-label="Product Info" title="Product Info" /> Info
                 </button>
+                <button t-if="this.pos.isSelectedLineCombo" class="break-combo-button" t-att-class="buttonClass" t-on-click="() => this.breakSelectedCombo()">
+                    <i class="fa fa-outdent" role="img" aria-label="Break combo" title="Brean combo" /> Break combo
+                </button>
                 <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
                     <i class="fa fa-trash me-1" role="img" /> Cancel Order 
                 </button>

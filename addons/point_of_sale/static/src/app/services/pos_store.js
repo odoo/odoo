@@ -455,6 +455,7 @@ export class PosStore extends WithLazyGetterTrap {
         const productIds = new Set();
         const productTmplIds = new Set();
         const productByTmplId = {};
+        const productCombos = [];
 
         for (const product of this.models["product.product"].getAll()) {
             if (product.product_template_variant_value_ids.length > 0) {
@@ -467,7 +468,12 @@ export class PosStore extends WithLazyGetterTrap {
 
                 productByTmplId[product.raw.product_tmpl_id].push(product);
             }
+            if (product.product_tmpl_id?.type === "combo") {
+                productCombos.push(product);
+            }
         }
+
+        this.productCombos = productCombos;
 
         if (productIds.size > 0) {
             try {
@@ -822,7 +828,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        keepGoing = await this.handleComboProduct(values, order, configure);
+        keepGoing = await this.handleComboProduct(values, order, configure, opts);
         if (keepGoing === false) {
             return;
         }
@@ -992,32 +998,8 @@ export class PosStore extends WithLazyGetterTrap {
     // It will return the combo prices and the selected products
     // ---
     // This actions cannot be handled inside pos_order.js or pos_order_line.js
-    async handleComboProduct(values, order, configure = true, { line } = {}) {
-        if (values.product_tmpl_id.isCombo() && configure) {
-            const payload =
-                values?.payload && Object.keys(values?.payload).length
-                    ? values.payload
-                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
-                          productTemplate: values.product_tmpl_id,
-                          line: line,
-                      });
-
-            if (!payload) {
-                return false;
-            }
-
-            // Product template of combo should not have more than 1 variant.
-            const [childLineConf, comboExtraLines] = payload;
-            const comboPrices = computeComboItems(
-                values.product_tmpl_id.product_variant_ids[0],
-                childLineConf,
-                order.pricelist_id,
-                this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id"),
-                comboExtraLines,
-                this.currency
-            );
-
+    async handleComboProduct(values, order, configure = true, opts = {}) {
+        const compleValue = (comboPrices) => {
             values.combo_line_ids = comboPrices.map((comboItem) => [
                 "create",
                 {
@@ -1047,6 +1029,35 @@ export class PosStore extends WithLazyGetterTrap {
                     ]),
                 },
             ]);
+        };
+        if (values.product_tmpl_id.isCombo() && configure) {
+            const payload =
+                values?.payload && Object.keys(values?.payload).length
+                    ? values.payload
+                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
+                          productTemplate: values.product_tmpl_id,
+                          line: opts.line,
+                      });
+
+            if (!payload) {
+                return false;
+            }
+
+            // Product template of combo should not have more than 1 variant.
+            const [childLineConf, comboExtraLines] = payload;
+            const comboPrices = computeComboItems(
+                values.product_tmpl_id.product_variant_ids[0],
+                childLineConf,
+                order.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines,
+                this.currency
+            );
+
+            compleValue(comboPrices);
+        } else if (!configure && opts.comboOpts) {
+            compleValue(opts.comboOpts);
         }
 
         return true;
@@ -1116,7 +1127,7 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 return false;
             }
-        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+        } else if (values.product_id?.product_template_variant_value_ids.length > 0) {
             // Verify price extra of variant products
             const priceExtra = values.product_id.product_template_variant_value_ids
                 .filter((attr) => attr.attribute_id.create_variant !== "always")
@@ -2659,6 +2670,323 @@ export class PosStore extends WithLazyGetterTrap {
             fastPaymentMethod: paymentMethod,
         });
         await validation.validateOrder(false);
+    }
+
+    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
+        const srcKey = srcLine.preparationKey;
+        const destKey = destLine.preparationKey;
+        const srcQty = srcPrep[srcKey]?.quantity;
+
+        if (srcQty) {
+            if (srcQty <= qty) {
+                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
+                destPrep[destKey] = newPrep;
+                delete srcPrep[srcKey];
+            } else {
+                srcPrep[srcKey].quantity = srcQty - qty;
+                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
+            }
+        }
+    }
+
+    get isSelectedLineCombo() {
+        const selectedOrderline = this.selectedOrder.getSelectedOrderline();
+        return selectedOrderline && selectedOrderline.isPartOfCombo();
+    }
+
+    /**
+     * This method is called in three different contexts.
+     *
+     * 1. Each time `order_summary` is rendered, this method is called in “limited” mode to
+     *    determine whether it is possible to create combos with the order lines.
+     *
+     * 2. When you click on “apply combos,” a popup opens if there are several possibilities, this
+     *    time in “combinations” mode.
+     *
+     * 3. When choosing a combo in the popup, this method is called in “full” mode to get all
+     *    possible combinations.
+     *
+     * Limited mode: this mode returns when more than one combo possibility is
+     * found.
+     *
+     * Combination mode: this mode returns 1 combination for each possible combo. It limits the computation time
+     * while giving all information needed for the popup.
+     *
+     * Full mode: returns all possibilities; this mode is more complex, hence the limited mode for
+     * rendering.
+     *
+     * @param {string} mode: limited | full | combinaison
+     * @param {ProductTemplate} productTmpl: ProductTmpl
+     */
+    getApplicableProductCombo(mode = "limited", productTmpl = null) {
+        const matchingCombos = [];
+        const productInOrder = this.selectedOrder.lines.reduce((acc, line) => {
+            if (line.isPartOfCombo()) {
+                return acc;
+            }
+            const pid = line.product_id.id;
+
+            if (!acc[pid]) {
+                acc[pid] = {
+                    lines: {},
+                    totalQty: 0,
+                };
+            }
+
+            acc[pid].lines[line.uuid] = line.qty;
+            acc[pid].totalQty += line.qty;
+            return acc;
+        }, {});
+        const combos = this.models["product.combo"].getAll();
+        const comboItems = combos.flatMap((combo) => combo.combo_item_ids);
+        const totalQtyAvailable = comboItems.reduce((acc, item) => {
+            const productId = item.product_id.id;
+            if (productInOrder[productId]) {
+                acc[item.combo_id.id] =
+                    (acc[item.combo_id.id] || 0) + productInOrder[productId].totalQty;
+            }
+            return acc;
+        }, {});
+
+        const productTmplsToCheck =
+            mode === "full" && productTmpl
+                ? [productTmpl]
+                : this.productCombos.sort(
+                      (a, b) => a.product_tmpl_id.list_price - b.product_tmpl_id.list_price
+                  );
+
+        for (const comboProduct of productTmplsToCheck) {
+            const combos = comboProduct.combo_ids;
+            const quantityTaken = {};
+            let comboQty = Infinity;
+            let hasUpsell = false;
+
+            for (const combo of combos) {
+                if (combo.is_upsell) {
+                    hasUpsell = true;
+                    continue;
+                }
+                const comboId = combo.id;
+                const minQty = combo.qty_free;
+                quantityTaken[comboId] = {};
+
+                if ((totalQtyAvailable[comboId] || 0) < minQty) {
+                    // Not enough to satisfy qty_free for this combo group
+                    comboQty = 0;
+                    break;
+                }
+                comboQty = Math.min(totalQtyAvailable[comboId] / minQty, comboQty);
+            }
+
+            if (comboQty === 0 || comboQty == Infinity) {
+                // The combo product is either composed of only upsell combo choices (Infinity)
+                // or cannot be completed with current order lines (0).
+                // We do not propose it as applicable or upsell
+                continue;
+            }
+
+            if (mode === "limited") {
+                // In limited mode, we only want the useful information for the UI
+                // We thus want to know if there is a applicable combo or not,
+                // If yes, we want to know if there could be several combos
+                // and the quantity of the first applicable combo
+                matchingCombos.push({
+                    productTmpl: comboProduct,
+                    quantity: comboQty,
+                    hasUpsell,
+                });
+                if (matchingCombos.length > 1) {
+                    break;
+                }
+                continue;
+            }
+
+            const availableQty = JSON.parse(JSON.stringify(productInOrder));
+            const combinations = [];
+
+            let qtyToCheck = Math.min(comboQty, 20); // For performance reasons, we only do 20 combos at a time
+            if (mode === "combinations") {
+                // In combinations mode, we only want to get the first combinations to display to the user
+                qtyToCheck = Math.min(qtyToCheck, 1);
+            }
+
+            for (let i = 0; i < qtyToCheck; i++) {
+                const quantityTaken = {};
+                for (const combo of combos) {
+                    const comboId = combo.id;
+                    let qtyNeeded = Math.min(
+                        Math.ceil(totalQtyAvailable[comboId] / comboQty),
+                        combo.qty_max
+                    );
+                    quantityTaken[comboId] = {};
+
+                    for (const item of combo.combo_item_ids) {
+                        const productId = item.product_id.id;
+                        if (!availableQty[productId]) {
+                            continue;
+                        }
+                        for (const [lUuid, qty] of Object.entries(availableQty[productId].lines)) {
+                            if (qtyNeeded === 0) {
+                                break;
+                            }
+                            const takeQty = Math.min(qty, qtyNeeded);
+                            quantityTaken[comboId][lUuid] = {
+                                qty: takeQty,
+                                combo_item: item,
+                            };
+                            availableQty[productId].lines[lUuid] -= takeQty;
+                            qtyNeeded -= takeQty;
+                        }
+                    }
+                    if (combo.is_upsell) {
+                        quantityTaken[comboId].upsell = true;
+                    }
+                }
+                combinations.push(quantityTaken);
+            }
+
+            matchingCombos.push({
+                productTmpl: comboProduct,
+                combinations,
+                combinationsQty: comboQty,
+            });
+        }
+        return matchingCombos;
+    }
+    async createComboFromLines(productTmpl, combinations) {
+        const concernedLinesQty = {};
+        combinations.forEach((items) => {
+            for (const combo of Object.values(items)) {
+                for (const uuid of Object.keys(combo)) {
+                    const line = this.selectedOrder.lines.find((l) => l.uuid === uuid);
+                    if (!line) {
+                        continue;
+                    }
+                    concernedLinesQty[uuid] = line.qty;
+                }
+            }
+        });
+        let comboLine = null;
+        for (const [index, items] of combinations.entries()) {
+            const props = {
+                productTemplate: productTmpl,
+                values: items,
+            };
+            if (combinations.length > 1) {
+                props.title = productTmpl.display_name + ` ${index + 1}/${combinations.length}`;
+            }
+            const payload = await makeAwaitable(this.dialog, ComboConfiguratorPopup, props);
+            if (!payload) {
+                break;
+            }
+
+            const comboPrices = computeComboItems(
+                productTmpl.product_variant_ids[0],
+                payload[0],
+                this.selectedOrder.pricelist_id,
+                this.data.models["decimal.precision"].getAll(),
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                payload[1],
+                this.currency
+            );
+
+            comboLine = await this.addLineToCurrentOrder(
+                { product_tmpl_id: productTmpl },
+                { comboOpts: comboPrices },
+                false
+            );
+
+            const linkOldNewLines = {};
+            comboLine.combo_line_ids.forEach((cl) => {
+                linkOldNewLines[cl.uuid] = 0;
+            });
+
+            const oldLines = this.selectedOrder.lines.filter((l) =>
+                Object.keys(concernedLinesQty).includes(l.uuid)
+            );
+
+            for (const oldLine of oldLines) {
+                const possibleLinkedComboLines = this.findComboLinesByOldLine(oldLine, comboLine);
+                for (const link of possibleLinkedComboLines) {
+                    if (linkOldNewLines[link.uuid] >= link.qty) {
+                        continue;
+                    }
+                    if (link.qty >= concernedLinesQty[oldLine.uuid]) {
+                        this.handlePreparationHistory(
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            oldLine,
+                            link,
+                            concernedLinesQty[oldLine.uuid]
+                        );
+                        linkOldNewLines[link.uuid] += concernedLinesQty[oldLine.uuid];
+                        concernedLinesQty[oldLine.uuid] = 0;
+                        break;
+                    } else {
+                        this.handlePreparationHistory(
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            this.selectedOrder.last_order_preparation_change.lines,
+                            oldLine,
+                            link,
+                            link.qty
+                        );
+                        linkOldNewLines[link.uuid] += link.qty;
+                        concernedLinesQty[oldLine.uuid] -= link.qty;
+                    }
+                }
+            }
+
+            // make orderline ignored by preparation printers if at least one child orderline has already been sent to the kitchen
+            if (
+                comboLine.combo_line_ids.some(
+                    (cl) =>
+                        this.selectedOrder.last_order_preparation_change.lines[cl.preparationKey]
+                )
+            ) {
+                this.selectedOrder.last_order_preparation_change[comboLine.preparationKey] = {
+                    ignoreQty: comboLine.qty,
+                };
+            }
+        }
+        for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
+            const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
+            if (newQty > 0) {
+                line.setQuantity(newQty);
+            } else {
+                line.order_id.removeOrderline(line);
+            }
+        }
+        if (comboLine) {
+            this.selectedOrder.selectOrderline(comboLine);
+        }
+        return;
+    }
+    findComboLinesByOldLine(oldLine, comboProduct) {
+        // Link future new lines to old lines for preparation history tracking
+        return comboProduct.combo_line_ids.filter((cl) => {
+            if (cl.product_id.id !== oldLine.product_id.id) {
+                return false;
+            }
+            if (cl.full_product_name !== oldLine.full_product_name) {
+                return false;
+            }
+            return true;
+        });
+    }
+    breakCombo(orderline) {
+        if (!this.isSelectedLineCombo) {
+            return;
+        }
+        const order = this.selectedOrder;
+        for (const line of orderline.combo_line_ids) {
+            line.combo_parent_id = false;
+            line.setUnitPrice(
+                line.product_id.getPrice(order.pricelist_id, line.qty, 0, false, line.product_id)
+            );
+        }
+        const preparationKey = orderline.preparationKey;
+        order.removeOrderline(orderline, false);
+        delete order.last_order_preparation_change.lines[preparationKey];
     }
 }
 

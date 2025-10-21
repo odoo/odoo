@@ -34,8 +34,8 @@ patch(OrderSummary.prototype, {
     },
     async unbookTable() {
         const order = this.pos.getOrder();
-        await this.pos.deleteOrders([order]);
         this.pos.navigate("FloorScreen");
+        await this.pos.deleteOrders([order]);
     },
     showUnbookButton() {
         if (this.pos.selectedTable) {

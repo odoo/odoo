@@ -146,6 +146,11 @@ export class ControlButtons extends Component {
                 .includes(selectedOrderLine.product_id.product_tmpl_id.id)
         );
     }
+
+    breakSelectedCombo() {
+        const selectedOrderline = this.currentOrder?.getSelectedOrderline();
+        return this.pos.isSelectedLineCombo && this.pos.breakCombo(selectedOrderline.parentLine);
+    }
 }
 
 export class ControlButtonsPopup extends Component {

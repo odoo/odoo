@@ -5,6 +5,7 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as ChoseComboPopup from "@point_of_sale/../tests/pos/tours/utils/chose_combo_popup_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 
@@ -1006,6 +1007,47 @@ export function openCartMobile() {
             trigger: ".switchpane .btn-switchpane:contains('Cart')",
             run: "click",
             isActive: ["mobile"],
+        },
+    ];
+}
+
+export function clickApplyCombo(
+    isOptionShown = false,
+    optionsShown = [],
+    optionToChoose = "",
+    dialogStillPresent = false
+) {
+    const steps = [
+        {
+            content: "Check apply combo button is there",
+            trigger: ".combo-proposition",
+        },
+        {
+            content: "Click apply combo button",
+            trigger: ".combo-proposition button.btn",
+            run: "click",
+        },
+    ];
+    if (isOptionShown) {
+        steps.push(ChoseComboPopup.isShown());
+        for (const option of optionsShown) {
+            steps.push(ChoseComboPopup.isOptionShown(option));
+        }
+        steps.push(ChoseComboPopup.apply(optionToChoose));
+    }
+    if (dialogStillPresent) {
+        steps.push(ChoseComboPopup.isShown());
+        steps.push(Dialog.cancel());
+    }
+    return inLeftSide(steps.flat());
+}
+
+export function clickBreakCombo() {
+    return [
+        {
+            content: "Click break combo button",
+            trigger: ".break-combo-button",
+            run: "click",
         },
     ];
 }
