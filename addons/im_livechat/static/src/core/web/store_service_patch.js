@@ -37,7 +37,9 @@ const storePatch = {
             return true;
         }
         this.store.chatHub.initPromise.then(() => {
-            const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadConversation.thread });
+            const chatWindow = this.ChatWindow.insert({
+                channel: oldestUnreadConversation.thread.channel,
+            });
             chatWindow.open({ focus: true, jumpToNewMessage: true });
         });
         return true;

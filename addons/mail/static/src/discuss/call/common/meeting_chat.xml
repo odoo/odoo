@@ -3,7 +3,9 @@
     <t t-name="mail.MeetingChat">
         <ActionPanel t-if="thread" title.translate="Chat" resizable="true" minWidth="300" initialWidth="400" icon="'fa fa-comments'" contentRef="panelContentRef">
             <Thread thread="thread" jumpPresent="state.jumpPresent"/>
-            <t t-call="mail.ChatWindow.memberTyping"/>
+            <t t-call="mail.ChatWindow.memberTyping">
+                <t t-set="channel" t-value="thread.channel"/>
+            </t>
             <Composer
                 composer="thread.composer"
                 autofocus="!isMobileOS"

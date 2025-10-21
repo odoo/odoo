@@ -71,7 +71,7 @@ export class LivechatService {
         const temporaryThread = thread;
         const deleteTemporary = async () => {
             await this.store.chatHub.initPromise;
-            await this.store.ChatWindow.get({ thread: temporaryThread })?.close({ force: true });
+            temporaryThread.channel.chatWindow?.close({ force: true });
             temporaryThread?.delete();
         };
         const savedChannel = await this._createChannel({ originThread: thread, persist: true });

@@ -761,7 +761,7 @@ function toChatHubData(opened, folded) {
 }
 
 function convertChatHubParam(param) {
-    return typeof param === "number" ? { id: param, model: "discuss.channel" } : param;
+    return typeof param === "number" ? { id: param } : param;
 }
 
 export function setupChatHub({ opened = [], folded = [] } = {}) {

@@ -1,6 +1,5 @@
 import { AND, fields, Record } from "@mail/core/common/record";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
-import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -74,9 +73,6 @@ export class Thread extends Record {
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
     can_react = true;
-    chat_window = fields.One("ChatWindow", {
-        inverse: "thread",
-    });
     close_chat_window = fields.Attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {
@@ -311,7 +307,7 @@ export class Thread extends Record {
     }
 
     computeIsDisplayed() {
-        return this.store.ChatWindow.get({ thread: this })?.isOpen;
+        return this.channel?.chatWindow?.isOpen;
     }
 
     get avatarUrl() {
@@ -672,17 +668,14 @@ export class Thread extends Record {
             return;
         }
         await this.store.chatHub.initPromise;
-        const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
-        );
-        cw.open({ focus, swapOpened });
-        return cw;
+        this.channel.chatWindow = { fromMessagingMenu, bypassCompact };
+        this.channel.chatWindow.open({ focus, swapOpened });
+        return this.channel.chatWindow;
     }
 
     async closeChatWindow(options = {}) {
         await this.store.chatHub.initPromise;
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        await chatWindow?.close({ notifyState: false, ...options });
+        await this.channel?.chatWindow?.close({ notifyState: false, ...options });
     }
 
     addOrReplaceMessage(message, tmpMsg) {

@@ -14,13 +14,13 @@ class ChatBubblePreview extends Component {
     static props = ["chatWindow", "close"];
     static template = "mail.ChatBubblePreview";
 
-    /** @returns {import("models").Thread} */
-    get thread() {
-        return this.props.chatWindow.thread;
+    /** @returns {import("models").DiscussChannel} */
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 
     get previewText() {
-        const lastMessage = this.thread?.newestPersistentOfAllMessage;
+        const lastMessage = this.channel.newestPersistentOfAllMessage;
         if (!lastMessage) {
             return false;
         }
@@ -68,20 +68,20 @@ export class ChatBubble extends Component {
             (importantCounter) => {
                 this.state.bouncing = Boolean(importantCounter);
             },
-            () => [this.thread?.importantCounter]
+            () => [this.channel.importantCounter]
         );
         useSubEnv({ inChatBubble: true });
     }
 
-    /** @returns {import("models").Thread} */
-    get thread() {
-        return this.props.chatWindow.thread;
+    /** @returns {import("models").Channel} */
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 
     get showImStatus() {
         return (
-            this.thread?.correspondent?.im_status &&
-            this.thread.correspondent.im_status !== "offline"
+            this.channel.correspondent?.im_status &&
+            this.channel.correspondent.im_status !== "offline"
         );
     }
 }

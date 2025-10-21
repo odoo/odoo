@@ -31,9 +31,8 @@ patch(Thread.prototype, {
         ) {
             if (this.model === "discuss.channel" && this.inChathubOnNewMessage) {
                 await this.store.chatHub.initPromise;
-                let chatWindow = this.store.ChatWindow.get({ thread: this });
-                if (!chatWindow) {
-                    chatWindow = this.store.ChatWindow.insert({ thread: this });
+                if (!this.channel.chatWindow) {
+                    const chatWindow = this.store.ChatWindow.insert({ channel: this.channel });
                     if (
                         this.autoOpenChatWindowOnNewMessage &&
                         this.store.chatHub.opened.length < this.store.chatHub.maxOpened

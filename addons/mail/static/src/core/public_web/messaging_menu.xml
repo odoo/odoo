@@ -49,6 +49,7 @@
                     <t t-if="message" t-set-slot="body-icon">
                         <t t-call="mail.message_preview_prefix">
                             <t t-set="message" t-value="message"/>
+                            <t t-set="channel" t-value="thread.channel"/>
                         </t>
                     </t>
                 </NotificationItem>

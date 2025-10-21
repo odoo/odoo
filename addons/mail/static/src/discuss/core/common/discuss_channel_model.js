@@ -47,6 +47,9 @@ export class DiscussChannel extends Record {
         return def;
     }
 
+    chatWindow = fields.One("ChatWindow", {
+        inverse: "channel",
+    });
     /** @type {number} */
     id = fields.Attr(undefined, {
         onUpdate() {
@@ -63,6 +66,13 @@ export class DiscussChannel extends Record {
         inverse: "channel",
         onDelete: (r) => r?.delete(),
     });
+
+    delete(options = { closeChatWindow: true }) {
+        if (this.chatWindow?.exists() && options.closeChatWindow) {
+            this.chatWindow.close();
+        }
+        super.delete(...arguments);
+    }
 
     /**
      * @returns {boolean} true if the channel was opened, false otherwise

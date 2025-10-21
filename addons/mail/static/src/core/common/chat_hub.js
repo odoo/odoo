@@ -136,7 +136,7 @@ export class ChatHub extends Component {
         let counter = 0;
         const cws = this.chatHub.opened.concat(this.chatHub.folded);
         for (const chatWindow of cws) {
-            counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
+            counter += chatWindow.channel.importantCounter > 0 ? 1 : 0;
         }
         return counter;
     }
@@ -144,7 +144,7 @@ export class ChatHub extends Component {
     get hiddenCounter() {
         let counter = 0;
         for (const chatWindow of this.chatHub.folded.slice(this.chatHub.maxFolded)) {
-            counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
+            counter += chatWindow.channel.importantCounter > 0 ? 1 : 0;
         }
         return counter;
     }
