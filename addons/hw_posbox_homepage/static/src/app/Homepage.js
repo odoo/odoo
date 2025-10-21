@@ -120,21 +120,20 @@ export class Homepage extends Component {
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
             </div>
-            <div t-if="!store.advanced and !state.data.is_certificate_ok and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
+            <div t-if="!state.data.is_certificate_ok and state.data.server_status !== 'Not Configured' and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">
                     This IoT Box doesn't have a valid certificate.
                 </p>
-                <small>
+                <small t-if="state.data.certificate_details === 'ERR_SSL_CERT_DOWNLOAD'">
                     The IoT Box should get a certificate automatically when paired with a database. If it doesn't, 
                     try to restart it.
                 </small>
+                <small t-else="" t-esc="state.data.certificate_details" />
             </div>
-            <div t-if="store.advanced" t-att-class="'alert ' + (state.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
+            <div t-if="store.advanced and state.data.is_certificate_ok" class="alert alert-info" role="alert">
                 <p class="m-0 fw-bold">HTTPS Certificate</p>
                 <small>
-                    <t t-if="state.data.is_certificate_ok === true">Status: </t>
-                    <t t-else="">Error Code: </t>
-                    <t t-esc="state.data.certificate_details" />
+                    Status: <t t-esc="state.data.certificate_details" />
                 </small>
             </div>
             <div t-if="store.base.is_access_point_up" class="alert alert-info" role="alert">

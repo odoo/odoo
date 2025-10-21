@@ -167,7 +167,7 @@ def check_certificate():
     except EnvironmentError:
         _logger.exception("Unable to read certificate file")
         return {"status": CertificateStatus.ERROR,
-                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+                "error_code": "Can't read certificate file"}
 
     cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
     for key in cert.get_subject().get_components():
@@ -412,7 +412,7 @@ def load_certificate():
     db_uuid = get_conf('db_uuid')
     enterprise_code = get_conf('enterprise_code') or ""
     if not db_uuid:
-        return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
+        return "No database UUID found on the IoT Box configuration, try pairing again."
 
     try:
         response = requests.post(
@@ -422,24 +422,24 @@ def load_certificate():
         )
         response.raise_for_status()
         response_body = response.json()
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         _logger.exception("An error occurred while trying to reach odoo.com servers.")
-        return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
+        return "ERR_SSL_CERT_DOWNLOAD"
 
     server_error = response_body.get('error')
     if server_error:
         _logger.error("A server error received from odoo.com while trying to get the certificate: %s", server_error)
-        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+        return server_error
 
     result = response_body.get('result', {})
     certificate_error = result.get('error')
     if certificate_error:
         _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
-        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+        return certificate_error
 
     if not result.get('x509_pem') or not result.get('private_key_pem'):
         _logger.error("The certificate received from odoo.com is not valid.")
-        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+        return "The certificate received from odoo.com is not valid, try restarting."
 
     update_conf({'subject': result['subject_cn']})
 
