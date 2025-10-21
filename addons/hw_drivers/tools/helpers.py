@@ -133,6 +133,94 @@ def start_nginx_server():
     elif platform.system() == 'Linux':
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
+<<<<<<< 6df8dfe6ebd6ee1c3aa32d30bd2af3f03b60968f
+||||||| 43810e6b8035bddcf6955d2b3ec2ddcb0277d1d7
+def check_certificate():
+    """
+    Check if the current certificate is up to date or not authenticated
+    :return CheckCertificateStatus
+    """
+    server = get_odoo_server_url()
+
+    if not server:
+        _logger.debug('Ignoring the nginx certificate check without a connected database')
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+
+    if platform.system() == 'Windows':
+        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+    elif platform.system() == 'Linux':
+        path = Path('/etc/ssl/certs/nginx-cert.crt')
+
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+
+    cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
+    for key in cert.get_subject().get_components():
+        if key[0] == b'CN':
+            cn = key[1].decode('utf-8')
+    if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
+        message = 'Your certificate %s must be updated' % cn
+        _logger.info(message)
+        return {"status": CertificateStatus.NEED_REFRESH}
+    else:
+        message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
+        _logger.debug(message)
+        return {"status": CertificateStatus.OK, "message": message}
+
+
+=======
+def check_certificate():
+    """
+    Check if the current certificate is up to date or not authenticated
+    :return CheckCertificateStatus
+    """
+    server = get_odoo_server_url()
+
+    if not server:
+        _logger.debug('Ignoring the nginx certificate check without a connected database')
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+
+    if platform.system() == 'Windows':
+        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+    elif platform.system() == 'Linux':
+        path = Path('/etc/ssl/certs/nginx-cert.crt')
+
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "Can't read certificate file"}
+
+    cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
+    for key in cert.get_subject().get_components():
+        if key[0] == b'CN':
+            cn = key[1].decode('utf-8')
+    if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
+        message = 'Your certificate %s must be updated' % cn
+        _logger.info(message)
+        return {"status": CertificateStatus.NEED_REFRESH}
+    else:
+        message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
+        _logger.debug(message)
+        return {"status": CertificateStatus.OK, "message": message}
+
+
+>>>>>>> 89f71f70a6731be9940aa66d0c90c12ce697793a
 @toggleable
 @require_db
 def check_git_branch(server_url=None, get_db_branch=False):
@@ -333,6 +421,122 @@ def get_version(detailed_version=False):
 
     return version
 
+<<<<<<< 6df8dfe6ebd6ee1c3aa32d30bd2af3f03b60968f
+||||||| 43810e6b8035bddcf6955d2b3ec2ddcb0277d1d7
+
+def load_certificate():
+    """
+    Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
+    """
+    db_uuid = get_conf('db_uuid')
+    enterprise_code = get_conf('enterprise_code') or ""
+    if not db_uuid:
+        return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
+
+    try:
+        response = requests.post(
+            'https://www.odoo.com/odoo-enterprise/iot/x509',
+            json = {'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
+            timeout=5,
+        )
+        response.raise_for_status()
+        response_body = response.json()
+    except requests.exceptions.RequestException as e:
+        _logger.exception("An error occurred while trying to reach odoo.com servers.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
+
+    server_error = response_body.get('error')
+    if server_error:
+        _logger.error("A server error received from odoo.com while trying to get the certificate: %s", server_error)
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    result = response_body.get('result', {})
+    certificate_error = result.get('error')
+    if certificate_error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    if not result.get('x509_pem') or not result.get('private_key_pem'):
+        _logger.error("The certificate received from odoo.com is not valid.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    update_conf({'subject': result['subject_cn']})
+
+    if platform.system() == 'Linux':
+        with writable():
+            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    elif platform.system() == 'Windows':
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+    time.sleep(3)
+    if platform.system() == 'Windows':
+        odoo_restart(0)
+    elif platform.system() == 'Linux':
+        start_nginx_server()
+    return True
+
+
+=======
+
+def load_certificate():
+    """
+    Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
+    """
+    db_uuid = get_conf('db_uuid')
+    enterprise_code = get_conf('enterprise_code') or ""
+    if not db_uuid:
+        return "No database UUID found on the IoT Box configuration, try pairing again."
+
+    try:
+        response = requests.post(
+            'https://www.odoo.com/odoo-enterprise/iot/x509',
+            json = {'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
+            timeout=5,
+        )
+        response.raise_for_status()
+        response_body = response.json()
+    except requests.exceptions.RequestException:
+        _logger.exception("An error occurred while trying to reach odoo.com servers.")
+        return "ERR_SSL_CERT_DOWNLOAD"
+
+    server_error = response_body.get('error')
+    if server_error:
+        _logger.error("A server error received from odoo.com while trying to get the certificate: %s", server_error)
+        return server_error
+
+    result = response_body.get('result', {})
+    certificate_error = result.get('error')
+    if certificate_error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
+        return certificate_error
+
+    if not result.get('x509_pem') or not result.get('private_key_pem'):
+        _logger.error("The certificate received from odoo.com is not valid.")
+        return "The certificate received from odoo.com is not valid, try restarting."
+
+    update_conf({'subject': result['subject_cn']})
+
+    if platform.system() == 'Linux':
+        with writable():
+            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    elif platform.system() == 'Windows':
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+    time.sleep(3)
+    if platform.system() == 'Windows':
+        odoo_restart(0)
+    elif platform.system() == 'Linux':
+        start_nginx_server()
+    return True
+
+
+>>>>>>> 89f71f70a6731be9940aa66d0c90c12ce697793a
 def delete_iot_handlers():
     """Delete all drivers, interfaces and libs if any.
     This is needed to avoid conflicts with the newly downloaded drivers.
