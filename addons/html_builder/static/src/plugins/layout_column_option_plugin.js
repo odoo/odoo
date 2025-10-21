@@ -15,6 +15,16 @@ class LayoutColumnOptionPlugin extends Plugin {
         builder_actions: {
             ChangeColumnCountAction,
         },
+        selection_placeholder_container_predicates: (container) => {
+            if (container.nodeName === "DIV" && container.parentElement.classList.contains("row")) {
+                return true;
+            }
+        },
+        selection_blocker_predicates: (blocker) => {
+            if (blocker.classList.contains("row")) {
+                return false;
+            }
+        },
     };
     onCloned({ cloneEl }) {
         const cloneElClassList = cloneEl.classList;

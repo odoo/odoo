@@ -1,0 +1,23 @@
+@keyframes blink-caret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+*[data-selection-placeholder] {
+    height: 0;
+    margin: 0 0 -1px; // Compensate for the border.
+    border-top: solid transparent 1px;
+    caret-color: transparent;
+    position: relative;
+
+    &.o-horizontal-caret {
+        border-top-color: gray;
+        z-index: 1;
+        animation: blink-caret 1.3s infinite;
+    }
+
+    // Disable hints:
+    &:after {
+        content: none !important;
+    }
+}

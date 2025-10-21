@@ -140,6 +140,7 @@ describe("findAdjacentPosition method", () => {
     describe("Different editable zones", () => {
         test("should find adjacent character", async () => {
             const previous = unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <p>abc</p>
                     <p contenteditable="true">[]def</p>
@@ -147,6 +148,7 @@ describe("findAdjacentPosition method", () => {
                 <p>fgh</p>
             `);
             const next = unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <p>abc</p>
                     <p contenteditable="true">d[]ef</p>
@@ -201,6 +203,7 @@ describe("findAdjacentPosition method", () => {
                 // it's the desirable one to compose a range for deletion,
                 // allowing to remove the div with deleteBackward
                 unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     []<div contenteditable="false">
                         <p>abc</p>
                         <p contenteditable="true">def</p>
@@ -231,6 +234,7 @@ describe("findAdjacentPosition method", () => {
                         <p>abc</p>
                         <p contenteditable="true">def</p>
                     </div>[]
+                    <p data-selection-placeholder=""><br></p>
                 `)
             );
         });

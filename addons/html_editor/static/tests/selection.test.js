@@ -188,7 +188,7 @@ test("press 'ctrl+a' in 'contenteditable' should only select his content", async
     );
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        `<div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div>`
+        `<p data-selection-placeholder=""><br></p><div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div><p data-selection-placeholder=""><br></p>`
     );
 });
 

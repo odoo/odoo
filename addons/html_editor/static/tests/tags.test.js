@@ -676,14 +676,16 @@ describe("transform", () => {
         const { el, editor } = await setupEditor("<p>[]<br></p>");
         await insertText(editor, "--- ");
         expect(getContent(el)).toBe(
-            `<hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
     });
 
     test("should transform three dashes at the start of text to separator before the block", async () => {
         const { el, editor } = await setupEditor("<p>[]abc</p>");
         await insertText(editor, "--- ");
-        expect(getContent(el)).toBe(`<hr contenteditable="false"><p>[]abc</p>`);
+        expect(getContent(el)).toBe(
+            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></p><hr contenteditable="false"><p>[]abc</p>`
+        );
     });
 
     test("should transform space preceding by greater-than symbol to blockquote", async () => {

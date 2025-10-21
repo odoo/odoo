@@ -27,7 +27,8 @@ describe("custom selection", () => {
         );
         expect(getContent(el)).toBe(
             unformat(`
-            <table class="o_selected_table">
+                <p data-selection-placeholder=""><br></p>
+                <table class="o_selected_table">
                 <tbody>
                     <tr>
                         <td>ab</td>
@@ -35,7 +36,8 @@ describe("custom selection", () => {
                         <td class="o_selected_td">e]f</td>
                     </tr>
                 </tbody>
-            </table>`)
+            </table>
+            <p data-selection-placeholder=""><br></p>`)
         );
         const overlayColorTDs = queryAll("table td").map(
             (td) => getComputedStyle(td)["box-shadow"]
@@ -60,7 +62,8 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef]</td>' +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -69,6 +72,7 @@ describe("select a full table on cross over", () => {
                 contentBefore:
                     "<table><tbody><tr><td>ab</td><td>cd</td><td>e[f</td></tr></tbody></table><p>a]bc</p>",
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
@@ -100,7 +104,8 @@ describe("select a full table on cross over", () => {
                     '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef]</td></tr></tbody></table>',
+                    '<td class="o_selected_td">ef]</td></tr></tbody></table>' +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -137,7 +142,8 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -151,6 +157,7 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table><p>a]bc</p>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
@@ -210,7 +217,8 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -287,7 +295,8 @@ describe("select a full table on cross over", () => {
                                 </td>
                             </tr>
                         </tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
 
@@ -301,6 +310,7 @@ describe("select a full table on cross over", () => {
                     "</tr></tbody></table><p>a]bc</p>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -407,7 +417,8 @@ describe("select a full table on cross over", () => {
                                 <font style="color: aquamarine;">ef]</font>
                             </td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
 
@@ -472,11 +483,13 @@ describe("select columns on cross over", () => {
                 contentBefore:
                     "<table><tbody><tr><td>a[b</td><td>c]d</td><td>ef</td></tr></tbody></table>",
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">c]d</td>' +
                     "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -485,11 +498,13 @@ describe("select columns on cross over", () => {
                 contentBefore:
                     "<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td">a[b</td>' +
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">e]f</td>' +
-                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -502,6 +517,7 @@ describe("select columns on cross over", () => {
                     "<tr><td>a]b</td><td>cd</td><td>ef</td></tr>" +
                     "</tbody></table>",
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
@@ -518,7 +534,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -531,6 +548,7 @@ describe("select columns on cross over", () => {
                     "<tr><td>ab</td><td>cd</td><td>ef</td></tr>" +
                     "</tbody></table>",
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
@@ -547,7 +565,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -560,6 +579,7 @@ describe("select columns on cross over", () => {
                     "<tr><td>ab</td><td>cd</td><td>e]f</td></tr>" +
                     "</tbody></table>",
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td">a[b</td>' +
@@ -576,7 +596,8 @@ describe("select columns on cross over", () => {
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">e]f</td>' +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
     });
@@ -592,11 +613,13 @@ describe("select columns on cross over", () => {
                     "</tr></tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd]</strong></td>' +
                     "<td>ef</td>" +
-                    "</tr></tbody></table>",
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -610,11 +633,13 @@ describe("select columns on cross over", () => {
                     "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
-                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -640,6 +665,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
@@ -656,7 +682,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -682,6 +709,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
@@ -698,7 +726,8 @@ describe("select columns on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
 
@@ -724,6 +753,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: bold,
                 contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>[ab</strong></td>' +
@@ -740,7 +770,8 @@ describe("select columns on cross over", () => {
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef]</strong></td>' +
                     "</tr>" +
-                    "</tbody></table>",
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
             });
         });
     });
@@ -910,6 +941,7 @@ describe("select columns on cross over", () => {
                     "</tr></tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -920,7 +952,8 @@ describe("select columns on cross over", () => {
                             </td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
 
@@ -934,6 +967,7 @@ describe("select columns on cross over", () => {
                     "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -951,7 +985,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
 
@@ -977,6 +1012,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -999,7 +1035,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
 
@@ -1025,6 +1062,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -1049,7 +1087,8 @@ describe("select columns on cross over", () => {
                             <td>cd</td>
                             <td>ef</td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
 
@@ -1075,6 +1114,7 @@ describe("select columns on cross over", () => {
                     "</tbody></table>",
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
@@ -1109,7 +1149,8 @@ describe("select columns on cross over", () => {
                                 <font style="color: aquamarine;">e]f</font>
                             </td>
                         </tr></tbody>
-                    </table>`),
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
             });
         });
     });
@@ -1255,7 +1296,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the end cell of sibling table", async () => {
+        test("should move cursor between two tables", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1283,7 +1324,39 @@ describe("move cursor with arrow keys", () => {
                         </tbody>
                     </table>
                 `),
-                stepFunction: async () => press("ArrowUp"),
+                stepFunction: async () => {
+                    await press("ArrowUp");
+                    await tick();
+                },
+                contentAfterEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
                 contentAfter: unformat(`
                     <table>
                         <tbody>
@@ -1293,10 +1366,11 @@ describe("move cursor with arrow keys", () => {
                             </tr>
                             <tr>
                                 <td><br></td>
-                                <td>[]<br></td>
+                                <td><br></td>
                             </tr>
                         </tbody>
                     </table>
+                    []
                     <table>
                         <tbody>
                             <tr>
@@ -1453,7 +1527,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the first cell of sibling table", async () => {
+        test("should move cursor between two tables", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1481,7 +1555,39 @@ describe("move cursor with arrow keys", () => {
                         </tbody>
                     </table>
                 `),
-                stepFunction: async () => press("ArrowDown"),
+                stepFunction: async () => {
+                    await press("ArrowDown");
+                    await tick();
+                },
+                contentAfterEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
                 contentAfter: unformat(`
                     <table>
                         <tbody>
@@ -1495,10 +1601,11 @@ describe("move cursor with arrow keys", () => {
                             </tr>
                         </tbody>
                     </table>
+                    []
                     <table>
                         <tbody>
                             <tr>
-                                <td>[]<br></td>
+                                <td><br></td>
                                 <td><br></td>
                             </tr>
                             <tr>
@@ -1532,12 +1639,14 @@ describe("symmetrical selection", () => {
         // Select single empty cell
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
         press(["Shift", "ArrowRight"]);
@@ -1546,12 +1655,14 @@ describe("symmetrical selection", () => {
         // Select two cells consecutively
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
         press(["Shift", "ArrowDown"]);
@@ -1560,12 +1671,14 @@ describe("symmetrical selection", () => {
         // Extend selection from two cells to four cells
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
         press(["Shift", "ArrowLeft"]);
@@ -1574,12 +1687,14 @@ describe("symmetrical selection", () => {
         // Shrink selection from four cells to two cells
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
                     <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
         press(["Shift", "ArrowUp"]);
@@ -1588,12 +1703,14 @@ describe("symmetrical selection", () => {
         // Shrink selection from two cells to single cell
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1613,12 +1730,14 @@ describe("symmetrical selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]</td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
         const firstTd = el.querySelector("td");
         setSelection({
@@ -1633,12 +1752,14 @@ describe("symmetrical selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[ab]</td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 });
@@ -1658,7 +1779,7 @@ describe("single cell selection", () => {
 
         const BORDER_SENSITIVITY = 5;
         const firstTd = el.querySelector("td");
-        const offset = BORDER_SENSITIVITY + 1;
+        const offset = BORDER_SENSITIVITY + 2;
 
         manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
             detail: 2,
@@ -1676,12 +1797,14 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1699,7 +1822,7 @@ describe("single cell selection", () => {
 
         const BORDER_SENSITIVITY = 5;
         const firstTd = el.querySelector("td");
-        const offset = BORDER_SENSITIVITY + 1;
+        const offset = BORDER_SENSITIVITY + 2;
 
         manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
             detail: 3,
@@ -1717,12 +1840,14 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table o_selected_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td">[abc]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1747,12 +1872,14 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1778,12 +1905,14 @@ describe("single cell selection", () => {
 
         expectContentToBe(
             el,
-            `<table class="table table-bordered o_table">
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
                 <tbody>
                     <tr><td>[]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1875,7 +2004,8 @@ describe("deselecting table", () => {
                         <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                         <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                     </tbody>
-                </table>`
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
 
         press(["Shift", "ArrowUp"]);
@@ -1889,7 +2019,8 @@ describe("deselecting table", () => {
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
-            </table>`
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 });
