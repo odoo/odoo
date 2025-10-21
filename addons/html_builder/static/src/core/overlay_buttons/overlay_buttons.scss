@@ -35,22 +35,4 @@
     button.o_move_handle {
         cursor: move;
     }
-
-    button.o_send_back, button.o_bring_front {
-        background-position: center;
-        background-repeat: no-repeat;
-
-        &::before {
-            // Hack to give a width to the buttons and apply paddings.
-            content: "\00a0\00a0\00a0";
-        }
-    }
-
-    button.o_send_back {
-        background-image: url('/html_builder/static/img/options/bring-backward.svg');
-    }
-
-    button.o_bring_front {
-        background-image: url('/html_builder/static/img/options/bring-forward.svg');
-    }
 }
