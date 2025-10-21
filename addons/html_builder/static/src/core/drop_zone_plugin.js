@@ -1,6 +1,7 @@
 import { isVisible } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 
 export class DropZonePlugin extends Plugin {
@@ -24,6 +25,11 @@ export class DropZonePlugin extends Plugin {
                 }
             }
             return true;
+        },
+        selection_placeholder_container_predicates: (container) => {
+            if (container.classList.contains("oe_structure")) {
+                return false;
+            }
         },
     };
 
@@ -437,13 +443,17 @@ export class DropZonePlugin extends Plugin {
         { toInsertInline, isContentInIframe = true } = {}
     ) {
         const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
-        const hookEls = [];
+        let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
             hookEls.push(...validChildrenEls);
             parentEl.prepend(this.createDropzone(parentEl));
         }
         hookEls.push(...selectorSiblings);
+        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
+        if (systemNodeSelectors) {
+            hookEls = hookEls.filter((el) => !closestElement(el, systemNodeSelectors));
+        }
 
         // Inserting the normal dropzones.
         for (const hookEl of hookEls) {

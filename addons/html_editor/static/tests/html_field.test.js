@@ -640,10 +640,18 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
             </form>`,
     });
     expect.verifySteps(["setup_wysiwyg"]);
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("inside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        '<div class="o-paragraph" data-selection-placeholder=""><br></div>' +
+            getTxtValue("inside", true) +
+            '<div class="o-paragraph" data-selection-placeholder=""><br></div>'
+    );
     setSelectionInHtmlField();
     pasteOdooEditorHtml(htmlEditor, "addon");
-    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("addoninside", true));
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        '<div class="o-paragraph" data-selection-placeholder=""><br></div>' +
+            getTxtValue("addoninside", true) +
+            '<div class="o-paragraph" data-selection-placeholder=""><br></div>'
+    );
     await clickSave();
     expect.verifySteps(["update_value", "web_save"]);
 });

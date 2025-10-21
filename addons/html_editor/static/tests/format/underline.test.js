@@ -199,6 +199,7 @@ test("should make a few characters underline inside table (underline)", async ()
             </table>`),
         stepFunction: underline,
         contentAfterEdit: unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -217,7 +218,8 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`),
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
     });
 });
 

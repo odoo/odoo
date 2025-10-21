@@ -161,7 +161,7 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p class="oe_unbreakable">content[]</p><table><tbody><tr><td></td></tr></tbody></table>`
+            `<p class="oe_unbreakable">content[]</p><table><tbody><tr><td></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
         );
     });
 
@@ -259,7 +259,7 @@ describe("collapsed selection", () => {
         editor.shared.history.addStep();
         cleanHints(editor);
         expect(getContent(editor.editable, { sortAttrs: true })).toBe(
-            `<p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
+            `<p data-selection-placeholder=""><br></p><p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
         );
     });
 

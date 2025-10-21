@@ -93,6 +93,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleOrderedList,
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -107,6 +108,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
@@ -224,6 +226,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleOrderedList,
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -238,6 +241,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
