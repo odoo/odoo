@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_form_inherit_self_billing" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.self.billing</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_sent'][hasclass('oe_highlight')]" position="attributes">
+                <attribute name="invisible" add="state != 'posted' or is_being_sent or invoice_pdf_report_id or not can_send_as_self_invoice" separator=" and "/>
+            </xpath>
+            <xpath expr="//button[@name='action_invoice_sent'][not(hasclass('oe_highlight'))]" position="attributes">
+                <attribute name="invisible" add="state != 'posted' or not is_being_sent and not invoice_pdf_report_id or not can_send_as_self_invoice" separator=" and "/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
