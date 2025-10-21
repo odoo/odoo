@@ -1823,10 +1823,11 @@ describe(parseUrl(import.meta.url), () => {
             </form>
         `);
 
-        mockFetch((url, { body, method }) => {
+        mockFetch((url, { body, headers, method }) => {
             expect.step(new URL(url).pathname);
 
-            expect(method).toBe("post");
+            expect(method).toBe("POST");
+            expect(headers).toEqual(new Headers([["Content-Type", "multipart/form-data"]]));
             expect(body).toBeInstanceOf(FormData);
             expect(body.get("csrf_token")).toBe("CSRF_TOKEN_VALUE");
             expect(body.get("name")).toBe("Pierre");
