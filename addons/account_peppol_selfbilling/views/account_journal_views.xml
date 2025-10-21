@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_journal_form_inherited" model="ir.ui.view">
+        <field name="name">account.journal.form.inherited</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='advanced_settings']/group/group" position="inside">
+                <field name="is_self_billing" invisible="type != 'purchase'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

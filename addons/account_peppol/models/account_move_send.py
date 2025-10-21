@@ -165,9 +165,16 @@ class AccountMoveSend(models.AbstractModel):
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
                     continue
 
-                if self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_data['invoice_edi_format']) != 'valid':
+                if (
+                    peppol_verification_state := self.env['res.partner']
+                        .with_context(check_self_billing_support=invoice._is_exportable_as_self_invoice())
+                        ._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_data['invoice_edi_format'])
+                 ) != 'valid':
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = _('Please verify partner configuration in partner settings.')
+                    if peppol_verification_state == 'not_valid_format':
+                        invoice_data['error'] = _('The partner has indicated it does not accept this document type, so you cannot send this invoice via Peppol.')
+                    else:
+                        invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
 
                 if not self._is_applicable_to_move('peppol', invoice, **invoice_data):

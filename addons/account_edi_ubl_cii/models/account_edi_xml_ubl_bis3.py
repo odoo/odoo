@@ -542,6 +542,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # EXPORT: Templates for invoice header nodes
     # -------------------------------------------------------------------------
 
+    def _can_export_selfbilling(self):
+        # Overridden in `account_peppol_selfbilling`
+        return False
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # Call the parent method from UBL 2.1
         super()._add_invoice_header_nodes(document_node, vals)
