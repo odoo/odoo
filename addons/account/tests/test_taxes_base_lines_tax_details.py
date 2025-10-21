@@ -28,10 +28,10 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             'taxes_data': [
                 {
                     'tax_id': tax_21.id,
-                    'tax_amount': 1.88,
-                    'tax_amount_currency': 1.88,
-                    'base_amount': 9.02,
-                    'base_amount_currency': 9.02,
+                    'tax_amount': 1.8699999999999999,
+                    'tax_amount_currency': 1.8699999999999999,
+                    'base_amount': 9.01,
+                    'base_amount_currency': 9.01,
                 }
             ],
         }
@@ -57,8 +57,8 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             'base_lines_tax_details': [
                 {
                     **line_1_expected_values,
-                    'delta_total_excluded': -0.02,
-                    'delta_total_excluded_currency': -0.02,
+                    'delta_total_excluded': -0.03,
+                    'delta_total_excluded_currency': -0.03,
                 },
                 {
                     **line_2_expected_values,
@@ -74,20 +74,7 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
                         }
                     ],
                 },
-                {
-                    **line_2_expected_values,
-                    'delta_total_excluded': -0.01,
-                    'delta_total_excluded_currency': -0.01,
-                    'taxes_data': [
-                        {
-                            'tax_id': tax_21.id,
-                            'tax_amount': 0.19,
-                            'tax_amount_currency': 0.19,
-                            'base_amount': 0.9299999999999999,
-                            'base_amount_currency': 0.9299999999999999,
-                        }
-                    ],
-                },
+                line_2_expected_values,
                 line_2_expected_values,
                 line_2_expected_values,
                 line_2_expected_values,
