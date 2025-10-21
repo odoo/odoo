@@ -1,16 +1,16 @@
-import { expect, test } from "@odoo/hoot";
-import { click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import {
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 import {
     confirmAddSnippet,
     dummyBase64Img,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
+import { expect, test } from "@odoo/hoot";
+import { click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
@@ -26,15 +26,11 @@ test("Add image in gallery", async () => {
         },
     ]);
 
-    onRpc(
-        "/web/image/hoot.png",
-        () => {
-            const base64Image =
-                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
-            return dataURItoBlob(base64Image);
-        },
-        { pure: true }
-    );
+    onRpc("/web/image/hoot.png", () => {
+        const base64Image =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        return dataURItoBlob(base64Image);
+    });
 
     await setupWebsiteBuilder(
         `

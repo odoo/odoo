@@ -428,16 +428,10 @@ describe("pos_store.js", () => {
         }
 
         test("correctly cached", async () => {
-            onRpc(
-                getCompanyLogo256Url("<int:id>"),
-                async (request, { id }) => {
-                    expect.step(`Company logo ${id} fetched`);
-                    return `Company logo ${id}`;
-                },
-                {
-                    pure: true,
-                }
-            );
+            onRpc(getCompanyLogo256Url("<int:id>"), async (request, { id }) => {
+                expect.step(`Company logo ${id} fetched`);
+                return `Company logo ${id}`;
+            });
             const store = await setupPosEnv();
             const companyId = store.company.id;
             expect.verifySteps([`Company logo ${companyId} fetched`]);
@@ -447,16 +441,10 @@ describe("pos_store.js", () => {
         });
 
         test("fetch failed", async () => {
-            onRpc(
-                getCompanyLogo256Url("<int:id>"),
-                async (request, { id }) => {
-                    expect.step(`Company logo ${id} fetched`);
-                    throw new Error("Fetch failed");
-                },
-                {
-                    pure: true,
-                }
-            );
+            onRpc(getCompanyLogo256Url("<int:id>"), async (request, { id }) => {
+                expect.step(`Company logo ${id} fetched`);
+                throw new Error("Fetch failed");
+            });
             const store = await setupPosEnv();
             const companyId = store.company.id;
             expect.verifySteps([`Company logo ${companyId} fetched`]);

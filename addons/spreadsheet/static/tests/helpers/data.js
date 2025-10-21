@@ -122,13 +122,10 @@ export function getBasicListArchs() {
     };
 }
 
-function mockSpreadsheetDataController(request) {
-    const parts = request.url.split("/");
-    const resModel = parts.at(-2);
-    const resId = parseInt(parts.at(-1));
-    const record = this.env[resModel].search_read([["id", "=", resId]])[0];
+function mockSpreadsheetDataController(_request, { res_model, res_id }) {
+    const [record] = this.env[res_model].search_read([["id", "=", parseInt(res_id)]]);
     if (!record) {
-        const error = new RPCError(`Spreadsheet ${resId} does not exist`);
+        const error = new RPCError(`Spreadsheet ${res_id} does not exist`);
         error.data = {};
         throw error;
     }
@@ -141,7 +138,7 @@ function mockSpreadsheetDataController(request) {
     };
 }
 
-onRpc("/spreadsheet/data/*", mockSpreadsheetDataController, { pure: true });
+onRpc("/spreadsheet/data/<string:res_model>/<int:res_id>", mockSpreadsheetDataController);
 
 export function defineSpreadsheetModels() {
     defineModels(SpreadsheetModels);
