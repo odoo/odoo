@@ -61,6 +61,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         """
         self._add_myinvois_document_config_vals(vals)
         self._add_myinvois_document_base_lines_vals(vals)
+        self._setup_base_lines(vals)
         self._add_document_currency_vals(vals)
         self._add_myinvois_document_tax_grouping_function_vals(vals)
         self._add_myinvois_document_monetary_total_vals(vals)
@@ -126,6 +127,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'customer': customer,
             'partner_shipping': partner_shipping,
 
+            'company': myinvois_document.company_id,
             'currency_id': myinvois_document.currency_id,
             'company_currency_id': myinvois_document.company_id.currency_id,
 
