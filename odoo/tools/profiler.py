@@ -206,6 +206,7 @@ class _BasePeriodicCollector(Collector):
         self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
         self.last_frame = None
+        self._stop_event = threading.Event()
 
     def start(self):
         interval = self.profiler.params.get(f'{self.name}_interval')
@@ -222,11 +223,11 @@ class _BasePeriodicCollector(Collector):
         self.last_time = real_time()
         while self.active:  # maybe add a check on parent_thread state?
             self.progress()
-            time.sleep(self.frame_interval)
-
+            self._stop_event.wait(self.frame_interval)
 
     def stop(self):
         self.active = False
+        self._stop_event.set()
         self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
         if self.__thread.is_alive() and self.__thread is not threading.current_thread():
             self.__thread.join()
