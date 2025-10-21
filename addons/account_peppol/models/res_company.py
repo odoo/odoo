@@ -217,10 +217,11 @@ class ResCompany(models.Model):
 
     def _inverse_peppol_purchase_journal_id(self):
         for company in self:
-            # This avoid having 2 or more journals from the same company with
+            # This avoid having 2 or more purchase journals from the same company with
             # `is_peppol_journal` set to True (which could occur after changes).
             journals_to_reset = self.env['account.journal'].search([
                 ('company_id', '=', company.id),
+                ('type', '=', 'purchase'),
                 ('is_peppol_journal', '=', True),
             ])
             journals_to_reset.is_peppol_journal = False
