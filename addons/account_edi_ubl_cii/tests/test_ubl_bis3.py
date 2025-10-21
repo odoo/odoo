@@ -29,6 +29,10 @@ class TestUblBis3(AccountTestInvoicingCommon):
         create_values['currency_id'] = cls.env.ref('base.EUR').id
         return super()._create_company(**create_values)
 
+    @classmethod
+    def _generate_ubl_file(cls, invoice):
+        cls.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+
     def setup_partner_as_be1(self, partner):
         partner.write({
             'street': "Chaussée de Namur 40",
@@ -138,7 +142,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_product_code_and_barcode')
 
     def test_financial_account(self):
@@ -165,7 +169,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_financial_account')
 
     # -------------------------------------------------------------------------
@@ -200,13 +204,15 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_taxes_rounding_negative_line_tax_included')
 
-    def test_single_fixed_tax_price_excluded(self):
+    def test_fixed_tax_recycling_contribution(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
+
         tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
+        tax_auvibel = self.fixed_tax(2.0, name="AUVIBEL", include_base_amount=True)
         tax_21 = self.percent_tax(21.0)
 
         invoice = self.env['account.move'].create({
@@ -219,17 +225,20 @@ class TestUblBis3(AccountTestInvoicingCommon):
                     'price_unit': 99.0,
                     'tax_ids': [Command.set((tax_recupel + tax_21).ids)],
                 }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 98.0,
+                    'quantity': 4.0,
+                    'discount': 25.0,
+                    'tax_ids': [Command.set((tax_auvibel + tax_21).ids)],
+                }),
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_single_fixed_tax_price_excluded')
+        self._generate_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_fixed_tax_recycling_contribution_price_excluded')
 
-    def test_single_fixed_tax_price_included(self):
-        self.setup_partner_as_be1(self.env.company.partner_id)
-        self.setup_partner_as_be2(self.partner_a)
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True, price_include_override='tax_included')
-        tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
+        (tax_recupel + tax_auvibel + tax_21).price_include_override = 'tax_included'
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -241,17 +250,24 @@ class TestUblBis3(AccountTestInvoicingCommon):
                     'price_unit': 121.0,
                     'tax_ids': [Command.set((tax_recupel + tax_21).ids)],
                 }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 484.0,
+                    'quantity': 4.0,
+                    'discount': 25.0,
+                    'tax_ids': [Command.set((tax_auvibel + tax_21).ids)],
+                }),
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_single_fixed_tax_price_included')
+        self._generate_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_fixed_tax_recycling_contribution_price_included')
 
-    def test_multiple_fixed_taxes_price_excluded(self):
+    def test_fixed_tax_emptying(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
-        tax_auvibel = self.fixed_tax(1.0, name="AUVIBEL", include_base_amount=True)
+
+        tax_emptying = self.fixed_tax(0.10, name="Vidange")
         tax_21 = self.percent_tax(21.0)
 
         invoice = self.env['account.move'].create({
@@ -261,38 +277,21 @@ class TestUblBis3(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
-                    'price_unit': 98.0,
-                    'tax_ids': [Command.set((tax_recupel + tax_auvibel + tax_21).ids)],
+                    'price_unit': 100.0,
+                    'quantity': 4.0,
+                    'tax_ids': [Command.set((tax_emptying + tax_21).ids)],
                 }),
-            ],
-        })
-        invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_multiple_fixed_taxes_price_excluded')
-
-    def test_single_fixed_tax_price_excluded_and_discount(self):
-        self.setup_partner_as_be1(self.env.company.partner_id)
-        self.setup_partner_as_be2(self.partner_a)
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
-        tax_21 = self.percent_tax(21.0)
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': '2017-01-01',
-            'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
-                    'quantity': 2,
-                    'discount': 10,
-                    'price_unit': 99.0,
-                    'tax_ids': [Command.set((tax_recupel + tax_21).ids)],
+                    'price_unit': 100.0,
+                    'quantity': 1.0,
+                    'tax_ids': [Command.set((tax_emptying + tax_21).ids)],
                 }),
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_single_fixed_tax_price_excluded_and_discount')
+        self._generate_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_fixed_tax_emptying')
 
     def test_manual_tax_amount_on_invoice(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -335,7 +334,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         ]})
         invoice.action_post()
 
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_manual_tax_amount_on_invoice')
 
     # -------------------------------------------------------------------------
@@ -364,7 +363,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_price_unit_with_more_decimals')
 
     # -------------------------------------------------------------------------
@@ -396,7 +395,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_different_taxes')
 
     def test_early_pay_discount_with_fixed_tax(self):
@@ -419,7 +418,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_fixed_tax')
 
     def test_early_pay_discount_with_discount_on_lines(self):
@@ -473,7 +472,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_discount_on_lines')
 
     # -------------------------------------------------------------------------
@@ -612,7 +611,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ] * 10,
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
 
     def test_unit_price_precision(self):
