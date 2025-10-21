@@ -12,6 +12,9 @@ class Website(models.Model):
         ),
     )
 
+    # The second version of GMC no longer mandates public access to the eCommerce.
+    _check_gmc_ecommerce_access = models.Constraint('CHECK (TRUE)', "Constraint disabled")
+
     def _populate_product_feeds(self):
         """Populate product feeds for the website with default values."""
         for website in self:

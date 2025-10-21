@@ -12,8 +12,6 @@ class ResConfigSettings(models.TransientModel):
         group='base.group_user',
     )
 
-    _check_gmc_ecommerce_access = models.Constraint('CHECK (TRUE)', "Disable the constraint")
-
     def set_values(self):
         """Override to pre-populate the website feeds if none already exists."""
         super().set_values()
