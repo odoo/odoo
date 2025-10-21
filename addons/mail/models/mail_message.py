@@ -278,7 +278,7 @@ class MailMessage(models.Model):
     def _compute_linked_message_ids(self):
         """ Compute the linked messages from the body of the message."""
         message_ids_by_message = defaultdict(list)
-        for message in self:
+        for message in self.sudo():
             if tools.is_html_empty(message.body):
                 continue
             str_ids = html.fromstring(message.body).xpath(
@@ -788,27 +788,6 @@ class MailMessage(models.Model):
         messages.filtered(lambda msg: msg._is_thread_message() and msg.message_type != 'user_notification')._invalidate_documents()
 
         return messages
-
-    def read(self, fields=None, load='_classic_read'):
-        """ Override to explicitely call check_access(), that is not called
-            by the ORM. It instead directly fetches ir.rules and apply them. """
-        self.check_access('read')
-        return super().read(fields=fields, load=load)
-
-    def copy_data(self, default=None):
-        """ Make is symmetric to read, to avoid spurious issues with recordsets
-        differences. """
-        self.check_access('read')
-        return super().copy_data(default=default)
-
-    def fetch(self, field_names=None):
-        # This freaky hack is aimed at reading data without the overhead of
-        # checking that "self" is accessible, which is already done above in
-        # methods read() and _search(). It reproduces the existing behavior
-        # before the introduction of method fetch(), where the low-lever
-        # reading method _read() did not enforce any actual permission.
-        self = self.sudo()
-        return super().fetch(field_names)
 
     def write(self, vals):
         if not (self.env.su or self.env.user.has_group('base.group_user')):
@@ -1392,7 +1371,8 @@ class MailMessage(models.Model):
         for partner, messages in messages_per_partner.items():
             if user := partner.main_user_id:
                 store = Store(bus_channel=user)
-                store.add(messages.with_user(user), "_store_notification_fields")
+                user_messages = messages.with_user(user)._filtered_access('read')
+                store.add(user_messages, "_store_notification_fields")
                 store.bus_send()
 
     def _bus_channel(self):

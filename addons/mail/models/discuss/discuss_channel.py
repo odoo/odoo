@@ -1515,28 +1515,29 @@ class DiscussChannel(models.Model):
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
+        messages = self.env["mail.message"]
         if not self.ids:
-            return self.env["mail.message"]
-        self.env['mail.message'].flush_model()
-        self.env.cr.execute(
+            return messages
+        # Build the subquery, we know the model and must inject the same
+        # security rules as in the `_search` method. The search is optimized to
+        # return a query without executing anything if the model is fixed.
+        domain = Domain('model', '=', self._name) & Domain.custom(
+            to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
+        )
+        messages_query = messages._search(domain, order='id desc', limit=1)
+        sql = SQL(
             """
                    SELECT last_message_id
                      FROM discuss_channel
-        LEFT JOIN LATERAL (
-                              SELECT id
-                                FROM mail_message
-                               WHERE mail_message.model = 'discuss.channel'
-                                 AND mail_message.res_id = discuss_channel.id
-                            ORDER BY id DESC
-                               LIMIT 1
-                          ) AS t(last_message_id) ON TRUE
-                    WHERE discuss_channel.id IN %(ids)s
+        LEFT JOIN LATERAL %s AS t(last_message_id) ON TRUE
+                    WHERE discuss_channel.id IN %s
                  GROUP BY discuss_channel.id, t.last_message_id
                  ORDER BY discuss_channel.id
             """,
-            {"ids": tuple(self.ids)},
+            messages_query.subselect(),
+            tuple(self.ids),
         )
-        return self.env["mail.message"].browse([mid for (mid,) in self.env.cr.fetchall() if mid])
+        return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
 
     def _clean_empty_message(self, message):
         super()._clean_empty_message(message)

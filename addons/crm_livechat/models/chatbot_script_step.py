@@ -18,7 +18,7 @@ class ChatbotScriptStep(models.Model):
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
         name = self.env._("%s's New Lead", self.chatbot_script_id.title)
-        if msg := self._find_first_user_free_input(discuss_channel):
+        if msg := self._find_first_user_free_input(discuss_channel.sudo()):
             name = html2plaintext(msg.body)[:100]
         partner = self.env.user.partner_id
         team = self.crm_team_id

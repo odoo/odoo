@@ -88,10 +88,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - fetch discuss_channel
-    #   2: channels_as_member
-    #       - search_fetch channel (channels)
-    #       - search_count member (has_unpinned_channels)
-    #   34: store add channel:
+    #   2: _get_channels_as_member
+    #       - search discuss_channel (member_domain)
+    #       - search discuss_channel (pinned_member_domain)
+    #   34: channel _to_store_defaults:
+    #       - read mail.message model for get_annotatable models and check access
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -153,7 +154,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
-    _query_count_discuss_channels = 63
+    # TODO use assertQueries
+    _query_count_discuss_channels = 64
 
     def setUp(self):
         super().setUp()
