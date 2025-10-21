@@ -1670,8 +1670,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.16,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1752,8 +1752,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.16,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1844,8 +1844,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.16,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1926,8 +1926,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.17,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
