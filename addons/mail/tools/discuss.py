@@ -109,7 +109,7 @@ class Store:
                     if hasattr(records, "_to_store_defaults")
                     else []
                 )
-        fields = self._format_fields(records, fields) + self._format_fields(records, extra_fields)
+        fields = Store._format_fields(fields) + Store._format_fields(extra_fields)
         if as_thread:
             if hasattr(records, "_thread_to_store"):
                 records._thread_to_store(self, fields, **kwargs)
@@ -158,7 +158,7 @@ class Store:
         assert isinstance(records, models.Model)
         if not fields:
             return self
-        fields = self._format_fields(records, fields)
+        fields = Store._format_fields(fields)
         for record, record_data_list in zip(records, self._get_records_data_list(records, fields)):
             for record_data in record_data_list:
                 if as_thread:
@@ -245,14 +245,15 @@ class Store:
         if index not in self.data[model_name]:
             self.data[model_name][index] = {}
 
-    def _format_fields(self, records, fields):
+    @staticmethod
+    def _format_fields(fields):
         if fields is None:
             return []
         if isinstance(fields, dict):
-            fields = [Store.Attr(key, value) for key, value in fields.items()]
+            return [Store.Attr(key, value) for key, value in fields.items()]
         if not isinstance(fields, list):
-            fields = [fields]
-        return fields
+            return [fields]
+        return list(fields)  # prevent mutation of original list
 
     def _get_records_data_list(self, records, fields):
         abstract_fields = [field for field in fields if isinstance(field, (dict, Store.Attr))]
@@ -415,7 +416,7 @@ class Store:
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
-            extra_fields = list(self.kwargs.get("extra_fields", []))
+            extra_fields = Store._format_fields(self.kwargs.get("extra_fields"))
             if self.dynamic_fields:
                 extra_fields += self.dynamic_fields(calling_record)
             params = {
