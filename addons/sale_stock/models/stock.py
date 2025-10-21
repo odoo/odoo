@@ -29,7 +29,8 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
-                move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
+                description_picking = move.description_picking if move.description_picking != move.product_id.display_name else ""
+                move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + description_picking).strip()
 
     def _action_synch_order(self):
         sale_order_lines_vals = []

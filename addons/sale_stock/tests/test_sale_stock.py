@@ -2332,6 +2332,37 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.action_confirm()
         self.assertEqual(so.picking_ids.move_ids.description_picking, 'No variant: extra\nDeliver with care')
 
+    def test_move_description_with_custom_attribute(self):
+        """
+        Test that the move description is correct when using the free text attribute with a custom value.
+        We use 3 different description_pickingout to check various cases:
+        - empty description_pickingout -> the default for the description is the name of the product and we want to ensure it is removed
+        - description_pickingout with simple text
+        - description_pickingout with text including the product name
+        """
+        self.color_attribute.name = 'product_attribute'
+        self.color_attribute_red.name = 'product_attribute_value'
+        self.color_attribute_red.is_custom = True
+        attribute_custom_value = self.env['product.attribute.custom.value'].create({
+            'name': 'custom value',
+            'custom_product_template_attribute_value_id': self.product_sofa_red.product_template_attribute_value_ids.id,
+            'custom_value': 'Hello',
+        })
+        descriptions = ['', "Handle with care", "Handle the Sofa with care please !"]
+        descriptions_picking = ['product_attribute: product_attribute_value: Hello',
+        'product_attribute: product_attribute_value: Hello\nHandle with care',
+        'product_attribute: product_attribute_value: Hello\nHandle the Sofa with care please !']
+        for i in range(len(descriptions)):
+            self.product_template_sofa.description_pickingout = descriptions[i]
+            sale_order = self._get_new_sale_order(
+                product=self.product_sofa_red,
+                sol_vals={
+                    'product_custom_attribute_value_ids': attribute_custom_value.ids
+                }
+            )
+            sale_order.action_confirm()
+            self.assertEqual(sale_order.picking_ids.move_ids.description_picking, descriptions_picking[i])
+
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
         user has only one allowed company. """
