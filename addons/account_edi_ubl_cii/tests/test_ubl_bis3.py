@@ -4,7 +4,6 @@ from unittest import mock
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.tools.misc import file_open
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -82,15 +81,8 @@ class TestUblBis3(AccountTestInvoicingCommon):
             yield
 
     def _assert_invoice_ubl_file(self, invoice, filename):
-        file_path = f'addons/{self.test_module}/tests/test_files/{filename}.xml'
-
-        with file_open(file_path, 'rb') as file:
-            expected_content = file.read()
         self.assertTrue(invoice.ubl_cii_xml_id)
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(invoice.ubl_cii_xml_id.raw),
-            self.get_xml_tree_from_string(expected_content),
-        )
+        self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder='bis3')
 
     def assert_same_invoice(self, invoice1, invoice2, **invoice_kwargs):
         self.assertEqual(len(invoice1.invoice_line_ids), len(invoice2.invoice_line_ids))
@@ -138,12 +130,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         actual_content, _dummy = self.env['account.edi.xml.ubl_bis3'].with_context(lang='en_US')._export_invoice(invoice)
-        with file_open(f'addons/{self.test_module}/tests/test_files/bis3/test_invoice.xml', 'rb') as file:
-            expected_content = file.read()
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(actual_content),
-            self.get_xml_tree_from_string(expected_content),
-        )
+        self.assert_xml(actual_content, 'test_invoice', subfolder='bis3')
 
     def test_product_code_and_barcode(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -169,7 +156,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_product_code_and_barcode')
+        self._assert_invoice_ubl_file(invoice, 'test_product_code_and_barcode')
 
     def test_financial_account(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -196,7 +183,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_financial_account')
+        self._assert_invoice_ubl_file(invoice, 'test_financial_account')
 
     # -------------------------------------------------------------------------
     # TAXES
@@ -231,7 +218,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_taxes_rounding_negative_line_tax_included')
+        self._assert_invoice_ubl_file(invoice, 'test_taxes_rounding_negative_line_tax_included')
 
     def test_fixed_tax_recycling_contribution(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -262,7 +249,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_fixed_tax_recycling_contribution_price_excluded')
+        self._assert_invoice_ubl_file(invoice, 'test_fixed_tax_recycling_contribution_price_excluded')
 
         (tax_recupel + tax_auvibel + tax_21).price_include_override = 'tax_included'
 
@@ -287,7 +274,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_fixed_tax_recycling_contribution_price_included')
+        self._assert_invoice_ubl_file(invoice, 'test_fixed_tax_recycling_contribution_price_included')
 
     def test_fixed_tax_emptying(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -317,7 +304,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_fixed_tax_emptying')
+        self._assert_invoice_ubl_file(invoice, 'test_fixed_tax_emptying')
 
     def test_manual_tax_amount_on_invoice(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -361,7 +348,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
 
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_manual_tax_amount_on_invoice')
+        self._assert_invoice_ubl_file(invoice, 'test_manual_tax_amount_on_invoice')
 
     # -------------------------------------------------------------------------
     # PRICE UNIT
@@ -390,7 +377,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_price_unit_with_more_decimals')
+        self._assert_invoice_ubl_file(invoice, 'test_price_unit_with_more_decimals')
 
     # -------------------------------------------------------------------------
     # PAYMENT TERM
@@ -422,7 +409,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_different_taxes')
+        self._assert_invoice_ubl_file(invoice, 'test_early_pay_discount_different_taxes')
 
     def test_early_pay_discount_with_fixed_tax(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -445,7 +432,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_fixed_tax')
+        self._assert_invoice_ubl_file(invoice, 'test_early_pay_discount_with_fixed_tax')
 
     def test_early_pay_discount_with_discount_on_lines(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -499,7 +486,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_discount_on_lines')
+        self._assert_invoice_ubl_file(invoice, 'test_early_pay_discount_with_discount_on_lines')
 
     # -------------------------------------------------------------------------
     # CASH ROUDNING
@@ -531,7 +518,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             {
                 'invoice_cash_rounding_id': cash_rounding_tax,
                 'expected': {
-                    'xml_file': 'bis3/test_cash_rounding_tax',
+                    'xml_file': 'test_cash_rounding_tax',
                     'xpaths': None,
                 },
                 'expected_rounding_invoice_line_values': None,
@@ -539,7 +526,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             {
                 'invoice_cash_rounding_id': cash_rounding_line,
                 'expected': {
-                    'xml_file': 'bis3/test_cash_rounding_line',
+                    'xml_file': 'test_cash_rounding_line',
                     'xpaths': None,
                 },
                 # We create an invoice line for the rounding amount.
@@ -638,7 +625,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self._generate_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
+        self._assert_invoice_ubl_file(invoice, 'test_dispatch_base_lines_delta')
 
     def test_unit_price_precision(self):
         """ Check that with large quantities, the precision of the rounding on the unit price
@@ -670,7 +657,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_unit_price_precision')
+        self._assert_invoice_ubl_file(invoice, 'test_unit_price_precision')
 
     # -------------------------------------------------------------------------
     # SELF-BILLED INVOICE
@@ -706,7 +693,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         with self.allow_sending_vendor_bills():
             self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_bill')
+        self._assert_invoice_ubl_file(invoice, 'test_vendor_bill')
 
     def test_export_vendor_bill_reverse_charge(self):
         self.setup_partner_as_fr1(self.env.company.partner_id)
@@ -749,7 +736,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         with self.allow_sending_vendor_bills():
             self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_bill_reverse_charge')
+        self._assert_invoice_ubl_file(invoice, 'test_vendor_bill_reverse_charge')
 
     def test_export_vendor_credit_note(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
@@ -782,4 +769,4 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         with self.allow_sending_vendor_bills():
             self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
-        self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_credit_note')
+        self._assert_invoice_ubl_file(invoice, 'test_vendor_credit_note')
