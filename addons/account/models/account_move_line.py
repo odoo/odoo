@@ -97,7 +97,7 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_account_id',
         index=False,  # covered by account_move_line_account_id_date_idx defined in init()
         auto_join=True,
-        ondelete="cascade",
+        ondelete="restrict",
         domain="[('account_type', '!=', 'off_balance')]",
         check_company=True,
         tracking=True,
