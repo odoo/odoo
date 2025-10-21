@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_ae_report_invoice_document" inherit_id="l10n_gcc_invoice.l10n_gcc_report_invoice_document" primary="True">
+        <!-- Titles -->
+        <t name="credit_note_title" position="replace">
+            <t name="credit_note_title">Tax Credit Note</t>
+        </t>
+        <t name="credit_note_title_ar" position="replace">
+            <t name="credit_note_title_ar">إشعار دائن ضريبي</t>
+        </t>
+        <t name="credit_note_title_en" position="replace">
+            <t name="credit_note_title_en">Tax Credit Note</t>
+        </t>
+        <!-- End Titles -->
         <!-- Invoice table -->
         <th name="th_taxes" position="after">
             <t t-if="display_taxes">
