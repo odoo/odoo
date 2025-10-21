@@ -1745,7 +1745,7 @@ class TestQueries(TransactionCase):
             SELECT COUNT(*) FROM (
                 SELECT FROM "res_partner"
                 WHERE ("res_partner"."active" IS TRUE AND "res_partner"."name" LIKE %s)
-                LIMIT %s
+                LIMIT 1
             ) t
         ''']):
             Model.search_count([('name', 'like', 'foo')], limit=1)
@@ -1872,7 +1872,7 @@ class TestQueries(TransactionCase):
                 OR "ir_model"."name"->>%s ILIKE %s
             )
             ORDER BY "ir_model"."model"
-            LIMIT %s
+            LIMIT 100
         ''']):
             Model.name_search('foo')
 
@@ -1884,7 +1884,7 @@ class TestQueries(TransactionCase):
                 AND "ir_model"."name"->>%s NOT ILIKE %s
             )
             ORDER BY "ir_model"."model"
-            LIMIT %s
+            LIMIT 100
         ''']):
             Model.name_search('foo', operator='not ilike')
 
@@ -2013,7 +2013,7 @@ class TestMany2one(TransactionCase):
                 FROM "res_company"
                 WHERE ("res_company"."active" IS TRUE AND "res_company"."name" LIKE %s)
                 ORDER BY "res_company"."id"
-                LIMIT %s
+                LIMIT 1
             )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):

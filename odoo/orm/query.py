@@ -17,6 +17,7 @@ def _sql_from_table(alias: str, table: SQL) -> SQL:
     return SQL("%s AS %s", table, alias_identifier)
 
 
+_SQL_EMPTY = SQL()
 _SQL_JOINS = {
     "JOIN": SQL("JOIN"),
     "LEFT JOIN": SQL("LEFT JOIN"),
@@ -66,7 +67,7 @@ class Query:
         # joins {alias: (kind(SQL), table(SQL), condition(SQL))}
         self._joins: dict[str, tuple[SQL, SQL, SQL]] = {
             # first entry is the FROM table
-            alias: (SQL(), table, SQL()),
+            alias: (_SQL_EMPTY, table, _SQL_EMPTY),
         }
 
         # holds the list of WHERE conditions (to be joined with 'AND')
@@ -172,17 +173,17 @@ class Query:
 
     def select(self, *args: str | SQL) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
-        sql_args = map(SQL, args) if args else [SQL.identifier(self.table, 'id')]
+        select_clause = SQL(", ").join(map(SQL, args)) if args else SQL.identifier(self.table, 'id')
         return SQL(
             "%s%s%s%s%s%s%s%s",
-            SQL("SELECT %s", SQL(", ").join(sql_args)),
+            SQL("SELECT %s", select_clause),
             SQL(" FROM %s", self.from_clause),
-            SQL(" WHERE %s", self.where_clause) if self._where_clauses else SQL(),
-            SQL(" GROUP BY %s", self.groupby) if self.groupby else SQL(),
-            SQL(" HAVING %s", self.having) if self.having else SQL(),
-            SQL(" ORDER BY %s", self._order) if self._order else SQL(),
-            SQL(" LIMIT %s", self.limit) if self.limit else SQL(),
-            SQL(" OFFSET %s", self.offset) if self.offset else SQL(),
+            SQL(" WHERE %s", self.where_clause) if self._where_clauses else _SQL_EMPTY,
+            SQL(" GROUP BY %s", self.groupby) if self.groupby else _SQL_EMPTY,
+            SQL(" HAVING %s", self.having) if self.having else _SQL_EMPTY,
+            SQL(" ORDER BY %s", self._order) if self._order else _SQL_EMPTY,
+            SQL(f" LIMIT {int(self.limit)}") if self.limit else _SQL_EMPTY,
+            SQL(f" OFFSET {int(self.offset)}") if self.offset else _SQL_EMPTY,
         )
 
     def subselect(self, *args: str | SQL) -> SQL:
@@ -203,14 +204,14 @@ class Query:
             # in this case, the ORDER BY clause is necessary
             return SQL("(%s)", self.select(*args))
 
-        sql_args = map(SQL, args) if args else [SQL.identifier(self.table, 'id')]
+        select_clause = SQL(", ").join(map(SQL, args)) if args else SQL.identifier(self.table, 'id')
         return SQL(
             "(%s%s%s%s%s)",
-            SQL("SELECT %s", SQL(", ").join(sql_args)),
+            SQL("SELECT %s", select_clause),
             SQL(" FROM %s", self.from_clause),
-            SQL(" WHERE %s", self.where_clause) if self._where_clauses else SQL(),
-            SQL(" GROUP BY %s", self.groupby) if self.groupby else SQL(),
-            SQL(" HAVING %s", self.having) if self.having else SQL(),
+            SQL(" WHERE %s", self.where_clause) if self._where_clauses else _SQL_EMPTY,
+            SQL(" GROUP BY %s", self.groupby) if self.groupby else _SQL_EMPTY,
+            SQL(" HAVING %s", self.having) if self.having else _SQL_EMPTY,
         )
 
     def get_result_ids(self) -> tuple[int, ...]:
