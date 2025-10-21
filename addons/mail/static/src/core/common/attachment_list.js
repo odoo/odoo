@@ -88,6 +88,15 @@ export class AttachmentList extends Component {
         });
     }
 
+    /**
+     * @param {import("models").Attachment} attachment
+     */
+    onClickShowInConversation(attachment) {
+        attachment.thread.highlightMessage = attachment.message_ids.find((m) =>
+            m.thread.eq(attachment.thread)
+        );
+    }
+
     onClickAttachment(attachment) {
         this.fileViewer.open(attachment, this.props.attachments);
     }
@@ -127,6 +136,13 @@ export class AttachmentList extends Component {
                 onSelect: () => this.onClickDownload(attachment),
             });
         }
+        if (this.showShowInConversation) {
+            res.push({
+                label: _t("Show in conversation"),
+                icon: "fa fa-eye",
+                onSelect: () => this.onClickShowInConversation(attachment),
+            });
+        }
         return res;
     }
 
@@ -143,6 +159,15 @@ export class AttachmentList extends Component {
             !this.env.message ||
             this.env.message.hasTextContent ||
             (this.env.message && this.props.attachments.length > 1)
+        );
+    }
+
+    get showShowInConversation() {
+        return (
+            !this.env.inComposer &&
+            !this.env.message &&
+            this.attachment.thread &&
+            this.attachment.message_ids.some((m) => m.thread.eq(this.attachment.thread))
         );
     }
 

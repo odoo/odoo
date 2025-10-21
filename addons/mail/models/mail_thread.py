@@ -5013,7 +5013,13 @@ class MailThread(models.AbstractModel):
             ):
                 res["activities"] = Store.Many(thread.with_context(active_test=True).activity_ids)
             if "attachments" in request_list:
-                res["attachments"] = Store.Many(thread._get_mail_thread_data_attachments())
+                res["attachments"] = Store.Many(
+                    thread._get_mail_thread_data_attachments(),
+                    extra_fields=[
+                        Store.Many("message_ids", Store.One("thread", [], as_thread=True)),
+                        *self.env["ir.attachment"]._get_store_ownership_fields(check_is_message_author=True),
+                    ],
+                )
                 res["areAttachmentsLoaded"] = True
                 res["isLoadingAttachments"] = False
             if "contact_fields" in request_list:
