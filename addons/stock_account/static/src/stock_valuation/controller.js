@@ -23,7 +23,7 @@ export class StockValuationReportController {
 
     async loadReportData() {
         const kwargs = {
-            date: serializeDate(this.state.date),
+            date: this.state.date.toISODate() || false,
         };
         const res = await this.orm.call(
             "stock_account.stock.valuation.report",
@@ -70,7 +70,7 @@ export class StockValuationReportController {
 
     async setDate(date) {
         this.state.date = date;
-        this.dateAsString = date.toFormat('y-LL-dd HH:mm:ss');
+        this.dateAsString = date.toISO();
         await this.loadReportData();
     }
 
