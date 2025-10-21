@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event_track
-# 
+# * website_event_track
+#
 # Translators:
 # Manon Rondou, 2025
 # Wil Odoo, 2025
-# 
+#
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-10-21 17:47+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
+"website_event_track/fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -128,20 +132,30 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Bonjour <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    Nous avons le plaisir de vous informer que votre proposition <t t-out=\"object.name or ''\">Informations sur l'événement</t> a été acceptée et confirmée pour l'événement <t t-out=\"object.event_id.name or ''\">Découverte en ligne de la collection OpenWood</t>.\n"
+"    Bonjour <t t-out=\"object.partner_id.name or object.partner_name or ''\""
+">Brandon Freeman</t><br/>\n"
+"    Nous avons le plaisir de vous informer que votre proposition <t t-out="
+"\"object.name or ''\">Informations sur l'événement</t> a été retenue et "
+"confirmée pour l'événement <t t-out=\"object.event_id.name or ''\""
+">Découverte en ligne de la collection OpenWood</t>.\n"
 "    <br/>\n"
 "    Vous trouverez plus de détails ici :\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none !important; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">\n"
+"        <a t-attf-href="
+"\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style="
+"\"padding: 8px 16px 8px 16px; font-size: 14px; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none "
+"!important; background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; border-radius:3px\">\n"
 "            Voir la présentation\n"
 "        </a>\n"
 "    </div>\n"
 "    <br/><br/>\n"
-"    Merci,\n"
+"    Cordialement,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>"
 
