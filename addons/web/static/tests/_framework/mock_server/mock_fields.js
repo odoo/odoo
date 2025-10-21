@@ -70,7 +70,7 @@ function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
             for (const key of requiredKeys) {
                 if (!(key in field)) {
                     throw new MockServerError(
-                        `missing key "${key}" in ${type || "generic"} field definition`
+                        `Missing key "${key}" in ${type || "generic"} field definition`
                     );
                 }
             }
