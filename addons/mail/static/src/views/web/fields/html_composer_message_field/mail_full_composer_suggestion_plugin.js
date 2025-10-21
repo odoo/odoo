@@ -4,8 +4,8 @@ import { router } from "@web/core/browser/router";
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
-export class MentionPlugin extends Plugin {
-    static id = "mention";
+export class MailFullComposerSuggestionPlugin extends Plugin {
+    static id = "mail_full_composer_suggestion";
     static dependencies = ["overlay", "dom", "history", "input", "selection"];
 
     resources = {
