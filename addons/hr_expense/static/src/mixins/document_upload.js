@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
 import { onWillStart, useRef, useEffect, useState } from "@odoo/owl";
+import { user } from "@web/core/user";
 
 export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
     static props = [
@@ -65,26 +66,16 @@ export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone exte
     }
 };
 
-export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends T {
+export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumentUpload extends T {
+
     setup() {
         super.setup();
         this.actionService = useService('action');
         this.notification = useService('notification');
-        this.orm = useService('orm');
-        this.http = useService('http');
+        this.orm = useService("orm");
+        this.http = useService("http");
         this.shareTarget = useService("shareTarget");
-        this.fileInput = useRef('fileInput');
-        this.root = useRef("root");
-
-        this.uploadsProcessing = 0;
         this.createdExpenseIds = [];
-
-        useBus(this.env.bus, "change_file_input", async (ev) => {
-            this.fileInput.el.files = ev.detail.files;
-            this.uploadsProcessing++;
-            await this.onChangeFileInput();
-        });
-
         onWillStart(async () => {
             if (this.shareTarget.hasSharedFiles()) {
                 const files = this.shareTarget.getSharedFilesToUpload();
@@ -93,35 +84,22 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         });
     }
 
-    uploadDocument() {
-        this.uploadsProcessing++;
-        this.fileInput.el.click();
-    }
-
-    async onChangeFileInput() {
-        try {
-            await this._onChangeFileInput([...this.fileInput.el.files]);
-            if (this.uploadsProcessing === 1) {
-                const actionName = _t("Generate Expenses");
-                const currentAction = this.actionService.currentController.action;
-                let domain = [['id', 'in', this.createdExpenseIds]];
-                let options = {}
-                if (currentAction.name === actionName) {
-                    domain = Domain.or([domain, currentAction.domain]).toList();
-                    options['stackPosition'] = 'replaceCurrentAction';
-                }
-                await this.actionService.doAction({
-                    'name': actionName,
-                    'res_model': 'hr.expense',
-                    'type': 'ir.actions.act_window',
-                    'views': [[false, this.env.config.viewType], [false, 'form']],
-                    'domain': domain,
-                    'context': this.props.context,
-                }, options);
-            }
-        } finally {
-            this.uploadsProcessing--;
+    async generateOpenExpensesAction(currentAction) {
+        const actionName = _t("Generate Expenses");
+        let domain = [['id', 'in', this.createdExpenseIds]];
+        let options = {}
+        if (currentAction && currentAction.name === actionName) {
+            domain = Domain.or([domain, currentAction.domain]).toList();
+            options['stackPosition'] = 'replaceCurrentAction';
         }
+        await this.actionService.doAction({
+            'name': actionName,
+            'res_model': 'hr.expense',
+            'type': 'ir.actions.act_window',
+            'views': [[false, this.viewType], [false, 'form']],
+            'domain': domain,
+            'context': this.props.context,
+        }, options);
     }
 
     async _onChangeFileInput(files) {
@@ -132,8 +110,7 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
             id: 0,
         };
 
-        const fileData = await this.http.post('/web/binary/upload_attachment', params, "text");
-        const attachments = JSON.parse(fileData);
+        const attachments = await this.http.post('/web/binary/upload_attachment', params);
         if (attachments.error) {
             throw new Error(attachments.error);
         }
@@ -152,9 +129,55 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         const createdExpenseIds = await this.orm.call(
             'hr.expense',
             'create_expense_from_attachments',
-            [attachmentIds, this.env.config.viewType],
-            { context: this.props.context },
+            [attachmentIds, this.viewType],
+            { context: this.context },
         );
         this.createdExpenseIds = [...this.createdExpenseIds, ...createdExpenseIds];
+    }
+
+    get viewType() {
+        return this.env.isSmall ? "kanban" : "list";
+    }
+
+    get context() {
+        return user.context;
+    }
+}
+
+export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends AbstractExpenseDocumentUpload(T) {
+    setup() {
+        super.setup();
+        this.fileInput = useRef('fileInput');
+        this.uploadsProcessing = 0;
+
+        useBus(this.env.bus, "change_file_input", async (ev) => {
+            this.fileInput.el.files = ev.detail.files;
+            this.uploadsProcessing++;
+            await this.onChangeFileInput();
+        });
+    }
+
+    uploadDocument() {
+        this.uploadsProcessing++;
+        this.fileInput.el.click();
+    }
+
+    async onChangeFileInput() {
+        try {
+            await this._onChangeFileInput([...this.fileInput.el.files]);
+            if (this.uploadsProcessing === 1) {
+                await this.generateOpenExpensesAction(this.actionService.currentController.action);
+            }
+        } finally {
+            this.uploadsProcessing--;
+        }
+    }
+
+    get viewType() {
+        return this.env.config.viewType;
+    }
+
+    get context() {
+        return this.props.context;
     }
 };
