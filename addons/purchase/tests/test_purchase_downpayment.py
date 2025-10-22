@@ -89,8 +89,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
     def test_downpayment_in_accrued_expense_entry(self):
         """Check that the downpayment is not included in the accrued expense entry"""
-        po = self.init_purchase(confirm=False, products=[self.product_order])
-        po.button_confirm()
+        po = self.init_purchase(confirm=True, products=[self.product_order])
 
         self.init_invoice('in_invoice', amounts=[1600.00], post=True)
 
@@ -106,8 +105,11 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             active_ids=po.ids,
         ).create({
             'account_id': self.company_data['default_account_expense'].id,
-            'date': '2025-01-01',
+            'date': fields.Date.today(),
         })
+
+        # Receive 1 qty to have something to accrual.
+        po.order_line.qty_received = 1
 
         self.assertRecordValues(self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
