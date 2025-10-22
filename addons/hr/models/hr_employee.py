@@ -880,7 +880,9 @@ class HrEmployee(models.Model):
             if employee.company_id.sudo().hr_presence_control_login:
                 # sudo: res.users - can access presence of accessible user
                 presence_status = employee.user_id.sudo().presence_ids.status or "offline"
-                if presence_status == "online":
+                if not employee.sudo().is_in_contract:
+                    state = "out_of_working_hour"
+                elif presence_status == "online":
                     state = 'present'
                 elif presence_status == "offline" and employee.id in working_now_list:
                     state = 'absent'
