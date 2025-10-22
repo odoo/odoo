@@ -46,6 +46,22 @@ test("readonly", async () => {
     expect(".o_field_widget[name='update_path'] .o_input").toHaveCount(0);
 });
 
+test("required", async () => {
+    await mountView({
+        type: "form",
+        resModel: "update.record.action",
+        arch: /* xml */ `
+            <form>
+                <field name="update_path" widget="field_selector" options="{'model': 'contact'}" required="1"/>
+            </form>
+        `,
+    });
+    expect(".o_model_field_selector_warning").toHaveCount(1);
+    await contains(".o_field_widget[name='update_path'] .o_input").click();
+    await contains(".o_model_field_selector_popover_item button:contains('email')").click();
+    expect(".o_model_field_selector_warning").toHaveCount(0);
+});
+
 test("model option", async () => {
     UpdateRecordAction._records = [
         {
