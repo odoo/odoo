@@ -762,7 +762,7 @@ class AccountMoveLine(models.Model):
 
         # get the where clause
         query = self._search(self.env.context.get('domain_cumulated_balance') or [], bypass_access=True)
-        sql_order = self._order_to_sql(self.env.context.get('order_cumulated_balance'), query, reverse=True)
+        sql_order = self._order_to_sql(query.table, self.env.context.get('order_cumulated_balance'), reverse=True)
         result = dict(self.env.execute_query(query.select(
             query.table.id,
             SQL(
