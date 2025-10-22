@@ -919,3 +919,45 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_combo_children_qty_updated_with_note", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickOrderButton(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Office Combo"),
+            ProductScreen.selectedOrderlineHas("Office Combo", 1),
+            ProductScreen.clickNumpad("Qty"),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.selectedOrderlineHas("Office Combo", 3),
+            ProductScreen.addInternalNote("test note"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            Order.doesNotHaveLine({
+                productName: "Office Combo",
+                quantity: 1,
+                internalNote: "test note",
+            }),
+            Order.hasLine({ productName: "Combo Product 2", quantity: 1 }),
+            Order.hasLine({ productName: "Combo Product 4", quantity: 1 }),
+            Order.hasLine({ productName: "Combo Product 6", quantity: 1 }),
+            Order.hasLine({
+                productName: "Office Combo",
+                quantity: 2,
+                internalNote: "test note",
+            }),
+            Order.hasLine({ productName: "Combo Product 2", quantity: 2 }),
+            Order.hasLine({ productName: "Combo Product 4", quantity: 2 }),
+            Order.hasLine({ productName: "Combo Product 6", quantity: 2 }),
+        ].flat(),
+});
