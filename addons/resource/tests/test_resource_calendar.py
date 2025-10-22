@@ -50,23 +50,35 @@ class TestResourceCalendar(TransactionCase):
         """
         Test that the duration of an attendance interval for flexible calendar is correctly computed.
         """
-        calendar = self.env['resource.calendar'].create({
+        flexible_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible Calendar',
             'hours_per_day': 7.0,
-            'full_time_required_hours': 7.0,
+            'full_time_required_hours': 30,
             'flexible_hours': True,
+            'tz': 'UTC',
         })
-        UTC = pytz.timezone('UTC')
-        start_dt = datetime(2025, 6, 4, 0, 0, 0).astimezone(UTC)
-        end_dt = datetime(2025, 6, 4, 12, 0, 0).astimezone(UTC)
-        result_per_resource_id = calendar._attendance_intervals_batch(
+
+        # Case 1: get attendances for the full week.
+        # Expected: 7-7-7-7-2 (30 hours total)
+        expected_hours = [7, 7, 7, 7, 2]
+
+        start_dt = datetime(2025, 6, 2, 0, 0, 0).astimezone(pytz.UTC)
+        end_dt = datetime(2025, 6, 7, 23, 59, 59).astimezone(pytz.UTC)
+        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
             start_dt, end_dt
         )
-        start, end, _ = result_per_resource_id[0]._items[0]
+        self.assertEqual(expected_hours, [(end - start).total_seconds() / 3600 for start, end, dummy_attendance in result_per_resource_id[0]._items])
+        self.assertEqual(expected_hours, [dummy_attendance.duration_hours for start, end, dummy_attendance in result_per_resource_id[0]._items])
 
-        actual_duration = end - start
+        # Case 2: check attendances are all contained between start_dt and end_dt
+        start_dt = datetime(2025, 6, 2, 11, 0, 0).astimezone(pytz.UTC)
+        end_dt = datetime(2025, 6, 7, 13, 0, 0).astimezone(pytz.UTC)
+        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
+            start_dt, end_dt
+        )
 
-        self.assertEqual(actual_duration.seconds / 3600, calendar.full_time_required_hours, "For a full day, the interval must match full time required hours")
+        self.assertTrue(start_dt <= result_per_resource_id[0]._items[0][0], "First attendance interval should not start before start_dt")
+        self.assertTrue(end_dt >= result_per_resource_id[0]._items[4][1], "Last attendance interval should not end after end_dt")
 
     @freeze_time("2019-5-28 08:00:00")
     def test_working_time_holiday_multicompany(self):
