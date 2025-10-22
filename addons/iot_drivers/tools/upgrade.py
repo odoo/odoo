@@ -54,8 +54,9 @@ def check_git_branch(server_url=None):
 
     try:
         branch = get_db_branch(server_url) or git('symbolic-ref', '-q', '--short', 'HEAD')
-        if not branch:
-            _logger.warning("Could not get the database branch, skipping git checkout")
+        if not git('ls-remote', 'origin', branch):
+            _logger.warning("Branch '%s' doesn't exist on github.com/odoo/odoo.git, assuming 'master'", branch)
+            branch = 'master'
 
         # Repository updates
         shallow_lock = path_file("odoo/.git/shallow.lock")
