@@ -52,6 +52,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             FlipImageShapeAction,
             RotateImageShapeAction,
             SetImageShapeSpeedAction,
+            RemoveImageShapeAction,
             ToggleImageShapeRatioAction,
         },
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
@@ -404,10 +405,60 @@ export class SetImageShapeAction extends BuilderAction {
     }
     apply({ editingElement: img, loadResult: updateImageAttributes }) {
         updateImageAttributes();
+        if (!img.dataset.shape) {
+            this.cleanImageDataset(img);
+            return;
+        }
         const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
         img.dataset.fileName = `${imgFilename}.svg`;
     }
+
+    // reset dataset fields set on
+    cleanImageDataset(img) {
+        const keys = [
+            "attachmentId",
+            "aspectRatio",
+            "fileName",
+            "mimetypeBeforeConversion",
+            "shapeColors",
+            "originalSrc",
+            "originalId",
+        ];
+        if (img.dataset.originalSrc) {
+            img.setAttribute("src", img.dataset.originalSrc);
+        }
+
+        for (const key of keys) {
+            delete img.dataset[key];
+        }
+    }
 }
+
+export class RemoveImageShapeAction extends BuilderAction {
+    static id = "removeImageShape";
+
+    apply({ editingElement: img }) {
+        const keys = [
+            "attachmentId",
+            "aspectRatio",
+            "fileName",
+            "mimetypeBeforeConversion",
+            "shapeColors",
+            "shape",
+            "shapeRotate",
+            "originalSrc",
+            "originalId",
+        ];
+        if (img.dataset.originalSrc) {
+            img.setAttribute("src", img.dataset.originalSrc);
+        }
+
+        for (const key of keys) {
+            delete img.dataset[key];
+        }
+    }
+}
+
 export class SetImgShapeColorAction extends BuilderAction {
     static id = "setImgShapeColor";
     static dependencies = ["imageShapeOption", "imageToolOption"];
