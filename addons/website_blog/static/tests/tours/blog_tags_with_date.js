@@ -26,7 +26,14 @@ registerWebsitePreviewTour("blog_tags_with_date", {
     }, {
         content: "Select first month",
         trigger: ":iframe select[name=archive]",
-        run: "selectByLabel October",
+        run: function (helpers) {
+            const options = Array.from(this.anchor?.options ?? []);
+            const firstMonthIndex = options.findIndex((option) => option.closest("optgroup"));
+            if (firstMonthIndex === -1) {
+                throw new Error("Expected an option inside an optgroup in the archive select.");
+            }
+            return helpers.selectByIndex(firstMonthIndex, this.anchor);
+        },
     }, {
         content: "Check date filter has been added",
         trigger: ":iframe #o_wblog_posts_loop span>i.fa-calendar-o",
