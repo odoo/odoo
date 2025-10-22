@@ -30,8 +30,8 @@ declare module "plugins" {
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
-    import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
-    import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
+    import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
+    import { mark_translatable_nodes } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
@@ -42,7 +42,6 @@ declare module "plugins" {
         cardImageOption: CardImageOptionShared;
         chartOptionPlugin: ChartOptionShared;
         CookiesBarOptionPlugin: CookiesBarOptionShared;
-        customizeTranslationTab: CustomizeTranslationTabShared;
         customizeWebsite: CustomizeWebsiteShared;
         dynamicSnippetCarouselOption: DynamicSnippetCarouselOptionShared;
         dynamicSnippetOption: DynamicSnippetOptionShared;
@@ -59,6 +58,7 @@ declare module "plugins" {
         socialMediaOptionPlugin: SocialMediaOptionShared;
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
+        translateWebpageOption: TranslateWebpageOptionShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;
@@ -95,7 +95,6 @@ declare module "plugins" {
         searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
         theme_options: theme_options;
-        translate_options: translate_options;
         visibility_selector_parameters: visibility_selector_parameters;
     }
 }

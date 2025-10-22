@@ -1,5 +1,5 @@
-
 declare module "registries" {
+    import { Plugin } from "@html_editor/plugin";
     import { Interaction } from "@web/public/interaction";
 
     type Constructor<T = {}> = new (arg: T) => T;
@@ -15,8 +15,13 @@ declare module "registries" {
         mixin?: PreviewInteractionMixin;
     }
 
+    export type WebsitePluginRegistryItemShape = typeof Plugin;
+    export type TranslationPluginRegistryItemShape = typeof Plugin;
+
     export interface GlobalRegistryCategories {
         "public.interactions.edit": EditInteractionRegistryItemShape;
         "public.interactions.preview": PreviewInteractionRegistryItemShape;
+        "translation-plugins": TranslationPluginRegistryItemShape;
+        "website-plugins": WebsitePluginRegistryItemShape;
     }
 }

@@ -45,3 +45,4 @@ export class WebsiteVisibilityPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(WebsiteVisibilityPlugin.id, WebsiteVisibilityPlugin);
+registry.category("translation-plugins").add(WebsiteVisibilityPlugin.id, WebsiteVisibilityPlugin);
