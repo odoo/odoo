@@ -73,11 +73,15 @@ class SaleOrderLine(models.Model):
     @api.depends('analytic_line_ids.project_id', 'project_id.pricing_type')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
+
+    def _prepare_qty_delivered(self):
+        delivered_qties = super()._prepare_qty_delivered()
         lines_by_timesheet = self.filtered(lambda sol: sol.qty_delivered_method == 'timesheet')
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
         for line in lines_by_timesheet:
-            line.qty_delivered = mapping.get(line.id or line._origin.id, 0.0)
+            delivered_qties[line] = mapping.get(line.id or line._origin.id, 0.0)
+        return delivered_qties
 
     def _timesheet_compute_delivered_quantity_domain(self):
         """ Hook for validated timesheet in addionnal module """

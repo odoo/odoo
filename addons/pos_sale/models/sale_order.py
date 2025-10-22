@@ -131,17 +131,33 @@ class SaleOrderLine(models.Model):
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
+
+    def _prepare_qty_delivered(self):
+        delivered_qties = super()._prepare_qty_delivered()
         for sale_line in self:
-            pos_lines = sale_line.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            if sale_line.product_id.type == 'service':
+                continue
+            pos_lines = sale_line.sudo().pos_order_line_ids.filtered(
+                lambda order_line: order_line.order_id.state not in ['cancel', 'draft']
+            )
             if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
-                sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
+                pos_qty = sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines), 0)
+                if pos_qty != 0:
+                    delivered_qties[sale_line] += pos_qty
+        return delivered_qties
 
     @api.depends('pos_order_line_ids.qty')
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
+
+    def _prepare_qty_invoiced(self):
+        invoiced_qties = super()._prepare_qty_invoiced()
         for sale_line in self:
             pos_lines = sale_line.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
-            sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines], 0)
+            invoiced_qties[sale_line] += sum((
+                self._convert_qty(self, pos_line.qty, 'p2s') for pos_line in pos_lines
+            ), 0)
+        return invoiced_qties
 
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_ids", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]

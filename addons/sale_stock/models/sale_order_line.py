@@ -196,6 +196,8 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
+    def _prepare_qty_delivered(self):
+        delivered_qties = super()._prepare_qty_delivered()
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
                 qty = 0.0
@@ -208,7 +210,8 @@ class SaleOrderLine(models.Model):
                     if move.state != 'done':
                         continue
                     qty -= move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
-                line.qty_delivered = qty
+                delivered_qties[line] = qty
+        return delivered_qties
 
     def _compute_invoice_status(self):
         def check_moves_state(moves):
@@ -336,7 +339,8 @@ class SaleOrderLine(models.Model):
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
         if self.env.context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self.env.context['accrual_entry_date'])
+            accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= accrual_date)
 
         for move in moves:
             if not move._is_dropshipped_returned() and (
