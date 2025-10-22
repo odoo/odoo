@@ -9,6 +9,15 @@ class DiscussCallHistory(models.Model):
     _description = "Keep the call history"
 
     channel_id = fields.Many2one("discuss.channel", index=True, required=True, ondelete="cascade")
+    recording_ids = fields.One2many("discuss.call.recording", "call_history_id", string="Recordings")
+    transcript = fields.Text("Transcription", compute="_compute_transcription", store=True)
+
+    @api.depends("recording_ids.transcription")
+    def _compute_transcription(self):
+        for record in self:
+            record.transcript = "\n".join(
+                rec.transcription for rec in record.recording_ids if rec.transcription
+            )
     duration_hour = fields.Float(compute="_compute_duration_hour")
     start_dt = fields.Datetime(index=True, required=True)
     end_dt = fields.Datetime()

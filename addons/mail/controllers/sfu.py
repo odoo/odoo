@@ -25,20 +25,26 @@ class SfuController(http.Controller):
             _logger.error(f"SFU upload request for non-existent channel_uuid: {channel_uuid}")
             return request.make_response("Channel not found.", status=404)
 
+        call_history = request.env['discuss.call.history'].sudo().search([
+            ('channel_id', '=', channel.id),
+            ('end_dt', '=', False)
+        ], order='start_dt DESC', limit=1)
+
+        if not call_history:
+            _logger.error(f"SFU upload request for channel {channel.id} with no active call history.")
+            return request.make_response("Active call history not found for the channel.", status=404)
+
         try:
-            attachment = request.env['ir.attachment'].sudo().create({
-                'name': f"transcription_{channel_uuid}.wav",
+            recording = request.env['discuss.call.recording'].sudo().create({
+                'name': f"recording_{channel_uuid}.wav",
+                'call_history_id': call_history.id,
                 'datas': base64.b64encode(uploaded_file.read()),
-                'res_model': 'discuss.channel',
-                'res_id': channel.id,
                 'mimetype': 'audio/wav',
             })
-            _logger.info(f"Successfully created attachment {attachment.id} for channel {channel.id}")
-            # Optional: Post a message to the channel
-            # channel.message_post(body=f"Recording saved: {attachment.name}")
+            _logger.info(f"Successfully created recording {recording.id} for call history {call_history.id}")
 
         except Exception as e:
-            _logger.error(f"Failed to create attachment for channel {channel.id}: {e}")
-            return request.make_response("Error creating attachment.", status=500)
+            _logger.error(f"Failed to create recording for call history {call_history.id}: {e}")
+            return request.make_response("Error creating recording.", status=500)
 
         return request.make_response("Success", status=200)
