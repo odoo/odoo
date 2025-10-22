@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import logging
 from json.decoder import JSONDecodeError
 from requests.exceptions import RequestException
@@ -29,7 +30,7 @@ class DiscussCallRecording(models.Model):
             ("too_big_to_process", "Too long to process"),  # >25 MB
             ("no_audio", "No audio"),  # attachment missing
         ],
-        default="no_audio",
+        default="pending",
         copy=False,
         index=True,
     )
@@ -48,16 +49,17 @@ class DiscussCallRecording(models.Model):
         if not modules.module.current_test:
             self.env.cr.commit()
 
-        # if not record.attachment_id or not record.attachment_id.raw:
-        #     record.transcription_status = 'no_audio'
-        #     return
+        if not record.datas:
+            record.transcription_status = 'no_audio'
+            return
 
-        # try:
-        #     text = LLMApiService(self.env).get_transcription(record.attachment_id.raw, record.attachment_id.mimetype)
-        # except (RequestException, JSONDecodeError, UserError) as e:
-        #     _logger.exception("Call Recording %s: transcription failed", record.id)
-        #     record.transcription_status = 'error'
-        #     return
+        try:
+            decoded_datas = base64.b64decode(record.datas)
+            text = LLMApiService(self.env).get_transcription(decoded_datas, record.mimetype)
+        except (RequestException, JSONDecodeError, UserError) as e:
+            _logger.exception("Call Recording %s: transcription failed", record.id)
+            record.transcription_status = 'error'
+            return
 
-        record.transcript = "test response mock"
+        record.transcript = text
         record.transcription_status = 'done'
