@@ -113,6 +113,7 @@ class HrJob(models.Model):
               AND app.active
               AND app.job_id IN %(job_ids)s
               AND sta.hired_stage IS NOT TRUE
+              AND COALESCE(act.active, TRUE) = TRUE
             GROUP BY app.job_id
         """, {
             'today': fields.Date.context_today(self),
