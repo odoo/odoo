@@ -5,9 +5,10 @@ from datetime import datetime, timedelta
 import logging
 
 from odoo import api, fields, models, tools
-from odoo.http import GeoIP, get_session_max_inactivity, request, root, STORED_SESSION_BYTES
-from odoo.tools import SQL, OrderedSet, unique
+from odoo.http import get_session_max_inactivity, request, root, STORED_SESSION_BYTES
+from odoo.tools import SQL
 from odoo.tools.translate import _
+from odoo.tools._vendor.useragents import UserAgent
 from .res_users import check_identity
 
 _logger = logging.getLogger(__name__)
@@ -16,62 +17,30 @@ _logger = logging.getLogger(__name__)
 class ResDeviceLog(models.Model):
     _name = 'res.device.log'
     _description = 'Device Log'
-    _rec_names_search = ['platform', 'browser']
+    _rec_names_search = ['ip_address', 'user_agent']
 
-    session_identifier = fields.Char("Session Identifier", required=True, index='btree')
-    platform = fields.Char("Platform")
-    browser = fields.Char("Browser")
-    ip_address = fields.Char("IP Address")
-    country = fields.Char("Country")
-    city = fields.Char("City")
-    device_type = fields.Selection([('computer', 'Computer'), ('mobile', 'Mobile')], "Device Type")
-    user_id = fields.Many2one("res.users", index='btree')
-    first_activity = fields.Datetime("First Activity")
-    last_activity = fields.Datetime("Last Activity", index='btree')
-    revoked = fields.Boolean("Revoked",
+    # Fields that identify a session
+    session_identifier = fields.Char('Session Identifier', required=True, index='btree')
+    user_id = fields.Integer(string='User', required=True, index='btree')
+    # Note:
+    # `user_id` is an Integer to keep a reference to the user even when the user
+    # is deleted. This avoids having a foreign key.
+    # Fields that identify a device for a given session (comes from the HTTP request information
+    ip_address = fields.Char('IP Address', required=True)
+    user_agent = fields.Char('User Agent', required=True)
+    # Store the country and city as this data may change over time for the same IP address
+    country = fields.Char('Country')
+    city = fields.Char('City')
+    # Fields that represent the device's activity
+    first_activity = fields.Datetime('First Activity', required=True)
+    last_activity = fields.Datetime('Last Activity', required=True, index='btree')
+    # Field that determine the "status" of the session/device on disk
+    revoked = fields.Boolean('Revoked',
                             help="""If True, the session file corresponding to this device
                                     no longer exists on the filesystem.""")
-    is_current = fields.Boolean("Current Device", compute="_compute_is_current")
-    linked_ip_addresses = fields.Text("Linked IP address", compute="_compute_linked_ip_addresses")
 
-    _composite_idx = models.Index("(user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked IS NOT TRUE")
-    _revoked_idx = models.Index("(revoked) WHERE revoked IS NOT TRUE")
-
-    def _compute_display_name(self):
-        for device in self:
-            platform = device.platform or _("Unknown")
-            browser = device.browser or _("Unknown")
-            device.display_name = f"{platform.capitalize()} {browser.capitalize()}"
-
-    def _compute_is_current(self):
-        for device in self:
-            device.is_current = request and request.session.sid.startswith(device.session_identifier)
-
-    def _compute_linked_ip_addresses(self):
-        device_group_map = {}
-        for *device_info, ip_array in self.env['res.device.log']._read_group(
-            domain=[('session_identifier', 'in', self.mapped('session_identifier'))],
-            groupby=['session_identifier', 'platform', 'browser'],
-            aggregates=['ip_address:array_agg']
-        ):
-            device_group_map[tuple(device_info)] = ip_array
-        for device in self:
-            device.linked_ip_addresses = '\n'.join(
-                OrderedSet(device_group_map.get(
-                    (device.session_identifier, device.platform, device.browser), []
-                ))
-            )
-
-    def _order_field_to_sql(self, table, field_expr, direction, nulls):
-        if field_expr == 'is_current' and request and request.session.sid:
-            return SQL("session_identifier = %s DESC", request.session.sid[:STORED_SESSION_BYTES])
-        return super()._order_field_to_sql(table, field_expr, direction, nulls)
-
-    def _is_mobile(self, platform):
-        if not platform:
-            return False
-        mobile_platform = ['android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone', 'webos']
-        return platform.lower() in mobile_platform
+    _composite_idx = models.Index('(session_identifier, ip_address, user_agent, id) WHERE revoked IS NOT TRUE')
+    _revoked_idx = models.Index('(revoked) WHERE revoked IS NOT TRUE')
 
     @api.model
     def _update_device(self, request):
@@ -85,7 +54,6 @@ class ResDeviceLog(models.Model):
         if not trace:
             return
 
-        geoip = GeoIP(trace['ip_address'])
         user_id = request.session.uid
         session_identifier = request.session.sid[:STORED_SESSION_BYTES]
 
@@ -96,22 +64,20 @@ class ResDeviceLog(models.Model):
             cursor = nullcontext(self.env.cr)
         with cursor as cr:
             cr.execute(SQL("""
-                INSERT INTO res_device_log (session_identifier, platform, browser, ip_address, country, city, device_type, user_id, first_activity, last_activity, revoked)
-                VALUES (%(session_identifier)s, %(platform)s, %(browser)s, %(ip_address)s, %(country)s, %(city)s, %(device_type)s, %(user_id)s, %(first_activity)s, %(last_activity)s, %(revoked)s)
+                INSERT INTO res_device_log (session_identifier, user_id, ip_address, user_agent, country, city, first_activity, last_activity, revoked)
+                VALUES (%(session_identifier)s, %(user_id)s, %(ip_address)s, %(user_agent)s, %(country)s, %(city)s, %(first_activity)s, %(last_activity)s, %(revoked)s)
             """,
                 session_identifier=session_identifier,
-                platform=trace['platform'],
-                browser=trace['browser'],
-                ip_address=trace['ip_address'],
-                country=geoip.country_name,
-                city=geoip.city.name,
-                device_type='mobile' if self._is_mobile(trace['platform']) else 'computer',
                 user_id=user_id,
+                ip_address=trace['ip_address'],
+                user_agent=trace['user_agent'][:1024],  # Truncate very long user-agent
+                country=trace.get('country'),  # TODO (v20): remove backward compatibility by forcing the key
+                city=trace.get('city'),  # TODO (v20): remove backward compatibility by forcing the key
                 first_activity=datetime.fromtimestamp(trace['first_activity']),
                 last_activity=datetime.fromtimestamp(trace['last_activity']),
                 revoked=False,
             ))
-        _logger.info("User %d inserts device log (%s)", user_id, session_identifier)
+        _logger.info('User %d inserts device log (%s)', user_id, session_identifier)
 
     @api.autovacuum
     def _gc_device_log(self):
@@ -123,13 +89,12 @@ class ResDeviceLog(models.Model):
                 SELECT 1 FROM res_device_log log2
                 WHERE
                     log1.session_identifier = log2.session_identifier
-                    AND log1.platform = log2.platform
-                    AND log1.browser = log2.browser
                     AND log1.ip_address = log2.ip_address
+                    AND log1.user_agent = log2.user_agent
                     AND log1.last_activity < log2.last_activity
             )
         """)
-        _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
+        _logger.info('GC device logs delete %d entries', self.env.cr.rowcount)
 
     @api.autovacuum
     def __update_revoked(self):
@@ -155,7 +120,7 @@ class ResDeviceLog(models.Model):
                 break
             offset += batch_size
             revoked_session_identifiers = root.session_store.get_missing_session_identifiers(
-                set(candidate_device_log_ids.mapped('session_identifier'))
+                set(candidate_device_log_ids.mapped('session_identifier')),
             )
             if not revoked_session_identifiers:
                 continue
@@ -169,10 +134,153 @@ class ResDeviceLog(models.Model):
 
 class ResDevice(models.Model):
     _name = 'res.device'
-    _inherit = ["res.device.log"]
-    _description = "Device"
+    _description = 'Device'
     _auto = False
     _order = 'last_activity desc'
+
+    session_identifier = fields.Char('Session identifier', readonly=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    ip_address = fields.Char('IP Address', readonly=True)
+    country = fields.Char('Country', readonly=True)
+    city = fields.Char('City', readonly=True)
+    user_agent = fields.Char('User Agent', readonly=True)
+    first_activity = fields.Datetime('First Activity', readonly=True)
+    last_activity = fields.Datetime('Last Activity', readonly=True)
+    revoked = fields.Boolean('Revoked', readonly=True)
+
+    platform = fields.Char('Platform', compute='_compute_device_info', readonly=True)
+    browser = fields.Char('Browser', compute='_compute_device_info', readonly=True)
+    browser_version = fields.Char('Browser Version', compute='_compute_device_info', readonly=True)
+    browser_language = fields.Char('Browser Language', compute='_compute_device_info', readonly=True)
+    device_type = fields.Char('Type', compute='_compute_device_info', readonly=True)
+
+    is_current = fields.Boolean('Current', compute='_compute_is_current', readonly=True)
+
+    __user_agent_parser = UserAgent._parser
+    __mobile_platform = ('android', 'iphone', 'ipad', 'ipod', 'blackberry', 'windows phone', 'webos')
+
+    def _compute_is_current(self):
+        if not request or not hasattr(request, 'httprequest'):
+            self.is_current = False
+            return
+        session_identifier = request.session.sid[:STORED_SESSION_BYTES]
+        ip_address = request.httprequest.remote_addr
+        user_agent = request.httprequest.user_agent.string
+        for device in self:
+            device.is_current = \
+                device.session_identifier == session_identifier and \
+                device.ip_address == ip_address and \
+                device.user_agent == user_agent
+
+    def _compute_device_info(self):
+        for device in self:
+            platform, browser, browser_version, browser_language = self.__user_agent_parser(device.user_agent)
+            device.platform = platform or _('Unknown')
+            device.browser = browser or _('Unknown')
+            device.browser_version = browser_version or _('Unknown')
+            device.browser_language = browser_language or _('Unknown')
+            device.device_type = 'mobile' if device.platform in self.__mobile_platform else 'computer'
+
+    @property
+    def _query(self):
+        return """
+            SELECT
+                MAX(L.id) as id,
+                L.session_identifier as session_identifier,
+                MIN(L.user_id) as user_id,
+                L.ip_address as ip_address,
+                L.user_agent as user_agent,
+                MAX(L.country) as country,
+                MAX(L.city) as city,
+                MIN(L.first_activity) as first_activity,
+                MAX(L.last_activity) as last_activity,
+                bool_and(L.revoked) as revoked
+            FROM
+                res_device_log L
+            WHERE
+                L.revoked IS NOT TRUE
+            GROUP BY
+                session_identifier,
+                ip_address,
+                user_agent
+        """
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute('CREATE OR REPLACE VIEW %s AS (%s)' % (self._table, self._query))
+
+
+class ResSession(models.Model):
+    _name = 'res.session'
+    _inherit = ['res.device']
+    _description = 'Session'
+    _auto = False
+    _order = 'last_activity desc'
+
+    device_ids = fields.One2many('res.device', compute='_compute_session_info', readonly=True)
+    ip_address = fields.Char('IP Address', compute='_compute_session_info', readonly=True)
+    user_agent = fields.Char('User Agent', compute='_compute_session_info', readonly=True)
+    country = fields.Char('Country', compute='_compute_session_info', readonly=True)
+    city = fields.Char('City', compute='_compute_session_info', readonly=True)
+
+    is_current = fields.Boolean('Current', compute='_compute_is_current', readonly=True)
+
+    def _compute_is_current(self):
+        if not request:
+            self.is_current = False
+            return
+        session_identifier = request.session.sid[:STORED_SESSION_BYTES]
+        for session in self:
+            session.is_current = session.session_identifier == session_identifier
+
+    def _compute_session_info(self):
+        session_map = {}
+        for session_identifier, device_line_ids in self.env['res.device']._read_group(
+            domain=[('session_identifier', 'in', self.mapped('session_identifier'))],
+            groupby=['session_identifier'],
+            aggregates=['id:recordset'],
+        ):
+            session_map[session_identifier] = device_line_ids.sorted('last_activity', reverse=True)
+
+        for session in self:
+            device_ids = session_map[session.session_identifier]
+            session.device_ids = device_ids
+            if session.is_current:
+                # The user will see the information for the device he is
+                # currently using, even if there are more recent logs for
+                # another device.
+                current_device_id = device_ids.filtered('is_current')
+            else:
+                current_device_id = device_ids[0]  # because order is `last_activity desc`
+            session.ip_address = current_device_id.ip_address
+            session.user_agent = current_device_id.user_agent
+            session.country = current_device_id.country
+            session.city = current_device_id.city
+
+    def _compute_display_name(self):
+        for session in self:
+            session.display_name = f'{session.platform.capitalize()} {session.browser.capitalize()}'
+
+    def _order_field_to_sql(self, table, field_expr, direction, nulls):
+        if field_expr == 'is_current' and request and request.session:
+            return SQL('session_identifier = %s DESC', request.session.sid[:STORED_SESSION_BYTES])
+        return super()._order_field_to_sql(table, field_expr, direction, nulls)
+
+    @property
+    def _query(self):
+        return """
+            SELECT
+                MAX(D.id) as id,
+                D.session_identifier as session_identifier,
+                MIN(D.user_id) as user_id,
+                MIN(D.first_activity) as first_activity,
+                MAX(D.last_activity) as last_activity,
+                bool_and(D.revoked) as revoked
+            FROM
+                res_device D
+            GROUP BY
+                session_identifier
+        """
 
     @check_identity
     def revoke(self):
@@ -180,54 +288,15 @@ class ResDevice(models.Model):
 
     def _revoke(self):
         ResDeviceLog = self.env['res.device.log']
-        session_identifiers = list(unique(device.session_identifier for device in self))
+        session_identifiers = list(set(self.mapped('session_identifier')))
         root.session_store.delete_from_identifiers(session_identifiers)
-        revoked_devices = ResDeviceLog.sudo().search([('session_identifier', 'in', session_identifiers)])
+        revoked_devices = ResDeviceLog.sudo().search([
+            ('session_identifier', 'in', session_identifiers),
+            ('revoked', '=', False),
+        ])
         revoked_devices.write({'revoked': True})
-        _logger.info("User %d revokes devices (%s)", self.env.uid, ', '.join(session_identifiers))
+        _logger.info('User %d revokes devices (%s)', self.env.uid, ', '.join(session_identifiers))
 
         must_logout = bool(self.filtered('is_current'))
         if must_logout:
             request.session.logout()
-
-    @api.model
-    def _select(self):
-        return "SELECT D.*"
-
-    @api.model
-    def _from(self):
-        return "FROM res_device_log D"
-
-    @api.model
-    def _where(self):
-        return """
-            WHERE
-                NOT EXISTS (
-                    SELECT 1
-                    FROM res_device_log D2
-                    WHERE
-                        D2.user_id = D.user_id
-                        AND D2.session_identifier = D.session_identifier
-                        AND D2.platform IS NOT DISTINCT FROM D.platform
-                        AND D2.browser IS NOT DISTINCT FROM D.browser
-                        AND (
-                            D2.last_activity > D.last_activity
-                            OR (D2.last_activity = D.last_activity AND D2.id > D.id)
-                        )
-                        AND D2.revoked IS NOT TRUE
-                )
-                AND D.revoked IS NOT TRUE
-        """
-
-    @property
-    def _query(self):
-        return "%s %s %s" % (self._select(), self._from(), self._where())
-
-    def init(self):
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute(SQL("""
-            CREATE or REPLACE VIEW %s as (%s)
-        """,
-            SQL.identifier(self._table),
-            SQL(self._query)
-        ))
