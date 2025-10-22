@@ -105,15 +105,8 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
             }
         },
     }, {
-        trigger: ".modal .html-history-dialog.html-history-loaded",
-    }, {
         content: "Verify that the active revision (revision 4) is related to the current version",
-        trigger: ".modal .history-container .history-content-view .history-view-inner",
-        run: async function () {
-            if( this.anchor.textContent !== `${baseDescriptionContent} 3`) {
-                console.error(`Expect revision content to be "${baseDescriptionContent} 3", got "${this.anchor.textContent}"`);
-            }
-        },
+        trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 3)`,
     }, {
         content: "Go to the third revision related to the second edit",
         trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(3)",
@@ -122,12 +115,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".modal .html-history-dialog.html-history-loaded",
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
-        trigger: ".modal .history-container .history-content-view .history-view-inner",
-        run: async function () {
-            if( this.anchor.textContent !== `${baseDescriptionContent} 1`) {
-                console.error(`Expect revision content to be "${baseDescriptionContent} 1", got "${this.anchor.textContent}"`);
-            }
-        },
+        trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 1)`,
     }, {
         // click on the comparison tab
         trigger: '.history-container .history-view-top-bar a:contains(Comparison)',
