@@ -1,6 +1,7 @@
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
 import { Component } from "@odoo/owl";
+import { cookie } from "@web/core/browser/cookie";
 
 /**
  * Component wrapping the <Spreadsheet> component from o-spreadsheet
@@ -19,5 +20,8 @@ export class SpreadsheetComponent extends Component {
     }
     setup() {
         useSpreadsheetNotificationStore();
+    }
+    get colorScheme() {
+        return cookie.get("color_scheme");
     }
 }
