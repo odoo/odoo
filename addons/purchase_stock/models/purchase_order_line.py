@@ -44,13 +44,17 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
         if self.env.context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self.env.context['accrual_entry_date'])
+            accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= accrual_date)
         return moves
 
     @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
+        super()._compute_qty_received()
+
+    def _prepare_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
-        super(PurchaseOrderLine, self - from_stock_lines)._compute_qty_received()
+        received_qties = super(PurchaseOrderLine, self - from_stock_lines)._prepare_qty_received()
         for line in self:
             if line.qty_received_method == 'stock_moves':
                 total = 0.0
@@ -72,7 +76,8 @@ class PurchaseOrderLine(models.Model):
                         else:
                             total += move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 line._track_qty_received(total)
-                line.qty_received = total
+                received_qties[line] = total
+        return received_qties
 
     @api.depends('product_uom_qty', 'date_planned')
     def _compute_forecasted_issue(self):
