@@ -18,7 +18,7 @@ import {
 } from "./website_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { uniqueId } from "@web/core/utils/functions";
-import { TranslationPlugin } from "@website/builder/plugins/translation_plugin";
+import { TranslationPlugin } from "@website/builder/plugins/translation/translation_plugin";
 
 defineWebsiteModels();
 
@@ -458,11 +458,13 @@ function getTranslateEditable({
     containerEditable = true,
 }) {
     return `
-        <div class="container s_allow_columns${containerEditable ? "" : " o_not_editable"}">
-            <p>
-                <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="o_editable translate_branding">${inWrap}</span>
-            </p>
-        </div>`;
+        <main>
+            <div class="container s_allow_columns${containerEditable ? "" : " o_not_editable"}">
+                <p>
+                    <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="o_editable translate_branding">${inWrap}</span>
+                </p>
+            </div>
+        </main>`;
 }
 
 async function setupSidebarBuilderForTranslation(options) {

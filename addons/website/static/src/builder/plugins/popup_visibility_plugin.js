@@ -104,3 +104,4 @@ export class PopupVisibilityPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(PopupVisibilityPlugin.id, PopupVisibilityPlugin);
+registry.category("translation-plugins").add(PopupVisibilityPlugin.id, PopupVisibilityPlugin);

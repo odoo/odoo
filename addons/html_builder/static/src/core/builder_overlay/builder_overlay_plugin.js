@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
-import { checkElement } from "../builder_options_plugin";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -21,7 +20,7 @@ function isResizable(el) {
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
-    static dependencies = ["localOverlay", "history", "operation"];
+    static dependencies = ["builderOptions", "localOverlay", "history", "operation"];
     static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -107,7 +106,9 @@ export class BuilderOverlayPlugin extends Plugin {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 history: this.dependencies.history,
-                hasOverlayOptions: checkElement(option.element, {}) && option.hasOverlayOptions,
+                hasOverlayOptions:
+                    this.dependencies.builderOptions.checkElement(option.element, {}) &&
+                    option.hasOverlayOptions,
                 next: this.dependencies.operation.next,
                 isMobileView: this.config.isMobileView,
                 mobileBreakpoint: this.config.mobileBreakpoint,

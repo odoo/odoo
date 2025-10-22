@@ -203,6 +203,10 @@ registerWebsitePreviewTour(
             trigger: ".o_builder_sidebar_open",
         },
         {
+            content: "Check that the generic 'Translation' option is always visible",
+            trigger: ".o_customize_tab .options-container [data-label='Translate to']",
+        },
+        {
             content: "translate text",
             trigger: ":iframe #wrap p font:first",
             async run(actionHelper) {

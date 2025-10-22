@@ -48,3 +48,4 @@ export class WebsiteSavePlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(WebsiteSavePlugin.id, WebsiteSavePlugin);
+registry.category("translation-plugins").add(WebsiteSavePlugin.id, WebsiteSavePlugin);

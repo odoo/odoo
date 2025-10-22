@@ -1005,6 +1005,10 @@ export class BaseOptionComponent extends Component {
     static components = {};
     static props = {};
     static template = "";
+    // When `editableOnly` is set to false, the element does not need to be in
+    // an editable area and the checks are therefore lighter. (= previous
+    // data-no-check/noCheck)
+    static editableOnly = true;
 
     setup() {
         /** @type {EditorContext} */
