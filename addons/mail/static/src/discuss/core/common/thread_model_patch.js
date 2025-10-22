@@ -52,12 +52,6 @@ const threadPatch = {
         /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
         this.group_ids = fields.Many("res.groups");
-        this.hasOtherMembersTyping = fields.Attr(false, {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.otherTypingMembers.length > 0;
-            },
-        });
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
@@ -162,12 +156,6 @@ const threadPatch = {
                 );
             },
         });
-        this.otherTypingMembers = fields.Many("discuss.channel.member", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
-            },
-        });
         this.self_member_id = fields.One("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
@@ -185,7 +173,6 @@ const threadPatch = {
                 this.store.updateBusSubscription();
             },
         });
-        this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {

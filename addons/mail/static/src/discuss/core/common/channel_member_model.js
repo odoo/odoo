@@ -101,9 +101,9 @@ export class ChannelMember extends Record {
             }
         },
     });
-    threadAsTyping = fields.One("mail.thread", {
+    channelAsTyping = fields.One("discuss.channel", {
         compute() {
-            return this.isTyping ? this.channel_id : undefined;
+            return this.isTyping ? this.channel_id.channel : undefined;
         },
         eager: true,
         onDelete() {
