@@ -1,0 +1,47 @@
+.o-mail-DiscussSidebarCategory {
+    &:hover {
+        outline: 1px solid transparent;
+        outline-offset: -1px;
+
+        .o-mail-DiscussSidebarCategory-title {
+            margin-left: map-get($spacers, 1);
+            transition: margin-left 0.2s;
+        }
+    }
+
+    &:hover {
+        background-color: mix($gray-100, $gray-200);
+        outline-color: mix($gray-100, $gray-200, 20%);
+    }
+
+    &:active {
+        background-color: mix($o-view-background-color, $o-action, 90%);
+        outline-color: mix($o-view-background-color, $o-action, 50%);
+    }
+    
+    &:not(:hover) {
+        .o-mail-DiscussSidebarCategory-actions {
+            visibility: hidden;
+        }
+    }
+
+}
+
+.o-mail-DiscussSidebarCategory-actions button:not(:hover) {
+    .text-success, .text-danger {
+        --color: #{$btn-color};
+    }
+}
+
+.o-mail-DiscussSidebarCategory-chevronCompact {
+    left: - map-get($spacers, 1)/2;
+}
+
+.o-mail-DiscussSidebarCategory-toggler {
+    &.o-compact {
+        font-size: .65rem;
+    }
+    &:not(.o-compact) {
+        line-height: 2.35; // so that same height as actions, so folding doesn't resize
+    }
+}

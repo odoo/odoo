@@ -1,10 +1,8 @@
-import {
-    DiscussSidebarCategory,
-    DiscussSidebarChannel,
-} from "@mail/discuss/core/public_web/discuss_sidebar_categories";
+import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_sidebar_category";
+import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_sidebar_channel";
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
+/** @type {DiscussSidebarCategory} */
 const DiscussSidebarCategoryPatch = {
     get actions() {
         const actions = super.actions;
@@ -33,7 +31,7 @@ const DiscussSidebarCategoryPatch = {
     },
 };
 
-/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarChannel} */
+/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_channel").DiscussSidebarChannel} */
 const DiscussSidebarChannelPatch = {
     get attClassContainer() {
         return {

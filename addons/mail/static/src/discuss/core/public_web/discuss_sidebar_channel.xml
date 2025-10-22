@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarChannel">
+        <div class="o-mail-DiscussSidebarChannel-container d-flex flex-column mx-2 bg-inherit" t-att-class="attClassContainer">
+            <t name="root">
+                <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu rounded-2 o-discuss-dropdownMenu border-secondary mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
+                    <t t-call="mail.DiscussSidebarChannel.main"/>
+                    <t t-set-slot="content">
+                        <UseHoverOverlay hover="hover">
+                            <div class="overflow-hidden d-flex flex-column" t-ref="floating">
+                                <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="thread.displayName"/>
+                                <DiscussSidebarChannelActions thread="thread"/>
+                            </div>
+                        </UseHoverOverlay>
+                    </t>
+                </Dropdown>
+                <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
+                <ul t-if="subChannels.length > 0" class="o-mail-DiscussSidebarChannel-subChannelList list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column">
+                    <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">
+                        <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !thread.discussAppCategory.is_open"/>
+                    </t>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.DiscussSidebarChannel.main">
+        <button class="o-mail-DiscussSidebarChannel btn o-mail-DiscussSidebar-item d-flex align-items-center cursor-pointer o-py-0_5 mb-0 position-relative rounded-2 gap-1 border-0"
+            t-att-class="attClass"
+            t-on-click="(ev) => this.openThread(ev, thread)"
+            t-ref="root"
+        >
+            <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': store.discuss.isSidebarCompact, 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
+                <div class="bg-inherit position-relative d-flex flex-shrink-0 o-my-0_5 rounded-2" style="width:26px;height:26px;" name="threadAvatar" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
+                    <img class="w-100 h-100 rounded-2 object-fit-cover" t-att-class="threadAvatarAttClass" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+                    <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.group_public_id)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+                </div>
+                <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate text-start lh-sm opacity-trigger-hove flex-grow-1" t-att-class="itemNameAttClass">
+                    <t t-esc="thread.displayName"/>
+                </span>
+            </div>
+            <div t-if="indicators.length" class="position-absolute rounded-circle p-0 smaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">
+                <t t-component="indicators[0]" t-props="{ thread }"/>
+            </div>
+            <t t-if="thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt and thread.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
+            <t t-if="thread.importantCounter > 0 and (showingActions.isOpen or store.discuss.isSidebarCompact or !hover.isHover)" t-call="mail.discuss_badge">
+                <t t-set="counter" t-value="thread.importantCounter"/>
+                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge shadow-sm flex-shrink-0 fw-bold ' + (thread.self_member_id?.mute_until_dt ? 'o-muted' : '') + ' ' + (store.discuss.isSidebarCompact ? 'position-absolute o-compact' : showingActions.isOpen ? 'ms-1 me-0' : 'ms-1 me-2') + (thread.importantCounter &lt; 10 ? ' o-discuss-badge-circle' : '') "/>
+                <t t-set="floating" t-value="store.discuss.isSidebarCompact"/>
+            </t>
+            <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
+        </button>
+    </t>
+
+    <t t-name="mail.DiscussSidebarChannel.actions">
+        <div class="o-mail-DiscussSidebarChannel-actions" t-att-class="{
+            'd-none': !showingActions.isOpen,
+            'd-flex': showingActions.isOpen,
+            'mx-1': thread.importantCounter === 0,
+            'ms-1': thread.importantCounter > 0,
+        }">
+            <Dropdown state="showingActions" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary my-0 min-w-0 mx-1 ' + store.discussDropdownMenuClass(this)">
+                <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen, 'me-1': !thread.parent_channel_id }" t-att-title="actionsTitle">
+                    <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
+                </button>
+                <t t-set-slot="content">
+                    <DiscussSidebarChannelActions thread="thread"/>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

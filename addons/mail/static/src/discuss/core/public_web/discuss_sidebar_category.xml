@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategory">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu p-1 mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
+            <t t-call="mail.DiscussSidebarCategory.main"/>
+            <t t-set-slot="content">
+                <div class="overflow-hidden d-flex flex-column" t-ref="floating">
+                    <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-esc="category.name"/>
+                    <t t-call="mail.DiscussSidebarCategory.actions"/>
+                </div>
+            </t>
+        </Dropdown>
+        <t t-else="" t-call="mail.DiscussSidebarCategory.main"/>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCategory.main">
+        <div class="o-mail-DiscussSidebarCategory position-relative d-flex align-items-center rounded opacity-trigger-hover" t-att-class="{ 'mx-2 my-1 position-relative': store.discuss.isSidebarCompact, 'mt-1 ms-4 me-2 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
+            <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start" t-att-class="{ 'align-items-baseline o-gap-0_5': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact gap-1': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
+                <t t-if="store.discuss.isSidebarCompact">
+                    <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xsmaller o-mt-0_5" t-att-class="{
+                        'oi oi-chevron-down': category.is_open,
+                        'oi oi-chevron-right': !category.is_open,
+                    }"/>
+                    <span class="rounded p-1"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
+                </t>
+                <t t-else="">
+                    <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 o-mt-0_5"/></span>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.is_open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                    <span class="o-mail-DiscussSidebarCategory-title text-break smaller"
+                        t-att-class="{ 'fs-bold': category.is_open }"
+                    >
+                        <t t-esc="category.name"/>
+                    </span>
+                </t>
+            </button>
+            <t t-if="actions.length and !store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>
+            <div t-if="!category.is_open and category.threadsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
+                <t t-esc="category.threadsWithCounter.length"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCategory.actions">
+        <div class="d-flex">
+            <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm ms-1 o-gap-0_5': !store.discuss.isSidebarCompact }">
+                <t name="action-group">
+                    <t t-foreach="actions" t-as="action" t-key="action_index">
+                        <button class="btn w-100 opacity-75 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start small btn-secondary shadow-sm': store.discuss.isSidebarCompact, 'p-0': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
+                            <i role="presentation" class="fa-fw fa-lg" t-att-class="action.icon"/>
+                            <span t-if="store.discuss.isSidebarCompact" class="text-muted" t-esc="action.label"/>
+                        </button>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
