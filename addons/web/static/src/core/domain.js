@@ -149,6 +149,7 @@ export class Domain {
     /**
      * Check if the set of records represented by a domain contains a record
      * Warning: smart dates (see parseSmartDateInput) are not handled here.
+     * Similarly, some operators like any, child_of are not handled correctly.
      *
      * @param {Object} record
      * @returns {boolean}

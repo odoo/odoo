@@ -22,7 +22,7 @@
                 </span>
             </xpath>
             <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
-                <field name="pos_config_ids" string="Point of Sale" widget="many2many_tags" invisible="not pos_ok" options="{'create': False}" placeholder="All PoS"/>
+                <field name="pos_config_ids" string="Point of Sale" widget="many2many_tags" invisible="not pos_ok" create="False" placeholder="All PoS"/>
             </xpath>
         </field>
     </record>
