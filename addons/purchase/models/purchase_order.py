@@ -62,7 +62,7 @@ class PurchaseOrder(models.Model):
                     float_is_zero(line.qty_to_invoice, precision_digits=precision)
                     for line in order.order_line.filtered(lambda l: not l.display_type)
                 )
-                and order.invoice_ids
+                and order.invoice_ids.filtered(lambda x: x.state not in 'cancel')
             ):
                 order.invoice_status = 'invoiced'
             else:
