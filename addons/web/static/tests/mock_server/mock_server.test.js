@@ -151,15 +151,15 @@ defineModels([Partner, Bar, Foo]);
  *  kwargs: Record<string, any>;
  *  [key: string]: any;
  * }} params
- * @returns
  */
-const ormRequest = async (params) => {
-    const response = await fetch(`/web/dataset/call_kw/${params.model}/${params.method}`, {
+function fetchCallKw(params) {
+    return fetch(`/web/dataset/call_kw/${params.model}/${params.method}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            id: nextJsonRpcId++,
             jsonrpc: "2.0",
             method: "call",
             params: {
@@ -169,6 +169,19 @@ const ormRequest = async (params) => {
             },
         }),
     });
+}
+
+/**
+ * @param {{
+ *  model: string;
+ *  method: string;
+ *  args: any[];
+ *  kwargs: Record<string, any>;
+ *  [key: string]: any;
+ * }} params
+ */
+const ormRequest = async (params) => {
+    const response = await fetchCallKw(params);
     const { error, result } = await response.json();
     if (error) {
         console.error(error);
@@ -186,6 +199,7 @@ const JSON_RPC_BASIC_PARAMS = {
         ["Content-Type"]: "application/json",
     },
 };
+let nextJsonRpcId = 0;
 
 describe.current.tags("headless");
 
@@ -316,6 +330,13 @@ test("rpc: calls on mock server", async () => {
     ).rejects.toThrow(
         `Cannot find a definition for model "fake.model": could not get model from server environment`
     );
+});
+
+test("performRPC: custom response", async () => {
+    const customResponse = new Response("{}", { status: 418 });
+    onRpc(() => customResponse);
+    await makeMockServer();
+    await expect(fetchCallKw({})).resolves.toBe(customResponse);
 });
 
 test("performRPC: search with active_test=false", async () => {
