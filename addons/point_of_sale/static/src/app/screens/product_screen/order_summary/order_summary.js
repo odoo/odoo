@@ -241,10 +241,14 @@ export class OrderSummary extends Component {
                 if (val === "remove") {
                     this.currentOrder.removeOrderline(selectedLine);
                 } else {
+                    const originalQty = selectedLine.qty || 1;
                     const result = selectedLine.setQuantity(
                         val,
                         Boolean(selectedLine.combo_line_ids?.length)
                     );
+                    for (const line of selectedLine.combo_line_ids) {
+                        line.setQuantity(line.qty / originalQty, true);
+                    }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
                         this.numberBuffer.reset();
