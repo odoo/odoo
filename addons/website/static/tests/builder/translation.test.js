@@ -129,6 +129,19 @@ test("only have translation editors on deepest nodes", async () => {
     expect(":iframe .o_editable .o_editable").toHaveAttribute("contenteditable", "true");
 });
 
+test("only [data-oe-model] not o_editable in translation", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test"><section>${getTranslateEditable({
+                inWrap: "Hello",
+            })}</section></div>
+        `,
+    });
+    expect(":iframe [data-oe-model='test']").not.toHaveClass("o_editable");
+    expect(":iframe .container").not.toHaveAttribute("contenteditable");
+    expect(":iframe .container span.o_editable").toHaveAttribute("contenteditable", "true");
+});
+
 test("404 page in translate mode", async () => {
     patchWithCleanup(EditWebsiteSystrayItem.prototype, {
         setup() {
