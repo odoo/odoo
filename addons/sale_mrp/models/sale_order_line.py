@@ -30,11 +30,11 @@ class SaleOrderLine(models.Model):
                 if components and components != [line.product_id.id]:
                     line.display_qty_widget = True
 
-    def _compute_qty_delivered(self):
-        super(SaleOrderLine, self)._compute_qty_delivered()
+    def _prepare_qty_delivered(self):
+        delivered_qties = super()._prepare_qty_delivered()
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
-                boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
+                boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').bom_line_id.bom_id
                 dropship = any(m._is_dropshipped() for m in order_line.move_ids)
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
@@ -60,9 +60,9 @@ class SaleOrderLine(models.Model):
                                                  sum(sub_m.product_uom._compute_quantity(sub_m.quantity, m.product_uom) for sub_m in m.returned_move_ids if sub_m.state == 'done'),
                                                  precision_rounding=m.product_uom.rounding) > 0)
                                for m in moves) or not moves:
-                            order_line.qty_delivered = 0
+                            delivered_qties[order_line] = 0
                         else:
-                            order_line.qty_delivered = order_line.product_uom_qty
+                            delivered_qties[order_line] = order_line.product_uom_qty
                         continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_usage != 'inventory')
                     filters = {
@@ -75,7 +75,7 @@ class SaleOrderLine(models.Model):
                     }
                     order_qty = order_line.product_uom_id._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
-                    order_line.qty_delivered += relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom_id)
+                    delivered_qties[order_line] += relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom_id)
 
                 # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
@@ -83,9 +83,10 @@ class SaleOrderLine(models.Model):
                 elif boms:
                     # if the move is ingoing, the product **sold** has delivered qty 0
                     if all(m.state == 'done' and m.location_dest_id.usage == 'customer' for m in order_line.move_ids):
-                        order_line.qty_delivered = order_line.product_uom_qty
+                        delivered_qties[order_line] = order_line.product_uom_qty
                     else:
-                        order_line.qty_delivered = 0.0
+                        delivered_qties[order_line] = 0.0
+        return delivered_qties
 
     def compute_uom_qty(self, new_qty, stock_move, rounding=True):
         #check if stock move concerns a kit
