@@ -318,10 +318,19 @@ describe("should zwnbsp-pad simple text link", () => {
     });
 });
 
-test("should not zwnbsp-pad nav-link", async () => {
+test("should not zwnbsp-pad display block link", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="http://test.test/" class="nav-link">[]b</a>c</p>',
-        contentBeforeEdit: '<p>a<a href="http://test.test/" class="nav-link">[]b</a>c</p>',
+        contentBefore: '<p>a<a href="http://test.test/" style="display: block;">[]b</a>c</p>',
+        contentBeforeEdit: '<p>a<a href="http://test.test/" style="display: block;">[]b</a>c</p>',
+    });
+});
+
+test("should zwnbsp-pad inline nav-link", async () => {
+    await testEditor({
+        contentBefore:
+            '<p>a<a href="http://test.test/" class="nav-link" style="display: inline;">[]b</a>c</p>',
+        contentBeforeEdit:
+            '<p>a\ufeff<a href="http://test.test/" class="nav-link o_link_in_selection" style="display: inline;">\ufeff[]b\ufeff</a>\ufeffc</p>',
     });
 });
 
