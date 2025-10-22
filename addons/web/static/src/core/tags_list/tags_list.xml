@@ -40,7 +40,7 @@
                 <a
                     t-if="tag.onDelete"
                     t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)"
-                    class="o_delete d-flex align-items-center opacity-100-hover"
+                    class="o_delete opacity-100-hover"
                     t-att-class="{
                             'btn btn-link position-relative py-0 px-1 text-danger opacity-0': tag.img,
                             'ps-1 opacity-75': !tag.img
@@ -49,7 +49,7 @@
                     aria-label="Delete"
                     tabIndex="-1"
                     href="#">
-                        <i class="oi oi-close align-text-top"/>
+                        <i class="oi oi-close"/>
                 </a>
             </span>
         </t>
