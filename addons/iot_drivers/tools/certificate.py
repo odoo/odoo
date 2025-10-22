@@ -65,20 +65,17 @@ def get_certificate_end_date():
 
 
 def download_odoo_certificate(retry=0):
-    """Send a request to Odoo with customer db_uuid and enterprise_code
-    to get a true certificate
-    """
+    """Send a request to Odoo with customer db_uuid to get a true certificate"""
     if IS_TEST:
         _logger.info("Skipping certificate download in test mode.")
         return None
     db_uuid = system.get_conf('db_uuid')
-    enterprise_code = system.get_conf('enterprise_code')
     if not db_uuid:
         return None
     try:
         response = requests.post(
             'https://www.odoo.com/odoo-enterprise/iot/x509',
-            json={'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
+            json={'params': {'db_uuid': db_uuid}},
             timeout=95,  # let's encrypt library timeout
         )
         response.raise_for_status()

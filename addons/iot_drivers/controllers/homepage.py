@@ -90,7 +90,6 @@ class IotBoxOwlHomePage(http.Controller):
     def clear_credential(self):
         system.update_conf({
             'db_uuid': '',
-            'enterprise_code': '',
         })
         helpers.odoo_restart(0)
         return json.dumps({
@@ -164,7 +163,6 @@ class IotBoxOwlHomePage(http.Controller):
 
         return json.dumps({
             'db_uuid': system.get_conf('db_uuid'),
-            'enterprise_code': system.get_conf('enterprise_code'),
             'ip': system.get_ip(),
             'identifier': IOT_IDENTIFIER,
             'mac_address': system.get_mac_address(),
@@ -272,10 +270,9 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
     @route.iot_route('/iot_drivers/save_credential', type="jsonrpc", methods=['POST'], cors='*')
-    def save_credential(self, db_uuid, enterprise_code):
+    def save_credential(self, db_uuid):
         system.update_conf({
             'db_uuid': db_uuid,
-            'enterprise_code': enterprise_code,
         })
         helpers.odoo_restart(0)
         return {
@@ -322,9 +319,9 @@ class IotBoxOwlHomePage(http.Controller):
             try:
                 if len(token.split('|')) == 4:
                     # Old style token with pipe separators (pre v18 DB)
-                    url, token, db_uuid, enterprise_code = token.split('|')
+                    url, token, db_uuid = token.split('|')[:3]
                     configuration = helpers.parse_url(url)
-                    helpers.save_conf_server(configuration["url"], token, db_uuid, enterprise_code)
+                    helpers.save_conf_server(configuration["url"], token, db_uuid)
                 else:
                     # New token using query params (v18+ DB)
                     configuration = helpers.parse_url(token)

@@ -15,13 +15,12 @@ export class CredentialDialog extends Component {
         this.state = useState({ waitRestart: false });
         this.form = useState({
             db_uuid: this.store.base.db_uuid,
-            enterprise_code: "",
         });
     }
 
     async connectToServer() {
         try {
-            if (!this.form.db_uuid || !this.form.enterprise_code) {
+            if (!this.form.db_uuid) {
                 return;
             }
 
@@ -71,7 +70,6 @@ export class CredentialDialog extends Component {
                 </div>
                 <div class="d-flex flex-column gap-2 mt-3">
                     <input type="text" class="form-control" placeholder="Database UUID" t-model="form.db_uuid"/>
-                    <input type="text" class="form-control" placeholder="Odoo contract number" t-model="form.enterprise_code"/>
                 </div>
             </t>
             <t t-set-slot="footer">

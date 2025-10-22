@@ -90,13 +90,13 @@ class ConnectionManager(Thread):
 
     def _poll_pairing_result(self):
         result = self._call_iot_proxy()
-        if all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
-            self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
+        if all(key in result for key in ['url', 'token', 'db_uuid']):
+            self._connect_to_server(result['url'], result['token'], result['db_uuid'])
 
-    def _connect_to_server(self, url, token, db_uuid, enterprise_code):
+    def _connect_to_server(self, url, token, db_uuid):
         self.new_database_url = url
         # Save DB URL and token
-        helpers.save_conf_server(url, token, db_uuid, enterprise_code)
+        helpers.save_conf_server(url, token, db_uuid)
         # Send already detected devices and IoT Box info to the database
         manager._send_all_devices()
         # Switch git branch before restarting, this avoids restarting twice
