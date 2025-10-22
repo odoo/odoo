@@ -12,11 +12,11 @@ class DiscussCallHistory(models.Model):
     recording_ids = fields.One2many("discuss.call.recording", "call_history_id", string="Recordings")
     transcript = fields.Text("Transcription", compute="_compute_transcription", store=True)
 
-    @api.depends("recording_ids.transcription")
+    @api.depends("recording_ids.transcript")
     def _compute_transcription(self):
-        for record in self:
-            record.transcript = "\n".join(
-                rec.transcription for rec in record.recording_ids if rec.transcription
+        for call_history_rec in self:
+            call_history_rec.transcript = "\n".join(
+                rec.transcript for rec in call_history_rec.recording_ids if rec.transcript
             )
     duration_hour = fields.Float(compute="_compute_duration_hour")
     start_dt = fields.Datetime(index=True, required=True)

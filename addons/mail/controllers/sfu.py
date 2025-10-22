@@ -40,11 +40,17 @@ class SfuController(http.Controller):
                 'call_history_id': call_history.id,
                 'datas': base64.b64encode(uploaded_file.read()),
                 'mimetype': 'audio/wav',
+                'transcription_status': 'pending',
             })
             _logger.info(f"Successfully created recording {recording.id} for call history {call_history.id}")
 
         except Exception as e:
             _logger.error(f"Failed to create recording for call history {call_history.id}: {e}")
             return request.make_response("Error creating recording.", status=500)
+
+        try:
+            request.env.ref("mail.ir_cron_transcribe_recent_call_recording").sudo()._trigger()
+        except Exception as e:
+            _logger.error(f"Failed to trigger transcription for call history {call_history.id}: {e}")
 
         return request.make_response("Success", status=200)
