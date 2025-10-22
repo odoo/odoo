@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo.tests import tagged, common
 from odoo.exceptions import ValidationError
 from odoo import Command
@@ -48,18 +47,18 @@ class test_inherits(common.TransactionCase):
 
     def test_read_3_levels_inherits(self):
         """ Check that we can read an inherited field on 3 levels """
-        pallet = self.env.ref('test_inherits.pallet_a')
+        pallet = self.env.ref('test_orm.pallet_a')
         self.assertEqual(pallet.read(['name']), [{'id': pallet.id, 'name': 'Unit A'}])
 
     def test_write_3_levels_inherits(self):
         """ Check that we can create an inherits on 3 levels """
-        pallet = self.env.ref('test_inherits.pallet_a')
+        pallet = self.env.ref('test_orm.pallet_a')
         pallet.write({'name': 'C'})
         self.assertEqual(pallet.name, 'C')
 
     def test_write_4_one2many(self):
         """ Check that we can write on an inherited one2many field. """
-        box = self.env.ref('test_inherits.box_a')
+        box = self.env.ref('test_orm.box_a')
         box.write({'line_ids': [Command.create({'name': 'Line 1'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['Line 1'])
@@ -80,7 +79,7 @@ class test_inherits(common.TransactionCase):
     def test_write_5_field_readonly(self):
         """ Check that we can write on an inherited readonly field. """
         self.assertTrue(self.env['test.box']._fields['readonly_name'])
-        box = self.env.ref('test_inherits.box_a')
+        box = self.env.ref('test_orm.box_a')
         box.write({'readonly_name': "Superuser's box"})
         self.assertEqual(box.readonly_name, "Superuser's box")
         self.assertEqual(box.unit_id.readonly_name, "Superuser's box")
@@ -90,11 +89,11 @@ class test_inherits(common.TransactionCase):
         IrModelData = self.env['ir.model.data']
         field = IrModelData.search([('name', '=', 'field_test_unit__name')])
         self.assertEqual(len(field), 1)
-        self.assertEqual(field.module, 'test_inherits')
+        self.assertEqual(field.module, 'test_orm')
 
         field = IrModelData.search([('name', '=', 'field_test_box__name')])
         self.assertEqual(len(field), 1)
-        self.assertEqual(field.module, 'test_inherits')
+        self.assertEqual(field.module, 'test_orm')
 
     def test_constraint_inherits(self):
         """Validate constraints on inherits when the parent is not updated"""
