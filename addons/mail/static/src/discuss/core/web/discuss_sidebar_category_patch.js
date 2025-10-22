@@ -1,9 +1,9 @@
 import { patch } from "@web/core/utils/patch";
-import { DiscussSidebarCategory } from "../public_web/discuss_sidebar_categories";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_sidebar_category";
 
-/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
+/** @type {DiscussSidebarCategory} */
 const DiscussSidebarCategoryPatch = {
     setup() {
         super.setup();
