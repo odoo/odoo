@@ -50,6 +50,12 @@ export class DiscussChannel extends Record {
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
     });
+    hasOtherMembersTyping = fields.Attr(false, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.otherTypingMembers.length > 0;
+        },
+    });
     /** @type {number} */
     id = fields.Attr(undefined, {
         onUpdate() {
@@ -59,6 +65,12 @@ export class DiscussChannel extends Record {
             }
         },
     });
+    otherTypingMembers = fields.Many("discuss.channel.member", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
+        },
+    });
     thread = fields.One("mail.thread", {
         compute() {
             return { id: this.id, model: "discuss.channel" };
@@ -66,6 +78,8 @@ export class DiscussChannel extends Record {
         inverse: "channel",
         onDelete: (r) => r?.delete(),
     });
+
+    typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
 
     delete(options = { closeChatWindow: true }) {
         if (this.chatWindow?.exists() && options.closeChatWindow) {
