@@ -554,3 +554,9 @@ class TestFrontend(TestFrontendCommon):
             if PoS gets reloaded, the order line gets back
         """
         self.start_pos_tour('test_reload_order_line_removed')
+
+    def test_combo_children_qty_updated_with_note(self):
+        setup_product_combo_items(self)
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_children_qty_updated_with_note')
