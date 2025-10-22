@@ -208,6 +208,8 @@ class PosConfig(models.Model):
         store=True, help="These payment methods will be available for fast payment", readonly=False)
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
 
+    pos_snooze_ids = fields.One2many('pos.product.template.snooze', 'pos_config_id', string='Snoozed Products')
+
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
         year_2_digits = str(datetime.now().year)[-2:]
@@ -811,6 +813,20 @@ class PosConfig(models.Model):
 
         self._check_company_has_fiscal_country()
         return self._action_to_open_ui()
+
+    def close_session_snoozes(self):
+        """
+        Unlink all snoozes that don't have an end_time when the session is closed
+        """
+        snoozes = self.pos_snooze_ids.search([
+            '|',
+            ('end_time', '=', False),
+            ('end_time', '<', datetime.now()),
+        ])
+
+        snoozes.unlink()
+
+        return snoozes
 
     def close_ui(self):
         return self.open_ui()
