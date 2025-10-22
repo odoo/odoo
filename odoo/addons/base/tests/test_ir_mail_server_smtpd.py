@@ -146,8 +146,8 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         # when resolving "localhost" (so stupid), use the following to
         # force aiosmtpd/odoo to bind/connect to a fixed ipv4 OR ipv6
         # address.
-        family, _, cls.port = _find_free_local_address()
-        cls.localhost = getaddrinfo('localhost', cls.port, family)
+        family, addr, cls.port = _find_free_local_address()
+        cls.localhost = getaddrinfo(addr, cls.port, family)
         cls.startClassPatcher(patch('socket.getaddrinfo', cls.getaddrinfo))
 
     @classmethod
