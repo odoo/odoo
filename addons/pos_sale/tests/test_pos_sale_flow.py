@@ -1683,7 +1683,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         provider = self.env['payment.provider'].create({
             'name': 'Test',
-            'code': 'custom',
         })
         transaction = self.env['payment.transaction'].create({
             'provider_id': provider.id,
@@ -1714,14 +1713,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product A',
             'available_in_pos': True,
             'lst_price': 10.0,
-        })
-        sale_order = self.env['sale.order'].create({
-            'partner_id': partner_1.id,
-            'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'product_uom_qty': 2,
-                'price_unit': product_a.lst_price
-            })]
         })
         sale_order = self.env['sale.order'].create({
             'partner_id': partner_1.id,
