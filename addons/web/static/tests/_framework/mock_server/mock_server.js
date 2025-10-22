@@ -536,9 +536,7 @@ export class MockServer {
         // Set default routes
         this._onRoute(["/web/action/load"], this.loadAction);
         this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);
-        this._onRoute(["/web/bundle/<string:bundle_name>"], this.loadBundle, {
-            pure: true,
-        });
+        this._onRoute(["/web/bundle/<string:bundle_name>"], this.loadBundle);
         this._onRoute(["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"], this.callKw, {
             final: true,
         });
@@ -548,15 +546,9 @@ export class MockServer {
             { final: true }
         );
         this._onRoute(["/web/dataset/resequence"], this.resequence);
-        this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
-            pure: true,
-        });
-        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus, {
-            pure: true,
-        });
-        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
-            pure: true,
-        });
+        this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage);
+        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus);
+        this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations);
 
         // Add routes from "mock_rpc" registry
         const mockRpcEntries = registry.category("mock_rpc").getEntries();
@@ -801,7 +793,7 @@ export class MockServer {
                     error = err instanceof Error ? err : new Error(err);
                 }
                 if (final || error || (result !== null && result !== undefined)) {
-                    if (pure) {
+                    if (pure || result instanceof Response) {
                         jsonRpcParams = null;
                     }
                     break;
