@@ -77,11 +77,12 @@ export const fieldSelectorField = {
             type: "string",
         },
     ],
-    extractProps({ options }) {
+    extractProps({ options }, dynamicInfo) {
         return {
             allowProperties: options.allow_properties ?? true,
             followRelation: options.follow_relations ?? true,
             model: options.model,
+            required: dynamicInfo.required,
         };
     },
 };
