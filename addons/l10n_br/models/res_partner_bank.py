@@ -2,9 +2,9 @@
 import re
 
 from odoo import models, fields, api, _
-from odoo.addons.mail.tools.mail_validation import mail_validate
 from odoo.exceptions import ValidationError
 from odoo.tools import float_repr
+from odoo.tools.mail import email_normalize
 
 
 class ResPartnerBank(models.Model):
@@ -36,7 +36,7 @@ class ResPartnerBank(models.Model):
                 )
 
             value = bank.proxy_value
-            if bank.proxy_type == "email" and not mail_validate(value):
+            if bank.proxy_type == "email" and not email_normalize(value):
                 raise ValidationError(_("%s is not a valid email.", value))
 
             if bank.proxy_type == "br_cpf_cnpj" and (
