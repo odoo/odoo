@@ -1270,6 +1270,7 @@ registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
             Dialog.confirm("Cancel Orders", ".btn-secondary"),
         ].flat(),
 });
+<<<<<<< f6b3ea1c6f1ef55dee92a214852e201e107c9f92
 
 registry.category("web_tour.tours").add("test_floating_order_name_change_partner", {
     steps: () =>
@@ -1312,3 +1313,49 @@ registry.category("web_tour.tours").add("test_floating_order_name_change_partner
             Chrome.clickRegister(),
         ].flat(),
 });
+||||||| b82fc96982dd06ae540b4df3582d9ac8f6b414d7
+=======
+
+registry.category("web_tour.tours").add("test_combo_children_qty_updated_with_note", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickOrderButton(),
+            Dialog.discard(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickLine("Office Combo"),
+            ProductScreen.selectedOrderlineHas("Office Combo", 1),
+            ProductScreen.clickNumpad("Qty"),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.selectedOrderlineHas("Office Combo", 3),
+            ProductScreen.addInternalNote("test note"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            Order.doesNotHaveLine({
+                productName: "Office Combo",
+                quantity: 1,
+                internalNote: "test note",
+            }),
+            Order.hasLine({ productName: "Combo Product 2", quantity: 1 }),
+            Order.hasLine({ productName: "Combo Product 4", quantity: 1 }),
+            Order.hasLine({ productName: "Combo Product 6", quantity: 1 }),
+            Order.hasLine({
+                productName: "Office Combo",
+                quantity: 2,
+                internalNote: "test note",
+            }),
+            Order.hasLine({ productName: "Combo Product 2", quantity: 2 }),
+            Order.hasLine({ productName: "Combo Product 4", quantity: 2 }),
+            Order.hasLine({ productName: "Combo Product 6", quantity: 2 }),
+        ].flat(),
+});
+>>>>>>> a43ac90c217385ae3dc14faab9b34178cc85da29

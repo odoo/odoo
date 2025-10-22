@@ -42,15 +42,25 @@ export class NoteButton extends Component {
         }
         const saved_quantity = selectedOrderline.qty - quantity_with_note;
         if (saved_quantity > 0 && quantity_with_note > 0) {
-            await this.pos.addLineToCurrentOrder({
+            const newLine = await this.pos.addLineToCurrentOrder({
                 product_tmpl_id: selectedOrderline.product_id.product_tmpl_id,
                 qty: quantity_with_note,
                 note: payload,
             });
+            newLine.combo_line_ids.forEach((child) => {
+                child.qty = quantity_with_note;
+            });
             selectedOrderline.qty = saved_quantity;
+<<<<<<< f6b3ea1c6f1ef55dee92a214852e201e107c9f92
             for (const line of selectedOrderline.combo_line_ids) {
                 line.setQuantity(line.uiState.oldQty);
             }
+||||||| b82fc96982dd06ae540b4df3582d9ac8f6b414d7
+=======
+            selectedOrderline.combo_line_ids.forEach((child) => {
+                child.qty = saved_quantity;
+            });
+>>>>>>> a43ac90c217385ae3dc14faab9b34178cc85da29
         } else {
             this.setOrderlineNote(payload);
         }
