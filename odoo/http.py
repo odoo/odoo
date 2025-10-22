@@ -329,6 +329,9 @@ STATIC_CACHE = 60 * 60 * 24 * 7
 # content (usually using a hash), one year.
 STATIC_CACHE_LONG = 60 * 60 * 24 * 365
 
+# The frequency with which a device's activity is updated
+DEVICE_ACTIVITY_UPDATE_FREQUENCY = 3600  # seconds (1 hour)
+
 
 # =========================================================
 # Helpers
@@ -1113,27 +1116,27 @@ class Session(collections.abc.MutableMapping):
             # be abused by unprivileged users. Such sessions will of course still be
             # subject to all other auditing mechanisms (server logs, web proxy logs,
             # metadata tracking on modified records, etc.)
-            return
+            return None
 
-        user_agent = request.httprequest.user_agent
-        platform = user_agent.platform
-        browser = user_agent.browser
+        user_agent = request.httprequest.user_agent.string
         ip_address = request.httprequest.remote_addr
         now = int(datetime.now().timestamp())
         for trace in self['_trace']:
-            if trace['platform'] == platform and trace['browser'] == browser and trace['ip_address'] == ip_address:
+            if trace.get('ip_address') == ip_address and trace.get('user_agent') == user_agent:
                 # If the device logs are not up to date (i.e. not updated for one hour or more)
-                if bool(now - trace['last_activity'] >= 3600):
+                if bool(now - trace['last_activity'] >= DEVICE_ACTIVITY_UPDATE_FREQUENCY):
                     trace['last_activity'] = now
                     self.is_dirty = True
                     return trace
-                return
+                return None
+        geoip = GeoIP(ip_address)
         new_trace = {
-            'platform': platform,
-            'browser': browser,
             'ip_address': ip_address,
+            'user_agent': user_agent,
             'first_activity': now,
-            'last_activity': now
+            'last_activity': now,
+            'country': geoip.country.name,
+            'city': geoip.city.name,
         }
         self['_trace'].append(new_trace)
         self.is_dirty = True

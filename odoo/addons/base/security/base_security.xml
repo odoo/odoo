@@ -272,7 +272,20 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
-        <!-- Record Rules For User Devices -->
+        <!-- Record Rules For User Sessions/Devices -->
+        <record id="user_session" model="ir.rule">
+            <field name="name">Users can read only their own sessions</field>
+            <field name="model_id" ref="model_res_session"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+        <record id="user_session_admin" model="ir.rule">
+            <field name="name">Administrators can read all sessions</field>
+            <field name="model_id" ref="model_res_session"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
         <record id="user_device" model="ir.rule">
             <field name="name">Users can read only their own devices</field>
             <field name="model_id" ref="model_res_device"/>

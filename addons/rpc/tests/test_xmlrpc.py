@@ -77,7 +77,15 @@ class TestXMLRPC(common.HttpCase):
         now = datetime.datetime.now()
         ids = self.xmlrpc(
             'res.device.log', 'create',
-            {'session_identifier': "abc", 'first_activity': now, 'revoked': False}
+            {
+                'session_identifier': 'abc',
+                'user_id': self.env.user.id,
+                'ip_address': '',
+                'user_agent': '',
+                'first_activity': now,
+                'last_activity': now,
+                'revoked': False,
+            },
         )
         [r] = self.xmlrpc(
             'res.device.log', 'read',
