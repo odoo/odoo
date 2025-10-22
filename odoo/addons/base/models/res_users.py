@@ -206,6 +206,7 @@ class ResUsers(models.Model):
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     device_ids = fields.One2many('res.device', 'user_id', string='User devices')
+    session_ids = fields.One2many('res.session', 'user_id', string='User sessions')
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest Login', readonly=False)
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
@@ -990,8 +991,8 @@ class ResUsers(models.Model):
         return (self.env.user if self.id == self.env.uid else self)._action_revoke_all_devices()
 
     def _action_revoke_all_devices(self):
-        devices = self.env["res.device"].search([("user_id", "=", self.id)])
-        devices.filtered(lambda d: not d.is_current)._revoke()
+        sessions = self.env["res.session"].search([("user_id", "=", self.id)])
+        sessions.filtered(lambda d: not d.is_current)._revoke()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     @api.readonly

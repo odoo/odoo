@@ -8,18 +8,20 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <group>
-                            <field name="user_id"/>
-                            <field name="display_name" string="Name"/>
-                            <field name="ip_address" string="Last IP Address"/>
-                        </group>
-                        <group>
-                            <field name="first_activity"/>
-                            <field name="last_activity"/>
-                        </group>
-                        <group>
-                            <field name="linked_ip_addresses"/>
-                        </group>
+                        <field name="session_identifier"/>
+                        <field name="user_id"/>
+                        <field name="ip_address"/>
+                        <field name="user_agent"/>
+                    </group>
+                    <group>
+                        <field name="first_activity"/>
+                        <field name="last_activity"/>
+                    </group>
+                    <group>
+                        <field name="country"/>
+                        <field name="city"/>
+                        <field name="platform"/>
+                        <field name="browser"/>
                     </group>
                 </form>
             </field>
@@ -30,8 +32,61 @@
             <field name="model">res.device</field>
             <field name="arch" type="xml">
                 <list default_order="last_activity desc">
+                    <field name="session_identifier" optional="hide"/>
                     <field name="user_id"/>
-                    <field name="display_name" string="Name"/>
+                    <field name="first_activity"/>
+                    <field name="last_activity"/>
+                    <field name="ip_address"/>
+                    <field name="country"/>
+                    <field name="city"/>
+                    <field name="platform"/>
+                    <field name="browser"/>
+                    <field name="user_agent" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="res_session_view_form">
+            <field name="name">res.session.form</field>
+            <field name="model">res.session</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="session_identifier"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="first_activity"/>
+                            <field name="last_activity"/>
+                        </group>
+                        <field name="device_ids" mode="list">
+                            <list decoration-success="is_current">
+                                <field name="platform"/>
+                                <field name="browser"/>
+                                <field name="country"/>
+                                <field name="city"/>
+                                <field name="ip_address"/>
+                                <field name="first_activity"/>
+                                <field name="last_activity"/>
+                                <field name="user_agent" optional="hide"/>
+                            </list>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="Close" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="res_session_view_tree">
+            <field name="name">res.session.list</field>
+            <field name="model">res.session</field>
+            <field name="arch" type="xml">
+                <list default_order="last_activity desc">
+                    <field name="session_identifier"/>
+                    <field name="user_id"/>
                     <field name="ip_address"/>
                     <field name="first_activity"/>
                     <field name="last_activity"/>
@@ -42,11 +97,11 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="res_device_view_kanban">
-            <field name="name">res.device.kanban</field>
-            <field name="model">res.device</field>
+        <record model="ir.ui.view" id="res_session_view_kanban">
+            <field name="name">res.session.kanban</field>
+            <field name="model">res.session</field>
             <field name="arch" type="xml">
-                <kanban create="0" can_open="0" default_order="is_current desc, last_activity desc">
+                <kanban create="0" can_open="1" default_order="is_current desc, last_activity desc">
                     <field name="id"/>
                     <field name="device_type"/>
                     <field name="last_activity"/>
@@ -81,7 +136,7 @@
             <field name="name">User Devices</field>
             <field name="res_model">res.device</field>
             <field name="path">user-device</field>
-            <field name="view_mode">list,kanban,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         <menuitem action="action_user_device" id="menu_action_user_device" parent="base.menu_security" sequence="10"/>
 
