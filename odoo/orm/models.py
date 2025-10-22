@@ -2172,10 +2172,11 @@ class BaseModel(metaclass=MetaModel):
                 traverse_many2one and field and field.type == 'many2one'
                 and self.env[field.comodel_name]._order != 'id'
             ):
-                if sql_order := self._order_to_sql(f'{term} {direction} {nulls}', query):
+                if sql_order := self._order_to_sql(query.table, f'{term} {direction} {nulls}'):
                     orderby_terms.append(sql_order)
                     if query._order_groupby:
-                        groupby_terms[term] = SQL(", ").join([groupby_terms[term], *query._order_groupby])
+                        query._order_groupby.insert(0, groupby_terms[term])
+                        groupby_terms[term] = SQL(", ").join(query._order_groupby)
                         query._order_groupby.clear()
 
             elif granularity == 'day_of_week':
@@ -4624,8 +4625,7 @@ class BaseModel(metaclass=MetaModel):
                 word,
             ))
 
-    def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
-                      reverse: bool = False) -> SQL:
+    def _order_to_sql(self, table: TableSQL, order: str, reverse: bool = False) -> SQL:
         """ Return an :class:`SQL` object that represents the given ORDER BY
         clause, without the ORDER BY keyword.  The method also checks whether
         the fields in the order are accessible for reading.
@@ -4634,8 +4634,6 @@ class BaseModel(metaclass=MetaModel):
         if not order:
             return SQL()
         self._check_qorder(order)
-
-        alias = alias or self._table
 
         terms = []
         for order_part in order.split(','):
@@ -4656,14 +4654,16 @@ class BaseModel(metaclass=MetaModel):
             if property_name := order_match['property']:
                 # field_name is an expression
                 field_name = f"{field_name}.{property_name}"
-            term = self._order_field_to_sql(alias, field_name, sql_direction, sql_nulls, query)
+            term = self._order_field_to_sql(table, field_name, sql_direction, sql_nulls)
             if term:
                 terms.append(term)
 
         return SQL(", ").join(terms)
 
-    def _order_field_to_sql(self, alias: str, field_name: str, direction: SQL,
-                            nulls: SQL, query: Query) -> SQL:
+    def _order_field_to_sql(
+        self, table: TableSQL, field_expr: str,
+        direction: SQL, nulls: SQL,
+    ) -> SQL:
         """ Return an :class:`SQL` object that represents the ordering by the
         given field.  The method also checks whether the field is accessible for
         reading.
@@ -4672,7 +4672,7 @@ class BaseModel(metaclass=MetaModel):
         :param nulls: one of ``SQL("NULLS FIRST")``, ``SQL("NULLS LAST")``, ``SQL()``
         """
         # field_name is an expression
-        fname, property_name = parse_field_expr(field_name)
+        fname, property_name = parse_field_expr(field_expr)
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
@@ -4686,15 +4686,16 @@ class BaseModel(metaclass=MetaModel):
             # figure out the applicable order_by for the m2o
             # special case: ordering by "x_id.id" doesn't recurse on x_id's comodel
             comodel = self.env[field.comodel_name]
+            sql_field = table[fname]
             if property_name == 'id':
                 coorder = 'id'
-                sql_field = self._field_to_sql(alias, fname, query)
+            elif property_name:
+                raise ValueError(f"Cannot order by comodel fields in {field_expr!r}")
             else:
                 coorder = comodel._order
-                sql_field = self._field_to_sql(alias, field_name, query)
 
             if coorder == 'id':
-                query._order_groupby.append(sql_field)
+                table._query._order_groupby.append(sql_field)
                 return SQL("%s %s %s", sql_field, direction, nulls)
 
             # instead of ordering by the field's raw value, use the comodel's
@@ -4709,20 +4710,22 @@ class BaseModel(metaclass=MetaModel):
             # LEFT JOIN the comodel table, in order to include NULL values, too
             # Run as sudo because we can order by inaccessible models as we can
             # only order by the default order or the id.
-            coalias = TableSQL(alias, self.sudo(), query)._join(field.name)._alias
+            cotable = table._with_model(self.sudo())._join(fname)
 
             # delegate the order to the comodel
             reverse = direction._sql_tuple[0] == 'DESC'
-            term = comodel._order_to_sql(coorder, query, alias=coalias, reverse=reverse)
+            term = comodel._order_to_sql(cotable, coorder, reverse=reverse)
             if term:
                 terms.append(term)
             return SQL(", ").join(terms)
 
-        sql_field = self._field_to_sql(alias, field_name, query)
+        sql_field = table[fname]
+        if property_name:
+            sql_field = sql_field[property_name]
         if field.type == 'boolean' and field not in self.env.registry.not_null_fields:
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
 
-        query._order_groupby.append(sql_field)
+        table._query._order_groupby.append(sql_field)
 
         return SQL("%s %s %s", sql_field, direction, nulls)
 
@@ -4788,7 +4791,7 @@ class BaseModel(metaclass=MetaModel):
 
         # add order and limits
         if order:
-            query.order = self._order_to_sql(order, query)
+            query.order = self._order_to_sql(query.table, order)
         if limit is not None:
             query.limit = limit
         if offset is not None:
