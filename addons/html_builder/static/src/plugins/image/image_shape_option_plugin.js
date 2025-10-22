@@ -446,6 +446,7 @@ export class RemoveImageShapeAction extends BuilderAction {
             "shapeColors",
             "shape",
             "shapeRotate",
+            "shapeFlip",
             "originalSrc",
             "originalId",
         ];
