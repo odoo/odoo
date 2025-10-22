@@ -231,8 +231,8 @@
         <attribute name="class" add="o_not_editable small" separator=" "/>
         <attribute name="t-if">not editable</attribute>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-sm')][2]" position="attributes">
-        <attribute name="class" remove="col-sm text-sm-end" add="col-md mt-auto mb-0 text-md-end" separator=" "/>
+    <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
+        <attribute name="class" remove="text-sm-end" add="mt-auto mb-0 text-md-end" separator=" "/>
     </xpath>
 
     <xpath expr="//head" position="inside">
@@ -2170,10 +2170,10 @@
             </section>
         </div>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-md')]" position="attributes">
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]/.." position="attributes">
         <attribute name="class" remove="text-center" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-md')][2]" position="attributes">
+    <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
         <attribute name="class" remove="text-center" separator=" "/>
     </xpath>
 </template>
@@ -2298,10 +2298,10 @@
             </section>
         </div>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-md')]" position="attributes">
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]/.." position="attributes">
         <attribute name="class" remove="text-center" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-md')][2]" position="attributes">
+    <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
         <attribute name="class" remove="text-center" separator=" "/>
     </xpath>
 </template>
@@ -2408,10 +2408,10 @@
             </section>
         </div>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-md')]" position="attributes">
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]/.." position="attributes">
         <attribute name="class" remove="text-center" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-md')][2]" position="attributes">
+    <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
         <attribute name="class" remove="text-center" separator=" "/>
     </xpath>
 </template>
@@ -2523,8 +2523,8 @@
     <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
         <span class="o_footer_copyright_name me-2 small">Copyright &amp;copy; Company name</span>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//div[hasclass('col-sm')]" position="attributes">
-        <attribute name="class" remove="col-sm text-sm-start" add="col-md d-flex flex-column-reverse gap-2 text-md-start" separator=" "/>
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]/.." position="attributes">
+        <attribute name="class" remove="text-sm-start" add="d-flex flex-column-reverse gap-2 text-md-start" separator=" "/>
     </xpath>
 </template>
 

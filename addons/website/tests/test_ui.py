@@ -742,3 +742,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         # It should go in edit mode if we are not on the FR page even if FR is
         # available
         self.start_tour('/', 'alt_a_edit', login='admin')
+
+    def test_mega_footer(self):
+        self.start_tour('/', 'mega_footer', login='admin')
