@@ -75,9 +75,7 @@ test("BadgeSelectionField widget on a many2one in a new record", async () => {
 });
 
 test("[Offline] BadgeSelectionField widget on a many2one", async () => {
-    onRpc("/web/dataset/call_kw/product/name_search", () => new Response("", { status: 502 }), {
-        pure: true,
-    });
+    onRpc("product", "name_search", () => new Response("", { status: 502 }));
     await mountView({
         resModel: "res.partner",
         resId: 2,

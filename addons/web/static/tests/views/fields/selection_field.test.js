@@ -114,9 +114,7 @@ test("SelectionField, edition and on many2one field", async () => {
 
 test.tags("desktop");
 test("[Offline] SelectionField on many2one field", async () => {
-    onRpc("/web/dataset/call_kw/product/name_search", () => new Response("", { status: 502 }), {
-        pure: true,
-    });
+    onRpc("product", "name_search", () => new Response("", { status: 502 }));
     Partner._onChanges.product_id = () => {};
     Partner._records[0].product_id = 37;
     Partner._records[0].trululu = false;
