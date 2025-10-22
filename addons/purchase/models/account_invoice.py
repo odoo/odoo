@@ -58,8 +58,7 @@ class AccountMove(models.Model):
         new_currency_id = self.currency_id if has_invoice_lines else invoice_vals.get('currency_id')
         del invoice_vals['ref'], invoice_vals['payment_reference']
         del invoice_vals['company_id']  # avoid recomputing the currency
-        if self.move_type == invoice_vals['move_type']:
-            del invoice_vals['move_type'] # no need to be updated if it's same value, to avoid recomputes
+        del invoice_vals['move_type']  # no need to change move_type
         self.update(invoice_vals)
         self.currency_id = new_currency_id
 

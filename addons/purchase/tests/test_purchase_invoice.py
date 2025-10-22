@@ -1130,6 +1130,40 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(bill.currency_id, self.other_currency, "The currency of the Bill should be the one of the context")
         self.assertEqual(bill.invoice_line_ids.currency_id, self.other_currency, "The currency of the Bill lines should be the same as the currency of the Bill")
 
+    def test_linking_in_refund_to_po(self):
+        """
+        Tests the linking of a vendor credit note to a purchase order based on the
+        invoice_origin field without changing credit note move_type.
+        """
+        po = self.env['purchase.order'].with_context(tracking_disable=True).create(
+            {
+                'partner_id': self.partner_a.id,
+                'partner_ref': 'PO-001',
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_order.id,
+                        'product_qty': 1.0,
+                        'price_unit': self.product_order.list_price,
+                        'taxes_id': False,
+                    }),
+                ]
+            })
+        po.button_confirm()
+
+        in_refund_bill = self.env['account.move'].create({
+            'invoice_origin': 'PO-001',
+            'move_type': 'in_refund',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_order.id,
+                'quantity': 1,
+                'price_unit':  self.product_order.list_price,
+            })]
+        })
+        in_refund_bill._link_bill_origin_to_purchase_orders()
+        self.assertTrue(in_refund_bill.id in po.invoice_ids.ids)
+        self.assertEqual(in_refund_bill.move_type, 'in_refund')
+
     def test_payment_reference_autocomplete_invoice(self):
         """
         Test that the payment_reference field is not replaced when selected a purchase order
