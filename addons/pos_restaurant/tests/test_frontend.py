@@ -828,3 +828,13 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(present_order.state, 'cancel')
         self.assertEqual(future_order.state, 'draft')
         self.assertEqual(future_order.session_id.id, False)
+
+    def test_combo_children_qty_updated_with_note(self):
+        setup_product_combo_items(self)
+        combo_categories = self.env['pos.category'].search([
+            ('name', 'in', ['Category 1', 'Category 2', 'Category 3'])
+        ])
+        for printer in self.main_pos_config.printer_ids:
+            printer.write({'product_categories_ids': [(6, 0, combo_categories.ids)]})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_children_qty_updated_with_note')
