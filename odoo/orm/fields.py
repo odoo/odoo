@@ -1240,6 +1240,7 @@ class Field(typing.Generic[T]):
 
         The query object is necessary for fields that need to add tables to the query.
         """
+        model._check_field_access(self, 'read')
         if self.compute_sql:
             if self.compute_sudo:
                 model = model.sudo()

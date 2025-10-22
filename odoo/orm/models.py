@@ -63,7 +63,7 @@ from .fields_temporal import Date, Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
-from .query import Query
+from .query import Query, TableSQL
 from .utils import (
     OriginIds, Prefetch, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
@@ -2290,15 +2290,10 @@ class BaseModel(metaclass=MetaModel):
         properties fields, where joins are added to the query.
         """
         fname, property_name = parse_field_expr(field_expr)
-        field = self._fields.get(fname)
-        if not field:
-            raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
-
-        self._check_field_access(field, 'read')
-
-        sql = field.to_sql(self, alias, query)
+        table = TableSQL(alias, self, query)
+        sql = table[fname]
         if property_name:
-            sql = field.property_to_sql(sql, property_name, self, alias, query)
+            sql = sql[property_name]
         return sql
 
     def _read_group_groupby_properties(self, alias: str, field: Field, property_name: str, query: Query) -> SQL:
