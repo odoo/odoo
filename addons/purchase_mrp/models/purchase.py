@@ -47,7 +47,8 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _compute_qty_received(self):
+    def _prepare_qty_received(self):
+        kit_invoiced_qties = defaultdict(float)
         kit_lines = self.env['purchase.order.line']
         lines_stock = self.filtered(lambda l: l.qty_received_method == 'stock_moves' and l.move_ids and l.state != 'cancel')
         product_by_company = defaultdict(OrderedSet)
@@ -69,9 +70,11 @@ class PurchaseOrderLine(models.Model):
                     'outgoing_moves': lambda m:
                         m._is_outgoing() and m.to_refund,
                 }
-                line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
+                kit_invoiced_qties[line] = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
                 kit_lines += line
-        super(PurchaseOrderLine, self - kit_lines)._compute_qty_received()
+        invoiced_qties = super(PurchaseOrderLine, self - kit_lines)._prepare_qty_received()
+        invoiced_qties.update(kit_invoiced_qties)
+        return invoiced_qties
 
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)
