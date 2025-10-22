@@ -137,9 +137,7 @@ test("[Offline] static statusbar widget on many2one field", async () => {
         domain: "[('bar', '=', True)]",
     });
     Partner._records[1].bar = false;
-    onRpc("/web/dataset/call_kw/partner/search_read", () => new Response("", { status: 502 }), {
-        pure: true,
-    });
+    onRpc("partner", "search_read", () => new Response("", { status: 502 }));
 
     await mountView({
         type: "form",
