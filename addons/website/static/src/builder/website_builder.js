@@ -5,6 +5,7 @@ import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugi
 import { OperationPlugin } from "@html_builder/core/operation_plugin";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plugin";
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -42,6 +43,7 @@ const TRANSLATION_PLUGINS = [
     DisableSnippetsPlugin,
     SavePlugin,
     SetupEditorPlugin,
+    TranslateSetupEditorPlugin,
     VisibilityPlugin,
     PopupVisibilityPlugin,
     SaveTranslationPlugin,
