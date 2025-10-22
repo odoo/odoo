@@ -1,3 +1,4 @@
+import inspect
 import textwrap
 from datetime import datetime, timedelta
 from http import HTTPStatus
@@ -5,6 +6,8 @@ from http import HTTPStatus
 from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 
+from .dummy_methods import DummyMethods
+from odoo.addons.api_doc.controllers.api_doc import parse_signature
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -201,3 +204,17 @@ class TestDoc(HttpCaseWithUserDemo):
         etag_admin = res.headers.get('ETag', '')
         self.assertTrue(etag_admin)
         self.assertNotEqual(etag_demo, etag_admin)
+
+    def test_parse_signature(self):
+        def clean_doc(d):
+            return dict(d, doc=inspect.cleandoc(d.get('doc', '')).replace('\n', '').strip())
+
+        methods = inspect.getmembers(DummyMethods, predicate=inspect.isroutine)
+        for name, method in methods:
+            if name.startswith('__'):
+                continue
+            with self.subTest(method=name):
+                self.assertEqual(
+                    clean_doc(parse_signature(method).as_dict()),
+                    clean_doc(method.expected),
+                )
