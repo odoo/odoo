@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-09 13:43+0000\n"
+"PO-Revision-Date: 2025-10-21 05:28+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -1411,6 +1411,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Sie können auswählen, wie Sie uns unsere Rechnungen "
+"und in welchem Format Sie sie senden möchten.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -4295,8 +4299,9 @@ msgstr "Automatische Buchung Standardjournal"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
+#, fuzzy
 msgid "Automatic Tax Mapping (AvaTax)"
-msgstr ""
+msgstr "Automatische Steuerzuordnung (AvaTax)"
 
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
@@ -4885,7 +4890,7 @@ msgstr "Textinhalt ist derselbe wie die Vorlage"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "Buchhalter"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5886,6 +5891,8 @@ msgid ""
 "Consider paying the amount with %(btn_start)searly payment discount%"
 "(btn_end)s instead."
 msgstr ""
+"Erwägen Sie, den Betrag mit einem %(btn_start)sFrühzahlerrabatt%(btn_end)s "
+"zu begleichen."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
@@ -7145,7 +7152,7 @@ msgstr "Standardsteuer für den Verkauf eines Produktes."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "Der Standardwert für „company_id“ für %(record)s ist keine Ganzzahl"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -9437,7 +9444,7 @@ msgstr "Hat IBAN-Warnung"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
 #: model:ir.model.fields,field_description:account.field_account_journal__has_invalid_statements
 msgid "Has Invalid Statements"
-msgstr ""
+msgstr "Hat gültige Kontoauszüge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -10452,7 +10459,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invalid Statement(s)"
-msgstr ""
+msgstr "Ungültige/r Kontoauszug/-auszüge"
 
 #. module: account
 #. odoo-python
@@ -10862,7 +10869,7 @@ msgstr "Rechnungsstellung"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Invoicing & Banks"
-msgstr ""
+msgstr "Rechnungsstellung & Banken"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -14092,7 +14099,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Zahlungen, die mit dieser Rechnung abgestimmt wurden."
 
 #. module: account
 #: model:account.group,name:account.2_us_group_61
@@ -14799,7 +14806,7 @@ msgstr "Neu sequenzieren"
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Read-only"
-msgstr ""
+msgstr "Schreibgeschützt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -14915,7 +14922,7 @@ msgstr "Abgestimmte Zeilen ausschließlich der Wechselkursdifferenz"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Abgestimmte Zahlungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -20516,6 +20523,10 @@ msgid ""
 "You can not delete a transaction from a valid statement.\n"
 "If you want to delete it, please remove the statement first."
 msgstr ""
+"Es ist nicht möglich, eine Transaktion aus einem gültigen Kontoauszug zu "
+"löschen.\n"
+"Sollten Sie diese Transaktion entfernen wollen, löschen Sie zunächst den "
+"gesamten Kontoauszug."
 
 #. module: account
 #. odoo-python
@@ -21387,12 +21398,16 @@ msgid ""
 "access to all Accounting features, including reporting, asset management, "
 "analytic accounting, without configuration rights."
 msgstr ""
+"Zugriff auf alle Buchhaltungsfunktionen, einschließlich Berichte, "
+"Anlagenverwaltung, Kostenrechnung, ohne Konfigurationsrechte."
 
 #. module: account
 #: model:res.groups,comment:account.group_account_readonly
 msgid ""
 "access to all the accounting data but in readonly mode, no actions allowed."
 msgstr ""
+"Zugriff auf alle Buchhaltungsdaten, jedoch im schreibgeschützten Modus, "
+"keine Aktionen zulässig."
 
 #. module: account
 #. odoo-python
@@ -21414,6 +21429,8 @@ msgstr "die Währung der Ausgangsrechnung aktivieren"
 #: model:res.groups,comment:account.group_account_basic
 msgid "adds the accounting dashboard, bank management and follow-up reports."
 msgstr ""
+"fügt das Buchhaltungsdashboard, die Bankverwaltung und die Mahnberichte "
+"hinzu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -21960,6 +21977,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Selbstfakturierte Gutschrift (Ref. {{ "
+"object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -21967,6 +21986,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
+"or 'n/a' }})"
 
 #~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"

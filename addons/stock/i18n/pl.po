@@ -45,8 +45,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-16 17:04+0000\n"
-"Last-Translator: Harkot <kharkot@trilab.pl>\n"
+"PO-Revision-Date: 2025-10-21 14:23+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/stock/pl/>"
 "\n"
 "Language: pl\n"
@@ -1058,6 +1058,7 @@ msgstr "<strong>Adres odbiorcy</strong>"
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Zapisz</strong> tę stronę i wróć tutaj, aby skonfigurować tę funkcję."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1402,6 +1403,9 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Zezwól na realizację produkcji na zamówienie lub automatyzację zamówień "
+"zakupu w momencie sprzedaży produktu i uzyskaj bezpośrednie powiązania "
+"między dokumentami."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -2229,6 +2233,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Oblicz koszty dostawy i wyślij z DHL<br/>\n"
+"                                    <strong>(Przejdź na Stronę główną&gt;"
+"Aplikacje, aby zainstalować)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2252,6 +2259,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Oblicz koszty dostawy i wyślij z FedEx<br/>\n"
+"                                    <strong>(Przejdź na Stronę główną&gt;"
+"Aplikacje, aby zainstalować)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2280,6 +2290,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Oblicz koszty dostawy i wyślij z UPS<br/>\n"
+"                                    <strong>(Przejdź na Stronę główną&gt;"
+"Aplikacje, aby zainstalować)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2293,6 +2306,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Oblicz koszty dostawy i wyślij z USPS<br/>\n"
+"                                    <strong>(Przejdź na Stronę główną&gt;"
+"Aplikacje, aby zainstalować)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2325,6 +2341,12 @@ msgid ""
 "delays, or trigger it just-in-time\n"
 "                                ('0 days') to avoid overstocking."
 msgstr ""
+"Skonfiguruj horyzont tak, aby zasady ponownego zamawiania były uruchamiane "
+"wcześniej, aby uzyskać\n"
+"                                przewagę w uzupełnianiu zapasów i uniknąć "
+"opóźnień, lub uruchamiaj je w systemie just-in-time\n"
+"                                ('0 dni'), aby uniknąć nadmiernego "
+"gromadzenia zapasów."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2333,6 +2355,10 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"Skonfiguruj horyzont tak, aby zasady ponownego zamawiania były uruchamiane "
+"wcześniej, aby zyskać przewagę w uzupełnianiu zapasów i uniknąć opóźnień, "
+"lub uruchamiaj je w systemie just-in-time ('0 dni'), aby uniknąć nadmiernego "
+"gromadzenia zapasów."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -7061,7 +7087,7 @@ msgstr "Adres partnera"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Instrukcje specyficzne dla partnera"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__percent_factor
@@ -8236,7 +8262,7 @@ msgstr "Uzupełnianie zapasów"
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__horizon_days
 msgid "Replenishment Horizon"
-msgstr ""
+msgstr "Horyzont uzupełniania zapasów"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
@@ -8846,6 +8872,8 @@ msgstr ""
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
 msgstr ""
+"Wysyłanie automatycznych wiadomości SMS z potwierdzeniem po zrealizowaniu "
+"zamówień dostawy"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9515,7 +9543,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_confirmation_type
 msgid "Stock Text Validation type"
-msgstr ""
+msgstr "Typ walidacji tekstu magazynowego"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_text_confirmation
@@ -9745,7 +9773,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Text Confirmation"
-msgstr ""
+msgstr "Potwierdzenie tekstowe"
 
 #. module: stock
 #. odoo-python
@@ -10457,7 +10485,7 @@ msgstr "Do przetworzenia"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr "Do odbioru"
+msgstr "Do Przyjęcia"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
