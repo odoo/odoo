@@ -141,7 +141,7 @@ class PosSession(models.Model):
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
-            'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account']
+            'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account', 'pos.product.template.snooze']
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -549,10 +549,12 @@ class PosSession(models.Model):
         # where cash_control = False
         open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft').ids
         check_closing_session = self._cannot_close_session(bank_payment_method_diffs)
+
         if check_closing_session:
             check_closing_session['open_order_ids'] = open_order_ids
             return check_closing_session
 
+        self.config_id.close_session_snoozes()
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
 
         # If an error is raised, the user will still be redirected to the back end to manually close the session.
