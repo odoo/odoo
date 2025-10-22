@@ -262,3 +262,52 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         # Check self-order in pos-terminal are not prompted for Send-for-Preparation
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes', login='pos_user')
+
+    def test_self_order_table_sharing(self):
+        """
+        - MEAL MODE: table is assigned to order via table_id field when scanning QR code
+            all phones scanning the same table QR code share the same order
+        - EACH MODE: table is assigned to order via floating_order_name field when scanning QR code
+            each phone scanning the same table QR code has its own order
+        """
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        table = self.pos_config.floor_ids.table_ids[0]
+        table_identifier = table.identifier
+        self_route = self.pos_config._get_self_order_route(table_id=table.id)
+
+        # Just needs to create an order, values do not matter
+        self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'table_id': table.id,
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'amount_paid': 0.0,
+            'floating_order_name': f'Self-Order {table_identifier}',
+            'lines': [(0, 0, {
+                'qty': 1,
+                'product_id': self.cola.id,
+                'price_unit': self.cola.lst_price,
+                'price_subtotal': self.cola.lst_price,
+                'price_subtotal_incl': self.cola.lst_price,
+            })],
+        })
+
+        self.start_tour(self_route, "test_self_order_table_sharing-each_mode")
+        last_order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(last_order.floating_order_name, f"Self-Order T {table.table_number}")
+        self.assertFalse(last_order.table_id)
+
+        self.pos_config.write({
+            'self_ordering_pay_after': 'meal',
+        })
+
+        self.start_tour(self_route, "test_self_order_table_sharing-meal_mode")
