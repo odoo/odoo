@@ -14,6 +14,7 @@ import traceback
 import warnings
 
 import werkzeug.serving
+from pkg_resources import PkgResourcesDeprecationWarning
 
 from . import release
 from . import sql_db
@@ -237,6 +238,15 @@ def init_logger():
     # This warning is triggered library only during the python precompilation which does not occur on readonly filesystem
     warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
     warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
+
+    # jammy's pdfminer has a broken version (the distribution returns
+    # `-VERSION-`, the code has a version of `__VERSION__`), which triggers
+    # these warnings when trying to check the version of something else (ldap):
+    #
+    # - the first signals a fallback after failing to parse the above as a `Version`
+    # - the second signals the use of the `LegacyVersion`... as fallback
+    warnings.filterwarnings("ignore", r'.*-VERSION-', category=PkgResourcesDeprecationWarning, module="pkg_resources")
+    warnings.filterwarnings("ignore", r'.*\bLegacyVersion\b', category=DeprecationWarning, module="pkg_resources")
     from .tools.translate import resetlocale
     resetlocale()
 
