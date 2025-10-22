@@ -397,3 +397,29 @@ registry.category("web_tour.tours").add("test_mobile_self_order_preparation_chan
             Utils.clickBtn("Ok"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            ProductPage.clickProduct("Fanta"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Fanta", "2.53", "1"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_self_order_table_sharing-meal_mode", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Coca-Cola", "2.20", "1"),
+        ].flat(),
+});
