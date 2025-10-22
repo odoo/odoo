@@ -40,8 +40,8 @@ export class TourStartWidget extends CharField {
 export const tourStartWidgetField = {
     ...charField,
     component: TourStartWidget,
-    extractProps: ({ options }) => ({
-        link: options.link,
+    extractProps: ({ viewType }) => ({
+        link: viewType === "list",
     }),
 };
 

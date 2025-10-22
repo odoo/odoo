@@ -1,9 +1,12 @@
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
+import { x2ManyCommands } from "@web/core/orm_service";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
+import { symmetricalDifference } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import {
     useActiveActions,
@@ -18,8 +21,6 @@ import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { symmetricalDifference } from "@web/core/utils/arrays";
-import { x2ManyCommands } from "@web/core/orm_service";
 
 import { Component } from "@odoo/owl";
 
@@ -325,15 +326,12 @@ export const x2ManyField = {
     displayName: _t("Relational table"),
     supportedTypes: ["one2many", "many2many"],
     useSubView: true,
-    extractProps: (
-        { attrs, relatedFields, viewMode, views, widget, options, string },
-        dynamicInfo
-    ) => {
+    extractProps: ({ attrs, relatedFields, viewMode, views, widget, string }, dynamicInfo) => {
         const props = {
             addLabel: attrs["add-label"],
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
-            crudOptions: options,
+            crudOptions: pick(attrs, "create", "delete", "link", "unlink", "write"),
             string,
         };
         if (viewMode) {

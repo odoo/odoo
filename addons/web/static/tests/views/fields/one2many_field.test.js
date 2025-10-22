@@ -3339,7 +3339,7 @@ test("one2many list: cannot open record in editable=bottom and edit=false list",
     expect(".modal-dialog").toHaveCount(0);
 });
 
-test("one2many list: conditional create/delete actions", async () => {
+test("one2many list: conditional create/delete attrs", async () => {
     Partner._records[0].p = [2, 4];
     await mountView({
         type: "form",
@@ -3347,7 +3347,7 @@ test("one2many list: conditional create/delete actions", async () => {
         arch: `
             <form>
                 <field name="bar"/>
-                <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
+                <field name="p" create="bar == True" delete="bar == True">
                     <list>
                         <field name="name"/>
                     </list>
@@ -3617,7 +3617,7 @@ test("one2many kanban: create action disabled", async () => {
     expect(".o_field_x2many_kanban .delete_icon").toHaveCount(1);
 });
 
-test("one2many kanban: conditional create/delete actions", async () => {
+test("one2many kanban: conditional create/delete attrs", async () => {
     Partner._records[0].p = [2, 4];
 
     await mountView({
@@ -3626,7 +3626,7 @@ test("one2many kanban: conditional create/delete actions", async () => {
         arch: `
             <form>
                 <field name="bar"/>
-                <field name="p" options="{'create': [('bar', '=', True)], 'delete': [('bar', '=', True)]}">
+                <field name="p" create="bar == True" delete="bar == True">
                     <kanban>
                         <templates>
                             <t t-name="card">
@@ -3672,7 +3672,7 @@ test("one2many kanban: conditional write action", async () => {
         arch: `
             <form>
                 <field name="bar"/>
-                <field name="p" options="{'write': [('bar', '=', True)]}">
+                <field name="p" write="bar == True">
                     <kanban>
                         <templates>
                             <t t-name="card">

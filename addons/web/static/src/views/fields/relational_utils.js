@@ -1,7 +1,6 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -126,7 +125,7 @@ export function useActiveActions({
         let evalFn = () => true;
         if (!isNull(crudOptions[actionName])) {
             const action = crudOptions[actionName];
-            evalFn = (evalContext) => Boolean(action && new Domain(action).contains(evalContext));
+            evalFn = (evalContext) => Boolean(action && evaluateBooleanExpr(action, evalContext));
         }
 
         if (actionName in subViewActiveActions) {
