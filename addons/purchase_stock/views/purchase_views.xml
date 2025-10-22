@@ -28,8 +28,8 @@
             </xpath>
             <xpath expr="//page/field[@name='order_line']/list/field[@name='product_qty']" position="after">
                 <field name="forecasted_issue" column_invisible="True"/>
-                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or not is_storable" class="text-danger"/>
-                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or not is_storable"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or not is_storable" class="text-danger" width="20px"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or not is_storable" width="20px"/>
             </xpath>
             <xpath expr="//div[@name='date_planned_div']" position="inside">
                 <div>
