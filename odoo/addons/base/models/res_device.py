@@ -62,10 +62,10 @@ class ResDeviceLog(models.Model):
                 ))
             )
 
-    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_current' and request and request.session.sid:
+    def _order_field_to_sql(self, table, field_expr, direction, nulls):
+        if field_expr == 'is_current' and request and request.session.sid:
             return SQL("session_identifier = %s DESC", request.session.sid[:STORED_SESSION_BYTES])
-        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
+        return super()._order_field_to_sql(table, field_expr, direction, nulls)
 
     def _is_mobile(self, platform):
         if not platform:

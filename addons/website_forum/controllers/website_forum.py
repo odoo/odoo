@@ -123,7 +123,7 @@ class WebsiteForum(WebsiteProfile):
             # retro-compatibility for V8 and google links
             try:
                 sorting = werkzeug.urls.url_unquote_plus(sorting)
-                Post._order_to_sql(sorting, Post._search([], bypass_access=True))
+                Post._order_to_sql(Post._search([], bypass_access=True).table, sorting)
             except (UserError, ValueError):
                 sorting = False
 

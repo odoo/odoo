@@ -943,7 +943,7 @@ class Field(typing.Generic[T]):
         model = env[self.model_name]
         query = model._as_query(ordered=False)
         try:
-            model._order_field_to_sql(model._table, self.name, SQL(), SQL(), query)
+            model._order_field_to_sql(query.table, self.name, SQL(), SQL())
             return True
         except (ValueError, AccessError):
             return False
