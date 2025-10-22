@@ -53,8 +53,8 @@ class StockRule(models.Model):
             mo = self.env['mrp.production']
             if procurement.origin != 'MPS':
                 domain = rule._make_mo_get_domain(procurement, bom)
-                mo = self.env['mrp.production'].sudo().search(domain, limit=1)
-            if not mo:
+                mo = self.env['mrp.production'].sudo().search(domain, limit=1, order='create_date desc')
+            if not mo or not mo._product_qty_updatable():
                 procurement_qty = procurement.product_qty
                 batch_size = procurement.values.get('batch_size', procurement_qty)
                 if batch_size <= 0:
@@ -150,7 +150,7 @@ class StockRule(models.Model):
                        '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
         if group:
             domain += (('procurement_group_id', '=', group.id),)
-        return domain
+        return list(domain)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(bom, values)
