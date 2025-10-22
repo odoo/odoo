@@ -1126,7 +1126,7 @@ export class ListPlugin extends Plugin {
 
     adjustListPaddingOnDelete() {
         const selection = this.document.getSelection();
-        if (!selection.isCollapsed) {
+        if (!selection.isCollapsed || !selection.anchorNode) {
             return;
         }
         const listItem = closestElement(selection.anchorNode);
