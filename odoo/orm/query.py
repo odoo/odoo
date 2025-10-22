@@ -347,7 +347,7 @@ class FieldSQL(SQL):
         self._field = field
         # Generate the SQL eagerly, it may be used multiple times and is easier
         # to debug than generating it lazily.
-        self.__sql_tuple = table._model._field_to_sql(table._alias, field.name, table._query)._sql_tuple
+        self.__sql_tuple = field.to_sql(table._model, table._alias, table._query)._sql_tuple
 
     @property
     def _sql_tuple(self):
