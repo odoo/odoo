@@ -17,7 +17,7 @@ export class AccountSidebar extends Sidebar {
 
     start() {
         super.start();
-        this.invoiceHTMLEl = document.querySelector("iframe");
+        this.invoiceHTMLEl = document.getElementById('invoice_html');
         const iframeDoc = this.invoiceHTMLEl.contentDocument || this.invoiceHTMLEl.contentWindow.document;
         if (iframeDoc.readyState === 'complete') {
             this.updateIframeSize();
