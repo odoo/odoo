@@ -153,6 +153,12 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 5)
 
+        purchase_order.invoice_ids.button_cancel()
+        self.assertEqual(purchase_order.invoice_status, "to invoice")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 5)
+            self.assertEqual(line.qty_invoiced, 0.0)
+
     def test_vendor_bill_ordered(self):
         """Test if a order of product invoiced by ordered quantity can be
         correctly invoiced."""
