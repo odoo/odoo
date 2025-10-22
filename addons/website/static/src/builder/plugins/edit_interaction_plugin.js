@@ -82,3 +82,4 @@ export class EditInteractionPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(EditInteractionPlugin.id, EditInteractionPlugin);
+registry.category("translation-plugins").add(EditInteractionPlugin.id, EditInteractionPlugin);

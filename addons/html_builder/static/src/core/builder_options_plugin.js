@@ -3,8 +3,8 @@ import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
-import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
+import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -32,10 +32,16 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
  *     cloneDisabledReason: string;
  *     optionsContainerTopButtons: BuilderButtonDescriptor[] | [];
  * }} BuilderOptionContainer
+ *
+ * @typedef {{
+ *      editableOnly?: boolean;
+ *      exclude?: string;
+ * }} BuilderOptionConfig
  */
 
 /**
  * @typedef { Object } BuilderOptionsShared
+ * @property { BuilderOptionsPlugin['checkElement'] } checkElement
  * @property { BuilderOptionsPlugin['computeContainers'] } computeContainers
  * @property { BuilderOptionsPlugin['findOption'] } findOption
  * @property { BuilderOptionsPlugin['getContainers'] } getContainers
@@ -105,15 +111,9 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
-    static dependencies = [
-        "selection",
-        "overlay",
-        "operation",
-        "history",
-        "builderOverlay",
-        "overlayButtons",
-    ];
+    static dependencies = ["operation", "history"];
     static shared = [
+        "checkElement",
         "computeContainers",
         "findOption",
         "getContainers",
@@ -194,6 +194,33 @@ export class BuilderOptionsPlugin extends Plugin {
         this.dependencies.operation.next(() => {
             this.updateContainers(ev.target);
         });
+    }
+    /**
+     * Checks if the given element is a valid builder option target.
+     *
+     * @param {HTMLElement} el
+     * @param {BaseOptionComponent | BuilderOptionConfig} option
+     * @returns {Boolean}
+     */
+    checkElement(el, { editableOnly = true, exclude = "" }) {
+        // Unless specified otherwise, the element should be in an editable.
+        if (editableOnly && !(el.closest(".o_editable") || el.closest(".o_editable_attribute"))) {
+            return false;
+        }
+        // Check that the element is not to be excluded.
+        exclude += `${exclude && ", "}.o_snippet_not_selectable`;
+        if (el.matches(exclude)) {
+            return false;
+        }
+        // If an editable is not required, do not check anything else.
+        if (!editableOnly) {
+            return true;
+        }
+        // `o_editable_media` bypasses the `o_not_editable` class.
+        if (el.matches(".o_editable_media")) {
+            return shouldEditableMediaBeEditable(el);
+        }
+        return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
     }
 
     getReloadSelector(editingElement) {
@@ -289,12 +316,11 @@ export class BuilderOptionsPlugin extends Plugin {
         const mapElementsToOptions = (Options) => {
             const map = new Map();
             for (const Option of Options) {
-                const { selector, exclude, editableOnly } = Option;
-                let elements = getClosestElements(target, selector);
+                let elements = getClosestElements(target, Option.selector);
                 if (!elements.length) {
                     continue;
                 }
-                elements = elements.filter((el) => checkElement(el, { exclude, editableOnly }));
+                elements = elements.filter((el) => this.checkElement(el, Option));
 
                 for (const element of elements) {
                     if (map.has(element)) {
@@ -372,7 +398,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         for (const { hasOption, editableOnly } of this.getResource("has_overlay_options")) {
-            if (checkElement(el, { editableOnly }) && hasOption(el)) {
+            if (this.checkElement(el, { editableOnly }) && hasOption(el)) {
                 return true;
             }
         }
@@ -590,37 +616,6 @@ function getClosestElements(element, selector) {
     }
     const parent = element.closest(selector);
     return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
-}
-
-/**
- * Checks if the given element is valid in order to have an option.
- *
- * @param {HTMLElement} el
- * @param {Boolean} editableOnly when set to false, the element does not need to
- *     be in an editable area and the checks are therefore lighter.
- *     (= previous data-no-check/noCheck)
- * @param {String} exclude
- * @returns {Boolean}
- */
-export function checkElement(el, { editableOnly = true, exclude = "" }) {
-    // Unless specified otherwise, the element should be in an editable.
-    if (editableOnly && !el.closest(".o_editable")) {
-        return false;
-    }
-    // Check that the element is not to be excluded.
-    exclude += `${exclude && ", "}.o_snippet_not_selectable`;
-    if (el.matches(exclude)) {
-        return false;
-    }
-    // If an editable is not required, do not check anything else.
-    if (!editableOnly) {
-        return true;
-    }
-    // `o_editable_media` bypasses the `o_not_editable` class.
-    if (el.matches(".o_editable_media")) {
-        return shouldEditableMediaBeEditable(el);
-    }
-    return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
 }
 
 function withIds(arr) {

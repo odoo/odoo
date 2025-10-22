@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
+import { registry } from "@web/core/registry";
 
 export class TranslateTableOfContentOptionPlugin extends Plugin {
     static id = "tableOfContentOption";
@@ -39,3 +40,7 @@ export class TranslateTableOfContentOptionPlugin extends Plugin {
         });
     }
 }
+
+registry
+    .category("translation-plugins")
+    .add(TranslateTableOfContentOptionPlugin.id, TranslateTableOfContentOptionPlugin);

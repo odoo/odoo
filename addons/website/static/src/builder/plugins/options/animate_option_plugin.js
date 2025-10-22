@@ -345,6 +345,16 @@ export class AnimateOptionPlugin extends Plugin {
     }
 }
 
+registry.category("website-plugins").add(AnimateOptionPlugin.id, AnimateOptionPlugin);
+
+export class TranslationAnimateOptionPlugin extends AnimateOptionPlugin {
+    resources = Object.assign(this.resources, { builder_options: [] });
+}
+
+registry
+    .category("translation-plugins")
+    .add(TranslationAnimateOptionPlugin.id, TranslationAnimateOptionPlugin);
+
 export class SetAnimationModeAction extends BuilderAction {
     static id = "setAnimationMode";
     static dependencies = ["animateOption"];
@@ -496,8 +506,6 @@ export class SetAnimationEffectAction extends BuilderAction {
         this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
-
-registry.category("website-plugins").add(AnimateOptionPlugin.id, AnimateOptionPlugin);
 
 function intersect(a, b) {
     return a.filter((value) => b.includes(value));

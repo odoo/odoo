@@ -1,26 +1,26 @@
 import { Plugin } from "@html_editor/plugin";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { AttributeTranslateDialog } from "../translation_components/attributeTranslateDialog";
-import { SelectTranslateDialog } from "../translation_components/selectTranslateDialog";
+import { registry } from "@web/core/registry";
+import { AttributeTranslateDialog } from "../../translation_components/attributeTranslateDialog";
+import { SelectTranslateDialog } from "../../translation_components/selectTranslateDialog";
 import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
-} from "../translation_components/translatorInfoDialog";
+} from "../../translation_components/translatorInfoDialog";
 import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
  */
 
-export const translationAttributeSelector =
-    '[placeholder*="data-oe-translation-source-sha="], ' +
-    '[title*="data-oe-translation-source-sha="], ' +
-    '[value*="data-oe-translation-source-sha="], ' +
-    '[alt*="data-oe-translation-source-sha="]';
+const TRANSLATED_ATTRS = ["placeholder", "title", "alt", "value"];
+const TRANSLATION_ATTRIBUTES_SELECTOR = TRANSLATED_ATTRS.map(
+    (att) => `[${att}*="data-oe-translation-source-sha="]`
+).join(", ");
 
 export function getTranslationAttributeEls(rootEl) {
-    const translationSavableEls = rootEl.querySelectorAll(translationAttributeSelector);
+    const translationSavableEls = rootEl.querySelectorAll(TRANSLATION_ATTRIBUTES_SELECTOR);
     const textAreaEls = Array.from(rootEl.querySelectorAll("textarea")).find((el) =>
         el.textContent.includes("data-oe-translation-source-sha")
     );
@@ -68,13 +68,12 @@ export class TranslationPlugin extends Plugin {
             // Apply data-oe-readonly on wrapping editor
             const editableElSelector = ".o_editable, .o_editable_attribute";
             const editableEls = [
-                ...translationSavableEls,
                 ...this.services.website.pageDocument.querySelectorAll(".o_editable"),
             ];
             for (const editableEl of editableEls) {
-                if (editableEl.querySelectorAll(editableElSelector).length) {
+                if (editableEl.querySelector(editableElSelector)) {
                     editableEl.setAttribute("data-oe-readonly", "true");
-                    editableEl.classList.remove("o_editable", "o_editable_attribute");
+                    editableEl.classList.remove("o_editable");
                 }
             }
             return true;
@@ -365,3 +364,5 @@ export class TranslationPlugin extends Plugin {
         }
     }
 }
+
+registry.category("translation-plugins").add(TranslationPlugin.id, TranslationPlugin);

@@ -241,6 +241,7 @@ export class HighlightPlugin extends Plugin {
     }
 }
 registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
+registry.category("translation-plugins").add(HighlightPlugin.id, HighlightPlugin);
 
 // Todo: formatsSpecs should allow to be register new formats through resources.
 formatsSpecs.highlight = {
