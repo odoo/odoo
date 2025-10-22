@@ -91,11 +91,7 @@
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/assets_backend/**/*',
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*.scss'),
-            ('remove', 'spreadsheet/static/src/**/*.dark.scss'),
             ('remove', 'spreadsheet/static/src/print_assets/**/*'),
-        ],
-        "web.assets_web_dark": [
-            'spreadsheet/static/src/**/*.dark.scss',
         ],
         'web.assets_unit_tests': [
             'spreadsheet/static/tests/**/*',
