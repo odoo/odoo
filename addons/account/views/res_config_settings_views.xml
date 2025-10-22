@@ -71,7 +71,7 @@
                                 string = "EU Intra-community Distance Selling"
                                 documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html"
                                 help="Apply VAT of the EU country to which goods and services are delivered."
-                                invisible="'EU' not in company_country_group_codes">
+                                invisible="not('EU' in company_country_group_codes or company_country_code in ('CH', 'UK'))">
                                 <button type="object" name="action_eu_oss_tax_mapping" icon="fa-refresh" string="OSS Tax mapping" class="btn-link"/>
                             </setting>
                             <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
